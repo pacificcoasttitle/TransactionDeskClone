@@ -5189,4 +5189,62 @@ class Cron extends MX_Controller {
         print_r($fileNumbers);
         echo "All prelim data synced successfully";   
     }
+
+    public function update_databackup_partner()
+    {
+		$table = 'order_details';
+		$this->load->library('order/resware');
+		$this->db->select('id,file_id');
+		$this->db->from($table);   
+		$this->db->where('is_imported', 1);
+        $this->db->where('is_added_databackup_partner', 0);
+		$this->db->order_by('id','asc');
+		$this->db->limit(10000);
+		$query = $this->db->get();
+        $result = $query->result();
+		$user_data = array();
+		$user_data['admin_api'] = 1; 
+		foreach($result as $record) {
+			$file_id = $record->file_id;
+			$endPoint = 'files/'. $file_id .'/partners';
+			$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+			$resPartners = json_decode($resultPartners, true);
+            $key = '';
+			if(!empty($resPartners)) {
+				$key = array_search(10049, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                if (isset($key) && strlen($key) > 0) {
+                    $order_details = [
+                        'is_added_databackup_partner' => 1,
+                    ];
+                    $condition = [
+                        'file_id'=>$file_id
+                    ];
+                    $this->db->update($table, $order_details, $condition);
+                } else {
+                    $partners = array(
+                        'PartnerTypeID' => 10049,
+                        'PartnerID' => 400023,
+                        'PartnerType' => array(
+                            'PartnerTypeID' => 10049
+                        )
+                    );
+                    $partnerData = json_encode(array('Partners' => $partners));
+                    $endPoint = 'files/'.$file_id.'/partners';
+                    $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
+                    $resultPartner = $this->make_request('POST', $endPoint, $partnerData, $user_data);
+                    $this->apiLogs->syncLogs(0, 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid); 
+                    if(empty($resultPartner)) {
+                        $order_details = [
+                            'is_added_databackup_partner' => 1,
+                        ];
+                        $condition = [
+                            'file_id'=>$file_id
+                        ];
+                        $this->db->update($table, $order_details, $condition);
+                    }
+                }
+                
+			}
+		}
+	}
 }
