@@ -3163,7 +3163,7 @@ class DashboardMail extends MX_Controller {
 			$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_update.pdf';
 			$pdf = new Pdf($pdf_templates_file);
 			$type = 'buyer';
-			$document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+			$document_name = $type.'_'.time().'.pdf';
 			$dir_to_upload = 'uploads/escrow/'.$type;
 			if (!is_dir(FCPATH.$dir_to_upload)) {
 				mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
@@ -3290,7 +3290,7 @@ class DashboardMail extends MX_Controller {
         
         if ($this->input->post()) {
 			$seller_infos = $this->input->post('seller');
-			$vesting_info = $skip_vesting= $main_buyer = array();
+			$vesting_info = $skip_vesting= $main_seller = $seller_info_pdf = array();
 			$is_first = 1;
 			foreach ($seller_infos as $seller_key => $seller_value) {
 				// Check Keys
@@ -3318,8 +3318,15 @@ class DashboardMail extends MX_Controller {
 						$seller_update['id'] = $seller_key;
 						$this->home_model->update($seller_info,$seller_update,'pct_order_borrower_seller_info');
 					}
-					
+					if(empty($main_seller)) {
+						$main_seller = $seller_info;
 					}
+					
+					$seller_info_pdf['seller_names'][] = $seller_info['first_name'].' '.$seller_info['last_name'];
+					$seller_info_pdf['phones'][] = $seller_info['phone'];
+					$seller_info_pdf['emails'][] = $seller_info['email'];
+					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
+				}
 				
 			}
             $sellerInfoData = array(
@@ -3444,7 +3451,58 @@ class DashboardMail extends MX_Controller {
             //     'escrow_signature' => $this->input->post('escrow_signature') ? $this->input->post('escrow_signature') : null,
             // );
             // $this->home_model->insert($sellerOwnerEscrowInfoData, 'pct_order_borrower_seller_owner_escrow_info');
-            $success[] = "Borrower seller info saved successfully.";
+			//Generate PDF
+			$pdf_fields_val = $pdf_fields_val = [
+				'1 Sellers'=>implode(',',$seller_info_pdf['seller_names']),
+				'Escrow#'=>$orderDetails['escrow_number'],
+				'Title#'=>$orderDetails['file_number'],
+				'4 Sellers Current Mailing Address'=>$main_seller['current_mailing_address'],
+				'5 Sellers Mailing Address after Close of Escrow 1'=>$main_seller['mailing_address_port_closing'],
+				// 'Date'=>date('d/m/Y'),
+				// 'Dated_2'=>date('d/m/Y'),
+			];
+			if(isset($seller_info_pdf['phones'][0])) {
+				$pdf_fields_val['undefined'] = $seller_info_pdf['phones'][0];
+			}
+			if(isset($seller_info_pdf['phones'][1])) {
+				$pdf_fields_val['undefined_2'] = $seller_info_pdf['phones'][1];
+			}
+			if(isset($seller_info_pdf['emails'][0])) {
+				$pdf_fields_val['EMail Address'] = $seller_info_pdf['emails'][0];
+			}
+			// if(isset($seller_info_pdf['emails'][1])) {
+			// 	$pdf_fields_val['Buyer_2 Email'] = $seller_info_pdf['emails'][1];
+			// }
+			if(isset($seller_info_pdf['ssns'][0])) {
+				$pdf_fields_val['2 Social Security'] = $seller_info_pdf['ssns'][0];
+			}
+			if(isset($seller_info_pdf['ssns'][1])) {
+				$pdf_fields_val['Social Security'] = $seller_info_pdf['ssns'][1];
+			}
+			// $pdf_fields_val
+			$pdf_templates_file = FCPATH.'assets/pdf_templates/seller_1.pdf';
+			$pdf = new Pdf($pdf_templates_file);
+			$type = 'seller';
+			$document_name = $type.'_'.time().'.pdf';
+			$dir_to_upload = 'uploads/escrow/'.$type;
+			if (!is_dir(FCPATH.$dir_to_upload)) {
+				mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+			}
+			chmod(FCPATH.$dir_to_upload, 0777);
+			$dir_name = FCPATH.$dir_to_upload.'/';
+			$dir_name = str_replace('\\', '/', $dir_name);
+			$file_full_path = $dir_name.$document_name;
+			$pdf->fillForm($pdf_fields_val)
+				->needAppearances()
+				->saveAs($file_full_path);
+			$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+
+			//Update table with pdf file name
+			// $this->home_model->update(["pdf_file"=>$document_name],["id"=>$inserted_wizard_id],'pct_order_borrower_buyer_info_wizard');
+			// echo $pdf_url;   
+			// die;
+            $success[] = "Borrower seller info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
+            // $success[] = "Borrower seller info saved successfully.";
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
@@ -3618,7 +3676,7 @@ class DashboardMail extends MX_Controller {
 		$this->load->library('snappy_pdf');
                 
         // header('Content-Type: application/pdf');
-        $document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+        $document_name = $type.'_'.time().'.pdf';
         $dir_to_upload = 'uploads/escrow/'.$type;
         if (!is_dir(FCPATH.$dir_to_upload)) {
             mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
@@ -3723,7 +3781,7 @@ class DashboardMail extends MX_Controller {
 		$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
 		$pdf = new Pdf($pdf_templates_file);
 		$type = 'buyer';
-		$document_name = $type.'_'.time().'_'.$this->user['id'].'.pdf';
+		$document_name = $type.'_'.time().'.pdf';
         $dir_to_upload = 'uploads/escrow/'.$type;
         if (!is_dir(FCPATH.$dir_to_upload)) {
             mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
