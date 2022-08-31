@@ -519,7 +519,7 @@
 															</u></p>
 														<p style="margin: 0px; padding: 0px;font-size:18px;"><strong><u
 																	style="">
-																	<font color="#000000;">Borrower Details</font>
+																	<font color="#000000;">Seller Details</font>
 																</u></strong></p>
 														<?php $i =0 ; foreach ($seller_first_names as $seller_first_name) { ?>
 															<p style="margin: 0px; padding: 0px;"><?php echo $seller_first_name." ".$seller_last_names[$i]; ?>

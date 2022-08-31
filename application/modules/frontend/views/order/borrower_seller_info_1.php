@@ -217,7 +217,7 @@
 							<div class="form-group">
 								<label class="form-label">Current Mailing Address</label>
 								<input type="text" name="seller[<?=$seller['id']?>][current_mailing_address]"
-									required="required" value="<?=$seller['current_mailing_address']?>" />
+									required="required" value="<?php echo ($seller['mailing_address_port_closing'])?$seller['mailing_address_port_closing']:$orderDetails['full_address'];?>" />
 								<span class="text-input">456 Main St. Los Angeles, CA </span>
 
 							</div>
@@ -225,7 +225,7 @@
 								<label class="form-label">Mailing Address Post Closing</label>
 								<input type="text" name="seller[<?=$seller['id']?>][mailing_address_port_closing]"
 									required="required"
-									value="<?php echo ($seller['mailing_address_port_closing'])?$seller['mailing_address_port_closing']:$orderDetails['full_address'];?>" />
+									value="<?=$seller['current_mailing_address']?>" />
 								<span class="text-input">456 Main St. Los Angeles, CA </span>
 
 							</div>

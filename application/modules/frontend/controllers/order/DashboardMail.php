@@ -3331,27 +3331,6 @@ class DashboardMail extends MX_Controller {
 			}
             $sellerInfoData = array(
                 'order_id' => $this->input->post('order_id'),
-                // 'first_name' => $this->input->post('first_name') ? $this->input->post('first_name') : null,
-                // 'last_name' => $this->input->post('last_name') ? $this->input->post('last_name') : null,
-                // 'email' => $this->input->post('email') ? $this->input->post('email') : null,
-                // 'phone' => $this->input->post('phone') ? $this->input->post('phone') : null,
-                // 'birth_month' => $this->input->post('birth_month') ? $this->input->post('birth_month') : null,
-                // 'birth_date' => $this->input->post('birth_date') ? $this->input->post('birth_date') : null,
-                // 'birth_year' => $this->input->post('birth_year') ? $this->input->post('birth_year') : null,
-                // 'ssn' => $this->input->post('ssn') ? $this->input->post('ssn') : null,
-                // 'current_mailing_address' => $this->input->post('current_mailing_address') ? $this->input->post('current_mailing_address') : null,
-                // 'mailing_address_port_closing' => $this->input->post('mailing_address_port_closing') ? $this->input->post('mailing_address_port_closing') : null,
-                // 'is_another_seller' => $this->input->post('is_another_seller') ? $this->input->post('is_another_seller') : null,
-                // 'second_first_name' => $this->input->post('second_first_name') ? $this->input->post('second_first_name') : null,
-                // 'second_last_name' => $this->input->post('second_last_name') ? $this->input->post('second_last_name') : null,
-                // 'second_email' => $this->input->post('second_email') ? $this->input->post('second_email') : null,
-                // 'second_phone' => $this->input->post('second_phone') ? $this->input->post('second_phone') : null,
-                // 'second_birth_month' => $this->input->post('second_birth_month') ? $this->input->post('second_birth_month') : null,
-                // 'second_birth_date' => $this->input->post('second_birth_date') ? $this->input->post('second_birth_date') : null,
-                // 'second_birth_year' => $this->input->post('second_birth_year') ? $this->input->post('second_birth_year') : null,
-                // 'second_ssn' => $this->input->post('second_ssn') ? $this->input->post('second_ssn') : null,
-                // 'second_current_mailing_address' => $this->input->post('second_current_mailing_address') ? $this->input->post('second_current_mailing_address') : null,
-                // 'second_mailing_address_port_closing' => $this->input->post('second_mailing_address_port_closing') ? $this->input->post('second_mailing_address_port_closing') : null,
                 'is_trustee' => $this->input->post('is_trustee') ? $this->input->post('is_trustee') : null,
                 'current_trustees' => $this->input->post('current_trustees') ? $this->input->post('current_trustees') : null,
                 'is_original_trustees' => $this->input->post('is_original_trustees') ? $this->input->post('is_original_trustees') : null,
@@ -3391,75 +3370,57 @@ class DashboardMail extends MX_Controller {
             );
             $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_packet_info');
 
-
-            // $sellerOwnerEscrowInfoData = array(
-            //     'order_id' => $this->input->post('order_id'),
-            //     'seller_name' => $this->input->post('seller_name') ? $this->input->post('seller_name') : null,
-            //     'escrow_home_phone_number' => $this->input->post('escrow_home_phone_number') ? $this->input->post('escrow_home_phone_number') : null,
-            //     'work_phone_number' => $this->input->post('work_phone_number') ? $this->input->post('work_phone_number') : null,
-            //     'fax_number' => $this->input->post('fax_number') ? $this->input->post('fax_number') : null,
-            //     'cell_phone_number' => $this->input->post('cell_phone_number') ? $this->input->post('cell_phone_number') : null,
-            //     'email_address' => $this->input->post('email_address') ? $this->input->post('email_address') : null,
-            //     'cell_phone_number_2' => $this->input->post('cell_phone_number_2') ? $this->input->post('cell_phone_number_2') : null,
-            //     'escrow_ssn' => $this->input->post('escrow_ssn') ? $this->input->post('escrow_ssn') : null,
-            //     'ssn_2' => $this->input->post('ssn_2') ? $this->input->post('ssn_2') : null,
-            //     'property_address' => $this->input->post('property_address') ? $this->input->post('property_address') : null,
-            //     'seller_current_mailing_address' => $this->input->post('seller_current_mailing_address') ? $this->input->post('seller_current_mailing_address') : null,
-            //     'seller_mailing_address_after_close_escrow' => $this->input->post('seller_mailing_address_after_close_escrow') ? $this->input->post('seller_mailing_address_after_close_escrow') : null,
-            //     'seller_mailing_address_after_close_escrow_2' => $this->input->post('seller_mailing_address_after_close_escrow_2') ? $this->input->post('seller_mailing_address_after_close_escrow_2') : null,
-            //     'first_trust_deed_lender' => $this->input->post('first_trust_deed_lender') ? $this->input->post('first_trust_deed_lender') : null,
-            //     'lender_address' => $this->input->post('lender_address') ? $this->input->post('lender_address') : null,
-            //     'loan_number' => $this->input->post('loan_number') ? $this->input->post('loan_number') : null,
-            //     'lender_phone_number' => $this->input->post('lender_phone_number') ? $this->input->post('lender_phone_number') : null,
-            //     'unpaid_principal_balance' => $this->input->post('unpaid_principal_balance') ? $this->input->post('unpaid_principal_balance') : null,
-            //     'next_due' => $this->input->post('next_due') ? $this->input->post('next_due') : null,
-            //     'type_of_loan' => $this->input->post('type_of_loan') ? $this->input->post('type_of_loan') : null,
-            //     'va' => $this->input->post('va') ? $this->input->post('va') : null,
-            //     'fha' => $this->input->post('fha') ? $this->input->post('fha') : null,
-            //     'conventional' => $this->input->post('conventional') ? $this->input->post('conventional') : null,
-            //     'taxes' => $this->input->post('taxes') ? $this->input->post('taxes') : null,
-            //     'paid' => $this->input->post('paid') ? $this->input->post('paid') : null,
-            //     'unpaid' => $this->input->post('unpaid') ? $this->input->post('unpaid') : null,
-            //     'is_impound_acc' => $this->input->post('is_impound_acc') ? $this->input->post('is_impound_acc') : null,
-            //     'second_trust_deed_lender' => $this->input->post('second_trust_deed_lender') ? $this->input->post('second_trust_deed_lender') : null,
-            //     'second_lender_address' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : null,
-            //     'second_loan_number' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : null,
-            //     'second_lender_phone_number' => $this->input->post('second_lender_phone_number') ? $this->input->post('second_lender_phone_number') : null,
-            //     'second_unpaid_principal_balance' => $this->input->post('second_unpaid_principal_balance') ? $this->input->post('second_unpaid_principal_balance') : null,
-            //     'second_type_of_loan' => $this->input->post('second_type_of_loan') ? $this->input->post('second_type_of_loan') : null,
-            //     'second_va' => $this->input->post('second_va') ? $this->input->post('second_va') : null,
-            //     'second_fha' => $this->input->post('second_fha') ? $this->input->post('second_fha') : null,
-            //     'second_conventional' => $this->input->post('second_conventional') ? $this->input->post('second_conventional') : null,
-            //     'homeowner_association' => $this->input->post('homeowner_association') ? $this->input->post('homeowner_association') : null,
-            //     'management_company' => $this->input->post('management_company') ? $this->input->post('management_company') : null,
-            //     'management_mailing_address' => $this->input->post('management_mailing_address') ? $this->input->post('management_mailing_address') : null,
-            //     'contact_person' => $this->input->post('contact_person') ? $this->input->post('contact_person') : null,
-            //     'management_phone_number' => $this->input->post('management_phone_number') ? $this->input->post('management_phone_number') : null,
-            //     'second_homeowner_association' => $this->input->post('second_homeowner_association') ? $this->input->post('second_homeowner_association') : null,
-            //     'second_management_company' => $this->input->post('second_management_company') ? $this->input->post('second_management_company') : null,
-            //     'second_management_mailing_address' => $this->input->post('second_management_mailing_address') ? $this->input->post('second_management_mailing_address') : null,
-            //     'second_contact_person' => $this->input->post('second_contact_person') ? $this->input->post('second_contact_person') : null,
-            //     'second_management_phone_number' => $this->input->post('second_management_phone_number') ? $this->input->post('second_management_phone_number') : null,
-            //     'water_company_name' => $this->input->post('water_company_name') ? $this->input->post('water_company_name') : null,
-            //     'water_contract_name' => $this->input->post('water_contract_name') ? $this->input->post('water_contract_name') : null,
-            //     'water_company_address' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : null,
-            //     'water_company_phone' => $this->input->post('water_company_phone') ? $this->input->post('water_company_phone') : null,
-            //     'amount_of_assessment' => $this->input->post('amount_of_assessment') ? $this->input->post('amount_of_assessment') : null,
-            //     'water_next_due' => $this->input->post('water_next_due') ? $this->input->post('water_next_due') : null,
-            //     'no_of_shares' => $this->input->post('no_of_shares') ? $this->input->post('no_of_shares') : null,
-            //     'date' => $this->input->post('date') ? $this->input->post('date') : null,
-            //     'escrow_signature' => $this->input->post('escrow_signature') ? $this->input->post('escrow_signature') : null,
-            // );
-            // $this->home_model->insert($sellerOwnerEscrowInfoData, 'pct_order_borrower_seller_owner_escrow_info');
 			//Generate PDF
 			$pdf_fields_val = $pdf_fields_val = [
-				'1 Sellers'=>implode(',',$seller_info_pdf['seller_names']),
-				'Escrow#'=>$orderDetails['escrow_number'],
-				'Title#'=>$orderDetails['file_number'],
-				'4 Sellers Current Mailing Address'=>$main_seller['current_mailing_address'],
-				'5 Sellers Mailing Address after Close of Escrow 1'=>$main_seller['mailing_address_port_closing'],
-				// 'Date'=>date('d/m/Y'),
-				// 'Dated_2'=>date('d/m/Y'),
+				'1 Sellers' => implode(',',$seller_info_pdf['seller_names']),
+				'Escrow#' => $orderDetails['escrow_number'],
+				'Title#' => $orderDetails['file_number'],
+                '2 Social Security' => isset($seller_info_pdf['ssn'][0]) ? $seller_info_pdf['ssn'][0] : '',
+				'4 Sellers Current Mailing Address' => $main_seller['current_mailing_address'],
+				'5 Sellers Mailing Address after Close of Escrow 1' => $main_seller['mailing_address_port_closing'],
+                '3 Property Address' => $orderDetails['full_address'],
+                'FIRST TRUST DEED LENDER' => $this->input->post('lender_name') ? $this->input->post('lender_name') : '',
+                'Address' => $this->input->post('lender_address') ? $this->input->post('lender_address') : '',
+                'Loan Number' => $this->input->post('loan_number') ? $this->input->post('loan_number') : '',
+                'undefined_6' => $this->input->post('lender_phone_number') ? $this->input->post('lender_phone_number') : '',
+                'Unpaid Principal Balance' => $this->input->post('unpaid_balance') ? $this->input->post('unpaid_balance') : '',
+                'Next Due' => $this->input->post('payment_due_date') ? $this->input->post('payment_due_date') : '',
+                'Type of Loan' => $this->input->post('loan_type') ? $this->input->post('loan_type') : '',
+                'VA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'VA') ? 'Yes' : '',
+                'FHA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'FHA') ? 'Yes' : '',
+                'Conventional' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'Conventional') ? 'Yes' : '',
+                'Yes' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'Yes') ? 'Yes' : '',
+                'No' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'No') ? 'Yes' : '',
+                'SECOND TRUST DEED LENDER' => $this->input->post('second_lender_name') ? $this->input->post('second_lender_name') : '',
+                'Address_2' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : '',
+                'Loan Number_2' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : '',
+                'undefined_7' => $this->input->post('second_lender_phone_number') ? $this->input->post('second_lender_phone_number') : '',
+                'Unpaid Principal Balance_2' => $this->input->post('second_unpaid_balance') ? $this->input->post('second_unpaid_balance') : '',
+                'Next Due' => $this->input->post('second_payment_due_date') ? $this->input->post('second_payment_due_date') : '',
+                'Type of Loan_2' => $this->input->post('second_loan_type') ? $this->input->post('second_loan_type') : '',
+                'VA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'VA') ? 'Yes' : '',
+                'FHA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'FHA') ? 'Yes' : '',
+                'Conventional_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'Conventional') ? 'Yes' : '',
+                'Management Company' => $this->input->post('hoa_company') ? $this->input->post('hoa_company') : '',
+                'Mailing Address' => $this->input->post('hoa_company_address') ? $this->input->post('hoa_company_address') : '',
+                'Contact Person' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : '',
+                'undefined_9' => $this->input->post('hoa_contact_number') ? $this->input->post('hoa_contact_number') : '',
+                'Text29' => $orderDetails['escrow_number'],
+                'Text30' => $orderDetails['file_number'],
+                'Name of Company' => $this->input->post('water_company') ? $this->input->post('water_company') : '',
+                'Address' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : '',
+                'undefined_2' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
+                'CONFIDENTIAL TO BE USED ONLY IN CONNECTION WITH ORDER NO' => $orderDetails['file_number'],
+                'THE STREET ADDRESS of the property in this transaction is' =>  $orderDetails['address'],
+                'IF NONE LEAVE BLANK' =>  $orderDetails['city'],
+                'PARTY 1' => $seller_info_pdf['seller_names'][0],
+                'undefined' => $seller_info_pdf['birth_month'][0]."/".$seller_info_pdf['birth_date'][0]."/".$seller_info_pdf['birth_year'][0],
+                'BIRTHPLACE' => $seller_info_pdf['ssns'][0],
+                'PARTY 2' => $seller_info_pdf['seller_names'][0],
+                'undefined_2' => !empty($seller_info_pdf['birth_month'][1]) ? $seller_info_pdf['birth_month'][1]."/".$seller_info_pdf['birth_date'][1]."/".$seller_info_pdf['birth_year'][1] : '',
+                'BIRTHPLACE_2' => isset($seller_info_pdf['ssns'][1]) ? $seller_info_pdf['birth_month'][1] : '',
+                'SINGLE' => $this->input->post('is_married') == 'single' ? 'Yes' : '',
+                'MARRIED' => $this->input->post('married') == 'Single' ? 'Yes' : '',
 			];
 			if(isset($seller_info_pdf['phones'][0])) {
 				$pdf_fields_val['undefined'] = $seller_info_pdf['phones'][0];
@@ -3470,9 +3431,6 @@ class DashboardMail extends MX_Controller {
 			if(isset($seller_info_pdf['emails'][0])) {
 				$pdf_fields_val['EMail Address'] = $seller_info_pdf['emails'][0];
 			}
-			// if(isset($seller_info_pdf['emails'][1])) {
-			// 	$pdf_fields_val['Buyer_2 Email'] = $seller_info_pdf['emails'][1];
-			// }
 			if(isset($seller_info_pdf['ssns'][0])) {
 				$pdf_fields_val['2 Social Security'] = $seller_info_pdf['ssns'][0];
 			}
@@ -3480,7 +3438,7 @@ class DashboardMail extends MX_Controller {
 				$pdf_fields_val['Social Security'] = $seller_info_pdf['ssns'][1];
 			}
 			// $pdf_fields_val
-			$pdf_templates_file = FCPATH.'assets/pdf_templates/seller_1.pdf';
+			$pdf_templates_file = FCPATH.'assets/pdf_templates/seller.pdf';
 			$pdf = new Pdf($pdf_templates_file);
 			$type = 'seller';
 			$document_name = $type.'_'.time().'.pdf';
@@ -3497,12 +3455,9 @@ class DashboardMail extends MX_Controller {
 				->saveAs($file_full_path);
 			$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
 
-			//Update table with pdf file name
-			// $this->home_model->update(["pdf_file"=>$document_name],["id"=>$inserted_wizard_id],'pct_order_borrower_buyer_info_wizard');
-			// echo $pdf_url;   
-			// die;
+			
             $success[] = "Borrower seller info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
-            // $success[] = "Borrower seller info saved successfully.";
+            
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
