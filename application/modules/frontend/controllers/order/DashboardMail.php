@@ -3397,7 +3397,7 @@ class DashboardMail extends MX_Controller {
                 'Loan Number_2' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : '',
                 'undefined_7' => $this->input->post('second_lender_phone_number') ? $this->input->post('second_lender_phone_number') : '',
                 'Unpaid Principal Balance_2' => $this->input->post('second_unpaid_balance') ? $this->input->post('second_unpaid_balance') : '',
-                'Next Due' => $this->input->post('second_payment_due_date') ? $this->input->post('second_payment_due_date') : '',
+                //'Next Due' => $this->input->post('second_payment_due_date') ? $this->input->post('second_payment_due_date') : '',
                 'Type of Loan_2' => $this->input->post('second_loan_type') ? $this->input->post('second_loan_type') : '',
                 'VA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'VA') ? 'Yes' : '',
                 'FHA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'FHA') ? 'Yes' : '',
