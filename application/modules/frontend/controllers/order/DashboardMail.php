@@ -3328,8 +3328,8 @@ class DashboardMail extends MX_Controller {
 					$seller_info_pdf['emails'][] = $seller_info['email'];
 					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
 				}
-				
 			}
+           
             $sellerInfoData = array(
                 'order_id' => $this->input->post('order_id'),
                 'is_trustee' => $this->input->post('is_trustee') ? $this->input->post('is_trustee') : null,
@@ -3415,10 +3415,10 @@ class DashboardMail extends MX_Controller {
                 'THE STREET ADDRESS of the property in this transaction is' =>  $orderDetails['address'],
                 'IF NONE LEAVE BLANK' =>  $orderDetails['property_city'],
                 'PARTY 1' => $seller_info_pdf['seller_names'][0],
-                'undefined' => $seller_info_pdf['birth_dates'][0],
+                'birth_date_1' => $seller_info_pdf['birth_dates'][0],
                 'BIRTHPLACE' => $seller_info_pdf['ssns'][0],
                 'PARTY 2' => $seller_info_pdf['seller_names'][1],
-                'undefined_2' => !empty($seller_info_pdf['birth_dates'][1]) ? $seller_info_pdf['birth_dates'][1] : '',
+                'birth_date_2' => !empty($seller_info_pdf['birth_dates'][1]) ? $seller_info_pdf['birth_dates'][1] : '',
                 'BIRTHPLACE_2' => isset($seller_info_pdf['ssns'][1]) ? $seller_info_pdf['ssns'][1] : '',
                 'SINGLE' => $this->input->post('is_married') == 'single' ? 'Yes' : '',
                 'MARRIED' => $this->input->post('married') == 'Single' ? 'Yes' : '',
