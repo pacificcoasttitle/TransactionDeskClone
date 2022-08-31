@@ -3324,6 +3324,7 @@ class DashboardMail extends MX_Controller {
 					
 					$seller_info_pdf['seller_names'][] = $seller_info['first_name'].' '.$seller_info['last_name'];
 					$seller_info_pdf['phones'][] = $seller_info['phone'];
+                    $seller_info_pdf['birth_dates'][] = $seller_info['birth_month']."/".$seller_info['birth_date']."/".$seller_info['birth_year'];
 					$seller_info_pdf['emails'][] = $seller_info['email'];
 					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
 				}
@@ -3412,13 +3413,13 @@ class DashboardMail extends MX_Controller {
                 'undefined_2' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
                 'CONFIDENTIAL TO BE USED ONLY IN CONNECTION WITH ORDER NO' => $orderDetails['file_number'],
                 'THE STREET ADDRESS of the property in this transaction is' =>  $orderDetails['address'],
-                'IF NONE LEAVE BLANK' =>  $orderDetails['city'],
+                'IF NONE LEAVE BLANK' =>  $orderDetails['property_city'],
                 'PARTY 1' => $seller_info_pdf['seller_names'][0],
-                'undefined' => $seller_info_pdf['birth_month'][0]."/".$seller_info_pdf['birth_date'][0]."/".$seller_info_pdf['birth_year'][0],
+                'undefined' => $seller_info_pdf['birth_dates'][0],
                 'BIRTHPLACE' => $seller_info_pdf['ssns'][0],
-                'PARTY 2' => $seller_info_pdf['seller_names'][0],
-                'undefined_2' => !empty($seller_info_pdf['birth_month'][1]) ? $seller_info_pdf['birth_month'][1]."/".$seller_info_pdf['birth_date'][1]."/".$seller_info_pdf['birth_year'][1] : '',
-                'BIRTHPLACE_2' => isset($seller_info_pdf['ssns'][1]) ? $seller_info_pdf['birth_month'][1] : '',
+                'PARTY 2' => $seller_info_pdf['seller_names'][1],
+                'undefined_2' => !empty($seller_info_pdf['birth_dates'][1]) ? $seller_info_pdf['birth_dates'][1] : '',
+                'BIRTHPLACE_2' => isset($seller_info_pdf['ssns'][1]) ? $seller_info_pdf['ssns'][1] : '',
                 'SINGLE' => $this->input->post('is_married') == 'single' ? 'Yes' : '',
                 'MARRIED' => $this->input->post('married') == 'Single' ? 'Yes' : '',
 			];
