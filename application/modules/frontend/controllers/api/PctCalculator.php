@@ -43,8 +43,13 @@ class PctCalculator extends MX_Controller {
 		}
 	}
 	
-	function get_file_details($file_number) 
+	function get_file_details($file_number = null) 
 	{
+		if($file_number == null) {
+			$this->return_response['message']='Please provide File Number';
+			echo json_encode($this->return_response);
+			exit;
+		}
 		$data = json_encode(array('FileNumber' => $file_number));
 		$userData = array(
 			'admin_api' => 1
