@@ -562,6 +562,7 @@ $route['download-label-pdf'] = "frontend/label/downloadPdf";
 $route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite'; 
 
+$route['api/get_file_details'] = 'frontend/api/pctCalculator/get_file_details';
 
 
 $route['404_override'] = '';
