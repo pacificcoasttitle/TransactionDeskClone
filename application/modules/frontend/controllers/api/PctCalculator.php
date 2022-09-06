@@ -66,7 +66,7 @@ class PctCalculator extends MX_Controller {
 			$result_data['ProductType']=$result_decoded->Files[0]->TransactionProductType->ProductType;
 
 			$this->return_response['status'] = true;
-			$this->return_response['data'] = json_encode($result_data);
+			$this->return_response['data'] = ($result_data);
 		}
 		echo json_encode($this->return_response);
 	}
