@@ -563,6 +563,7 @@ $route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite'; 
 
 $route['api/get_file_details(/:num)?'] = 'frontend/api/pctCalculator/get_file_details$1';
+$route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';
 
 
 $route['404_override'] = '';
