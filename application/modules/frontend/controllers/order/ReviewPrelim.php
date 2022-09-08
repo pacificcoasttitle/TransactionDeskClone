@@ -76,14 +76,16 @@ class ReviewPrelim extends MX_Controller {
 					$retOrderId = $this->importOrder($file_number);
 					if(!empty($retOrderId)) {
 						//update
-						$update_prelim_flag_data = [
-							'prelim_flag'=>0
-						];
-						$update_prelim_flag_condition = ['id'=>$retOrderId];
-						$this->order->update($update_prelim_flag_data,$update_prelim_flag_condition);
+						
 						$order_details = $this->order->get_rows($orderCondition);
 					}
 				}
+
+				$update_prelim_flag_data = [
+					'prelim_flag'=>0
+				];
+				$update_prelim_flag_condition = ['file_number' => $file_number,];
+				$this->order->update($update_prelim_flag_data,$update_prelim_flag_condition);
 
 				if(isset($order_details) && !empty($order_details)) {
 					$file_id = isset($order_details['file_id']) && !empty($order_details['file_id']) ? $order_details['file_id'] : '';
@@ -620,12 +622,17 @@ class ReviewPrelim extends MX_Controller {
 								'file_number' => $file_number
 						);
 						$data = array(
-							'prelim_summary_id'	=> $id,
-							'prelim_flag'=>1
+							'prelim_summary_id'	=> $id
 						);
 
 						$this->order->update($data,$condition);
 					}
+
+					$update_prelim_flag_condition = ['file_number' => $file_number];
+					$update_prelim_flag_data = [
+						'prelim_flag'=>1
+					];
+					$this->order->update($update_prelim_flag_data,$update_prelim_flag_condition);
 			
 
 					/* Send email to customer */
