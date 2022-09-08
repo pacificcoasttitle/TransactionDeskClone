@@ -66,8 +66,24 @@ class PctCalculator extends MX_Controller {
 			$result_data['ProductType']=$result_decoded->Files[0]->TransactionProductType->ProductType;
 
 			$this->return_response['status'] = true;
-			$this->return_response['data'] = ($result_data);
+			$this->return_response['data'] = $result_data;
 		}
+		echo json_encode($this->return_response);
+	}
+
+	function add_calc_details()  {
+		$this->load->library('form_validation');
+		$stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
+		$_POST = json_decode($stream_clean,TRUE);
+		$this->form_validation->set_rules('file_number', 'File Number', 'required|numeric');
+		$this->form_validation->set_rules('transaction_type', 'Transaction Type', 'required');
+		if($this->form_validation->run() == TRUE) {
+			$this->return_response['status'] = true;
+		}
+		else {
+			$this->return_response['message']=$this->form_validation->error_array();
+		}
+		// var_dump($request_data);
 		echo json_encode($this->return_response);
 	}
 }
