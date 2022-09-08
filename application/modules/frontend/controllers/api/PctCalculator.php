@@ -59,6 +59,7 @@ class PctCalculator extends MX_Controller {
 			$result_data = $result_decoded = array();
 			$result_decoded = json_decode($result);
 			$result_data['LoanNumber']=$result_decoded->Files[0]->Loans[0]->LoanNumber;
+			$result_data['LoanAmount']=$result_decoded->Files[0]->Loans[0]->LoanAmount;
 			$result_data['SalesPrice']=$result_decoded->Files[0]->SalesPrice;
 			$result_data['City']=$result_decoded->Files[0]->Properties[0]->City;
 			$result_data['State']=$result_decoded->Files[0]->Properties[0]->State;
