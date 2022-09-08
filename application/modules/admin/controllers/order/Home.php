@@ -96,7 +96,7 @@ class Home extends MX_Controller {
 		$customer_filter = [];
 		$expiredPasswords = $this->home_model->get_incorrect_customers($customer_filter);
 		$expiredPasswordCount = $expiredPasswords['recordsTotal'];
-		$failedJsonCount = $this->home_model->get_pending_json_files();
+		$failedJsonCount = $this->home_model->get_failed_json_files();
         
         $data = array(
             'title' => 'PCT Order: Dashboard',

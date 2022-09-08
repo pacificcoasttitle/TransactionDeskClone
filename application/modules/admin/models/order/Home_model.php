@@ -1682,6 +1682,20 @@ class Home_model extends CI_Model
 
 	}
 
+	public function get_failed_json_files() {
+		
+		$this->db->select('count(id) as total_files');
+		$this->db->from('order_details');
+		$this->db->where('prelim_flag','0');
+		$query = $this->db->get();
+		$result = $query->row_array();
+        if(!empty($result)) { 
+            return $result['total_files'];
+        } else {
+            return 0;
+        }
+	}
+
 	public function get_records($table,$condition = null,$order = null) {
 		$this->db->from($table);
 		if($condition) {
