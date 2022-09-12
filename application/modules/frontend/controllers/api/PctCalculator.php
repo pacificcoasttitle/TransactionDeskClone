@@ -9,7 +9,10 @@ class PctCalculator extends MX_Controller {
     {
 		parent::__construct();
 		$this->return_response = ['status'=>false,'message'=>'','data'=>array()];
+		$this->load->library('order/order');
 		$this->load->library('order/resware');
+		$this->load->model('order/home_model');
+		$this->load->model('order/apiLogs');
 		$headers = null;
     if (isset($_SERVER['Authorization'])) {
         $headers = trim($_SERVER["Authorization"]);
@@ -60,6 +63,8 @@ class PctCalculator extends MX_Controller {
 			$result_decoded = json_decode($result);
 			$property_data = $result_decoded->Files[0]->Properties[0];
 			$result_data['LoanNumber']=$result_decoded->Files[0]->Loans[0]->LoanNumber;
+			$result_data['FileID']=$result_decoded->Files[0]->FileID;
+			$result_data['FileNumber']=$result_decoded->Files[0]->FileNumber;
 			$result_data['LoanAmount']=$result_decoded->Files[0]->Loans[0]->LoanAmount;
 			$result_data['SalesPrice']=$result_decoded->Files[0]->SalesPrice;
 			$result_data['City']=$property_data->City;
@@ -95,6 +100,60 @@ class PctCalculator extends MX_Controller {
 			$this->return_response['message']=$this->form_validation->error_array();
 		}
 		// var_dump($request_data);
+	}
+
+	function send_title_rates_document_to_resware() 
+	{
+		$data = json_decode(file_get_contents('php://input'), true);
+		
+		if (empty($data['file_name'])) {
+			$this->return_response['message']='Please provide file name';
+			echo json_encode($this->return_response);
+			exit;
+		}
+
+		if (empty($data['file_id'])) {
+			$this->return_response['message']='Please provide file id';
+			echo json_encode($this->return_response);
+			exit;
+		}
+
+		$orderDetails = $this->order->get_order_details($data['file_id'], 1);
+		//print_r($orderDetails);exit;
+
+		$contents = file_get_contents(env('PCT_CALC_DOC_PATH').$data['file_name']);
+		$binaryData   = base64_encode($contents); 
+		$document_name = date('YmdHis')."_".$data['file_name'];
+		if (!is_dir('uploads/calc_title_rates')) {
+			mkdir('./uploads/calc_title_rates', 0777, TRUE);
+		}
+		file_put_contents(FCPATH.'/uploads/calc_title_rates/'.$document_name, $contents);
+		$this->order->uploadDocumentOnAwsS3($document_name, 'calc_title_rates');
+		
+		$this->home_model->update(array('calc_title_doc_name' => $document_name), array('file_id' => $data['file_id']), 'order_details');
+		$endPoint = 'files/'.$data['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $data['file_name'],
+			'DocumentType' => array(
+				'DocumentTypeID' => 1044,
+			),
+			'Description' => 'Calc Title Rates',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+		$user_data['admin_api'] = 1; 
+		$logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		if (!empty($res->Document->DocumentID)) {
+			$this->return_response['status'] = true;
+			$this->return_response['message']='Title Rate document uploaded successfully on Resware side for this file number '.$orderDetails['file_number'];
+		} else {
+			$this->return_response['status'] = false;
+			$this->return_response['message']='Something went wrong during upload title rate document on Resware side';
+		}
 		echo json_encode($this->return_response);
 	}
 }

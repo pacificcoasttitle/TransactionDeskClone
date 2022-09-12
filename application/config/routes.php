@@ -564,6 +564,8 @@ $route['send_invite'] = 'frontend/order/home/send_invite';
 
 $route['api/get_file_details(/:num)?'] = 'frontend/api/pctCalculator/get_file_details$1';
 $route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';
+$route['api/send_title_doc_to_resware'] = 'frontend/api/pctCalculator/send_title_rates_document_to_resware';
+
 
 
 $route['404_override'] = '';
