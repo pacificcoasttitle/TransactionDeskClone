@@ -58,12 +58,22 @@ class PctCalculator extends MX_Controller {
 		if(json_decode($result) && count(json_decode($result)->Files)) {
 			$result_data = $result_decoded = array();
 			$result_decoded = json_decode($result);
+			$property_data = $result_decoded->Files[0]->Properties[0];
 			$result_data['LoanNumber']=$result_decoded->Files[0]->Loans[0]->LoanNumber;
 			$result_data['LoanAmount']=$result_decoded->Files[0]->Loans[0]->LoanAmount;
 			$result_data['SalesPrice']=$result_decoded->Files[0]->SalesPrice;
-			$result_data['City']=$result_decoded->Files[0]->Properties[0]->City;
-			$result_data['State']=$result_decoded->Files[0]->Properties[0]->State;
-			$result_data['County']=$result_decoded->Files[0]->Properties[0]->County;
+			$result_data['City']=$property_data->City;
+			$result_data['State']=$property_data->State;
+			$result_data['County']=$property_data->County;
+
+			$result_data['FullAddress']=$property_data->StreetNumber;
+			$result_data['FullAddress'] .= ! empty($property_data->StreetDirection) ?' '.substr($property_data->StreetDirection, 0, 1) : '';
+			$result_data['FullAddress'] .= ' '.$property_data->StreetName;
+			$result_data['FullAddress'] .= ' '.$property_data->StreetSuffix;	
+			$result_data['FullAddress'] .= ', '.$property_data->City;	
+			$result_data['FullAddress'] .= ', '.$property_data->State;	
+			$result_data['FullAddress'] .= ' '.$property_data->Zip;	
+
 			$result_data['ProductType']=$result_decoded->Files[0]->TransactionProductType->ProductType;
 
 			$this->return_response['status'] = true;
