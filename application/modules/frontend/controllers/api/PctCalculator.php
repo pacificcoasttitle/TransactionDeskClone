@@ -59,6 +59,19 @@ class PctCalculator extends MX_Controller {
 		);
 		$result = $this->resware->make_request('POST', 'files/search', $data, $userData);
 		if(json_decode($result) && count(json_decode($result)->Files)) {
+			$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
+
+			if (empty($orderDetails)) {
+				$orderId =  $this->order->importOrder($file_number);
+				$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
+			}
+
+			if (!empty($orderDetails)) {
+				$result_data['seller'] = $orderDetails['primary_owner'];
+			} else {
+				$result_data['seller'] = '';
+			}
+
 			$result_data = $result_decoded = array();
 			$result_decoded = json_decode($result);
 			$property_data = $result_decoded->Files[0]->Properties[0];
@@ -70,6 +83,7 @@ class PctCalculator extends MX_Controller {
 			$result_data['City']=$property_data->City;
 			$result_data['State']=$property_data->State;
 			$result_data['County']=$property_data->County;
+			$result_data['borrower']=$result_decoded->Files[0]->Buyers[0]->Primary->First." ".$result_decoded->Files[0]->Buyers[0]->Primary->Last;
 
 			$result_data['FullAddress']=$property_data->StreetNumber;
 			$result_data['FullAddress'] .= ! empty($property_data->StreetDirection) ?' '.substr($property_data->StreetDirection, 0, 1) : '';
