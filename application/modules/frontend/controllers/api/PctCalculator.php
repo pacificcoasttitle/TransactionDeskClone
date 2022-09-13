@@ -69,17 +69,16 @@ class PctCalculator extends MX_Controller {
 
 			if (empty($order)) {
 				$orderId =  $this->order->importOrder($file_number);
-				$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
 			}
 
+			$result_data = $result_decoded = array();
+			$result_decoded = json_decode($result);
+			$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
 			if (!empty($orderDetails)) {
 				$result_data['seller'] = $orderDetails['primary_owner'];
 			} else {
 				$result_data['seller'] = '';
 			}
-
-			$result_data = $result_decoded = array();
-			$result_decoded = json_decode($result);
 			$property_data = $result_decoded->Files[0]->Properties[0];
 			$result_data['LoanNumber']=$result_decoded->Files[0]->Loans[0]->LoanNumber;
 			$result_data['FileID']=$result_decoded->Files[0]->FileID;
