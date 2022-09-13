@@ -62,6 +62,8 @@ class PctCalculator extends MX_Controller {
 			$result_data = $result_decoded = array();
 			$result_decoded = json_decode($result);
 			$property_data = $result_decoded->Files[0]->Properties[0];
+			$buyer_data = $result_decoded->Files[0]->Buyers[0];
+			$buyer_name = $buyer_data->Primary;
 			$result_data['LoanNumber']=$result_decoded->Files[0]->Loans[0]->LoanNumber;
 			$result_data['FileID']=$result_decoded->Files[0]->FileID;
 			$result_data['FileNumber']=$result_decoded->Files[0]->FileNumber;
@@ -80,6 +82,25 @@ class PctCalculator extends MX_Controller {
 			$result_data['FullAddress'] .= ' '.$property_data->Zip;	
 
 			$result_data['ProductType']=$result_decoded->Files[0]->TransactionProductType->ProductType;
+
+			//Borrower
+			$result_data['Borrower'] = ! empty($buyer_name->First) ? $buyer_name->First : '';
+			$result_data['Borrower'] .= ! empty($buyer_name->Middle) ? ' '.$buyer_name->Middle : '';
+			$result_data['Borrower'] .= ! empty($buyer_name->Last) ? ' '.$buyer_name->Last : '';
+			$result_data['Borrower'] = trim($result_data['Borrower']);
+
+			if(empty($result_data['Borrower'])) {
+				$result_data['Borrower'] = ! empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
+			}
+
+
+			//ECD
+			$result_data['ECD']='';
+			if(!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
+				$ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "",$result_decoded->Files[0]->Dates->FileCompletedDate));
+				$ecd_date = date('m/d/Y', $ecd_timestamp/1000);
+				$result_data['ECD'] = $ecd_date;
+			}
 
 			$this->return_response['status'] = true;
 			$this->return_response['data'] = $result_data;
