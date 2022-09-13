@@ -59,9 +59,15 @@ class PctCalculator extends MX_Controller {
 		);
 		$result = $this->resware->make_request('POST', 'files/search', $data, $userData);
 		if(json_decode($result) && count(json_decode($result)->Files)) {
-			$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
+			
+			$condition = array(
+				'where' => array(
+					'file_number' => $file_number,
+				)
+			);
+			$order = $this->order->get_order($condition);
 
-			if (empty($orderDetails)) {
+			if (empty($order)) {
 				$orderId =  $this->order->importOrder($file_number);
 				$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
 			}
