@@ -10,7 +10,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="typography-section__inner">
-						<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b><?php echo date('Y');?></b></h3>
+						<h4 class="ui-title-block_light">Production figures for the current month of <b><?php echo date('F');?></b></h3>
 					</div>
 					
 					<div class="typography-sectiona">
