@@ -3967,4 +3967,122 @@ class DashboardMail extends MX_Controller {
 
         $document->save()->finish();
     }
+
+    public function get_netsheet()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+
+        $file_number = $this->input->post('order_number');
+        $netsheet_for = $this->input->post('netsheet_for');
+
+        $data = json_encode(array('FileNumber' => $file_number));
+		$userData = array(
+			'admin_api' => 1
+		);
+		$result = $this->resware->make_request('POST', 'files/search', $data, $userData);
+		if (json_decode($result) && count(json_decode($result)->Files)) {
+            $result_data = $result_decoded = array();
+			$result_decoded = json_decode($result);
+			$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
+			if (!empty($orderDetails)) {
+				$result_data['seller'] = $orderDetails['primary_owner'];
+			} else {
+				$result_data['seller'] = '';
+			}
+
+			$property_data = $result_decoded->Files[0]->Properties[0];
+			$buyer_data = $result_decoded->Files[0]->Buyers[0];
+			$buyer_name = $buyer_data->Primary;
+			$result_data['LoanNumber'] = $result_decoded->Files[0]->Loans[0]->LoanNumber;
+			$result_data['FileID'] = $result_decoded->Files[0]->FileID;
+			$result_data['FileNumber'] = $result_decoded->Files[0]->FileNumber;
+			$result_data['LoanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount;
+			$result_data['SalesPrice'] = $result_decoded->Files[0]->SalesPrice;
+			$result_data['City'] = $property_data->City;
+			$result_data['State'] = $property_data->State;
+			$result_data['County'] = $property_data->County;
+			$result_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First." ".$result_decoded->Files[0]->Buyers[0]->Primary->Last;
+
+			$result_data['FullAddress'] = $property_data->StreetNumber;
+			$result_data['FullAddress'] .= ! empty($property_data->StreetDirection) ?' '.substr($property_data->StreetDirection, 0, 1) : '';
+			$result_data['FullAddress'] .= ' '.$property_data->StreetName;
+			$result_data['FullAddress'] .= ' '.$property_data->StreetSuffix;	
+			$result_data['FullAddress'] .= ', '.$property_data->City;	
+			$result_data['FullAddress'] .= ', '.$property_data->State;	
+			$result_data['FullAddress'] .= ' '.$property_data->Zip;	
+
+			$result_data['ProductType']=$result_decoded->Files[0]->TransactionProductType->ProductType;
+
+			//Borrower
+			$result_data['Borrower'] = ! empty($buyer_name->First) ? $buyer_name->First : '';
+			$result_data['Borrower'] .= ! empty($buyer_name->Middle) ? ' '.$buyer_name->Middle : '';
+			$result_data['Borrower'] .= ! empty($buyer_name->Last) ? ' '.$buyer_name->Last : '';
+			$result_data['Borrower'] = trim($result_data['Borrower']);
+
+			if(empty($result_data['Borrower'])) {
+				$result_data['Borrower'] = ! empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
+			}
+
+
+			//ECD
+			$result_data['ECD']='';
+			if(!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
+				$ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "",$result_decoded->Files[0]->Dates->FileCompletedDate));
+				$ecd_date = date('m/d/Y', $ecd_timestamp/1000);
+				$result_data['ECD'] = $ecd_date;
+			}
+            
+        }
+
+
+        $random_number = $this->uri->segment(2); 
+        $order = $this->getOrderInfo($random_number);
+        $fileId = $order[0]['file_id'];  
+
+        $data['title'] = 'Get Netsheet | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['file_number'] = $orderDetails['file_number'];
+        $data['full_address'] = $orderDetails['full_address'];
+        $data['file_id'] = $orderDetails['file_id'];
+        $data['order_id'] = $orderDetails['order_id'];
+
+
+        $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
+        $user_data['admin_api'] = 1;
+        $user_data['from_mail'] = 1; 
+        $endPoint = 'files/'.$fileId.'/documents';
+					
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $orderDetails['order_id'], $logid);
+        $res = json_decode($result, true);
+        
+        $policyDocuments = array();
+        $i = 0;
+        foreach($res['Documents'] as $document) {
+            if ($document['DocumentType']['DocumentTypeID'] == 103) {
+                $policyDocuments[$i]['no'] = $i + 1;
+                $policyDocuments[$i]['api_document_id'] = $document['DocumentID'];
+                $policyDocuments[$i]['document_name'] = $document['DocumentName'];
+                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate'])))/1000);
+                $created_date = date('m/d/Y', $time);
+                $policyDocuments[$i]['created_at'] = $created_date;
+                $i++;
+            }
+        }
+
+        $data['policyDocuments'] = $policyDocuments;
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/mail_policy_package', $data);
+    }
 }

@@ -96,15 +96,29 @@
                             <span id="order_number_php_error" class="error" style="display: none;"></span>
                             
                             <div class="frm-row">
-                                    <div class="section colm colm12">
-                                        <label class="field prepend-icon">
-                                            <input class="radio" type="radio" name="actions" id="get_fees" value="get_fees" checked="checked">Get Fees  
-                                            <input class="radio" type="radio" name="actions" id="get_cpl" value="get_cpl">Get CPL
-                                            <input class="radio" type="radio" name="actions" id="get_proposed" value="get_proposed">Get Proposed
-                                            <input class="radio" type="radio" name="actions" id="get_policy" value="get_policy">Get Policy
-                                        </label>
-                                    </div>
+                                <div class="section colm colm12">
+                                    <label class="field prepend-icon">
+                                        <input class="radio" type="radio" name="actions" id="get_fees" value="get_fees" checked="checked">Get Fees  
+                                        <input class="radio" type="radio" name="actions" id="get_cpl" value="get_cpl">Get CPL
+                                        <input class="radio" type="radio" name="actions" id="get_proposed" value="get_proposed">Get Proposed
+                                        <input class="radio" type="radio" name="actions" id="get_policy" value="get_policy">Get Policy
+                                        <input class="radio" type="radio" name="actions" id="get_netsheet" value="get_netsheet">Get Netsheet
+                                    </label>
                                 </div>
+                            </div>
+
+                            <div class="frm-row d-none mt-2" id="netsheet_container">
+                                <div class="page-links">
+                                    <a href="" class="active">Netsheet For</a>
+                                </div>
+                                <div class="section colm colm12">
+                                    <label class="field prepend-icon option-group" style="display:block;">
+                                        <input class="radio" type="radio" name="netsheet_for" id="buyer" value="buyer">Buyer 
+                                        <input class="radio" type="radio" name="netsheet_for" id="seller" value="seller">Seller
+                                    </label>
+                                </div>
+                            </div>
+
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Submit</button>
                             </div>
@@ -127,6 +141,13 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $('input[type=radio][name=actions]').change(function() {
+                if (this.value == 'get_netsheet') {
+                    $('#netsheet_container').removeClass('d-none');
+                } else  {
+                    $('#netsheet_container').addClass('d-none');
+                }
+            });
             var $preloader = $('#page-preloader'),
             $spinner   = $preloader.find('.spinner-loader');
             $spinner.fadeOut();
@@ -149,6 +170,13 @@
                     },
                     actions: {
                         required: true
+                    },
+                    netsheet_for:{
+                        required: {
+                            depends: function(element) {
+                                return ($("input[name=actions]:checked").val() == "get_netsheet");
+                            },
+                        },
                     }
                 },
                 /* @validation error messages 
@@ -159,6 +187,9 @@
                     },
                     actions: {
                         required: 'Please select an action'
+                    },
+                    netsheet_for: {
+                        required: 'Please select a property option'
                     },
                    
                 },
@@ -205,6 +236,24 @@
                                 else if(action == 'get_policy')
                                 {
                                     window.location.replace(base_url+'policy/'+res.random_number);
+                                }
+                                else if(action == 'get_netsheet')
+                                {
+                                    $.ajax({
+                                        url: '<?php echo base_url(); ?>get-netsheet',
+                                        type: "POST",
+                                        data: {
+                                            order_number: $("#order_number").val(),
+                                            netsheet_for: $("#netsheet_for").val()
+                                        },
+                                        success: function(result) {
+
+                                        },
+                                        error:function(){
+                                            alert('Something went wrong');
+                                        }
+                                    });
+                                    window.location.replace(base_url+'get-netsheet/'+res.random_number);
                                 }
                                 else
                                 {
