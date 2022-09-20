@@ -28,6 +28,7 @@
                             <th>Partner Id</th>
                             <th>Partner Type Id</th>
                             <th>Mail Notification</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

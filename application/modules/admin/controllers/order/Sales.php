@@ -59,6 +59,7 @@ class Sales extends MX_Controller {
                 $nestedData[] = $value['partner_id'];
                 $nestedData[] = $value['partner_type_id'];
                 $nestedData[] = ($value['is_mail_notification'] == 1) ? 'On' : 'Off';
+                $nestedData[] = ($value['status'] == 1) ? 'Enable' : 'Disable';
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-sales-rep/'.$value['id'];
