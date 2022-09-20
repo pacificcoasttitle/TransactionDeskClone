@@ -2673,7 +2673,7 @@ class Cron extends MX_Controller {
                             $titleOfficerkey = array_search("Title Officer",$headerColumns);
                             $titleOfficerName = $data[$titleOfficerkey];
                             $titleOfficerName = str_replace(' ', '_', $titleOfficerName);
-                            $titleOfficerName = preg_replace('/[^A-Za-z0-9\_-]/', '',  $titleOfficerName);
+                            $titleOfficerName = preg_replace('/[^A-Za-z0-9&\_-]/', '',  $titleOfficerName);
                             $titleOfficerName = str_replace('_', ' ', $titleOfficerName);
                             $titleOfckey = array_search($titleOfficerName, array_column($titleOfficerNameArr, 'name'));
                             if (isset($titleOfckey) && !empty($titleOfckey)) {
