@@ -3983,6 +3983,7 @@ class DashboardMail extends MX_Controller {
 
         $file_number = $this->input->post('order_number');
         $netsheet_for = $this->input->post('netsheet_for');
+        
 
         $data = json_encode(array('FileNumber' => $file_number));
 		$userData = array(
@@ -3998,6 +3999,8 @@ class DashboardMail extends MX_Controller {
 			} else {
 				$result_data['seller'] = '';
 			}
+
+            $result_data['LoanNumber'] = $result_decoded->Files[0]->Loans[0]->LoanNumber;
 
 			$property_data = $result_decoded->Files[0]->Properties[0];
 			$buyer_data = $result_decoded->Files[0]->Buyers[0];
