@@ -157,7 +157,7 @@
 									</div>
 								<?php } ?>
 								<?php if($is_sales_rep_manager == 1) { ?>
-									<a href="<?php echo base_url(); ?>sales-current-month-history"><button style="width: 60%;margin: 0px !important;" class="btn btn-grad-2a button-color" type="button">View Current Month Production History</button></a>
+									<!-- <a href="<?php echo base_url(); ?>sales-current-month-history"><button style="width: 60%;margin: 0px !important;" class="btn btn-grad-2a button-color" type="button">View Current Month Production History</button></a> -->
 								<?php } ?>
 							</div>
 
