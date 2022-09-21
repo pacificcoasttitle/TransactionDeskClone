@@ -80,7 +80,7 @@ class Report_model extends CI_Model
 	            $this->db->where($key, $val);
 	        }
         }
-        $this->db->order_by($order_by);
+        $this->db->order_by($order_by,'DESC');
         if($limit > 0) {
         	$this->db->limit($limit);
         }
