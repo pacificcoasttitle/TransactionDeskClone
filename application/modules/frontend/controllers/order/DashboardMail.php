@@ -3984,7 +3984,6 @@ class DashboardMail extends MX_Controller {
         $file_number = $this->input->post('order_number');
         $netsheet_for = $this->input->post('netsheet_for');
         
-
         $data = json_encode(array('FileNumber' => $file_number));
 		$userData = array(
 			'admin_api' => 1
@@ -4035,8 +4034,6 @@ class DashboardMail extends MX_Controller {
 				$result_data['Borrower'] = ! empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
 			}
 
-
-			//ECD
 			$result_data['ECD']='';
 			if(!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
 				$ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "",$result_decoded->Files[0]->Dates->FileCompletedDate));
