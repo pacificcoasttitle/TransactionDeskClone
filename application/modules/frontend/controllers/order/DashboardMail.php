@@ -263,8 +263,8 @@ class DashboardMail extends MX_Controller {
             $data['fees'] = $fees;
             $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
             $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-            $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
-            $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+            $data['sales_amount'] = $salesAmount;
+            $data['loan_amount'] = $loanAmount;
 
             
             $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
