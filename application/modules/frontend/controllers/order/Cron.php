@@ -2602,6 +2602,12 @@ class Cron extends MX_Controller {
             }
         }
         $files = glob("uploads/open-closed-orders/*csv");
+
+        $this->db->select("id, LOWER(CONCAT_WS(' ', first_name, last_name)) AS sales_name, LOWER(email_address) as email");
+        $this->db->from('customer_basic_details');
+        $this->db->where('is_sales_rep', 1);
+        $query = $this->db->get();
+        $salesUsers = $query->result_array();
                  
         if (is_array($files) && count($files) > 0) {
             foreach($files as $filePath) {
@@ -2626,6 +2632,7 @@ class Cron extends MX_Controller {
                         $prodkey = '';
                         $premiumkey = '';
                         $saleskey = '';
+                        $emailkey = '';
                         $closedDate = '';
                         $salesRepId = 0;
                         $sales_rep_img = '';
@@ -2651,22 +2658,41 @@ class Cron extends MX_Controller {
                             $premium = str_replace(',', '', $premium);
                         }
 
-                        $salesRepName = '';
-                        if(in_array('Sales Rep', $headerColumns)) {
-                            $saleskey = array_search("Sales Rep",$headerColumns);
-                            $salesRepName = $data[$saleskey];
-                            $salesRepName = str_replace(' ', '_', $salesRepName);
-                            $salesRepName = preg_replace('/[^A-Za-z0-9&\_-]/', '',  $salesRepName);
-                            $salesRepName = str_replace('_', ' ', $salesRepName);
-                            $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
-                            if (isset($key) && !empty($key)) {
-                               $salesRepId =  $salesRepNameArr[$key]['id'];
-                               $sales_rep_img = $salesRepNameArr[$key]['sales_rep_img'];
-                            } else {
-                                $salesRepNameArr[$i]['name'] =  $salesRepName;
+                        if (in_array('Email', $headerColumns)) {
+                            $emailkey = array_search("Email",$headerColumns);
+                            $sales_email = strtolower(trim($data[$emailkey]));
+                            if (!empty($sales_email)) {
+                                $saleUserKey = array_search($sales_email, array_column($salesUsers, 'email'));
+                                if (isset($saleUserKey) && !empty($saleUserKey)) {
+                                    $salesRepId = $salesUsers[$saleUserKey]['id'];
+                                }
                             }
-                            $salesRepColumnFlag = 1;
                         }
+
+                        if ($salesRepId == 0) {
+                            $salesRepName = '';
+                            if(in_array('Sales Rep', $headerColumns)) {
+                                $saleskey = array_search("Sales Rep",$headerColumns);
+                                $salesRepName = strtolower(trim($data[$saleskey]));
+                    
+                                if (!empty($salesRepName)) {
+                                    $saleUserKey = array_search($salesRepName, array_column($salesUsers, 'sales_name'));
+                                    if (isset($saleUserKey) && !empty($saleUserKey)) {
+                                        $salesRepId = $salesUsers[$saleUserKey]['id'];
+                                    }
+                                }
+                               
+                                // $key = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
+                                // if (isset($key) && !empty($key)) {
+                                // $salesRepId =  $salesRepNameArr[$key]['id'];
+                                // $sales_rep_img = $salesRepNameArr[$key]['sales_rep_img'];
+                                // } else {
+                                //     $salesRepNameArr[$i]['name'] =  $salesRepName;
+                                // }
+                                // $salesRepColumnFlag = 1;
+                            }
+                        }
+                        
 
                         $titleOfficerName = '';
                         if(in_array('Title Officer', $headerColumns)) {
@@ -2691,32 +2717,32 @@ class Cron extends MX_Controller {
 
                         if($row != 1) {
                             //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
-                            $resultSales = array();
-                            if(!empty($salesRepName)) {
-                                if ($salesRepId == 0) {
-                                    $this->db->select('*');
-                                    $this->db->from('customer_basic_details');
-                                    $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
-                                    $this->db->where('is_sales_rep', 1);
-                                    $query = $this->db->get();
-                                    $resultSales = $query->row_array(); 
-                                    if (!empty($resultSales)) {
-                                        $salesRepId =  $resultSales['id'];
-                                        $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && !empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
-                                        if(!empty($sales_rep_img)) {
-                                            $sales_rep_img = env('AWS_PATH').str_replace('uploads/', '', $sales_rep_img);
-                                        }
-                                        $salesRepNameArr[$i]['id'] = $salesRepId;
-                                        $salesRepNameArr[$i]['sales_rep_img'] = $sales_rep_img;
-                                        $i++;
-                                    } else {
-                                        if (!empty(trim($salesRepNameArr[$i]['name']))) {
-                                            $salesRepNameArr[$i]['id'] = 0;
-                                            $i++;
-                                        }
-                                    }
-                                }
-                            }
+                            // $resultSales = array();
+                            // if(!empty($salesRepName)) {
+                            //     if ($salesRepId == 0) {
+                            //         $this->db->select('*');
+                            //         $this->db->from('customer_basic_details');
+                            //         $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
+                            //         $this->db->where('is_sales_rep', 1);
+                            //         $query = $this->db->get();
+                            //         $resultSales = $query->row_array(); 
+                            //         if (!empty($resultSales)) {
+                            //             $salesRepId =  $resultSales['id'];
+                            //             $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && !empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
+                            //             if(!empty($sales_rep_img)) {
+                            //                 $sales_rep_img = env('AWS_PATH').str_replace('uploads/', '', $sales_rep_img);
+                            //             }
+                            //             $salesRepNameArr[$i]['id'] = $salesRepId;
+                            //             $salesRepNameArr[$i]['sales_rep_img'] = $sales_rep_img;
+                            //             $i++;
+                            //         } else {
+                            //             if (!empty(trim($salesRepNameArr[$i]['name']))) {
+                            //                 $salesRepNameArr[$i]['id'] = 0;
+                            //                 $i++;
+                            //             }
+                            //         }
+                            //     }
+                            // }
 
                             $resultTitleOfficer = array();
                             if(!empty($titleOfficerName)) {
@@ -2930,8 +2956,8 @@ class Cron extends MX_Controller {
                                             } elseif(strpos($ProductTypeTxt, 'Sale') !== false) {
                                                 $transactionData['borrower'] = $primary_owner;
                                                 $transactionData['secondary_borrower'] = $secondary_owner;
-                                                $propertyData['primary_owner'] = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                                                $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                                $propertyData['primary_owner'] = isset($property_details['primary_owner']) && !empty($property_details['primary_owner']) ? $property_details['primary_owner'] : '';
+                                                $propertyData['secondary_owner'] = isset($property_details['secondary_owner']) && !empty($property_details['secondary_owner']) ? $property_details['secondary_owner'] : '';
                                             }
                                             
                                             $propertyId = $this->home_model->insert($propertyData,'property_details');
