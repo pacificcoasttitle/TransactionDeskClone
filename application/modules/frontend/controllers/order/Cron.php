@@ -5273,4 +5273,90 @@ class Cron extends MX_Controller {
 			}
 		}
 	}
+
+    public function sendDailyProductionReport()
+    {
+        $this->db->select('*');
+        $this->db->from('customer_basic_details');
+        $this->db->where('is_sales_rep', 1);
+        $this->db->where('is_sales_rep_manager', 1);
+        $this->db->where('status', 1);
+        $this->db->order_by('first_name', 'asc');
+        $query = $this->db->get();
+        $salesMangers = $query->result_array();
+        
+        if (!empty($salesMangers)) {
+            foreach ($salesMangers as $salesManger) {
+                $data = array();
+                $salesUsers = array();
+                if (!empty($salesManger['sales_rep_users'])) {
+                    $salesRepUsers = explode(',', $salesManger['sales_rep_users']);
+                    if (!in_array($salesManger['id'], $salesRepUsers)) {
+                        $salesRepUsers[] = $salesManger['id'];
+                    }
+                    $salesUsers = $this->order->get_sales_users($salesRepUsers);
+                } else {
+                    $salesUsers = $this->order->get_sales_users();
+                }
+                $i = 0;
+                if(!empty($salesUsers)) {
+                    foreach($salesUsers as $salesrep) {
+                        $data['salesHistory'][$i]['sales_rep'] = $salesrep['first_name']." ".$salesrep['last_name'];
+                        $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $salesrep['id']);
+                        $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $salesrep['id']);
+                        $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                        $data['salesHistory'][$i]['refi_open_count'] = $refi_open_count;
+                        $data['salesHistory'][$i]['sale_open_count'] = $sale_open_count;
+                        $data['salesHistory'][$i]['total_open_count'] = $sale_open_count + $refi_open_count;
+
+                        $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $salesrep['id']);
+                        $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                        $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $salesrep['id']);
+                        $sale_close_count =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                        $data['salesHistory'][$i]['refi_close_count'] = $refi_close_count;
+                        $data['salesHistory'][$i]['sale_close_count'] = $sale_close_count;
+                        $data['salesHistory'][$i]['total_close_count'] = $refi_close_count + $sale_close_count;
+
+                        $openOrderRefiTotalPremium =  !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+                        $closeOrderRefiTotalPremium =  !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                        //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+                        $refi_total_premium =  $closeOrderRefiTotalPremium;
+                        $openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+                        $closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                        //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+                        $sale_total_premium = $closeOrderSaleTotalPremium;
+                        $data['salesHistory'][$i]['total_premium'] = number_format($sale_total_premium + $refi_total_premium);
+                        $i++;
+                    }
+
+                    $data['sales_name'] = $salesManger['first_name']." ".$salesManger['last_name'];
+
+                    $message = $this->load->view('emails/daily_production.php', $data, TRUE);
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Daily Production';
+                    $to = $salesManger['email_address'];
+                    $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+
+                    $mailParams = array(
+                        'from_mail'=>$from_mail, 
+                        'from_name'=>$from_name, 
+                        'to'=> $to,
+                        'subject'=>$subject,
+                        'message'=>json_encode($data),
+                        'cc' => $cc
+                    );
+                    //$to = 'hitesh.p@crestinfosystems.com';
+                    //$cc = array();
+                    $this->load->helper('sendemail');
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
+                    $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+                }
+            }
+            echo "Mails sent successfully to Sales Managers";exit;
+        } 
+    }
+
 }
