@@ -499,7 +499,7 @@
             <td align="center" height="50" style="height:50px;">
             <![endif]-->
 
-													<a href="#" mc:edit="mct3nxlesjf"
+													<a href="<?php echo base_url().'order';?>" mc:edit="mct3nxlesjf"
 														style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;font-weight:700;font-style:normal;color:#FFFFFF;text-decoration:none;letter-spacing:0px;padding:15px 35px 15px 35px;display:inline-block;"><span>LOG
 															IN TO DASHBOARD</span></a>
 
