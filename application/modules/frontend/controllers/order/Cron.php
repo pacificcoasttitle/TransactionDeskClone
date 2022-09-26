@@ -5336,8 +5336,8 @@ class Cron extends MX_Controller {
                         $openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
                         $closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
                         //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-                        $total_premium = $sale_total_premium + $refi_total_premium;
                         $sale_total_premium = $closeOrderSaleTotalPremium;
+                        $total_premium = $sale_total_premium + $refi_total_premium;
                         $data['salesHistory'][$i]['total_premium'] = number_format($total_premium);
 
                         if ($i == 0) {
@@ -5392,7 +5392,7 @@ class Cron extends MX_Controller {
                         'message'=>json_encode($data),
                         'cc' => $cc
                     );
-                    $to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'ghernandez@pct.com';
                     $cc = array();
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
