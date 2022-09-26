@@ -5372,6 +5372,7 @@ class Cron extends MX_Controller {
                     }
                     $data['yesterday_month'] = date('F',strtotime("-1 days"));
                     $data['yesterday_date'] = date('m/d/Y',strtotime("-1 days"));
+                    $data['start_date'] = date('m/01/Y',strtotime("-1 days"));
 
                     $data['total_sum_premium'] = number_format($data['total_sum_premium']);
                     $data['sales_name'] = $salesManger['first_name']." ".$salesManger['last_name'];

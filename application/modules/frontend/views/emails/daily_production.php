@@ -418,7 +418,7 @@
 
                                                                     <div mc:edit="mcrvl959r6tju"
                                                                         style="margin: 0px; padding: 0px;">
-                                                                        <p style="margin: 0px; padding: 0px;">From <?php echo $yesterday_date;?></p>
+                                                                        <p style="margin: 0px; padding: 0px;">From <?php echo $start_date;?> To <?php echo $yesterday_date;?></p>
                                                                         <p style="margin: 0px; padding: 0px;"><br></p>
                                                                     </div>
 
