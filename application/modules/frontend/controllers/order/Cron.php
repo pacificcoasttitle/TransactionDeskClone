@@ -5286,8 +5286,19 @@ class Cron extends MX_Controller {
         $salesMangers = $query->result_array();
         
         if (!empty($salesMangers)) {
+            $data['max_resales_open_orders'] = 0;
+            $data['max_resales_open_orders_sales_name'] = '';
+            $data['max_resales_close_orders'] = 0;
+            $data['max_resales_close_orders_sales_name'] = '';
+            $data['max_refi_open_orders'] = 0;
+            $data['max_refi_open_orders_sales_name'] = '';
+            $data['max_refi_close_orders'] = 0;
+            $data['max_refi_close_orders_sales_name'] = '';
+            $data['total_sum_premium'] = 0;
+            
             foreach ($salesMangers as $salesManger) {
                 $data = array();
+                $total_premium = 0;
                 $salesUsers = array();
                 if (!empty($salesManger['sales_rep_users'])) {
                     $salesRepUsers = explode(',', $salesManger['sales_rep_users']);
@@ -5325,12 +5336,46 @@ class Cron extends MX_Controller {
                         $openOrderSaleTotalPremium =  !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
                         $closeOrderSaleTotalPremium =  !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
                         //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+                        $total_premium = $sale_total_premium + $refi_total_premium;
                         $sale_total_premium = $closeOrderSaleTotalPremium;
-                        $data['salesHistory'][$i]['total_premium'] = number_format($sale_total_premium + $refi_total_premium);
+                        $data['salesHistory'][$i]['total_premium'] = number_format($total_premium);
+
+                        if ($i == 0) {
+                            $data['max_resales_open_orders'] = $sale_open_count;
+                            $data['max_resales_open_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];
+                            $data['max_resales_close_orders'] = $sale_close_count;
+                            $data['max_resales_close_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];
+                            $data['max_refi_open_orders'] = $refi_open_count;
+                            $data['max_refi_open_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];
+                            $data['max_refi_close_orders'] = $refi_close_count;
+                            $data['max_refi_close_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];
+                        } else {
+                            if ($data['max_resales_open_orders'] <  $sale_open_count) {
+                                $data['max_resales_open_orders'] = $sale_open_count;
+                                $data['max_resales_open_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];  
+                            }
+                            if ($data['max_resales_close_orders'] <  $sale_close_count) {
+                                $data['max_resales_close_orders'] = $sale_close_count;
+                                $data['max_resales_close_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];  
+                            }
+                            if ($data['max_refi_open_orders'] <  $refi_open_count) {
+                                $data['max_refi_open_orders'] = $refi_open_count;
+                                $data['max_refi_open_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];  
+                            }
+                            if ($data['max_refi_close_orders'] <  $refi_close_count) {
+                                $data['max_refi_close_orders'] = $refi_close_count;
+                                $data['max_refi_close_orders_sales_name'] = $salesrep['first_name']." ".$salesrep['last_name'];  
+                            }
+                        }
+                        $data['total_sum_premium'] += $total_premium;
                         $i++;
                     }
+                    $data['yesterday_month'] = date('F',strtotime("-1 days"));
+                    $data['yesterday_date'] = date('m/d/Y',strtotime("-1 days"));
 
+                    $data['total_sum_premium'] = number_format($data['total_sum_premium']);
                     $data['sales_name'] = $salesManger['first_name']." ".$salesManger['last_name'];
+                    //print_r($data);exit;
 
                     $message = $this->load->view('emails/daily_production.php', $data, TRUE);
                     $from_name = 'Pacific Coast Title Company';
@@ -5347,8 +5392,8 @@ class Cron extends MX_Controller {
                         'message'=>json_encode($data),
                         'cc' => $cc
                     );
-                    //$to = 'hitesh.p@crestinfosystems.com';
-                    //$cc = array();
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = array();
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
