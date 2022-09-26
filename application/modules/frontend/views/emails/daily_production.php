@@ -418,7 +418,7 @@
 
                                                                     <div mc:edit="mcrvl959r6tju"
                                                                         style="margin: 0px; padding: 0px;">
-                                                                        <p style="margin: 0px; padding: 0px;">From <?php $yesterday_date;?></p>
+                                                                        <p style="margin: 0px; padding: 0px;">From <?php echo $yesterday_date;?></p>
                                                                         <p style="margin: 0px; padding: 0px;"><br></p>
                                                                     </div>
 
@@ -435,7 +435,7 @@
                                                                                 style="height: 18px;background-color:#f2f2f2;border-color:#c2c2c2;">
                                                                                 <td
                                                                                     style="width: 100%; height: 18px; text-align: center;">
-                                                                                    Title Revenue <?php $yesterday_month;?></td>
+                                                                                    Title Revenue <?php echo $yesterday_month;?></td>
                                                                             </tr>
                                                                             <tr style="height: 18px;">
                                                                                 <td
