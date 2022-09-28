@@ -4015,17 +4015,19 @@ class DashboardMail extends MX_Controller {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            //curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Authorization: Bearer '.env('PCT_CALC_TOKEN'),
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen($post_data))
             );
             $error_msg = curl_error($ch);
+           
             $calcResult = json_decode(curl_exec($ch));
+            //echo $error_msg;exit;
             
             if (!empty($calcResult)) {
-                $data = array('success' => true);
+                $data = array('success' => true, 'calcResult' => $calcResult);
             } else {
                 $data = array('success' => false, 'msg' => 'Something went wrong.Please try again.');
             }
