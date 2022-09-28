@@ -332,6 +332,8 @@
                                             if (res.status == 'success') {
                                                 window.location.replace(base_url+'netsheet/'+res.random_number);
                                             } else {
+                                                $('#page-preloader').css('display', 'none');
+                                                $('#generic_cpl').css('opacity', '1');
                                                 alert(res.msg);
                                             }
                                         },
