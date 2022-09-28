@@ -4042,7 +4042,7 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $data['title'] = 'Get Netsheet | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $data['documentUrl'] = env('AWS_PATH')."calc_title_doc_name/".$order[0]['calc_title_doc_name'];
+        $data['documentUrl'] = env('AWS_PATH')."calc_title_rates/".$order[0]['calc_title_doc_name'];
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
