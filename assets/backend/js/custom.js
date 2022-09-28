@@ -10,11 +10,6 @@ var forms_list = '';
 
 $(document).ready(function () {
 
-    "use strict";
-    var $preloader = $('#page-preloader'),
-    $spinner   = $preloader.find('.spinner-loader');
-    $spinner.fadeOut();
-    $preloader.delay(50).fadeOut('slow');
     // Add active class to menu
     // if(jQuery('#users').children().hasClass('active')) {
     //     jQuery('#users').parent('li').addClass('active');
