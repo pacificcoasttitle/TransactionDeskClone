@@ -51,7 +51,7 @@
 													<td><?php echo $created;?></td>
 													<td>
                                                         <div style="display:flex;">
-                                                            <a href="#" onclick="downloadDocumentFromAws($documentUrl, 'netsheet');">
+                                                            <a href="#" onclick="downloadDocumentFromAws('<?php echo $documentUrl;?>', 'netsheet');">
                                                                 <button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button>
                                                             </a>
                                                         </div>
