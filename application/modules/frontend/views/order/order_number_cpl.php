@@ -164,14 +164,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('input[type=radio][name=actions]').change(function() {
-                if (this.value == 'get_netsheet') {
-                    $('#netsheet_container').removeClass('d-none');
-                } else  {
-                    $('#netsheet_container').addClass('d-none');
-                }
-            });
-
             $('input[type=radio][name=netsheet_for]').change(function() {
                 if (this.value == 'buyer') {
                     $('#buyer_netsheet_container').removeClass('d-none');
@@ -179,7 +171,6 @@
                     $('#buyer_netsheet_container').addClass('d-none');
                 }
             });
-
             var $preloader = $('#page-preloader'),
             $spinner   = $preloader.find('.spinner-loader');
             $spinner.fadeOut();
@@ -313,12 +304,22 @@
                                 }
                                 else if(action == 'get_netsheet')
                                 {
+                                    if (res.prod_type == 'sale') {
+                                        $('#netsheet_container').removeClass('d-none');
+                                        if ($("input[name=netsheet_for]:checked").val() == '' || typeof $("input[name=netsheet_for]:checked").val() === 'undefined') {
+                                            $('#page-preloader').css('display', 'none');
+                                            $('#generic_cpl').css('opacity', '1');
+                                            return false;
+                                        } 
+                                    } else {
+                                        $('#netsheet_container').addClass('d-none');
+                                    }
                                     $.ajax({
                                         url: '<?php echo base_url(); ?>get-netsheet',
                                         type: "POST",
                                         data: {
                                             order_number: $("#order_number").val(),
-                                            netsheet_for: $("#netsheet_for").val(),
+                                            netsheet_for: $("input[name=netsheet_for]:checked").val(),
                                             origin_charge: $("#origin_charge").val(),
                                             appraisal_fee: $("#appraisal_fee").val(),
                                             credit_repot: $("#credit_repot").val(),
@@ -327,13 +328,17 @@
                                             process_fee: $("#process_fee").val()
                                         },
                                         success: function(result) {
-
+                                            var res = jQuery.parseJSON(result);
+                                            if (res.status == 'success') {
+                                                window.location.replace(base_url+'netsheet/'+res.random_number);
+                                            } else {
+                                                alert(res.msg);
+                                            }
                                         },
                                         error:function(){
                                             alert('Something went wrong');
                                         }
                                     });
-                                    window.location.replace(base_url+'get-netsheet/'+res.random_number);
                                 }
                                 else
                                 {
