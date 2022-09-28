@@ -238,6 +238,8 @@ $route['add-buyer-on-order'] = 'frontend/order/escrow/addBuyerOnOrder';
 $route['add-seller-on-order'] = 'frontend/order/escrow/addSellerOnOrder';
 $route['buyer-info/(:any)'] = 'frontend/order/dashboardMail/buyerInfo/$1';
 $route['seller-info/(:any)'] = 'frontend/order/dashboardMail/sellerInfo/$1';
+$route['get-netsheet'] = 'frontend/order/dashboardMail/get_netsheet';
+$route['netsheet'] = 'frontend/order/dashboardMail/netsheet';
 
 
 /* Route for PCT-Order backend*/
