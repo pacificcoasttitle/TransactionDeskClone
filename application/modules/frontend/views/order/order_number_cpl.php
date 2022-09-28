@@ -325,12 +325,14 @@
                                             credit_repot: $("#credit_repot").val(),
                                             prepaid_interest: $("#prepaid_interest").val(),
                                             home_ins: $("#home_ins").val(),
-                                            process_fee: $("#process_fee").val()
+                                            process_fee: $("#process_fee").val(),
+                                            random_number: res.random_number
                                         },
                                         success: function(result) {
                                             var res = jQuery.parseJSON(result);
-                                            if (res.status == 'success') {
+                                            if (res.success) {
                                                 window.location.replace(base_url+'netsheet/'+res.random_number);
+                                                console.log('hi');
                                             } else {
                                                 $('#page-preloader').css('display', 'none');
                                                 $('#generic_cpl').css('opacity', '1');

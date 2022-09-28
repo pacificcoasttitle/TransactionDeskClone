@@ -3936,6 +3936,7 @@ class DashboardMail extends MX_Controller {
     public function get_netsheet()
     {
         $file_number = $this->input->post('order_number');
+        $random_number = $this->input->post('random_number');
         $data = json_encode(array('FileNumber' => $file_number));
 		$userData = array(
 			'admin_api' => 1
@@ -4010,24 +4011,23 @@ class DashboardMail extends MX_Controller {
             $post_data['escrowPriceCheck'] = 1; 
             $post_data['recordingPriceCheck'] = 1; 
             $post_data['print_pdf'] = 1; 
-            //echo json_encode($post_data);exit;
             $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            //curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Authorization: Bearer '.env('PCT_CALC_TOKEN'),
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($post_data))
+                'Content-Length: ' . strlen(json_encode($post_data)))
             );
             $error_msg = curl_error($ch);
-           
-            $calcResult = json_decode(curl_exec($ch));
-            //echo $error_msg;exit;
-            
+            $calcResult = json_decode(curl_exec($ch), true);
             if (!empty($calcResult)) {
-                $data = array('success' => true, 'calcResult' => $calcResult);
+                if ($calcResult['success'] && !empty($calcResult['document_name'])) {
+                    $data = array('success' => true, 'random_number' => $random_number);
+                } else {
+                    $data = array('success' => false, 'msg' => 'Something went wrong.Please try again.');
+                }
             } else {
                 $data = array('success' => false, 'msg' => 'Something went wrong.Please try again.');
             }
@@ -4037,17 +4037,17 @@ class DashboardMail extends MX_Controller {
         echo json_encode($data);exit;
     }
 
-    public function netsheet()
+    public function netsheet($random_number)
     {
-        $random_number = $this->uri->segment(2); 
         $order = $this->getOrderInfo($random_number);
         $data['title'] = 'Get Netsheet | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $data['documentUrl'] = env('AWS_PATH')."calc_title_doc_name/".$order[0]['calc_title_doc_name'];
+        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
         $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
         $this->load->view('layout/head_dashboard', $data);
-        $this->load->view('order/mail_policy_package', $data);
+        $this->load->view('order/get_netsheet_doc', $data);
     }
 }
