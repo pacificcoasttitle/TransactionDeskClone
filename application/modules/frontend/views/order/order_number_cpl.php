@@ -329,6 +329,7 @@
                                             prepaid_interest: $("#prepaid_interest").val(),
                                             home_ins: $("#home_ins").val(),
                                             process_fee: $("#process_fee").val(),
+                                            prepaid_interest_days: $("#prepaid_interest_days").val(),
                                             random_number: res.random_number
                                         },
                                         success: function(result) {
