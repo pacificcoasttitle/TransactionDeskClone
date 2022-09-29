@@ -127,11 +127,14 @@
                                     <label class="field" style="width:48% !important;">
                                         <input class="form-control gui-input" type="text" name="appraisal_fee" id="appraisal_fee" placeholder="Appraisal Fee">
                                     </label>
-                                    <label class="field" style="margin-right:3% !important;width:48% !important;">
+                                    <label class="field" style="width:99.5% !important;">
                                         <input class="form-control gui-input" type="text" name="credit_repot" id="credit_repot" placeholder="Credit Report Fee">
                                     </label>
-                                    <label class="field" style="width:48% !important;">
+                                    <label class="field" style="margin-right:3% !important;width:48% !important;">
                                         <input class="form-control gui-input" type="text" name="prepaid_interest" id="prepaid_interest" placeholder="Prepaid Interest">
+                                    </label>
+                                    <label class="field" style="width:48% !important;">
+                                        <input class="form-control gui-input" type="text" name="prepaid_interest_days" id="prepaid_interest_days" placeholder="Prepaid Interest Days">
                                     </label>
                                     <label class="field" style="margin-right:3% !important;width:48% !important;">
                                         <input class="form-control gui-input" type="text" name="home_ins" id="home_ins" placeholder="Homeowner’s Insurance Premium">

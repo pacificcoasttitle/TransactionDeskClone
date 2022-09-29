@@ -3997,6 +3997,7 @@ class DashboardMail extends MX_Controller {
                     $post_data['buyer_fees']['appraisal_fee'] = $this->input->post('appraisal_fee');
                     $post_data['buyer_fees']['credit_repot'] = $this->input->post('credit_repot');
                     $post_data['buyer_fees']['prepaid_interest'] = $this->input->post('prepaid_interest');
+                    $post_data['buyer_fees']['prepaid_interest_days'] = $this->input->post('prepaid_interest_days');
                     $post_data['buyer_fees']['home_ins'] = $this->input->post('home_ins');
                     $post_data['buyer_fees']['process_fee'] = $this->input->post('process_fee');
                 } else {
