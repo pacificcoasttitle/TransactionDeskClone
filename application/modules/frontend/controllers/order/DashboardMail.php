@@ -3957,7 +3957,7 @@ class DashboardMail extends MX_Controller {
 			
 			$post_data['file_id'] = $result_decoded->Files[0]->FileID;
 			$post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
-			$post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount;
+			$post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
 			$post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
 			$post_data['city'] = $property_data->City;
 			$post_data['county'] = $property_data->County;
@@ -4011,6 +4011,7 @@ class DashboardMail extends MX_Controller {
             $post_data['escrowPriceCheck'] = 1; 
             $post_data['recordingPriceCheck'] = 1; 
             $post_data['print_pdf'] = 1; 
+            //print_r($post_data);
             $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
@@ -4022,7 +4023,7 @@ class DashboardMail extends MX_Controller {
             );
             $error_msg = curl_error($ch);
             $calcResult = json_decode(curl_exec($ch), true);
-            
+            //print_r($calcResult);exit;
             if (!empty($calcResult)) {
                 if ($calcResult['success'] && !empty($calcResult['document_name'])) {
                     $this->home_model->update(array('calc_title_doc_name' => $calcResult['document_name']), array('file_id' => $order[0]['file_id']), 'order_details');
