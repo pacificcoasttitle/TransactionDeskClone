@@ -3986,7 +3986,7 @@ class DashboardMail extends MX_Controller {
 			}
 
             if (strpos($result_decoded->Files[0]->TransactionProductType->ProductType, 'Sale') !== false) {
-                $netsheet_for = $this->input->post('netsheet_for');
+                $netsheet_for = $this->input->post('req_type');
                 $post_data['lenderInsurance'] = 1; 
                 $post_data['transactionType'] = 'Resale'; 
                 $post_data['transferTaxesCheck'] = 1; 
@@ -4072,15 +4072,15 @@ class DashboardMail extends MX_Controller {
             $documentUrl = env('AWS_PATH')."calc_title_rates/".$documentName;
             if ($order[0]['prod_type'] == 'loan') {
                 $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"netsheet"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['file_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form></div>";
+                <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['random_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>Regenerate</button></form></div>";
             } else {
                 $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"netsheet"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                <a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></a></div>";
+                <a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Regenerate</button></a></div>";
             }
         } else {
             if ($order[0]['prod_type'] == 'loan') {
                 $data['action'] = "<div style='display:flex;'>
-                        <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['file_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></form></div>";
+                        <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['random_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></form></div>";
             } else {
                 $data['action'] = "<div style='display:flex;'><a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></a></div>";
             }
