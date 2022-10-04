@@ -190,6 +190,7 @@ class PctCalculator extends MX_Controller {
 		if (!empty($res->Document->DocumentID)) {
 			$this->return_response['status'] = true;
 			$this->return_response['message']='Title Rate document uploaded successfully on Resware side for this file number '.$orderDetails['file_number'];
+			$this->return_response['document_name'] = $document_name;
 		} else {
 			$this->return_response['status'] = false;
 			$this->return_response['message']='Something went wrong during upload title rate document on Resware side';

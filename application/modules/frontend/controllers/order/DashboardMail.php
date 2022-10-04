@@ -3933,11 +3933,10 @@ class DashboardMail extends MX_Controller {
         $document->save()->finish();
     }
 
-    public function get_netsheet()
+    public function create_netsheet($random_number)
     {
-        $file_number = $this->input->post('order_number');
-        $random_number = $this->input->post('random_number');
-        $data = json_encode(array('FileNumber' => $file_number));
+        $order = $this->getOrderInfo($random_number);
+        $data = json_encode(array('FileNumber' => $order[0]['file_number']));
 		$userData = array(
 			'admin_api' => 1
 		);
@@ -4023,32 +4022,70 @@ class DashboardMail extends MX_Controller {
             );
             $error_msg = curl_error($ch);
             $calcResult = json_decode(curl_exec($ch), true);
+            
             if (!empty($calcResult)) {
                 if ($calcResult['success'] && !empty($calcResult['document_name'])) {
-                    $data = array('success' => true, 'random_number' => $random_number);
+                    $this->home_model->update(array('calc_title_doc_name' => $calcResult['document_name']), array('file_id' => $order[0]['file_id']), 'order_details');
+                    $success[] = "Netsheet document generated successfully.";
                 } else {
-                    $data = array('success' => false, 'msg' => 'Something went wrong.Please try again.');
+                    $errors[] = "Something went wrong.Please try again.";
                 }
             } else {
-                $data = array('success' => false, 'msg' => 'Something went wrong.Please try again.');
+                $errors[] = "Something went wrong.Please try again.";
             }
         } else {
-            $data = array('success' => false, 'msg' => 'Order not found');
+            $errors[] = "Order not found.";
         }
-        echo json_encode($data);exit;
+        $data = array(
+            "errors" =>  $errors,
+            "success" => $success
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url().'/get-netsheet/'.$order[0]['random_number']);
     }
 
-    public function netsheet($random_number)
+    public function get_netsheet($random_number)
     {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        } 
         $order = $this->getOrderInfo($random_number);
-        $data['title'] = 'Get Netsheet | Pacific Coast Title Company';
+        $fileId = $order[0]['file_id'];  
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $data['documentUrl'] = env('AWS_PATH')."calc_title_rates/".$order[0]['calc_title_doc_name'];
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['random_number'] = $orderDetails['random_number'];
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
-        $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
+        $data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
+        $file_id = $orderDetails['file_id'];
+
+        if (!empty($order[0]['calc_title_doc_name'])) {
+            $documentName = $order[0]['calc_title_doc_name'];
+            $documentUrl = env('AWS_PATH')."calc_title_rates/".$documentName;
+            if ($order[0]['prod_type'] == 'loan') {
+                $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"netsheet"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+                <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['file_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form></div>";
+            } else {
+                $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"netsheet"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+                <a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></a></div>";
+            }
+        } else {
+            if ($order[0]['prod_type'] == 'loan') {
+                $data['action'] = "<div style='display:flex;'>
+                        <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['file_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></form></div>";
+            } else {
+                $data['action'] = "<div style='display:flex;'><a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></a></div>";
+            }
+        }        
         $this->load->view('layout/head_dashboard', $data);
-        $this->load->view('order/get_netsheet_doc', $data);
+        $this->load->view('order/get_netsheet', $data);
     }
 }

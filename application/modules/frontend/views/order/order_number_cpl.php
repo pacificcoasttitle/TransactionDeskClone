@@ -108,43 +108,6 @@
                                 </div>
                             </div>
 
-                            <div class="frm-row d-none mt-2" id="netsheet_container">
-                                <div class="page-links">
-                                    <a href="" class="active">Please provide below data for netsheet</a>
-                                </div>
-                                
-                                <div class="section colm colm12 mb-4">
-                                    <label class="field prepend-icon option-group" style="display:block;">
-                                        <input class="radio" type="radio" name="netsheet_for" id="buyer" value="buyer">Buyer 
-                                        <input class="radio" type="radio" name="netsheet_for" id="seller" value="seller">Seller
-                                    </label>
-                                </div>
-
-                                <div class="d-none" id="buyer_netsheet_container">
-                                    <label class="field" style="margin-right:3% !important;width:48% !important;">
-                                        <input class="form-control gui-input" type="text" name="origin_charge" id="origin_charge" placeholder="Origination Charge Fee">
-                                    </label>
-                                    <label class="field" style="width:48% !important;">
-                                        <input class="form-control gui-input" type="text" name="appraisal_fee" id="appraisal_fee" placeholder="Appraisal Fee">
-                                    </label>
-                                    <label class="field" style="width:99.5% !important;">
-                                        <input class="form-control gui-input" type="text" name="credit_repot" id="credit_repot" placeholder="Credit Report Fee">
-                                    </label>
-                                    <label class="field" style="margin-right:3% !important;width:48% !important;">
-                                        <input class="form-control gui-input" type="text" name="prepaid_interest" id="prepaid_interest" placeholder="Prepaid Interest">
-                                    </label>
-                                    <label class="field" style="width:48% !important;">
-                                        <input class="form-control gui-input" type="text" name="prepaid_interest_days" id="prepaid_interest_days" placeholder="Prepaid Interest Days">
-                                    </label>
-                                    <label class="field" style="margin-right:3% !important;width:48% !important;">
-                                        <input class="form-control gui-input" type="text" name="home_ins" id="home_ins" placeholder="Homeowner’s Insurance Premium">
-                                    </label>
-                                    <label class="field" style="width:48% !important;">
-                                        <input class="form-control gui-input" type="text" name="process_fee" id="process_fee" placeholder="Processing Fee">
-                                    </label>
-                                </div>
-                            </div>
-
                             <div class="form-button">
                                 <button id="submit" type="submit" class="ibtn">Submit</button>
                             </div>
@@ -167,13 +130,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('input[type=radio][name=netsheet_for]').change(function() {
-                if (this.value == 'buyer') {
-                    $('#buyer_netsheet_container').removeClass('d-none');
-                } else  {
-                    $('#buyer_netsheet_container').addClass('d-none');
-                }
-            });
             var $preloader = $('#page-preloader'),
             $spinner   = $preloader.find('.spinner-loader');
             $spinner.fadeOut();
@@ -196,55 +152,6 @@
                     },
                     actions: {
                         required: true
-                    },
-                    netsheet_for:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet");
-                            },
-                        },
-                    },
-                    origin_charge:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet" && $("input[name=netsheet_for]:checked").val() == "buyer");
-                            },
-                        },
-                    },
-                    appraisal_fee:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet" && $("input[name=netsheet_for]:checked").val() == "buyer");
-                            },
-                        },
-                    },
-                    credit_repot:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet" && $("input[name=netsheet_for]:checked").val() == "buyer");
-                            },
-                        },
-                    },
-                    prepaid_interest:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet" && $("input[name=netsheet_for]:checked").val() == "buyer");
-                            },
-                        },
-                    },
-                    home_ins:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet" && $("input[name=netsheet_for]:checked").val() == "buyer");
-                            },
-                        },
-                    },
-                    process_fee:{
-                        required: {
-                            depends: function(element) {
-                                return ($("input[name=actions]:checked").val() == "get_netsheet" && $("input[name=netsheet_for]:checked").val() == "buyer");
-                            },
-                        },
                     }
                 },
                 /* @validation error messages 
@@ -255,11 +162,7 @@
                     },
                     actions: {
                         required: 'Please select an action'
-                    },
-                    netsheet_for: {
-                        required: 'Please select a property option'
-                    },
-                   
+                    }
                 },
                 /* @validation highlighting + error placement  
                 ---------------------------------------------------- */ 
@@ -307,46 +210,7 @@
                                 }
                                 else if(action == 'get_netsheet')
                                 {
-                                    if (res.prod_type == 'sale') {
-                                        $('#netsheet_container').removeClass('d-none');
-                                        if ($("input[name=netsheet_for]:checked").val() == '' || typeof $("input[name=netsheet_for]:checked").val() === 'undefined') {
-                                            $('#page-preloader').css('display', 'none');
-                                            $('#generic_cpl').css('opacity', '1');
-                                            return false;
-                                        } 
-                                    } else {
-                                        $('#netsheet_container').addClass('d-none');
-                                    }
-                                    $.ajax({
-                                        url: '<?php echo base_url(); ?>get-netsheet',
-                                        type: "POST",
-                                        data: {
-                                            order_number: $("#order_number").val(),
-                                            netsheet_for: $("input[name=netsheet_for]:checked").val(),
-                                            origin_charge: $("#origin_charge").val(),
-                                            appraisal_fee: $("#appraisal_fee").val(),
-                                            credit_repot: $("#credit_repot").val(),
-                                            prepaid_interest: $("#prepaid_interest").val(),
-                                            home_ins: $("#home_ins").val(),
-                                            process_fee: $("#process_fee").val(),
-                                            prepaid_interest_days: $("#prepaid_interest_days").val(),
-                                            random_number: res.random_number
-                                        },
-                                        success: function(result) {
-                                            var res = jQuery.parseJSON(result);
-                                            if (res.success) {
-                                                window.location.replace(base_url+'netsheet/'+res.random_number);
-                                                console.log('hi');
-                                            } else {
-                                                $('#page-preloader').css('display', 'none');
-                                                $('#generic_cpl').css('opacity', '1');
-                                                alert(res.msg);
-                                            }
-                                        },
-                                        error:function(){
-                                            alert('Something went wrong');
-                                        }
-                                    });
+                                    window.location.replace(base_url+'get-netsheet/'+res.random_number);
                                 }
                                 else
                                 {
