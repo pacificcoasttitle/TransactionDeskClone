@@ -7,7 +7,7 @@
                 <div class="container">
                     <div class="header-navibox-1">
                         <button class="menu-mobile-button visible-xs-block js-toggle-mobile-slidebar toggle-menu-button"><i class="toggle-menu-button-icon"><span></span><span></span><span></span><span></span><span></span><span></span></i></button>
-                        <a class="navbar-brand scroll" href="<?php echo base_url(); ?>dashboard"><img class="normal-logo" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt="logo"></a>
+                        <a class="navbar-brand scroll" style="margin-right: 90px !important;" href="<?php echo base_url(); ?>dashboard"><img class="normal-logo" src="<?php echo base_url(); ?>assets/media/general/logo2.png" alt="logo"><img class="scroll-logo hidden-xs" src="<?php echo base_url(); ?>assets/media/general/logo2-dark.png" alt="logo"></a>
                     </div>
                     
                     <?php if(!isset($mail_dashboard)) {?>
