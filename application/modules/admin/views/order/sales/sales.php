@@ -26,8 +26,9 @@
                             <th>Email Address</th>
                             <th>Telephone</th>
                             <th>Partner Id</th>
-                            <th>Partner Type Id</th>
+                            <th>Sales Rep Type</th>
                             <th>Mail Notification</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>                
