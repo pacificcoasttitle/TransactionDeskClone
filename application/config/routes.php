@@ -241,7 +241,6 @@ $route['seller-info/(:any)'] = 'frontend/order/dashboardMail/sellerInfo/$1';
 $route['get-netsheet/(:any)'] = 'frontend/order/dashboardMail/get_netsheet/$1';
 $route['create-netsheet/(:any)'] = 'frontend/order/dashboardMail/create_netsheet/$1';
 
-$route['sales-current-month-history'] = 'frontend/order/salesRep/salesCurrentMonthSummary';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';

@@ -155,32 +155,13 @@ class DashboardMail extends MX_Controller {
 
         $request['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$streetNumber, 'StreetName'=> $streetName, 'City'=> $propertyCity, 'State'=> $propertyState, 'County'=> $county, 'Zip'=>$PropertyZip);
 
-        $loanAmount = 0;
-        $salesAmount = 0;
-        $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
-		$userData = array(
-			'admin_api' => 1
-		);
-
-		$result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
-		if (json_decode($result) && count(json_decode($result)->Files)) {
-			$result_decoded = json_decode($result);
-			$loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
-			$salesAmount = $result_decoded->Files[0]->SalesPrice;
-        }
-
-        if (empty($loanAmount)) {
-            $loanAmount = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-        }
-        
+        $loanAmount = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
         if(isset($loanAmount) && !empty($loanAmount))
         {
             $request['Loans'][]['LoanAmount'] = $loanAmount;
         }
 
-        if (empty($salesAmount)) {
-            $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
-        }
+        $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
 
         $product_type = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
         $data['productType'] = $product_type;
@@ -263,8 +244,8 @@ class DashboardMail extends MX_Controller {
             $data['fees'] = $fees;
             $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
             $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-            $data['sales_amount'] = $salesAmount;
-            $data['loan_amount'] = $loanAmount;
+            $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+            $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
 
             
             $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;

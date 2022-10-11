@@ -3250,15 +3250,4 @@ class Home extends MX_Controller {
 		echo  json_encode(array('status'=>'success', 'message'=> 'Script execution is in process.'));
 
 	}
-
-    public function sendDailyProductionReport()
-    {
-        $this->load->library('order/order');
-        $result = $this->order->sendDailyProductionReport(1);
-        if ($result) {
-            echo json_encode(array('status'=>'success', 'message'=> 'Daily production mail sent successfully.'));   
-        } else {
-            echo json_encode(array('status'=>'error'));
-        }
-    }
 }

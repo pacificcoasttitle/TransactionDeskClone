@@ -4682,39 +4682,3 @@ function refreshExipredPasswords()
         return false;
     }
 }
-
-function sendDailyProductionReport() 
-{
-	var ready = confirm("Are you sure want to send daily production email?");
-    if (ready) {
-        $('body').animate({ opacity: 0.5 }, "slow");
-        $.ajax({
-            url: base_url+"admin/order/home/sendDailyProductionReport",
-            success: function(data) {
-                var result = jQuery.parseJSON(data);
-                if (result.status == 'success') {
-                    $('body').animate({ opacity: 1.0 }, "slow");
-                    $('#daily_prod_success_msg').html(result.message).show();
-                    setTimeout(function () {
-                        $('#daily_prod_success_msg').html('').hide();
-                    }, 4000);
-                } else {
-                    $('body').animate({ opacity: 1.0 }, "slow");
-                    $('#daily_prod_error_msg').html('Something went wrong. Please try it again.').show();
-					setTimeout(function () {
-						$('#daily_prod_error_msg').html('').hide();
-					}, 4000);
-                }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                $('body').animate({ opacity: 1.0 }, "slow");
-                $('#daily_prod_error_msg').html('Something went wrong. Please try it again.').show();
-                setTimeout(function () {
-                    $('#daily_prod_error_msg').html('').hide();
-                }, 4000);
-            }
-        })
-    } else {
-        return false;
-    }
-}
