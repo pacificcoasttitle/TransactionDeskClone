@@ -113,9 +113,9 @@
 
 
 	#sales_user_listing {
-		float:left;
+		margin-bottom: 20px;
+		float:right;
 		margin-right: 25px;
-		width: 100%;
 	}
 	.custom-select {
 		border-radius: 5px;
@@ -142,8 +142,6 @@
 							<div class="col-sm-7">
 								<h2 class="ui-title-block ui-title-block_light">Welcome <?php echo $name; ?>,</h2>
 								<div class="ui-decor-1a bg-accent"></div>
-								
-								<h4 class="ui-title-block_light">Production figures for the current month of <b><?php echo date('F');?></b></h3>
 								<?php if(!empty($salesUsers) && $is_sales_rep_manager == 1) { ?>
 									<div id="sales_user_listing">
 										<label>
@@ -156,9 +154,7 @@
 										</label>
 									</div>
 								<?php } ?>
-								<?php if($is_sales_rep_manager == 1) { ?>
-									<!-- <a href="<?php echo base_url(); ?>sales-current-month-history"><button style="width: 60%;margin: 0px !important;" class="btn btn-grad-2a button-color" type="button">View Current Month Production History</button></a> -->
-								<?php } ?>
+								<h4 class="ui-title-block_light">Production figures for the current month of <b><?php echo date('F');?></b></h3>
 							</div>
 
 							<div class="col-sm-5 text-right">
