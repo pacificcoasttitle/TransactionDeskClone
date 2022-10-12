@@ -27,11 +27,11 @@
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email Address</th>
-                            <th>Telephone</th>
                             <th>Company Name</th>
                             <th>Street Address</th>
                             <th>City</th>
                             <th>Zipcode</th>
+                            <th>Dual CPL</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

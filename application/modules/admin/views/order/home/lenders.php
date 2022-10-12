@@ -31,6 +31,7 @@
                             <th>Address</th>
                             <th>Mortgage User</th>
                             <th>User Type</th>
+                            <th>Dual CPL</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

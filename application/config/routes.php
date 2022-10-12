@@ -342,6 +342,7 @@ $route['order/admin/edit-commission-range/(:num)'] = 'admin/order/commissionRang
 $route['order/admin/delete-commission-range/(:num)'] = 'admin/order/commissionRange/delete_commission_range/$1';
 $route['order/admin/commission-files(/:num)?(/:num)?(/:num)?'] = 'admin/order/commissionRange/commission_files$1$2$3';
 $route['order/admin/delete-commission-file/(:num)'] = 'admin/order/commissionRange/delete_commission_file/$1';
+$route['update-dual-cpl-user'] = 'admin/order/home/updateDualCplUser';
 
 $route['order/admin/commission-bonus'] = 'admin/order/commissionRange/index_bonus';
 $route['order/admin/add-commission-bonus'] = 'admin/order/commissionRange/add_bonus';
