@@ -524,7 +524,7 @@ class Westcor
 				if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
 					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
 					$notificationData = array(
-						'sent_user_id' => $orderDetails['customer_id'],
+						'sent_user_id' => $orderDetails['customer_id'] ? $orderDetails['customer_id'] : 0,
 						'message' => $message,
 						'is_admin' => 0,
 						'type' =>  'created'
@@ -534,7 +534,7 @@ class Westcor
 				} else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
 					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
 					$notificationData = array(
-						'sent_user_id' => $orderDetails['title_officer'],
+						'sent_user_id' => $orderDetails['title_officer'] ? $orderDetails['title_officer'] : 0,
 						'message' => $message,
 						'is_admin' => 0,
 						'type' =>  'created'
@@ -544,7 +544,7 @@ class Westcor
 				} else {
 					$message = 'CPL document generated for order number #'.$orderDetails['file_number'];
 					$notificationData = array(
-						'sent_user_id' => $orderDetails['title_officer'],
+						'sent_user_id' => $orderDetails['title_officer'] ? $orderDetails['title_officer'] : 0,
 						'message' => $message,
 						'is_admin' => 0,
 						'type' =>  'created'
@@ -552,7 +552,7 @@ class Westcor
 					$this->CI->home_model->insert($notificationData, 'pct_order_notifications');
 					$this->CI->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
 					$notificationData = array(
-						'sent_user_id' => $orderDetails['customer_id'],
+						'sent_user_id' => $orderDetails['customer_id'] ? $orderDetails['customer_id'] : 0,
 						'message' => $message,
 						'is_admin' => 0,
 						'type' =>  'created'
