@@ -164,15 +164,24 @@ class Home extends MX_Controller {
 	    	foreach ($customer_lists['data'] as $key => $value) 
 	    	{
 	    		$nestedData=array();
+                $user_id = $value['id'];
 	            /*$nestedData[] = $value['customer_number'];*/
 	            $nestedData[] = $value['first_name'];
 	            $nestedData[] = $value['last_name'];
 	            $nestedData[] = $value['email_address'];
-	            $nestedData[] = $value['telephone_no'];
+                
+                
+	           // $nestedData[] = $value['telephone_no'];
 	            $nestedData[] = $value['company_name'];
 	            $nestedData[] = $value['street_address'];
 	            $nestedData[] = $value['city'];
 	            $nestedData[] = $value['zip_code'];
+                if ($value['is_dual_cpl'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isDualCplUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
 	                     
 	            
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
@@ -540,7 +549,13 @@ class Home extends MX_Controller {
                 $nestedData[] = "<select onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
                 // $nestedData[] = $value['lender_type'];
                          
-                
+                if ($value['is_dual_cpl'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isDualCplUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+	            
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
                     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";*/
@@ -3260,5 +3275,19 @@ class Home extends MX_Controller {
         } else {
             echo json_encode(array('status'=>'error'));
         }
+    }
+
+    public function updateDualCplUser()
+    {
+        $user_id = $this->input->post('user_id');
+        $dualCplUserFlag = $this->input->post('dualCplUserFlag');
+        $data['is_dual_cpl'] = $dualCplUserFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Dual Cpl value updated successfully for user.');
+        echo json_encode($data);
     }
 }
