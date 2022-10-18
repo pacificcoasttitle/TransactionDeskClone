@@ -1996,7 +1996,7 @@ class Order
         $data['message'] = $message ;
         $data['date'] = date("F d, Y");
         $data['type'] = $type;
-        $pusher->trigger($channel, $event, $data);
+        //$pusher->trigger($channel, $event, $data);
     }
 
     public function getEscrowOfficerInfoFromOrder($email)
