@@ -108,7 +108,7 @@
 		$("#password-edit").hide();
 		$("#password-check").show();
         $.ajax({
-            url: base_url + "order/admin/get_admin_details",
+            url: base_url + "order/admin/get_branch_details",
             type: "post",
             data: {
                 branch_id: branch_id
