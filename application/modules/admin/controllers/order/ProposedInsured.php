@@ -58,6 +58,18 @@ class ProposedInsured extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
 	}
 
+	public function get_branch_details()
+	{
+		$branch_id = $this->input->post('branch_id');
+		$check_exist = $this->branches_model->get($branch_id);
+		$return_data = array('status'=>false,'data'=>[]);
+		if($check_exist) {
+			$return_data['status']=true;
+			$return_data['data']=$check_exist;
+		}
+		echo json_encode($return_data);
+	}
+		
     public function delete_proposed_branch($id)
     {
 		$status = false;

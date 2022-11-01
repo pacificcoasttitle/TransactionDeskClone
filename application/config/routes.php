@@ -372,6 +372,7 @@ $route['order/admin/delete-admin-record/(:num)'] = 'admin/order/adminUsers/delet
 $route['order/admin/roles'] = 'admin/order/usersRole/index';
 $route['order/admin/delete-role-record/(:num)'] = 'admin/order/usersRole/delete_user_role/$1';
 $route['order/admin/proposed-branches'] = 'admin/order/proposedInsured/index';
+$route['order/admin/get_branch_details'] = 'admin/order/proposedInsured/get_branch_details';
 $route['order/admin/delete-proposed-branch/(:num)'] = 'admin/order/proposedInsured/delete_proposed_branch/$1';
 /* Route for PCT-Order backend*/
 
