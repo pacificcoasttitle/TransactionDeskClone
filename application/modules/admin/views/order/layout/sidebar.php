@@ -94,12 +94,13 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" href="#" id="cpl_branches" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-sitemap"></i>
-			<span>CPL Branches</span>
+			<span>Branches</span>
         </a>
 		<div class="dropdown-menu" aria-labelledby="cpl_branches" id="cpl_branches_section">
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/north-american-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/north-american-branches'; ?>">North American</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/westcor-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/westcor-branches'; ?>">Westcor</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/commonwealth-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commonwealth-branches'; ?>">Commonwealth</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/north-american-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/north-american-branches'; ?>">CPL - North American</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/westcor-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/westcor-branches'; ?>">CPL - Westcor</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/commonwealth-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/commonwealth-branches'; ?>">CPL - Commonwealth</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/proposed-branches') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/proposed-branches'; ?>">Proposed Insured</a>
         </div>
 	</li>
 
