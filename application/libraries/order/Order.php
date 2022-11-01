@@ -1237,8 +1237,7 @@ class Order
     public function getProposedBranches()
     {
         $this->CI->db->select('*');
-        $this->CI->db->from('pct_order_westcore_branches');
-        $this->CI->db->where('is_proposed_branch', 1);
+        $this->CI->db->from('pct_order_proposed_branches');
         $query = $this->CI->db->get();
         $result = $query->result_array();
         return $result;
@@ -1247,7 +1246,7 @@ class Order
     public function getProposedBranchDetail($branchId)
     {
         $this->CI->db->select('*');
-        $this->CI->db->from('pct_order_westcore_branches');
+        $this->CI->db->from('pct_order_proposed_branches');
         $this->CI->db->where('id', $branchId);
         $query = $this->CI->db->get();
         $result = $query->row_array();
