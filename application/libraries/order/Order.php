@@ -2493,17 +2493,17 @@ class Order
                 if(!empty($salesUsers)) {
                     foreach($salesUsers as $salesrep) {
                         $data['salesHistory'][$i]['sales_rep'] = $salesrep['first_name']." ".$salesrep['last_name'];
-                        $openRefiResult = $this->CI->order->getOpenOrdersCountForRefiProducts(date('m'), $salesrep['id']);
+                        $openRefiResult = $this->CI->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id']);
                         $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                        $openSaleResult = $this->CI->order->getOpenOrdersCountForSaleProducts(date('m'), $salesrep['id']);
+                        $openSaleResult = $this->CI->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id']);
                         $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
                         $data['salesHistory'][$i]['refi_open_count'] = $refi_open_count;
                         $data['salesHistory'][$i]['sale_open_count'] = $sale_open_count;
                         $data['salesHistory'][$i]['total_open_count'] = $sale_open_count + $refi_open_count;
 
-                        $closeRefiResult = $this->CI->order->getClosedOrdersCountForRefiProducts(date('m'), $salesrep['id']);
+                        $closeRefiResult = $this->CI->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id']);
                         $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                        $closeSaleResult = $this->CI->order->getClosedOrdersCountForSaleProducts(date('m'), $salesrep['id']);
+                        $closeSaleResult = $this->CI->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id']);
                         $sale_close_count =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
                         $data['salesHistory'][$i]['refi_close_count'] = $refi_close_count;
                         $data['salesHistory'][$i]['sale_close_count'] = $sale_close_count;
