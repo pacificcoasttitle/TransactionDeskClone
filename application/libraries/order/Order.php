@@ -2485,6 +2485,11 @@ class Order
                     $salesUsers = $this->CI->order->get_sales_users();
                 }
                 $i = 0;
+                if (date('d') == '01') {
+                    $month = date('m', strtotime(date('Y-m')." -1 month"));
+                } else {
+                    $month = date('m');
+                }
                 if(!empty($salesUsers)) {
                     foreach($salesUsers as $salesrep) {
                         $data['salesHistory'][$i]['sales_rep'] = $salesrep['first_name']." ".$salesrep['last_name'];

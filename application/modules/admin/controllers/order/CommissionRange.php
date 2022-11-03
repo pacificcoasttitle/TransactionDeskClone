@@ -641,9 +641,6 @@ class CommissionRange extends MX_Controller {
 
     public function delete_commission_file($id)
     {
-
-		
-
 		$status = false;
 		if($this->input->post('action') == 'delete') {
 			$this->load->model('order/user_monthly_commission_model');
