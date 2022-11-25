@@ -3054,6 +3054,7 @@ class DashboardMail extends MX_Controller {
 			$buyer_infos = $this->input->post('buyer');
 			$vesting_info = $skip_vesting= $main_buyer = array();
 			$is_first = 1;
+            $buyer_email = '';
 			foreach ($buyer_infos as $buyer_key => $buyer_value) {
 				// Check Keys
 				$buyer_info = [
@@ -3089,6 +3090,7 @@ class DashboardMail extends MX_Controller {
 						$buyer_pdf['current_address'] = $buyer_info['current_mailing_address'];
 						$buyer_pdf['closing_address'] = $buyer_info['mailing_address_port_closing'];
 						$main_buyer = $buyer_info;
+                        $buyer_email = $buyer_value['email'];
 						$is_first = 0;
 					}
 					if(!(in_array($buyer_key,$skip_vesting))) {
@@ -3193,7 +3195,7 @@ class DashboardMail extends MX_Controller {
 			];
 			if($main_buyer['married_to'] && $buyer_infos[$main_buyer['married_to']]) {
 				$married_to_buyer = $buyer_infos[$main_buyer['married_to']];
-				$pdf_fields_val['Are you currently married'] = 'Yes';
+				$pdf_fields_val['Are you currently married'] = 'Checked';
 				$pdf_fields_val['Spouse'] = $married_to_buyer['first_name'].' '.$married_to_buyer['last_name'];
 				$pdf_fields_val['Date of Birth_2'] = $married_to_buyer['birth_date'].' / '.$married_to_buyer['birth_month'].'/'.$married_to_buyer['birth_year'];
 				$pdf_fields_val['Home Phone_2'] = $married_to_buyer['phone'];
@@ -3221,14 +3223,56 @@ class DashboardMail extends MX_Controller {
 			if($vesting_info['marital_status'] && is_array($vesting_info['marital_status'])) {
 				foreach($vesting_info['marital_status'] as $vesting_info) {
 					$key_to_check = $this->marital_status[$vesting_info]['text'];
-					$pdf_fields_val[$key_to_check] = 'Yes';
+					$pdf_fields_val[$key_to_check] = 'Checked';
 				}
 			}
 			if($buyer_pdf['property_vested']) {
 				$key_to_check = $this->vesting_choice[$buyer_pdf['property_vested']]['pdf_val'];
-				$pdf_fields_val[$key_to_check] = 'Yes';
+				$pdf_fields_val[$key_to_check] = 'Checked';
 				
 			}
+
+            $mergeFieldInfo = array();
+            foreach($pdf_fields_val as $key => $value) {
+                $mergeFieldInfo[] = array(
+                    'fieldName' => $key,
+                    'defaultValue' => $value,
+                );
+            }
+            $postData = array(
+                'fileInfos' => array(
+                    array(
+                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID')
+                    ),
+                ),
+                'name' => 'Test',
+                'participantSetsInfo' => array(
+                    array (
+                        'memberInfos' => array(
+                            array(
+                                'email' => $buyer_email
+                            ),
+                        ),
+                        'name' => 'Hitesh Patel',
+                        'order' => 1,
+                        'role' => 'SIGNER',
+                    ),
+                ),
+                'mergeFieldInfo' => $mergeFieldInfo,
+                'signatureType' => 'ESIGN',
+                'state' => 'IN_PROCESS'
+            );
+
+            $request_data = [
+                'url'			=>'api/rest/v6/agreements',
+                'request_type'	=>'POST',
+                'data_type'		=>'JSON',
+                'post_data' => $postData
+            ];
+            $this->load->library('order/adobe');
+            $response = $this->adobe->send_request($request_data);
+
+
 			$pdf->fillForm($pdf_fields_val)
 				->needAppearances()
 				->saveAs($file_full_path);
@@ -3276,6 +3320,7 @@ class DashboardMail extends MX_Controller {
 			$seller_infos = $this->input->post('seller');
 			$vesting_info = $skip_vesting= $main_seller = $seller_info_pdf = array();
 			$is_first = 1;
+            $seller_email = '';
 			foreach ($seller_infos as $seller_key => $seller_value) {
 				// Check Keys
 				$seller_info = [
@@ -3293,6 +3338,11 @@ class DashboardMail extends MX_Controller {
                     'marital_status' => $seller_value['marital_status']?$seller_value['marital_status']:null,
                     'married_to' => $seller_value['married_to']?$seller_value['married_to']:null
 				];
+
+                if($is_first) {
+                    $seller_email = $seller_value['email'];
+                    $is_first = 0;
+                }
 				if($seller_info['first_name'] && $seller_info['last_name']) {
 					if ($seller_key == 'new') {
 						$seller_info['is_main_buyer'] = 0;
@@ -3371,11 +3421,11 @@ class DashboardMail extends MX_Controller {
                 'Unpaid Principal Balance' => $this->input->post('unpaid_balance') ? $this->input->post('unpaid_balance') : '',
                 'Next Due' => $this->input->post('payment_due_date') ? $this->input->post('payment_due_date') : '',
                 'Type of Loan' => $this->input->post('loan_type') ? $this->input->post('loan_type') : '',
-                'VA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'VA') ? 'Yes' : '',
-                'FHA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'FHA') ? 'Yes' : '',
-                'Conventional' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'Conventional') ? 'Yes' : '',
-                'Yes' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'Yes') ? 'Yes' : '',
-                'No' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'No') ? 'Yes' : '',
+                'VA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'VA') ? 'Checked' : '',
+                'FHA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'FHA') ? 'Checked' : '',
+                'Conventional' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'Conventional') ? 'Checked' : '',
+                'Yes' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'Yes') ? 'Checked' : '',
+                'No' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'No') ? 'Checked' : '',
                 'SECOND TRUST DEED LENDER' => $this->input->post('second_lender_name') ? $this->input->post('second_lender_name') : '',
                 'Address_2' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : '',
                 'Loan Number_2' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : '',
@@ -3383,9 +3433,9 @@ class DashboardMail extends MX_Controller {
                 'Unpaid Principal Balance_2' => $this->input->post('second_unpaid_balance') ? $this->input->post('second_unpaid_balance') : '',
                 //'Next Due' => $this->input->post('second_payment_due_date') ? $this->input->post('second_payment_due_date') : '',
                 'Type of Loan_2' => $this->input->post('second_loan_type') ? $this->input->post('second_loan_type') : '',
-                'VA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'VA') ? 'Yes' : '',
-                'FHA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'FHA') ? 'Yes' : '',
-                'Conventional_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'Conventional') ? 'Yes' : '',
+                'VA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'VA') ? 'Checked' : '',
+                'FHA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'FHA') ? 'Checked' : '',
+                'Conventional_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'Conventional') ? 'Checked' : '',
                 'Management Company' => $this->input->post('hoa_company') ? $this->input->post('hoa_company') : '',
                 'Mailing Address' => $this->input->post('hoa_company_address') ? $this->input->post('hoa_company_address') : '',
                 'Contact Person' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : '',
@@ -3404,8 +3454,8 @@ class DashboardMail extends MX_Controller {
                 'PARTY 2' => $seller_info_pdf['seller_names'][1],
                 'birth_date_2' => !empty($seller_info_pdf['birth_dates'][1]) ? $seller_info_pdf['birth_dates'][1] : '',
                 'BIRTHPLACE_2' => isset($seller_info_pdf['ssns'][1]) ? $seller_info_pdf['ssns'][1] : '',
-                'SINGLE' => $this->input->post('is_married') == 'single' ? 'Yes' : '',
-                'MARRIED' => $this->input->post('married') == 'Single' ? 'Yes' : '',
+                'SINGLE' => $this->input->post('is_married') == 'single' ? 'Checked' : '',
+                'MARRIED' => $this->input->post('married') == 'Single' ? 'Checked' : '',
 			];
 			if(isset($seller_info_pdf['phones'][0])) {
 				$pdf_fields_val['undefined'] = $seller_info_pdf['phones'][0];
@@ -3422,6 +3472,47 @@ class DashboardMail extends MX_Controller {
 			if(isset($seller_info_pdf['ssns'][1])) {
 				$pdf_fields_val['Social Security'] = $seller_info_pdf['ssns'][1];
 			}
+
+            $mergeFieldInfo = array();
+            foreach($pdf_fields_val as $key => $value) {
+                $mergeFieldInfo[] = array(
+                    'fieldName' => $key,
+                    'defaultValue' => $value,
+                );
+            }
+            $postData = array(
+                'fileInfos' => array(
+                    array(
+                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
+                    ),
+                ),
+                'name' => 'Test',
+                'participantSetsInfo' => array(
+                    array (
+                        'memberInfos' => array(
+                            array(
+                                'email' => $seller_email
+                            ),
+                        ),
+                        'name' => 'Hitesh Patel',
+                        'order' => 1,
+                        'role' => 'SIGNER',
+                    ),
+                ),
+                'mergeFieldInfo' => $mergeFieldInfo,
+                'signatureType' => 'ESIGN',
+                'state' => 'IN_PROCESS'
+            );
+
+            $request_data = [
+                'url'			=>'api/rest/v6/agreements',
+                'request_type'	=>'POST',
+                'data_type'		=>'JSON',
+                'post_data' => $postData
+            ];
+            $this->load->library('order/adobe');
+            $response = $this->adobe->send_request($request_data);
+
 			// $pdf_fields_val
 			$pdf_templates_file = FCPATH.'assets/pdf_templates/seller.pdf';
 			$pdf = new Pdf($pdf_templates_file);
