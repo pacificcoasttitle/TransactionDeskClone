@@ -80,6 +80,16 @@
                 </div>
 
                 <div class="form-group row">
+                    <label for="company" class="col-sm-2 col-form-label">Title Company<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="title_company" id="title_company" value="<?php echo set_value('title_company')?>" class="form-control" placeholder="Title Company">
+                        <?php if(!empty($title_company_error_msg)){ ?>                     
+                            <span class="error"><?php echo $title_company_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="user_type" class="col-sm-2 col-form-label">User Type<span class="required"> *</span></label>
                     <div class="col-sm-10">
                         <select name="user_type" id="user_type" class="form-control">
@@ -134,8 +144,9 @@
                         <?php } ?>
                     </div>
                 </div>
-
-                <input type="hidden" name="partner_id" id="partner_id" value="<?php echo set_value('partner_id')?>">     
+                
+                <input type="hidden" name="partner_id" id="partner_id" value="<?php echo set_value('partner_id')?>">   
+                <input type="hidden" name="title_partner_id" id="title_partner_id" value="<?php echo set_value('title_partner_id')?>">    
                
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Add</button>
@@ -189,6 +200,40 @@
 	        change: function( event, ui ) {
 	            if (ui.item == null) {
 	            	$("#company").parent().removeClass('state-success').addClass('state-error');
+	            }
+	        }
+	    });
+
+        $("#title_company").autocomplete({
+	        source: function(request, response) {
+	            $.ajax({
+	                url: base_url+"admin/order/home/get_title_company_list",
+	                data: {
+						term : request.term        
+	                },
+	                type: "POST",
+	                dataType: "json",
+	                success: function (data) {
+						if (data.length > 0) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        } else {
+                            response([{ label: 'No results found.', val: -1}]);
+                        }
+					}
+	            });
+			},
+			delay: 0,
+			minLength: 2,
+	        select: function( event, ui ) {
+	            event.preventDefault();
+	            $("#title_company").val(ui.item.partner_name);
+                $("#title_partner_id").val(ui.item.partner_id);
+	        },
+	        change: function( event, ui ) {
+	            if (ui.item == null) {
+	            	$("#title_company").parent().removeClass('state-success').addClass('state-error');
 	            }
 	        }
 	    });

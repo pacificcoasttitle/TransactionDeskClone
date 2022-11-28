@@ -422,6 +422,20 @@ class Home_model extends CI_Model
         return !empty($result) ? $result : FALSE;
     }
 
+    public function get_title_company_list($params)
+    {
+        $table = 'pct_order_partner_company_info';
+        $this->db->select('*');
+        $this->db->from($table);
+        $this->db->order_by('id', 'asc');
+        $this->db->select("CONCAT(partner_name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value");
+        $this->db->like('partner_name', $params['partner_name']); 
+        $this->db->like('partner_name', 'title'); 
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return !empty($result) ? $result : FALSE;
+    }
+
     public function get_grant_deed_document_list($params)
     {
         $this->db->from('order_details')

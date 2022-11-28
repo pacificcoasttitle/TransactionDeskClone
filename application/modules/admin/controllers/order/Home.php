@@ -881,6 +881,31 @@ class Home extends MX_Controller {
     	echo json_encode($companyInfo);
     }
 
+    function get_title_company_list()
+    {
+    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+    	$condition = array(
+            'partner_name' => $searchTerm,
+        );
+    	$companyDetails = $this->home_model->get_title_company_list($condition);
+        $companyInfo = array();
+        
+    	if (isset($companyDetails) && !empty($companyDetails)) {
+    		foreach ($companyDetails as $key => $value) {
+    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+                $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+                $data['partner_name'] = isset($value['partner_name']) && !empty($value['partner_name']) ? $value['partner_name'] : '';
+                $data['address1'] = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
+                $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+                $data['zip'] = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
+	            $companyInfo[] =$data;
+    		}
+    	}
+    	echo json_encode($companyInfo);
+    }
+
     public function addNewUserToResware($customerData)
     {
         $this->load->model('order/apiLogs');
