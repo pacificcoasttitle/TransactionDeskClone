@@ -3022,6 +3022,7 @@ class DashboardMail extends MX_Controller {
 
     public function buyerInfo($random_number)
     {
+        $this->load->model('order/document');
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
@@ -3030,10 +3031,9 @@ class DashboardMail extends MX_Controller {
 		$buyer_where['order_id']=$orderDetails['order_id'];
 		$buyer_order['is_main_buyer']='desc';
 		$data['buyers'] = $this->home_model->get_records('pct_order_borrower_buyer_info',$buyer_where,$buyer_order);
-		// var_dump($data['buyers']);die;
 		$data['marital_status'] = $this->marital_status;
 		$data['vesting_choice'] = $this->vesting_choice;
-		//vesting_choice
+	
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -3047,10 +3047,7 @@ class DashboardMail extends MX_Controller {
         }
 
         if ($this->input->post()) {
-			// echo '<pre>';
-			// var_dump($this->input->post());
 			$buyers_names = $buyer_pdf = array();
-			//Add all Buyer info relational table
 			$buyer_infos = $this->input->post('buyer');
 			$vesting_info = $skip_vesting= $main_buyer = array();
 			$is_first = 1;
@@ -3272,17 +3269,56 @@ class DashboardMail extends MX_Controller {
             $this->load->library('order/adobe');
             $response = $this->adobe->send_request($request_data);
 
-
-			$pdf->fillForm($pdf_fields_val)
+            if ($response['status'] && !empty($response['result'])) {
+                $result = json_decode($response['result'], true);
+                if (!empty($result['id'])) {
+                    $request_data = [
+                        'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
+                        'request_type'	=>'GET'
+                    ];
+                    $response_doc = $this->adobe->send_request($request_data);
+                    if (!empty($response_doc['status']) && $response_doc['result']) {
+                        if (!is_dir('uploads/borrower')) {
+                            mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                        }
+                        $document_name = $orderDetails['file_number'].'_buyer_sign.pdf';
+                        file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
+                        $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+                        $documentData = array(
+                            'document_name' => $document_name,
+                            'original_document_name' => $document_name,
+                            'document_type_id' => 1041,
+                            'document_size' => ($data['file_size'] * 1000),
+                            'user_id' => 0,
+                            'order_id' => $orderDetails['order_id'],
+                            'task_id' => 4,
+                            'description' => 'Borrower Document',
+                            'is_buyer_pdf_adobe_doc' => 1,
+                            'is_sync' => 1,
+                            'is_uploaded_by_borrower' => 1
+                        );
+                        $this->document->insert($documentData);
+                        $pdf_url = env('AWS_PATH')."borrower/".$document_name;
+                        $success[] = "Borrower buyer info saved successfully. View PDF from <a href='$pdf_url' target='_blank' >here</a><br>
+                        We also sent mail to buyer user for sign document.";
+                    }
+                } else {
+                    $errors[] = "Something went wrong. Please try again.";
+                }
+            } else {
+                $errors[] = "Something went wrong. Please try again.";
+            }
+            
+			/*$pdf->fillForm($pdf_fields_val)
 				->needAppearances()
 				->saveAs($file_full_path);
-			$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
+			$pdf_url = base_url($dir_to_upload.'/'.$document_name); */    
 
 			//Update table with pdf file name
-			$this->home_model->update(["pdf_file"=>$document_name],["id"=>$inserted_wizard_id],'pct_order_borrower_buyer_info_wizard');
+			//$this->home_model->update(["pdf_file"=>$document_name],["id"=>$inserted_wizard_id],'pct_order_borrower_buyer_info_wizard');
 			// echo $pdf_url;   
 			// die;
-            $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
+            
             // $success[] = "Borrower buyer info saved successfully.";
             $data = array(
                 "errors" =>  $errors,
@@ -3512,6 +3548,47 @@ class DashboardMail extends MX_Controller {
             ];
             $this->load->library('order/adobe');
             $response = $this->adobe->send_request($request_data);
+
+            if ($response['status'] && !empty($response['result'])) {
+                $result = json_decode($response['result'], true);
+                if (!empty($result['id'])) {
+                    $request_data = [
+                        'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
+                        'request_type'	=>'GET'
+                    ];
+                    $response_doc = $this->adobe->send_request($request_data);
+                    if (!empty($response_doc['status']) && $response_doc['result']) {
+                        if (!is_dir('uploads/borrower')) {
+                            mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                        }
+                        $document_name = $orderDetails['file_number'].'_seller_sign.pdf';
+                        file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
+                        $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+                        $documentData = array(
+                            'document_name' => $document_name,
+                            'original_document_name' => $document_name,
+                            'document_type_id' => 1041,
+                            'document_size' => ($data['file_size'] * 1000),
+                            'user_id' => 0,
+                            'order_id' => $orderDetails['order_id'],
+                            'task_id' => 4,
+                            'description' => 'Borrower Document',
+                            'is_seller_pdf_adobe_doc' => 1,
+                            'is_sync' => 1,
+                            'is_uploaded_by_borrower' => 1
+                        );
+                        $this->document->insert($documentData);
+                        $pdf_url = env('AWS_PATH')."borrower/".$document_name;
+                        $success[] = "Borrower buyer info saved successfully. View PDF from <a href='$pdf_url' target='_blank' >here</a><br>
+                        We also sent mail to buyer user for sign document.";
+                    }
+                } else {
+                    $errors[] = "Something went wrong. Please try again.";
+                }
+            } else {
+                $errors[] = "Something went wrong. Please try again.";
+            }
+            
 
 			// $pdf_fields_val
 			$pdf_templates_file = FCPATH.'assets/pdf_templates/seller.pdf';
