@@ -20,7 +20,7 @@ final class AddBuyerSellerAdobeId extends AbstractMigration
     {
         $table = $this->table('pct_order_documents');
         $table->addColumn('is_buyer_pdf_adobe_doc', 'boolean', ['null' => true, 'default'=>0])
-            ->addColumn('is_seller_pdf_adobe_doc', 'boolean', ['null' => true,' default'=>0])
+            ->addColumn('is_seller_pdf_adobe_doc', 'boolean', ['null' => true,'default'=>0])
             ->addColumn('is_buyer_pdf_sign', 'boolean', ['null' => true, 'default'=>0])
             ->addColumn('is_seller_pdf_sign', 'boolean', ['null' => true, 'default'=>0])
             ->update();
