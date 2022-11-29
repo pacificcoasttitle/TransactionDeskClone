@@ -240,7 +240,7 @@ $route['buyer-info/(:any)'] = 'frontend/order/dashboardMail/buyerInfo/$1';
 $route['seller-info/(:any)'] = 'frontend/order/dashboardMail/sellerInfo/$1';
 $route['get-netsheet/(:any)'] = 'frontend/order/dashboardMail/get_netsheet/$1';
 $route['create-netsheet/(:any)'] = 'frontend/order/dashboardMail/create_netsheet/$1';
-
+$route['get-data-from-adobe'] = 'frontend/order/adobe/getDataFromAdobe';
 $route['sales-current-month-history'] = 'frontend/order/salesRep/salesCurrentMonthSummary';
 
 /* Route for PCT-Order backend*/
