@@ -3559,9 +3559,9 @@ class DashboardMail extends MX_Controller {
                     $response_doc = $this->adobe->send_request($request_data);
                     if (!empty($response_doc['status']) && $response_doc['result']) {
                         if (!is_dir('uploads/borrower')) {
-                            $document_name = $orderDetails['file_number'].'_seller_sign.pdf';
                             mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
                         }
+                        $document_name = $orderDetails['file_number'].'_seller_sign.pdf';
                         file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
                         $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
                         $documentData = array(
@@ -3579,7 +3579,8 @@ class DashboardMail extends MX_Controller {
                         );
                         $this->document->insert($documentData);
                         $pdf_url = env('AWS_PATH')."borrower/".$document_name;
-                        $success[] = "Borrower buyer info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
+                        $success[] = "Borrower buyer info saved successfully. View PDF from <a href='$pdf_url' target='_blank' >here</a><br>
+                        We also sent mail to buyer user for sign document.";
                     }
                 } else {
                     $errors[] = "Something went wrong. Please try again.";
