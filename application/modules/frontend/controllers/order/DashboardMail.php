@@ -3332,6 +3332,7 @@ class DashboardMail extends MX_Controller {
 
     public function sellerInfo($random_number)
     {
+        $this->load->model('order/document');
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
