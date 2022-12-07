@@ -3382,7 +3382,7 @@ class DashboardMail extends MX_Controller {
                 }
 				if($seller_info['first_name'] && $seller_info['last_name']) {
 					if ($seller_key == 'new') {
-						$seller_info['is_main_buyer'] = 0;
+						$seller_info['is_main_seller'] = 0;
 						$new_seller_id = $this->home_model->insert($seller_info,'pct_order_borrower_seller_info');
 					} else {
 						//Update Value
@@ -3393,9 +3393,10 @@ class DashboardMail extends MX_Controller {
 						$main_seller = $seller_info;
 					}
 					
-					$seller_info_pdf['seller_names'][] = $seller_info['first_name'].' '.$seller_info['last_name'];
+					$seller_info_pdf['first_names'][] = $seller_info['first_name'];
+                    $seller_info_pdf['last_names'][] = $seller_info['last_name'];
 					$seller_info_pdf['phones'][] = $seller_info['phone'];
-                    $seller_info_pdf['birth_dates'][] = $seller_info['birth_month']."/".$seller_info['birth_date']."/".$seller_info['birth_year'];
+                    $seller_info_pdf['current_mailing_address'][] = $seller_info['current_mailing_address'];
 					$seller_info_pdf['emails'][] = $seller_info['email'];
 					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
 				}
@@ -3442,176 +3443,218 @@ class DashboardMail extends MX_Controller {
             );
             $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_packet_info');
 
+
 			//Generate PDF
-			$pdf_fields_val = $pdf_fields_val = [
-				'1 Sellers' => implode(',',$seller_info_pdf['seller_names']),
-				'Escrow#' => $orderDetails['escrow_number'],
-				'Title#' => $orderDetails['file_number'],
-                '2 Social Security' => isset($seller_info_pdf['ssn'][0]) ? $seller_info_pdf['ssn'][0] : '',
-				'4 Sellers Current Mailing Address' => $main_seller['current_mailing_address'],
-				'5 Sellers Mailing Address after Close of Escrow 1' => $main_seller['mailing_address_port_closing'],
-                '3 Property Address' => $orderDetails['full_address'],
-                'FIRST TRUST DEED LENDER' => $this->input->post('lender_name') ? $this->input->post('lender_name') : '',
-                'Address' => $this->input->post('lender_address') ? $this->input->post('lender_address') : '',
-                'Loan Number' => $this->input->post('loan_number') ? $this->input->post('loan_number') : '',
-                'undefined_6' => $this->input->post('lender_phone_number') ? $this->input->post('lender_phone_number') : '',
-                'Unpaid Principal Balance' => $this->input->post('unpaid_balance') ? $this->input->post('unpaid_balance') : '',
-                'Next Due' => $this->input->post('payment_due_date') ? $this->input->post('payment_due_date') : '',
-                'Type of Loan' => $this->input->post('loan_type') ? $this->input->post('loan_type') : '',
-                'VA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'VA') ? 'Checked' : '',
-                'FHA' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'FHA') ? 'Checked' : '',
-                'Conventional' => ($this->input->post('loan_type') && $this->input->post('loan_type') == 'Conventional') ? 'Checked' : '',
-                'Yes' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'Yes') ? 'Checked' : '',
-                'No' => ($this->input->post('is_impound_account') && $this->input->post('is_impound_account') == 'No') ? 'Checked' : '',
-                'SECOND TRUST DEED LENDER' => $this->input->post('second_lender_name') ? $this->input->post('second_lender_name') : '',
-                'Address_2' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : '',
-                'Loan Number_2' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : '',
-                'undefined_7' => $this->input->post('second_lender_phone_number') ? $this->input->post('second_lender_phone_number') : '',
-                'Unpaid Principal Balance_2' => $this->input->post('second_unpaid_balance') ? $this->input->post('second_unpaid_balance') : '',
-                //'Next Due' => $this->input->post('second_payment_due_date') ? $this->input->post('second_payment_due_date') : '',
-                'Type of Loan_2' => $this->input->post('second_loan_type') ? $this->input->post('second_loan_type') : '',
-                'VA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'VA') ? 'Checked' : '',
-                'FHA_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'FHA') ? 'Checked' : '',
-                'Conventional_2' => ($this->input->post('second_loan_type') && $this->input->post('second_loan_type') == 'Conventional') ? 'Checked' : '',
-                'Management Company' => $this->input->post('hoa_company') ? $this->input->post('hoa_company') : '',
-                'Mailing Address' => $this->input->post('hoa_company_address') ? $this->input->post('hoa_company_address') : '',
-                'Contact Person' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : '',
-                'undefined_9' => $this->input->post('hoa_contact_number') ? $this->input->post('hoa_contact_number') : '',
-                'Text29' => $orderDetails['escrow_number'],
-                'Text30' => $orderDetails['file_number'],
-                'Name of Company' => $this->input->post('water_company') ? $this->input->post('water_company') : '',
-                'Address' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : '',
-                'undefined_2' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
-                'CONFIDENTIAL TO BE USED ONLY IN CONNECTION WITH ORDER NO' => $orderDetails['file_number'],
-                'THE STREET ADDRESS of the property in this transaction is' =>  $orderDetails['address'],
-                'IF NONE LEAVE BLANK' =>  $orderDetails['property_city'],
-                'PARTY 1' => $seller_info_pdf['seller_names'][0],
-                'birth_date_1' => $seller_info_pdf['birth_dates'][0],
-                'BIRTHPLACE' => $seller_info_pdf['ssns'][0],
-                'PARTY 2' => $seller_info_pdf['seller_names'][1],
-                'birth_date_2' => !empty($seller_info_pdf['birth_dates'][1]) ? $seller_info_pdf['birth_dates'][1] : '',
-                'BIRTHPLACE_2' => isset($seller_info_pdf['ssns'][1]) ? $seller_info_pdf['ssns'][1] : '',
-                'SINGLE' => $this->input->post('is_married') == 'single' ? 'Checked' : '',
-                'MARRIED' => $this->input->post('married') == 'Single' ? 'Checked' : '',
+			$pdf_fields_val  = [
+				'Custom Field 1' => $orderDetails['escrow_number'],
+				'Custom Field 2' => $orderDetails['file_number'],
+                'Custom Field 17' => $orderDetails['full_address'],
+                'Custom Field 24' => $orderDetails['full_address'],
+                'Custom Field 37' => $orderDetails['escrow_number'],
+				'Custom Field 38' => $orderDetails['file_number'],
+                'Custom Field 18' => $this->input->post('lender_name') ? $this->input->post('lender_name') : '',
+                'Copy of Custom Field 9 (1)' => $this->input->post('lender_address') ? $this->input->post('lender_address') : '',
+                'Custom Field 19' => $this->input->post('loan_number') ? $this->input->post('loan_number') : '',
+                'Custom Field 23' => $this->input->post('tax_status') ? $this->input->post('tax_status') : '',
+                'Custom Field 20' => $this->input->post('unpaid_balance') ? $this->input->post('unpaid_balance') : '',
+                'Custom Field 21' => $this->input->post('payment_due_date') ? $this->input->post('payment_due_date') : '',
+                'Custom Field 22' => $this->input->post('loan_type') ? $this->input->post('loan_type') : '',
+                'Copy of Custom Field 18 (1)' => $this->input->post('second_lender_name') ? $this->input->post('second_lender_name') : '',
+                'Copy of Custom Field 9 (2)' => $this->input->post('second_lender_address') ? $this->input->post('second_lender_address') : '',
+                'Copy of Custom Field 19 (1)' => $this->input->post('second_loan_number') ? $this->input->post('second_loan_number') : '',
+                'Copy of Custom Field 19 (5)' => $this->input->post('second_tax_status') ? $this->input->post('second_tax_status') : '',
+                'Copy of Custom Field 19 (2)' => $this->input->post('second_unpaid_balance') ? $this->input->post('second_unpaid_balance') : '',
+                'Copy of Custom Field 19 (3)' => $this->input->post('second_payment_due_date') ? $this->input->post('second_payment_due_date') : '',
+                'Copy of Custom Field 19 (4)' => $this->input->post('second_loan_type') ? $this->input->post('second_loan_type') : '',
+                'Custom Field 25' => $this->input->post('hoa_company') ? $this->input->post('hoa_company') : '',
+                'Custom Field 28' => $this->input->post('hoa_company_address') ? $this->input->post('hoa_company_address') : '',
+                'Custom Field 26' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : '',
+                'Custom Field 27' => $this->input->post('hoa_contact_number') ? $this->input->post('hoa_contact_number') : '',
+                'Custom Field 29' => $this->input->post('water_company') ? $this->input->post('water_company') : '',
+                'Copy of Custom Field 28 (1)' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : '',
+                'Custom Field 31' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
 			];
-			if(isset($seller_info_pdf['phones'][0])) {
-				$pdf_fields_val['undefined'] = $seller_info_pdf['phones'][0];
-			}
-			if(isset($seller_info_pdf['phones'][1])) {
-				$pdf_fields_val['undefined_2'] = $seller_info_pdf['phones'][1];
-			}
-			if(isset($seller_info_pdf['emails'][0])) {
-				$pdf_fields_val['EMail Address'] = $seller_info_pdf['emails'][0];
-			}
-			if(isset($seller_info_pdf['ssns'][0])) {
-				$pdf_fields_val['2 Social Security'] = $seller_info_pdf['ssns'][0];
-			}
-			if(isset($seller_info_pdf['ssns'][1])) {
-				$pdf_fields_val['Social Security'] = $seller_info_pdf['ssns'][1];
-			}
 
-            $mergeFieldInfo = array();
-            foreach($pdf_fields_val as $key => $value) {
-                $mergeFieldInfo[] = array(
-                    'fieldName' => $key,
-                    'defaultValue' => $value,
-                );
-            }
-            $postData = array(
-                'fileInfos' => array(
-                    array(
-                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
-                    ),
-                ),
-                'name' => 'Test',
-                'participantSetsInfo' => array(
-                    array (
-                        'memberInfos' => array(
-                            array(
-                                'email' => $seller_email
-                            ),
-                        ),
-                        'name' => 'Hitesh Patel',
-                        'order' => 1,
-                        'role' => 'SIGNER',
-                    ),
-                ),
-                'mergeFieldInfo' => $mergeFieldInfo,
-                'signatureType' => 'ESIGN',
-                'state' => 'IN_PROCESS'
-            );
+            if (count($seller_info_pdf['emails']) > 0) {
+                $total_count = count($seller_info_pdf['emails']);
+                $i = 1;
+                $j = 1;
+                $email_sent_flag = 0;
+                foreach($seller_info_pdf['emails'] as $seller_email) {
+                    if ($total_count == $i) {
+                        if ($i % 2 != 0) {
+                            $pdf_fields_val['Custom Field 3'] = $seller_info_pdf['first_names'][$i-1];
+                            $pdf_fields_val['Custom Field 4'] = $seller_info_pdf['last_names'][$i-1];
+                            $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i-1];
+                            $pdf_fields_val['Custom Field 6'] = '';
+                            $pdf_fields_val['Custom Field 7'] = $seller_info_pdf['emails'][$i-1];
+                            $pdf_fields_val['Custom Field 8'] = $seller_info_pdf['ssns'][$i-1];
+                            $pdf_fields_val['Custom Field 9'] = $seller_info_pdf['current_mailing_address'][$i-1];
+                            $pdf_fields_val['Custom Field 35'] = $seller_info_pdf['first_names'][$i-1];
+                            $pdf_fields_val['Custom Field 39'] = $i;
 
-            $request_data = [
-                'url'			=>'api/rest/v6/agreements',
-                'request_type'	=>'POST',
-                'data_type'		=>'JSON',
-                'post_data' => $postData
-            ];
-            $this->load->library('order/adobe');
-            $response = $this->adobe->send_request($request_data);
-
-            if ($response['status'] && !empty($response['result'])) {
-                $result = json_decode($response['result'], true);
-                if (!empty($result['id'])) {
-                    $request_data = [
-                        'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
-                        'request_type'	=>'GET'
-                    ];
-                    $response_doc = $this->adobe->send_request($request_data);
-                    if (!empty($response_doc['status']) && $response_doc['result']) {
-                        if (!is_dir('uploads/borrower')) {
-                            mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                            $pdf_fields_val['Custom Field 10'] = "";
+                            $pdf_fields_val['Custom Field 11'] = "";
+                            $pdf_fields_val['Custom Field 12'] = "";
+                            $pdf_fields_val['Custom Field 13'] = "";
+                            $pdf_fields_val['Custom Field 14'] = "";
+                            $pdf_fields_val['Custom Field 15'] = "";
+                            $pdf_fields_val['Custom Field 16'] = "";
+                            $pdf_fields_val['Custom Field 35'] = "";
+                            $pdf_fields_val['Custom Field 36'] = "";
+                            $pdf_fields_val['Copy of Custom Field 39 (1)'] = "";
+                            $email_sent_odd_flag = 1;
                         }
-                        $document_name = $orderDetails['file_number'].'_seller_sign.pdf';
-                        file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
-                        $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
-                        $documentData = array(
-                            'document_name' => $document_name,
-                            'original_document_name' => $document_name,
-                            'document_type_id' => 1041,
-                            'document_size' => ($data['file_size'] * 1000),
-                            'user_id' => 0,
-                            'order_id' => $orderDetails['order_id'],
-                            'task_id' => 4,
-                            'description' => 'Borrower Document',
-                            'is_seller_pdf_adobe_doc' => 1,
-                            'is_sync' => 1,
-                            'is_uploaded_by_borrower' => 1
-                        );
-                        $this->document->insert($documentData);
-                        $pdf_url = env('AWS_PATH')."borrower/".$document_name;
-                        $success[] = "Borrower buyer info saved successfully. View PDF from <a href='$pdf_url' target='_blank' >here</a><br>
-                        We also sent mail to buyer user for sign document.";
                     }
-                } else {
-                    $errors[] = "Something went wrong. Please try again.";
+                    if ($i % 2 == 0) {
+                        $pdf_fields_val['Custom Field 3'] = $seller_info_pdf['first_names'][$i-2];
+                        $pdf_fields_val['Custom Field 4'] = $seller_info_pdf['last_names'][$i-2];
+                        $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i-2];
+                        $pdf_fields_val['Custom Field 6'] = '';
+                        $pdf_fields_val['Custom Field 7'] = $seller_info_pdf['emails'][$i-2];
+                        $pdf_fields_val['Custom Field 8'] = $seller_info_pdf['ssns'][$i-2];
+                        $pdf_fields_val['Custom Field 9'] = $seller_info_pdf['current_mailing_address'][$i-2];
+                        $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i-2];
+                        $pdf_fields_val['Custom Field 39'] = $i-1;
+
+                        $pdf_fields_val['Custom Field 10'] = $seller_info_pdf['first_names'][$i-1];
+                        $pdf_fields_val['Custom Field 11'] = $seller_info_pdf['last_names'][$i-1];
+                        $pdf_fields_val['Custom Field 12'] = $seller_info_pdf['phones'][$i-1];
+                        $pdf_fields_val['Custom Field 13'] = '';
+                        $pdf_fields_val['Custom Field 14'] = $seller_info_pdf['emails'][$i-1];
+                        $pdf_fields_val['Custom Field 15'] = $seller_info_pdf['ssns'][$i-1];
+                        $pdf_fields_val['Custom Field 16'] = $seller_info_pdf['current_mailing_address'][$i-1];
+                        $pdf_fields_val['Custom Field 35'] = $seller_info_pdf['first_names'][$i-2]." ".$seller_info_pdf['last_names'][$i-2];
+                        $pdf_fields_val['Custom Field 36'] = $seller_info_pdf['first_names'][$i-1]." ".$seller_info_pdf['last_names'][$i-1];
+                        $pdf_fields_val['Copy of Custom Field 39 (1)'] = $i;
+                        $email_sent_even_flag = 1;
+                    }
+
+                    if ($email_sent_odd_flag == 1 || $email_sent_even_flag == 1) {
+                        $mergeFieldInfo = array();
+                        foreach($pdf_fields_val as $key => $value) {
+                            $mergeFieldInfo[] = array(
+                                'fieldName' => $key,
+                                'defaultValue' => $value,
+                            );
+                        }
+
+                        if ($email_sent_odd_flag == 1) {
+                            $postData = array(
+                                'fileInfos' => array(
+                                    array(
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
+                                    ),
+                                ),
+                                'name' => 'Test',
+                                'participantSetsInfo' => array(
+                                    array (
+                                        'memberInfos' => array(
+                                            array(
+                                                'email' => $pdf_fields_val['Custom Field 7']
+                                            ),
+                                        ),
+                                        'name' => $pdf_fields_val['Custom Field 3']." ".$pdf_fields_val['Custom Field 4'],
+                                        'order' => 1,
+                                        'role' => 'SIGNER',
+                                    ),
+                                ),
+                                'mergeFieldInfo' => $mergeFieldInfo,
+                                'signatureType' => 'ESIGN',
+                                'state' => 'IN_PROCESS'
+                            );
+                        } else {
+                            $postData = array(
+                                'fileInfos' => array(
+                                    array(
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
+                                    ),
+                                ),
+                                'name' => 'Test',
+                                'participantSetsInfo' => array(
+                                    array (
+                                        'memberInfos' => array(
+                                            array(
+                                                'email' => $pdf_fields_val['Custom Field 7']
+                                            ),
+                                        ),
+                                        'name' => $pdf_fields_val['Custom Field 3']." ".$pdf_fields_val['Custom Field 4'],
+                                        'order' => 1,
+                                        'role' => 'SIGNER',
+                                    ),
+                                    array (
+                                        'memberInfos' => array(
+                                            array(
+                                                'email' => $pdf_fields_val['Custom Field 14']
+                                            ),
+                                        ),
+                                        'name' => $pdf_fields_val['Custom Field 10']." ".$pdf_fields_val['Custom Field 11'],
+                                        'order' => 1,
+                                        'role' => 'SIGNER',
+                                    ),
+                                ),
+                                'mergeFieldInfo' => $mergeFieldInfo,
+                                'signatureType' => 'ESIGN',
+                                'state' => 'IN_PROCESS'
+                            );
+                        }
+                        
+                        $request_data = [
+                            'url'			=>'api/rest/v6/agreements',
+                            'request_type'	=>'POST',
+                            'data_type'		=>'JSON',
+                            'post_data' => $postData
+                        ];
+                        $this->load->library('order/adobe');
+                        $response = $this->adobe->send_request($request_data);
+
+                        if ($response['status'] && !empty($response['result'])) {
+                            $result = json_decode($response['result'], true);
+                            if (!empty($result['id'])) {
+                                $request_data = [
+                                    'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
+                                    'request_type'	=>'GET'
+                                ];
+                                $response_doc = $this->adobe->send_request($request_data);
+                                if (!empty($response_doc['status']) && $response_doc['result']) {
+                                    if (!is_dir('uploads/borrower')) {
+                                        mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                                    }
+                                    $document_name = $orderDetails['file_number'].'_seller_sign_'.$j.'.pdf';
+                                    $j++;
+                                    $email_sent_odd_flag = 0;
+                                    $email_sent_even_flag = 0;
+                                    file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
+                                    $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+                                    $documentData = array(
+                                        'document_name' => $document_name,
+                                        'original_document_name' => $document_name,
+                                        'document_type_id' => 1041,
+                                        'document_size' => ($data['file_size'] * 1000),
+                                        'user_id' => 0,
+                                        'order_id' => $orderDetails['order_id'],
+                                        'task_id' => 4,
+                                        'description' => 'Borrower Document',
+                                        'is_seller_pdf_adobe_doc' => 1,
+                                        'is_sync' => 1,
+                                        'is_uploaded_by_borrower' => 1
+                                    );
+                                    $this->document->insert($documentData);
+                                    $pdf_url = env('AWS_PATH')."borrower/".$document_name;
+                                    $success[0] = "Borrower buyer info saved successfully. <br>
+                                    We also sent mail to seller users for sign document.";
+                                }
+                            } else {
+                                $errors[] = "Something went wrong. Please try again.";
+                            }
+                        } else {
+                            $errors[] = "Something went wrong. Please try again.";
+                        }
+                    }
+                    $i++;
                 }
-            } else {
-                $errors[] = "Something went wrong. Please try again.";
             }
-            
-
-			// $pdf_fields_val
-			$pdf_templates_file = FCPATH.'assets/pdf_templates/seller.pdf';
-			$pdf = new Pdf($pdf_templates_file);
-			$type = 'seller';
-			$document_name = $type.'_'.time().'.pdf';
-			$dir_to_upload = 'uploads/escrow/'.$type;
-			if (!is_dir(FCPATH.$dir_to_upload)) {
-				mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
-			}
-			chmod(FCPATH.$dir_to_upload, 0777);
-			$dir_name = FCPATH.$dir_to_upload.'/';
-			$dir_name = str_replace('\\', '/', $dir_name);
-			$file_full_path = $dir_name.$document_name;
-			$pdf->fillForm($pdf_fields_val)
-				->needAppearances()
-				->saveAs($file_full_path);
-			$pdf_url = base_url($dir_to_upload.'/'.$document_name);      
-
 			
-            $success[] = "Borrower seller info saved successfully.View PDF from <a href='$pdf_url' target='_blank' >here</a>";
-            
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
