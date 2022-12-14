@@ -66,77 +66,6 @@
 						<p class="desc">Please enter your infomation and proceed to next step so we can build your
 							account</p>
 					<div class="fieldset-content">
-							<!-- <div class="form-row">
-								<div class="form-flex">
-									<div class="form-group">
-										<label class="form-label">Name</label>
-										<input type="text" name="first_name" id="first_name" required="required">
-										<span class="text-input">example: John,Jane </span>
-									</div>
-									<div class="form-group">
-										<label class="form-label">Last Name</label>
-										<input type="text" name="last_name" id="last_name" required="required">
-										<span class="text-input">example: Smith. </span>
-									</div>
-								</div>
-							</div>
-							<div class="form-row">
-								<div class="form-flex">
-									<div class="form-group">
-										<label for="email" class="form-label">Email</label>
-										<input type="email" name="email" id="email" required="required">
-										<span class="text-input">example: jsmith@gmail.com </span>
-									</div>
-									<div class="form-group">
-										<label for="phone" class="form-label">Phone</label>
-										<input type="text" class="phone_mask" name="phone" id="phone"
-											required="required">
-										<span class="text-input">example: (000) 000-0000 </span>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-row">
-								<div class="form-flex">
-									<div class="form-date" style="margin-left: 10px;">
-										<label for="birth_date" class="form-label">Birth Date</label>
-										<div class="form-date-group">
-
-											<div class="form-date-item">
-												<select id="birth_date" name="birth_date" required="required"></select>
-												<span class="text-input">DD</span>
-											</div>
-											<div class="form-date-item">
-												<select id="birth_month" name="birth_month"
-													required="required"></select>
-												<span class="text-input">MM</span>
-											</div>
-											<div class="form-date-item">
-												<select id="birth_year" name="birth_year" required="required"></select>
-												<span class="text-input">YYYY</span>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="form-label">Social Security No.</label>
-										<input class="ssn" type="text" name="ssn" required />
-										<span class="text-input">example: XXX-XX-XXXX </span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="ssn" class="form-label">Current Mailing Address</label>
-								<input type="text" name="current_mailing_address" id="current_mailing_address"
-									required="required" />
-								<span class="text-input">456 Main St. Los Angeles, CA </span>
-
-							</div>
-							<div class="form-group">
-								<label for="ssn" class="form-label">Mailing Address Post Closing</label>
-								<input type="text" name="mailing_address_port_closing" id="mailing_address_port_closing"
-									required="required">
-								<span class="text-input">456 Main St. Los Angeles, CA </span>
-							</div> -->
 							<?php foreach($sellers as $key_seller=>$seller) :?>
 							<div class="form-group">
 								<p class="buyer_desc">
@@ -390,6 +319,371 @@
 						</div>
 					</fieldset>
 
+					<h3>Your History</h3>
+					<fieldset>
+						<h2>Personal History</h2>
+						<p class="desc">Please enter your infomation below in regards to your aliases and marriage history.
+						</p>
+						<div class="fieldset-content">
+							<div class="form-group">
+								<p class="buyer_desc">
+									<span class="desc_title">Seller 1</span>
+									<span class="desc_border"></span>
+								</p>
+							</div>
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Have you ever used another last name?</label>
+									<select id="is_used_another_last_name" name="is_used_another_last_name" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+									<span class="text-input">example: Jones, Johnson, etc. </span>
+								</div>
+							</div>
+							<div class="d-none" id="another_last_name_container">
+								<div class="form-group">
+									<label class="form-label">Enter Last Names Here Below</label>
+									<input type="text" name="another_last_name" id="another_last_name" value="" />
+									<span class="text-input">example: Jones, Johnson, etc. </span>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Have you ever been married or have a domestic partner?</label>
+									<select id="is_married_or_domestic_partner" name="is_married_or_domestic_partner" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+									<span class="text-input">example: Yes, No, etc. </span>
+								</div>
+							</div>
+
+							<div class="d-none" id="married_or_domestic_partner">
+								<div class="form-group">
+									<div class="form-group form-date dob_date_picker_div">
+										<label class="form-label">Enter Date of Marriage/Domestic Parntership</label>
+										<div class="form-date-group">
+											<div class="form-date-item">
+												<select class="dob_birth_date" id="marriage_or_domestic_day"
+													name="marriage_or_domestic_day"></select>
+												<span class="text-input">DD</span>
+											</div>
+											<div class="form-date-item">
+												<select class="dob_birth_month" id="marriage_or_domestic_month"
+													name="marriage_or_domestic_month"></select>
+												<span class="text-input">MM</span>
+											</div>
+											<div class="form-date-item">
+												<select class="dob_birth_year" id="marriage_or_domestic_year"
+													name="marriage_or_domestic_year"></select>
+												<span class="text-input">YYYY</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<p class="buyer_desc">
+										<span class="desc_title">Spouse Domestic Partner</span>
+										<span class="desc_border"></span>
+									</p>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+											<label class="form-label">First Name</label>
+											<input type="text" name="spouse_first_name" id="spouse_first_name" value="" />
+											<span class="text-input">example: John </span>
+										</div>
+										<div class="form-group">
+											<label class="form-label">Last Name</label>
+											<input type="text" name="spouse_last_name" id="spouse_last_name" value=""/>
+											<span class="text-input">example: Smith </span>
+										</div>
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+											<label for="email" class="form-label">Email</label>
+											<input type="email" name="spouse_email" id="spouse_email" value=""/>
+											<span class="text-input">example: johnsmith@gmail.com </span>
+										</div>
+										<div class="form-group">
+											<label for="phone" class="form-label">Mobile Phone #</label>
+											<input class="phone_mask" type="text" name="spouse_phone" id="spouse_phone"
+												value="" pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}" />
+											<span class="text-input">example: (000) 000-0000 </span>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">Birth Date</label>
+											<div class="form-date-group">
+												<div class="form-date-item">
+													<select class="dob_birth_date" id="spouse_birth_day" name="spouse_birth_day"></select>
+													<span class="text-input">DD</span>
+												</div>
+												<div class="form-date-item">
+													<select class="dob_birth_month" id="spouse_birth_month" name="spouse_birth_month"></select>
+													<span class="text-input">MM</span>
+												</div>
+												<div class="form-date-item">
+													<select class="dob_birth_year" id="spouse_birth_year" name="spouse_birth_year"></select>
+													<span class="text-input">YYYY</span>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="form-label">Social Security No.</label>
+											<input class="ssn" type="text" name="spouse_ssn" id="spouse_ssn" pattern="\d{3}-?\d{2}-?\d{4}" value="" />
+											<span class="text-input">example: XXX-XX-XXXX </span>
+										</div>
+
+									</div>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<p class="buyer_desc">
+									<span class="desc_title">Residence History (Last 10 Years)</span>
+									<span class="desc_border"></span>
+								</p>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Is the property you are selling:
+										6768 San Onofre Dr, Camarillo, CA, 93012</label>
+									<select id="is_property_sell_2" name="is_property_sell_2" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="is_another_property_sell">
+								<div class="form-group">
+									<label class="form-label">Enter the property name that is selling</label>
+									<input type="text" name="another_property_sell" id="another_property_sell" value="" />
+									<span class="text-input">example: Jones, Johnson, etc. </span>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-flex">
+									<div class="form-group">
+										<label class="form-label">From</label>
+										<input type="text" class="datepicker" name="from_date" id="from_date" required="required" value="" />
+									</div>
+									<div class="form-group">
+										<label class="form-label">To</label>
+										<input type="text" class="datepicker" name="from_to" id="from_to" required="required" value="" />
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Would you like to add another residence?</label>
+									<select id="is_another_residence" name="is_another_residence" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="another_residence_container">
+								<div class="form-group">
+									<label class="form-label">Enter the another residence name</label>
+									<input type="text" name="another_residence" id="another_residence" value="" />
+									<span class="text-input">example: Jones, Johnson, etc. </span>
+								</div>
+							
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+											<label class="form-label">From</label>
+											<input type="text" class="datepicker" name="another_from_date" id="another_from_date" value="" />
+										</div>
+										<div class="form-group">
+											<label class="form-label">To</label>
+											<input type="text" class="datepicker" name="another_to_date" id="another_to_date" value="" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
+					<h3>Occupation History</h3>
+					<fieldset>
+						<h2>Occupation History</h2>
+						<p class="desc">Please enter your infomation below in regards to your employment history</p>
+						<div class="fieldset-content">
+							<div class="form-group">
+								<p class="buyer_desc">
+									<span class="desc_title">Seller 1 Employment History (Last 10 Years)</span>
+									<span class="desc_border"></span>
+								</p>
+							</div>
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Are You Currently Employed?</label>
+									<select id="is_currently_employed" name="is_currently_employed" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+									<span class="text-input"></span>
+								</div>
+							</div>
+							
+							<div class="d-none" id="currently_employed_container">
+								<div class="form-row">
+									<div class="form-group">
+										<label class="form-label">Please Enter Company Name</label>
+										<input type="text" name="employee_company_name" id="employee_company_name" value="" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">From:</label>
+											<input type="text" class="datepicker" name="from_employee_date" id="from_employee_date" value="" />
+										</div>
+
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">To:</label>
+											<input type="text" class="datepicker" name="to_employee_date" id="to_employee_date" value="" />
+										</div>
+									</div>
+								</div>
+							</div>
+						
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Would you like to add another occupation?</label>
+									<select id="is_add_another_occupation" name="is_add_another_occupation" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="another_occupation_container">
+								<div class="form-row">
+									<div class="form-group">
+										<label class="form-label">Please Enter Company Name</label>
+										<input type="text" name="employee_another_company_name" id="employee_another_company_name" value="" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">From:</label>
+											<input type="text" class="datepicker" name="another_from_employee_date" id="another_from_employee_date" value="" />
+										</div>
+
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">To:</label>
+											<input type="text" class="datepicker" name="another_to_employee_date" id="another_to_employee_date" value="" />
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Is Your Spouse/Domestic Partner employed?</label>
+									<select id="is_spouse_domestic_partner_employed" name="is_spouse_domestic_partner_employed" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+									<span class="text-input">example: Yes, No, etc. </span>
+								</div>
+							</div>
+							
+							<div class="d-none" id="spouse_domestic_partner_employed_container">
+								<div class="form-group">
+									<p class="buyer_desc">
+										<span class="desc_title">Spouse/Domestic Partner Employment</span>
+										<span class="desc_border"></span>
+									</p>
+								</div>
+								
+								<div class="form-row">
+									<div class="form-group">
+										<label class="form-label">Please Enter Company Name</label>
+										<input type="text" name="spouse_company_name" id="spouse_company_name" value="" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">From:</label>
+											<input type="text" class="datepicker" name="from_spouse_date" id="from_spouse_date" value="" />
+										</div>
+
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">To:</label>
+											<input type="text" class="datepicker" name="to_spouse_date" id="to_spouse_date" value="" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Would you like to add another occupation for your spouse/domestic partner?</label>
+									<select id="is_another_occupation_spouse_domestic" name="is_another_occupation_spouse_domestic" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="another_spouse_domestic_partner_employed_container">
+								<div class="form-group">
+									<p class="buyer_desc">
+										<span class="desc_title">Spouse/Domestic Partner Employment</span>
+										<span class="desc_border"></span>
+									</p>
+								</div>
+								
+								<div class="form-row">
+									<div class="form-group">
+										<label class="form-label">Please Enter Company Name</label>
+										<input type="text" name="another_spouse_company_name" id="another_spouse_company_name" value="" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">From:</label>
+											<input type="text" class="datepicker" name="another_from_spouse_date" id="another_from_spouse_date" value="" />
+										</div>
+
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">To:</label>
+											<input type="text" class="datepicker" name="another_to_spouse_date" id="another_to_spouse_date" value="" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
 					<h3>Property & Loan</h3>
 					<fieldset>
 						<h2>About Your Loan</h2>
@@ -479,7 +773,7 @@
 											</select>
 											<span class="text-input">example: Conventional, FHA </span>
 										</div>
-										<div class="form-group">
+										<div class="form-group d-none">
 											<label class="form-label">Impound Accouunt?</label>
 											<select id="is_impound_account" name="is_impound_account">
 												<option value="">Select</option>
@@ -490,7 +784,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-row">
+								<div class="form-row d-none">
 									<div class="form-flex">
 										<div class="form-group">
 											<label class="form-label">Taxes Status</label>
@@ -564,7 +858,7 @@
 										</div>
 										<div class="form-group">
 											<label class="form-label">Payment Due Date</label>
-											<input type="text" name="second_payment_due_date"
+											<input type="text" class="datepicker" name="second_payment_due_date"
 												id="second_payment_due_date" />
 											<span class="text-input">example: 10/15/2022 </span>
 										</div>
@@ -584,7 +878,7 @@
 											</select>
 											<span class="text-input">example: Conventional, FHA </span>
 										</div>
-										<div class="form-group">
+										<div class="form-group d-none">
 											<label class="form-label">Impound Accouunt?</label>
 											<select id="second_is_impound_account" name="second_is_impound_account">
 												<option value="">Select</option>
@@ -595,7 +889,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-row">
+								<div class="form-row d-none">
 									<div class="form-flex">
 										<div class="form-group">
 											<label class="form-label">Taxes Status</label>
