@@ -3443,6 +3443,46 @@ class DashboardMail extends MX_Controller {
             );
             $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_packet_info');
 
+            $sellerInfo2Data = array(
+                'is_used_another_last_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
+                'another_last_name' => $this->input->post('another_last_name') ? $this->input->post('another_last_name') : null,
+                'is_married_or_domestic_partner' => $this->input->post('is_married_or_domestic_partner') ? $this->input->post('is_married_or_domestic_partner') : null,
+                'marriage_or_domestic_day' => $this->input->post('marriage_or_domestic_day') ? $this->input->post('marriage_or_domestic_day') : null,
+                'marriage_or_domestic_month' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month') : null,
+                'marriage_or_domestic_year' => $this->input->post('marriage_or_domestic_year') ? $this->input->post('marriage_or_domestic_year') : null,
+                'spouse_first_name' => $this->input->post('spouse_first_name') ? $this->input->post('spouse_first_name') : null,
+                'spouse_last_name' => $this->input->post('spouse_last_name') ? $this->input->post('spouse_last_name') : null,
+                'spouse_email' => $this->input->post('spouse_email') ? $this->input->post('spouse_email') : null,
+                'spouse_phone' => $this->input->post('spouse_phone') ? $this->input->post('spouse_phone') : null,
+                'spouse_birth_day' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_day') : null,
+                'spouse_birth_month' => $this->input->post('spouse_birth_month') ? $this->input->post('spouse_birth_month') : null,
+                'spouse_birth_year' => $this->input->post('spouse_birth_year') ? $this->input->post('spouse_birth_year') : null,
+                'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : null,
+                'is_property_sell_2' => $this->input->post('is_property_sell') ? $this->input->post('is_property_sell') : null,
+                'another_property_sell' => $this->input->post('another_property_sell') ? $this->input->post('another_property_sell') : null,
+                'from_date' => $this->input->post('from_date') ? $this->input->post('from_date') : null,
+                'from_to' => $this->input->post('from_to') ? $this->input->post('from_to') : null,
+                'is_another_residence' => $this->input->post('is_another_residence') ? $this->input->post('is_another_residence') : null,
+                'another_residence' => $this->input->post('another_residence') ? $this->input->post('another_residence') : null,
+                'another_from_date' => $this->input->post('another_from_date') ? $this->input->post('another_from_date') : null,
+                'another_to_date' => $this->input->post('another_to_date') ? $this->input->post('another_to_date') : null,
+                'is_currently_employed' => $this->input->post('is_currently_employed') ? $this->input->post('is_currently_employed') : null,
+                'employee_company_name' => $this->input->post('employee_company_name') ? $this->input->post('employee_company_name') : null,
+                'from_employee_date' => $this->input->post('from_employee_date') ? $this->input->post('from_employee_date') : null,
+                'to_employee_date' => $this->input->post('to_employee_date') ? $this->input->post('to_employee_date') : null,
+                'is_add_another_occupation' => $this->input->post('is_add_another_occupation') ? $this->input->post('is_add_another_occupation') : null,
+                'employee_another_company_name' => $this->input->post('employee_another_company_name') ? $this->input->post('employee_another_company_name') : null,
+                'another_from_employee_date' => $this->input->post('another_from_employee_date') ? $this->input->post('another_from_employee_date') : null,
+                'another_to_employee_date' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : null,
+                'is_spouse_domestic_partner_employed' => $this->input->post('is_spouse_domestic_partner_employed') ? $this->input->post('is_spouse_domestic_partner_employed') : null,
+                'spouse_company_name' => $this->input->post('spouse_company_name') ? $this->input->post('spouse_company_name') : null,
+                'from_spouse_date' => $this->input->post('from_spouse_date') ? $this->input->post('from_spouse_date') : null,
+                'is_another_occupation_spouse_domestic' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : null,
+                'another_spouse_company_name' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : null,
+                'another_from_spouse_date' => $this->input->post('another_from_spouse_date') ? $this->input->post('another_from_spouse_date') : null,
+                'another_to_spouse_date' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : null
+            );
+            $this->home_model->insert($sellerInfo2Data, 'pct_order_borrower_seller_packet_info_2');
 
 			//Generate PDF
 			$pdf_fields_val  = [
@@ -3473,7 +3513,61 @@ class DashboardMail extends MX_Controller {
                 'Custom Field 29' => $this->input->post('water_company') ? $this->input->post('water_company') : '',
                 'Copy of Custom Field 28 (1)' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : '',
                 'Custom Field 31' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
-			];
+                'Drop Down 1' => '', 
+                'escrow_number' => $orderDetails['escrow_number'],
+                'escrow_number_2' => $orderDetails['escrow_number'],
+                'residence_address' => $this->input->post('is_property_sell_2') == 'Yes' ? $orderDetails['full_address'] : $this->input->post('another_property_sell'),
+                'residence_address_1' => $this->input->post('another_residence') ? $this->input->post('another_residence') : '',
+                'residence_address_2' => '',
+                'residence_from' => $this->input->post('from_date') ? $this->input->post('from_date') : '',
+                'residence_from_1' => $this->input->post('another_from_date') ? $this->input->post('another_from_date') : '',
+                'residence_from_2' => '',
+                'residence_to' => $this->input->post('from_to') ? $this->input->post('from_to') : '',
+                'residence_to_1' => $this->input->post('another_to_date') ? $this->input->post('another_to_date') : '',
+                'residence_to_2' => '',
+                'seller_birth_place' => '',
+                'seller_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'seller_last_name' => $seller_info_pdf['last_names'][0],
+                'seller_lived_in_usa' => '',
+                'seller_married' => $this->input->post('is_married') ? $this->input->post('is_married') : '',
+                'seller_no' => '1',
+                'seller_occupation' => $this->input->post('employee_company_name') ? $this->input->post('employee_company_name') : '',
+                'seller_occupation_1' => $this->input->post('employee_another_company_name') ? $this->input->post('employee_another_company_name') : '',
+                'seller_occupation_2' => '',
+                'seller_occupation_from' => $this->input->post('from_employee_date') ? $this->input->post('from_employee_date') : '',
+                'seller_occupation_from_1' => $this->input->post('another_from_employee_date') ? $this->input->post('another_from_employee_date') : '',
+                'seller_occupation_from_2' => '',
+                'seller_occupation_to' => $this->input->post('to_employee_date') ? $this->input->post('to_employee_date') : '',
+                'seller_occupation_to_1' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : '',
+                'seller_occupation_to_2' =>  '',
+                'seller_ssn' => $seller_info_pdf['ssns'][0],
+                'seller_state_residence' => '',
+                'seller_first_name' => $seller_info_pdf['first_names'][0],
+                'signature_3_name' => $seller_info_pdf['first_names'][0]." ".$seller_info_pdf['last_names'][0],
+                'seller_birth_date' => $seller_info[0]['birth_month']."/".$seller_info[0]['birth_day']."/".$seller_info[0]['birth_year'],
+                'signature_4_name' => $seller_info_pdf['first_names'][1]." ".$seller_info_pdf['last_names'][1],
+                'spouse_birth_place' => '',
+                'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month')."/".$this->input->post('spouse_birth_day')."/".$this->input->post('spouse_birth_year') : '',
+                'spouse_domestic_address' => $this->input->post('spouse_company_name') ? $this->input->post('spouse_company_name') : '',
+                'spouse_domestic_address_1' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : '',
+                'spouse_domestic_address_2' => '',
+                'spouse_domestic_from' => $this->input->post('from_spouse_date') ? $this->input->post('from_spouse_date') : '',
+                'spouse_domestic_from_1' => $this->input->post('another_from_spouse_date') ? $this->input->post('another_from_spouse_date') : '',
+                'spouse_domestic_from_2' => '',
+                'spouse_domestic_to' => $this->input->post('to_spouse_date') ? $this->input->post('to_spouse_date') : '',
+                'spouse_domestic_to_1' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : '',
+                'spouse_domestic_to_2' => '',
+                'spouse_driver_license' =>  '',
+                'spouse_first_name' => $this->input->post('spouse_first_name') ? $this->input->post('spouse_first_name') : '',
+                'spouse_last_name' => $this->input->post('spouse_last_name') ? $this->input->post('spouse_last_name') : '',
+                'spouse_lived_in_usa' => '',
+                'spouse_marriage_date' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'spouse_other_last_name' => '',
+                'spouse_residence' => '',
+                'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : '',
+                'title_number' => $orderDetails['file_number'],
+                'title_number_2' => $orderDetails['file_number'],
+            ];
 
             if (count($seller_info_pdf['emails']) > 0) {
                 $total_count = count($seller_info_pdf['emails']);
@@ -3541,11 +3635,14 @@ class DashboardMail extends MX_Controller {
 
                         if ($email_sent_odd_flag == 1) {
                             $postData = array(
-                                'fileInfos' => array(
-                                    array(
+                                'fileInfos' => [
+                                    [
                                         'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
-                                    ),
-                                ),
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID')
+                                    ],
+                                ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
                                     array (
@@ -3565,11 +3662,14 @@ class DashboardMail extends MX_Controller {
                             );
                         } else {
                             $postData = array(
-                                'fileInfos' => array(
-                                    array(
+                                'fileInfos' => [
+                                    [
                                         'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
-                                    ),
-                                ),
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID')
+                                    ],
+                                ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
                                     array (
@@ -3659,7 +3759,7 @@ class DashboardMail extends MX_Controller {
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);
+            $this->session->set_userdata($data);exit;
             redirect(base_url().'seller-info/'.$random_number);exit;
         }
         $this->load->view('order/borrower_seller_info_1', $data);
