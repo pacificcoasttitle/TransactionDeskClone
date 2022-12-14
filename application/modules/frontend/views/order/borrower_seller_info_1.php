@@ -461,7 +461,7 @@
 							<div class="form-row">
 								<div class="form-group">
 									<label class="form-label">Is the property you are selling:
-										6768 San Onofre Dr, Camarillo, CA, 93012</label>
+										<?php echo $orderDetails['full_address'];?></label>
 									<select id="is_property_sell_2" name="is_property_sell_2" required="required">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
