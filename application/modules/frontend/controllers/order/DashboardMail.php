@@ -3759,7 +3759,7 @@ class DashboardMail extends MX_Controller {
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);exit;
+            $this->session->set_userdata($data);
             redirect(base_url().'seller-info/'.$random_number);exit;
         }
         $this->load->view('order/borrower_seller_info_1', $data);
