@@ -3741,7 +3741,7 @@ class DashboardMail extends MX_Controller {
                                     );
                                     $this->document->insert($documentData);
                                     $pdf_url = env('AWS_PATH')."borrower/".$document_name;
-                                    $success[0] = "Borrower buyer info saved successfully. <br>
+                                    $success[0] = "Borrower seller info saved successfully. <br>
                                     We also sent mail to seller users for sign document.";
                                 }
                             } else {
