@@ -3399,7 +3399,7 @@ class DashboardMail extends MX_Controller {
                     $seller_info_pdf['current_mailing_address'][] = $seller_info['current_mailing_address'];
 					$seller_info_pdf['emails'][] = $seller_info['email'];
 					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
-                    $seller_info_pdf['birth_dates'][] = $seller_value['birth_month']."/".$seller_value['birth_date']."/".$seller_value['birth_year'];
+                    $seller_info_pdf['birth_dates'][] = $seller_info['birth_month']."/".$seller_info['birth_date']."/".$seller_info['birth_year'];
 				}
 			}
            
