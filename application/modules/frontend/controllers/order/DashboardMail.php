@@ -3399,6 +3399,7 @@ class DashboardMail extends MX_Controller {
                     $seller_info_pdf['current_mailing_address'][] = $seller_info['current_mailing_address'];
 					$seller_info_pdf['emails'][] = $seller_info['email'];
 					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
+                    $seller_info_pdf['birth_dates'][] = $seller_value['birth_month']."/".$seller_value['birth_date']."/".$seller_value['birth_year'];
 				}
 			}
            
@@ -3486,12 +3487,11 @@ class DashboardMail extends MX_Controller {
 
 			//Generate PDF
 			$pdf_fields_val  = [
-				'Custom Field 1' => $orderDetails['escrow_number'],
+				'Custom Field 1' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
 				'Custom Field 2' => $orderDetails['file_number'],
                 'Custom Field 17' => $orderDetails['full_address'],
                 'Custom Field 24' => $orderDetails['full_address'],
-                'Custom Field 37' => $orderDetails['escrow_number'],
-				'Custom Field 38' => $orderDetails['file_number'],
+                'Custom Field 37' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],				'Custom Field 38' => $orderDetails['file_number'],
                 'Custom Field 18' => $this->input->post('lender_name') ? $this->input->post('lender_name') : '',
                 'Copy of Custom Field 9 (1)' => $this->input->post('lender_address') ? $this->input->post('lender_address') : '',
                 'Custom Field 19' => $this->input->post('loan_number') ? $this->input->post('loan_number') : '',
@@ -3513,9 +3513,9 @@ class DashboardMail extends MX_Controller {
                 'Custom Field 29' => $this->input->post('water_company') ? $this->input->post('water_company') : '',
                 'Copy of Custom Field 28 (1)' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : '',
                 'Custom Field 31' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
-                'Drop Down 1' => '', 
-                'escrow_number' => $orderDetails['escrow_number'],
-                'escrow_number_2' => $orderDetails['escrow_number'],
+                'Drop Down 1' => $this->input->post('is_married') == 'married' ? 'Yes' : 'No', 
+                'escrow_number' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'escrow_number_2' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
                 'residence_address' => $this->input->post('is_property_sell_2') == 'Yes' ? $orderDetails['full_address'] : $this->input->post('another_property_sell'),
                 'residence_address_1' => $this->input->post('another_residence') ? $this->input->post('another_residence') : '',
                 'residence_address_2' => '',
@@ -3529,7 +3529,7 @@ class DashboardMail extends MX_Controller {
                 'seller_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
                 'seller_last_name' => $seller_info_pdf['last_names'][0],
                 'seller_lived_in_usa' => '',
-                'seller_married' => $this->input->post('is_married') ? $this->input->post('is_married') : '',
+                'seller_married' => $this->input->post('is_married') == 'married' ? 'Yes' : 'No',
                 'seller_no' => '1',
                 'seller_occupation' => $this->input->post('employee_company_name') ? $this->input->post('employee_company_name') : '',
                 'seller_occupation_1' => $this->input->post('employee_another_company_name') ? $this->input->post('employee_another_company_name') : '',
@@ -3544,7 +3544,7 @@ class DashboardMail extends MX_Controller {
                 'seller_state_residence' => '',
                 'seller_first_name' => $seller_info_pdf['first_names'][0],
                 'signature_3_name' => $seller_info_pdf['first_names'][0]." ".$seller_info_pdf['last_names'][0],
-                'seller_birth_date' => $seller_info[0]['birth_month']."/".$seller_info[0]['birth_day']."/".$seller_info[0]['birth_year'],
+                'seller_birth_date' => $seller_info_pdf['birth_dates'][0],
                 'signature_4_name' => $seller_info_pdf['first_names'][1]." ".$seller_info_pdf['last_names'][1],
                 'spouse_birth_place' => '',
                 'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month')."/".$this->input->post('spouse_birth_day')."/".$this->input->post('spouse_birth_year') : '',
@@ -3567,6 +3567,11 @@ class DashboardMail extends MX_Controller {
                 'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : '',
                 'title_number' => $orderDetails['file_number'],
                 'title_number_2' => $orderDetails['file_number'],
+                'escrow_number_disposition' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'title_number_disposition' => $orderDetails['file_number'],
+                'address_disposition' => $orderDetails['full_address'],
+                'escrow_number_proceed' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'title_number_proceed' => $orderDetails['file_number'],
             ];
 
             if (count($seller_info_pdf['emails']) > 0) {
@@ -3642,6 +3647,12 @@ class DashboardMail extends MX_Controller {
                                     [
                                         'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID')
                                     ],
+                                    [
+                                        'libraryDocumentId' => 'CBJCHBCAABAADo5s4v2-sHYm9aHJf-iURR5n-EsI6NKK'
+                                    ],
+                                    [
+                                        'libraryDocumentId' => 'CBJCHBCAABAAJE8Vvvn8ale4sCEVAPYEt0tOmP5LqekR'
+                                    ],
                                 ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
@@ -3668,6 +3679,12 @@ class DashboardMail extends MX_Controller {
                                     ],
                                     [
                                         'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => 'CBJCHBCAABAADo5s4v2-sHYm9aHJf-iURR5n-EsI6NKK'
+                                    ],
+                                    [
+                                        'libraryDocumentId' => 'CBJCHBCAABAAJE8Vvvn8ale4sCEVAPYEt0tOmP5LqekR'
                                     ],
                                 ],
                                 'name' => 'Test',
