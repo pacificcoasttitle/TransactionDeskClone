@@ -216,7 +216,144 @@
 
 	});
 
+    $('#is_used_another_last_name').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#another_last_name_container").removeClass("d-none");
+            $('#another_last_name').prop('required',true);
+        } else {
+            $("#another_last_name_container").addClass("d-none");
+            $('#another_last_name').prop('required',false);
+        }
+    });
+
+    $('#is_married_or_domestic_partner').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#married_or_domestic_partner").removeClass("d-none");
+            $('#marriage_or_domestic_day').prop('required',true);
+            $('#marriage_or_domestic_month').prop('required',true);
+            $('#marriage_or_domestic_year').prop('required',true);
+            $('#spouse_first_name').prop('required',true);
+            $('#spouse_last_name').prop('required',true);
+            $('#spouse_email').prop('required',true);
+            $('#spouse_phone').prop('required',true);
+            $('#spouse_birth_day').prop('required',true);
+            $('#spouse_birth_month').prop('required',true);
+            $('#spouse_birth_year').prop('required',true);
+            $('#spouse_ssn').prop('required',true);
+        } else {
+            $("#married_or_domestic_partner").addClass("d-none");
+            $('#marriage_or_domestic_day').prop('required',false);
+            $('#marriage_or_domestic_month').prop('required',false);
+            $('#marriage_or_domestic_year').prop('required',false);
+            $('#spouse_first_name').prop('required',false);
+            $('#spouse_last_name').prop('required',false);
+            $('#spouse_email').prop('required',false);
+            $('#spouse_phone').prop('required',false);
+            $('#spouse_birth_day').prop('required',false);
+            $('#spouse_birth_month').prop('required',false);
+            $('#spouse_birth_year').prop('required',false);
+            $('#spouse_ssn').prop('required',false);
+        }
+    });
+
+    $('#is_currently_employed').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#currently_employed_container").removeClass("d-none");
+            $('#employee_company_name').prop('required',true);
+            $('#from_employee_date').prop('required',true);
+            $('#to_employee_date').prop('required',true);
+        } else {
+            $("#currently_employed_container").addClass("d-none");
+            $('#employee_company_name').prop('required',false);
+            $('#from_employee_date').prop('required',false);
+            $('#to_employee_date').prop('required',false);
+        }
+    });
+
+    $('#is_spouse_domestic_partner_employed').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#spouse_domestic_partner_employed_container").removeClass("d-none");
+            $('#spouse_company_name').prop('required',true);
+            $('#from_spouse_date').prop('required',true);
+            $('#to_spouse_date').prop('required',true);
+        } else {
+            $("#spouse_domestic_partner_employed_container").addClass("d-none");
+            $('#spouse_company_name').prop('required',false);
+            $('#from_spouse_date').prop('required',false);
+            $('#to_spouse_date').prop('required',false);
+        }
+    });
+
+    $('#is_another_occupation_spouse_domestic').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#another_spouse_domestic_partner_employed_container").removeClass("d-none");
+            $('#another_spouse_company_name').prop('required',true);
+            $('#another_from_spouse_date').prop('required',true);
+            $('#another_to_spouse_date').prop('required',true);
+        } else {
+            $("#another_spouse_domestic_partner_employed_container").addClass("d-none");
+            $('#another_spouse_company_name').prop('required',false);
+            $('#another_from_spouse_date').prop('required',false);
+            $('#another_to_spouse_date').prop('required',false);
+        }
+    });
+
+    $('#is_property_sell_2').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'No'){
+            $("#is_another_property_sell").removeClass("d-none");
+            $('#another_property_sell').prop('required',true);
+        } else {
+            $("#is_another_property_sell").addClass("d-none");
+            $('#another_property_sell').prop('required',false);
+        }
+    });
+
+    $('#is_another_residence').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'Yes'){
+            $("#another_residence_container").removeClass("d-none");
+            $('#another_residence').prop('required',true);
+            $('#another_from_date').prop('required',true);
+            $('#another_to_date').prop('required',true);
+        } else {
+            $("#another_residence_container").addClass("d-none");
+            $('#another_residence').prop('required',false);
+            $('#another_from_date').prop('required',false);
+            $('#another_to_date').prop('required',false);
+        }
+    });
+
+    $('#is_add_another_occupation').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if (selectedvalue == 'Yes') {
+            $("#another_occupation_container").removeClass("d-none");
+            $('#employee_another_company_name').prop('required',true);
+            $('#another_from_employee_date').prop('required',true);
+            $('#another_to_employee_date').prop('required',true);
+        } else {
+            $("#another_occupation_container").addClass("d-none");
+            $('#employee_another_company_name').prop('required',false);
+            $('#another_from_employee_date').prop('required',false);
+            $('#another_to_employee_date').prop('required',false);
+        }
+    });
+
 	$(".phone_mask").mask('(000) 000-0000');
 	$(".amount_mask").mask("#,##0", {reverse: true});
 	$(".ssn").mask('000-00-0000');
+    $( ".datepicker" ).datepicker();
 })(jQuery);
