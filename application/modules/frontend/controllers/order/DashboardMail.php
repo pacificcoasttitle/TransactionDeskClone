@@ -3485,7 +3485,7 @@ class DashboardMail extends MX_Controller {
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);exit;
+            $this->session->set_userdata($data);
             redirect(base_url().'buyer-info/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer_info1', $data);
