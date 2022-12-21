@@ -3080,9 +3080,14 @@ class DashboardMail extends MX_Controller {
 					}
 
 					$buyers_names[] = $buyer_info['first_name'].' '.$buyer_info['last_name'];
+                    $buyer_pdf['first_names'][] = $buyer_info['first_name'];
+                    $buyer_pdf['last_names'][] = $buyer_info['last_name'];
+                    $buyer_pdf['current_mailing_address'][] = $buyer_info['current_mailing_address'];
 					$buyer_pdf['phones'][] = $buyer_info['phone'];
 					$buyer_pdf['emails'][] = $buyer_info['email'];
 					$buyer_pdf['ssns'][] = $buyer_info['ssn'];
+                    $buyer_pdf['birth_dates'][] = $buyer_info['birth_month']."/".$buyer_info['birth_date']."/".$buyer_info['birth_year'];
+
 					if($is_first) {
 						$buyer_pdf['current_address'] = $buyer_info['current_mailing_address'];
 						$buyer_pdf['closing_address'] = $buyer_info['mailing_address_port_closing'];
@@ -3137,24 +3142,49 @@ class DashboardMail extends MX_Controller {
                 'property_vested'=>$this->input->post('property_vested')
             );
             $inserted_wizard_id=$this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
-			$buyer_pdf['lender_name'] = $borrowerBuyerInfoData['lender_name'];
-			$buyer_pdf['ins_agency_name'] = $borrowerBuyerInfoData['ins_agency_name'];
-			$buyer_pdf['ins_agent_name'] = $borrowerBuyerInfoData['ins_agent_name'];
-			$buyer_pdf['property_vested'] = $borrowerBuyerInfoData['property_vested'];
+
+            $buyerInfo2Data = array(
+                'is_used_another_last_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
+                'another_last_name' => $this->input->post('another_last_name') ? $this->input->post('another_last_name') : null,
+                'is_married_or_domestic_partner' => $this->input->post('is_married_or_domestic_partner') ? $this->input->post('is_married_or_domestic_partner') : null,
+                'marriage_or_domestic_day' => $this->input->post('marriage_or_domestic_day') ? $this->input->post('marriage_or_domestic_day') : null,
+                'marriage_or_domestic_month' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month') : null,
+                'marriage_or_domestic_year' => $this->input->post('marriage_or_domestic_year') ? $this->input->post('marriage_or_domestic_year') : null,
+                'spouse_first_name' => $this->input->post('spouse_first_name') ? $this->input->post('spouse_first_name') : null,
+                'spouse_last_name' => $this->input->post('spouse_last_name') ? $this->input->post('spouse_last_name') : null,
+                'spouse_email' => $this->input->post('spouse_email') ? $this->input->post('spouse_email') : null,
+                'spouse_phone' => $this->input->post('spouse_phone') ? $this->input->post('spouse_phone') : null,
+                'spouse_birth_day' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_day') : null,
+                'spouse_birth_month' => $this->input->post('spouse_birth_month') ? $this->input->post('spouse_birth_month') : null,
+                'spouse_birth_year' => $this->input->post('spouse_birth_year') ? $this->input->post('spouse_birth_year') : null,
+                'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : null,
+                'is_property_sell_2' => $this->input->post('is_property_sell') ? $this->input->post('is_property_sell') : null,
+                'another_property_sell' => $this->input->post('another_property_sell') ? $this->input->post('another_property_sell') : null,
+                'from_date' => $this->input->post('from_date') ? $this->input->post('from_date') : null,
+                'from_to' => $this->input->post('from_to') ? $this->input->post('from_to') : null,
+                'is_another_residence' => $this->input->post('is_another_residence') ? $this->input->post('is_another_residence') : null,
+                'another_residence' => $this->input->post('another_residence') ? $this->input->post('another_residence') : null,
+                'another_from_date' => $this->input->post('another_from_date') ? $this->input->post('another_from_date') : null,
+                'another_to_date' => $this->input->post('another_to_date') ? $this->input->post('another_to_date') : null,
+                'is_currently_employed' => $this->input->post('is_currently_employed') ? $this->input->post('is_currently_employed') : null,
+                'employee_company_name' => $this->input->post('employee_company_name') ? $this->input->post('employee_company_name') : null,
+                'from_employee_date' => $this->input->post('from_employee_date') ? $this->input->post('from_employee_date') : null,
+                'to_employee_date' => $this->input->post('to_employee_date') ? $this->input->post('to_employee_date') : null,
+                'is_add_another_occupation' => $this->input->post('is_add_another_occupation') ? $this->input->post('is_add_another_occupation') : null,
+                'employee_another_company_name' => $this->input->post('employee_another_company_name') ? $this->input->post('employee_another_company_name') : null,
+                'another_from_employee_date' => $this->input->post('another_from_employee_date') ? $this->input->post('another_from_employee_date') : null,
+                'another_to_employee_date' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : null,
+                'is_spouse_domestic_partner_employed' => $this->input->post('is_spouse_domestic_partner_employed') ? $this->input->post('is_spouse_domestic_partner_employed') : null,
+                'spouse_company_name' => $this->input->post('spouse_company_name') ? $this->input->post('spouse_company_name') : null,
+                'from_spouse_date' => $this->input->post('from_spouse_date') ? $this->input->post('from_spouse_date') : null,
+                'is_another_occupation_spouse_domestic' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : null,
+                'another_spouse_company_name' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : null,
+                'another_from_spouse_date' => $this->input->post('another_from_spouse_date') ? $this->input->post('another_from_spouse_date') : null,
+                'another_to_spouse_date' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : null
+            );
+            $this->home_model->insert($buyerInfo2Data, 'pct_order_borrower_buyer_info_wizard_2');
+
 			
-			//Generate PDF
-			$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_update.pdf';
-			$pdf = new Pdf($pdf_templates_file);
-			$type = 'buyer';
-			$document_name = $type.'_'.time().'.pdf';
-			$dir_to_upload = 'uploads/escrow/'.$type;
-			if (!is_dir(FCPATH.$dir_to_upload)) {
-				mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
-			}
-			chmod(FCPATH.$dir_to_upload, 0777);
-			$dir_name = FCPATH.$dir_to_upload.'/';
-			$dir_name = str_replace('\\', '/', $dir_name);
-			$file_full_path = $dir_name.$document_name;
 			$vesting_buyer_name = $vesting_buyer_name1 = implode(', ',$vesting_info['names']);
 			$vesting_buyer_name2 = '';
 			if(strlen($vesting_buyer_name) > 100 && count($vesting_info['names']) > 2){
@@ -3163,168 +3193,299 @@ class DashboardMail extends MX_Controller {
 				unset($vesting_info['names'][1]);
 				$vesting_buyer_name2 =  implode(', ',$vesting_info['names']);
 			}
-			$pdf_fields_val = [
-				'1 Buyers'=> implode(',',$buyer_pdf['buyers_name']),
-				'Social Security 1'=>$buyer_pdf['ssn'],
-				// 'Social Security'=>$this->input->post('second_ssn'),
-				'Buyers Current Mailing Address'=>$buyer_pdf['current_address'],
-				'1_3'=>$buyer_pdf['closing_address'],
-				'Name Of Lender'=>$buyer_pdf['lender_name'],
-				'Agents Name'=>$borrowerBuyerInfoData['loan_officer_name'],
-				'Name Of Lender_2'=>$borrowerBuyerInfoData['loan_officer_email'],
-				'Loan_Processor_Name'=>$borrowerBuyerInfoData['loan_processor_name'],
-				'LoanProcessor_Phone_Email'=>$borrowerBuyerInfoData['loan_processor_phone'].'/'.$borrowerBuyerInfoData['loan_processor_email'],
-				'Agents Name_3'=>$borrowerBuyerInfoData['ins_agent_name'],
-				'Insurance_Agent_Phone'=>$borrowerBuyerInfoData['ins_agent_phone'],
-				'Insurance Company'=>$borrowerBuyerInfoData['ins_agency_name'],
-				'Insurance_Email'=>$borrowerBuyerInfoData['ins_agent_email'],
-				'Names 1' => $vesting_buyer_name1,
-				'Names 2' => $vesting_buyer_name2,
-				'First Name'=>$main_buyer['first_name'],
-				'Last Name'=>$main_buyer['last_name'],
-				'Date of Birth'=>$main_buyer['birth_date'].'/'.$main_buyer['birth_month'].'/'.$main_buyer['birth_year'],
-				'Home Phone'=>$main_buyer['phone'],
-				'Social Security No'=>$main_buyer['ssn'],
-				'Escrow#'=>$orderDetails['escrow_number'],
-				'Title#'=>$orderDetails['file_number'],
-				'Date'=>date('d/m/Y'),
-				'Dated_2'=>date('d/m/Y'),
-			];
-			if($main_buyer['married_to'] && $buyer_infos[$main_buyer['married_to']]) {
+
+            $pdf_fields_val  = [
+                'buyer_another_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
+				'escrow_number' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'escrow_number_1' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+				'title_number' => $orderDetails['file_number'],
+                'title_number_1' => $orderDetails['file_number'],
+                'property_address' => $orderDetails['full_address'],
+                'property_address_1' => $orderDetails['full_address'],
+                'lender_name' => $this->input->post('lender_name') ? $this->input->post('lender_name') : '',
+                'lender_loan_amount' => $this->input->post('loan_amount') ? $this->input->post('loan_amount') : '',
+                'lender_loan_officer' => $this->input->post('loan_officer_name') ? $this->input->post('loan_officer_name') : '',
+                'lender_email' => $this->input->post('loan_officer_email') ? $this->input->post('loan_officer_email') : '',
+                'lender_phone' => $this->input->post('loan_officer_phone') ? $this->input->post('loan_officer_phone') : '',
+                'lender_name_1' => $this->input->post('loan_processor_name') ? $this->input->post('loan_processor_name') : '',
+                'lender_loan_amount_1' => $this->input->post('loan_amount') ? $this->input->post('loan_amount') : '',
+                'lender_loan_officer_1' => $this->input->post('loan_officer_name') ? $this->input->post('loan_officer_name') : '',
+                'lender_email_1' => $this->input->post('loan_processor_email') ? $this->input->post('loan_processor_email') : '',
+                'lender_phone_1' => $this->input->post('loan_processor_phone') ? $this->input->post('loan_processor_phone') : '',
+                'hoa_company' => $this->input->post('ins_agency_name') ? $this->input->post('ins_agency_name') : '',
+                'hoa_agent' => $this->input->post('ins_agent_name') ? $this->input->post('ins_agent_name') : '',
+                'hoa_email' => $this->input->post('ins_agent_email') ? $this->input->post('ins_agent_email') : '',
+                'hoa_phone' => $this->input->post('ins_agent_phone') ? $this->input->post('ins_agent_phone') : '',
+                'hoa_quote' => $this->input->post('annual_premium') ? $this->input->post('annual_premium') : '',
+                'tc_company' => '',
+                'tc_name' => '',
+                'tc_phone' => '',
+                'tc_email' => '',
+                'buyer_married' => $this->input->post('marriage_or_domestic_month') ? 'Yes' : 'No', 
+                'escrow_number_3' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'escrow_number_2' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'residence_address' => $this->input->post('is_property_sell_2') == 'Yes' ? $orderDetails['full_address'] : $this->input->post('another_property_sell'),
+                'residence_address_1' => $this->input->post('another_residence') ? $this->input->post('another_residence') : '',
+                'residence_address_2' => '',
+                'residence_from' => $this->input->post('from_date') ? $this->input->post('from_date') : '',
+                'residence_from_1' => $this->input->post('another_from_date') ? $this->input->post('another_from_date') : '',
+                'residence_from_2' => '',
+                'residence_to' => $this->input->post('from_to') ? $this->input->post('from_to') : '',
+                'residence_to_1' => $this->input->post('another_to_date') ? $this->input->post('another_to_date') : '',
+                'residence_to_2' => '',
+                'buyer_birth_place' => '',
+                'buyer_last_name_2' => $buyer_pdf['last_names'][0],
+                'buyer_lived_in_usa' => '',
+                'buyer_married' => $this->input->post('is_married') == 'married' ? 'Yes' : 'No',
+                'buyer_no' => '1',
+                'buyer_occupation' => $this->input->post('employee_company_name') ? $this->input->post('employee_company_name') : '',
+                'buyer_occupation_1' => $this->input->post('employee_another_company_name') ? $this->input->post('employee_another_company_name') : '',
+                'buyer_occupation_2' => '',
+                'buyer_occupation_from' => $this->input->post('from_employee_date') ? $this->input->post('from_employee_date') : '',
+                'buyer_occupation_from_1' => $this->input->post('another_from_employee_date') ? $this->input->post('another_from_employee_date') : '',
+                'buyer_occupation_from_2' => '',
+                'buyer_occupation_to' => $this->input->post('to_employee_date') ? $this->input->post('to_employee_date') : '',
+                'buyer_occupation_to_1' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : '',
+                'buyer_occupation_to_2' =>  '',
+                'buyer_ssn_2' => $buyer_pdf['ssns'][0],
+                'buyer_state_residence' => '',
+                'buyer_first_name_2' => $buyer_pdf['first_names'][0],
+                'buyer_birth_date_2' => $buyer_pdf['birth_dates'][0],
+                'spouse_birth_place' => '',
+                'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month')."/".$this->input->post('spouse_birth_day')."/".$this->input->post('spouse_birth_year') : '',
+                'spouse_domestic_address' => $this->input->post('spouse_company_name') ? $this->input->post('spouse_company_name') : '',
+                'spouse_domestic_address_1' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : '',
+                'spouse_domestic_address_2' => '',
+                'spouse_domestic_from' => $this->input->post('from_spouse_date') ? $this->input->post('from_spouse_date') : '',
+                'spouse_domestic_from_1' => $this->input->post('another_from_spouse_date') ? $this->input->post('another_from_spouse_date') : '',
+                'spouse_domestic_from_2' => '',
+                'spouse_domestic_to' => $this->input->post('to_spouse_date') ? $this->input->post('to_spouse_date') : '',
+                'spouse_domestic_to_1' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : '',
+                'spouse_domestic_to_2' => '',
+                'spouse_driver_license' =>  '',
+                'spouse_first_name' => $this->input->post('spouse_first_name') ? $this->input->post('spouse_first_name') : '',
+                'spouse_last_name' => $this->input->post('spouse_last_name') ? $this->input->post('spouse_last_name') : '',
+                'spouse_lived_in_usa' => '',
+                'spouse_marriage_date' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'buyer_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'spouse_other_last_name' => '',
+                'spouse_residence' => '',
+                'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : '',
+                'title_number_2' => $orderDetails['file_number'],
+                'title_number_3' => $orderDetails['file_number'],
+            ];
+            
+            if($main_buyer['married_to'] && $buyer_infos[$main_buyer['married_to']]) {
 				$married_to_buyer = $buyer_infos[$main_buyer['married_to']];
 				$pdf_fields_val['Are you currently married'] = 'Checked';
 				$pdf_fields_val['Spouse'] = $married_to_buyer['first_name'].' '.$married_to_buyer['last_name'];
 				$pdf_fields_val['Date of Birth_2'] = $married_to_buyer['birth_date'].' / '.$married_to_buyer['birth_month'].'/'.$married_to_buyer['birth_year'];
 				$pdf_fields_val['Home Phone_2'] = $married_to_buyer['phone'];
 				$pdf_fields_val['Social Security No_2'] = $married_to_buyer['ssn'];
-
 			}
-			if(isset($buyer_pdf['phones'][0])) {
-				$pdf_fields_val['Buyer_1 Phone'] = $buyer_pdf['phones'][0];
-			}
-			if(isset($buyer_pdf['phones'][1])) {
-				$pdf_fields_val['Buyer_2_Phone'] = $buyer_pdf['phones'][1];
-			}
-			if(isset($buyer_pdf['emails'][0])) {
-				$pdf_fields_val['EMail Address'] = $buyer_pdf['emails'][0];
-			}
-			if(isset($buyer_pdf['emails'][1])) {
-				$pdf_fields_val['Buyer_2 Email'] = $buyer_pdf['emails'][1];
-			}
-			if(isset($buyer_pdf['ssns'][0])) {
-				$pdf_fields_val['Social Security 1'] = $buyer_pdf['ssns'][0];
-			}
-			if(isset($buyer_pdf['ssns'][1])) {
-				$pdf_fields_val['Social Security'] = $buyer_pdf['ssns'][1];
-			}
-			if($vesting_info['marital_status'] && is_array($vesting_info['marital_status'])) {
-				foreach($vesting_info['marital_status'] as $vesting_info) {
-					$key_to_check = $this->marital_status[$vesting_info]['text'];
-					$pdf_fields_val[$key_to_check] = 'Checked';
-				}
-			}
-			if($buyer_pdf['property_vested']) {
-				$key_to_check = $this->vesting_choice[$buyer_pdf['property_vested']]['pdf_val'];
-				$pdf_fields_val[$key_to_check] = 'Checked';
-				
-			}
-
-            $mergeFieldInfo = array();
-            foreach($pdf_fields_val as $key => $value) {
-                $mergeFieldInfo[] = array(
-                    'fieldName' => $key,
-                    'defaultValue' => $value,
-                );
-            }
-            $postData = array(
-                'fileInfos' => array(
-                    array(
-                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID')
-                    ),
-                ),
-                'name' => 'Test',
-                'participantSetsInfo' => array(
-                    array (
-                        'memberInfos' => array(
-                            array(
-                                'email' => $buyer_email
-                            ),
-                        ),
-                        'name' => 'Hitesh Patel',
-                        'order' => 1,
-                        'role' => 'SIGNER',
-                    ),
-                ),
-                'mergeFieldInfo' => $mergeFieldInfo,
-                'signatureType' => 'ESIGN',
-                'state' => 'IN_PROCESS'
-            );
-
-            $request_data = [
-                'url'			=>'api/rest/v6/agreements',
-                'request_type'	=>'POST',
-                'data_type'		=>'JSON',
-                'post_data' => $postData
-            ];
-            $this->load->library('order/adobe');
-            $response = $this->adobe->send_request($request_data);
-
-            if ($response['status'] && !empty($response['result'])) {
-                $result = json_decode($response['result'], true);
-                if (!empty($result['id'])) {
-                    $request_data = [
-                        'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
-                        'request_type'	=>'GET'
-                    ];
-                    $response_doc = $this->adobe->send_request($request_data);
-                    if (!empty($response_doc['status']) && $response_doc['result']) {
-                        if (!is_dir('uploads/borrower')) {
-                            mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+			
+            if (count($buyer_pdf['emails']) > 0) {
+                $total_count = count($buyer_pdf['emails']);
+                $i = 1;
+                $j = 1;
+                $email_sent_flag = 0;
+                foreach($buyer_pdf['emails'] as $buyer_email) {
+                    if ($total_count == $i) {
+                        if ($i % 2 != 0) {
+                            $pdf_fields_val['buyer_first_name'] = $buyer_pdf['first_names'][$i-1];
+                            $pdf_fields_val['buyer_last_name'] = $buyer_pdf['last_names'][$i-1];
+                            $pdf_fields_val['buyer_cell_phone'] = $buyer_pdf['phones'][$i-1];
+                            $pdf_fields_val['buyer_home_phone'] = '';
+                            $pdf_fields_val['buyer_email'] = $buyer_pdf['emails'][$i-1];
+                            $pdf_fields_val['buyer_ssn'] = $buyer_pdf['ssns'][$i-1];
+                            $pdf_fields_val['buyer_current_mailing_address'] = $buyer_pdf['current_mailing_address'][$i-1];
+                            $pdf_fields_val['buyer_num_field_1'] = $i;
+                            $pdf_fields_val['signature_1_name'] = $buyer_pdf['first_names'][$i-1]." ".$buyer_pdf['last_names'][$i-1];
+                
+                            $pdf_fields_val['buyer_first_name_1'] = "";
+                            $pdf_fields_val['buyer_last_name_1'] = "";
+                            $pdf_fields_val['buyer_cell_phone_1'] = "";
+                            $pdf_fields_val['buyer_home_phone_1'] = "";
+                            $pdf_fields_val['buyer_email_1'] = "";
+                            $pdf_fields_val['buyer_ssn_1'] = "";
+                            $pdf_fields_val['buyer_current_mailing_address_1'] = "";
+                            $pdf_fields_val['buyer_num_field_2'] = '';
+                            $pdf_fields_val['signature_2_name'] = '';
+                            $email_sent_odd_flag = 1;
                         }
-                        $document_name = $orderDetails['file_number'].'_buyer_sign.pdf';
-                        file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
-                        $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
-                        $documentData = array(
-                            'document_name' => $document_name,
-                            'original_document_name' => $document_name,
-                            'document_type_id' => 1041,
-                            'document_size' => ($data['file_size'] * 1000),
-                            'user_id' => 0,
-                            'order_id' => $orderDetails['order_id'],
-                            'task_id' => 4,
-                            'description' => 'Borrower Document',
-                            'is_buyer_pdf_adobe_doc' => 1,
-                            'is_sync' => 1,
-                            'is_uploaded_by_borrower' => 1
-                        );
-                        $this->document->insert($documentData);
-                        $pdf_url = env('AWS_PATH')."borrower/".$document_name;
-                        $success[] = "Borrower buyer info saved successfully. View PDF from <a href='$pdf_url' target='_blank' >here</a><br>
-                        We also sent mail to buyer user for sign document.";
                     }
-                } else {
-                    $errors[] = "Something went wrong. Please try again.";
-                }
-            } else {
-                $errors[] = "Something went wrong. Please try again.";
-            }
-            
-			/*$pdf->fillForm($pdf_fields_val)
-				->needAppearances()
-				->saveAs($file_full_path);
-			$pdf_url = base_url($dir_to_upload.'/'.$document_name); */    
+                    if ($i % 2 == 0) {
+                        $pdf_fields_val['buyer_first_name'] = $buyer_pdf['first_names'][$i-2];
+                        $pdf_fields_val['buyer_last_name'] = $buyer_pdf['last_names'][$i-2];
+                        $pdf_fields_val['buyer_cell_phone'] = $buyer_pdf['phones'][$i-2];
+                        $pdf_fields_val['buyer_home_phone'] = '';
+                        $pdf_fields_val['buyer_email'] = $buyer_pdf['emails'][$i-2];
+                        $pdf_fields_val['buyer_ssn'] = $buyer_pdf['ssns'][$i-2];
+                        $pdf_fields_val['buyer_current_mailing_address'] = $buyer_pdf['current_mailing_address'][$i-2];
+                        $pdf_fields_val['buyer_num_field_1'] = $i-1;
+                        $pdf_fields_val['signature_1_name'] = $buyer_pdf['first_names'][$i-2]." ".$buyer_pdf['last_names'][$i-2];
+                        
+                
+                        $pdf_fields_val['buyer_first_name_1'] = $buyer_pdf['first_names'][$i-1];
+                        $pdf_fields_val['buyer_last_name_1'] = $buyer_pdf['last_names'][$i-1];
+                        $pdf_fields_val['buyer_cell_phone_1'] = $buyer_pdf['phones'][$i-1];
+                        $pdf_fields_val['buyer_home_phone_1'] = '';
+                        $pdf_fields_val['buyer_email_1'] = $buyer_pdf['emails'][$i-1];
+                        $pdf_fields_val['buyer_ssn_1'] = $buyer_pdf['ssns'][$i-1];
+                        $pdf_fields_val['buyer_current_mailing_address_1'] = $buyer_pdf['current_mailing_address'][$i-1];
+                        
+                        $pdf_fields_val['signature_2_name'] = $buyer_pdf['first_names'][$i-1]." ".$buyer_pdf['last_names'][$i-1];
+                        $pdf_fields_val['buyer_num_field_2'] = $i;
+                        $email_sent_even_flag = 1;
+                    }
 
-			//Update table with pdf file name
-			//$this->home_model->update(["pdf_file"=>$document_name],["id"=>$inserted_wizard_id],'pct_order_borrower_buyer_info_wizard');
-			// echo $pdf_url;   
-			// die;
-            
-            // $success[] = "Borrower buyer info saved successfully.";
+                    if ($email_sent_odd_flag == 1 || $email_sent_even_flag == 1) {
+                        $mergeFieldInfo = array();
+                        foreach($pdf_fields_val as $key => $value) {
+                            $mergeFieldInfo[] = array(
+                                'fieldName' => $key,
+                                'defaultValue' => $value,
+                            );
+                        }
+
+                        if ($email_sent_odd_flag == 1) {
+                            $postData = array(
+                                'fileInfos' => [
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_STATEMENT_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_VESTING_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_PROCEED_DOCUMENT_ID')
+                                    ],
+                                ],
+                                'name' => 'Test',
+                                'participantSetsInfo' => array(
+                                    array (
+                                        'memberInfos' => array(
+                                            array(
+                                                'email' => $pdf_fields_val['buyer_email']
+                                            ),
+                                        ),
+                                        'name' => $pdf_fields_val['buyer_first_name']." ".$pdf_fields_val['buyer_last_name'],
+                                        'order' => 1,
+                                        'role' => 'SIGNER',
+                                    ),
+                                ),
+                                'mergeFieldInfo' => $mergeFieldInfo,
+                                'signatureType' => 'ESIGN',
+                                'state' => 'IN_PROCESS'
+                            );
+                        } else {
+                            $postData = array(
+                                'fileInfos' => [
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_STATEMENT_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_VESTING_DOCUMENT_ID')
+                                    ],
+                                    [
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_PROCEED_DOCUMENT_ID')
+                                    ],
+                                ],
+                                'name' => 'Test',
+                                'participantSetsInfo' => array(
+                                    array (
+                                        'memberInfos' => array(
+                                            array(
+                                                'email' => $pdf_fields_val['buyer_email']
+                                            ),
+                                        ),
+                                        'name' => $pdf_fields_val['buyer_first_name']." ".$pdf_fields_val['buyer_last_name'],
+                                        'order' => 1,
+                                        'role' => 'SIGNER',
+                                    ),
+                                    array (
+                                        'memberInfos' => array(
+                                            array(
+                                                'email' => $pdf_fields_val['buyer_email_1']
+                                            ),
+                                        ),
+                                        'name' => $pdf_fields_val['buyer_first_name_1']." ".$pdf_fields_val['buyer_last_name_1'],
+                                        'order' => 1,
+                                        'role' => 'SIGNER',
+                                    ),
+                                ),
+                                'mergeFieldInfo' => $mergeFieldInfo,
+                                'signatureType' => 'ESIGN',
+                                'state' => 'IN_PROCESS'
+                            );
+                        }
+                        
+                        $request_data = [
+                            'url'			=>'api/rest/v6/agreements',
+                            'request_type'	=>'POST',
+                            'data_type'		=>'JSON',
+                            'post_data' => $postData
+                        ];
+                        $this->load->library('order/adobe');
+                        $response = $this->adobe->send_request($request_data);
+
+                        if ($response['status'] && !empty($response['result'])) {
+                            $result = json_decode($response['result'], true);
+                            if (!empty($result['id'])) {
+                                $request_data = [
+                                    'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
+                                    'request_type'	=>'GET'
+                                ];
+                                $response_doc = $this->adobe->send_request($request_data);
+                                if (!empty($response_doc['status']) && $response_doc['result']) {
+                                    if (!is_dir('uploads/borrower')) {
+                                        mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                                    }
+                                    $document_name = $orderDetails['file_number'].'_seller_sign_'.$j.'.pdf';
+                                    $j++;
+                                    $email_sent_odd_flag = 0;
+                                    $email_sent_even_flag = 0;
+                                    file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
+                                    $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
+                                    $documentData = array(
+                                        'document_name' => $document_name,
+                                        'original_document_name' => $document_name,
+                                        'document_type_id' => 1041,
+                                        'document_size' => ($data['file_size'] * 1000),
+                                        'user_id' => 0,
+                                        'order_id' => $orderDetails['order_id'],
+                                        'task_id' => 4,
+                                        'description' => 'Borrower Document',
+                                        'is_seller_pdf_adobe_doc' => 1,
+                                        'is_sync' => 1,
+                                        'is_uploaded_by_borrower' => 1
+                                    );
+                                    $this->document->insert($documentData);
+                                    $pdf_url = env('AWS_PATH')."borrower/".$document_name;
+                                    $success[0] = "Borrower buyer info saved successfully. <br>
+                                    We also sent mail to buyer users for sign document.";
+                                }
+                            } else {
+                                $errors[] = "Something went wrong. Please try again.";
+                            }
+                        } else {
+                            $errors[] = "Something went wrong. Please try again.";
+                        }
+                    }
+                    $i++;
+                }
+            }
             $data = array(
                 "errors" =>  $errors,
                 "success" => $success
             );
-            $this->session->set_userdata($data);
+            $this->session->set_userdata($data);exit;
             redirect(base_url().'buyer-info/'.$random_number);exit;
         }
         $this->load->view('order/borrower_buyer_info1', $data);
