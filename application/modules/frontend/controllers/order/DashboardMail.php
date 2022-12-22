@@ -3185,14 +3185,8 @@ class DashboardMail extends MX_Controller {
             $this->home_model->insert($buyerInfo2Data, 'pct_order_borrower_buyer_info_wizard_2');
 
 			
-			$vesting_buyer_name = $vesting_buyer_name1 = implode(', ',$vesting_info['names']);
-			$vesting_buyer_name2 = '';
-			if(strlen($vesting_buyer_name) > 100 && count($vesting_info['names']) > 2){
-				$vesting_buyer_name1 = $vesting_info['names'][0].', '.$vesting_info['names'][1];
-				unset($vesting_info['names'][0]);
-				unset($vesting_info['names'][1]);
-				$vesting_buyer_name2 =  implode(', ',$vesting_info['names']);
-			}
+			$vesting_buyer_name  = implode(', ',$vesting_info['names']);
+			
 
             $pdf_fields_val  = [
                 'buyer_another_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
@@ -3273,16 +3267,18 @@ class DashboardMail extends MX_Controller {
                 'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : '',
                 'title_number_2' => $orderDetails['file_number'],
                 'title_number_3' => $orderDetails['file_number'],
+                'vesting_names' => $vesting_buyer_name,
+                'property_vested' => $this->input->post('property_vested')
             ];
             
-            if($main_buyer['married_to'] && $buyer_infos[$main_buyer['married_to']]) {
-				$married_to_buyer = $buyer_infos[$main_buyer['married_to']];
-				$pdf_fields_val['Are you currently married'] = 'Checked';
-				$pdf_fields_val['Spouse'] = $married_to_buyer['first_name'].' '.$married_to_buyer['last_name'];
-				$pdf_fields_val['Date of Birth_2'] = $married_to_buyer['birth_date'].' / '.$married_to_buyer['birth_month'].'/'.$married_to_buyer['birth_year'];
-				$pdf_fields_val['Home Phone_2'] = $married_to_buyer['phone'];
-				$pdf_fields_val['Social Security No_2'] = $married_to_buyer['ssn'];
+            //print_r($vesting_info['marital_status']);
+            if($vesting_info['marital_status'] && is_array($vesting_info['marital_status'])) {
+				foreach($vesting_info['marital_status'] as $vesting_info) {
+                    $pdf_fields_val[$vesting_info] = 'Checked';
+				}
 			}
+
+            //print_r($pdf_fields_val);exit;
 			
             if (count($buyer_pdf['emails']) > 0) {
                 $total_count = count($buyer_pdf['emails']);
