@@ -3268,7 +3268,18 @@ class DashboardMail extends MX_Controller {
                 'title_number_2' => $orderDetails['file_number'],
                 'title_number_3' => $orderDetails['file_number'],
                 'vesting_names' => $vesting_buyer_name,
-                'property_vested' => $this->input->post('property_vested')
+                'property_vested' => $this->input->post('property_vested'),
+                'proceeds_refund' => $this->input->post('proceeds_refund'),
+                'transfer_all_proceeds_att' => $this->input->post('transfer_all_proceeds_att') ? $this->input->post('transfer_all_proceeds_att') : '',
+                'transfer_all_proceeds_esc' => $this->input->post('transfer_all_proceeds_esc') ? $this->input->post('transfer_all_proceeds_esc') : '',
+                'transfer_portion_att' => $this->input->post('transfer_portion_att') ? $this->input->post('transfer_portion_att') : '',
+                'transfer_portion_att_esc' => $this->input->post('transfer_portion_att_esc') ? $this->input->post('transfer_portion_att_esc') : '',
+                'fed_Ex_check_address' => $this->input->post('fed_Ex_check_address') ? $this->input->post('fed_Ex_check_address') : '',
+                'bank_name' => $this->input->post('bank_name') ? $this->input->post('bank_name') : '',
+                'account_name' => $this->input->post('account_name') ? $this->input->post('account_name') : '',
+                'wire_proceed_phone' => $this->input->post('wire_proceed_phone') ? $this->input->post('wire_proceed_phone') : '',
+                'routing_number' => $this->input->post('routing_number') ? $this->input->post('routing_number') : '',
+                'account_number' => $this->input->post('account_number') ? $this->input->post('account_number') : '',
             ];
             
             //print_r($vesting_info['marital_status']);

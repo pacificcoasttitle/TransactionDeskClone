@@ -887,6 +887,103 @@
 							</div>
 						</div>
 					</fieldset>
+
+					<h3>Proceeds/Refund</h3>
+					<fieldset>
+						<h2>Proceeds/Refund Disbursement Instructions</h2>
+						<p class="desc">Tell us a little bit about it.</p>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label class="form-label">The Undersigned hereby authorizes and directs Pacific Coast Title Company to disburse proceeds as follows:</label>
+								<select id="proceeds_refund" name="proceeds_refund" required="required">
+									<option value="">Select</option>
+									<option value="transfer_all_proceeds" >Transfer All Proceeds</option>
+									<option value="transfer_portion" >Transfer Portion</option>
+									<option value="issue_physical_check_for_pickup">Issue physical Check For PickUp</option>
+									<option value="fed_Ex_check_address">Fed Ex Check Addres</option>
+									<option value="wire_proceeds">Wire Proceeds</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="d-none" id="transfer_all_proceeds_cont">
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Att:</label>
+									<input type="text" name="transfer_all_proceeds_att" id="transfer_all_proceeds_att" />
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Esc#:</label>
+									<input type="text" name="transfer_all_proceeds_esc" id="transfer_all_proceeds_esc" />
+								</div>
+							</div>
+						</div>
+
+						<div class="d-none" id="transfer_portion_cont">
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Att:</label>
+									<input type="text" name="transfer_portion_att" id="transfer_portion_att" />
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Esc#:</label>
+									<input type="text" name="transfer_portion_att_esc" id="transfer_portion_att_esc" />
+								</div>
+							</div>
+						</div>
+
+						<div class="d-none" id="fed_Ex_check_address_cont">
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Address</label>
+									<input type="text" name="fed_Ex_check_address" id="fed_Ex_check_address" />
+								</div>
+							</div>
+						</div>
+
+						<div class="d-none" id="wire_proceeds_cont">
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Bank Name</label>
+									<input type="text" name="bank_name" id="bank_name"/>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-flex">
+									<div class="form-group">
+										<label class="form-label">Account Name</label>
+										<input type="text" name="account_name" id="account_name" />
+									</div>
+									<div class="form-group">
+										<label class="form-label">Phone Number</label>
+										<input class="phone_mask" type="text" name="wire_proceed_phone"
+											id="wire_proceed_phone" pattern="\(\d{3}\)[ ]?\d{3}[-]?\d{4}" />
+										<span class="text-input">example: (800) 000-0000 </span>
+									</div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-flex">
+									<div class="form-group">
+										<label class="form-label">Routing Number</label>
+										<input type="text" name="routing_number" id="routing_number" />
+									</div>
+									<div class="form-group">
+										<label class="form-label">Account Number</label>
+										<input type="text" name="account_number" id="account_number" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+
 					<h3>Confirmation</h3>
 					<fieldset>
 						<h2>Confirmation</h2>

@@ -352,6 +352,92 @@
         }
     });
 
+    $('#proceeds_refund').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if (selectedvalue == 'transfer_all_proceeds') {
+            $("#transfer_all_proceeds_cont").removeClass("d-none");
+            $("#transfer_portion_cont").addClass("d-none");
+            $("#fed_Ex_check_address_cont").addClass("d-none");
+            $("#wire_proceeds_cont").addClass("d-none");
+
+            $('#transfer_all_proceeds_att').prop('required',true);
+            $('#transfer_all_proceeds_esc').prop('required',true);
+            $('#transfer_portion_att').prop('required', false);
+            $('#transfer_portion_att_esc').prop('required', false);
+            $('#fed_Ex_check_address').prop('required', false);
+            $('#bank_name').prop('required', false);
+            $('#account_name').prop('required', false);
+            $('#wire_proceed_phone').prop('required', false);
+            $('#routing_number').prop('required', false);
+            $('#account_number').prop('required', false);
+        } else if (selectedvalue == 'transfer_portion') {
+            $("#transfer_all_proceeds_cont").addClass("d-none");
+            $("#transfer_portion_cont").removeClass("d-none");
+            $("#fed_Ex_check_address_cont").addClass("d-none");
+            $("#wire_proceeds_cont").addClass("d-none");
+
+            $('#transfer_all_proceeds_att').prop('required',false);
+            $('#transfer_all_proceeds_esc').prop('required',false);
+            $('#transfer_portion_att').prop('required', true);
+            $('#transfer_portion_att_esc').prop('required', true);
+            $('#fed_Ex_check_address').prop('required', false);
+            $('#bank_name').prop('required', false);
+            $('#account_name').prop('required', false);
+            $('#wire_proceed_phone').prop('required', false);
+            $('#routing_number').prop('required', false);
+            $('#account_number').prop('required', false);
+        } else if (selectedvalue == 'fed_Ex_check_address') {
+            $("#transfer_all_proceeds_cont").addClass("d-none");
+            $("#transfer_portion_cont").addClass("d-none");
+            $("#fed_Ex_check_address_cont").removeClass("d-none");
+            $("#wire_proceeds_cont").addClass("d-none");
+
+            $('#transfer_all_proceeds_att').prop('required',false);
+            $('#transfer_all_proceeds_esc').prop('required',false);
+            $('#transfer_portion_att').prop('required', false);
+            $('#transfer_portion_att_esc').prop('required', false);
+            $('#fed_Ex_check_address').prop('required', true);
+            $('#bank_name').prop('required', false);
+            $('#account_name').prop('required', false);
+            $('#wire_proceed_phone').prop('required', false);
+            $('#routing_number').prop('required', false);
+            $('#account_number').prop('required', false);
+        } else if (selectedvalue == 'wire_proceeds') {
+            $("#transfer_all_proceeds_cont").addClass("d-none");
+            $("#transfer_portion_cont").addClass("d-none");
+            $("#fed_Ex_check_address_cont").addClass("d-none");
+            $("#wire_proceeds_cont").removeClass("d-none");
+
+            $('#transfer_all_proceeds_att').prop('required',false);
+            $('#transfer_all_proceeds_esc').prop('required',false);
+            $('#transfer_portion_att').prop('required', false);
+            $('#transfer_portion_att_esc').prop('required', false);
+            $('#fed_Ex_check_address').prop('required', false);
+            $('#bank_name').prop('required', true);
+            $('#account_name').prop('required', true);
+            $('#wire_proceed_phone').prop('required', true);
+            $('#routing_number').prop('required', true);
+            $('#account_number').prop('required', true);
+        } else {
+            $("#transfer_all_proceeds_cont").addClass("d-none");
+            $("#transfer_portion_cont").addClass("d-none");
+            $("#fed_Ex_check_address_cont").addClass("d-none");
+            $("#wire_proceeds_cont").addClass("d-none");
+
+            $('#transfer_all_proceeds_att').prop('required',false);
+            $('#transfer_all_proceeds_esc').prop('required',false);
+            $('#transfer_portion_att').prop('required', false);
+            $('#transfer_portion_att_esc').prop('required', false);
+            $('#fed_Ex_check_address').prop('required', false);
+            $('#bank_name').prop('required', false);
+            $('#account_name').prop('required', false);
+            $('#wire_proceed_phone').prop('required', false);
+            $('#routing_number').prop('required', false);
+            $('#account_number').prop('required', false);
+        }
+    });
+
 	$(".phone_mask").mask('(000) 000-0000');
 	$(".amount_mask").mask("#,##0", {reverse: true});
 	$(".ssn").mask('000-00-0000');
