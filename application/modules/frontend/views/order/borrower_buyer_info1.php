@@ -467,6 +467,96 @@
 									</div>
 								</div>
 							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Buyer intends to reside on the property?</label>
+									<select id="is_reside_property" name="is_reside_property" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Property Address: <?php echo $orderDetails['full_address'];?></label>
+									<select id="is_property_address" name="is_property_address" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">The land is unimproved/improved with a structure type of the followng:</label>
+									<select id="is_unimproved_improved" name="is_unimproved_improved" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Improvements/Remodel/Repairs made in the last 6 months?</label>
+									<select id="is_improvement" name="is_improvement" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="is_improvement_container">
+								<div class="form-row">
+									<div class="form-group">
+										<label class="form-label">If Yes, have all cost and labor been paid in full?</label>
+										<select id="is_full_paid" name="is_full_paid" required="required">
+											<option value="">Select</option>
+											<option value="Yes">Yes</option>
+											<option value="No">No</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Are there any current loans against the property?</label>
+									<select id="is_loan" name="is_loan" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="is_loan_container">
+								<div class="form-row">
+									<div class="form-group">
+										<label class="form-label">Lender Name</label>
+										<input type="text" name="lender_name_2" id="lender_name_2" value="" />
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">Loan Amount</label>
+											<input type="text" name="lender_loan_amount" id="lender_loan_amount" value="" />
+										</div>
+
+										<div class="form-group form-date dob_date_picker_div">
+											<label class="form-label">Acct No</label>
+											<input type="text" name="lender_acct_no" id="lender_acct_no" value="" />
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</fieldset>
 

@@ -3280,6 +3280,15 @@ class DashboardMail extends MX_Controller {
                 'wire_proceed_phone' => $this->input->post('wire_proceed_phone') ? $this->input->post('wire_proceed_phone') : '',
                 'routing_number' => $this->input->post('routing_number') ? $this->input->post('routing_number') : '',
                 'account_number' => $this->input->post('account_number') ? $this->input->post('account_number') : '',
+                'is_reside_property' => $this->input->post('is_reside_property') ? $this->input->post('is_reside_property') : '',
+                'is_property_address' => $this->input->post('is_property_address') ? $this->input->post('is_property_address') : '',
+                'is_unimproved_improved' => $this->input->post('is_unimproved_improved') ? $this->input->post('is_unimproved_improved') : '',
+                'is_improvement' => $this->input->post('is_improvement') ? $this->input->post('is_improvement') : '',
+                'is_full_paid' => $this->input->post('is_full_paid') ? $this->input->post('is_full_paid') : '',
+                'is_loan' => $this->input->post('is_loan') ? $this->input->post('is_loan') : '',
+                'lender_name_2' => $this->input->post('lender_name_2') ? $this->input->post('lender_name_2') : '',
+                'lender_loan_amount' => $this->input->post('lender_loan_amount') ? $this->input->post('lender_loan_amount') : '',
+                'lender_acct_no' => $this->input->post('lender_acct_no') ? $this->input->post('lender_acct_no') : '',
             ];
             
             //print_r($vesting_info['marital_status']);
