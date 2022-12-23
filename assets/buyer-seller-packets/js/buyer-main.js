@@ -352,6 +352,34 @@
         }
     });
 
+    $('#is_improvement').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if (selectedvalue == 'Yes') {
+            $("#is_improvement_container").removeClass("d-none");
+            $('#is_full_paid').prop('required',true);
+        } else {
+            $("#is_improvement_container").addClass("d-none");
+            $('#is_full_paid').prop('required',false);
+        }
+    });
+
+    $('#is_loan').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if (selectedvalue == 'Yes') {
+            $("#is_loan_container").removeClass("d-none");
+            $('#lender_name_2').prop('required',true);
+            $('#lender_loan_amount').prop('required',true);
+            $('#lender_acct_no').prop('required',true);
+        } else {
+            $("#is_loan_container").addClass("d-none");
+            $('#lender_name_2').prop('required',false);
+            $('#lender_loan_amount').prop('required',false);
+            $('#lender_acct_no').prop('required',false);
+        }
+    });
+
     $('#proceeds_refund').change(function(){
         var $this = $(this);
         var selectedvalue = $this.val();
