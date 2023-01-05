@@ -271,6 +271,17 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																<?php } ?>
 															</div>
 														<?php } ?>
+
+														<?php if ($task['id'] == 5) {?>
+															
+															<div class="smart-forms spacer-t30" style="margin-bottom: 50px;">
+																<div class="tagline" style="width:70%;"><span>  </span></div>
+																<a data-target="#escrow_instruction" data-toggle="modal"
+																	role="button"  href="#" class="btn button btn-primary" style="height: 35px;float:right;line-height:35px;margin: -15px 15px 0 0;width:auto;">
+																	<span class="text">Create Escrow Instructions</span>
+																</a>
+															</div>
+														<?php } ?>
 														
 														<div class="" id="">
 															<div class="smart-forms spacer-b30 spacer-t30">
@@ -727,3 +738,69 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 	</div>
 </div>
 
+
+
+<div class="modal fade" width="800px" id="escrow_instruction" tabindex="-1" role="dialog"
+	aria-labelledby="Escrow Instruction" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:80%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url();?>add-seller-on-order" enctype="multipart/form-data">
+				<div class="smart-forms smart-container" style="margin:30px">
+					<div class="modal-body search-result">
+						
+							<div id="lender-details-fields" >
+								
+								<div class="spacer-b25">
+									<div class="tagline"><span>Escrow Instruction</span></div>
+								</div>
+
+								<div id="seller-info-clone-group-fields">
+									<div class="toclone clone-widget">
+										<div class="frm-row">
+											<?php if (!empty($escrow_instruction_list)) {
+												foreach ($escrow_instruction_list as $escrow_instruction) { ?>
+													<div class="section colm colm4">
+														<label class="field prepend-icon"><?php echo $escrow_instruction->name;?></label>
+													</div>
+
+													<div class="section colm colm4">
+														<label class="field select">
+															<select class="esw_ins_name" id="<?php echo $escrow_instruction->id;?>" name="<?php echo $escrow_instruction->id;?>">
+																<option value="">--------- Select ---------</option>
+																<?php if (!empty($escrow_instruction_value_list)) {
+																	foreach ($escrow_instruction_value_list as $escrow_instruction_value) { 
+																		if ($escrow_instruction->id == $escrow_instruction_value->escrow_instruction_id) { ?>
+																			<option value="<?php echo $escrow_instruction_value->id;?>" data-foo="<?php echo $escrow_instruction_value->value;?>"><?php echo $escrow_instruction_value->name;?></option>
+																<?php }
+																} }?>
+															</select>
+															<i class="arrow double"></i>
+														</label>
+
+													</div>
+													<div class="section colm colm4">
+														<label class="field">
+															<textarea class="gui-textarea ui-autocomplete-input" id="esw_ins_value_<?php echo $escrow_instruction->id;?>" name="esw_ins_value_<?php echo $escrow_instruction->id;?>" rows="5" cols="80"></textarea>
+														</label>
+													</div>
+											<?php } 
+											}?>
+										</div>
+										
+									</div>
+								</div>							
+							</div>
+						<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+						<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+					</div>
+
+					<div class="form-footer" style="padding-top:0px;">
+						<button type="submit" data-btntext-sending="Sending..."
+							class="button btn-primary">Submit</button>
+						<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

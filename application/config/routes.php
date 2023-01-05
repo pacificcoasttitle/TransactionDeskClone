@@ -374,6 +374,10 @@ $route['order/admin/delete-role-record/(:num)'] = 'admin/order/usersRole/delete_
 $route['order/admin/proposed-branches'] = 'admin/order/proposedInsured/index';
 $route['order/admin/get_branch_details'] = 'admin/order/proposedInsured/get_branch_details';
 $route['order/admin/delete-proposed-branch/(:num)'] = 'admin/order/proposedInsured/delete_proposed_branch/$1';
+$route['order/admin/dashboard'] = 'admin/order/home/index';
+$route['order/admin/escrow-instruction'] = 'admin/order/escrowInstruction/index';
+$route['order/admin/escrow-instruction-import'] = 'admin/order/escrowInstruction/import';
+
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
