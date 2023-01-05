@@ -114,6 +114,12 @@ class Escrow extends MX_Controller
         $this->load->model('admin/escrow/order_model');
         $this->load->model('admin/escrow/order_completed_tasks_model');
         $this->load->model('admin/escrow/escrow_user_model');
+        $this->load->model('admin/order/escrow_instruction_model');
+        $this->load->model('admin/order/escrow_instruction_value_model');
+
+        $data['escrow_instruction_list'] = $this->escrow_instruction_model->get_all();
+        $data['escrow_instruction_value_list'] = $this->escrow_instruction_value_model->get_all();
+        
         $this->load->model('admin/hr/users_model');
 
         $data['errors'] = array();
@@ -248,7 +254,7 @@ class Escrow extends MX_Controller
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
 		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=06') );
+		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=07') );
         $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}

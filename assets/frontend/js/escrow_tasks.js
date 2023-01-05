@@ -89,6 +89,12 @@ $(document).ready(function () {
                 ")</li>");
         }
     });
+
+    $('.esw_ins_name').change(function(){
+        var esw_name_id = $(this).attr('id');
+        var selected = $(this).find('option:selected');
+        $('#esw_ins_value_'+esw_name_id).val(selected.data('foo')); 
+    }).change();
 });
 
 function change_progress() {

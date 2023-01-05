@@ -145,7 +145,9 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
 				Holidays
 			</a>
-			
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/escrow-instruction' || $this->uri->uri_string() == 'order/admin/escrow-instruction-import') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/escrow-instruction'; ?>">
+				Escrow Instruction
+			</a>
         </div>
 	</li>
 	<?php 
