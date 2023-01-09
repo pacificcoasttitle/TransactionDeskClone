@@ -759,11 +759,11 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 										<div class="frm-row">
 											<?php if (!empty($escrow_instruction_list)) {
 												foreach ($escrow_instruction_list as $escrow_instruction) { ?>
-													<div class="section colm colm4">
+													<div class="section colm colm3">
 														<label class="field prepend-icon"><?php echo $escrow_instruction->name;?></label>
 													</div>
 
-													<div class="section colm colm4">
+													<div class="section colm colm3">
 														<label class="field select">
 															<select class="esw_ins_name" id="<?php echo $escrow_instruction->id;?>" name="<?php echo $escrow_instruction->id;?>">
 																<option value="">--------- Select ---------</option>
@@ -778,7 +778,7 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 														</label>
 
 													</div>
-													<div class="section colm colm4">
+													<div class="section colm colm6">
 														<label class="field">
 															<textarea class="gui-textarea ui-autocomplete-input" id="esw_ins_value_<?php echo $escrow_instruction->id;?>" name="esw_ins_value_<?php echo $escrow_instruction->id;?>" rows="5" cols="80"></textarea>
 														</label>

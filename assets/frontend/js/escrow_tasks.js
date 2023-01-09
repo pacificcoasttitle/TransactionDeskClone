@@ -1,4 +1,5 @@
-
+CKEDITOR.replace( 'esw_ins_value_1' );
+CKEDITOR.replace( 'esw_ins_value_2' );
 $(document).ready(function () {
     $('#buyer-info-clone-group-fields').cloneya({
         maximum: 5
@@ -10,6 +11,18 @@ $(document).ready(function () {
             $(clone).remove();
         })
     });
+
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {
+        modal_this = this
+        $(document).on('focusin.modal', function (e) {
+            if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
+            // add whatever conditions you need here:
+            &&
+            !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+                modal_this.$element.focus()
+            }
+        })
+    };
 
     $('#seller-info-clone-group-fields').cloneya({
         maximum: 5
