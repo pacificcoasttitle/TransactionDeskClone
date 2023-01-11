@@ -254,7 +254,7 @@ class Escrow extends MX_Controller
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
 		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
         $this->template->addJS( base_url('assets/plugins/ckeditor/ckeditor.js') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=08') );
+		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=09') );
         $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
 		$this->template->show("order/escrow", "order_tasks", $data);
 	}
