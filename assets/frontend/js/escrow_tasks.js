@@ -1,10 +1,11 @@
 CKEDITOR.replace( 'esw_ins_value_1',
 {
     uiStyles : { 'background-color' : 'Yellow' }, 
+    
     toolbar : [
         ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
     ],
-    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+    styles: { 'color': 'Blue' } 
 });
 CKEDITOR.on('instanceReady', function( ev ) {
     ev.editor.dataProcessor.htmlFilter.addRules({
