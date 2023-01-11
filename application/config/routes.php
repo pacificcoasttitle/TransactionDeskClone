@@ -242,6 +242,7 @@ $route['get-netsheet/(:any)'] = 'frontend/order/dashboardMail/get_netsheet/$1';
 $route['create-netsheet/(:any)'] = 'frontend/order/dashboardMail/create_netsheet/$1';
 $route['get-data-from-adobe'] = 'frontend/order/adobe/getDataFromAdobe';
 $route['sales-current-month-history'] = 'frontend/order/salesRep/salesCurrentMonthSummary';
+$route['add-escrow-ins-order'] = 'frontend/order/escrow/addEscrowInsOrder';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';

@@ -416,9 +416,15 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																						<td><?php echo $document['original_document_name'];?></td>
 																						<td>
 																							<div class="custom__task_actions smart-forms" style="display: flex;">
-																								<a target="_blank" href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>" class="btn button btn-primary">
-																									<span class="text">View</span>
-																								</a>
+																								<?php if ($task['id'] == 5) { ?>
+																									<a target="_blank" href="<?php echo env('AWS_PATH').'escrow_ins/'.$document['document_name'];?>" class="btn button btn-primary">
+																										<span class="text">View</span>
+																									</a>
+																								<?php } else { ?>
+																									<a target="_blank" href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>" class="btn button btn-primary">
+																										<span class="text">View</span>
+																									</a>
+																								<?php }?>
 																								<?php if ($document['api_document_id'] > 0) { ?>
 																									<a href="#" class="btn button btn-default" style="width:auto;">
 																										<span class="text">Approved & Pushed</span>
@@ -744,7 +750,7 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 	aria-labelledby="Escrow Instruction" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:80%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>add-seller-on-order" enctype="multipart/form-data">
+			<form method="POST" action="<?php echo base_url();?>add-escrow-ins-order" enctype="multipart/form-data">
 				<div class="smart-forms smart-container" style="margin:30px">
 					<div class="modal-body search-result">
 						
@@ -763,24 +769,29 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 														<label class="field prepend-icon"><?php echo $escrow_instruction->name;?></label>
 													</div>
 
+													
 													<div class="section colm colm3">
+													<?php if ($escrow_instruction->id != 1) { ?>
 														<label class="field select">
-															<select class="esw_ins_name" id="<?php echo $escrow_instruction->id;?>" name="<?php echo $escrow_instruction->id;?>">
-																<option value="">--------- Select ---------</option>
-																<?php if (!empty($escrow_instruction_value_list)) {
-																	foreach ($escrow_instruction_value_list as $escrow_instruction_value) { 
-																		if ($escrow_instruction->id == $escrow_instruction_value->escrow_instruction_id) { ?>
-																			<option value="<?php echo $escrow_instruction_value->id;?>" data-foo="<?php echo $escrow_instruction_value->value;?>"><?php echo $escrow_instruction_value->name;?></option>
-																<?php }
-																} }?>
-															</select>
+															
+																<select class="esw_ins_name" id="<?php echo $escrow_instruction->id;?>" name="<?php echo $escrow_instruction->id;?>" required="required">
+																	<option value="">--------- Select ---------</option>
+																	<?php if (!empty($escrow_instruction_value_list)) {
+																		foreach ($escrow_instruction_value_list as $escrow_instruction_value) { 
+																			if ($escrow_instruction->id == $escrow_instruction_value->escrow_instruction_id) { ?>
+																				<option value="<?php echo $escrow_instruction_value->name;?>" data-foo="<?php echo $escrow_instruction_value->value;?>"><?php echo $escrow_instruction_value->name;?></option>
+																	<?php }
+																	} }?>
+																</select>
+															
 															<i class="arrow double"></i>
+															<?php }?>
 														</label>
 
 													</div>
 													<div class="section colm colm6">
 														<label class="field">
-															<textarea class="gui-textarea ui-autocomplete-input" id="esw_ins_value_<?php echo $escrow_instruction->id;?>" name="esw_ins_value_<?php echo $escrow_instruction->id;?>" rows="5" cols="80"></textarea>
+															<textarea class="gui-textarea ui-autocomplete-input" id="esw_ins_value_<?php echo $escrow_instruction->id;?>" name="esw_ins_value_<?php echo $escrow_instruction->id;?>" required="required"></textarea>
 														</label>
 													</div>
 											<?php } 
