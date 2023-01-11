@@ -1,4 +1,151 @@
-
+CKEDITOR.replace( 'esw_ins_value_1',
+{
+    uiStyles : { 'background-color' : 'Yellow' }, 
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.on('instanceReady', function( ev ) {
+    ev.editor.dataProcessor.htmlFilter.addRules({
+      elements: {
+        p: function (e) { e.attributes.style = 'font-size: 18px;'; }
+      }
+    });
+  });
+CKEDITOR.replace( 'esw_ins_value_2',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_3',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_4',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_5',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_6',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_7',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_8',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_9',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_10',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_11',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_12',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_13',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_14',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_15',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_16',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_17',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_18',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_19',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
+CKEDITOR.replace( 'esw_ins_value_20',
+{
+    toolbar : [
+        ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Styles','Format','Font','FontSize', 'TextColor'],
+    ],
+    extraPlugins : ['colordialog' , 'dialog' ,'dialogui']
+});
 $(document).ready(function () {
     $('#buyer-info-clone-group-fields').cloneya({
         maximum: 5
@@ -10,6 +157,18 @@ $(document).ready(function () {
             $(clone).remove();
         })
     });
+
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {
+        modal_this = this
+        $(document).on('focusin.modal', function (e) {
+            if (modal_this.$element[0] !== e.target && !modal_this.$element.has(e.target).length
+            // add whatever conditions you need here:
+            &&
+            !$(e.target.parentNode).hasClass('cke_dialog_ui_input_select') && !$(e.target.parentNode).hasClass('cke_dialog_ui_input_text')) {
+                modal_this.$element.focus()
+            }
+        })
+    };
 
     $('#seller-info-clone-group-fields').cloneya({
         maximum: 5
@@ -93,7 +252,8 @@ $(document).ready(function () {
     $('.esw_ins_name').change(function(){
         var esw_name_id = $(this).attr('id');
         var selected = $(this).find('option:selected');
-        $('#esw_ins_value_'+esw_name_id).val(selected.data('foo')); 
+        CKEDITOR.instances['esw_ins_value_'+esw_name_id].setData(selected.data('foo'));
+        //$('#esw_ins_value_'+esw_name_id).val(selected.data('foo')); 
     }).change();
 });
 

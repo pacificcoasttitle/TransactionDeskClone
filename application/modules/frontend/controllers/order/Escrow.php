@@ -118,8 +118,7 @@ class Escrow extends MX_Controller
         $this->load->model('admin/order/escrow_instruction_value_model');
 
         $data['escrow_instruction_list'] = $this->escrow_instruction_model->get_all();
-        $data['escrow_instruction_value_list'] = $this->escrow_instruction_value_model->get_all();
-        
+        $data['escrow_instruction_value_list'] = $this->escrow_instruction_value_model->get_all();        
         $this->load->model('admin/hr/users_model');
 
         $data['errors'] = array();
@@ -254,6 +253,7 @@ class Escrow extends MX_Controller
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
 		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
+        $this->template->addJS( base_url('assets/plugins/ckeditor/ckeditor.js') );
 		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=07') );
         $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
 		$this->template->show("order/escrow", "order_tasks", $data);
@@ -820,6 +820,92 @@ class Escrow extends MX_Controller
         }
 
         $success[] = "Mail sent succesfully to sellers."; 
+        $data['errors'] = $errors;
+		$data['success'] = $success;
+		$data = array(
+			"errors" =>  $errors,
+			"success" => $success
+		);
+		$this->session->set_userdata($data);
+		redirect(base_url().'order/escrow/order-tasks/'.$orderDetails['order_id']);
+    }
+
+    public function addEscrowInsOrder()
+    {
+        $userdata = $this->session->userdata('user');
+        $file_id = $this->input->post('file_id');
+		$order_id = $this->input->post('order_id');
+	    $orderDetails = $this->order->get_order_details($file_id);
+        $this->load->model('admin/order/escrow_instruction_model');
+        $errors = array();
+        $success = array();
+        $escrow_instruction_list = $this->escrow_instruction_model->get_all();
+
+        $filename = date('YmdHis')."_".$file_id.".doc";
+        header("Content-Type: application/force-download");
+        header( "Content-Disposition: attachment; filename=".basename($filename));
+        header( "Content-Description: File Transfer");
+        @readfile($filename);
+        $content = '<html xmlns:v="urn:schemas-microsoft-com:vml" '
+                .'xmlns:o="urn:schemas-microsoft-com:office:office" '
+                .'xmlns:w="urn:schemas-microsoft-com:office:word" '
+                .'xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"= '
+                .'xmlns="http://www.w3.org/TR/REC-html40">'
+                .'<head><meta http-equiv="Content-Type" content="text/html; charset=Windows-1252">'
+                .'<title></title>'
+                .'<!--[if gte mso 9]>'
+                .'<xml>'
+                .'<w:WordDocument>'
+                .'<w:View>Print'
+                .'<w:Zoom>100'
+                .'<w:DoNotOptimizeForBrowser/>'
+                .'</w:WordDocument>'
+                .'</xml>'
+                .'<![endif]-->'
+                .'<style>
+                @page
+                {
+                    font-family: Arial;
+                    size:215.9mm 279.4mm;  /* A4 */
+                    margin:14.2mm 17.5mm 14.2mm 16mm; /* Margins: 2.5 cm on each side */
+                }
+                h2 { font-family: Arial; font-size: 22px; text-align:center; }
+                p.para {font-family: Arial; font-size: 20px !important; text-align: justify;}
+                span.marker {background-color: Yellow}
+                </style>'
+                .'</head>'
+                .'<body>'
+                .'<h2>Escrow Instruction</h2><br/>';
+
+        foreach($escrow_instruction_list as $escrow_ins) {
+            $escrow_ins_name = $escrow_ins->name;
+            $escrow_ins_select_name = $this->input->post($escrow_ins->id);
+            $escrow_ins_select_value = $this->input->post('esw_ins_value_'.$escrow_ins->id);
+            
+            $content .= "<p class='para'>$escrow_ins_name: <b>$escrow_ins_select_name</b>$escrow_ins_select_value<br/></p>";
+        }     
+        $content .= '</body></html>';
+        if (!is_dir('uploads/escrow_ins')) {
+			mkdir('./uploads/escrow_ins', 0777, TRUE);
+		}
+        $this->load->model('order/document');
+        file_put_contents("./uploads/escrow_ins/".$filename, $content);
+        $this->order->uploadDocumentOnAwsS3($filename, 'escrow_ins');
+
+        $documentData = array(
+            'document_name' => $filename,
+            'original_document_name' => $filename,
+            'document_type_id' => 1041,
+            'document_size' => 0,
+            'user_id' => $userdata['id'],
+            'order_id' => $this->input->post('order_id'),
+            'task_id' => 5,
+            'description' => 'Escrow Instruction Document',
+            'is_sync' => 1,
+            'is_uploaded_by_borrower' => 1
+        );
+        $this->document->insert($documentData);
+        $success[] = "Escrow instruction word document generated successfully.<br> ".$filename." uploaded successfully for Check Escrow Instructions & Packages task";
         $data['errors'] = $errors;
 		$data['success'] = $success;
 		$data = array(
