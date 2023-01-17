@@ -36,14 +36,14 @@
                         <input type="file" class="" name="file" class="form-control">
 
                         <?php if(!empty(form_error('file'))){ ?>                     
-						    <span class="error"><?php echo form_error('file'); ?></span>
+						    <span class="text-danger"><?php echo form_error('file'); ?></span>
 					    <?php } ?>
                     </div>
                 </div>
                 
                 <div class="pull-right">
                     <button type="submit" value="import" name="importSubmit" class="btn btn-secondary">Import</button>
-                    <a href="<?php echo base_url(); ?>order/admin/escrow-instruction" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo base_url(); ?>hr/admin/escrow-instruction" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

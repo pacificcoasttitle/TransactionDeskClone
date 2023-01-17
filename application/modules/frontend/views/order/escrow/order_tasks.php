@@ -779,7 +779,7 @@ user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 																	<?php if (!empty($escrow_instruction_value_list)) {
 																		foreach ($escrow_instruction_value_list as $escrow_instruction_value) { 
 																			if ($escrow_instruction->id == $escrow_instruction_value->escrow_instruction_id) { ?>
-																				<option value="<?php echo $escrow_instruction_value->name;?>" data-foo="<?php echo $escrow_instruction_value->value;?>"><?php echo $escrow_instruction_value->name;?></option>
+																				<option value="<?php echo $escrow_instruction_value->name;?>" data-foo='<?php echo $escrow_instruction_value->value;?>'><?php echo $escrow_instruction_value->name;?></option>
 																	<?php }
 																	} }?>
 																</select>

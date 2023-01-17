@@ -201,6 +201,14 @@
 		</div>
 	</li>
 
+	<li
+		class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/escrow-instruction') { echo 'active'; } ?>">
+		<a class="nav-link" href="<?php echo base_url().'hr/admin/escrow-instruction'; ?>">
+			<i class="fas fa-bell fa-fw"></i>
+			<span>Escrow instruction</span>
+		</a>
+	</li>
+
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 
