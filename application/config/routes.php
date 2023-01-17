@@ -376,8 +376,6 @@ $route['order/admin/proposed-branches'] = 'admin/order/proposedInsured/index';
 $route['order/admin/get_branch_details'] = 'admin/order/proposedInsured/get_branch_details';
 $route['order/admin/delete-proposed-branch/(:num)'] = 'admin/order/proposedInsured/delete_proposed_branch/$1';
 $route['order/admin/dashboard'] = 'admin/order/home/index';
-$route['order/admin/escrow-instruction'] = 'admin/order/escrowInstruction/index';
-$route['order/admin/escrow-instruction-import'] = 'admin/order/escrowInstruction/import';
 
 /* Route for PCT-Order backend*/
 
@@ -539,6 +537,11 @@ $route['hr/admin/add-lender-on-order'] = 'admin/hr/orders/addLenderOnOrder';
 $route['hr/admin/add-buyer-on-order'] = 'admin/hr/orders/addBuyerOnOrder';
 $route['hr/admin/add-seller-on-order'] = 'admin/hr/orders/addSellerOnOrder';
 $route['hr/admin/task-documents'] = 'admin/hr/orders/taskDocuments';
+$route['hr/admin/escrow-instruction'] = 'admin/hr/escrowInstruction/index';
+$route['hr/admin/escrow-instruction-import'] = 'admin/hr/escrowInstruction/import';
+$route['hr/admin/add-escrow-instruction'] = 'admin/hr/escrowInstruction/addEscrowInstruction';
+$route['hr/admin/edit-escrow-instruction/:num'] = 'admin/hr/escrowInstruction/editEscrowInstruction';
+$route['hr/admin/delete-escrow-instruction'] = 'admin/hr/escrowInstruction/deleteEscrowInstruction';
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 

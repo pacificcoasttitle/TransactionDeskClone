@@ -954,4 +954,86 @@ class Hr extends CI_Model
             'data' => $branches
         );
     }
+
+    public function get_escrow_instruction_list($params)
+    {
+        $this->db->from('pct_order_escrow_instruction_columns_values')
+                 ->join('pct_order_escrow_instruction', 'pct_order_escrow_instruction_columns_values.escrow_instruction_id = pct_order_escrow_instruction.id');
+        $total_records =  $this->db->count_all_results();
+    
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $cpl_document_lists = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_order_escrow_instruction_columns_values.custom_field_value_id', $keyword)
+                        ->or_like('pct_order_escrow_instruction_columns_values.custom_field_id', $keyword)
+                        ->or_like('pct_order_escrow_instruction_columns_values.name', $keyword)
+                        ->or_like('pct_order_escrow_instruction_columns_values.value', $keyword)
+                        ->or_like('pct_order_escrow_instruction.name', $keyword)
+                        ->group_end();
+               
+            }
+
+            $this->db->from('pct_order_escrow_instruction_columns_values')
+                ->join('pct_order_escrow_instruction', 'pct_order_escrow_instruction_columns_values.escrow_instruction_id = pct_order_escrow_instruction.id');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('pct_order_escrow_instruction_columns_values.custom_field_value_id', $keyword)
+                        ->or_like('pct_order_escrow_instruction_columns_values.custom_field_id', $keyword)
+                        ->or_like('pct_order_escrow_instruction_columns_values.name', $keyword)
+                        ->or_like('pct_order_escrow_instruction_columns_values.value', $keyword)
+                        ->or_like('pct_order_escrow_instruction.name', $keyword)
+                        ->group_end();
+			}
+
+            $this->db->select('pct_order_escrow_instruction_columns_values.id, pct_order_escrow_instruction_columns_values.custom_field_value_id, pct_order_escrow_instruction_columns_values.custom_field_id, pct_order_escrow_instruction_columns_values.name, pct_order_escrow_instruction_columns_values.value, pct_order_escrow_instruction.name as instruction_name');
+            $this->db->from('pct_order_escrow_instruction_columns_values')
+                ->join('pct_order_escrow_instruction', 'pct_order_escrow_instruction_columns_values.escrow_instruction_id = pct_order_escrow_instruction.id');
+            
+            $this->db->order_by('pct_order_escrow_instruction_columns_values.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $cpl_document_lists = $query->result_array();
+	        }
+    	} else {    		
+
+    		$this->db->from('pct_order_escrow_instruction_columns_values')
+                ->join('pct_order_escrow_instruction', 'pct_order_escrow_instruction_columns_values.escrow_instruction_id = pct_order_escrow_instruction.id');
+        
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('pct_order_escrow_instruction_columns_values.id, pct_order_escrow_instruction_columns_values.custom_field_value_id, pct_order_escrow_instruction_columns_values.custom_field_id, pct_order_escrow_instruction_columns_values.name, pct_order_escrow_instruction_columns_values.value, pct_order_escrow_instruction.name as instruction_name');
+
+            $this->db->from('pct_order_escrow_instruction_columns_values')
+                ->join('pct_order_escrow_instruction', 'pct_order_escrow_instruction_columns_values.escrow_instruction_id = pct_order_escrow_instruction.id');
+            
+            $this->db->order_by('pct_order_escrow_instruction_columns_values.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $cpl_document_lists = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $cpl_document_lists
+        );
+    }
 }
