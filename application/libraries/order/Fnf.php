@@ -52,6 +52,9 @@ class Fnf
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $error_msg = curl_error($ch);
         $result = curl_exec($ch);
+        if (curl_errno($ch)) {
+            echo $error_msg = curl_error($ch);exit;
+        }
         return $result;
     }
 
