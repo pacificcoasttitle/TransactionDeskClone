@@ -24,7 +24,7 @@ class ReviewPrelim extends MX_Controller {
 
 		if ($_SERVER['SERVER_NAME'] == 'sandbox.pacificcoasttitle.com') {
 			$logSyncId = $this->apiLogs->syncLogs(0, 'local', 'sync_prelim_data','https://mypctrep.com/ReceiveSearchDataService.svc?wsdl', array('ReceiveSearchDataService'=>true), array());
-			$url = "http://app.pacificcoasttitle.com/resware-fetch-data";    
+			$url = "https://app.pacificcoasttitle.com/resware-fetch-data";    
 			$curl = curl_init($url);
 			curl_setopt($curl, CURLOPT_HEADER, false);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
