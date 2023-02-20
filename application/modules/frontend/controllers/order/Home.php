@@ -1564,8 +1564,12 @@ class Home extends MX_Controller {
 	public function preListingDocs() 
 	{
 		$this->load->library('order/titlepoint');
-		$escrowId = $_POST['escrow_id'];
-		if(!isset($escrowId) || empty($escrowId)) {
+		$escrowId = (!empty($_POST['escrow_id'])) ? $_POST['escrow_id'] : '';
+		if (!empty($escrowId)) {
+			$orderUser =  $this->home_model->get_user(array('id' => $escrowId));
+		}
+		
+		if((!isset($escrowId) || empty($escrowId)) || (!empty($orderUser) && $orderUser['is_escrow'] == 0)) {
 			$this->titlepoint->generateGeoDoc($_POST);
 			$fileNumber = $_POST['file_number'];
 			$orderId = $_POST['order_id'];
