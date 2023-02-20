@@ -1504,11 +1504,7 @@ class Home extends MX_Controller {
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
 	        
 	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
-			// print_r('************' . $propertyData['escrow_lender_id'] . '**********');
 			$escrowId = isset($propertyData['escrow_lender_id']) && !empty($propertyData['escrow_lender_id']) ? $propertyData['escrow_lender_id'] :'';
-			// print_r('-------' . $escrowId . '--------------');
-			// print_r('-------' . $propertyState . '--------------');
-			// print_r($propertyData);die;
 			
 			$lv_file_url = ''; 
 			if (env('AWS_ENABLE_FLAG') == 1) {
@@ -1560,8 +1556,6 @@ class Home extends MX_Controller {
 		$data['file_num'] = $file_number;
 		$data['order_id'] = $orderId;
 		$data['escrow_id'] = $escrowId;
-		// echo "<pre>";
-		// print_r($data);die;
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
 
@@ -1569,12 +1563,24 @@ class Home extends MX_Controller {
 	
 	public function preListingDocs() 
 	{
-		// echo "<pre>";
-		// print_r($_POST);die;
 		$this->load->library('order/titlepoint');
 		$escrowId = $_POST['escrow_id'];
 		if(!isset($escrowId) || empty($escrowId)) {
 			$this->titlepoint->generateGeoDoc($_POST);
+			$fileNumber = $_POST['file_number'];
+			$orderId = $_POST['order_id'];
+			$condition = array(
+				'where' => array(
+					'file_number' => $fileNumber,
+					)
+				);
+			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+			$file_id = $titlePointDetails[0]['file_id'];
+			$geoFileName = $titlePointDetails[0]['geo_file_message'];
+			$orderDetails = $this->order->get_order_details($file_id);
+			if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
+				$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
+			}
 		}
 	}
 
@@ -1863,7 +1869,60 @@ class Home extends MX_Controller {
 
 	public function uploadPreListingDocsToResware($document_name, $fileId, $orderDetails)
 	{
+		$this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/pre-listing-doc/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/pre-listing-doc/'.$document_name);
+		}
+		
+		
+		$binaryData   = base64_encode($contents); 
 
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Pre Listing Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_pre_listing_doc' => 1
+		);
+		$documentId = $this->document->insert($documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Pre Listing Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 	}
 
 	public function checkDuplicateOrder()
