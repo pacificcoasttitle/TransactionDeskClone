@@ -3362,7 +3362,7 @@ class Home extends MX_Controller {
                 
 				$nestedData[] = convertTimezone($value['created']);
                 
-                $documentUrl = env('AWS_PATH')."tax/".$documentName;
+                $documentUrl = env('AWS_PATH')."pre-listing-doc/".$documentName;
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"tax"'.");'><i class='fas fa-fw fa-download'></i></a>
                     <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
