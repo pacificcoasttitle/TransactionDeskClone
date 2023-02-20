@@ -377,7 +377,7 @@ $route['order/admin/proposed-branches'] = 'admin/order/proposedInsured/index';
 $route['order/admin/get_branch_details'] = 'admin/order/proposedInsured/get_branch_details';
 $route['order/admin/delete-proposed-branch/(:num)'] = 'admin/order/proposedInsured/delete_proposed_branch/$1';
 $route['order/admin/dashboard'] = 'admin/order/home/index';
-
+$route['order/admin/pre-listing-documents'] = 'admin/order/home/pre_listing_document';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
