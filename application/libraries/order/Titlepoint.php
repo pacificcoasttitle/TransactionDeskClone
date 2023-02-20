@@ -6,6 +6,7 @@ class Titlepoint
 {
     public $count = 0;
     public $taxcount = 0;
+    public $geocount = 0;
     public static $CI;
     
 	public function __construct($params = array())
@@ -1141,15 +1142,15 @@ class Titlepoint
             }
             else if($status == 'processing') 
             {
-                if($this->taxcount < 3)
+                if($this->geocount < 3)
                 {
                     sleep(1);
-                    $this->taxcount = $this->taxcount + 1;
+                    $this->geocount = $this->geocount + 1;
                     return $this->getGeoImageRequestStatus($requestId,$orderId);                    
                 }
                 else
                 {
-                    $this->taxcount = 0;
+                    $this->geocount = 0;
                     return $response;
                 }   
                 
