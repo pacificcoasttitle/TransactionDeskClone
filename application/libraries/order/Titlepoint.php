@@ -6,6 +6,7 @@ class Titlepoint
 {
     public $count = 0;
     public $taxcount = 0;
+    public $geocount = 0;
     public static $CI;
     
 	public function __construct($params = array())
@@ -62,6 +63,7 @@ class Titlepoint
             if($returnStatus == 'success')
             {
                 $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+                $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
 
                 if(isset($requestId) && !empty($requestId))
                 {
@@ -104,7 +106,8 @@ class Titlepoint
 
                                 $tpData = array(
                                     'lv_file_status' => $generateImgStatus,
-                                    'lv_file_message' => $generateImgMsg
+                                    'lv_file_message' => $generateImgMsg,
+                                    'lv_order_id' => $requestOrderId
                                 );
                             }
                             else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
@@ -112,7 +115,8 @@ class Titlepoint
                                 
                                 $tpData = array(
                                     'lv_file_status' => $generateImgStatus,
-                                    'lv_file_message' => $generateImgMsg
+                                    'lv_file_message' => $generateImgMsg,
+                                    'lv_order_id' => $requestOrderId
                                 );
                                 /*$condition =array(
                                     'file_number' => $fileNumber
@@ -125,7 +129,8 @@ class Titlepoint
 
                                 $tpData = array(
                                     'lv_file_status' => $generateImgReturnStatus,
-                                    'lv_file_message' => $error
+                                    'lv_file_message' => $error,
+                                    'lv_order_id' => $requestOrderId
                                 );
                                 /*$condition =array(
                                     'file_number' => $fileNumber
@@ -143,7 +148,8 @@ class Titlepoint
                             $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
                             $tpData = array(
                                 'lv_file_status' => $status,
-                                'lv_file_message' => $message
+                                'lv_file_message' => $message,
+                                'lv_order_id' => $requestOrderId
                             );
                             $condition =array(
                                 'file_number' => $fileNumber
@@ -156,7 +162,8 @@ class Titlepoint
 
                             $tpData = array(
                                 'lv_file_status' => $imgReturnStatus,
-                                'lv_file_message' => $error
+                                'lv_file_message' => $error,
+                                'lv_order_id' => $requestOrderId
                             );
                             $condition =array(
                                 'file_number' => $fileNumber
@@ -337,7 +344,7 @@ class Titlepoint
             if($returnStatus == 'success')
             {
                 $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
-                
+                $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
                 if(isset($requestId) && !empty($requestId))
                 {
                     $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
@@ -377,7 +384,8 @@ class Titlepoint
 
                             $tpData = array(
                                 'tax_file_status' => $generateImgStatus,
-                                'tax_file_message' => $generateImgMsg
+                                'tax_file_message' => $generateImgMsg,
+                                'tax_order_id' => $requestOrderId
                             );
                         }
                         else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
@@ -385,7 +393,8 @@ class Titlepoint
                             
                             $tpData = array(
                                 'tax_file_status' => $generateImgStatus,
-                                'tax_file_message' => $generateImgMsg
+                                'tax_file_message' => $generateImgMsg,
+                                'tax_order_id' => $requestOrderId
                             );
                         }
                         else
@@ -394,7 +403,8 @@ class Titlepoint
 
                             $tpData = array(
                                 'tax_file_status' => $generateImgReturnStatus,
-                                'tax_file_message' => $error
+                                'tax_file_message' => $error,
+                                'tax_order_id' => $requestOrderId
                             );  
                         }
                         $condition =array(
@@ -408,7 +418,8 @@ class Titlepoint
                         $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
                         $tpData = array(
                             'tax_file_status' => $status,
-                            'tax_file_message' => $message
+                            'tax_file_message' => $message,
+                            'tax_order_id' => $requestOrderId
                         );
                         $condition =array(
                             'file_number' => $fileNumber
@@ -421,7 +432,8 @@ class Titlepoint
 
                         $tpData = array(
                             'tax_file_status' => $imgReturnStatus,
-                            'tax_file_message' => $error
+                            'tax_file_message' => $error,
+                            'tax_order_id' => $requestOrderId
                         );
                         $condition =array(
                             'file_number' => $fileNumber
@@ -442,6 +454,333 @@ class Titlepoint
                     'file_number' => $fileNumber
                 );
                 $this->CI->titlePointData->update($tpData,$condition);  
+            }
+        }
+    }
+
+    public function generateGeoDoc($postData)
+    {
+        $fileNumber = $postData['file_number'];
+        $orderId = $postData['order_id'];
+        $state = $postData['state'];
+        $county = $postData['county'];
+        $property = $postData['property'];
+
+        // echo "<pre>";
+        $userdata = $this->CI->session->userdata('user');
+        // print_r($userdata);die;
+        // $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $context = stream_context_create($opts);
+        
+        $requestParams = array(
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
+            'serviceType' => TP_GEO_SERVICE_TYPE,
+            // 'parameters' =>  'Address.FullAddress=1358 5th St;General.AutoSearchTaxes=False;General.AutoSearchProperty=True',
+            'parameters' =>  'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;General.AutoSearchProperty=True',
+            'department'=> '',
+            'orderNo'=>  '',
+            'customerRef'=>  '',
+            'company'=>  '',
+            'titleOfficer'=>  '',
+            'orderComment'=>  '',
+            'starterRemarks'=>  '',
+            // 'state'=>  'CA',
+            'state'=>  $state,
+            // 'county'=>  'Los Angeles',
+            'county'=>  $county,
+        );
+
+        $requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_CREATE_SERVICE_URL;
+
+        $request = $requestUrl.http_build_query($requestParams);
+
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, array(), $orderId, 0);
+
+        $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+        
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, $result, $orderId, $logid);
+
+        $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $returnStatus = strtolower($returnStatus);
+        
+        // echo "<pre>";
+        // print_r($result);die;
+        
+        
+        if($returnStatus == 'success')
+        // if(true)
+        {
+            $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+            $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
+            // $requestId = "672082128";
+            // $requestOrderId = "385791977";
+            if(isset($requestId) && !empty($requestId))
+            {
+                $imgresponse = $this->getGeoImageRequestStatus($requestId,$orderId);
+                // echo "Heloo Tested <pre>";
+                $imgResult = json_decode($imgresponse, TRUE);
+                // print_r($imgResult);
+                // die;
+                $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
+                $status = isset($imgResult['RequestSummaries']['RequestSummary']) && !empty($imgResult['RequestSummaries']['RequestSummary']) ? $imgResult['RequestSummaries']['RequestSummary']['Status'] : '';
+                $imgReturnStatus = strtolower($imgReturnStatus);
+                $status = strtolower($status);
+                // print_r($status);
+                // print_r($imgReturnStatus == 'success');
+                if($imgReturnStatus == 'success' && $status == 'complete')
+                {
+                    $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services']['Service'];
+                    $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
+                    $serviceId = $requestSummary['ID'];
+                    $resultId = $thumbnail['ID'];
+                    // echo "Hello if";
+                    $generateImgResponse = $this->generateGeoDocument($resultId,$orderId);
+
+                    // echo "<pre>Hello";
+                    $generateImgResult = json_decode($generateImgResponse, TRUE);
+                    // print_r($generateImgResult);die;
+                    $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
+                    // $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
+
+                    $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
+                    $generateImgReturnStatus = strtolower($generateImgReturnStatus);
+                    // $generateImgStatus = strtolower($generateImgStatus);
+                    if($generateImgReturnStatus == 'success')
+                    {
+                        return $this->generateGeoImg($serviceId,$fileNumber,$orderId, $requestOrderId);
+                    }
+                }
+                else if($imgReturnStatus == 'success' && $status != 'success')
+                {
+                    $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
+                    $tpData = array(
+                        'geo_file_status' => $status,
+                        'geo_file_message' => $message,
+                        'geo_order_id' => $requestOrderId
+                    );
+                    $condition =array(
+                        'file_number' => $fileNumber
+                    );
+                    $this->CI->titlePointData->update($tpData,$condition);
+                }
+                else
+                {
+                    $error = isset($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $imgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                    $tpData = array(
+                        'geo_file_status' => $imgReturnStatus,
+                        'geo_file_message' => $error,
+                        'geo_order_id' => $requestOrderId
+                    );
+                    $condition =array(
+                        'file_number' => $fileNumber
+                    );
+                    $this->CI->titlePointData->update($tpData,$condition);  
+                }
+            }
+        }
+        else
+        {
+            $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+            $tpData = array(
+                'geo_file_status' => $returnStatus,
+                'geo_file_message' => $error
+            );
+            $condition =array(
+                'file_number' => $fileNumber
+            );
+            $this->CI->titlePointData->update($tpData,$condition);  
+        }
+        
+    }
+
+    public function generateGeoImg($serviceId, $fileNumber, $orderId, $requestOrderId)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $context = stream_context_create($opts);
+        
+        if($serviceId)
+        {
+            $requestParams = array(
+                'username' => env('TP_USERNAME'),
+                'password' => env('TP_PASSWORD'),
+                'serviceId1' =>  $serviceId,
+                'serviceId2'=>  '',
+                'source'=>  '',
+                'clientKey1'=>  '',
+                'clientKey2'=>  '',
+                'sortOrder'=>  '',
+                'fileType'=>  'pdf',
+            );
+            $requestUrl= env('TP_IMAGE_ENDPOINT');
+
+            $request = $requestUrl.http_build_query($requestParams);
+
+            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_image_request', $request, $requestParams, array(), $orderId, 0);
+
+            $file = file_get_contents($request,false,$context);
+            $xmlData = simplexml_load_string($file);
+            $response = json_encode($xmlData);
+            $result = json_decode($response,TRUE);
+
+            $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_image_request', $request, $requestParams, $result, $orderId, $logid);
+
+            $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            $returnStatus = strtolower($returnStatus);
+            if($returnStatus == 'success')
+            {
+                $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+                // $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
+                // echo "<pre>";
+                // print_r($requestOrderId);
+                // print_r($result);
+                // die;
+                if(isset($requestId) && !empty($requestId))
+                {
+                    $response = $this->getImageRequestStatus($requestId,$orderId, 'Geo');
+                    
+                    $imgResult = json_decode($response, TRUE);
+                    
+                    if(isset($imgResult) && !empty($imgResult))
+                    {
+                        $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
+                        $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
+                        $imgReturnStatus = strtolower($imgReturnStatus);
+                        $status = strtolower($status);
+                        if($imgReturnStatus == 'success' && $status == 'success')
+                        {
+                            $generateImgResponse = $this->generateImage($requestId,$orderId, 'Geo');
+
+                            $generateImgResult = json_decode($generateImgResponse, TRUE);
+                            // echo "<pre>";
+                            // print_r($generateImgResult);die;
+                            $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
+                            $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
+
+                            $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
+                            $generateImgReturnStatus = strtolower($generateImgReturnStatus);
+                            $generateImgStatus = strtolower($generateImgStatus);
+                            if($generateImgReturnStatus == 'success' && $generateImgStatus == 'success')
+                            {
+                                $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
+                                
+                                if(isset($base64_data) && !empty($base64_data))
+                                {
+                                    $bin = base64_decode($base64_data, true);      
+                                
+                                    if (!is_dir('uploads/pre-listing-doc')) {
+                                        mkdir('./uploads/pre-listing-doc', 0777, TRUE);
+                                    }
+                                    $pdfFilePath = './uploads/pre-listing-doc/'.$fileNumber.'.pdf';
+                                    file_put_contents($pdfFilePath, $bin); 
+                                    $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'pre-listing-doc');
+                                }
+
+                                $tpData = array(
+                                    'geo_file_status' => $generateImgStatus,
+                                    'geo_file_message' => $generateImgMsg,
+                                    'geo_order_id' => $requestOrderId
+                                );
+                                $condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                                // $updated = $this->CI->titlePointData->update($tpData,$condition);  
+                                // echo "Hello checlk" . $updated; print_r($condition); die;
+                            }
+                            else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
+                            {
+                                
+                                $tpData = array(
+                                    'geo_file_status' => $generateImgStatus,
+                                    'geo_file_message' => $generateImgMsg,
+                                    'geo_order_id' => $requestOrderId
+                                );
+                                $condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                                // $this->CI->titlePointData->update($tpData,$condition);
+                            }
+                            else
+                            {
+                              $error = isset($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                                $tpData = array(
+                                    'geo_file_status' => $generateImgReturnStatus,
+                                    'geo_file_message' => $error,
+                                    'geo_order_id' => $requestOrderId
+                                );
+                                $condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                                // $this->CI->titlePointData->update($tpData,$condition);
+                            }
+                            $condition =array(
+                                    'file_number' => $fileNumber
+                                );
+                            return $this->CI->titlePointData->update($tpData,$condition); 
+
+                        }
+                        else if($imgReturnStatus == 'success' && $status != 'success')
+                        {
+                            $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
+                            $tpData = array(
+                                'geo_file_status' => $status,
+                                'geo_file_message' => $message,
+                                'geo_order_id' => $requestOrderId
+                            );
+                            $condition =array(
+                                'file_number' => $fileNumber
+                            );
+                            return $this->CI->titlePointData->update($tpData,$condition);
+                        }
+                        else
+                        {
+                          $error = isset($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $imgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                            $tpData = array(
+                                'geo_file_status' => $imgReturnStatus,
+                                'geo_file_message' => $error,
+                                'geo_order_id' => $requestOrderId
+                            );
+                            $condition =array(
+                                'file_number' => $fileNumber
+                            );
+                            return $this->CI->titlePointData->update($tpData,$condition);  
+                        }
+                    }
+                    
+                }
+            }
+            else
+            {
+              $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                $tpData = array(
+                    'geo_file_status' => $returnStatus,
+                    'geo_file_message' => $error
+                );
+                $condition =array(
+                    'file_number' => $fileNumber
+                );
+                return $this->CI->titlePointData->update($tpData,$condition);  
             }
         }
     }
@@ -574,7 +913,7 @@ class Titlepoint
     }*/
     
 
-    public function getImageRequestStatus($requestId,$orderId)
+    public function getImageRequestStatus($requestId,$orderId,$requestFrom='')
     {
         $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
@@ -583,16 +922,16 @@ class Titlepoint
                             'requestId'=>  $requestId
                         );
         $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
+        $requestName = ($requestFrom == 'Geo') ? 'geo_image_request_status' : 'lv_image_request_status';
         
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'lv_image_request_status', $request, $requestParams, array(), $orderId, 0);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, array(), $orderId, 0);
 
         $file = file_get_contents($request,false,$context);
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
 
         $imgResult = json_decode($response, TRUE);
-
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'lv_image_request_status', $request, $requestParams, $imgResult, $orderId, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $imgResult, $orderId, $logid);
 
         $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
         $imgReturnStatus = strtolower($imgReturnStatus);
@@ -630,7 +969,7 @@ class Titlepoint
         }
     }
 
-    public function generateImage($requestId,$orderId)
+    public function generateImage($requestId,$orderId, $requestFrom='')
     {
         $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
@@ -640,15 +979,15 @@ class Titlepoint
                         );
 
         $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
-
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image', $request, $requestParams, array(), $orderId, 0);
+        $requestName = ($requestFrom == 'Geo') ? 'generate_geo_image' : 'generate_lv_image';
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, array(), $orderId, 0);
         $file = file_get_contents($request,false,$context);
 
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
 
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image', $request, $requestParams, $result, $orderId, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $result, $orderId, $logid);
 
         return $response;
     }
@@ -730,5 +1069,100 @@ class Titlepoint
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $request, $requestParams, $result, $orderId, $logid);
 
         return $response;
+    }
+
+    public function generateGeoDocument($resultId,$orderId)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $requestParams = array(
+                            'userID' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'), 
+                            'company'=>'',
+                            'department' => '',
+                            'titleOfficer' => '',
+                            'requestingTPXML' => "true",
+                            'resultID'=>  $resultId
+                        );
+
+                        
+        // echo "<pre>";
+        $requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_GET_RESULT_URL;
+        $request = $requestUrl.http_build_query($requestParams);
+        // print_r($request);
+        $file = file_get_contents($request,false,$context);
+
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, array(), $orderId, 0);
+
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        $result = json_decode($response, TRUE);
+        // print_r($result);die;
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);
+
+        return $response;
+    }
+    
+    public function getGeoImageRequestStatus($requestId,$orderId)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $requestParams = array(
+                            'userID' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'company' => '',
+                            'department' => '',
+                            'titleOfficer' => '',
+                            'requestId'=>  $requestId,
+                            'maxWaitSeconds' => '20'
+                        );
+        
+        $requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_REQUEST_SUMMARY_URL;
+        $request = $requestUrl.http_build_query($requestParams);
+        // print_r($request);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'geo_request_summary_status', $request, $requestParams, array(), $orderId, 0);
+
+        $file = file_get_contents($request,false,$context);
+        $xmlData = simplexml_load_string($file);
+        $response = json_encode($xmlData);
+        // echo "--------------------------";
+        // print_r($response);
+        $imgResult = json_decode($response, TRUE);
+        // echo "<pre> Hello";
+        // print_r($imgResult);die;
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'geo_request_summary_status', $request, $requestParams, $imgResult, $orderId, $logid);
+
+        $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
+        if($imgReturnStatus == 'success')
+        {
+            $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
+            $status = strtolower($status);
+            if($status == 'success')
+            {
+                return $response;
+            }
+            else if($status == 'processing') 
+            {
+                if($this->geocount < 3)
+                {
+                    sleep(1);
+                    $this->geocount = $this->geocount + 1;
+                    return $this->getGeoImageRequestStatus($requestId,$orderId);                    
+                }
+                else
+                {
+                    $this->geocount = 0;
+                    return $response;
+                }   
+                
+            }
+            else
+            { 
+                return $response;
+            }
+        }
+        else
+        {
+          return $response; 
+        }
     }
 }

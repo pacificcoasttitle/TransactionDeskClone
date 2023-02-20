@@ -362,8 +362,32 @@
 <?php
     $this->load->view('layout/footer');
 ?>
+<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script> -->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js?random=<?php echo uniqid(); ?>"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
 <script>
+    jQuery(document).ready(function($){
+        let data = {};
+        data.state = "<?php echo $state ?>";
+        data.county = "<?php echo $county ?>";
+        data.property = "<?php echo $property ?>";
+        data.order_id = "<?php echo $order_id ?>";
+        data.file_number = "<?php echo $file_num ?>";
+        data.escrow_id = "<?php echo $escrow_id ?>";
+        console.log('data ===', data);
+        $.ajax({
+			url: base_url + "pre-listing-doc",
+			type: "post",
+			data: data,
+            async: false,
+			success: function (response) {
+				if (response) {
+					console.log('response ==', response);
+				}
+                $('#page-preloader').css('display', 'none');
+			}
+        });
+    });
     function downloadDocumentFromAws(url, documentType)
     {
         $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');

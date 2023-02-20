@@ -6,10 +6,10 @@ class Home extends MX_Controller {
 
 	private $order_js_version = '02';
 	private $custom_js_version = '02';
-
+	
     function __construct() {
         parent::__construct();
-        $this->load->helper(array('file', 'url'));
+		$this->load->helper(array('file', 'url'));
         $this->load->library('session');
 		$this->load->library('order/template');
 		$this->load->model('order/home_model');
@@ -19,6 +19,8 @@ class Home extends MX_Controller {
 		$this->load->model('order/titlePointData');
 		$this->load->model('order/productType');
 		$this->order->is_user();
+
+		// $this->load->model('order/apiLogs');
     }
 
     function index() 
@@ -1342,7 +1344,6 @@ class Home extends MX_Controller {
     	{
 			$data['title'] = 'Open Order | Pacific Coast Title Company';
 			$customer_data =  $this->home_model->get_user(array('id' => $userdata['id']));
-
 			$is_master = isset($customer_data['is_master']) && !empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
 
 			/*$condition = array(
@@ -1495,7 +1496,7 @@ class Home extends MX_Controller {
 			$property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] :'';
 			$customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] :'';
 			$propertyData = $this->home_model->get_property_details($property_id);
-			
+			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] :'';
 			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
 			$apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] :'';
 			$FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] :'';
@@ -1503,7 +1504,11 @@ class Home extends MX_Controller {
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
 	        
 	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
-
+			// print_r('************' . $propertyData['escrow_lender_id'] . '**********');
+			$escrowId = isset($propertyData['escrow_lender_id']) && !empty($propertyData['escrow_lender_id']) ? $propertyData['escrow_lender_id'] :'';
+			// print_r('-------' . $escrowId . '--------------');
+			// print_r('-------' . $propertyState . '--------------');
+			// print_r($propertyData);die;
 			
 			$lv_file_url = ''; 
 			if (env('AWS_ENABLE_FLAG') == 1) {
@@ -1552,12 +1557,27 @@ class Home extends MX_Controller {
 		$data['apn'] = isset($apn) && !empty($apn) ? $apn : '';
 		$data['property'] = isset($FullProperty) && !empty($FullProperty) ? $FullProperty : '';
 		$data['customer_id'] = isset($customer_id) && !empty($customer_id) ? $customer_id : '';
-		
+		$data['file_num'] = $file_number;
+		$data['order_id'] = $orderId;
+		$data['escrow_id'] = $escrowId;
+		// echo "<pre>";
+		// print_r($data);die;
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
 
 	}
 	
+	public function preListingDocs() 
+	{
+		// echo "<pre>";
+		// print_r($_POST);die;
+		$this->load->library('order/titlepoint');
+		$escrowId = $_POST['escrow_id'];
+		if(!isset($escrowId) || empty($escrowId)) {
+			$this->titlepoint->generateGeoDoc($_POST);
+		}
+	}
+
 	function logout()
 	{
 		$this->session->sess_destroy();
@@ -1838,6 +1858,12 @@ class Home extends MX_Controller {
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
+
+
+	public function uploadPreListingDocsToResware($document_name, $fileId, $orderDetails)
+	{
+
 	}
 
 	public function checkDuplicateOrder()
