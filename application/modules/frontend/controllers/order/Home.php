@@ -1582,7 +1582,6 @@ class Home extends MX_Controller {
 			$file_id = $titlePointDetails[0]['file_id'];
 			$geoFileName = $titlePointDetails[0]['geo_file_message'];
 			$orderDetails = $this->order->get_order_details($file_id);
-			echo $geoFileName;exit;
 			if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
 				$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 			}
