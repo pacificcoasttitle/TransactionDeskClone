@@ -6,9 +6,7 @@ class Home extends MX_Controller {
 
 	private $order_js_version = '02';
 	private $custom_js_version = '02';
-	private $config;
-	public static $CI;
-
+	
     function __construct() {
         parent::__construct();
 		$this->load->helper(array('file', 'url'));
@@ -20,9 +18,9 @@ class Home extends MX_Controller {
 		$this->load->library('order/order');
 		$this->load->model('order/titlePointData');
 		$this->load->model('order/productType');
+		$this->order->is_user();
 
-
-		$this->load->model('order/apiLogs');
+		// $this->load->model('order/apiLogs');
     }
 
     function index() 
