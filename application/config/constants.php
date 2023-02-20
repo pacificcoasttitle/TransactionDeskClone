@@ -105,3 +105,10 @@ defined('UNDERWRITERS')  OR define('UNDERWRITERS', ['westcor'=>'westcor','natic'
 defined('PRODUCT_TYPE')  OR define('PRODUCT_TYPE', ['loan','sale']); 
 /* settings.php */
 
+define('TP_GEO_CREATE_SERVICE_URL', 'TpsService.asmx/CreateService3?');
+define('TP_GEO_SERVICE_TYPE', 'TitlePoint.Geo.Address');
+define('TP_GEO_REQUEST_SUMMARY_URL', 'TpsService.asmx/GetRequestSummaries?');
+define('TP_GEO_GET_RESULT_URL', 'TpsService.asmx/GetResultByID3?');
+
+
+

@@ -103,6 +103,7 @@ $route['agent/getAgentDetails'] = 'frontend/order/agent/getAgentDetails';
 $route['home/getCustomerDetails'] = 'frontend/order/home/getCustomerDetails';
 $route['getDetailsByName'] = 'frontend/order/common/getDetailsByName';
 $route['order-submit/:num'] = 'frontend/order/home/orderSubmit';
+$route['pre-listing-doc'] = 'frontend/order/home/preListingDocs';
 $route['createService'] = 'frontend/order/TitlePoint/createService';
 $route['getRequestSummaries'] = 'frontend/order/TitlePoint/getRequestSummaries';
 $route['getResultById'] = 'frontend/order/TitlePoint/getResultById';
