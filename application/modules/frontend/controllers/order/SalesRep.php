@@ -247,6 +247,12 @@ class SalesRep extends MX_Controller
 					$action = "<a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
 				}
 				$action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
+
+                if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$order['file_number'].'.pdf')) {
+                    $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['file_number'].'.pdf';
+                    $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' >View Pre List Doc</button></a>";
+                }
+    
                	$nestedData[] = $action;
 
                 $data[] = $nestedData; 

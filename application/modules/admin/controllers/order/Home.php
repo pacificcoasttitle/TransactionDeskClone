@@ -3328,7 +3328,6 @@ class Home extends MX_Controller {
     public function get_pre_listing_document_list()
     {
         $params = array();
-
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
@@ -3361,22 +3360,13 @@ class Home extends MX_Controller {
                     $nestedData[] = 'No';
                 }
                 
-                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
 				$nestedData[] = convertTimezone($value['created']);
-                if (env('AWS_ENABLE_FLAG') == 1) {
-                    $documentUrl = env('AWS_PATH')."tax/".$documentName;
-                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"tax"'.");'><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                    }
-                } else {
-                    $documentUrl = base_url()."uploads/tax/".$documentName;
-                    if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                    }
-                }
                 
+                $documentUrl = env('AWS_PATH')."tax/".$documentName;
+                if(isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"tax"'.");'><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
                 $data[] = $nestedData;  
                 $i++;          
             }
