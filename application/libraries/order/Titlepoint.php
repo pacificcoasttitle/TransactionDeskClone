@@ -696,7 +696,7 @@ class Titlepoint
 
                                 $tpData = array(
                                     'geo_file_status' => $generateImgStatus,
-                                    'geo_file_message' => $fileNumber.'.pdf',
+                                    'geo_file_message' => $generateImgMsg,
                                     'geo_order_id' => $requestOrderId
                                 );
                                 $condition =array(
@@ -710,7 +710,7 @@ class Titlepoint
                                 
                                 $tpData = array(
                                     'geo_file_status' => $generateImgStatus,
-                                    'geo_file_message' => $fileNumber.'.pdf',
+                                    'geo_file_message' => $generateImgMsg,
                                     'geo_order_id' => $requestOrderId
                                 );
                                 $condition =array(

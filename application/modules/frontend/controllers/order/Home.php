@@ -1580,7 +1580,7 @@ class Home extends MX_Controller {
 				);
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 			$file_id = $titlePointDetails[0]['file_id'];
-			$geoFileName = $titlePointDetails[0]['geo_file_message'];
+			$geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
 			$orderDetails = $this->order->get_order_details($file_id);
 			if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
 				$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
@@ -1918,6 +1918,7 @@ class Home extends MX_Controller {
 			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
 			$user_data['email'] = $orderUser['email_address'];
 			$user_data['password'] = $orderUser['random_password'];
+			// $user_data['admin_api'] = 1;
 		} else {
 			$user_data = array();
 		}
