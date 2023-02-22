@@ -25,6 +25,15 @@ class TitlePoint extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
 	}
 
+    public function preListing()
+	{
+		$data = array();
+        $data['title'] = 'PCT Order: Pre Listing Log';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/pre_listing_logs', $data);
+        $this->load->view('order/layout/footer', $data);
+	}
+
     public function get_logs()
     {
         $params = array();
@@ -83,6 +92,79 @@ class TitlePoint extends MX_Controller {
                         $nestedData[] = 'Failed';
                     } else {
                         $nestedData[] = $value['cs4_message'];
+                    }
+
+                    // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+					$nestedData[] = convertTimezone($value['created_at']);
+
+                    $data[] = $nestedData;
+                    $count++;
+                }
+            }
+        }
+        $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $logs_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function get_pre_listing_logs()
+    {
+        $params = array();
+
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['preListingLog'] = isset($_POST['preListingLog']) && !empty($_POST['preListingLog']) ? $_POST['preListingLog'] : '';
+
+            $pageno = ($params['start'] / $params['length'])+1;
+            $logs_list = $this->titlePoint_model->getPreListingLogs($params);
+            // echo "<pre>";
+            // print_r($logs_list);die;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['preListingLog'] = isset($_POST['preListingLog']) && !empty($_POST['preListingLog']) ? $_POST['preListingLog'] : '';
+            
+            $logs_list = $this->titlePoint_model->getPreListingLogs($params);          
+        }
+        $data = array();
+
+        if(isset($logs_list['data']) && !empty($logs_list['data']))
+        {
+            $count = $params['start'] + 1;
+            foreach ($logs_list['data'] as $key => $value) 
+            {
+                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                if(isset($file_id) && !empty($file_id))
+                {
+                    $order_details = $this->titlePoint_model->get_order_details($file_id);
+
+                    $nestedData=array();
+                    
+                    $nestedData[] = $count;
+                    $nestedData[] = $value['file_number'];
+                    $nestedData[] = $order_details['full_address'];
+
+                    if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$value['file_number'].'.pdf')) {
+                        $nestedData[] = 'Success';
+                    } else if ((strtolower($value['geo_file_status']) != 'success') && !empty($value['geo_file_status'])) {
+                        $nestedData[] = $value['geo_file_status'];
+                    } else if (empty($value['geo_file_status']) && (strtolower($value['geo_file_status']) == 'success')) { 
+                        $nestedData[] = 'Failed';
+                    } else {
+                        $nestedData[] = $value['geo_file_status'];
                     }
 
                     // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));

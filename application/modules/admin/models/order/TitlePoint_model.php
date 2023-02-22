@@ -168,6 +168,106 @@ class TitlePoint_model extends CI_Model
         );
     }
 
+    public function getPreListingLogs($params)
+    {
+        $this->db->where('file_id IS NOT NULL');
+        $this->db->from($this->table);
+        $total_records =  $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $logs_lists =array();
+
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['preListingLog']) && !empty($params['preListingLog']))) {
+            $keyword = $params['searchvalue'];
+            $dateRange = trim($params['dateRange']);
+            $preListingLog = $params['preListingLog'];
+            $ymdStartDate = '';
+            $ymdEndDate = '';
+            if (!empty($dateRange)) {
+                $dateRangeArr = explode(' - ', $dateRange);
+                $startDate = $dateRangeArr[0];
+                $endDate = $dateRangeArr[1];
+                $ymdStartDate = date("Y-m-d 00:00:00", strtotime($startDate));
+                $ymdEndDate = date("Y-m-d 23:59:59", strtotime($endDate));
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('file_number', $keyword)->where('geo_file_status IS NOT NULL');
+            }
+            if (!empty($preListingLog) && $preListingLog == 'success') {
+                $this->db->where('geo_file_status', $preListingLog);
+            } else if (!empty($preListingLog) && $preListingLog == 'error') {
+                $this->db->group_start()
+                    ->where('geo_file_status !=', 'success')
+                    ->where('geo_file_status IS NOT NULL')
+                    ->group_end();
+            }
+            
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->from($this->table);
+            $filter_total_records =  $this->db->count_all_results();
+
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('file_number', $keyword)->where('geo_file_status IS NOT NULL');
+            }
+            if(isset($dateRange) && !empty($dateRange)) {
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if (!empty($preListingLog) && $preListingLog == 'success') {
+                $this->db->where('geo_file_status', $preListingLog);
+            } else if (!empty($preListingLog) && $preListingLog == 'error') {
+                $this->db->group_start()
+                    ->where('geo_file_status !=', 'success')
+                    ->where('geo_file_status IS NOT NULL')
+                    ->group_end();
+            }
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+
+            $this->db->order_by('file_number', 'desc');
+            $this->db->where('file_id IS NOT NULL');
+            $query = $this->db->get($this->table);
+
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            }
+        }
+        else
+        {
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('geo_file_status IS NOT NULL');
+            $this->db->from($this->table);
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->where('geo_file_status IS NOT NULL');
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('file_number', 'desc');
+            $query = $this->db->get($this->table);
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists
+        );
+    }
+
     public function get_order_details($fileId)
     {
         

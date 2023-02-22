@@ -513,24 +513,17 @@ class Titlepoint
         $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
         $returnStatus = strtolower($returnStatus);
         
-        // echo "<pre>";
-        // print_r($result);die;
         
         
         if($returnStatus == 'success')
-        // if(true)
         {
             $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
             $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
-            // $requestId = "672082128";
-            // $requestOrderId = "385791977";
+            
             if(isset($requestId) && !empty($requestId))
             {
                 $imgresponse = $this->getGeoImageRequestStatus($requestId,$orderId);
-                // echo "Heloo Tested <pre>";
                 $imgResult = json_decode($imgresponse, TRUE);
-                // print_r($imgResult);
-                // die;
                 $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
                 $status = isset($imgResult['RequestSummaries']['RequestSummary']) && !empty($imgResult['RequestSummaries']['RequestSummary']) ? $imgResult['RequestSummaries']['RequestSummary']['Status'] : '';
                 $imgReturnStatus = strtolower($imgReturnStatus);
@@ -558,6 +551,17 @@ class Titlepoint
                     if($generateImgReturnStatus == 'success')
                     {
                         return $this->generateGeoImg($serviceId,$fileNumber,$orderId, $requestOrderId);
+                    } else {
+                        $error = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
+                        $tpData = array(
+                            'geo_file_status' => $generateImgReturnStatus,
+                            'geo_file_message' => $error,
+                            'geo_order_id' => $resultId
+                        );
+                        $condition =array(
+                            'file_number' => $fileNumber
+                        );
+                        $this->CI->titlePointData->update($tpData,$condition);
                     }
                 }
                 else if($imgReturnStatus == 'success' && $status != 'success')
@@ -640,19 +644,15 @@ class Titlepoint
             $xmlData = simplexml_load_string($file);
             $response = json_encode($xmlData);
             $result = json_decode($response,TRUE);
-
+            
             $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_image_request', $request, $requestParams, $result, $orderId, $logid);
-
+            
             $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $returnStatus = strtolower($returnStatus);
             if($returnStatus == 'success')
             {
                 $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
                 // $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
-                // echo "<pre>";
-                // print_r($requestOrderId);
-                // print_r($result);
-                // die;
                 if(isset($requestId) && !empty($requestId))
                 {
                     $response = $this->getImageRequestStatus($requestId,$orderId, 'Geo');
@@ -696,12 +696,12 @@ class Titlepoint
 
                                 $tpData = array(
                                     'geo_file_status' => $generateImgStatus,
-                                    'geo_file_message' => $fileNumber.'.pdf',
-                                    'geo_order_id' => $requestOrderId
+                                    'geo_file_message' => $generateImgMsg,
+                                    'geo_order_id' => $requestId
                                 );
-                                $condition =array(
-                                    'file_number' => $fileNumber
-                                );
+                                // $condition =array(
+                                //     'file_number' => $fileNumber
+                                // );
                                 // $updated = $this->CI->titlePointData->update($tpData,$condition);  
                                 // echo "Hello checlk" . $updated; print_r($condition); die;
                             }
@@ -710,12 +710,12 @@ class Titlepoint
                                 
                                 $tpData = array(
                                     'geo_file_status' => $generateImgStatus,
-                                    'geo_file_message' => $fileNumber.'.pdf',
-                                    'geo_order_id' => $requestOrderId
+                                    'geo_file_message' => $generateImgMsg,
+                                    'geo_order_id' => $requestId
                                 );
-                                $condition =array(
-                                    'file_number' => $fileNumber
-                                );
+                                // $condition =array(
+                                //     'file_number' => $fileNumber
+                                // );
                                 // $this->CI->titlePointData->update($tpData,$condition);
                             }
                             else
@@ -725,11 +725,11 @@ class Titlepoint
                                 $tpData = array(
                                     'geo_file_status' => $generateImgReturnStatus,
                                     'geo_file_message' => $error,
-                                    'geo_order_id' => $requestOrderId
+                                    'geo_order_id' => $requestId
                                 );
-                                $condition =array(
-                                    'file_number' => $fileNumber
-                                );
+                                // $condition =array(
+                                //     'file_number' => $fileNumber
+                                // );
                                 // $this->CI->titlePointData->update($tpData,$condition);
                             }
                             $condition =array(
@@ -744,7 +744,7 @@ class Titlepoint
                             $tpData = array(
                                 'geo_file_status' => $status,
                                 'geo_file_message' => $message,
-                                'geo_order_id' => $requestOrderId
+                                'geo_order_id' => $requestId
                             );
                             $condition =array(
                                 'file_number' => $fileNumber
@@ -758,7 +758,7 @@ class Titlepoint
                             $tpData = array(
                                 'geo_file_status' => $imgReturnStatus,
                                 'geo_file_message' => $error,
-                                'geo_order_id' => $requestOrderId
+                                'geo_order_id' => $requestId
                             );
                             $condition =array(
                                 'file_number' => $fileNumber
@@ -775,7 +775,8 @@ class Titlepoint
 
                 $tpData = array(
                     'geo_file_status' => $returnStatus,
-                    'geo_file_message' => $error
+                    'geo_file_message' => $error,
+                    'geo_order_id' => $serviceId
                 );
                 $condition =array(
                     'file_number' => $fileNumber

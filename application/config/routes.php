@@ -267,6 +267,7 @@ $route['order/admin/add-title-officer'] = 'admin/order/title/add_title_officer';
 $route['order/admin/edit-title-officer/:num'] = 'admin/order/title/edit_title_officer';
 $route['order/admin/credentials-check'] = 'admin/order/customer/index';
 $route['order/admin/lv-log'] = 'admin/order/TitlePoint/index';
+$route['order/admin/pre-listing'] = 'admin/order/TitlePoint/preListing';
 $route['order/admin/primary-check'] = 'admin/order/home/primaryCheck';
 $route['order/admin/get-user-check-list'] = 'admin/order/home/get_user_check_list';
 $route['order/admin/orders(/:any)?'] = 'admin/order/order/orders';
