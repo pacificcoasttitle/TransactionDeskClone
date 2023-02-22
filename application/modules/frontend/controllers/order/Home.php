@@ -1500,6 +1500,7 @@ class Home extends MX_Controller {
 			$county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] :'';
 			$apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] :'';
 			$FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] :'';
+			$address = isset($propertyData['address']) && !empty($propertyData['address']) ? $propertyData['address'] :'';
 			
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
 	        
@@ -1552,6 +1553,7 @@ class Home extends MX_Controller {
 		$data['county'] = isset($county) && !empty($county) ? $county : '';
 		$data['apn'] = isset($apn) && !empty($apn) ? $apn : '';
 		$data['property'] = isset($FullProperty) && !empty($FullProperty) ? $FullProperty : '';
+		$data['address'] = isset($address) && !empty($address) ? $address : '';
 		$data['customer_id'] = isset($customer_id) && !empty($customer_id) ? $customer_id : '';
 		$data['file_num'] = $file_number;
 		$data['order_id'] = $orderId;
