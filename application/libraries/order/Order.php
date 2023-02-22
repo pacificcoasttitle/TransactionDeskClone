@@ -490,6 +490,7 @@ class Order
             property_details.escrow_lender_id,
             property_details.cpl_lender_id,
             property_details.buyer_agent_id,
+            property_details.listing_agent_id,
             property_details.borrowers_vesting,
             property_details.cpl_proposed_property_address,
             property_details.cpl_proposed_property_city,
