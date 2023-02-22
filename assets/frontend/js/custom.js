@@ -555,6 +555,7 @@ $(document).ready(function() {
 function autoComplete() {
     // use Google Places API to autocomplete address searches and bias suggestions to California
     var input = document.getElementById('property-search');
+    console.log(input);
     var defaultBounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(-32.30, 114.8),
         new google.maps.LatLng(-42, 124.24)); // latitude and longitude ranges of California
@@ -565,8 +566,10 @@ function autoComplete() {
         bounds: defaultBounds
     };
     autocomplete = new google.maps.places.Autocomplete(input, options);
+    console.log('autocomplete ===', autocomplete);
     google.maps.event.addListener(autocomplete, 'place_changed', function() {
         var place = autocomplete.getPlace(); // get address, without city and state
+        console.log('place.formatted_address ==', place.formatted_address);
         $('#property-full-address').val(place.formatted_address);
         setTimeout(function() {
             $('#property-search').val(place.name);
@@ -672,6 +675,7 @@ function compileRequest(dataObj,neighbourhood,retry) {
 
 function fetchReports(repNum,request,dataObj,neighbourhood,retry) 
 {
+    console.log('fetchReports')
     reportNum = repNum;
     $.ajax({
         url: base_url+'home/getSearchResults?',
@@ -694,6 +698,11 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             else if (responseStatus != 'OK') 
             {
                 if(!retry){
+                    console.log('retryy');
+                    // var state = $('#property-state').val();
+                    //     var county = $('#County').val();
+                    // var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+                    // createServicePreList(address,state,county,random_number);
                     $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
                     data(dataObj.Address,dataObj.LastLine,neighbourhood,true);
                 }else {
@@ -713,16 +722,17 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                         {
                            $('#random_number').val(random_number); 
                         }
-                       var unit_no = 1;
-                       createService4(fipCode,address,city,unit_no,apn,random_number);
+                        var unit_no = 1;
+                        createService4(fipCode,address,city,unit_no,apn,random_number);
                         createService3(apn,state,county,random_number);
+                        createServicePreList(address,state,county,random_number);
                     }
                 }                
             } 
             else 
             {
                 compileXmlUrls(response, '187');
-                
+                console.log('else');
                 if(isNewSearch)
                 {
                     multipleResults(response);
@@ -736,6 +746,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             }
         })
         .fail(function(err) {
+            console.log('fails');
             $('.pma-error').text('Unsuccessful Request');
             $(".buttonNext").addClass("buttonDisabled");
         });
@@ -750,6 +761,7 @@ function compileXmlUrls(response, report) {
 
 
 function get187() {
+    console.log('get187 ==');
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
@@ -877,6 +889,7 @@ function parse187()
                 }
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
+                createServicePreList(address,state,county,random_number);
             }
         }
     });

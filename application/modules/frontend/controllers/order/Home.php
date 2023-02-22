@@ -1082,6 +1082,11 @@ class Home extends MX_Controller {
 								$fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
 								
 								$this->titlepoint->generateGrantDeed($instrumentNumber,$recordedDate,$fips,$orderNumber,$orderId);
+								
+								if((!isset($escrowId) || empty($escrowId)) || (!empty($escrow_user_details) && $escrow_user_details['is_escrow'] == 0)) {
+									$serviceId = isset($titlePointDetails['pre_listing_service_id']) && !empty($titlePointDetails['pre_listing_service_id']) ? $titlePointDetails['pre_listing_service_id'] : '';
+									$this->titlepoint->generateGeoImg($serviceId,$orderNumber,$orderId);
+								}
 							}
 							
 							$orderDetails = $this->order->get_order_details($file_id);

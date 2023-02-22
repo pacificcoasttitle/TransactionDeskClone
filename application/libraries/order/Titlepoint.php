@@ -609,7 +609,7 @@ class Titlepoint
         
     }
 
-    public function generateGeoImg($serviceId, $fileNumber, $orderId, $requestOrderId)
+    public function generateGeoImg($serviceId, $fileNumber, $orderId)
     {
         $userdata = $this->CI->session->userdata('user');
         $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';

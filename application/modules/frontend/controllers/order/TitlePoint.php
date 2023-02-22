@@ -81,7 +81,25 @@ class TitlePoint extends MX_Controller {
 			$requestParams['fipsCode'] = $fipsCode;
 			$requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
 			$request_type= 'create_service_4';
+		} 
+		else if($methodId == 5)
+		{
+			unset($requestParams['customerRef']);
+			$state = isset($_POST['state']) && !empty($_POST['state']) ? $_POST['state'] : '';
+			$county = isset($_POST['county']) && !empty($_POST['county']) ? $_POST['county'] : '';
+			$address = isset($_POST['address']) && !empty($_POST['address']) ? $_POST['address'] : '';
+
+			$requestParams['serviceType'] = TP_GEO_SERVICE_TYPE;
+			$requestParams['parameters'] = 'Address.FullAddress='. $address .';General.AutoSearchTaxes=False;General.AutoSearchProperty=True';
+			$requestParams['state'] = $state;
+            $requestParams['county'] =  'Los Angeles'; // $county;
+			
+			$requestParams['customerRef'] = '';
+			$requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_CREATE_SERVICE_URL;
+			$request_type= 'create_pre_listing_service';
 		}
+		// echo "<pre>";
+		// print_r($requestParams);die;
 		$request = $requestUrl.http_build_query($requestParams);
 
 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, array(), $random_number, 0);
@@ -129,7 +147,43 @@ class TitlePoint extends MX_Controller {
 		else
 		{
 			$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-		
+			
+			if($methodId == 5)
+			{
+				if($responseStatus == 'Success')
+				{
+					$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+					$tpData = 	array(
+									'pre_listing_request_id' => $requestId,
+								);
+
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
+				
+			}
+
 			if($methodId == 4)
 			{
 				if($responseStatus == 'Success')
@@ -278,7 +332,57 @@ class TitlePoint extends MX_Controller {
 		{
 			$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 			$session_data = array();
+			if($methodId == 5)
+			{
+				if($responseStatus == 'Success')
+				{
+					$status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+					// echo "<pre>";
+					// print_r($result);
+					if($status == 'Complete')
+					{
+						$resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : ''; 
+						$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+						
+						$tpData = 	array(
+							'pre_listing_result_id' => $resultId,
+							'pre_listing_service_id' => $serviceId,
+						);
+					}
+					else
+					{
+						$tpData = 	array(
+							'pre_listing_message' => $status,
+						);
+					}
+					// echo "<pre>";
+					// print_r($tpData);die;
 
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
+			}
 
 			if($methodId == 4)
 			{
@@ -410,6 +514,11 @@ class TitlePoint extends MX_Controller {
 		    $requestParams['requestingTPXML'] = 'true';
 		    $resultUrl = env('TP_GET_RESULT_BY_ID_3');
 		}
+		if($methodId == 5)
+		{
+		    $requestParams['requestingTPXML'] = 'true';
+		    $resultUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_GET_RESULT_URL;
+		}
 
 		$request = $resultUrl.http_build_query($requestParams);
 
@@ -427,7 +536,7 @@ class TitlePoint extends MX_Controller {
 		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
-
+		
 		$this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'get_result_by_id_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
 
 		if(isset($result) && empty($result))
@@ -435,6 +544,12 @@ class TitlePoint extends MX_Controller {
 			$tpData = 	array(
 				'cs4_message' => 'Failed',
 			);
+
+			if($methodId == 5) {
+				$tpData = 	array(
+					'pre_listing_message' => 'Failed',
+				);
+			}
 
 			if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
 			{
@@ -447,12 +562,8 @@ class TitlePoint extends MX_Controller {
 			else
 			{
 				$tpData['session_id'] = 'tp_api_id_'.$random_number;
-				
-
 				$tpId = $this->titlePointData->insert($tpData);
-
 				$this->session->set_userdata('tp_api_id_'.$random_number, 1);
-
 			}
 		}
 		else
@@ -460,6 +571,63 @@ class TitlePoint extends MX_Controller {
 			$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 			$session_data = array();
 			
+			if($methodId == 5)
+			{
+				if($responseStatus == 'Success')
+				{
+					// $firstInstallment = $secondInstallment = array();
+					// if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
+					// {
+					// 	$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];					
+					// }
+
+					// if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
+					// {
+					// 	$secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];			
+					// }
+					
+					// $status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
+					// if($status == 'Success')
+					// {
+						$message = 'Success';
+					// }
+					// else
+					// {
+					// 	$message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
+					// }
+					
+					// $tpData = 	array(
+					// 	'first_installment' => json_encode($firstInstallment),
+					// 	'second_installment' => json_encode($secondInstallment),
+					// );
+
+					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+					{
+						$session_id = 'tp_api_id_'.$random_number;
+						$condition = array(
+							'session_id' => $session_id
+						);				
+						$this->titlePointData->update($tpData,$condition);
+					}
+					else
+					{
+						$tpData['session_id'] = 'tp_api_id_'.$random_number;
+						
+
+						$tpId = $this->titlePointData->insert($tpData);
+
+						$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+					}
+					$this->addLogs($methodId,$responseStatus,$message,'',$random_number);
+				}
+				else
+				{
+					$error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+				}
+			}
+
 			if($methodId == 4)
 			{
 				if($responseStatus == 'Success')
