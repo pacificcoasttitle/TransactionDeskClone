@@ -370,7 +370,7 @@
         let data = {};
         data.state = "<?php echo $state ?>";
         data.county = "<?php echo $county ?>";
-        data.property = "<?php echo $property ?>";
+        data.property = "<?php echo $address ?>";
         data.order_id = "<?php echo $order_id ?>";
         data.file_number = "<?php echo $file_num ?>";
         data.escrow_id = "<?php echo $escrow_id ?>";
