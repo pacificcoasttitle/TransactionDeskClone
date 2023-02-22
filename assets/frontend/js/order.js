@@ -33,89 +33,91 @@ $(document).ready(function() {
         $(this).parent().parent().children("span").html(fileName);
     });
 
-    // $("#CompanyName, #OpenEmail").autocomplete({
-    //     source: function(request, response) {
-    //         $.ajax({
-    //             url: base_url+'getDetailsByName',
-    //             data: {
-    //                 term : request.term,
-    //                 is_master_search: 1           
-    //             },
-    //             type: "POST",
-    //             dataType: "json",
-    //             success: function (data) {
-    //                 if (data.length > 0) {
-    //                     response($.map(data, function (item) {
-    //                         return item;
-    //                     }))
-    //                 } else {
-    //                     response([{ label: 'No results found.', val: -1}]);
-    //                 }
-    //             }
-    //         });
-    //     },
-    //     delay: 0,
-    //     minLength: 3,
-    //     select: function( event, ui ) {
-    //         event.preventDefault();
-    //         $("#CompanyName").val(ui.item.company);
-    //         $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');
-    //         $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
-    //         $("#OpenName").val(ui.item.fname).parent().addClass('state-success');
-    //         $("#OpenLastName").val(ui.item.lname).parent().addClass('state-success');
-    //         $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
-    //         $("#City").val(ui.item.city).parent().addClass('state-success');
-    //         $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
-    //         $("#CustomerId").val(ui.item.id);
-            
+    if ($('#CompanyName').length) {
+        $("#CompanyName, #OpenEmail").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: base_url+'getDetailsByName',
+                    data: {
+                        term : request.term,
+                        is_master_search: 1           
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.length > 0) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        } else {
+                            response([{ label: 'No results found.', val: -1}]);
+                        }
+                    }
+                });
+            },
+            delay: 0,
+            minLength: 3,
+            select: function( event, ui ) {
+                event.preventDefault();
+                $("#CompanyName").val(ui.item.company);
+                $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');
+                $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+                $("#OpenName").val(ui.item.fname).parent().addClass('state-success');
+                $("#OpenLastName").val(ui.item.lname).parent().addClass('state-success');
+                $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
+                $("#City").val(ui.item.city).parent().addClass('state-success');
+                $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
+                $("#CustomerId").val(ui.item.id);
+                
 
-    //         var is_escrow = ui.item.is_escrow;
-    //         var is_mortgage_broker = ui.item.is_primary_mortgage_user;
+                var is_escrow = ui.item.is_escrow;
+                var is_mortgage_broker = ui.item.is_primary_mortgage_user;
 
-    //         if(is_mortgage_broker == 1) {
-    //             $('#add-lender-section').show();
-    //             $('#add-escrow-section').show();
-    //             $('#email-notification-section').show();
-    //             $('#upload_lender').show();
-    //             $('#upload_escrow').show();
-    //         } else {
-    //             if(is_escrow == 1) {
-    //                 $('#add-lender-section').show();
-    //                 $('#add-escrow-section').hide();
-    //                 $('#escrow-details-fields').hide();
-    //                 $("#add-escrow-details").prop( "checked", false );
-    //                 $('#upload_lender').hide();
-    //                 $('#upload_escrow').show();
-    //                 $('#email-notification-section').hide();
-    //             } else {
-    //                 $('#add-lender-section').hide();
-    //                 $('#lender-details-fields').hide();
-    //                 $("#add-lender-details").prop( "checked", false );
-    //                 $('#add-escrow-section').show();
-    //                 $('#email-notification-section').show();
-    //                 $('#upload_lender').show();
-    //                 $('#upload_escrow').hide();
-    //             }
-    //         }
-            
-    //         getProductTypes();
-    //         getDeliverables(ui.item.partner_id);
-    //     },
-    //     change: function( event, ui ) {
-    //         if (ui.item == null)
-    //         {
-    //             $("#CompanyName").parent().removeClass('state-success').addClass('state-error');
-    //             $("#OpenEmail").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#Opentelephone").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#OpenName").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#OpenLastName").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#StreetAddress").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#City").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#Zipcode").val('').parent().removeClass('state-success').addClass('state-error');
-    //             $("#CustomerId").val('');
-    //         }
-    //     }
-    // });
+                if(is_mortgage_broker == 1) {
+                    $('#add-lender-section').show();
+                    $('#add-escrow-section').show();
+                    $('#email-notification-section').show();
+                    $('#upload_lender').show();
+                    $('#upload_escrow').show();
+                } else {
+                    if(is_escrow == 1) {
+                        $('#add-lender-section').show();
+                        $('#add-escrow-section').hide();
+                        $('#escrow-details-fields').hide();
+                        $("#add-escrow-details").prop( "checked", false );
+                        $('#upload_lender').hide();
+                        $('#upload_escrow').show();
+                        $('#email-notification-section').hide();
+                    } else {
+                        $('#add-lender-section').hide();
+                        $('#lender-details-fields').hide();
+                        $("#add-lender-details").prop( "checked", false );
+                        $('#add-escrow-section').show();
+                        $('#email-notification-section').show();
+                        $('#upload_lender').show();
+                        $('#upload_escrow').hide();
+                    }
+                }
+                
+                getProductTypes();
+                getDeliverables(ui.item.partner_id);
+            },
+            change: function( event, ui ) {
+                if (ui.item == null)
+                {
+                    $("#CompanyName").parent().removeClass('state-success').addClass('state-error');
+                    $("#OpenEmail").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#Opentelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#OpenName").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#OpenLastName").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#StreetAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#City").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#Zipcode").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#CustomerId").val('');
+                }
+            }
+        });
+    }
 
     $('#email-notification').on('click' , function() {
         if ( $(this).is(":checked") ) {
