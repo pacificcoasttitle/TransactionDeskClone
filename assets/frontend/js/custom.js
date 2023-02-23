@@ -984,7 +984,7 @@ function apnData(e) {
 function compileAPNRequest(dataobj) {
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
     request += $.param(dataObj);
-    console.log('compileAPNRequest ==', request);
+    console.log('compileAPNRequest');
     fetchReports('187',request,dataObj);
 }
 
