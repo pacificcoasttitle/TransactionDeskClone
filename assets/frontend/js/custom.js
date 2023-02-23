@@ -974,7 +974,7 @@ function apnData(e) {
     dataObj.apn = apn;
     dataObj.FIPS = fips;
     dataObj.ClientReference = '<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>';
-    dataObj.random_number = $('#random_number').val(random_number);
+    dataObj.random_number = $('#random_number').val();
     console.log('apnData dataObj ==', dataObj);
     compileAPNRequest(dataObj);
 }
