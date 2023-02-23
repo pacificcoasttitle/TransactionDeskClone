@@ -92,7 +92,7 @@ class TitlePoint extends MX_Controller {
 			$requestParams['serviceType'] = TP_GEO_SERVICE_TYPE;
 			$requestParams['parameters'] = 'Address.FullAddress='. $address .';General.AutoSearchTaxes=False;General.AutoSearchProperty=True';
 			$requestParams['state'] = $state;
-            $requestParams['county'] =  'Los Angeles'; // $county;
+            $requestParams['county'] = $county;
 			
 			$requestParams['customerRef'] = '';
 			$requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_CREATE_SERVICE_URL;
