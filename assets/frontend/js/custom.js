@@ -685,7 +685,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
         dataType: 'xml'
     })
     	.done(function(response, textStatus, jqXHR) {
-
+            console.log('Execution done');
             var responseStatus = $(response).find('StatusCode').text();
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
             
@@ -735,10 +735,12 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                 console.log('else');
                 if(isNewSearch)
                 {
+                    console.log('isNewSearch ==', isNewSearch);
                     multipleResults(response);
                 }
                 else
                 {
+                    console.log('fetchReports get187');
                     get187();
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
@@ -754,6 +756,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
 
 // extracts url for report from API response and adds to reportData object
 function compileXmlUrls(response, report) {
+    console.log('compileXmlUrls ==', response);
     // get the url for each report
     reportUrl = $(response).find('ReportURL').text();
     reportData.report187 = reportUrl;
@@ -761,7 +764,7 @@ function compileXmlUrls(response, report) {
 
 
 function get187() {
-    console.log('get187 ==');
+    console.log('get187 ==', reportData);
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
@@ -980,7 +983,7 @@ function apnData(e) {
     dataObj.apn = apn;
     dataObj.FIPS = fips;
     dataObj.ClientReference = '<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>';
-
+    dataObj.random_number = $('#random_number').val(random_number);
     compileAPNRequest(dataObj);
 }
 
