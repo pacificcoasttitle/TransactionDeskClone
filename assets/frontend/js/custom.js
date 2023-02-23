@@ -672,6 +672,7 @@ function compileRequest(dataObj,neighbourhood,retry) {
 
 function fetchReports(repNum,request,dataObj,neighbourhood,retry) 
 {
+    console.log('fetchReports');
     reportNum = repNum;
     $.ajax({
         url: base_url+'home/getSearchResults?',
@@ -687,6 +688,7 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             
             if (responseStatus == 'MM') 
             {
+                console.log('multipleResults =', response);
                 multipleResults(response);
                 $("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");
@@ -721,14 +723,17 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             } 
             else 
             {
+                console.log('compileXmlUrls ==', response);
                 compileXmlUrls(response, '187');
                 
                 if(isNewSearch)
                 {
+                    console.log('isNewSearch ==', isNewSearch);
                     multipleResults(response);
                 }
                 else
                 {
+                    console.log('fetchReports get187')
                     get187();
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
@@ -746,10 +751,12 @@ function compileXmlUrls(response, report) {
     // get the url for each report
     reportUrl = $(response).find('ReportURL').text();
     reportData.report187 = reportUrl;
+    console.log('compileXmlUrls ==', reportData);
 }
 
 
 function get187() {
+    console.log('get187 ==', reportData);
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
@@ -967,7 +974,8 @@ function apnData(e) {
     dataObj.apn = apn;
     dataObj.FIPS = fips;
     dataObj.ClientReference = '<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>';
-
+    dataObj.random_number = $('#random_number').val(random_number);
+    console.log('apnData dataObj ==', dataObj);
     compileAPNRequest(dataObj);
 }
 
@@ -976,6 +984,7 @@ function apnData(e) {
 function compileAPNRequest(dataobj) {
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
     request += $.param(dataObj);
+    console.log('compileAPNRequest ==', request);
     fetchReports('187',request,dataObj);
 }
 
