@@ -367,7 +367,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
 <script>
     jQuery(document).ready(function($){
-        let data = {};
+        /*let data = {};
         data.state = "<?php echo $state ?>";
         data.county = "<?php echo $county ?>";
         data.property = "<?php echo $address ?>";
@@ -386,7 +386,7 @@
 				}
                 $('#page-preloader').css('display', 'none');
 			}
-        });
+        });*/
     });
     function downloadDocumentFromAws(url, documentType)
     {
