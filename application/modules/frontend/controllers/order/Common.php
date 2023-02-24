@@ -489,8 +489,9 @@ class Common extends MX_Controller {
 	}
 
     function getSearchResults()
-    {
-    	$userdata = $this->session->userdata('user');
+    {	
+		$this->load->model('order/titlePointData');
+		$userdata = $this->session->userdata('user');
     	ini_set('max_execution_time', 300);
     	$request = $_GET['requrl'];
     	$api_key = env('BLACK_KNIGHT_KEY');        
@@ -498,22 +499,47 @@ class Common extends MX_Controller {
 		$query_string = parse_url($request,PHP_URL_QUERY);
         parse_str($query_string, $requestParams);
         $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
+		$randomNumber = isset($_GET['randomnumber'])?$_GET['randomnumber']:'';
         $opts = array(
-        	'http'=>array(
-        		'header' => "User-Agent:MyAgent/1.0\r\n"
-        	),
-        	"ssl"=>array(
-		        "verify_peer"=>false,
-		        "verify_peer_name"=>false,
-		    )
-        );
-        $context = stream_context_create($opts);
-        $this->load->model('order/apiLogs');
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, $requestParams, array(), 0, 0);
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
+		'http'=>array(
+			'header' => "User-Agent:MyAgent/1.0\r\n"
+		),
+		"ssl"=>array(
+			"verify_peer"=>false,
+			"verify_peer_name"=>false,
+			)
+		);
+		$context = stream_context_create($opts);
+		$this->load->model('order/apiLogs');
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, $requestParams, array(), 0, 0);
+		$file = file_get_contents($request,false,$context);
+		$xmlData = simplexml_load_string($file);
 		$response = json_encode($xmlData);
 		$result = json_decode($response,TRUE);
+		if (!empty($randomNumber)) {
+			$propertyCharateristics = isset($result['PropertyProfile']['PropertyCharacteristics']) ? $result['PropertyProfile']['PropertyCharacteristics'] : '';
+			if (!empty($propertyCharateristics)) {
+				$bedrooms = isset($propertyCharateristics['Bedrooms']) ? $propertyCharateristics['Bedrooms'] : '';
+				$bathrooms = (isset($propertyCharateristics['Baths']) ? $propertyCharateristics['Baths'] : (isset($propertyCharateristics['Bathrooms']) ? $propertyCharateristics['Bathrooms'] : ''));
+				$zoning = (isset($propertyCharateristics['Zoning']) && !empty($propertyCharateristics['Zoning'])) ? $propertyCharateristics['Zoning'] : '';
+				$lotSize = (isset($propertyCharateristics['LotSize']) && !empty($propertyCharateristics['LotSize'])) ? $propertyCharateristics['LotSize'] : '';
+				$buildingArea = (isset($propertyCharateristics['BuildingArea']) && !empty($propertyCharateristics['BuildingArea'])) ? $propertyCharateristics['BuildingArea'] : '';
+				$session_id = 'tp_api_id_'.$randomNumber;
+
+				$condition = array(
+					'session_id' => $session_id
+				);
+				$tpData = array(
+					'property_bedroom' => $bedrooms,
+					'property_bathroom' => $bathrooms,
+					'property_lotsize' => $lotSize,
+					'property_squarefeet' => $buildingArea,
+					'property_zoning' => $zoning,
+				);
+				$this->titlePointData->update($tpData,$condition);
+				// $totalRooms = isset($propertyCharateristics['TotalRooms']) ? $propertyCharateristics['TotalRooms'] : '';
+			}
+		}
 		$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
         echo trim($file);
     }
