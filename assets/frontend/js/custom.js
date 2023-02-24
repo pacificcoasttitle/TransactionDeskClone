@@ -757,10 +757,14 @@ function compileXmlUrls(response, report) {
 
 function get187() {
     console.log('get187 ==', reportData);
+    let random_number = $('#random_number').val();
+    // let requrl = 'https://api.sitexdata.com/187/1E0F8F50-6300-4d9f-BA0F-180ADAEDF187.asmx/GetXML?reportInfo=dKcwbONSbWKxybFhTRZMEZRtUwFBMwc6KJ4Ue3_BBnUevCptIkrKGxmIKJzCp8lFj2vogw_hcRj5bk5jQkNyQHPKkNcT98JYD72J5HdslsMxf3-cLfhBVLmuKuaIBP_nxSkYGYzHKpHXdjzYw4H9lcMbfJdcpOlcnWI1&filter=<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>';
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
             requrl: reportData.report187,
+            randomnumber: random_number
+            // requrl: requrl,
         },
         dataType: "xml",
         success: function(xml) {
