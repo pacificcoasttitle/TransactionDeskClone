@@ -537,9 +537,9 @@ class Common extends MX_Controller {
 					'property_zoning' => $zoning,
 				);
 
-				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+				if ($this->session->has_userdata('tp_api_id_'.$randomNumber)) 
 				{
-					$session_id = 'tp_api_id_'.$random_number;
+					$session_id = 'tp_api_id_'.$randomNumber;
 					$condition = array(
 						'session_id' => $session_id
 					);				
@@ -547,9 +547,9 @@ class Common extends MX_Controller {
 				}
 				else
 				{
-					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					$tpData['session_id'] = 'tp_api_id_'.$randomNumber;
 					$tpId = $this->titlePointData->insert($tpData);
-					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+					$this->session->set_userdata('tp_api_id_'.$randomNumber, 1);
 
 				}
 				// $this->titlePointData->update($tpData,$condition);
