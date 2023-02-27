@@ -524,11 +524,11 @@ class Common extends MX_Controller {
 				$zoning = (isset($propertyCharateristics['Zoning']) && !empty($propertyCharateristics['Zoning'])) ? $propertyCharateristics['Zoning'] : '';
 				$lotSize = (isset($propertyCharateristics['LotSize']) && !empty($propertyCharateristics['LotSize'])) ? $propertyCharateristics['LotSize'] : '';
 				$buildingArea = (isset($propertyCharateristics['BuildingArea']) && !empty($propertyCharateristics['BuildingArea'])) ? $propertyCharateristics['BuildingArea'] : '';
-				$session_id = 'tp_api_id_'.$randomNumber;
+				// $session_id = 'tp_api_id_'.$randomNumber;
 
-				$condition = array(
-					'session_id' => $session_id
-				);
+				// $condition = array(
+				// 	'session_id' => $session_id
+				// );
 				$tpData = array(
 					'property_bedroom' => $bedrooms,
 					'property_bathroom' => $bathrooms,
@@ -536,7 +536,23 @@ class Common extends MX_Controller {
 					'property_squarefeet' => $buildingArea,
 					'property_zoning' => $zoning,
 				);
-				$this->titlePointData->update($tpData,$condition);
+
+				if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
+				{
+					$session_id = 'tp_api_id_'.$random_number;
+					$condition = array(
+						'session_id' => $session_id
+					);				
+					$this->titlePointData->update($tpData,$condition);
+				}
+				else
+				{
+					$tpData['session_id'] = 'tp_api_id_'.$random_number;
+					$tpId = $this->titlePointData->insert($tpData);
+					$this->session->set_userdata('tp_api_id_'.$random_number, 1);
+
+				}
+				// $this->titlePointData->update($tpData,$condition);
 				// $totalRooms = isset($propertyCharateristics['TotalRooms']) ? $propertyCharateristics['TotalRooms'] : '';
 			}
 		}
