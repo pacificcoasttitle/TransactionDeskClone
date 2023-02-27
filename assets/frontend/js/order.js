@@ -129,8 +129,16 @@ $(document).ready(function() {
 });
 
 
-function createService4(fipCode,address,city,unit_no,apn,random_number)
+function createService4(fipCode,address,city,unit_no,apn,random_number,properyData)
 {
+    let bedrooms = baths = lotSize = zoning = buildingArea = '';
+    if (!$.isEmptyObject(properyData)) {
+        bedrooms = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Bedrooms").text();
+        baths = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Baths").text();
+        lotSize = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("LotSize").text();
+        zoning = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Zoning").text();
+        buildingArea = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("BuildingArea").text();
+    }
 	$.ajax({
         // url: 'php/createservice.php',
         url: base_url+'createService',
@@ -141,7 +149,12 @@ function createService4(fipCode,address,city,unit_no,apn,random_number)
             unit_no: unit_no,
             apn: apn,
             methodId: 4,
-            random_number:random_number
+            random_number:random_number,
+            bedRooms: bedrooms,
+            baths: baths,
+            lotSize: lotSize,
+            zoning: zoning,
+            buildingArea: buildingArea
         },
         type: "POST",
         dataType: "xml"
