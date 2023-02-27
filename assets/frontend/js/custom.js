@@ -889,6 +889,7 @@ function parse187()
                 // {
                 //    $('#random_number').val(random_number); 
                 // }
+                let random_number = $('#random_number').val(random_number);
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
             }
