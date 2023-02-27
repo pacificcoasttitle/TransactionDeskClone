@@ -682,7 +682,11 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
         dataType: 'xml'
     })
     	.done(function(response, textStatus, jqXHR) {
-
+            var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+            if($('#random_number').length)
+            {
+                $('#random_number').val(random_number); 
+            }
             var responseStatus = $(response).find('StatusCode').text();
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
             
@@ -880,12 +884,11 @@ function parse187()
             }
             else
             {
-                var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
-
-                if($('#random_number').length)
-                {
-                   $('#random_number').val(random_number); 
-                }
+                // var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
+                // if($('#random_number').length)
+                // {
+                //    $('#random_number').val(random_number); 
+                // }
                 createService4(fipCode,address,city,unit_no,apn,random_number);
                 createService3(apn,state,county,random_number);
             }
