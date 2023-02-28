@@ -72,6 +72,11 @@ class TitlePoint extends MX_Controller {
 			$city = isset($_POST['city']) && !empty($_POST['city']) ? $_POST['city'] : '';
 			$unit_no = isset($_POST['unit_no']) && !empty($_POST['unit_no']) ? $_POST['unit_no'] : '';
 			$apn = isset($_POST['apn']) && !empty($_POST['apn']) ? $_POST['apn'] : '';
+			$bedRooms = isset($_POST['bedRooms']) ? $_POST['bedRooms'] : '';
+			$baths = isset($_POST['baths']) ? $_POST['baths'] : '';
+			$lotSize = isset($_POST['lotSize']) && !empty($_POST['lotSize']) ? $_POST['lotSize'] : '';
+			$zoning = isset($_POST['zoning']) && !empty($_POST['zoning']) ? $_POST['zoning'] : '';
+			$buildingArea = isset($_POST['buildingArea']) && !empty($_POST['buildingArea']) ? $_POST['buildingArea'] : '';
 			if($unit_no)
 			{
 				$unitinfo =  'UnitNumber '.$unit_no.', '; 
@@ -137,6 +142,11 @@ class TitlePoint extends MX_Controller {
 					$requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
 					$tpData = 	array(
 									'cs4_request_id' => $requestId,
+									'property_bedroom' => $bedRooms,
+									'property_bathroom' => $baths,
+									'property_lotsize' => $lotSize,
+									'property_zoning' => $zoning,
+									'property_squarefeet' => $buildingArea
 								);
 
 					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
