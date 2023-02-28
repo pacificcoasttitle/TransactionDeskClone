@@ -672,7 +672,6 @@ function compileRequest(dataObj,neighbourhood,retry) {
 
 function fetchReports(repNum,request,dataObj,neighbourhood,retry) 
 {
-    console.log('fetchReports');
     reportNum = repNum;
     $.ajax({
         url: base_url+'home/getSearchResults?',
@@ -682,36 +681,11 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
         dataType: 'xml'
     })
     	.done(function(response, textStatus, jqXHR) {
-            // var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
-            // if($('#random_number').length)
-            // {
-            //     $('#random_number').val(random_number); 
-            // }
             var responseStatus = $(response).find('StatusCode').text();
-            // var status = $(response).find('Status').text();
-            // console.log('done response', status);
-            // if (status == 'Invalid IP') {
-            //     compileXmlUrls(response, '187');
-                
-            //     if(isNewSearch)
-            //     {
-            //         console.log('isNewSearch ==', isNewSearch);
-            //         // multipleResults(response);
-            //         apnData(response);
-            //     }
-            //     else
-            //     {
-            //         console.log('fetchReports get187')
-            //         get187();
-            //         return;
-            //     }
-            // }
-
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
             
             if (responseStatus == 'MM') 
             {
-                console.log('multipleResults =', response);
                 multipleResults(response);
                 $("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");
@@ -746,17 +720,14 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             } 
             else 
             {
-                console.log('compileXmlUrls ==', response);
                 compileXmlUrls(response, '187');
                 
                 if(isNewSearch)
                 {
-                    console.log('isNewSearch ==', isNewSearch);
                     multipleResults(response);
                 }
                 else
                 {
-                    console.log('fetchReports get187')
                     get187();
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
@@ -764,7 +735,6 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
             }
         })
         .fail(function(err) {
-            console.log('Fails response');
             $('.pma-error').text('Unsuccessful Request');
             $(".buttonNext").addClass("buttonDisabled");
         });
@@ -777,20 +747,14 @@ function compileXmlUrls(response, report) {
     reportUrl = $(response).find('ReportURL').text();
     reportData.report187 = reportUrl;
     // reportData.report187 = "https://api.sitexdata.com/187/1E0F8F50-6300-4d9f-BA0F-180ADAEDF187.asmx/GetXML?reportInfo=dKkqbOJCdWKhyaFj6Y1iSlrrt7qlKMPG7DnIfoL_3BRS2Xh0YN_O4Jv3DrD-3mpXtVRlphtwkaLM7COOoWLTY2P_pLWxtG_goKDG0-Sr_RLj29EYBmnnGByXR7q8FXUFsMlIXFZ3vu0fLzr8tP73h5nGVZQijmIYoX01&filter=<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>";//reportUrl;
-    console.log('compileXmlUrls =============', reportData);
 }
 
 
 function get187() {
-    console.log('get187 ==', reportData);
-    // let random_number = $('#random_number').val();
-    // let requrl = 'https://api.sitexdata.com/187/1E0F8F50-6300-4d9f-BA0F-180ADAEDF187.asmx/GetXML?reportInfo=dKcwbONSbWKxybFhTRZMEZRtUwFBMwc6KJ4Ue3_BBnUevCptIkrKGxmIKJzCp8lFj2vogw_hcRj5bk5jQkNyQHPKkNcT98JYD72J5HdslsMxf3-cLfhBVLmuKuaIBP_nxSkYGYzHKpHXdjzYw4H9lcMbfJdcpOlcnWI1&filter=<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>';
     $.ajax({
         url: base_url+'home/getSearchResults?',
         data: {
-            requrl: reportData.report187,
-            // randomnumber: random_number
-            // requrl: requrl,
+            requrl: reportData.report187
         },
         dataType: "xml",
         success: function(xml) {
@@ -806,10 +770,6 @@ function get187() {
 
 function parse187() 
 {
-    console.log('PrimaryOwnerName === ', $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text());
-    console.log('Bedrooms ==', $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Bedrooms").text());
-    console.log('Bedrooms ==', $(reportXML).find("PropertyProfile").find("PropertyCharacteristics"));
-    console.log('Test ==', $(reportXML).find("PropertyProfile").find("test").find("Bedrooms").text());
     let propertyCharacteristics = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics");
     let bedrooms = baths = lotSize = zoning = buildingArea = '';
     let properyData = [];
@@ -821,11 +781,6 @@ function parse187()
         properyData['buildingArea'] = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("BuildingArea").text();
     }
 
-    console.log('bedrooms  ==', bedrooms);
-    console.log('baths  ==', baths);
-    console.log('lotSize  ==', lotSize);
-    console.log('zoning  ==', zoning);
-    console.log('buildingArea  ==', buildingArea);
     var ownerNamePrimary = $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text();
     var ownerNameSecondary = $(reportXML).find("PropertyProfile").find("SecondaryOwnerName").text();
     
@@ -931,7 +886,6 @@ function parse187()
                 {
                    $('#random_number').val(random_number); 
                 }
-                // let random_number = $('#random_number').val();
                 createService4(fipCode,address,city,unit_no,apn,random_number,properyData);
                 createService3(apn,state,county,random_number);
             }
@@ -1026,7 +980,6 @@ function apnData(e) {
     dataObj.FIPS = fips;
     dataObj.ClientReference = '<CustCompFilter><SQFT>0.20</SQFT><Radius>0.75</Radius></CustCompFilter>';
     dataObj.random_number = $('#random_number').val();
-    console.log('apnData dataObj ==', dataObj);
     compileAPNRequest(dataObj);
 }
 
@@ -1035,7 +988,6 @@ function apnData(e) {
 function compileAPNRequest(dataobj) {
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
     request += $.param(dataObj);
-    console.log('compileAPNRequest');
     fetchReports('187',request,dataObj);
 }
 
