@@ -806,7 +806,6 @@ function get187() {
 
 function parse187() 
 {
-
     console.log('PrimaryOwnerName === ', $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text());
     console.log('Bedrooms ==', $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Bedrooms").text());
     console.log('Bedrooms ==', $(reportXML).find("PropertyProfile").find("PropertyCharacteristics"));
@@ -932,7 +931,7 @@ function parse187()
                 {
                    $('#random_number').val(random_number); 
                 }
-                let random_number = $('#random_number').val();
+                // let random_number = $('#random_number').val();
                 createService4(fipCode,address,city,unit_no,apn,random_number,properyData);
                 createService3(apn,state,county,random_number);
             }

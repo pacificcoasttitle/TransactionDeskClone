@@ -129,7 +129,7 @@ $(document).ready(function() {
 });
 
 
-function createService4(fipCode,address,city,unit_no,apn,random_number,properyData)
+function createService4(fipCode,address,city,unit_no,apn,random_number,properyData='')
 {
     let bedrooms = baths = lotSize = zoning = buildingArea = '';
     if (!$.isEmptyObject(properyData)) {
