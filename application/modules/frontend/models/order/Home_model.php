@@ -412,4 +412,20 @@ class Home_model extends CI_Model
 			return array();
 		}
 	}
+
+    public function getLastFileNumberForLpOrders() 
+    {
+		$this->db->select('*');
+		$this->db->from('order_details');
+		$this->db->where('lp_file_number is not null');
+        $this->db->order_by('order_details.id', 'desc');
+        $this->db->limit(1);
+		$query = $this->db->get();
+		$result = $query->row_array();
+        if(!empty($result)) { 
+            return $result;
+        } else {
+            return array();
+        }
+	}
 }
