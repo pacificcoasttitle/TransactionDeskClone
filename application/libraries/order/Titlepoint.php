@@ -15,6 +15,7 @@ class Titlepoint
 		$this->CI->load->database();
         $this->CI->load->library('session');
         $this->CI->load->model('order/titlePointData');
+        $this->CI->load->model('order/titlePointDocumentRecords');
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->library('order/order');
 		self::$CI = $this->CI;
@@ -537,7 +538,7 @@ class Titlepoint
                     $serviceId = $requestSummary['ID'];
                     $resultId = $thumbnail['ID'];
                     // echo "Hello if";
-                    $generateImgResponse = $this->generateGeoDocument($resultId,$orderId);
+                    $generateImgResponse = $this->generateGeoDocument($resultId,$orderId, $fileNumber);
 
                     // echo "<pre>Hello";
                     $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -1072,7 +1073,7 @@ class Titlepoint
         return $response;
     }
 
-    public function generateGeoDocument($resultId,$orderId)
+    public function generateGeoDocument($resultId,$orderId, $fileNumber)
     {
         $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
@@ -1097,7 +1098,42 @@ class Titlepoint
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
-        // print_r($result);die;
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+                )
+            );
+        $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
+        $titlePointId = $titlePointDetails[0]['id'];
+        
+        
+        /** Save document records here Start*/
+        $recordArray = [];
+		$i = 0;
+		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
+			$result = $result['Result']['DocumentList'];
+			$documentIdentifications = $result['DocumentIdentifications']['DocumentIdentification'];
+			$items = $result['Items'];
+			if (isset($items['Item'])) {
+				foreach($items['Item'] as $key => $val) {
+					$id = $val['DocumentIdentification'];
+					if (isset($id['@attributes']['Id'])) {
+						$docId = $id['@attributes']['Id'];
+						$key = array_search($docId, array_column($documentIdentifications, 'Id'));
+						if (!empty($key) && isset($documentIdentifications[$key]) && $documentIdentifications[$key]['InstrumentNumber']) {
+							$recordArray[$i]['title_point_id'] = $titlePointId;
+							$recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+							$recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
+							$recordArray[$i]['document_name'] = $val['DocumentFullName'];
+							$recordArray[$i]['amount'] = 0;
+							$i++;
+						}
+					}
+				}
+                $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
+			}
+        }
+        /** Save document records here end*/
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);
 
         return $response;
