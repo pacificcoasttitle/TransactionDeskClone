@@ -1125,6 +1125,7 @@ class Titlepoint
 							$recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
 							$recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
 							$recordArray[$i]['document_name'] = $val['DocumentFullName'];
+                            $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
 							$recordArray[$i]['amount'] = 0;
 							$i++;
 						}
