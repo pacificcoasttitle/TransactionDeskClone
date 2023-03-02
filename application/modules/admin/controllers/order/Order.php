@@ -41,8 +41,7 @@ class Order extends MX_Controller {
     	$params = array();
         $params['length'] = $this->input->post('length');
         $params['start'] = $this->input->post('start');
-        /*$params['orderColumn'] = $this->input->post('order.0.column');
-        $params['orderDir'] = $this->input->post('order.0.dir');*/
+        $params['order_type'] = 'resware_orders';
         $params['searchValue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value']: '';
         $params['sales_rep'] = $this->input->post('sales_rep');
         $params['created_by'] = $this->input->post('created_by');
@@ -443,5 +442,76 @@ class Order extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $safewire_orders_lists['recordsFiltered'] );
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
+    }
+
+    function lpOrders() 
+    {
+    	$params = array();
+    	$salesRep = $this->sales_model->get_sales_reps($params);
+    	$data['salesRep'] = $salesRep;
+        $con = array(
+            'where' => array(
+                'is_master' => 1,
+                'status' => 1,
+            )
+        );
+        $product_type = $this->uri->segment(4);
+        $master_users = $this->home_model->get_rows($con);
+        $data['master_users'] = $master_users;
+        $data['product_type'] = $product_type;
+    	$this->load->view('order/layout/header', $data);
+        $this->load->view('order/order/lp_orders', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    function get_lp_order_list()
+    {
+    	$params = array();
+        $params['length'] = $this->input->post('length');
+        $params['start'] = $this->input->post('start');
+        $params['order_type'] = 'lp_orders';
+        $params['searchValue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value']: '';
+        $params['sales_rep'] = $this->input->post('sales_rep');
+        $params['created_by'] = $this->input->post('created_by');
+        $params['product_type'] = $this->input->post('product_type');
+       
+        $pageno = ($params['start'] / $params['length'])+1; 
+        $ordersList = $this->order_model->get_orders($params);   
+        
+        $data = array(); 
+        $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+        $count = $params['start'] + 1;
+        foreach( $ordersList['data'] as $key => $value )
+        {
+            $nestedData=array();
+            $nestedData[] = $count;
+            $nestedData[] = $value['file_number'];
+            $nestedData[] = $value['full_address'];
+            $nestedData[] = $value['product_type'];
+			$nestedData[] = $value['sales_rep_name'];
+			$nestedData[] = $value['first_name']." ".$value['last_name'];
+            $property_id = $value['property_id'];
+            if ($value['allow_duplication'] == 1) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
+            // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+			$nestedData[] = convertTimezone($value['created_at']);
+            $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
+            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
+            $nestedData[] = $action;
+            $data[] = $nestedData;            
+            $count++;          
+        }  
+                      
+        $json_data = array(            
+            "recordsTotal"    => $ordersList['recordsTotal'],
+            "recordsFiltered" => $ordersList['recordsFiltered'],
+            "data" => $data 
+        );
+
+        echo json_encode($json_data);
     }
 }

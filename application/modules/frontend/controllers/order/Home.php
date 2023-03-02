@@ -943,6 +943,10 @@ class Home extends MX_Controller {
 					$this->order->sendNotification($message, 'assigned', $customer_id, 0);
 				}
 
+				if ($lpOrderFlag == 1) {
+					$orderNumber = $lp_file_number;
+				}
+
 				/* Escrow Details */					
 				if(isset($escrowId) && !empty($escrowId)) {
 					$name = explode(' ', $escrowName);
