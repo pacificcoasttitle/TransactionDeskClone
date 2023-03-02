@@ -11,57 +11,75 @@ class Order_model extends CI_Model
     public function get_orders($params)
     {
         $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
-
         $product_type = isset($params['product_type']) && !empty($params['product_type']) ? $params['product_type'] : '';
+        $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
 
-        if(isset($sales_rep) && !empty($sales_rep))
-        {
+        if (isset($sales_rep) && !empty($sales_rep)) {
             $this->db->where('transaction_details.sales_representative', $sales_rep);
         }
 
-        if(isset($product_type) && !empty($product_type))
-        {
+        if (isset($product_type) && !empty($product_type)) {
             $this->db->like('pct_order_product_types.product_type', $product_type);
         }
 
         $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-        if(isset($created_by) && !empty($created_by))
-        {
+
+        if (isset($created_by) && !empty($created_by)) {
             $this->db->where('order_details.created_by', $created_by);
         }
-        if(isset($params['searchValue']) && !empty($params['searchValue']))
-        {
+
+        if (isset($order_type) && !empty($order_type)) {
+            if ($order_type == 'resware_orders') {
+                $this->db->where('order_details.lp_file_number is null');
+                $this->db->where('order_details.file_number is not null'); 
+            } else if ($order_type == 'lp_orders') {
+                $this->db->where('order_details.lp_file_number is not null');
+                $this->db->where('order_details.file_number', 0);
+            }
+            
+        }
+
+        if (isset($params['searchValue']) && !empty($params['searchValue'])) {
             $keyword = $params['searchValue'];
 
-            if(isset($keyword) && !empty($keyword))
-            {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
             
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
-            ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->from('order_details')
+                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $total_records =  $this->db->count_all_results();
-            if(isset($sales_rep) && !empty($sales_rep))
-            {
+            
+            if (isset($sales_rep) && !empty($sales_rep)) {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
-
             }
-            if(isset($product_type) && !empty($product_type))
-            {
+
+            if (isset($product_type) && !empty($product_type)) {
                 $this->db->like('pct_order_product_types.product_type', $product_type);
             }
+
             $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if(isset($created_by) && !empty($created_by))
-            {
+            if (isset($created_by) && !empty($created_by)) {
                 $this->db->where('order_details.created_by', $created_by);
             }
-            if(isset($keyword) && !empty($keyword))
-            {
+
+            if (isset($order_type) && !empty($order_type)) {
+                if ($order_type == 'resware_orders') {
+                    $this->db->where('order_details.lp_file_number is null');
+                    $this->db->where('order_details.file_number is not null'); 
+                } else if ($order_type == 'lp_orders') {
+                    $this->db->where('order_details.lp_file_number is not null');
+                    $this->db->where('order_details.file_number', 0);
+                }
+                
+            }
+
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
             
@@ -70,12 +88,12 @@ class Order_model extends CI_Model
             $orders_lists = array();
            
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
-            ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->from('order_details')
+                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $this->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -87,57 +105,52 @@ class Order_model extends CI_Model
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             }
-        }
-        else
-        {
-            if(isset($sales_rep) && !empty($sales_rep))
-            {
-                $this->db->where('transaction_details.sales_representative', $sales_rep);
-            }
-
-            if(isset($product_type) && !empty($product_type))
-            {
-                $this->db->like('pct_order_product_types.product_type', $product_type);
-            }
-            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if(isset($created_by) && !empty($created_by))
-            {
-                $this->db->where('order_details.created_by', $created_by);
-            }
+        } else {
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
-            ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->from('order_details')
+                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
        
             $total_records =  $this->db->count_all_results();
            
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
-            if(isset($sales_rep) && !empty($sales_rep))
-            {
+
+            if (isset($sales_rep) && !empty($sales_rep)) {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
-            if(isset($product_type) && !empty($product_type))
-            {
+
+            if (isset($product_type) && !empty($product_type)) {
                 $this->db->like('pct_order_product_types.product_type', $product_type);
             }
+
             $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if(isset($created_by) && !empty($created_by))
-            {
+            if (isset($created_by) && !empty($created_by)) {
                 $this->db->where('order_details.created_by', $created_by);
+            }
+
+            if (isset($order_type) && !empty($order_type)) {
+                if ($order_type == 'resware_orders') {
+                    $this->db->where('order_details.lp_file_number is null');
+                    $this->db->where('order_details.file_number is not null'); 
+                } else if ($order_type == 'lp_orders') {
+                    $this->db->where('order_details.lp_file_number is not null');
+                    $this->db->where('order_details.file_number', 0);
+                }
+                
             }
             
             $this->db->select('order_details.file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
-            ->from('order_details')
-            ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
-            ->join('property_details', 'order_details.property_id = property_details.id')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->from('order_details')
+                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
             $this->db->order_by("order_details.id", "desc");
 
