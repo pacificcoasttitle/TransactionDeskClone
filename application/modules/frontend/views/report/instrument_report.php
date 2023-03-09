@@ -9,7 +9,7 @@
     <meta name="x-apple-disable-message-reformatting"> <!-- Disable auto-scale in iOS 10 Mail entirely -->
     <title>PCT</title>
     <!-- <link rel="icon" type="image/x-icon" href="assets/images/fevicon.png"> -->
-    <link href="fonts/fonts.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>assets/frontend/fonts/fontawesome/fonts.css"  rel="stylesheet">
     <style>
        body{
         font-family: 'Calibri';
@@ -36,8 +36,7 @@
 </head>
 
 <body class="background-color:#fff">
-
-    <?php //echo "<pre>"; print_r($orderDetails['file_number']);die; ?>
+        
     <!-- 1st page -->
     <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;max-width:1000px;height:100vh;background-image: url('<?php echo base_url("assets/frontend/images/bg.jpg") ?>');background-position: center; background-repeat: no-repeat;background-size: cover;">
         <tbody>
@@ -78,7 +77,7 @@
     <!-- 1st page -->
 
     <div class="page-break" style="page-break-after: always;"></div>
-
+    
     <!-- 2st page -->
     <table cellpadding="0" cellspacing="0" border="0">
         <tr>
@@ -191,7 +190,6 @@
     </table>
 
     <!-- 2st page -->
-    
     <div class="page-break" style="page-break-after: always;"></div>
     
     <!-- 3st page -->
@@ -612,7 +610,7 @@
         </tr>
     </table>
     <!-- 4th page -->
-
+    
     <div class="page-break" style="page-break-after: always;"></div>
 
     <!-- 5th page -->
@@ -841,7 +839,7 @@
     <!-- 5th page -->
 
     <div class="page-break" style="page-break-after: always;"></div>
-
+    
     <!-- 6th page -->
     <table cellpadding="0" cellspacing="0" border="0">
         <tr>
@@ -886,7 +884,7 @@
                                         </tr>
                                         <tr>
                                             <td align="center">
-                                                <img src="diagram.png" alt="diagram" style="width: 80%;"/>
+                                                <img src="<?php echo base_url('assets/frontend/images/diagram.png') ?>" alt="diagram" style="width: 80%;"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -953,7 +951,6 @@
     </table>
     
     <!-- 7th page -->
-    
 </body>
 
 </html>
