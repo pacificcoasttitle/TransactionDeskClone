@@ -381,7 +381,7 @@ $route['order/admin/dashboard'] = 'admin/order/home/index';
 $route['order/admin/pre-listing-documents'] = 'admin/order/home/pre_listing_document';
 $route['order/admin/lp-listing-documents'] = 'admin/order/home/lp_listing_document';
 $route['order/admin/lp-orders'] = 'admin/order/order/lpOrders';
-$route['order/admin/send-order-to-resware'] = 'admin/order/order/sendOrderToResware';
+$route['order/admin/send-order-to-resware'] = 'admin/order/home/sendOrderToResware';
 $route['order/admin/update-lp-report-status'] = 'admin/order/home/updateLpeportStatus';
 /* Route for PCT-Order backend*/
 
