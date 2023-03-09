@@ -84,7 +84,7 @@ class TitleOfficers extends MX_Controller
                 if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
                     $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['lp_file_number'].'.pdf';
                     $reportDocumentUrl = env('AWS_PATH')."pre-listing-doc/pre_listing_report_".$order['lp_file_number'].'.pdf';
-                    $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a><a target='_blank' href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a>";
+                    $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a><a target='_blank' href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View LP Report</button></a>";
                 }
                 
                	$nestedData[] = $action;
