@@ -377,26 +377,26 @@
         data.escrow_id = "<?php echo $escrow_id ?>";
         // data.lpFileNumber = "<?php echo $lpFileNumber ?>";
         console.log('data ===', data);
-        let executeCall = false;
+        // let executeCall = false;
         if (data.file_number != '') {
-            $(document).ajaxStop(function() {
+            // $(document).ajaxStop(function() {
                 // place code to be executed on completion of last outstanding ajax call here
-                if (!executeCall) {
-                    executeCall = true;
-                    $.ajax({
-                        url: base_url + "pre-listing-doc",
-                        type: "post",
-                        data: data,
-                        async: false,
-                        success: function (response) {
-                            if (response) {
-                                console.log('response ==', response);
-                            }
-                            // $('#page-preloader').css('display', 'none');
+                // if (!executeCall) {
+                //     executeCall = true;
+                $.ajax({
+                    url: base_url + "pre-listing-doc",
+                    type: "post",
+                    data: data,
+                    async: false,
+                    success: function (response) {
+                        if (response) {
+                            console.log('response ==', response);
                         }
-                    });
-                }
-            });
+                        // $('#page-preloader').css('display', 'none');
+                    }
+                });
+                // }
+            // });
         }
     });
     function downloadDocumentFromAws(url, documentType)
