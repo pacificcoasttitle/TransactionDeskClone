@@ -373,28 +373,31 @@
         data.county = "<?php echo $county ?>";
         data.property = "<?php echo $address ?>";
         data.order_id = "<?php echo $order_id ?>";
-        data.file_number = "<?php echo $file_num ?>";
+        data.file_number = "<?php echo $lpFileNumber ?>";
         data.escrow_id = "<?php echo $escrow_id ?>";
+        // data.lpFileNumber = "<?php echo $lpFileNumber ?>";
         console.log('data ===', data);
         let executeCall = false;
-        $(document).ajaxStop(function() {
-            // place code to be executed on completion of last outstanding ajax call here
-            if (!executeCall) {
-                executeCall = true;
-                $.ajax({
-                    url: base_url + "pre-listing-doc",
-                    type: "post",
-                    data: data,
-                    async: false,
-                    success: function (response) {
-                        if (response) {
-                            console.log('response ==', response);
+        if (data.file_number != '') {
+            $(document).ajaxStop(function() {
+                // place code to be executed on completion of last outstanding ajax call here
+                if (!executeCall) {
+                    executeCall = true;
+                    $.ajax({
+                        url: base_url + "pre-listing-doc",
+                        type: "post",
+                        data: data,
+                        async: false,
+                        success: function (response) {
+                            if (response) {
+                                console.log('response ==', response);
+                            }
+                            // $('#page-preloader').css('display', 'none');
                         }
-                        // $('#page-preloader').css('display', 'none');
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
     });
     function downloadDocumentFromAws(url, documentType)
     {
