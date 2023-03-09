@@ -3360,7 +3360,7 @@ class Home extends MX_Controller {
             foreach ($pre_listing_document_lists['data'] as $key => $value) {
                 $nestedData=array();
                 $nestedData[] = $i;
-                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
                 // if ($value['api_document_id'] > 0) {
@@ -3417,7 +3417,7 @@ class Home extends MX_Controller {
                 $documentName = $value['document_name'];
                 
                 $lp_report_status = $value['lp_report_status'];
-                $lpReportStatusSelection ='<select onchange="updateReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
+                $lpReportStatusSelection ='<select onchange="updateLpReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
                                     <option value="">Select</option>
                                     <option value="pending">Pending</option>
                                     <option value="approved">Approved</option>

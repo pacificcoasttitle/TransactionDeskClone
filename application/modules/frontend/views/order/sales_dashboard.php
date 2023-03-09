@@ -1,9 +1,9 @@
 
 <style type="text/css">
 
-	table#orders_listing tr td:last-child {
+	/* table#orders_listing tr td:last-child {
 		 display: inline-flex; 
-	}
+	} */
 
 	.ui-autocomplete {
 		max-height: 300px !important;
