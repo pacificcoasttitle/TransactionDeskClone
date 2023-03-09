@@ -1131,7 +1131,7 @@ class Titlepoint
 		$i = 0;
 		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
 			$result = $result['Result']['DocumentList'];
-            $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
+            // $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
             /*$primaryDocIdFilter = $secondaryDocIdFilter = [];
 			if (!empty($primaryNameToSearch)) {
 				$primaryDocIdFilter = array_filter($result['Parties']['DocumentParty'], function($elem) use($primaryNameToSearch){
@@ -1147,8 +1147,8 @@ class Titlepoint
 			$docIds = array_column($docIdFilter, 'Id');
 			print_r($docIds);*/
 			$documentIdentifications = $result['DocumentIdentifications']['DocumentIdentification'];
-			$items = $result['Items'];
-			if (isset($items['Item']) && !empty($addressIds)) {
+            $items = $result['Items'];
+			if (isset($items['Item'])) {
                 /*
                 $docIdentificationId = [];
 				foreach($items['Item'] as $key => $val) {
@@ -1160,6 +1160,7 @@ class Titlepoint
 				}*/
 
                 /** Start All instrument number details fetched */
+                
                 foreach($items['Item'] as $key => $val) {
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
@@ -1177,6 +1178,7 @@ class Titlepoint
                         }
                     }
                 }
+                
                 /** End All instrument number details fetched */
 
                 /** Start Address based instrument number details fetched  */
@@ -1203,6 +1205,7 @@ class Titlepoint
                 /** End Address based instrument number details fetched  */
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			}
+            // echo "hello";die;
         }
         /** Save document records here end*/
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);

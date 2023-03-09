@@ -6,6 +6,23 @@ class Document extends CI_Model
         $this->table = 'pct_order_documents';
     }
 
+    public function delete($data)
+    {
+        $table = $this->table;
+        if(!empty($data))
+        {   
+            $this->db->select('*')
+            ->from('pct_order_documents');
+            $this->db->where('order_id', $data['order_id']);
+            $this->db->where('is_pre_listing_report_doc', 1);
+            $query = $this->db->get();
+            if ($query->num_rows() > 0)  {
+                // Delete data
+                return $this->db->delete($table, array('order_id' => $data['order_id'], 'is_pre_listing_report_doc' => 1));
+            }
+        }
+        return false;
+    }
     public function update($data, $condition) 
     {
         $table = $this->table;
