@@ -367,6 +367,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
 <script>
     jQuery(document).ready(function($){
+        // $('#page-preloader').css('display', 'none');
         let data = {};
         data.state = "<?php echo $state ?>";
         data.county = "<?php echo $county ?>";
@@ -375,17 +376,24 @@
         data.file_number = "<?php echo $file_num ?>";
         data.escrow_id = "<?php echo $escrow_id ?>";
         console.log('data ===', data);
-        $.ajax({
-			url: base_url + "pre-listing-doc",
-			type: "post",
-			data: data,
-            async: false,
-			success: function (response) {
-				if (response) {
-					console.log('response ==', response);
-				}
-                $('#page-preloader').css('display', 'none');
-			}
+        let executeCall = false;
+        $(document).ajaxStop(function() {
+            // place code to be executed on completion of last outstanding ajax call here
+            if (!executeCall) {
+                executeCall = true;
+                $.ajax({
+                    url: base_url + "pre-listing-doc",
+                    type: "post",
+                    data: data,
+                    async: false,
+                    success: function (response) {
+                        if (response) {
+                            console.log('response ==', response);
+                        }
+                        // $('#page-preloader').css('display', 'none');
+                    }
+                });
+            }
         });
     });
     function downloadDocumentFromAws(url, documentType)

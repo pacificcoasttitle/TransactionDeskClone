@@ -234,6 +234,21 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-pre-listing-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }else if(this.context[0].sTableId == 'tbl-lp-listing-documents-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/home/get_pre_listing_document_list",
+                        data: {
+                            keyword: $('#tbl-lp-listing-documents-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-lp-listing-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else if(this.context[0].sTableId == 'tbl-curative-documents-listing')
                 {
@@ -2192,6 +2207,53 @@ $(document).ready(function () {
                     }
                     $("#tbl-pre-listing-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-pre-listing-documents-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+    }
+    if ($('#tbl-lp-listing-documents-listing').length) 
+    {
+        lp_listing_documents = $('#tbl-lp-listing-documents-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                
+            },
+            dom: 'Blfrtip',
+            buttons: [],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/home/get_lp_listing_document_list", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-lp-listing-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-lp-listing-documents-listing_processing").css("display", "none");
 
                 }
             }            

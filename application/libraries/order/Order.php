@@ -442,7 +442,8 @@ class Order
     public function get_order_details($fileId, $from_mail=0)
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, 
+        $this->CI->db->select('
+            order_details.file_number, 
             order_details.customer_id,
             order_details.id as order_id,
             order_details.file_id, 
@@ -525,6 +526,10 @@ class Order
             customer_basic_details.assignment_clause as lender_assignment_clause,
             customer_basic_details.is_escrow,
             customer_basic_details.telephone_no as lender_telephone_no,
+            cbd.first_name as cust_first_name,
+            cbd.last_name as cust_last_name,
+            titleofficer.first_name as titleofficer_first_name,
+            titleofficer.last_name as titleofficer_last_name,
             agents.name as agent_name,
             agents.address as agent_address,
             agents.city as agent_city,
@@ -534,11 +539,15 @@ class Order
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
             pct_order_product_types.product_type,
-            pct_order_documents.created, p.created as proposed_document_created_date')
+            pct_order_product_types.transaction_type,
+            pct_order_documents.created, 
+            p.created as proposed_document_created_date')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
+            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
@@ -551,7 +560,6 @@ class Order
                 ->where('order_details.customer_id', $userdata['id'])
                 ->or_where('property_details.escrow_lender_id', $userdata['id'])
                 ->group_end();
-           
         }
         $query = $this->CI->db->get();
         return $query->row_array();

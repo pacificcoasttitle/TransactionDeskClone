@@ -540,9 +540,9 @@ class Titlepoint
                     // echo "Hello if";
                     $generateImgResponse = $this->generateGeoDocument($resultId,$orderId, $fileNumber);
 
-                    // echo "<pre>Hello";
                     $generateImgResult = json_decode($generateImgResponse, TRUE);
-                    // print_r($generateImgResult);die;
+                    // echo "<pre>Hello";
+                    // print_r($generateImgResult['ReturnStatus']);die;
                     $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
                     // $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
 
@@ -551,6 +551,7 @@ class Titlepoint
                     // $generateImgStatus = strtolower($generateImgStatus);
                     if($generateImgReturnStatus == 'success')
                     {
+                        /** Generate image and uploadin AWS */
                         return $this->generateGeoImg($serviceId,$fileNumber,$orderId, $requestOrderId);
                     } else {
                         $error = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -1075,7 +1076,8 @@ class Titlepoint
 
     public function generateGeoDocument($resultId,$orderId, $fileNumber)
     {
-        /*$userdata = $this->CI->session->userdata('user');
+        $userdata = $this->CI->session->userdata('user');
+        /*
         $primarySplitName = explode(' ', $primaryOwner);
         $secondarySplitName = explode(' ', $secondaryOwner);
         $primaryFirstName = $primaryMiddleName = $primaryLastName = $secondaryFirstName = $secondaryMiddleName = $secondaryLastName = $secondaryNameToSearch = $primaryNameToSearch = '';

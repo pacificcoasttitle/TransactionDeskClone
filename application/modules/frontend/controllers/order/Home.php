@@ -1575,9 +1575,7 @@ class Home extends MX_Controller {
 		}
 		
 		if((!isset($escrowId) || empty($escrowId)) || (!empty($orderUser) && $orderUser['is_escrow'] == 0)) {
-			$this->titlepoint->generateGeoDoc($_POST);
 			$fileNumber = $_POST['file_number'];
-			$orderId = $_POST['order_id'];
 			$condition = array(
 				'where' => array(
 					'file_number' => $fileNumber,
@@ -1585,9 +1583,46 @@ class Home extends MX_Controller {
 				);
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 			$file_id = $titlePointDetails[0]['file_id'];
-			$geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
+			// print_r($file_id);die;
 			$orderDetails = $this->order->get_order_details($file_id);
+			$_POST['primary_owner'] = $orderDetails['primary_owner'];
+			$_POST['secondary_owner'] = $orderDetails['secondary_owner'];
+			// print_r($_POST);die;
+			$this->titlepoint->generateGeoDoc($_POST);
+			$orderId = $_POST['order_id'];
+			$geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
 			if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
+				/** Generate Pre listing report document */
+				$condition = array(
+					'where' => array(
+						'file_number' => $fileNumber,
+						)
+					);
+				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+				// echo "<pre>";
+				// print_r($titlePointDetails);die;
+				$file_id = $titlePointDetails[0]['file_id'];
+				$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($fileNumber);
+				$orderDetails = $this->order->get_order_details($file_id);
+				$data['orderDetails'] = $orderDetails;
+				$data['titlePointDetails'] = $titlePointDetails;
+				$data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+				$html = $this->load->view('report/instrument_report',$data,true);
+				// echo $html;die;
+				
+				$this->load->library('snappy_pdf');
+				
+				$document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
+				if (!is_dir('uploads/pre-listing-doc')) {
+					mkdir('./uploads/pre-listing-doc', 0777, TRUE);
+				}
+				$pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
+				$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+				$this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
+				$this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
+				$this->insertRecord($document_name, $file_id, $orderDetails);
+
+				/*** Upload Pre listing doc to resware */
 				$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 			}
 
@@ -2016,6 +2051,10 @@ class Home extends MX_Controller {
 			'is_pre_listing_doc' => 1
 		);
 		$documentId = $this->document->insert($documentData);
+		
+		/** Upload records to resware  */
+		
+		/*
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 		
 		$documentApiData = array(			
@@ -2043,7 +2082,33 @@ class Home extends MX_Controller {
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
-		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));*/
+	}
+
+	public function insertRecord($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('order/document');
+		// $this->load->library('order/resware');
+		// $this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Pre Listing Report Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_pre_listing_doc' => 0,
+			'is_pre_listing_report_doc' => 1
+		);
+		$documentId = $this->document->insert($documentData);
 	}
 
 	public function checkDuplicateOrder()

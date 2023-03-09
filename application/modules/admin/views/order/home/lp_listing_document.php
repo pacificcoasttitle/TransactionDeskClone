@@ -16,7 +16,7 @@
             <div id="pre_listing_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="pre_listing_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="tbl-pre-listing-documents-listing" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl-lp-listing-documents-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Sr No</th>
@@ -37,10 +37,13 @@
 <script>
 function downloadDocumentFromAws(url, documentType)
 {
+    console.log('url ==', url);
+    console.log('documentType ==', documentType);
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var fileNameIndex = url.lastIndexOf("/") + 1;
     var filename = url.substr(fileNameIndex);
+    console.log('filename ==', filename);
     $.ajax({
         url: base_url + "download-aws-document-admin",
         type: "post",
