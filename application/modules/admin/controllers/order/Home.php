@@ -3415,11 +3415,16 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
-                // if ($value['api_document_id'] > 0) {
-                //     $nestedData[] = 'Yes';
-                // } else {
-                //     $nestedData[] = 'No';
-                // }
+                
+                $lp_report_status = $value['lp_report_status'];
+                $lpReportStatusSelection ='<select onchange="updateReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
+                                    <option value="">Select</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="denied">Denied</option>
+                                </select>'; 
+                $lpReportStatusSelection = str_replace('value="' .  $lp_report_status . '"','value="' .  $lp_report_status . '" selected', $lpReportStatusSelection);          
+                $nestedData[] = $lpReportStatusSelection;
                 
 				$nestedData[] = convertTimezone($value['created']);
                 
@@ -3437,4 +3442,67 @@ class Home extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function updateLpReportStatus()
+    {
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/twilio');
+        $this->load->model('frontend/order/twilioMessage');
+        $file_id = $this->input->post('file_id');
+        $status = $this->input->post('status');
+        $updateData = array('lp_report_status' => $status);
+        $condition = array('file_id' => $file_id);
+        $this->home_model->update($updateData, $condition, 'order_details');
+        $order_details = $this->order_model->get_order_details($file_id);
+
+        if (!empty($order_details['sales_rep_phone'])) {
+            $sid = env('TWILIO_SID');
+            $token = env('TWILIO_TOKEN');
+            $from = env('TWILIO_FROM');
+            $message = "LP Report is ready for file number ".$order_details['lp_file_number'];
+            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
+
+            try {
+                $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
+                $response = $result->toArray();
+                $response['msg_status'] = 'success';
+                $response['code'] = $code;
+
+            } catch (Exception $e) {
+                $response['sid'] = '';
+                $response['to'] = $order_details['sales_rep_phone'];
+                $response['msg_status'] = 'error';
+                $response['errorCode'] = $e->getCode();
+                $response['errorMessage'] = $e->getMessage();
+            } catch (\Twilio\Exceptions\RestException $e) {
+                $response['sid'] = '';
+                $response['to'] = $order_details['sales_rep_phone'];
+                $response['msg_status'] = 'error';
+                $response['errorCode'] = $e->getCode();
+                $response['errorMessage'] = $e->getMessage();
+            }
+
+            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), $response, 0, $logid);
+
+            if ($response['msg_status'] == 'success') {
+                $data = array(
+                    'message' => $response['body'],
+                    'sent_from' => $response['from'],
+                    'sent_to' => $response['to'],
+                    'status' => $response['status'],
+                    'message_sid' => $response['sid'],
+                    'error_code' => $response['errorCode'],
+                    'error_message' => $response['errorMessage'],
+                );
+                $this->twilioMessage->insert($data);
+                $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
+            } else {
+                $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
+            }
+        }
+        
+        $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
+        echo json_encode($data);exit;
+    }
 }
+
