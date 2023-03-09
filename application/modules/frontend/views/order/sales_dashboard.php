@@ -2,7 +2,7 @@
 <style type="text/css">
 
 	table#orders_listing tr td:last-child {
-		/* display: inline-flex; */
+		 display: inline-flex; 
 	}
 
 	.ui-autocomplete {

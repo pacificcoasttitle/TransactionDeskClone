@@ -32,7 +32,16 @@
                             </div>
                         </div>
                 <?php
-                    }
+                    } else if(isset($order_details['lp_file_number']) && !empty($order_details['lp_file_number'])) {
+                ?>
+                        <div class="form-group row">
+                            <label for="name" class="col-sm-3 col-form-label">Order Number:</label>
+                            <div class="col-sm-9 col-form-label">
+                                <?php echo $order_details['lp_file_number']; ?>
+                            </div>
+                        </div>
+                <?php
+                    } 
                 ?>
                 <?php
                     if(isset($order_details['file_id']) && !empty($order_details['file_id']))
