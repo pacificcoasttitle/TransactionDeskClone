@@ -1471,6 +1471,7 @@ class Home extends MX_Controller {
 			$address = isset($propertyData['address']) && !empty($propertyData['address']) ? $propertyData['address'] :'';
 			
 	        $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] :'';
+			$lpFileNumber = isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number']) ? $orderDetails['lp_file_number'] :'';
 	        
 	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
 			$escrowId = isset($propertyData['escrow_lender_id']) && !empty($propertyData['escrow_lender_id']) ? $propertyData['escrow_lender_id'] :'';
@@ -1526,6 +1527,8 @@ class Home extends MX_Controller {
 		$data['file_num'] = $file_number;
 		$data['order_id'] = $orderId;
 		$data['escrow_id'] = $escrowId;
+		$data['lpFileNumber'] = $lpFileNumber;
+		
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
 

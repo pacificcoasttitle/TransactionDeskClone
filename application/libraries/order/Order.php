@@ -484,6 +484,7 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('
+            order_details.lp_file_number,
             order_details.file_number, 
             order_details.customer_id,
             order_details.id as order_id,

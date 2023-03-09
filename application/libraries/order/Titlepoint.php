@@ -1158,7 +1158,29 @@ class Titlepoint
 						array_push($docIdentificationId,$val['DocumentIdentification']['@attributes']['Id']);
 					}
 				}*/
-				foreach($items['Item'] as $key => $val) {
+
+                /** Start All instrument number details fetched */
+                foreach($items['Item'] as $key => $val) {
+                    $id = $val['DocumentIdentification'];
+                    if (isset($id['@attributes']['Id'])) {
+                        $docId = $id['@attributes']['Id'];
+                        $key = array_search($docId, array_column($documentIdentifications, 'Id'));
+                        if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
+                            $recordArray[$i]['title_point_id'] = $titlePointId;
+                            $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                            $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
+                            $recordArray[$i]['document_name'] = $val['DocumentFullName'];
+                            $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
+                            $recordArray[$i]['amount'] = 0;
+                            // $recordArray[$i]['AddressId'] = $addressId;
+                            $i++;
+                        }
+                    }
+                }
+                /** End All instrument number details fetched */
+
+                /** Start Address based instrument number details fetched  */
+				/*foreach($items['Item'] as $key => $val) {
 					$id = $val['DocumentIdentification'];
 					if (isset($id['@attributes']['Id']) && isset($val['DocumentAddresses']) && !empty($val['DocumentAddresses']['Address'])) {
 						
@@ -1177,7 +1199,8 @@ class Titlepoint
 							}
 						}
 					}
-				}
+				} */
+                /** End Address based instrument number details fetched  */
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			}
         }

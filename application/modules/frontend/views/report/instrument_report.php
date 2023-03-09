@@ -588,8 +588,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Title to said estate or interest at the date hereof is vested in: Bhakti patel, an unmarried woman
-                                            and cheng ly, a single man as tenants in common</td>
+                                        <td><?php echo $orderDetails['legal_description']; ?></td>
                                     </tr>
                                 </table>
                             </td>
