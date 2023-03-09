@@ -2079,7 +2079,8 @@ class Home extends MX_Controller {
 			'is_pre_listing_doc' => 0,
 			'is_pre_listing_report_doc' => 1
 		);
-		$documentId = $this->document->insert($documentData);
+		$this->document->delete($documentData);
+		$this->document->insert($documentData);
 	}
 
 	public function checkDuplicateOrder()
