@@ -2021,6 +2021,8 @@ class Home extends MX_Controller {
 			'is_prelim_document' => 0,
 			'is_pre_listing_doc' => 1
 		);
+		$condition = array('is_pre_listing_doc' => 1, 'order_id' => $orderDetails['order_id']);
+		$this->document->delete($documentData, $condition);
 		$documentId = $this->document->insert($documentData);
 		
 		/** Upload records to resware  */
@@ -2079,7 +2081,8 @@ class Home extends MX_Controller {
 			'is_pre_listing_doc' => 0,
 			'is_pre_listing_report_doc' => 1
 		);
-		$this->document->delete($documentData);
+		$condition = array('is_pre_listing_report_doc' => 1, 'order_id' => $orderDetails['order_id']);
+		$this->document->delete($documentData, $condition);
 		$this->document->insert($documentData);
 	}
 
