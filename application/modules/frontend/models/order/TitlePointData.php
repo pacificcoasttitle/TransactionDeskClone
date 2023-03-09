@@ -85,4 +85,19 @@ class TitlePointData extends CI_Model
         // Return fetched data
         return $result;
     }
+
+    public function getInstrumentDetails($fileNumber)
+    {
+        $table = $this->table;
+
+        $this->db->select('pct_title_point_document_records.*')
+            ->from($table)
+            ->join('pct_title_point_document_records', 'pct_order_title_point_data.id = pct_title_point_document_records.title_point_id', 'left');
+        $this->db->where('pct_order_title_point_data.file_number', $fileNumber);
+         
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
+
+?>

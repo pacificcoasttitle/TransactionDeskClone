@@ -15,6 +15,7 @@ class Titlepoint
 		$this->CI->load->database();
         $this->CI->load->library('session');
         $this->CI->load->model('order/titlePointData');
+        $this->CI->load->model('order/titlePointDocumentRecords');
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->library('order/order');
 		self::$CI = $this->CI;
@@ -465,10 +466,10 @@ class Titlepoint
         $state = $postData['state'];
         $county = $postData['county'];
         $property = $postData['property'];
+        // $primaryOwner = $postData['primary_owner'];
+        // $secondaryOwner = $postData['secondary_owner'];
 
-        // echo "<pre>";
         $userdata = $this->CI->session->userdata('user');
-        // print_r($userdata);die;
         // $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
         $opts = array(
             "ssl"=>array(
@@ -537,11 +538,11 @@ class Titlepoint
                     $serviceId = $requestSummary['ID'];
                     $resultId = $thumbnail['ID'];
                     // echo "Hello if";
-                    $generateImgResponse = $this->generateGeoDocument($resultId,$orderId);
+                    $generateImgResponse = $this->generateGeoDocument($resultId,$orderId, $fileNumber);
 
-                    // echo "<pre>Hello";
                     $generateImgResult = json_decode($generateImgResponse, TRUE);
-                    // print_r($generateImgResult);die;
+                    // echo "<pre>Hello";
+                    // print_r($generateImgResult['ReturnStatus']);die;
                     $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
                     // $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
 
@@ -550,6 +551,7 @@ class Titlepoint
                     // $generateImgStatus = strtolower($generateImgStatus);
                     if($generateImgReturnStatus == 'success')
                     {
+                        /** Generate image and uploadin AWS */
                         return $this->generateGeoImg($serviceId,$fileNumber,$orderId, $requestOrderId);
                     } else {
                         $error = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -1072,9 +1074,28 @@ class Titlepoint
         return $response;
     }
 
-    public function generateGeoDocument($resultId,$orderId)
+    public function generateGeoDocument($resultId,$orderId, $fileNumber)
     {
         $userdata = $this->CI->session->userdata('user');
+        /*
+        $primarySplitName = explode(' ', $primaryOwner);
+        $secondarySplitName = explode(' ', $secondaryOwner);
+        $primaryFirstName = $primaryMiddleName = $primaryLastName = $secondaryFirstName = $secondaryMiddleName = $secondaryLastName = $secondaryNameToSearch = $primaryNameToSearch = '';
+        if (!empty($primarySplitName)) {
+            $primaryFirstName = $primarySplitName[0];
+            $primaryMiddleName = (isset($primarySplitName[1]) && isset($primarySplitName[2])) ? $primarySplitName[1] : '';
+            $primaryLastName = isset($primarySplitName[2]) ? $primarySplitName[2] : (isset($primarySplitName[1]) ? $primarySplitName[1] : '');
+			$primaryNameToSearch = $primaryLastName . ', ' . $primaryFirstName . ' ' . $primaryMiddleName;
+        }
+
+        if (!empty($secondarySplitName)) {
+            $secondaryFirstName = $secondarySplitName[0];
+            $secondaryMiddleName = (isset($secondarySplitName[1]) && isset($secondarySplitName[2])) ? $secondarySplitName[1] : '';
+            $secondaryLastName = isset($secondarySplitName[2]) ? $secondarySplitName[2] : (isset($secondarySplitName[1]) ? $secondarySplitName[1] : '');
+			$secondaryNameToSearch = $secondaryLastName . ', ' . $secondaryFirstName . ' ' . $secondaryMiddleName;
+        }
+        */
+        
         $requestParams = array(
                             'userID' => env('TP_USERNAME'),
                             'password' => env('TP_PASSWORD'), 
@@ -1097,7 +1118,70 @@ class Titlepoint
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
-        // print_r($result);die;
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+                )
+            );
+        $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
+        $titlePointId = $titlePointDetails[0]['id'];
+        
+        /** Save document records here Start*/
+        $recordArray = [];
+		$i = 0;
+		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
+			$result = $result['Result']['DocumentList'];
+            $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
+            /*$primaryDocIdFilter = $secondaryDocIdFilter = [];
+			if (!empty($primaryNameToSearch)) {
+				$primaryDocIdFilter = array_filter($result['Parties']['DocumentParty'], function($elem) use($primaryNameToSearch){
+					return str_contains(strtolower($elem['Name']), strtolower($primaryNameToSearch));
+				});
+			}
+			if (!empty($secondaryNameToSearch)) {
+				$secondaryDocIdFilter = array_filter($result['Parties']['DocumentParty'], function($elem) use($secondaryNameToSearch){
+					return str_contains(strtolower($elem['Name']), strtolower($secondaryNameToSearch));
+				});
+			}
+			$docIdFilter = array_merge($primaryDocIdFilter, $secondaryDocIdFilter);
+			$docIds = array_column($docIdFilter, 'Id');
+			print_r($docIds);*/
+			$documentIdentifications = $result['DocumentIdentifications']['DocumentIdentification'];
+			$items = $result['Items'];
+			if (isset($items['Item']) && !empty($addressIds)) {
+                /*
+                $docIdentificationId = [];
+				foreach($items['Item'] as $key => $val) {
+					$documentPartys = $val['Parties']['DocumentParty'];
+					$docPartiesId = array_column(array_column($documentPartys, '@attributes'), 'Id');
+					if (!empty(array_intersect($docIds, $docPartiesId))) {
+						array_push($docIdentificationId,$val['DocumentIdentification']['@attributes']['Id']);
+					}
+				}*/
+				foreach($items['Item'] as $key => $val) {
+					$id = $val['DocumentIdentification'];
+					if (isset($id['@attributes']['Id']) && isset($val['DocumentAddresses']) && !empty($val['DocumentAddresses']['Address'])) {
+						
+						$addressId = $val['DocumentAddresses']['Address']['@attributes']['Id'];
+						if (in_array($addressId, $addressIds)) {
+							$docId = $id['@attributes']['Id'];
+							$key = array_search($docId, array_column($documentIdentifications, 'Id'));
+							if (!empty($key) && isset($documentIdentifications[$key]) && $documentIdentifications[$key]['InstrumentNumber']) {
+								$recordArray[$i]['title_point_id'] = $titlePointId;
+								$recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+								$recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
+								$recordArray[$i]['document_name'] = $val['DocumentFullName'];
+								$recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
+								$recordArray[$i]['amount'] = 0;
+								$i++;
+							}
+						}
+					}
+				}
+                $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
+			}
+        }
+        /** Save document records here end*/
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);
 
         return $response;
