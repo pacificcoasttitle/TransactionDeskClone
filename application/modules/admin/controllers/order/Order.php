@@ -491,16 +491,17 @@ class Order extends MX_Controller {
 			$nestedData[] = $value['sales_rep_name'];
 			$nestedData[] = $value['first_name']." ".$value['last_name'];
             $property_id = $value['property_id'];
-            if ($value['allow_duplication'] == 1) {
-                $checked = 'checked';
-            } else {
-                $checked = '';
-            }
-            $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
-            // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+            // if ($value['allow_duplication'] == 1) {
+            //     $checked = 'checked';
+            // } else {
+            //     $checked = '';
+            // }
+            // $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
+            
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
-            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
+            $file_id = $value['file_id'];
+            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a><a href='#' onclick='sendOrderToResware($file_id);' class='btn btn-xs view-icon action-btn-padding' title ='Resware Sync'><span class='fa fa-sync' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $count++;          
@@ -657,6 +658,6 @@ class Order extends MX_Controller {
         );
         $this->db->update('property_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Avoid duplication flag updated successfully.');
-        echo json_encode($data);
+        echo json_encode($data);exit;
     }
 }

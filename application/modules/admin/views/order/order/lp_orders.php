@@ -37,7 +37,7 @@
                             <th>Product Type</th>
                             <th>Sales Rep</th> 
                             <th>Created By</th>           
-                            <th>Avoid Duplication</th>           
+                            <!-- <th>Avoid Duplication</th>            -->
                             <th>Created At</th>           
                             <th>Action</th>
                         </tr>
@@ -106,14 +106,7 @@ function avoidDuplication()
 
 function sendOrderToResware(file_id)
 {    
-    
     $('body').animate({ opacity: 0.5 }, "slow");
-    var property_id = $(this).attr('id');
-    if ($(this).is(":checked")) {
-        var avoidFlag = 1;
-    } else {
-        var avoidFlag = 0;
-    }
     $.ajax({
         url: base_url+"send-order-to-resware",
         method: "POST",
