@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="typography-section__innera">
-						<h2 class="ui-title-block ui-title-block_light">Welcome Back1 <?php echo $name; ?>,</h2>
+						<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 						<div class="ui-decor-1a bg-accent"></div>
 						<h3 class="ui-title-block_light">How can we help you today?</h3>
 					</div>
