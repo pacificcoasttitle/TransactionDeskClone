@@ -18,7 +18,7 @@ class Document extends CI_Model
             $query = $this->db->get();
             if ($query->num_rows() > 0)  {
                 // Delete data
-                return $this->db->delete($table, array('order_id' => $data['order_id'], 'is_pre_listing_report_doc' => 1));
+                return $this->db->delete($table, $condition);
             }
         }
         return false;
