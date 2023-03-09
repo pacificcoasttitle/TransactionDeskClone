@@ -6,15 +6,15 @@ class Document extends CI_Model
         $this->table = 'pct_order_documents';
     }
 
-    public function delete($data)
+    public function delete($data, $condition)
     {
         $table = $this->table;
         if(!empty($data))
         {   
             $this->db->select('*')
             ->from('pct_order_documents');
-            $this->db->where('order_id', $data['order_id']);
-            $this->db->where('is_pre_listing_report_doc', 1);
+            $this->db->where($condition);
+            // $this->db->where('is_pre_listing_report_doc', 1);
             $query = $this->db->get();
             if ($query->num_rows() > 0)  {
                 // Delete data
