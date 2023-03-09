@@ -3460,45 +3460,45 @@ class Home extends MX_Controller {
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
             $message = "LP Report is ready for file number ".$order_details['lp_file_number'];
-            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
+            // $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
 
-            try {
-                $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
-                $response = $result->toArray();
-                $response['msg_status'] = 'success';
-                $response['code'] = $code;
+            // try {
+            //     $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
+            //     $response = $result->toArray();
+            //     $response['msg_status'] = 'success';
+            //     $response['code'] = $code;
 
-            } catch (Exception $e) {
-                $response['sid'] = '';
-                $response['to'] = $order_details['sales_rep_phone'];
-                $response['msg_status'] = 'error';
-                $response['errorCode'] = $e->getCode();
-                $response['errorMessage'] = $e->getMessage();
-            } catch (\Twilio\Exceptions\RestException $e) {
-                $response['sid'] = '';
-                $response['to'] = $order_details['sales_rep_phone'];
-                $response['msg_status'] = 'error';
-                $response['errorCode'] = $e->getCode();
-                $response['errorMessage'] = $e->getMessage();
-            }
+            // } catch (Exception $e) {
+            //     $response['sid'] = '';
+            //     $response['to'] = $order_details['sales_rep_phone'];
+            //     $response['msg_status'] = 'error';
+            //     $response['errorCode'] = $e->getCode();
+            //     $response['errorMessage'] = $e->getMessage();
+            // } catch (\Twilio\Exceptions\RestException $e) {
+            //     $response['sid'] = '';
+            //     $response['to'] = $order_details['sales_rep_phone'];
+            //     $response['msg_status'] = 'error';
+            //     $response['errorCode'] = $e->getCode();
+            //     $response['errorMessage'] = $e->getMessage();
+            // }
 
-            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), $response, 0, $logid);
+            // $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), $response, 0, $logid);
 
-            if ($response['msg_status'] == 'success') {
-                $data = array(
-                    'message' => $response['body'],
-                    'sent_from' => $response['from'],
-                    'sent_to' => $response['to'],
-                    'status' => $response['status'],
-                    'message_sid' => $response['sid'],
-                    'error_code' => $response['errorCode'],
-                    'error_message' => $response['errorMessage'],
-                );
-                $this->twilioMessage->insert($data);
-                $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
-            } else {
-                $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
-            }
+            // if ($response['msg_status'] == 'success') {
+            //     $data = array(
+            //         'message' => $response['body'],
+            //         'sent_from' => $response['from'],
+            //         'sent_to' => $response['to'],
+            //         'status' => $response['status'],
+            //         'message_sid' => $response['sid'],
+            //         'error_code' => $response['errorCode'],
+            //         'error_message' => $response['errorMessage'],
+            //     );
+            //     $this->twilioMessage->insert($data);
+            //     $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
+            // } else {
+            //     $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
+            // }
         }
         
         $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
