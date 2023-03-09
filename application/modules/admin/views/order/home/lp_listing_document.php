@@ -8,7 +8,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
-            Pre Listing Documents
+            LP Listing Documents
             
         </div>
 
