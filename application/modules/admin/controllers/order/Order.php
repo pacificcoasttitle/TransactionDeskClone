@@ -629,20 +629,20 @@ class Order extends MX_Controller {
             $place_order['Note']['listing_agent'] = $listing_agent_details;
         }
 
-        if (!empty($lender_details)) {
-            $place_order['Note']['lender_details'] = $lender_details;
+        // if (!empty($lender_details)) {
+        //     $place_order['Note']['lender_details'] = $lender_details;
+        // }
+
+        // if (!empty($escrow_details)) {
+        //     $place_order['Note']['escrow_details'] = $escrow_details;
+        // }
+
+        if (!empty($order_details['escrow_number'])) {
+            $place_order['Note']['EscrowNumber'] = $order_details['escrow_number'];
         }
 
-        if (!empty($escrow_details)) {
-            $place_order['Note']['escrow_details'] = $escrow_details;
-        }
-
-        if (!empty($EscrowNumber)) {
-            $place_order['Note']['EscrowNumber'] = $EscrowNumber;
-        }
-
-        if (!empty($Notes)) {
-            $place_order['Note']['Notes'] = $Notes;
+        if (!empty($order_details['notes'])) {
+            $place_order['Note']['Notes'] = $order_details['notes'];
         }				
         
         $order_data = json_encode($place_order);
