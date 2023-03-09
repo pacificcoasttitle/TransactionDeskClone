@@ -3504,5 +3504,170 @@ class Home extends MX_Controller {
         $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
         echo json_encode($data);exit;
     }
+
+    public function sendOrderToResware() 
+    {
+        $file_id = $this->input->post('file_id');
+        $order_details = $this->order_model->get_order_details($file_id);
+        $splitName = explode(' ', $order_details['primary_owner']);
+        $ownerLastName = end($splitName);
+        $primaryName = array_slice($splitName, 0, -1);
+        $ownerFirstName = implode(" ", $primaryName);
+
+        $place_order = array();
+        $loanFlag = 1;
+        $legalEntity = array(
+            'EntityType' => 'INDIVIDUAL', 
+            'IsPrimaryTransactee' => 'true', 
+            'primary' => array(
+                'First' => $ownerFirstName,
+                'Last' => $ownerLastName
+            ),
+            'Address' => array(
+                'Address1' => $order_details['address'], 
+                'City' => $order_details['property_city'], 
+                'State' => $order_details['property_state'], 
+                'Zip' => $order_details['property_zip']
+            )
+        );
+
+        if (strpos($order_details['product_type'], 'Loan') !== false) {
+            $place_order['Buyers'][] = $legalEntity;
+        } elseif(strpos($order_details['product_type'], 'Sale') !== false) {
+            $borrowerName = explode(' ', $order_details['borrower']);
+            $borrowerLastName = end($borrowerName);
+            $borrowerPrimaryName = array_slice($borrowerName, 0, -1);
+            $borrowerFirstName = implode(" ", $borrowerPrimaryName);
+            $borrowers = array(
+                'EntityType' => 'INDIVIDUAL', 
+                'IsPrimaryTransactee' => 'true', 
+                'primary' => array(
+                    'First' => $borrowerFirstName,
+                    'Last' => $borrowerLastName
+                )
+            );
+            $place_order['Sellers'][] = $legalEntity;
+            $place_order['Buyers'][] = $borrowers;
+            $place_order['SalesPrice'] = $order_details['sales_amount'];
+            $loanFlag = 0;
+        }
+        
+        $place_order['TransactionProductType'] = array(
+            "TransactionTypeID" => $order_details['transaction_type'], 
+            'ProductTypeID' => $order_details['purchase_type']
+        );
+        $loan = array();
+        if (isset($order_details['loan_amount']) && !empty($order_details['loan_amount'])) {
+            $loan['LoanAmount'] = $order_details['loan_amount'];
+        }
+
+        if(isset($order_details['loan_number']) && !empty($order_details['loan_number'])) {
+            $loan['LoanNumber'] = $loan_number;
+        }
+        
+        if ($order_details['purchase_type'] == '4' || $order_details['purchase_type'] == '5' || $order_details['purchase_type'] == '36') {
+            $loan['LienPosition'] = 0;
+            $loan['LoanType'] = 'ConvIns';
+            $place_order['SettlementStatementVersion'] = 'HUD';
+        }
+        
+        $splitPropertyAddress = explode(' ', $order_details['address']);
+        $streetNumber = isset($splitPropertyAddress[0]) && !empty($splitPropertyAddress[0]) ? $splitPropertyAddress[0] : '';
+        $primaryStreetName = array_slice($splitPropertyAddress, 1);
+        $streetName = isset($primaryStreetName) && !empty($primaryStreetName) ? implode(" ", $primaryStreetName) : '';
+
+        $place_order['Loans'][] = $loan;
+        $place_order['Properties'][] = array(
+            'IsPrimary' => 'true', 
+            'StreetNumber' => $streetNumber, 
+            'StreetName' => $streetName, 
+            'City' => $order_details['property_city'], 
+            'State' => $order_details['property_state'], 
+            'County'=> $order_details['county'], 
+            'Zip' => $order_details['property_zip']
+        );
+        $place_order['Note']['APN'] = $order_details['apn'];
+        $place_order['Note']['parcel_id'] = $order_details['apn'];
+        $place_order['Note']['legal_description'] = $order_details['legal_description'];
+        
+        if (!empty($order_details['title_officer_name'])) {
+            $place_order['Note']['title_Officer'] = $order_details['title_officer_name'];
+        }
+
+        if (!empty($order_details['sales_rep_name'])) {
+            $place_order['Note']['sales_rep'] = $order_details['sales_rep_name'];
+        }
+
+        if (!empty($order_details['buyer_agent_id'])) {
+            $buyers_agent_details = array(
+                'name' => $order_details['buyer_agent_name'], 
+                'email' => $order_details['buyer_agent_email_address'], 
+                'telephone' => $order_details['buyer_agent_company'],
+                'company' => $order_details['buyer_agent_telephone_no']
+            );
+            $place_order['Note']['buyers_agent'] = $buyers_agent_details;
+        }
+
+        if (!empty($order_details['listing_agent_id'])) {
+            $listing_agent_details = array(
+                'name' => $order_details['buyer_agent_name'], 
+                'email' => $order_details['buyer_agent_email_address'], 
+                'telephone' => $order_details['buyer_agent_company'],
+                'company' => $order_details['buyer_agent_telephone_no']
+            );
+            $place_order['Note']['listing_agent'] = $listing_agent_details;
+        }
+
+        // if (!empty($lender_details)) {
+        //     $place_order['Note']['lender_details'] = $lender_details;
+        // }
+
+        // if (!empty($escrow_details)) {
+        //     $place_order['Note']['escrow_details'] = $escrow_details;
+        // }
+
+        if (!empty($order_details['escrow_number'])) {
+            $place_order['Note']['EscrowNumber'] = $order_details['escrow_number'];
+        }
+
+        if (!empty($order_details['notes'])) {
+            $place_order['Note']['Notes'] = $order_details['notes'];
+        }				
+
+
+        $user_data = array();
+        $orderUser =  $this->home_model->get_user(array('id' => $order_details['customer_id']));	
+        $user_data['email'] = $orderUser['email_address'];
+        $user_data['password'] = $orderUser['random_password'];
+        $user_data['from_mail'] = 1;
+        
+        $order_data = json_encode($place_order);
+        $this->load->library('order/resware');
+        $this->load->model('order/apiLogs');
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
+        $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, $result, 0, $logid);
+        
+        if(isset($result) && !empty($result)) {
+            $response = json_decode($result,true);
+
+            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+                $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                $response = array('status'=>'error', 'message'=> $message);
+                echo json_encode($response); exit;
+            } else {
+                $orderNumber = $file_id = '';
+                if(isset($response['FileID']) && !empty($response['FileID'])) {
+                    $fileNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
+                    $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
+                }
+                $condition = array('id' => $order_details['order_id']);
+                $data = array('file_id' => $file_id, 'file_number' => $fileNumber);
+                $update = $this->order_model->update($data, $condition);
+                $data = array('status'=>'success', 'message'=> 'Order synced successfully on Resware side with file number '. $fileNumber);
+                echo json_encode($data);exit;
+            }
+        }
+    }
 }
 

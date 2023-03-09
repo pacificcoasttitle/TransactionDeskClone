@@ -253,9 +253,10 @@ class SalesRep extends MX_Controller
                     $action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
                 }
 				
-                if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$order['file_number'].'.pdf')) {
-                    $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['file_number'].'.pdf';
-                    $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a>";
+                if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
+                    $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['lp_file_number'].'.pdf';
+                    $reportDocumentUrl = env('AWS_PATH')."pre-listing-doc/pre_listing_report_".$order['lp_file_number'].'.pdf';
+                    $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a><a target='_blank' href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a>";
                 }
     
                	$nestedData[] = $action;
