@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller 
 {
-    private $sales_dashboard_js_version = '04';
+    private $sales_dashboard_js_version = '05';
 
 	function __construct() 
     {
@@ -235,7 +235,7 @@ class SalesRep extends MX_Controller
             foreach ($order_lists['data'] as $order)  {
 
                 $nestedData = array();
-                $nestedData[] = !empty($order['file_number']) ? $order['file_number'] : $order['lp_file_number'];
+                $nestedData[] = !empty($order['file_number'])  ? $order['file_number'] : $order['lp_file_number'];
 				if ($userdata['is_sales_rep_manager'] == 1) {
 					$nestedData[] = $order['sales_first_name']." ".$order['sales_last_name'];
 				}
