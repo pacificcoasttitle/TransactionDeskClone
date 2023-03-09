@@ -48,9 +48,10 @@ class Order
         $salesUser = isset($params['salesUser']) && !empty($params['salesUser']) ? $params['salesUser'] : '';
         $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
+        $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
         $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         $result = $this->getUserFromPartners();
-        $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+        $select = 'order_details.lp_file_number,order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
             order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
         if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
@@ -95,6 +96,16 @@ class Order
 
             if ($userdata['is_sales_rep_manager'] == 1) {
                 $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
+            }
+
+            if (isset($order_type) && !empty($order_type)) {
+                if ($order_type == 'resware_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is null');
+                    $this->CI->db->where('order_details.file_number is not null'); 
+                } else if ($order_type == 'lp_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is not null');
+                    $this->CI->db->where('order_details.file_number', 0);
+                }
             }
 
             $this->CI->db->select($select)
@@ -176,6 +187,16 @@ class Order
 
             if (isset($yearFlag) && !empty($yearFlag)) {
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+            }
+
+            if (isset($order_type) && !empty($order_type)) {
+                if ($order_type == 'resware_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is null');
+                    $this->CI->db->where('order_details.file_number is not null'); 
+                } else if ($order_type == 'lp_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is not null');
+                    $this->CI->db->where('order_details.file_number', 0);
+                }
             }
 
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -275,6 +296,16 @@ class Order
                 $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
             }
 
+            if (isset($order_type) && !empty($order_type)) {
+                if ($order_type == 'resware_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is null');
+                    $this->CI->db->where('order_details.file_number is not null'); 
+                } else if ($order_type == 'lp_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is not null');
+                    $this->CI->db->where('order_details.file_number', 0);
+                }
+            }
+
             $this->CI->db->select($select)
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -350,6 +381,16 @@ class Order
 
             if (isset($yearFlag) && !empty($yearFlag)) {
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+            }
+
+            if (isset($order_type) && !empty($order_type)) {
+                if ($order_type == 'resware_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is null');
+                    $this->CI->db->where('order_details.file_number is not null'); 
+                } else if ($order_type == 'lp_orders') {
+                    $this->CI->db->where('order_details.lp_file_number is not null');
+                    $this->CI->db->where('order_details.file_number', 0);
+                }
             }
 
             $this->CI->db->select($select)

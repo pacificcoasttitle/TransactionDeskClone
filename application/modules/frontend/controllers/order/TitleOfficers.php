@@ -4,7 +4,7 @@
 
 class TitleOfficers extends MX_Controller 
 {
-	private $title_officer_dashboard_js_version = '01';
+	private $title_officer_dashboard_js_version = '02';
 	function __construct() 
     {
         parent::__construct();
@@ -43,8 +43,10 @@ class TitleOfficers extends MX_Controller
         $params = array();  $data = array();
         $status = $this->input->post('status');
 		$month = $this->input->post('month') ? $this->input->post('month') :  '';
+        $order_type = $this->input->post('order_type');
         $params['status'] = isset($status) && !empty($status) ? $status : 'open';
 		$params['month'] = isset($month) && !empty($month) ? $month : date('m');
+        $params['order_type'] = isset($order_type) && !empty($order_type) ? $order_type : '';
 		
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;

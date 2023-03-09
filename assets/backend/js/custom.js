@@ -8,6 +8,7 @@ var fees_type_list = '';
 var code_book_list = '';
 var forms_list = '';
 var pre_listing_documents = '';
+var lp_order_list = '';
 
 $(document).ready(function () {
 
@@ -1600,6 +1601,92 @@ $(document).ready(function () {
     });
 
     $("#FilterCreatedBy").on("change", function(){
+        order_list.ajax.reload();
+    });
+
+    if ($('#tbl-lp-orders-listing').length) 
+    {
+        lp_order_list = $('#tbl-lp-orders-listing').DataTable({
+           /*"pageLength": 2,*/
+           "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "lengthChange": true,
+            /*"columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],*/
+            "language": {
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                
+
+
+            },
+            "dom": 'lf<"FilterOrderListing">rtip',
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/order/get_lp_order_list", // json datasource
+                type: "post", // method  , by default get
+                data   : function( d ) {
+                  d.sales_rep= $('#FilterLpOrderListing').val();
+                  d.created_by= $('#FilterLpCreatedBy').val();
+                  d.product_type= lp_product_type;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-lp-orders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-lp-orders-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+
+        if (lp_sales_rep) {
+            var obj = jQuery.parseJSON(lp_sales_rep);
+            var options='';
+            $.each( obj, function( key, value ) {
+                options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
+            });
+            $("div.FilterLpOrderListing").html('<label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label>');   
+        }
+
+        if (lp_master_users) {
+            var obj = jQuery.parseJSON(lp_master_users);
+            var options='';
+            $.each( obj, function( key, value ) {
+              options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
+            });
+            
+            $("div.FilterLpOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterLpCreatedBy" id="FilterLpCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
+        }
+
+        if (lp_product_type) {
+            lp_order_list.ajax.reload();  
+        }
+       
+    }
+    $("#FilterLpOrderListing").on("change", function(){
+        order_list.ajax.reload();
+    });
+
+    $("#FilterLpCreatedBy").on("change", function(){
         order_list.ajax.reload();
     });
 

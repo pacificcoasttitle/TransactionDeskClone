@@ -41,8 +41,7 @@ class Order extends MX_Controller {
     	$params = array();
         $params['length'] = $this->input->post('length');
         $params['start'] = $this->input->post('start');
-        /*$params['orderColumn'] = $this->input->post('order.0.column');
-        $params['orderDir'] = $this->input->post('order.0.dir');*/
+        $params['order_type'] = 'resware_orders';
         $params['searchValue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value']: '';
         $params['sales_rep'] = $this->input->post('sales_rep');
         $params['created_by'] = $this->input->post('created_by');
@@ -443,5 +442,221 @@ class Order extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $safewire_orders_lists['recordsFiltered'] );
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
+    }
+
+    function lpOrders() 
+    {
+    	$params = array();
+    	$salesRep = $this->sales_model->get_sales_reps($params);
+    	$data['salesRep'] = $salesRep;
+        $con = array(
+            'where' => array(
+                'is_master' => 1,
+                'status' => 1,
+            )
+        );
+        $product_type = $this->uri->segment(4);
+        $master_users = $this->home_model->get_rows($con);
+        $data['master_users'] = $master_users;
+        $data['product_type'] = $product_type;
+    	$this->load->view('order/layout/header', $data);
+        $this->load->view('order/order/lp_orders', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    function get_lp_order_list()
+    {
+    	$params = array();
+        $params['length'] = $this->input->post('length');
+        $params['start'] = $this->input->post('start');
+        $params['order_type'] = 'lp_orders';
+        $params['searchValue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value']: '';
+        $params['sales_rep'] = $this->input->post('sales_rep');
+        $params['created_by'] = $this->input->post('created_by');
+        $params['product_type'] = $this->input->post('product_type');
+       
+        $pageno = ($params['start'] / $params['length'])+1; 
+        $ordersList = $this->order_model->get_orders($params);   
+        
+        $data = array(); 
+        $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+        $count = $params['start'] + 1;
+        foreach( $ordersList['data'] as $key => $value )
+        {
+            $nestedData=array();
+            $nestedData[] = $count;
+            $nestedData[] = $value['lp_file_number'];
+            $nestedData[] = $value['full_address'];
+            $nestedData[] = $value['product_type'];
+			$nestedData[] = $value['sales_rep_name'];
+			$nestedData[] = $value['first_name']." ".$value['last_name'];
+            $property_id = $value['property_id'];
+            if ($value['allow_duplication'] == 1) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
+            // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+			$nestedData[] = convertTimezone($value['created_at']);
+            $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
+            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
+            $nestedData[] = $action;
+            $data[] = $nestedData;            
+            $count++;          
+        }  
+                      
+        $json_data = array(            
+            "recordsTotal"    => $ordersList['recordsTotal'],
+            "recordsFiltered" => $ordersList['recordsFiltered'],
+            "data" => $data 
+        );
+
+        echo json_encode($json_data);
+    }
+
+    public function sendOrderToResware() 
+    {
+        $file_id = $this->input->post('file_id');
+        $order_details = $this->order_model->get_order_details($file_id);
+        $splitName = explode(' ', $order_details['primary_owner']);
+        $ownerLastName = end($splitName);
+        $primaryName = array_slice($splitName, 0, -1);
+        $ownerFirstName = implode(" ", $primaryName);
+
+        $place_order = array();
+        $loanFlag = 1;
+        $legalEntity = array(
+            'EntityType' => 'INDIVIDUAL', 
+            'IsPrimaryTransactee' => 'true', 
+            'primary' => array(
+                'First' => $ownerFirstName,
+                'Last' => $ownerLastName
+            ),
+            'Address' => array(
+                'Address1' => $order_details['address'], 
+                'City' => $order_details['property_city'], 
+                'State' => $order_details['property_state'], 
+                'Zip' => $order_details['property_zip']
+            )
+        );
+
+        if (strpos($order_details['product_type'], 'Loan') !== false) {
+            $place_order['Buyers'][] = $legalEntity;
+        } elseif(strpos($order_details['product_type'], 'Sale') !== false) {
+            $borrowerName = explode(' ', $order_details['borrower']);
+            $borrowerLastName = end($borrowerName);
+            $borrowerPrimaryName = array_slice($borrowerName, 0, -1);
+            $borrowerFirstName = implode(" ", $borrowerPrimaryName);
+            $borrowers = array(
+                'EntityType' => 'INDIVIDUAL', 
+                'IsPrimaryTransactee' => 'true', 
+                'primary' => array(
+                    'First' => $borrowerFirstName,
+                    'Last' => $borrowerLastName
+                )
+            );
+            $place_order['Sellers'][] = $legalEntity;
+            $place_order['Buyers'][] = $borrowers;
+            $place_order['SalesPrice'] = $order_details['sales_amount'];
+            $loanFlag = 0;
+        }
+        
+        $place_order['TransactionProductType'] = array(
+            "TransactionTypeID" => $order_details['transaction_type'], 
+            'ProductTypeID' => $order_details['purchase_type']
+        );
+        $loan = array();
+        if (isset($order_details['loan_amount']) && !empty($order_details['loan_amount'])) {
+            $loan['LoanAmount'] = $order_details['loan_amount'];
+        }
+
+        if(isset($order_details['loan_number']) && !empty($order_details['loan_number'])) {
+            $loan['LoanNumber'] = $loan_number;
+        }
+        
+        if ($order_details['purchase_type'] == '4' || $order_details['purchase_type'] == '5' || $order_details['purchase_type'] == '36') {
+            $loan['LienPosition'] = 0;
+            $loan['LoanType'] = 'ConvIns';
+            $place_order['SettlementStatementVersion'] = 'HUD';
+        }
+        
+        $splitPropertyAddress = explode(' ', $order_details['address']);
+        $streetNumber = isset($splitPropertyAddress[0]) && !empty($splitPropertyAddress[0]) ? $splitPropertyAddress[0] : '';
+        $primaryStreetName = array_slice($splitPropertyAddress, 1);
+        $streetName = isset($primaryStreetName) && !empty($primaryStreetName) ? implode(" ", $primaryStreetName) : '';
+
+        $place_order['Loans'][] = $loan;
+        $place_order['Properties'][] = array(
+            'IsPrimary' => 'true', 
+            'StreetNumber' => $streetNumber, 
+            'StreetName' => $streetName, 
+            'City' => $order_details['property_city'], 
+            'State' => $order_details['property_state'], 
+            'County'=> $order_details['county'], 
+            'Zip' => $order_details['property_zip']
+        );
+        $place_order['Note']['APN'] = $order_details['apn'];
+        $place_order['Note']['parcel_id'] = $order_details['apn'];
+        $place_order['Note']['legal_description'] = $order_details['legal_description'];
+        
+        if (!empty($order_details['title_officer_name'])) {
+            $place_order['Note']['title_Officer'] = $order_details['title_officer_name'];
+        }
+
+        if (!empty($order_details['sales_rep_name'])) {
+            $place_order['Note']['sales_rep'] = $order_details['sales_rep_name'];
+        }
+
+        if (!empty($order_details['buyer_agent_id'])) {
+            $buyers_agent_details = array(
+                'name' => $order_details['buyer_agent_name'], 
+                'email' => $order_details['buyer_agent_email_address'], 
+                'telephone' => $order_details['buyer_agent_company'],
+                'company' => $order_details['buyer_agent_telephone_no']
+            );
+            $place_order['Note']['buyers_agent'] = $buyers_agent_details;
+        }
+
+        if (!empty($order_details['listing_agent_id'])) {
+            $listing_agent_details = array(
+                'name' => $order_details['buyer_agent_name'], 
+                'email' => $order_details['buyer_agent_email_address'], 
+                'telephone' => $order_details['buyer_agent_company'],
+                'company' => $order_details['buyer_agent_telephone_no']
+            );
+            $place_order['Note']['listing_agent'] = $listing_agent_details;
+        }
+
+        if (!empty($lender_details)) {
+            $place_order['Note']['lender_details'] = $lender_details;
+        }
+
+        if (!empty($escrow_details)) {
+            $place_order['Note']['escrow_details'] = $escrow_details;
+        }
+
+        if (!empty($EscrowNumber)) {
+            $place_order['Note']['EscrowNumber'] = $EscrowNumber;
+        }
+
+        if (!empty($Notes)) {
+            $place_order['Note']['Notes'] = $Notes;
+        }				
+        
+        $order_data = json_encode($place_order);
+        $this->load->library('order/resware');
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
+        $result = $this->resware->make_request('POST', 'orders', $order_data,$user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, $result, 0, $logid);
+        $avoidFlag = $this->input->post('avoidFlag');
+        $data['allow_duplication'] = $avoidFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $property_id
+        );
+        $this->db->update('property_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Avoid duplication flag updated successfully.');
+        echo json_encode($data);
     }
 }

@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller 
 {
-    private $sales_dashboard_js_version = '03';
+    private $sales_dashboard_js_version = '05';
 
 	function __construct() 
     {
@@ -208,10 +208,12 @@ class SalesRep extends MX_Controller
         $status = $this->input->post('status');
 		$month = $this->input->post('month') ? $this->input->post('month') :  '';
 		$salesUser = $this->input->post('sales_user') ? $this->input->post('sales_user') :  '';
+        $order_type = $this->input->post('order_type');
 		$params['salesUser'] = $salesUser;
         $params['salesFlag'] = 1;
-       // $params['status'] = isset($status) && !empty($status) ? $status : 'open';
+        //$params['status'] = isset($status) && !empty($status) ? $status : 'open';
 		//$params['month'] = isset($month) && !empty($month) ? $month : date('m');
+        $params['order_type'] = isset($order_type) && !empty($order_type) ? $order_type : '';
 		
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -233,7 +235,7 @@ class SalesRep extends MX_Controller
             foreach ($order_lists['data'] as $order)  {
 
                 $nestedData = array();
-                $nestedData[] = $order['file_number'];
+                $nestedData[] = !empty($order['file_number'])  ? $order['file_number'] : $order['lp_file_number'];
 				if ($userdata['is_sales_rep_manager'] == 1) {
 					$nestedData[] = $order['sales_first_name']." ".$order['sales_last_name'];
 				}
@@ -246,8 +248,11 @@ class SalesRep extends MX_Controller
 				} else {
 					$action = "<a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
 				}
-				$action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
 
+                if (!empty($order['file_number'])) {
+                    $action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
+                }
+				
                 if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$order['file_number'].'.pdf')) {
                     $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['file_number'].'.pdf';
                     $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a>";
