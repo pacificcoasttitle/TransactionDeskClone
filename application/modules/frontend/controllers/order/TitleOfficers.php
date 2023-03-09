@@ -4,7 +4,7 @@
 
 class TitleOfficers extends MX_Controller 
 {
-	private $title_officer_dashboard_js_version = '02';
+	private $title_officer_dashboard_js_version = '03';
 	function __construct() 
     {
         parent::__construct();
@@ -67,7 +67,7 @@ class TitleOfficers extends MX_Controller
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order)  {
                 $nestedData = array();
-                $nestedData[] = $order['file_number'];
+                $nestedData[] = !empty($order['file_number'])  ? $order['file_number'] : $order['lp_file_number'];
 				$nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
                 $nestedData[] = ucfirst($order['resware_status']);
@@ -76,7 +76,15 @@ class TitleOfficers extends MX_Controller
 				} else {
 					$action = "<a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
 				}
-				$action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
+
+                if (!empty($order['file_number'])) {
+				    $action .= "<a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a>";
+                }
+
+                if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$order['file_number'].'.pdf')) {
+                    $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['file_number'].'.pdf';
+                    $action .= "<a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a>";
+                }
                	$nestedData[] = $action;
                 $data[] = $nestedData; 
                 $i++; 
