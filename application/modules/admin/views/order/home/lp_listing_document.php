@@ -8,8 +8,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
-            LP Listing Documents
-            
+            LP Reports
         </div>
 
         <div class="card-body">
@@ -22,7 +21,7 @@
                             <th>Sr No</th>
                             <th>File Number</th>
                             <th>Document Name</th>
-                            <!-- <th>Sent To Resware</th> -->
+                            <th>Report Status</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>

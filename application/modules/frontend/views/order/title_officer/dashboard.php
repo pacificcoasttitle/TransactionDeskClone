@@ -21,6 +21,14 @@
 			padding: 9px 22px 12px;
 		}
 
+		select#order_type_filter {
+			margin-bottom: 0px;
+			margin-left: 0.5em;
+			border: 1px solid #cbd2d6;
+			border-radius: 3px;
+			padding: 9px 22px 12px;
+		}
+
 		select#orders_filter {
 			margin-bottom: 0px;
 			margin-left: 0.5em;

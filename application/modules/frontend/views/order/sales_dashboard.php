@@ -1,9 +1,9 @@
 
 <style type="text/css">
 
-	table#orders_listing tr td:last-child {
+	/* table#orders_listing tr td:last-child {
 		 display: inline-flex; 
-	}
+	} */
 
 	.ui-autocomplete {
 		max-height: 300px !important;
@@ -12,6 +12,14 @@
 	#orders_listing_filter {
 		display: inline-flex;
 		float: right;
+	}
+
+	select#order_type_filter {
+		margin-bottom: 0px;
+		margin-left: 0.5em;
+		border: 1px solid #cbd2d6;
+		border-radius: 3px;
+		padding: 9px 22px 12px;
 	}
 
 	select#month_filter {

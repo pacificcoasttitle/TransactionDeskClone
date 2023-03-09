@@ -229,6 +229,7 @@ class Order_model extends CI_Model
             transaction_details.id as transaction_id,
             transaction_details.sales_representative,
             CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,
+            cbd.telephone_no as sales_rep_phone,
             transaction_details.title_officer,
             CONCAT(to.first_name, " ", to.last_name) as title_officer_name,
             transaction_details.sales_amount,

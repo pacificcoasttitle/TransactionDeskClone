@@ -1614,104 +1614,104 @@ class Home extends MX_Controller {
 				$user_data['admin_api'] = 1; 
 			//}
 			
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
-			$result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+			// $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+			// $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+			// $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
 			
-			if (isset($result) && !empty($result)) {
-				$response = json_decode($result, TRUE);
+			// if (isset($result) && !empty($result)) {
+			// 	$response = json_decode($result, TRUE);
 
-				if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-					$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-					$errors[] = $message;
-				} else {
-					$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
-					$notesData = array(
-						'resware_note_id' => $noteId,
-						'subject' => $subject,
-						'note' => $body,
-						'user_id' => $userdata['id'],
-						'order_id' => $orderId,
-						'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0
-					);
-					$id = $this->note->insert($notesData);
-					if ($noteId && $id) {
-						$success[] = 'Note created successfully.';
-					} else {
-						$errors[] = 'Something went wrong. Please try again.';
-					}
-				}
-			}
+			// 	if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+			// 		$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+			// 		$errors[] = $message;
+			// 	} else {
+			// 		$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+			// 		$notesData = array(
+			// 			'resware_note_id' => $noteId,
+			// 			'subject' => $subject,
+			// 			'note' => $body,
+			// 			'user_id' => $userdata['id'],
+			// 			'order_id' => $orderId,
+			// 			'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0
+			// 		);
+			// 		$id = $this->note->insert($notesData);
+			// 		if ($noteId && $id) {
+			// 			$success[] = 'Note created successfully.';
+			// 		} else {
+			// 			$errors[] = 'Something went wrong. Please try again.';
+			// 		}
+			// 	}
+			// }
 
-			if (!empty($orderDetails['sales_representative'])) {
-				$parties_email = array();
-				$from_name = 'Pacific Coast Title Company';
-				$from_mail = env('FROM_EMAIL');
-				$condition = array(
-	                'id' => $orderDetails['sales_representative']	                
-	            );
-				$salesRepDetails = $this->home_model->getSalesRepDetails($condition);
-				$to = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+			// if (!empty($orderDetails['sales_representative'])) {
+			// 	$parties_email = array();
+			// 	$from_name = 'Pacific Coast Title Company';
+			// 	$from_mail = env('FROM_EMAIL');
+			// 	$condition = array(
+	        //         'id' => $orderDetails['sales_representative']	                
+	        //     );
+			// 	$salesRepDetails = $this->home_model->getSalesRepDetails($condition);
+			// 	$to = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
 
-				$file = array();
-				if (!empty($to)) {
-					$file[] = env('AWS_PATH').'pre-listing-doc/'.$geoFileName;
-					$agentDetails = array();
-					if (!empty($orderDetails['buyer_agent_id'])) {
-						$condition = array(
-							'id' => $orderDetails['buyer_agent_id']
-						);
-						$agentDetails = $this->agent_model->get_agents($condition);
-						$parties_email[] = $agentDetails['email_address'];
-					}
+			// 	$file = array();
+			// 	if (!empty($to)) {
+			// 		$file[] = env('AWS_PATH').'pre-listing-doc/'.$geoFileName;
+			// 		$agentDetails = array();
+			// 		if (!empty($orderDetails['buyer_agent_id'])) {
+			// 			$condition = array(
+			// 				'id' => $orderDetails['buyer_agent_id']
+			// 			);
+			// 			$agentDetails = $this->agent_model->get_agents($condition);
+			// 			$parties_email[] = $agentDetails['email_address'];
+			// 		}
 
-					if (!empty($orderDetails['listing_agent_id'])) {
-						$condition = array(
-							'id' => $orderDetails['listing_agent_id']
-						);
-						$agentDetails = $this->agent_model->get_agents($condition);
-						$parties_email[] = $agentDetails['email_address'];
-					}
+			// 		if (!empty($orderDetails['listing_agent_id'])) {
+			// 			$condition = array(
+			// 				'id' => $orderDetails['listing_agent_id']
+			// 			);
+			// 			$agentDetails = $this->agent_model->get_agents($condition);
+			// 			$parties_email[] = $agentDetails['email_address'];
+			// 		}
 
-					if (!empty($orderDetails['escrow_lender_id'])) {
-						$condition = array(
-							'id' => $orderDetails['escrow_lender_id']
-						);
-						$customerDetails = $this->home_model->get_customers($condition);
-						$parties_email[] = $customerDetails['email_address'];
-					}
+			// 		if (!empty($orderDetails['escrow_lender_id'])) {
+			// 			$condition = array(
+			// 				'id' => $orderDetails['escrow_lender_id']
+			// 			);
+			// 			$customerDetails = $this->home_model->get_customers($condition);
+			// 			$parties_email[] = $customerDetails['email_address'];
+			// 		}
 
-					if (!empty($orderDetails['cpl_lender_id'])) {
-						$condition = array(
-							'id' => $orderDetails['cpl_lender_id']
-						);
-						$customerDetails = $this->home_model->get_customers($condition);
-						$parties_email[] = $customerDetails['email_address'];
-					}
+			// 		if (!empty($orderDetails['cpl_lender_id'])) {
+			// 			$condition = array(
+			// 				'id' => $orderDetails['cpl_lender_id']
+			// 			);
+			// 			$customerDetails = $this->home_model->get_customers($condition);
+			// 			$parties_email[] = $customerDetails['email_address'];
+			// 		}
 
-					$message = 'Hi <br> Please find attachment for pre listing document'; 
-					$subject = $fileNumber. ' - Pre Listing Document';
-					$parties_email[] = env('ORDER_ADMIN_EMAIL');
-					$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
-					$this->load->helper('sendemail');
-					$to = 'hitesh.p@crestinfosystems.com';
-					$cc = array();
-					$mailParams = array(
-						'from_mail' => $from_mail, 
-						'from_name' => $from_name, 
-						'to' => $to,
-						'subject' => $subject,
-						'message' => $message,
-						'cc' => json_encode($cc)
-					);
-					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array(), $orderId, 0);
+			// 		$message = 'Hi <br> Please find attachment for pre listing document'; 
+			// 		$subject = $fileNumber. ' - Pre Listing Document';
+			// 		$parties_email[] = env('ORDER_ADMIN_EMAIL');
+			// 		$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
+			// 		$this->load->helper('sendemail');
+			// 		$to = 'hitesh.p@crestinfosystems.com';
+			// 		$cc = array();
+			// 		$mailParams = array(
+			// 			'from_mail' => $from_mail, 
+			// 			'from_name' => $from_name, 
+			// 			'to' => $to,
+			// 			'subject' => $subject,
+			// 			'message' => $message,
+			// 			'cc' => json_encode($cc)
+			// 		);
+			// 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array(), $orderId, 0);
 
-					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+			// 		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
 
-					$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
-				}
+			// 		$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
+			// 	}
 				
-			}
+			// }
 			
 		}
 	}
