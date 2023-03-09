@@ -3404,7 +3404,7 @@ class Home extends MX_Controller {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
             $lp_listing_document_lists = $this->home_model->get_lp_listing_document_list($params);            
         }
-
+        
         $data = array(); 
         
         if(isset($lp_listing_document_lists['data']) && !empty($lp_listing_document_lists['data'])) {
@@ -3412,7 +3412,7 @@ class Home extends MX_Controller {
             foreach ($lp_listing_document_lists['data'] as $key => $value) {
                 $nestedData=array();
                 $nestedData[] = $i;
-                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
                 
