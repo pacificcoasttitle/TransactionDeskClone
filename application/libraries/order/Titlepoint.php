@@ -952,7 +952,7 @@ class Titlepoint
                 {
                     sleep(1);
                     $this->count = $this->count + 1;
-                    return $this->getImageRequestStatus($requestId,$orderId);                    
+                    return $this->getImageRequestStatus($requestId,$orderId,$requestFrom);                    
                 }
                 else
                 {
