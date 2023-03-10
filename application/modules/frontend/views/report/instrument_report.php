@@ -41,13 +41,26 @@
     <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;max-width:1000px;height:100vh;background-image: url('<?php echo base_url("assets/frontend/images/bg.jpg") ?>');background-position: center; background-repeat: no-repeat;background-size: cover;">
         <tbody>
             <tr>
+                <td style="height:230px"></td>
+            </tr>
+            <tr>
                 <td style="padding-left: 70px; vertical-align: middle;">
-                    <div style="height: 700px; display: flex;align-items: start;flex-direction: column;justify-content: center;">
-                        <span style="font-size: 80px;color: #d35627; font-weight: 400;font-family: 'LushScript';"><i>Concierge</i></span>
-                        <span style="font-size: 40px;color: #FFF;text-transform: uppercase;font-weight: 800;font-family: 'Montserrat';">LISTING PRELIM</span>
-                        <span style="font-size: 25px;color: #d35627; font-weight:bold;text-transform: uppercase;font-family: 'Montserrat';">Report</span>
-                        <span style="font-size: 25px;color: #fff; font-weight:400;text-transform: uppercase;font-family: 'Montserrat';"><?php echo $orderDetails['full_address'] ?></span>
-                    </div>
+                    <span style="font-size: 80px;color: #d35627; font-weight: 400;font-family: 'LushScript';"><i>Concierge</i></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left: 70px; vertical-align: middle;">
+                    <span style="font-size: 40px;color: #FFF;text-transform: uppercase;font-weight: 800;font-family: 'Montserrat';">LISTING PRELIM</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left: 70px; vertical-align: middle;">
+                    <span style="font-size: 25px;color: #d35627; font-weight:bold;text-transform: uppercase;font-family: 'Montserrat';">Report</span>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left: 70px; vertical-align: middle;">
+                    <span style="font-size: 25px;color: #fff; font-weight:400;text-transform: uppercase;font-family: 'Montserrat';"><?php echo $orderDetails['full_address'] ?></span>
                 </td>
             </tr>
             <tr>
@@ -55,7 +68,7 @@
                     <table cellpadding="0" cellspacing="0" border="0">
                         <tbody>
                             <tr>
-                                <td style="height: 70px;"></td>
+                                <td style="height: 300px;" colspan="2"></td>
                             </tr>
                             <tr>
                                 <td style="font-size: 22px; font-weight: 500;color: #fff;text-transform: uppercase;padding-left: 70px;font-family: 'Montserrat';">
@@ -66,7 +79,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style="height: 70px;"></td>
+                                <td style="height: 70px;"colspan="2"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -74,6 +87,7 @@
             </tr>
         </tbody>        
     </table>
+    
     <!-- 1st page -->
 
     <div class="page-break" style="page-break-after: always;"></div>
@@ -680,7 +694,7 @@
                         <tr>
                             <td style="height:20px"></td>
                         </tr>
-                        <?php if (!empty($titlePointInstrumentDetails)) { 
+                        <?php //if (!empty($titlePointInstrumentDetails)) { 
                                 
                             ?>
                         <tr>
@@ -700,7 +714,9 @@
                                             <td align="center">Instrument #</td>
                                         </tr>
                                         <?php  
-                                            $i = 0; 
+                                            $i = 0;
+                                            if (!empty($titlePointInstrumentDetails)) { 
+                                                
                                             foreach ($titlePointInstrumentDetails as $key => $val) {  ?>
                                         <tr>
                                             <td><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
@@ -709,7 +725,11 @@
                                             <td><?php echo  $val['recorded_date']; ?></td>
                                             <td align="center" style="font-weight:600; color:#d35627"><?php echo  $val['instrument']; ?></td>
                                         </tr>
-                                        <?php $i++; } ?>
+                                        <?php $i++; } } else {?>
+                                            <tr style="text-align: center;" >
+                                                <td colspan="5" > No Record Found</td>
+                                            </tr>
+                                        <?php } ?>
                                         <!-- <tr>
                                             <td>2nd</td>
                                             <td>Ficticious Doc #1</td>
@@ -778,7 +798,7 @@
                                 </table>
                             </td>
                         </tr>
-                        <?php } ?>
+                        <?php //} ?>
                         <tr>
                             <td style="height:20px"></td>
                         </tr>
