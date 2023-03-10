@@ -719,11 +719,11 @@
                                                 
                                             foreach ($titlePointInstrumentDetails as $key => $val) {  ?>
                                         <tr>
-                                            <td><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
-                                            <td><?php echo  $val['document_name']; ?></td>
-                                            <td>$<?php echo  $val['amount']; ?></td>
-                                            <td><?php echo  $val['recorded_date']; ?></td>
-                                            <td align="center" style="font-weight:600; color:#d35627"><?php echo  $val['instrument']; ?></td>
+                                            <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                                            <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                                            <td style="width: 15%;">$<?php echo  $val['amount']; ?></td>
+                                            <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                                            <td align="center" style="width: 20%; font-weight:600; color:#d35627"><?php echo  $val['instrument']; ?></td>
                                         </tr>
                                         <?php $i++; } } else {?>
                                             <tr style="text-align: center;" >
