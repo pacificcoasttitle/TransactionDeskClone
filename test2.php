@@ -63,11 +63,47 @@ curl_setopt_array($curl, array(
 $error_msg = curl_error($curl);
 $response = curl_exec($curl);
 if (curl_errno($curl)) {
-  echo $error_msg = "dsd--".curl_errno($curl)."---".curl_error($curl);exit;
+  echo $error_msg = "dsd--".curl_errno($curl)."---".curl_error($curl);
 }
 curl_close($curl);
 echo $response."dfdf";
 
 
+$requestParams = array(
+  'userID' => 'PCTXML01',
+  'password' => 'AlphaOmega637#',
+  'orderNo' =>  '',
+  'customerRef'=>  567467456743213,
+  'company'=>  '',
+  'department'=>  '',
+  'titleOfficer'=>  '',
+  'orderComment'=>  '',
+  'starterRemarks'=>  '',
+);
+
+$requestParams['serviceType'] = 'TitlePoint.Geo.Tax';
+			$requestParams['parameters'] = 'Tax.APN=533-363-11-00;General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
+			$requestParams['state'] = 'CA';
+			$requestParams['county'] = 'San Diego';
+			$requestUrl= 'https://www.titlepoint.com/TitlePointServices/TpsService.asmx/CreateService3?';
+			$request_type= 'create_service_3';
 
 
+
+
+      $request = $requestUrl.http_build_query($requestParams);
+
+      
+      $opts = array(
+        "ssl"=>array(
+              "verify_peer"=>false,
+              "verify_peer_name"=>false,
+          ),
+      );
+      $context = stream_context_create($opts);
+      $file = file_get_contents($request,false,$context);
+  
+      $xmlData = simplexml_load_string($file);
+      $response = json_encode($xmlData);
+      $result = json_decode($response,TRUE);
+      print_r($result);
