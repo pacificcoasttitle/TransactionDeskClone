@@ -3669,5 +3669,110 @@ class Home extends MX_Controller {
             }
         }
     }
+
+    public function importDocumentTypes()
+    {    
+        $data = array();
+        $data['title'] = 'PCT Order: Import Document Types';
+    	if ($this->input->post()) {
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            
+            if ($this->form_validation->run($this) == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+                
+                // If file uploaded
+                if(is_uploaded_file($_FILES['file']['tmp_name']))
+                {
+                    // Load CSV reader library
+                    $this->load->library('CSVReader');
+                    
+                    // Parse data from CSV file
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+                    $password = md5('Pacific1');
+                    
+                    // Insert/update CSV data into database
+                    if(!empty($csvData)){                        
+                        foreach($csvData as $row)
+                        {
+                            $rowCount++;
+                            if(isset($row['Email']) && !empty($row['Email']))
+                            {
+                                $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
+                                // Prepare data for DB insertion
+                                $customerData = array(
+                                    'resware_user_id' => $row['Partner Employee ID'],
+                                    'partner_id' => $row['Partner Company ID'],
+                                    'first_name' => $row['First Name'],
+                                    'last_name' => $row['Last Name'],
+                                    'title' => $row['Title'],
+                                    'telephone_no' => $row['Phone'],
+                                    'email_address' => $email_address,
+                                    'password' => $password,    
+                                    'company_name' => $row['Company Name'],
+                                    'street_address' => $row['Street1'],
+                                    'street_address_2' => $row['Street2'],
+                                    'city' => $row['City'],
+                                    'state' => $row['State'],
+                                    'zip_code' => $row['Zip'],
+                                    'is_escrow' => 1,
+                                    'status'=> 1,
+                                );
+
+                                $con = array(
+                                    'where' => array(
+                                        'email_address' => $email_address,
+                                        'resware_user_id' => $row['Partner Employee ID'],
+                                        'is_escrow' => 1
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_rows($con);
+                              
+                                if($prevCount > 0){
+                                    // Update member data
+                                    // unset($customerData['customer_number']);
+                                    $condition = array('email_address' => $email_address,'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 1);
+                                    $update = $this->home_model->update($customerData, $condition);
+                                    
+                                    if($update){
+                                        $updateCount++;
+                                    }
+                                }else{
+                                    // Insert member data
+                                    $insert = $this->home_model->insert($customerData);
+                                    
+                                    if($insert){
+                                        $insertCount++;
+                                    }
+                                }
+                            }   
+                            
+                        }
+                        
+                        // Status message with imported data count
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Customers imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        // $this->session->set_userdata('success_msg', $successMsg);
+                        $data['success_msg'] = $successMsg;
+                    }
+                }
+                else
+                {
+                   // $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                    $data['error_msg'] = 'Error on file upload, please try again.';
+                }
+            }
+            else
+            {
+                // $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+                $data['error_msg'] = 'Invalid file, please select only CSV file.';
+            }
+        }
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 }
 
