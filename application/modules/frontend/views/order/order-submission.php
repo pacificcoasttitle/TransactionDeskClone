@@ -32,7 +32,7 @@
                     ?>
                     
                     <li>
-                        <h3>Full Legal Description:</h3><br>
+                        <h3>Brief Legal Description:</h3><br>
                         <span class="orderinfo1">
                             <span id="legalDescription">
                                 <?php 

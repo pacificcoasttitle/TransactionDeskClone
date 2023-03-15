@@ -518,11 +518,12 @@ class Order extends MX_Controller {
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a><a href='#' onclick='sendOrderToResware($file_id);' class='btn btn-xs view-icon action-btn-padding' title ='Resware Sync'><span class='fa fa-sync' aria-hidden='true'></span></a>";
+            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:8px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
 
+            $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];
             if (!empty($value['document_name'])) {
-                $action .= "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
+                    <!-- <a style='margin-left:5px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div> -->";
             } else {
                 $action .= "</div>";
             }
