@@ -1131,7 +1131,7 @@ class Titlepoint
 		$i = 0;
 		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
 			$result = $result['Result']['DocumentList'];
-            // $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
+            $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
             /*$primaryDocIdFilter = $secondaryDocIdFilter = [];
 			if (!empty($primaryNameToSearch)) {
 				$primaryDocIdFilter = array_filter($result['Parties']['DocumentParty'], function($elem) use($primaryNameToSearch){
@@ -1161,7 +1161,7 @@ class Titlepoint
 
                 /** Start All instrument number details fetched */
                 
-                foreach($items['Item'] as $key => $val) {
+                /*foreach($items['Item'] as $key => $val) {
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
                         $docId = $id['@attributes']['Id'];
@@ -1177,12 +1177,12 @@ class Titlepoint
                             $i++;
                         }
                     }
-                }
+                }*/
                 
                 /** End All instrument number details fetched */
 
                 /** Start Address based instrument number details fetched  */
-				/*foreach($items['Item'] as $key => $val) {
+				foreach($items['Item'] as $key => $val) {
 					$id = $val['DocumentIdentification'];
 					if (isset($id['@attributes']['Id']) && isset($val['DocumentAddresses']) && !empty($val['DocumentAddresses']['Address'])) {
 						
@@ -1201,7 +1201,7 @@ class Titlepoint
 							}
 						}
 					}
-				} */
+				} 
                 /** End Address based instrument number details fetched  */
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			}
