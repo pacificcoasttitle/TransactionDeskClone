@@ -118,8 +118,7 @@
 	th {
 		text-align: center;
 	}
-
-
+	
 	#sales_user_listing {
 		float:left;
 		margin-right: 25px;
@@ -137,7 +136,16 @@
 	.pagination > li > a {
 		border-radius: 5px;
 	}
-
+	.dropdown-menu {
+		margin-top: 0px !important
+	}
+	.dropdown-menu > li > a {
+		padding: 5px 0px 5px 0px;
+	}
+	.dropdown .click-action-type {
+		color: #222222;
+    	text-decoration: none;
+	}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 	<div class="container">
