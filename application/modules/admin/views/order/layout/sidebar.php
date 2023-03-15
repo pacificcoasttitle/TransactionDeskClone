@@ -95,8 +95,8 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-documents'; ?>">Tax</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/curative-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/curative-documents'; ?>">Curative</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/file-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/file-documents'; ?>">Forms</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/pre-listing-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/pre-listing-documents'; ?>">Pre Listing</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lp-listing-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-listing-documents'; ?>">LP Listing</a>
+			<!-- <a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/pre-listing-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/pre-listing-documents'; ?>">Pre Listing</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lp-listing-documents') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-listing-documents'; ?>">LP Listing</a> -->
         </div>
 	</li>
 
