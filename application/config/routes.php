@@ -383,6 +383,7 @@ $route['order/admin/lp-listing-documents'] = 'admin/order/home/lp_listing_docume
 $route['order/admin/lp-orders'] = 'admin/order/order/lpOrders';
 $route['order/admin/send-order-to-resware'] = 'admin/order/home/sendOrderToResware';
 $route['order/admin/update-lp-report-status'] = 'admin/order/home/updateLpReportStatus';
+$route['order/admin/admin-user-logs'] = 'admin/order/home/adminUserLogs';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */

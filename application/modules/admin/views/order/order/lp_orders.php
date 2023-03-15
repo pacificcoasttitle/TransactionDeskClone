@@ -36,6 +36,8 @@
                             <th>Property Address</th>
                             <th>Product Type</th>
                             <th>Sales Rep</th> 
+                            <th>Lp Document Name</th> 
+                            <th>Report Status</th> 
                             <th>Created By</th>           
                             <!-- <th>Avoid Duplication</th>            -->
                             <th>Created At</th>           

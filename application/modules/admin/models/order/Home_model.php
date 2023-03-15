@@ -1879,4 +1879,78 @@ class Home_model extends CI_Model
             'data' => $grant_document_lists
         );
     }
+
+    public function get_admin_user_logs($params)
+    {
+        $this->db->from('admin')
+                 ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
+        $total_records =  $this->db->count_all_results();
+    
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $admin_logs_list = array();
+
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('admin.first_name', $keyword)
+                        ->or_like('admin.last_name', $keyword)
+                        ->or_like('pct_admin_activity_logs.message', $keyword)
+                        ->group_end();
+               
+            }
+
+            $this->db->from('admin')
+                 ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                        ->like('admin.first_name', $keyword)
+                        ->or_like('admin.last_name', $keyword)
+                        ->or_like('pct_admin_activity_logs.message', $keyword)
+                        ->group_end();
+			}
+
+            $this->db->select('admin.first_name, admin.last_name, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
+            $this->db->from('admin')
+                 ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
+            $this->db->order_by('pct_admin_activity_logs.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }	
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $admin_logs_list = $query->result_array();
+	        }
+    	} else {    		
+    		$this->db->from('admin')
+                 ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->select('admin.first_name, admin.last_name, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
+            $this->db->from('admin')
+                 ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
+            $this->db->order_by('pct_admin_activity_logs.id', 'desc');
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+	            $admin_logs_list = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $admin_logs_list
+        );
+    }
+
 }
