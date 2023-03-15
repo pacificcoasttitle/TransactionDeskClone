@@ -49,6 +49,14 @@ class Login extends MX_Controller {
                 );
 
                 $this->session->set_userdata('admin', $session_data);
+
+                $data = array(
+                    'user_id' => $admin['id'],
+                    'message' => 'Logged',
+                    'created_at' => date("Y-m-d H:i:s")
+                );
+                $this->db->insert('pct_admin_activity_logs', $data);
+
                 if ($this->input->is_ajax_request())  {
                     $result = array('status'=>'success');
                     echo json_encode($result); exit;

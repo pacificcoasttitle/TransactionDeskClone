@@ -3774,5 +3774,54 @@ class Home extends MX_Controller {
         $this->load->view('order/home/import', $data);
         $this->load->view('order/layout/footer', $data);
     }
+
+    public function adminUserLogs()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Admin User Logs';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/admin_user_logs', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_admin_user_logs()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $admin_logs_list = $this->home_model->get_admin_user_logs($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $admin_logs_list = $this->home_model->get_admin_user_logs($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($admin_logs_list['data']) && !empty($admin_logs_list['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($admin_logs_list['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['message']; 
+				$nestedData[] = convertTimezone($value['created_at']);
+                $data[] = $nestedData;  
+                $i++;          
+            }
+        }
+        $json_data['recordsTotal'] = intval( $admin_logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $admin_logs_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }
 

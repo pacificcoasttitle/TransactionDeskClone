@@ -476,7 +476,7 @@ class Order extends MX_Controller {
         $params['product_type'] = $this->input->post('product_type');
        
         $pageno = ($params['start'] / $params['length'])+1; 
-        $ordersList = $this->order_model->get_orders($params);   
+        $ordersList = $this->order_model->get_lp_orders($params);   
         
         $data = array(); 
         $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
@@ -490,6 +490,21 @@ class Order extends MX_Controller {
             $nestedData[] = $value['product_type'];
 			$nestedData[] = $value['sales_rep_name'];
 			$nestedData[] = $value['first_name']." ".$value['last_name'];
+            $nestedData[] = $value['document_name'];
+            $lp_report_status = $value['lp_report_status'];
+            $disabled = '';
+            if (empty($value['document_name'])) {
+                $disabled = "disabled";
+            }
+            $lpReportStatusSelection ='<select '.$disabled.' onchange="updateLpReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
+                                <option value="">Select</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="denied">Denied</option>
+                            </select>'; 
+            $lpReportStatusSelection = str_replace('value="' .  $lp_report_status . '"','value="' .  $lp_report_status . '" selected', $lpReportStatusSelection);          
+            $nestedData[] = $lpReportStatusSelection;
+
             $property_id = $value['property_id'];
             // if ($value['allow_duplication'] == 1) {
             //     $checked = 'checked';
@@ -498,10 +513,19 @@ class Order extends MX_Controller {
             // }
             // $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
             
+            
+
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a><a href='#' onclick='sendOrderToResware($file_id);' class='btn btn-xs view-icon action-btn-padding' title ='Resware Sync'><span class='fa fa-sync' aria-hidden='true'></span></a>";
+            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a><a href='#' onclick='sendOrderToResware($file_id);' class='btn btn-xs view-icon action-btn-padding' title ='Resware Sync'><span class='fa fa-sync' aria-hidden='true'></span></a>";
+
+            if (!empty($value['document_name'])) {
+                $action .= "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+            } else {
+                $action .= "</div>";
+            }
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $count++;          
