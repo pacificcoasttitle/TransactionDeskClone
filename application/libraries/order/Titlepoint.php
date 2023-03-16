@@ -1181,7 +1181,7 @@ class Titlepoint
                                     print_r($recordArray);
                                     echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
                                     unset($recordArray[$existKey]);
-                                    array_values($recordArray); 
+                                    $recordArray = array_values($recordArray); 
                                     print_r($recordArray);
                                 }
                                 
