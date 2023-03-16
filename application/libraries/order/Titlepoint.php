@@ -1170,15 +1170,15 @@ class Titlepoint
                         if ($val['DocumentType'] == 'DEG' || $val['DocumentType'] == 'TDD' || $val['DocumentType'] == 'ASE' || $val['DocumentType'] == 'LIS' || $val['DocumentType'] == 'FIN') {
                             
                             if (!empty($recordArray)) {
-                                if (isset($val['DocumentType']) && isset($val['DocumentSubType'])) {
+                                if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];
                                     echo "hete";
                                     $existKey = array_search($docType, array_column($recordArray, 'document_sub_type'));
                                 } else if (isset($val['DocumentType'])) {
                                     $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
                                 }
-                                echo "dcd".$existKey;
-                                print_r($recordArray);
+                                //echo "dcd".$existKey;
+                                //print_r($recordArray);
                                 if (strlen($existKey) > 0) {
                                     print_r($recordArray);
                                    echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
