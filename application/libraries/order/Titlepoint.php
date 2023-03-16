@@ -1178,11 +1178,12 @@ class Titlepoint
                                 //echo "dcd".$existKey;
                                 //print_r($recordArray);
                                 if (strlen($existKey) > 0) {
-                                    print_r($recordArray);
-                                    echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
+                                    //print_r($recordArray);
+                                   // echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
                                     unset($recordArray[$existKey]);
                                     $recordArray = array_values($recordArray); 
-                                    print_r($recordArray);
+                                    //print_r($recordArray);
+                                    $i--;
                                 }
                                 
                             }
@@ -1202,7 +1203,7 @@ class Titlepoint
                         }
                     }
                 }
-                exit;
+            
                 /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
