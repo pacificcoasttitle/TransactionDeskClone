@@ -1179,6 +1179,7 @@ class Titlepoint
                                 //print_r($recordArray);
                                 if (strlen($existKey) > 0) {
                                     print_r($recordArray);
+                                    echo "dcd".$existKey;
                                     unset($recordArray[$existKey]);
                                     print_r($recordArray);exit;
                                 }
