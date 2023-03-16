@@ -1173,7 +1173,7 @@ class Titlepoint
                             } else if (isset($val['DocumentType'])) {
                                 $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
                             }
-
+                            echo $existKey;
                             if (strlen($existKey) > 0) {
                                 unset($recordArray[$existKey]);
                             }
