@@ -379,6 +379,7 @@
         console.log('data ===', data);
         // let executeCall = false;
         if (data.file_number != '') {
+            console.log(data.file_number);
             // $(document).ajaxStop(function() {
                 // place code to be executed on completion of last outstanding ajax call here
                 // if (!executeCall) {
