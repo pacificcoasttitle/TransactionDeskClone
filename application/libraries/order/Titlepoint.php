@@ -1171,7 +1171,7 @@ class Titlepoint
                             
                             if (!empty($recordArray)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType'])) {
-                                    $existKey = array_search($val['DocumentSubType'], array_column($recordArray, 'document_sub_type'));
+                                    $existKey = array_search($val['DocumentType'].$val['DocumentSubType'], array_column($recordArray, 'document_sub_type'));
                                 } else if (isset($val['DocumentType'])) {
                                     $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
                                 }
@@ -1194,7 +1194,7 @@ class Titlepoint
                                 $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
                                 $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
                                 $recordArray[$i]['document_name'] = $val['DocumentFullName'];
-                                $recordArray[$i]['document_type'] = $val['DocumentType'];
+                                $recordArray[$i]['document_type'] = $val['DocumentType'].isset($val['DocumentSubType']) ? $val['DocumentSubType'] : '';
                                 $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
                                 $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                                 $recordArray[$i]['amount'] = 0;
