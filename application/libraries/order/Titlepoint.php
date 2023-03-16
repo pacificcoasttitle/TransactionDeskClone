@@ -1194,7 +1194,11 @@ class Titlepoint
                                 $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
                                 $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
                                 $recordArray[$i]['document_name'] = $val['DocumentFullName'];
-                                $recordArray[$i]['document_type'] = $val['DocumentType'].isset($val['DocumentSubType']) ? $val['DocumentSubType'] : '';
+                                if (isset($val['DocumentSubType'])) {
+                                    $recordArray[$i]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
+                                } else {
+                                    $recordArray[$i]['document_type'] = $val['DocumentType'];
+                                }
                                 $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
                                 $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                                 $recordArray[$i]['amount'] = 0;
