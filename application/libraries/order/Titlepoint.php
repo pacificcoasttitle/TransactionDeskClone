@@ -1172,7 +1172,7 @@ class Titlepoint
                             if (!empty($recordArray)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    echo "hete--".$docType;
+                                    //echo "hete--".$docType;
                                     $existKey = array_search($docType, array_column($recordArray, 'document_type'));
                                 } else if (isset($val['DocumentType'])) {
                                     $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
@@ -1181,12 +1181,12 @@ class Titlepoint
                                 //print_r($recordArray);
                                 if (strlen($existKey) > 0) {
                                     print_r($recordArray);
-                                   echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
+                                    //echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
                                     unset($recordArray[$existKey]);
                                     $recordArray = array_values($recordArray); 
-                                    print_r($recordArray);
+                                    //print_r($recordArray);
                                     $i--;
-                                    echo $i;
+                                    //echo $i;
                                 }
                                 
                             }
@@ -1210,7 +1210,6 @@ class Titlepoint
                         }
                     }
                 }
-            exit;
                 /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
