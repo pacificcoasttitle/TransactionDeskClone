@@ -1167,27 +1167,29 @@ class Titlepoint
                         $docId = $id['@attributes']['Id'];
                         $key = array_search($docId, array_column($documentIdentifications, 'Id'));
                         $existKey = '';
-                        if (isset($val['DocumentType']) && isset($val['DocumentSubType'])) {
-                            $existKey = array_search($val['DocumentSubType'], array_column($recordArray, 'document_sub_type'));
-                        } else if (isset($val['DocumentType'])) {
-                            $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
-                        }
+                        if ($val['DocumentType'] == 'DEG' || $val['DocumentType'] == 'TDD' || $val['DocumentType'] == 'ASE' || $val['DocumentType'] == 'LIS' || $val['DocumentType'] == 'FIN') {
+                            if (isset($val['DocumentType']) && isset($val['DocumentSubType'])) {
+                                $existKey = array_search($val['DocumentSubType'], array_column($recordArray, 'document_sub_type'));
+                            } else if (isset($val['DocumentType'])) {
+                                $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
+                            }
 
-                        if (strlen($existKey) > 0) {
-                            unset($recordArray[$existKey]);
-                        }
+                            if (strlen($existKey) > 0) {
+                                unset($recordArray[$existKey]);
+                            }
 
-                        if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
-                            $recordArray[$i]['title_point_id'] = $titlePointId;
-                            $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
-                            $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
-                            $recordArray[$i]['document_name'] = $val['DocumentFullName'];
-                            $recordArray[$i]['document_type'] = $val['DocumentType'];
-                            $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
-                            $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
-                            $recordArray[$i]['amount'] = 0;
-                            // $recordArray[$i]['AddressId'] = $addressId;
-                            $i++;
+                            if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
+                                $recordArray[$i]['title_point_id'] = $titlePointId;
+                                $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                                $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
+                                $recordArray[$i]['document_name'] = $val['DocumentFullName'];
+                                $recordArray[$i]['document_type'] = $val['DocumentType'];
+                                $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
+                                $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
+                                $recordArray[$i]['amount'] = 0;
+                                // $recordArray[$i]['AddressId'] = $addressId;
+                                $i++;
+                            }
                         }
                     }
                 }
@@ -1216,6 +1218,8 @@ class Titlepoint
 					}
 				} 
                  End Address based instrument number details fetched  */
+
+                $this->CI->db->delete('pct_title_point_document_records', array('title_point_id' => $titlePointId)); 
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			}
             // echo "hello";die;
