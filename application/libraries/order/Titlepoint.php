@@ -1179,9 +1179,9 @@ class Titlepoint
                                 //print_r($recordArray);
                                 if (strlen($existKey) > 0) {
                                     print_r($recordArray);
-                                    echo "dcd".$existKey;
+                                    echo "dcd---".$existKey."---".$val['DocumentType']."--------".$val['DocumentSubType'];
                                     unset($recordArray[$existKey]);
-                                    print_r($recordArray);exit;
+                                    print_r($recordArray);
                                 }
                                 
                             }
@@ -1201,7 +1201,7 @@ class Titlepoint
                         }
                     }
                 }
-                
+                exit;
                 /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
