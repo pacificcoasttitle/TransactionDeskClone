@@ -1175,9 +1175,10 @@ class Titlepoint
                                 } else if (isset($val['DocumentType'])) {
                                     $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
                                 }
-                                echo "dcd".$existKey;
-                                print_r($recordArray);
+                                //echo "dcd".$existKey;
+                                //print_r($recordArray);
                                 if (strlen($existKey) > 0) {
+                                    print_r($recordArray);
                                     unset($recordArray[$existKey]);
                                     print_r($recordArray);exit;
                                 }
