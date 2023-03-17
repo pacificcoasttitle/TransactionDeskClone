@@ -1691,8 +1691,10 @@ class Home extends MX_Controller {
 				$data['orderDetails'] = $orderDetails;
 				$data['titlePointDetails'] = $titlePointDetails;
 				$data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+				echo "<pre>";
+				print_r($data);
 				$html = $this->load->view('report/instrument_report',$data,true);
-				// echo $html;die;
+				echo $html;
 				
 				$this->load->library('snappy_pdf');
 				$this->snappy_pdf->pdf->setOption('page-size', 'A4');
@@ -1704,9 +1706,11 @@ class Home extends MX_Controller {
 				$pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
 				$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
 				$this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
+				echo "pdf generated";
 				$this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
+				echo "Pdf moveed to aws";
 				$this->insertRecord($document_name, $file_id, $orderDetails);
-
+				echo "record inserted";
 				/*** Upload Pre listing doc to resware */
 				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 			}
