@@ -1555,8 +1555,6 @@ class Home extends MX_Controller {
 				);
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 			$file_id = $titlePointDetails[0]['file_id'];
-			echo 'titlePointDetails';
-			print_r($titlePointDetails);
 			// print_r($file_id);die;
 			$orderDetails = $this->order->get_order_details($file_id);
 			// echo "<pre>";
@@ -1575,11 +1573,9 @@ class Home extends MX_Controller {
 				} else {
 					$file_url = base_url().'uploads/plat-map/'.$fileNumber.'.pdf';
 				}
-				echo "In plat map if";
 			} 
 			else
 			{
-				echo "In plat map else";
 				$address = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
 				$locale = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';
 				$propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
@@ -1595,16 +1591,16 @@ class Home extends MX_Controller {
 						$locale .= ', CA';
 					}
 				}
-				$data=new stdClass();
-				$data->Address= $address;
-				$data->LastLine= (string) $locale;
-				$data->ClientReference= '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
-				$data->OwnerName= '';
-				$data->key= env('BLACK_KNIGHT_KEY');
-				$data->ReportType= '111';
+				$stdcls=new stdClass();
+				$stdcls->Address= $address;
+				$stdcls->LastLine= (string) $locale;
+				$stdcls->ClientReference= '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
+				$stdcls->OwnerName= '';
+				$stdcls->key= env('BLACK_KNIGHT_KEY');
+				$stdcls->ReportType= '111';
 				$request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
 		
-				$requestUrl = $request.http_build_query($data);
+				$requestUrl = $request.http_build_query($stdcls);
 				$query_string = parse_url($request,PHP_URL_QUERY);
 				parse_str($query_string, $requestParams);
 				$getsortedresults = 'false';
@@ -1700,20 +1696,13 @@ class Home extends MX_Controller {
 				// $file_id = $titlePointDetails[0]['file_id'];
 				$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($fileNumber);
 				$titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
-				echo "titlePointInstrumentDetails";
-				print_r($titlePointInstrumentDetails);
 				$orderDetails = $this->order->get_order_details($file_id);
-				echo "orderDetails";
-				print_r($orderDetails);
-				$data['orderDetails'] = $orderDetails;
-				echo 'data - orderDetails';
-				$data['titlePointDetails'] = $titlePointDetails;
-				echo 'data - titlePointDetails';
-				$data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
-				echo "All data";
-				print_r($data);
-				$html = $this->load->view('report/instrument_report',$data,true);
-				echo $html;
+				
+				$instrumentRecordDetails['orderDetails'] = $orderDetails;
+				$instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
+				$instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+				
+				$html = $this->load->view('report/instrument_report',$instrumentRecordDetails,true);
 				
 				$this->load->library('snappy_pdf');
 				$this->snappy_pdf->pdf->setOption('page-size', 'A4');
@@ -1725,11 +1714,8 @@ class Home extends MX_Controller {
 				$pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
 				$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
 				$this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
-				echo "pdf generated";
 				$this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
-				echo "Pdf moveed to aws";
 				$this->insertRecord($document_name, $file_id, $orderDetails);
-				echo "record inserted";
 				/*** Upload Pre listing doc to resware */
 				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 			}
