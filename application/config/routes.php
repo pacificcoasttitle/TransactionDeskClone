@@ -385,7 +385,7 @@ $route['order/admin/send-order-to-resware'] = 'admin/order/home/sendOrderToReswa
 $route['order/admin/update-lp-report-status'] = 'admin/order/home/updateLpReportStatus';
 $route['order/admin/admin-user-logs'] = 'admin/order/home/adminUserLogs';
 $route['order/admin/get-instrument-data'] = 'admin/order/order/getInstrumentData';
-$route['order/admin/store-lp-document-info'] = 'admin/order/order/storeLpDocumentInfo';
+$route['order/admin/store-lp-document-info'] = 'admin/order/home/storeLpDocumentInfo';
 
 /* Route for PCT-Order backend*/
 

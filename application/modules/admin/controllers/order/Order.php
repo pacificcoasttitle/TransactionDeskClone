@@ -600,13 +600,5 @@ class Order extends MX_Controller {
         echo json_encode($result); exit;
     }
 
-    public function storeLpDocumentInfo()
-    {
-        $instrument_number_ids = $this->input->post('instrument_number_ids');
-        $title_point_id = $this->input->post('title_point_id');
-        $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
-        foreach($instrument_number_ids as $instrument_number_id) {
-            $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
-        }
-    }
+    
 }

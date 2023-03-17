@@ -3823,5 +3823,74 @@ class Home extends MX_Controller {
         $json_data['data'] = $data;
         echo json_encode($json_data);
     }
+
+    public function storeLpDocumentInfo()
+    {
+        $this->load->library('order/order');
+        $this->load->model('admin/order/titlePointData');
+        $instrument_number_ids = $this->input->post('instrument_number_ids');
+        $title_point_id = $this->input->post('title_point_id');
+
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('id', $title_point_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+
+        $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
+        foreach($instrument_number_ids as $instrument_number_id) {
+            $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
+        }
+
+        $file_id = $titlePointData->file_id;
+        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData->file_number);
+        $orderDetails = $this->order->get_order_details($file_id);
+        $data['orderDetails'] = $orderDetails;
+        $data['titlePointDetails'] = $titlePointDetails;
+        $data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+        $html = $this->load->view('report/instrument_report',$data,true);
+        // echo $html;die;
+        
+        $this->load->library('snappy_pdf');
+        
+        $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
+        if (!is_dir('uploads/pre-listing-doc')) {
+            mkdir('./uploads/pre-listing-doc', 0777, TRUE);
+        }
+        $pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
+        $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+        $this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
+        $this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
+        $this->insertRecord($document_name, $file_id, $orderDetails);
+
+    }
+
+    public function insertRecord($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('admin/order/document');
+		// $this->load->library('order/resware');
+		// $this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Pre Listing Report Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_pre_listing_doc' => 0,
+			'is_pre_listing_report_doc' => 1
+		);
+		$condition = array('is_pre_listing_report_doc' => 1, 'order_id' => $orderDetails['order_id']);
+		$this->document->delete($documentData, $condition);
+		$this->document->insert($documentData);
+	}
 }
 

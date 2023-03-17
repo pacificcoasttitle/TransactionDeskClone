@@ -1594,7 +1594,7 @@ class Home extends MX_Controller {
 				$this->insertRecord($document_name, $file_id, $orderDetails);
 
 				/*** Upload Pre listing doc to resware */
-				$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
+				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 			}
 
 			$subject = 'Change Status to Prelisitng';
