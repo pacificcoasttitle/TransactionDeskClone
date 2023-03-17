@@ -31,6 +31,12 @@
 
 
 		<div class="card-body">
+            <?php if(!empty($success)) {?>
+                <div id="" class="w-100 alert alert-success alert-dismissible"><?php echo $success;?></div>
+            <?php }   
+            if(!empty($errors)) {?>
+                <div id="" class="w-100 alert alert-danger alert-dismissible"><?php echo $errors;?></div>
+            <?php } ?>
 			<div id="lp_order_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;">
 			</div>
 			<div id="lp_order_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
@@ -99,6 +105,9 @@
 	
 <script>
 	function getInstrumentData(file_id) {
+        $('body').animate({
+			opacity: 0.5
+		}, "slow");
 		$.ajax({
 			url: base_url + "order/admin/get-instrument-data",
 			method: "POST",
@@ -107,6 +116,9 @@
 			},
 			success: function (data) {
 				var result = jQuery.parseJSON(data);
+                $('body').animate({
+						opacity: 1.0
+                }, "slow");
 				if (result.status == 'success') {
 					$('#instrument_number_container').html(result.data);
 					$('#instrument_model').modal('show');

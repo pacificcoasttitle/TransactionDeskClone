@@ -447,6 +447,14 @@ class Order extends MX_Controller {
     function lpOrders() 
     {
     	$params = array();
+        if ($this->session->userdata('errors')) {
+			$data['errors'] = $this->session->userdata('errors');
+			$this->session->unset_userdata('errors');
+		}
+		if ($this->session->userdata('success')) {
+			$data['success'] = $this->session->userdata('success');
+			$this->session->unset_userdata('success');
+		}
     	$salesRep = $this->sales_model->get_sales_reps($params);
     	$data['salesRep'] = $salesRep;
         $con = array(
