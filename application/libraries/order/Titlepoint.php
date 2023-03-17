@@ -1128,6 +1128,7 @@ class Titlepoint
         
         /** Save document records here Start*/
         $recordArray = [];
+        $filterArr = [];
 		$i = 0;
 		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
 			$result = $result['Result']['DocumentList'];
@@ -1160,12 +1161,12 @@ class Titlepoint
 				}*/
 
                 /** Start All instrument number details fetched */
-                
                 foreach($items['Item'] as $key => $val) {
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
                         $docId = $id['@attributes']['Id'];
                         $key = array_search($docId, array_column($documentIdentifications, 'Id'));
+                        $existKey = '';
                         if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
                             $recordArray[$i]['title_point_id'] = $titlePointId;
                             $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
@@ -1179,13 +1180,13 @@ class Titlepoint
                             $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
-                            $recordArray[$i]['is_display'] = 1;
+                            $recordArray[$i]['is_display'] = 0;
                             $i++;
                         }
                     }
                 }
-
-                /*foreach($items['Item'] as $key => $val) {
+                
+                foreach($items['Item'] as $key => $val) {
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
                         $docId = $id['@attributes']['Id'];
@@ -1203,7 +1204,6 @@ class Titlepoint
                                 if (strlen($existKey) > 0) {
                                     unset($filterArr[$existKey]);
                                     $filterArr = array_values($filterArr); 
-                                    $filterArr[$existKey]['is_display'] = 0;
                                     $i--;
                                 }
                                 
@@ -1227,14 +1227,17 @@ class Titlepoint
                         } 
                     }
                 }
-                /** End All instrument number details fetched */
 
-                /*foreach($filterArr as $arr) {
-                    $filterKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
-                    if (strlen ($filterKey) > 0) {
-                        $recordArray[$filterKey]['is_display'] = 1;
+                if (!empty($filterArr)) {
+                    foreach ($filterArr as $arr) {
+                        $filterKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
+                        if (strlen($filterKey) > 0) {
+                            $recordArray[$filterKey]['is_display'] = 1;
+                        }
                     }
-                }*/
+                }
+
+                /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
 				foreach($items['Item'] as $key => $val) {
@@ -1258,7 +1261,7 @@ class Titlepoint
 					}
 				} 
                  End Address based instrument number details fetched  */
-
+                
                 $this->CI->db->delete('pct_title_point_document_records', array('title_point_id' => $titlePointId)); 
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			}
