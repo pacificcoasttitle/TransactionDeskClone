@@ -1171,23 +1171,24 @@ class Titlepoint
                             if (!empty($recordArray)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    //$existKey = array_search($docType, array_column($recordArray, 'document_type'));
-                                    
-                                    
-                                    $existKey = array_filter($recordArray, function($value){
+                                    $filterArr = array();
+                                    $filterArr = key(array_filter($recordArray, function($value){
                                         return ($value['is_display']== 1 && $value['document_type']== $docType);
-                                    }, ARRAY_FILTER_USE_KEY);
-
+                                    }));
+                                    $existKey = array_search($docType, array_column($filterArr, 'document_type'));
                                 } else if (isset($val['DocumentType'])) {
                                     //$existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
-                                    $existKey = array_filter($recordArray, function($value){
+                                    $filterArr = array();
+                                    $filterArr = key(array_filter($recordArray, function($value){
                                         return ($value['is_display']== 1 && $value['document_type']== $val['DocumentType']);
-                                    }, ARRAY_FILTER_USE_KEY);
+                                    }));
+                                    $existKey = array_search($val['DocumentType'], array_column($filterArr, 'document_type'));
+                                    
                                 }
                         
                                 if (strlen($existKey) > 0) {
-                                    echo $existKey;
-                                    print_r($recordArray);
+                                    //echo $existKey;
+                                    //print_r($recordArray);
                                     //unset($recordArray[$existKey]);
                                     //$recordArray = array_values($recordArray); 
                                     $recordArray[$existKey]['is_display'] = 0;
@@ -1231,7 +1232,7 @@ class Titlepoint
                             }
                         }
                     }
-                }exit;
+                }
                 /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
