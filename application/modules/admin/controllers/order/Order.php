@@ -523,7 +523,7 @@ class Order extends MX_Controller {
             $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];
             if (!empty($value['document_name'])) {
                 $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
-                    <!-- <a style='margin-left:5px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div> -->";
+                     <a style='margin-left:5px;' onclick='getInstrumentData($file_id);'><i class='fas fa-eye'></i></a></div> ";
             } else {
                 $action .= "</div>";
             }
@@ -539,5 +539,74 @@ class Order extends MX_Controller {
         );
 
         echo json_encode($json_data);
+    }
+
+    public function getInstrumentData()
+    {
+        $file_id = $this->input->post('file_id');
+
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+
+        $this->db->select('*');
+        $this->db->from('pct_title_point_document_records');
+        $this->db->where('title_point_id', $titlePointData->id);
+        $query = $this->db->get();
+        $instrumentRecords = $query->result(); 
+
+        $data = "<input type='hidden' id='title_point_id' name='title_point_id' value='$titlePointData->id'>
+        <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Document Name</th>
+                    <th>Instrument</th>
+                    <th>Recorded Date</th>
+                    <th>Action</th>        
+                </tr>
+            </thead>
+        <tbody>";
+
+        $i = 1;
+        if (!empty($instrumentRecords)) {
+            foreach ($instrumentRecords as $instrumentRecord) {
+                if ($instrumentRecord->is_display == 1) {
+                    $checked = "checked";                    
+                } else {
+                    $checked = "";
+                }
+                $data .= "<tr>
+                            <td>$i</td>
+                            <td>$instrumentRecord->document_name</td>
+                            <td>$instrumentRecord->instrument</td>
+                            <td>$instrumentRecord->recorded_date</td>
+                            <td><input type='checkbox' id='$instrumentRecord->id' $checked name='instrument_number_ids[]' value='$instrumentRecord->id'></td>
+                        </tr>";
+                $i++;
+            }
+        } else {
+            $data .= "No records found.";  
+            
+        }
+        $data .= '</tbody></table>';
+        if(!empty($data)) {
+            $result = array('status'=> 'success', 'data' => $data);    
+        } else {
+            $result = array('status'=> 'error', 'data' => $data);   
+        }
+        echo json_encode($result); exit;
+    }
+
+    public function storeLpDocumentInfo()
+    {
+        $instrument_number_ids = $this->input->post('instrument_number_ids');
+        $title_point_id = $this->input->post('title_point_id');
+        $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
+        foreach($instrument_number_ids as $instrument_number_id) {
+            $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
+        }
     }
 }
