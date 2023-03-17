@@ -1179,13 +1179,13 @@ class Titlepoint
                             $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
-                            $recordArray[$i]['is_display'] = 0;
+                            $recordArray[$i]['is_display'] = 1;
                             $i++;
                         }
                     }
                 }
 
-                foreach($items['Item'] as $key => $val) {
+                /*foreach($items['Item'] as $key => $val) {
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
                         $docId = $id['@attributes']['Id'];
@@ -1234,7 +1234,7 @@ class Titlepoint
                     if (strlen ($filterKey) > 0) {
                         $recordArray[$filterKey]['is_display'] = 1;
                     }
-                }
+                }*/
 
                 /* Start Address based instrument number details fetched  
 				foreach($items['Item'] as $key => $val) {
