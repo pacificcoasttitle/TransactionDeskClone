@@ -1177,9 +1177,10 @@ class Titlepoint
                                 }
                         
                                 if (strlen($existKey) > 0) {
-                                    unset($recordArray[$existKey]);
-                                    $recordArray = array_values($recordArray); 
-                                    $i--;
+                                    //unset($recordArray[$existKey]);
+                                    //$recordArray = array_values($recordArray); 
+                                    $recordArray[$existKey]['is_display'] = 0;
+                                    //$i--;
                                 }
                                 
                             }
