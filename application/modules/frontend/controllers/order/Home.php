@@ -1555,6 +1555,8 @@ class Home extends MX_Controller {
 				);
 			$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 			$file_id = $titlePointDetails[0]['file_id'];
+			echo 'titlePointDetails';
+			print_r($titlePointDetails);
 			// print_r($file_id);die;
 			$orderDetails = $this->order->get_order_details($file_id);
 			// echo "<pre>";
@@ -1704,7 +1706,9 @@ class Home extends MX_Controller {
 				echo "orderDetails";
 				print_r($orderDetails);
 				$data['orderDetails'] = $orderDetails;
+				echo 'data - orderDetails';
 				$data['titlePointDetails'] = $titlePointDetails;
+				echo 'data - titlePointDetails';
 				$data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
 				echo "All data";
 				print_r($data);
