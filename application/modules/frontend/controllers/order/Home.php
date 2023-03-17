@@ -1706,7 +1706,7 @@ class Home extends MX_Controller {
 				$data['orderDetails'] = $orderDetails;
 				$data['titlePointDetails'] = $titlePointDetails;
 				$data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
-				
+				echo "All data";
 				print_r($data);
 				$html = $this->load->view('report/instrument_report',$data,true);
 				echo $html;
