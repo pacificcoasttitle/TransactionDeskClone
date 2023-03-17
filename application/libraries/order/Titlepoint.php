@@ -1232,7 +1232,7 @@ class Titlepoint
                             }
                         }
                     }
-                }exit;
+                }
                 /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
