@@ -3447,7 +3447,7 @@ class Home extends MX_Controller {
     {
         $this->load->model('order/apiLogs');
         $this->load->library('order/twilio');
-        $this->load->model('frontend/order/twilioMessage');
+        //$this->load->model('frontend/order/twilioMessage');
         $file_id = $this->input->post('file_id');
         $status = $this->input->post('status');
         $updateData = array('lp_report_status' => $status);
@@ -3460,45 +3460,45 @@ class Home extends MX_Controller {
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
             $message = "LP Report is ready for file number ".$order_details['lp_file_number'];
-            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
+            // $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
 
-            try {
-                $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
-                $response = $result->toArray();
-                $response['msg_status'] = 'success';
-                $response['code'] = $code;
+            // try {
+            //     $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
+            //     $response = $result->toArray();
+            //     $response['msg_status'] = 'success';
+            //     $response['code'] = $code;
 
-            } catch (Exception $e) {
-                $response['sid'] = '';
-                $response['to'] = $order_details['sales_rep_phone'];
-                $response['msg_status'] = 'error';
-                $response['errorCode'] = $e->getCode();
-                $response['errorMessage'] = $e->getMessage();
-            } catch (\Twilio\Exceptions\RestException $e) {
-                $response['sid'] = '';
-                $response['to'] = $order_details['sales_rep_phone'];
-                $response['msg_status'] = 'error';
-                $response['errorCode'] = $e->getCode();
-                $response['errorMessage'] = $e->getMessage();
-            }
+            // } catch (Exception $e) {
+            //     $response['sid'] = '';
+            //     $response['to'] = $order_details['sales_rep_phone'];
+            //     $response['msg_status'] = 'error';
+            //     $response['errorCode'] = $e->getCode();
+            //     $response['errorMessage'] = $e->getMessage();
+            // } catch (\Twilio\Exceptions\RestException $e) {
+            //     $response['sid'] = '';
+            //     $response['to'] = $order_details['sales_rep_phone'];
+            //     $response['msg_status'] = 'error';
+            //     $response['errorCode'] = $e->getCode();
+            //     $response['errorMessage'] = $e->getMessage();
+            // }
 
-            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), $response, 0, $logid);
+            // $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), $response, 0, $logid);
 
-            if ($response['msg_status'] == 'success') {
-                $data = array(
-                    'message' => $response['body'],
-                    'sent_from' => $response['from'],
-                    'sent_to' => $response['to'],
-                    'status' => $response['status'],
-                    'message_sid' => $response['sid'],
-                    'error_code' => $response['errorCode'],
-                    'error_message' => $response['errorMessage'],
-                );
-                $this->twilioMessage->insert($data);
-                $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
-            } else {
-                $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
-            }
+            // if ($response['msg_status'] == 'success') {
+            //     $data = array(
+            //         'message' => $response['body'],
+            //         'sent_from' => $response['from'],
+            //         'sent_to' => $response['to'],
+            //         'status' => $response['status'],
+            //         'message_sid' => $response['sid'],
+            //         'error_code' => $response['errorCode'],
+            //         'error_message' => $response['errorMessage'],
+            //     );
+            //     $this->twilioMessage->insert($data);
+            //     $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
+            // } else {
+            //     $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
+            // }
         }
         
         $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
@@ -3669,5 +3669,228 @@ class Home extends MX_Controller {
             }
         }
     }
+
+    public function importDocumentTypes()
+    {    
+        $data = array();
+        $data['title'] = 'PCT Order: Import Document Types';
+    	if ($this->input->post()) {
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            
+            if ($this->form_validation->run($this) == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+                
+                // If file uploaded
+                if(is_uploaded_file($_FILES['file']['tmp_name']))
+                {
+                    // Load CSV reader library
+                    $this->load->library('CSVReader');
+                    
+                    // Parse data from CSV file
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+                    $password = md5('Pacific1');
+                    
+                    // Insert/update CSV data into database
+                    if(!empty($csvData)){                        
+                        foreach($csvData as $row)
+                        {
+                            $rowCount++;
+                            if(isset($row['Email']) && !empty($row['Email']))
+                            {
+                                $email_address = str_replace(' ','',$row['Email']);
+                                $email_address = strtolower($email_address);
+                                // Prepare data for DB insertion
+                                $customerData = array(
+                                    'resware_user_id' => $row['Partner Employee ID'],
+                                    'partner_id' => $row['Partner Company ID'],
+                                    'first_name' => $row['First Name'],
+                                    'last_name' => $row['Last Name'],
+                                    'title' => $row['Title'],
+                                    'telephone_no' => $row['Phone'],
+                                    'email_address' => $email_address,
+                                    'password' => $password,    
+                                    'company_name' => $row['Company Name'],
+                                    'street_address' => $row['Street1'],
+                                    'street_address_2' => $row['Street2'],
+                                    'city' => $row['City'],
+                                    'state' => $row['State'],
+                                    'zip_code' => $row['Zip'],
+                                    'is_escrow' => 1,
+                                    'status'=> 1,
+                                );
+
+                                $con = array(
+                                    'where' => array(
+                                        'email_address' => $email_address,
+                                        'resware_user_id' => $row['Partner Employee ID'],
+                                        'is_escrow' => 1
+                                    ),
+                                    'returnType' => 'count'
+                                );
+                                $prevCount = $this->home_model->get_rows($con);
+                              
+                                if($prevCount > 0){
+                                    // Update member data
+                                    // unset($customerData['customer_number']);
+                                    $condition = array('email_address' => $email_address,'resware_user_id'=>$row['Partner Employee ID'],'is_escrow' => 1);
+                                    $update = $this->home_model->update($customerData, $condition);
+                                    
+                                    if($update){
+                                        $updateCount++;
+                                    }
+                                }else{
+                                    // Insert member data
+                                    $insert = $this->home_model->insert($customerData);
+                                    
+                                    if($insert){
+                                        $insertCount++;
+                                    }
+                                }
+                            }   
+                            
+                        }
+                        
+                        // Status message with imported data count
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'Customers imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        // $this->session->set_userdata('success_msg', $successMsg);
+                        $data['success_msg'] = $successMsg;
+                    }
+                }
+                else
+                {
+                   // $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                    $data['error_msg'] = 'Error on file upload, please try again.';
+                }
+            }
+            else
+            {
+                // $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+                $data['error_msg'] = 'Invalid file, please select only CSV file.';
+            }
+        }
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function adminUserLogs()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Admin User Logs';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/admin_user_logs', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_admin_user_logs()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $admin_logs_list = $this->home_model->get_admin_user_logs($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $admin_logs_list = $this->home_model->get_admin_user_logs($params);            
+        }
+
+        $data = array(); 
+        
+        if(isset($admin_logs_list['data']) && !empty($admin_logs_list['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($admin_logs_list['data'] as $key => $value) {
+                $nestedData=array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['message']; 
+				$nestedData[] = convertTimezone($value['created_at']);
+                $data[] = $nestedData;  
+                $i++;          
+            }
+        }
+        $json_data['recordsTotal'] = intval( $admin_logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $admin_logs_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function storeLpDocumentInfo()
+    {
+        $this->load->library('order/order');
+        $this->load->model('admin/order/titlePointData');
+        $instrument_number_ids = $this->input->post('instrument_number_ids');
+        $title_point_id = $this->input->post('title_point_id');
+
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('id', $title_point_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+
+        $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
+        foreach($instrument_number_ids as $instrument_number_id) {
+            $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
+        }
+
+        $file_id = $titlePointData->file_id;
+        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData->file_number);
+        $orderDetails = $this->order->get_order_details($file_id);
+        $data['orderDetails'] = $orderDetails;
+        $data['titlePointDetails'] = $titlePointDetails;
+        $data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+        $html = $this->load->view('report/instrument_report',$data,true);
+        // echo $html;die;
+        
+        $this->load->library('snappy_pdf');
+        
+        $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
+        if (!is_dir('uploads/pre-listing-doc')) {
+            mkdir('./uploads/pre-listing-doc', 0777, TRUE);
+        }
+        $pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
+        $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+        $this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
+        $this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
+        $this->insertRecord($document_name, $file_id, $orderDetails);
+
+    }
+
+    public function insertRecord($document_name, $fileId, $orderDetails)
+	{
+		$this->load->model('admin/order/document');
+		// $this->load->library('order/resware');
+		// $this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Pre Listing Report Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_pre_listing_doc' => 0,
+			'is_pre_listing_report_doc' => 1
+		);
+		$condition = array('is_pre_listing_report_doc' => 1, 'order_id' => $orderDetails['order_id']);
+		$this->document->delete($documentData, $condition);
+		$this->document->insert($documentData);
+	}
 }
 

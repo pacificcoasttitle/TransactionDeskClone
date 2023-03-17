@@ -476,7 +476,7 @@ class Order extends MX_Controller {
         $params['product_type'] = $this->input->post('product_type');
        
         $pageno = ($params['start'] / $params['length'])+1; 
-        $ordersList = $this->order_model->get_orders($params);   
+        $ordersList = $this->order_model->get_lp_orders($params);   
         
         $data = array(); 
         $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
@@ -490,6 +490,21 @@ class Order extends MX_Controller {
             $nestedData[] = $value['product_type'];
 			$nestedData[] = $value['sales_rep_name'];
 			$nestedData[] = $value['first_name']." ".$value['last_name'];
+            $nestedData[] = $value['document_name'];
+            $lp_report_status = $value['lp_report_status'];
+            $disabled = '';
+            if (empty($value['document_name'])) {
+                $disabled = "disabled";
+            }
+            $lpReportStatusSelection ='<select '.$disabled.' onchange="updateLpReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
+                                <option value="">Select</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="denied">Denied</option>
+                            </select>'; 
+            $lpReportStatusSelection = str_replace('value="' .  $lp_report_status . '"','value="' .  $lp_report_status . '" selected', $lpReportStatusSelection);          
+            $nestedData[] = $lpReportStatusSelection;
+
             $property_id = $value['property_id'];
             // if ($value['allow_duplication'] == 1) {
             //     $checked = 'checked';
@@ -498,10 +513,20 @@ class Order extends MX_Controller {
             // }
             // $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
             
+            
+
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a><a href='#' onclick='sendOrderToResware($file_id);' class='btn btn-xs view-icon action-btn-padding' title ='Resware Sync'><span class='fa fa-sync' aria-hidden='true'></span></a>";
+            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:8px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+
+            $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];
+            if (!empty($value['document_name'])) {
+                $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
+                     <a style='margin-left:5px;' onclick='getInstrumentData($file_id);'><i class='fas fa-eye'></i></a></div> ";
+            } else {
+                $action .= "</div>";
+            }
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $count++;          
@@ -515,4 +540,65 @@ class Order extends MX_Controller {
 
         echo json_encode($json_data);
     }
+
+    public function getInstrumentData()
+    {
+        $file_id = $this->input->post('file_id');
+
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+
+        $this->db->select('*');
+        $this->db->from('pct_title_point_document_records');
+        $this->db->where('title_point_id', $titlePointData->id);
+        $query = $this->db->get();
+        $instrumentRecords = $query->result(); 
+
+        $data = "<input type='hidden' id='title_point_id' name='title_point_id' value='$titlePointData->id'>
+        <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Document Name</th>
+                    <th>Instrument</th>
+                    <th>Recorded Date</th>
+                    <th>Action</th>        
+                </tr>
+            </thead>
+        <tbody>";
+
+        $i = 1;
+        if (!empty($instrumentRecords)) {
+            foreach ($instrumentRecords as $instrumentRecord) {
+                if ($instrumentRecord->is_display == 1) {
+                    $checked = "checked";                    
+                } else {
+                    $checked = "";
+                }
+                $data .= "<tr>
+                            <td>$i</td>
+                            <td>$instrumentRecord->document_name</td>
+                            <td>$instrumentRecord->instrument</td>
+                            <td>$instrumentRecord->recorded_date</td>
+                            <td><input type='checkbox' id='$instrumentRecord->id' $checked name='instrument_number_ids[]' value='$instrumentRecord->id'></td>
+                        </tr>";
+                $i++;
+            }
+        } else {
+            $data .= "No records found.";  
+            
+        }
+        $data .= '</tbody></table>';
+        if(!empty($data)) {
+            $result = array('status'=> 'success', 'data' => $data);    
+        } else {
+            $result = array('status'=> 'error', 'data' => $data);   
+        }
+        echo json_encode($result); exit;
+    }
+
+    
 }

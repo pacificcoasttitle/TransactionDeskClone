@@ -32,7 +32,7 @@
                     ?>
                     
                     <li>
-                        <h3>Full Legal Description:</h3><br>
+                        <h3>Brief Legal Description:</h3><br>
                         <span class="orderinfo1">
                             <span id="legalDescription">
                                 <?php 
@@ -379,6 +379,7 @@
         console.log('data ===', data);
         // let executeCall = false;
         if (data.file_number != '') {
+            console.log(data.file_number);
             // $(document).ajaxStop(function() {
                 // place code to be executed on completion of last outstanding ajax call here
                 // if (!executeCall) {
