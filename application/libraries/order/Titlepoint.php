@@ -1229,7 +1229,7 @@ class Titlepoint
                 }
                 /** End All instrument number details fetched */
 
-                foreach($filterArr as $arr) {
+                /*foreach($filterArr as $arr) {
                     $filterKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
                     if (strlen ($filterKey) > 0) {
                         $recordArray[$filterKey]['is_display'] = 1;
