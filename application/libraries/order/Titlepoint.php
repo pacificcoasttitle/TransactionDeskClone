@@ -1171,7 +1171,13 @@ class Titlepoint
                             if (!empty($recordArray)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    $existKey = array_search($docType, array_column($recordArray, 'document_type'));
+                                    //$existKey = array_search($docType, array_column($recordArray, 'document_type'));
+                                    
+                                    
+                                    $existKey = array_filter($recordArray, function($val){
+                                        return ($val['is_display']== 1 and $val['document_type']== $docType);
+                                    }, ARRAY_FILTER_USE_KEY);
+
                                 } else if (isset($val['DocumentType'])) {
                                     $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
                                 }
