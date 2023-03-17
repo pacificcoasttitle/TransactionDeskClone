@@ -1096,7 +1096,7 @@
             <div class="pdf_body">
                 <div class="table_title"><em>Section G:</em> Open Loans:</div>
                 <div style="height:20px"></div>
-                <img src="https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/10275373.png" style="max-width:800px;margin:0 auto;text-align:center" alt=""/>
+                <img src="https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/<?php echo $orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center" alt=""/>
             </div>           
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
