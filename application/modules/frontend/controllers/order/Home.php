@@ -1556,8 +1556,8 @@ class Home extends MX_Controller {
 			$file_id = $titlePointDetails[0]['file_id'];
 			// print_r($file_id);die;
 			$orderDetails = $this->order->get_order_details($file_id);
-			echo "<pre>";
-			print_r($orderDetails);die;
+			// echo "<pre>";
+			// print_r($orderDetails);die;
 			/************** Plat map url integration Start ************** */
 	        if (env('AWS_ENABLE_FLAG') == 1) {
 				$file_path = env('AWS_PATH')."plat-map/".$fileNumber.'.pdf';
@@ -1616,6 +1616,7 @@ class Home extends MX_Controller {
 		
 				$context = stream_context_create($opts);
 				$logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, array(), $orderDetails['order_id'], 0);
+				// print_r($logid);die;
 				// $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $imgResult, $orderId, $logid);
 				$file = file_get_contents($requestUrl,false,$context);
 				$xmlData = simplexml_load_string($file);
