@@ -670,7 +670,7 @@
                 <div style="font-size: 50px; font-weight: 400; color: #276fa8;font-family: 'LushScript';font-style: italic;">
                     <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?>
                 </div>
-                <img src="img/sign.png" class="sign_img" alt="">
+                <!-- <img src="img/sign.png" class="sign_img" alt=""> -->
                 <div class="h150"></div>
                 <div class="main_title">About This Report</div>
                 <div class="title_divider"></div>
@@ -1079,6 +1079,7 @@
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
     <?php $page++; } ?>
+    <?php if(file_exists("https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/" . $orderDetails['lp_file_number'].".png")) { ?>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
@@ -1104,7 +1105,7 @@
             </div>
         </div>
     </div>
-
+    <?php } ?>
     <div class="page-break" style="page-break-after: always;"></div>
 
     <div class="page_container">
