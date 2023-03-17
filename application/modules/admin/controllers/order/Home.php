@@ -3868,6 +3868,8 @@ class Home extends MX_Controller {
         $this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
         $this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
         $this->insertRecord($document_name, $file_id, $orderDetails);
+        $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
+        $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');
 
     }
