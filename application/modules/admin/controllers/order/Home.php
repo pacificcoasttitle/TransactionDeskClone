@@ -3827,7 +3827,7 @@ class Home extends MX_Controller {
     public function storeLpDocumentInfo()
     {
         $this->load->library('order/order');
-        $this->load->model('admin/order/titlePointData');
+        $this->load->model('order/titlePointData');
         $instrument_number_ids = $this->input->post('instrument_number_ids');
         $title_point_id = $this->input->post('title_point_id');
 
@@ -3835,15 +3835,21 @@ class Home extends MX_Controller {
         $this->db->from('pct_order_title_point_data');
         $this->db->where('id', $title_point_id);
         $query = $this->db->get();
-        $titlePointData = $query->row(); 
+        $titlePointData = $query->row_array(); 
 
         $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
         foreach($instrument_number_ids as $instrument_number_id) {
             $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
         }
 
-        $file_id = $titlePointData->file_id;
-        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData->file_number);
+        $file_id = $titlePointData['file_id'];
+        $condition = array(
+            'where' => array(
+                'file_number' => $titlePointData['file_number'],
+                )
+            );
+        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData['file_number']);
         $orderDetails = $this->order->get_order_details($file_id);
         $data['orderDetails'] = $orderDetails;
         $data['titlePointDetails'] = $titlePointDetails;
@@ -3862,15 +3868,18 @@ class Home extends MX_Controller {
         $this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
         $this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
         $this->insertRecord($document_name, $file_id, $orderDetails);
+        $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
+        $this->session->set_userdata('success', $successMsg);
+        redirect(base_url().'order/admin/lp-orders');
 
     }
 
     public function insertRecord($document_name, $fileId, $orderDetails)
 	{
-		$this->load->model('admin/order/document');
+		$this->load->model('frontend/order/document');
 		// $this->load->library('order/resware');
 		// $this->load->model('order/apiLogs');
-		$userdata = $this->session->userdata('user');
+		
 		$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
 		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
 		// $binaryData   = base64_encode($contents); 
@@ -3880,7 +3889,7 @@ class Home extends MX_Controller {
 			'original_document_name' => $document_name,
 			'document_type_id' => 1037,
 			'document_size' => $fileSize,
-			'user_id' => $userdata['id'],
+			'user_id' => 0,
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'Pre Listing Report Document',
 			'is_sync' => 1,
