@@ -1614,13 +1614,14 @@ class Home extends MX_Controller {
 				);
 		
 				$context = stream_context_create($opts);
-				$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, array(), 0, 0);
+				$logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, array(), $orderDetails['id'], 0);
+				// $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $imgResult, $orderId, $logid);
 				$file = file_get_contents($requestUrl,false,$context);
 				$xmlData = simplexml_load_string($file);
 				$response = json_encode($xmlData);
 				$result = json_decode($response,TRUE);
 				// echo "<pre>";
-				$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
+				$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $requestUrl, $requestParams, $result, 0, $logid);
 				// $property_info = array();
 				if(isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK')
 				{
@@ -1633,11 +1634,11 @@ class Home extends MX_Controller {
 						$rdata=new stdClass();
 						$rdata->key= env('BLACK_KNIGHT_KEY');
 						$requestUrl = $reportUrl.http_build_query($rdata);
-						$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - request', 'address_search', $requestUrl, $requestParams, array(), 0, 0);
+						$logid = $this->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - request', 'address_search', $requestUrl, $requestParams, array(), $orderDetails['id'], 0);
 						$reportFile = file_get_contents($requestUrl,false,$context);
 						$reportData = simplexml_load_string($reportFile);
 						$response = json_encode($reportData);
-						$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, response, 0, 0);
+						$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - response', 'address_search', $requestUrl, $requestParams, $response, $orderDetails['id'],  $logid);
 						$details = json_decode($response,TRUE);
 						if (isset($details['PlatMap']) && !empty($details['PlatMap']['Content'])) {
 							$imagedata = isset($details['PlatMap']['Content']) && !empty($details['PlatMap']['Content']) ? $details['PlatMap']['Content'] : '';
