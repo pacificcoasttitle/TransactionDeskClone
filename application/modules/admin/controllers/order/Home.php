@@ -3835,15 +3835,21 @@ class Home extends MX_Controller {
         $this->db->from('pct_order_title_point_data');
         $this->db->where('id', $title_point_id);
         $query = $this->db->get();
-        $titlePointDetails = $query->row_array(); 
+        $titlePointData = $query->row_array(); 
 
         $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
         foreach($instrument_number_ids as $instrument_number_id) {
             $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
         }
 
-        $file_id = $titlePointDetails['file_id'];
-        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointDetails['file_number']);
+        $file_id = $titlePointData['file_id'];
+        $condition = array(
+            'where' => array(
+                'file_number' => $titlePointData['file_number'],
+                )
+            );
+        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData['file_number']);
         $orderDetails = $this->order->get_order_details($file_id);
         $data['orderDetails'] = $orderDetails;
         $data['titlePointDetails'] = $titlePointDetails;

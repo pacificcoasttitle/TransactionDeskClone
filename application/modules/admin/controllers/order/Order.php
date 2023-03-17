@@ -523,10 +523,11 @@ class Order extends MX_Controller {
             $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];
             if (!empty($value['document_name'])) {
                 $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
-                     <a style='margin-left:5px;' onclick='getInstrumentData($file_id);'><i class='fas fa-eye'></i></a></div> ";
+                     <a style='margin-left:5px;' title ='Select Document' onclick='getInstrumentData($file_id);'><i class='fa fa-external-link'></i></a></div> ";
             } else {
                 $action .= "</div>";
             }
+            // <i class="fa-solid fa-up-right-from-square"></i>
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $count++;          
