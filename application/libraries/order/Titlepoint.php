@@ -1174,12 +1174,15 @@ class Titlepoint
                                     //$existKey = array_search($docType, array_column($recordArray, 'document_type'));
                                     
                                     
-                                    $existKey = array_filter($recordArray, function($val){
-                                        return ($val['is_display']== 1 and $val['document_type']== $docType);
+                                    $existKey = array_filter($recordArray, function($value){
+                                        return ($value['is_display']== 1 and $value['document_type']== $docType);
                                     }, ARRAY_FILTER_USE_KEY);
 
                                 } else if (isset($val['DocumentType'])) {
-                                    $existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
+                                    //$existKey = array_search($val['DocumentType'], array_column($recordArray, 'document_type'));
+                                    $existKey = array_filter($recordArray, function($value){
+                                        return ($value['is_display']== 1 and $value['document_type']== $val['DocumentType']);
+                                    }, ARRAY_FILTER_USE_KEY);
                                 }
                         
                                 if (strlen($existKey) > 0) {
