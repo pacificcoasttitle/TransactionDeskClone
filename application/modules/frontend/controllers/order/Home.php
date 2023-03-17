@@ -1556,6 +1556,115 @@ class Home extends MX_Controller {
 			$file_id = $titlePointDetails[0]['file_id'];
 			// print_r($file_id);die;
 			$orderDetails = $this->order->get_order_details($file_id);
+
+			/************** Plat map url integration Start ************** */
+	        if (env('AWS_ENABLE_FLAG') == 1) {
+				$file_path = env('AWS_PATH')."plat-map/".$fileNumber.'.pdf';
+			} else {
+				$file_path = FCPATH.'uploads/plat-map/'.$fileNumber.'.pdf';
+			} 
+			$file_url = '';
+			if (file_exists($file_path)) 
+			{
+				if (env('AWS_ENABLE_FLAG') == 1) {
+					$file_url = env('AWS_PATH')."plat-map/".$fileNumber.'.pdf';
+				} else {
+					$file_url = base_url().'uploads/plat-map/'.$fileNumber.'.pdf';
+				}
+			} 
+			else
+			{
+				$address = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
+				$locale = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';
+				$propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
+				$PropertyZip = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';        
+				if (($locale)) 
+				{
+					if(!empty($propertyState))
+					{
+						$locale .= ', '.$propertyState;
+					} 
+					else 
+					{
+						$locale .= ', CA';
+					}
+				}
+				$data=new stdClass();
+				$data->Address= $address;
+				$data->LastLine= (string) $locale;
+				$data->ClientReference= '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
+				$data->OwnerName= '';
+				$data->key= env('BLACK_KNIGHT_KEY');
+				$data->ReportType= '111';
+				$request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
+		
+				$requestUrl = $request.http_build_query($data);
+				$query_string = parse_url($request,PHP_URL_QUERY);
+				parse_str($query_string, $requestParams);
+				$getsortedresults = 'false';
+				
+				$opts = array(
+					'http'=>array(
+						'header' => "User-Agent:MyAgent/1.0\r\n"
+					),
+					"ssl"=>array(
+						"verify_peer"=>false,
+						"verify_peer_name"=>false,
+					)
+				);
+		
+				$context = stream_context_create($opts);
+				$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, array(), 0, 0);
+				$file = file_get_contents($requestUrl,false,$context);
+				$xmlData = simplexml_load_string($file);
+				$response = json_encode($xmlData);
+				$result = json_decode($response,TRUE);
+				// echo "<pre>";
+				$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $request, array(), $result, 0, $logid);
+				// $property_info = array();
+				if(isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK')
+				{
+					$reportUrl = (isset($result['ReportURL']) && !empty($result['ReportURL'])) ? $result['ReportURL'] : '';
+					// $reportUrl = "https://api.sitexdata.com/111/A9848F79-B03E-5199-87B5-9D7A01B8A111.asmx/GetXMLWithFilter?reportInfo=dKagb-JSbWexO13idLleU6jTy7YyY-gG4_QVbq5sHOWWHuYyviAIfxaZ3rNiK_YGA8I26ioLlWrZUPvQNXjgra6PdYeNsVlNxhIMu3hnlAnSGmSKaTfcYg2&filter=<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>";
+					// print_r($reportUrl);die;
+		
+					if($reportUrl)
+					{
+						$rdata=new stdClass();
+						$rdata->key= env('BLACK_KNIGHT_KEY');
+						$requestUrl = $reportUrl.http_build_query($rdata);
+						$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - request', 'address_search', $requestUrl, $requestParams, array(), 0, 0);
+						$reportFile = file_get_contents($requestUrl,false,$context);
+						$reportData = simplexml_load_string($reportFile);
+						$response = json_encode($reportData);
+						$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, response, 0, 0);
+						$details = json_decode($response,TRUE);
+						if (isset($details['PlatMap']) && !empty($details['PlatMap']['Content'])) {
+							$imagedata = isset($details['PlatMap']['Content']) && !empty($details['PlatMap']['Content']) ? $details['PlatMap']['Content'] : '';
+							if($imagedata)
+							{
+								if (!is_dir('uploads/plat-map')) 
+								{
+									mkdir('./uploads/plat-map', 0777, TRUE);
+								}
+								$path = './uploads/plat-map/'.$fileNumber.'.png';
+		
+								file_put_contents($path, base64_decode($imagedata,true));
+								if (env('AWS_ENABLE_FLAG') == 1) { 
+									$plat_map_url = env('AWS_PATH')."plat-map/".$fileNumber.'.png';
+								} else {
+									$plat_map_url = base_url().'uploads/plat-map/'.$fileNumber.'.png';
+								}
+								$this->order->uploadDocumentOnAwsS3($fileNumber.'.png', 'plat-map');
+							}
+						}
+					}
+				}
+			}
+			
+			/************** Plat map url integration end ************** */
+
+			// $orderDetails = $this->order->get_order_details($file_id);
 			$_POST['primary_owner'] = $orderDetails['primary_owner'];
 			$_POST['secondary_owner'] = $orderDetails['secondary_owner'];
 			// print_r($_POST);die;
@@ -1574,6 +1683,7 @@ class Home extends MX_Controller {
 				// print_r($titlePointDetails);die;
 				$file_id = $titlePointDetails[0]['file_id'];
 				$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($fileNumber);
+				$titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
 				$orderDetails = $this->order->get_order_details($file_id);
 				$data['orderDetails'] = $orderDetails;
 				$data['titlePointDetails'] = $titlePointDetails;
