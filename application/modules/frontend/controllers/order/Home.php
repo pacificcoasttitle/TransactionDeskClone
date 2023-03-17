@@ -1546,7 +1546,6 @@ class Home extends MX_Controller {
 		}
 		
 		if((!isset($escrowId) || empty($escrowId)) || (!empty($orderUser) && $orderUser['is_escrow'] == 0)) {
-			echo "escrow condtion pass";
 			$fileNumber = $_POST['file_number'];
 			$condition = array(
 				'where' => array(
@@ -1623,8 +1622,6 @@ class Home extends MX_Controller {
 				$xmlData = simplexml_load_string($file);
 				$response = json_encode($xmlData);
 				$result = json_decode($response,TRUE);
-				echo "result";
-				print_r($result);
 				// echo "<pre>";
 				$this->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $requestUrl, $requestParams, $result, $orderDetails['order_id'], $logid);
 				// $property_info = array();
@@ -1645,8 +1642,6 @@ class Home extends MX_Controller {
 						$response = json_encode($reportData);
 						$this->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - response', 'address_search', $requestUrl, $requestParams, $response, $orderDetails['order_id'],  $logid);
 						$details = json_decode($response,TRUE);
-						echo "Details";
-						print_r($details);
 						if (isset($details['PlatMap']) && !empty($details['PlatMap']['Content'])) {
 							$imagedata = isset($details['PlatMap']['Content']) && !empty($details['PlatMap']['Content']) ? $details['PlatMap']['Content'] : '';
 							if($imagedata)
@@ -1675,14 +1670,10 @@ class Home extends MX_Controller {
 			// $orderDetails = $this->order->get_order_details($file_id);
 			$_POST['primary_owner'] = $orderDetails['primary_owner'];
 			$_POST['secondary_owner'] = $orderDetails['secondary_owner'];
-			// print_r($_POST);die;
-			echo "Generatedoc";
 			$this->titlepoint->generateGeoDoc($_POST);
-			echo "Doc genearted";
 			$orderId = $_POST['order_id'];
 			$geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
 			if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
-				echo "File exist geo";
 				/** Generate Pre listing report document */
 				$condition = array(
 					'where' => array(
@@ -1690,9 +1681,6 @@ class Home extends MX_Controller {
 						)
 					);
 				// $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-				// print_r($titlePointDetails);
-				// echo "<pre>";
-				// print_r($titlePointDetails);die;
 				// $file_id = $titlePointDetails[0]['file_id'];
 				$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($fileNumber);
 				$titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
