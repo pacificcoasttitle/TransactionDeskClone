@@ -601,29 +601,29 @@
     <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
-                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:70vh;background-position: center;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>'); background-repeat: no-repeat;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:90vh;background-position: center;background-size: cover;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>'); background-repeat: no-repeat;">
                     <tbody>
                         <tr>
                             <td style="padding-left: 70px; height: 320px;"></td>
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;">
-                                    <span style="font-size: 80px;color: #d35627; font-weight: 400;font-family: 'LushScript';"><i>Concierge</i></span>
+                                    <span style="font-size: 60px;color: #d35627; font-weight: 400;font-family: 'LushScript';"><i>Concierge</i></span>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;">
-                                <span style="font-size: 40px;color: #FFF;text-transform: uppercase;font-weight: 800;font-family: 'Montserrat';">LISTING PRELIM</span> 
+                                <span style="font-size: 30px;color: #FFF;text-transform: uppercase;font-weight: 800;font-family: 'Montserrat';">LISTING PRELIM</span> 
                             </td>
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;padding-top:15px">
-                                <span style="font-size: 25px;color: #d35627; font-weight:bold;text-transform: uppercase;font-family: 'Montserrat';">Report</span>   
+                                <span style="font-size: 21px;color: #d35627; font-weight:bold;text-transform: uppercase;font-family: 'Montserrat';">Report</span>   
                             </td>
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;">
-                                <span style="font-size: 25px;color: #fff; font-weight:400;text-transform: uppercase;font-family: 'Montserrat';"><?php echo $orderDetails['full_address']; ?></span>
+                                <span style="font-size: 14px;color: #fff; font-weight:400;text-transform: uppercase;font-family: 'Montserrat';"><?php echo $orderDetails['full_address']; ?></span>
                             </td>
                         </tr>
                         <tr>
@@ -1095,7 +1095,7 @@
                 </div>
             </div>
             <div class="pdf_body">
-                <div class="table_title"><em>Section G:</em> Open Loans:</div>
+                <!-- <div class="table_title"><em>Section G:</em> Open Loans:</div> -->
                 <div style="height:20px"></div>
                 <img src="https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/<?php echo $orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center" alt=""/>
             </div>           
