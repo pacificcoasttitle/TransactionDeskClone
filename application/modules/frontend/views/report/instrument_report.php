@@ -601,7 +601,7 @@
     <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
-                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:50vh;background-position: center;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>'); background-repeat: no-repeat;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:70vh;background-position: center;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>'); background-repeat: no-repeat;">
                     <tbody>
                         <tr>
                             <td style="padding-left: 70px; height: 320px;"></td>
@@ -623,7 +623,7 @@
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;">
-                                <span style="font-size: 25px;color: #fff; font-weight:400;text-transform: uppercase;font-family: 'Montserrat';">1358 5TH LA VERNE, CA 91750</span>
+                                <span style="font-size: 25px;color: #fff; font-weight:400;text-transform: uppercase;font-family: 'Montserrat';"><?php echo $orderDetails['full_address']; ?></span>
                             </td>
                         </tr>
                         <tr>
@@ -635,7 +635,7 @@
                                         </tr>
                                         <tr>
                                             <td style="font-size: 22px; font-weight: 500;color: #fff;text-transform: uppercase;padding-left: 70px;font-family: 'Montserrat';">
-                                                Prepared For: <br/><span style="font-size: 18px;font-weight: 300;">John Smith</span>
+                                                Prepared For: <br/><span style="font-size: 18px;font-weight: 300;"><?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?>John Smith</span>
                                             </td>
                                             <td align="right" style="padding-right: 70px;">
                                                 <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="width: 250px;" alt=""/>
@@ -1077,9 +1077,9 @@
             </div>
         </div>
     </div>
-    <div class="page-break" style="page-break-after: always;"></div>
     <?php $page++; } ?>
-    <?php if(file_exists("https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/" . $orderDetails['lp_file_number'].".png")) { ?>
+    <?php if($is_plat_map_exist == 1) { ?>
+    <div class="page-break" style="page-break-after: always;"></div>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
