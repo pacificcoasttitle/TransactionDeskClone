@@ -68,7 +68,7 @@
             margin: 25px 0;
         }
         .f26{
-            font-size: 29px;
+            font-size: 24px;
             margin-bottom: 30px;
         }
         .body_text {
@@ -473,11 +473,11 @@
             float: right;
             text-align: right; 
             color: #121212;
-            font-size: 21px;
+            font-size: 16px;
             line-height: 30px
         }
         .main_title{
-            font-size: 48px;
+            font-size: 36px;
         }
         .title_divider{
             height: 5px;
@@ -487,7 +487,7 @@
         }
         .body_text {
             line-height: 30px;
-            font-size: 21px;
+            font-size: 16px;
             color: #121212;
         }
         .red_text{
@@ -498,18 +498,18 @@
             border-bottom: 2px solid;
             padding-bottom: 8px;
             margin-bottom: 8px;
-            font-size: 21px;
+            font-size: 16px;
             line-height: 30px;
         }
         .report_info {
-            font-size: 21px;
+            font-size: 16px;
             font-weight: 700;
-            line-height: 30px;
+            line-height: 21px;
         }
         .billing_info{
             margin: 20px 0;
-            font-size: 21px;
-            line-height: 24px;
+            font-size: 16px;
+            line-height: 21px;
         }
         .float_left{
             float: left;
@@ -547,11 +547,11 @@
             background-color: #f2f3f4;
             border: 1px solid #e8e9ea;
             padding: 5px 8px;
-            font-size: 24px;
-            margin-top: 30px;
+            font-size: 16px;
+            margin-top: 21px;
         }
         .table_a, .table_b, .table_g  {
-            font-size: 21px;
+            font-size: 16px;
         }
         .table{
             border: 1px solid #e8e9ea;
@@ -579,8 +579,8 @@
         }
         .legal_desc{
             padding: 5px 8px;
-            font-size: 21px;
-            line-height: 30px;
+            font-size: 16px;
+            line-height: 21px;
         }
         .orange_text{
             color: #f2692c;
