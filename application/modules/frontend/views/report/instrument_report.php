@@ -604,7 +604,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:100vh;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>');background-position: center; background-repeat: no-repeat;background-size: cover;">
                     <tbody>
                         <tr>
-                            <td style="padding-left: 70px; height: 400px;"></td>
+                            <td style="padding-left: 70px; height: 320px;"></td>
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;">
