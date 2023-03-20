@@ -484,7 +484,7 @@ class Titlepoint
             'password' => env('TP_PASSWORD'),
             'serviceType' => TP_GEO_SERVICE_TYPE,
             // 'parameters' =>  'Address.FullAddress=1358 5th St;General.AutoSearchTaxes=False;General.AutoSearchProperty=True',
-            'parameters' =>  'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;General.AutoSearchProperty=True',
+            'parameters' =>  'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;Tax.CurrentYearTaxesOnly=False;General.AutoSearchProperty=True;General.AutoSearchOwnerNames=False;General.AutoSearchStarters=False',
             'department'=> '',
             'orderNo'=>  '',
             'customerRef'=>  '',
