@@ -601,7 +601,7 @@
     <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
-                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:100vh;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>');background-position: center; background-repeat: no-repeat;background-size: cover;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:50vh;background-position: center;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>'); background-repeat: no-repeat;">
                     <tbody>
                         <tr>
                             <td style="padding-left: 70px; height: 320px;"></td>
@@ -631,7 +631,7 @@
                                 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
                                     <tbody>
                                         <tr>
-                                            <td style="height: 600px;"></td>
+                                            <td style="height: 100px;"></td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 22px; font-weight: 500;color: #fff;text-transform: uppercase;padding-left: 70px;font-family: 'Montserrat';">
@@ -1124,7 +1124,7 @@
             </div>
             <div class="pdf_body" >
             <div class="logo" style="position:relative;height:16in">
-                <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="max-width:700px;position:absolute;top:30%;left:15%; " alt=""/>
+                <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="max-width:530px;position:absolute;top:20%;left:15%; " alt=""/>
             </div>
             </div>           
             <div class="pdf_footer">
