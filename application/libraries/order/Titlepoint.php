@@ -1130,6 +1130,7 @@ class Titlepoint
         $recordArray = [];
         $filterArr = [];
 		$i = 0;
+        $j = 0;
 		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
 			$result = $result['Result']['DocumentList'];
             $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
@@ -1185,7 +1186,9 @@ class Titlepoint
                         }
                     }
                 }
-                
+                //echo "<pre>";
+                //print_r($recordArray);
+
                 foreach($items['Item'] as $key => $val) {
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
@@ -1204,30 +1207,32 @@ class Titlepoint
                                 if (strlen($existKey) > 0) {
                                     unset($filterArr[$existKey]);
                                     $filterArr = array_values($filterArr); 
-                                    $i--;
+                                    $j--;
                                 }
                                 
                             }
 
                             if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
-                                $filterArr[$i]['title_point_id'] = $titlePointId;
-                                $filterArr[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
-                                $filterArr[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
-                                $filterArr[$i]['document_name'] = $val['DocumentFullName'];
+                                $filterArr[$j]['title_point_id'] = $titlePointId;
+                                $filterArr[$j]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                                $filterArr[$j]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
+                                $filterArr[$j]['document_name'] = $val['DocumentFullName'];
                                 if (isset($val['DocumentSubType'])) {
-                                    $filterArr[$i]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
+                                    $filterArr[$j]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
                                 } else {
-                                    $filterArr[$i]['document_type'] = $val['DocumentType'];
+                                    $filterArr[$j]['document_type'] = $val['DocumentType'];
                                 }
-                                $filterArr[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
-                                $filterArr[$i]['created_at'] = date("Y-m-d H:i:s");
-                                $filterArr[$i]['amount'] = 0;
-                                $i++;
+                                $filterArr[$j]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
+                                $filterArr[$j]['created_at'] = date("Y-m-d H:i:s");
+                                $filterArr[$j]['amount'] = 0;
+                                // $recordArray[$i]['AddressId'] = $addressId;
+                                $j++;
                             }
-                        } 
+                        }
                     }
                 }
-
+                //print_r($filterArr);
+                
                 if (!empty($filterArr)) {
                     foreach ($filterArr as $arr) {
                         $filterKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
@@ -1237,6 +1242,7 @@ class Titlepoint
                     }
                 }
 
+                //print_r($recordArray);
                 /** End All instrument number details fetched */
 
                 /* Start Address based instrument number details fetched  
