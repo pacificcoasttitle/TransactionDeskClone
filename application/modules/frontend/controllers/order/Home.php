@@ -1558,20 +1558,14 @@ class Home extends MX_Controller {
 			$orderDetails = $this->order->get_order_details($file_id);
 			// echo "<pre>";
 			// print_r($orderDetails);die;
+
 			/************** Plat map url integration Start ************** */
-	        if (env('AWS_ENABLE_FLAG') == 1) {
-				$file_path = env('AWS_PATH')."plat-map/".$fileNumber.'.pdf';
-			} else {
-				$file_path = FCPATH.'uploads/plat-map/'.$fileNumber.'.pdf';
-			} 
-			$file_url = '';
-			if (file_exists($file_path)) 
+	        
+			$plat_map_url = '';
+			if ($this->order->fileExistOrNotOnS3('plat-map/'.$fileNumber.'.png')) 
 			{
-				if (env('AWS_ENABLE_FLAG') == 1) {
-					$file_url = env('AWS_PATH')."plat-map/".$fileNumber.'.pdf';
-				} else {
-					$file_url = base_url().'uploads/plat-map/'.$fileNumber.'.pdf';
-				}
+				$plat_map_url = env('AWS_PATH')."plat-map/".$fileNumber.'.png';
+				
 			} 
 			else
 			{
@@ -1689,6 +1683,7 @@ class Home extends MX_Controller {
 				$instrumentRecordDetails['orderDetails'] = $orderDetails;
 				$instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
 				$instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+				$instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
 				
 				$html = $this->load->view('report/instrument_report',$instrumentRecordDetails,true);
 				
