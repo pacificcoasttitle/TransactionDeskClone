@@ -3846,15 +3846,21 @@ class Home extends MX_Controller {
         $condition = array(
             'where' => array(
                 'file_number' => $titlePointData['file_number'],
-                )
-            );
+            )
+        );
         $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
         $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData['file_number']);
+        $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
         $orderDetails = $this->order->get_order_details($file_id);
-        $data['orderDetails'] = $orderDetails;
-        $data['titlePointDetails'] = $titlePointDetails;
-        $data['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
-        $html = $this->load->view('report/instrument_report',$data,true);
+        $instrumentRecordDetails['orderDetails'] = $orderDetails;
+        $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
+        $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+        $plat_map_url = '';
+		if ($this->order->fileExistOrNotOnS3('plat-map/'.$titlePointData['file_number'].'.png'))  {
+            $plat_map_url = env('AWS_PATH')."plat-map/".$titlePointData['file_number'].'.png';
+        } 
+        $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
+        $html = $this->load->view('report/instrument_report',$instrumentRecordDetails,true);
         // echo $html;die;
         
         $this->load->library('snappy_pdf');
