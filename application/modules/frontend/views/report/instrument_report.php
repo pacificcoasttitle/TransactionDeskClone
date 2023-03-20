@@ -1123,8 +1123,8 @@
                 </div>
             </div>
             <div class="pdf_body" >
-            <div class="logo" style="position:relative;height:16in">
-                <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="max-width:530px;position:absolute;top:20%;left:15%; " alt=""/>
+            <div class="logo" style="position:relative;height:10in">
+                <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="max-width:530px;position:absolute;top:35%;left:15%; " alt=""/>
             </div>
             </div>           
             <div class="pdf_footer">
