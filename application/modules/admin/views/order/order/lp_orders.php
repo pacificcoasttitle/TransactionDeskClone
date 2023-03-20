@@ -123,7 +123,7 @@
 					$('#instrument_number_container').html(result.data);
 					$('#instrument_model').modal('show');
 				} else {
-					$('#instrument_number_container').html('No records found');
+					$('#instrument_number_container').html(result.data);
 					$('#instrument_model').modal('show');
 				}
 			},
