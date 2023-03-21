@@ -901,7 +901,9 @@
                 </div>
                 <div class="table_title"><em>Section F:</em> Property Vesting:</div>
                 <div class="legal_desc">
-                    <?php echo $orderDetails['legal_description']; ?>
+                    <?php echo $orderDetails['legal_description']; ?> <a target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/grant-deed/<?php echo $titlePointDetails[0]['file_number'] ?>.pdf">
+                        <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>  
+                    </a> 
                 </div>
             </div>           
             <div class="pdf_footer">
@@ -912,10 +914,11 @@
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
     <?php
+        //is_notice = 1 and is_display = 1
         $i = 0; 
         $page = 4;
-        foreach ($titlePointInstrumentDetails as $key => $instrumentData) {  
-        
+        foreach ($itemsForReview as $k => $data) {  
+            // is_notice = 0 and is_display = 1
     ?>
     <div class="page_container">
         <div style="height:50px"></div>
@@ -932,7 +935,7 @@
                 </div>
             </div>
             <div class="pdf_body">
-                <div class="table_title" style="display: none;"><em>Section G:</em> Open Loans:</div>
+                <!-- <div class="table_title" style="display: none;"><em>Section G:</em> Open Loans:</div>
                 <table class="table_g table" style="display: none;" >
                     <tr>
                         <td></td>
@@ -955,8 +958,8 @@
                         <td>03/21/2022</td>
                         <td class="text_center"><b class="orange_text">21313156</b></td>
                     </tr>
-                </table>
-                <div class="table_title"><em>Section F:</em> Liens & Items for Review</div>
+                </table> -->
+                <div class="table_title"><em>Section G:</em> Liens & Items for Review</div>
                 <table class="table_g table">
                     <tr>
                         <td></td>
@@ -967,9 +970,9 @@
                     </tr>
                     <?php  
                     
-                    if (!empty($instrumentData)) { 
+                    if (!empty($data)) { 
                         
-                    foreach ($instrumentData as $key => $val) {  ?>
+                    foreach ($data as $key => $val) {  ?>
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
@@ -1045,6 +1048,66 @@
                         <td>N/A</td>
                         <td class="text_center"><b class="orange_text">2323985855</b></td>
                     </tr> -->
+                </table>
+                
+            </div>           
+            <div class="pdf_footer">
+                <p class="page_title">Listing Prelim Report</p>
+                <p class="page_text"><?php echo $page; ?></p>
+            </div>
+        </div>
+    </div>
+    <?php 
+    $page++; } ?>
+    <div class="page-break" style="page-break-after: always;"></div>
+    <?php
+        $i = 0; 
+        // $page = 4;
+        foreach ($foreclosure as $key => $data) {  
+            //is_notice = 0 and is_display = 1
+    ?>
+    <div class="page_container">
+        <div style="height:50px"></div>
+        <div class="pdf_page size_letter">
+            <div class="pdf_header">
+                <div class="logo_container">
+                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
+                </div>
+                <div class="report_info float_right text_right">
+                    Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
+                    Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
+                    Feb 2nd. 4:50pm<br>
+                    Escrow No: <?php echo $orderDetails['escrow_number'] ?>
+                </div>
+            </div>
+            <div class="pdf_body">
+                <div class="table_title"><em>Section H:</em> Foreclosure Activity</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <td>Amount</td>
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php  
+                    
+                    if (!empty($data)) { 
+                        
+                    foreach ($data as $key => $val) {  ?>
+                    <tr>
+                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                        <td style="width: 15%;">$<?php echo  $val['amount']; ?></td>
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                        <td class="text_center"><b class="orange_text"><?php echo  $val['instrument']; ?></b></td>
+                    </tr>
+                    <?php $i++; } } else {?>
+                        <tr style="text-align: center;" >
+                            <td colspan="5" > No Record Found</td>
+                        </tr>
+                    <?php } ?>
+                    
                 </table>
                 <div class="table_title" style="display: none;"><em>Section G:</em> Foreclosure Activity</div>
                 <table class="table table_g" style="display: none;" >

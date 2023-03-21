@@ -1677,12 +1677,18 @@ class Home extends MX_Controller {
 				// $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 				// $file_id = $titlePointDetails[0]['file_id'];
 				$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($fileNumber);
-				$titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
-				$orderDetails = $this->order->get_order_details($file_id);
+				// $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
+				// $orderDetails = $this->order->get_order_details($file_id);
+				$itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1); });
+				$foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1); });
 				
+				// $instrumentRecordDetails['orderDetails'] = $orderDetails;
+				// $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
 				$instrumentRecordDetails['orderDetails'] = $orderDetails;
 				$instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
-				$instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+				$instrumentRecordDetails['itemsForReview'] = array_chunk($itemsForReview, 25);
+				$instrumentRecordDetails['foreclosure'] = array_chunk($foreclosure, 25);
+				// $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
 				$instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
 				
 				$html = $this->load->view('report/instrument_report',$instrumentRecordDetails,true);
