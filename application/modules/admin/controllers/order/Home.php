@@ -3447,7 +3447,7 @@ class Home extends MX_Controller {
     {
         $this->load->model('order/apiLogs');
         $this->load->library('order/twilio');
-        $this->load->model('frontend/order/twilioMessage');
+        $this->load->model('order/twilioMessage');
         $file_id = $this->input->post('file_id');
         $status = $this->input->post('status');
         $updateData = array('lp_report_status' => $status);
