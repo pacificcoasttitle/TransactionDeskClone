@@ -1129,8 +1129,10 @@ class Titlepoint
         /** Save document records here Start*/
         $recordArray = [];
         $filterArr = [];
+        $noticeArr = [];
 		$i = 0;
         $j = 0;
+        $k = 0;
 		if ((strtolower($result['ReturnStatus']) == 'success') && !empty($result['Result']['DocumentList'])) {
 			$result = $result['Result']['DocumentList'];
             $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
@@ -1167,7 +1169,8 @@ class Titlepoint
                     if (isset($id['@attributes']['Id'])) {
                         $docId = $id['@attributes']['Id'];
                         $key = array_search($docId, array_column($documentIdentifications, 'Id'));
-                        $existKey = '';
+                        $filterNoticeExistKey = '';
+                        $filterExistKey = '';
                         if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
                             $recordArray[$i]['title_point_id'] = $titlePointId;
                             $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
@@ -1182,56 +1185,75 @@ class Titlepoint
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
                             $recordArray[$i]['is_display'] = 0;
+                            $recordArray[$i]['is_notice'] = ($val['DocumentType'] == 'NOC' || $val['DocumentType'] == 'NOD' || $val['DocumentType'] == 'NOT' || $val['DocumentType'] == 'NOS') ? 1 : 0;
                             $i++;
                         }
-                    }
-                }
-                //echo "<pre>";
-                //print_r($recordArray);
 
-                foreach($items['Item'] as $key => $val) {
-                    $id = $val['DocumentIdentification'];
-                    if (isset($id['@attributes']['Id'])) {
-                        $docId = $id['@attributes']['Id'];
-                        $key = array_search($docId, array_column($documentIdentifications, 'Id'));
-                        $existKey = '';
+                        if ($val['DocumentType'] == 'NOC' || $val['DocumentType'] == 'NOD' || $val['DocumentType'] == 'NOT' || $val['DocumentType'] == 'NOS') {
+                            if (!empty($noticeArr)) {
+                                if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
+                                    $docType = $val['DocumentType'].$val['DocumentSubType'];
+                                    $filterNoticeExistKey = array_search($docType, array_column($filterArr, 'document_type'));
+                                } else if (isset($val['DocumentType'])) {
+                                    $filterNoticeExistKey = array_search($val['DocumentType'], array_column($noticeArr, 'document_type'));
+                                }
+                        
+                                if (strlen($filterNoticeExistKey) > 0) {
+                                    unset($noticeArr[$filterNoticeExistKey]);
+                                    $noticeArr = array_values($noticeArr); 
+                                    $j--;
+                                }
+                            }
+
+                            if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
+                                $noticeArr[$k]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                                if (isset($val['DocumentSubType'])) {
+                                    $noticeArr[$j]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
+                                } else {
+                                    $noticeArr[$j]['document_type'] = $val['DocumentType'];
+                                }
+                                $k++;
+                            }
+
+                        }
+
                         if ($val['DocumentType'] == 'DEG' || $val['DocumentType'] == 'TDD' || $val['DocumentType'] == 'ASE' || $val['DocumentType'] == 'LIS' || $val['DocumentType'] == 'FIN') {
                             if (!empty($filterArr)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    $existKey = array_search($docType, array_column($filterArr, 'document_type'));
+                                    $filterExistKey = array_search($docType, array_column($filterArr, 'document_type'));
                                 } else if (isset($val['DocumentType'])) {
-                                    $existKey = array_search($val['DocumentType'], array_column($filterArr, 'document_type'));
+                                    $filterExistKey = array_search($val['DocumentType'], array_column($filterArr, 'document_type'));
                                 }
                         
-                                if (strlen($existKey) > 0) {
-                                    unset($filterArr[$existKey]);
+                                if (strlen($filterExistKey) > 0) {
+                                    unset($filterArr[$filterExistKey]);
                                     $filterArr = array_values($filterArr); 
                                     $j--;
                                 }
-                                
                             }
 
                             if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
-                                $filterArr[$j]['title_point_id'] = $titlePointId;
                                 $filterArr[$j]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
-                                $filterArr[$j]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
-                                $filterArr[$j]['document_name'] = $val['DocumentFullName'];
                                 if (isset($val['DocumentSubType'])) {
                                     $filterArr[$j]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
                                 } else {
                                     $filterArr[$j]['document_type'] = $val['DocumentType'];
                                 }
-                                $filterArr[$j]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
-                                $filterArr[$j]['created_at'] = date("Y-m-d H:i:s");
-                                $filterArr[$j]['amount'] = 0;
-                                // $recordArray[$i]['AddressId'] = $addressId;
                                 $j++;
                             }
                         }
                     }
                 }
-                //print_r($filterArr);
+               
+                if (!empty($noticeArr)) {
+                    foreach ($noticeArr as $arr) {
+                        $filterNoticeKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
+                        if (strlen($filterNoticeKey) > 0) {
+                            $recordArray[$filterNoticeKey]['is_display'] = 1;
+                        }
+                    }
+                }
                 
                 if (!empty($filterArr)) {
                     foreach ($filterArr as $arr) {
