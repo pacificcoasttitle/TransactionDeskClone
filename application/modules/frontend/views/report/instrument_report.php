@@ -418,7 +418,7 @@
             box-sizing: border-box;
         }
         .size_a4 { width: 8.3in; height: 11.7in; }
-        .size_letter { width: 8.5in; height: 13in; }
+        .size_letter { width: 9.5in; height: 13in; }
         .size_executive { width: 7.25in; height: 10.5in; }
         .pdf_page {
             margin: 0 auto;
