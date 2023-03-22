@@ -5286,3 +5286,56 @@ function isDualCplUser()
         });
     });
 }
+
+function deleteDocumentType(id)
+{
+    if (id=='') {
+        alert('ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+
+    if (ready) {
+        $.ajax({
+            url: base_url+"order/admin/delete-lp-document-type",
+            method: "POST",
+            data : {id:id},
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                console.log(result);
+                if (result.status == 'success') {
+                    $('#lp_document_types_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#lp_document_types_success_msg").offset().top
+                    }, 1000);
+                    lp_document_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#lp_document_types_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#lp_document_types_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#lp_document_types_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#lp_document_types_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#lp_document_types_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#lp_document_types_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#lp_document_types_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}

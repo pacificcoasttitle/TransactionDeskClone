@@ -5,13 +5,24 @@
 }
 </style>
 <div class="container-fluid">
+    <?php if(!empty($successMsg)){ ?>
+        <div class="col-xs-12">
+            <div class="alert alert-success"><?php echo $successMsg; ?></div>
+        </div>
+    <?php } ?>
+
+    <?php if(!empty($error_msg)){ ?>
+        <div class="col-xs-12">
+            <div class="alert alert-danger"><?php echo $error_msg; ?></div>
+        </div>
+    <?php } ?>
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
             LP Document Types
             <div class="float-right">
                 <a href="<?php echo base_url()?>order/admin/import-lp-document-types" class="btn btn-secondary"> Import </a>
-                <a href="javascript:void(0);" class="btn btn-secondary"> Add LP Document Type </a>
+                <a href="<?php echo base_url()?>order/admin/add-lp-document-types" class="btn btn-secondary"> Add LP Document Type </a>
             </div>
         </div>
                 

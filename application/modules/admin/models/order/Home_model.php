@@ -2010,4 +2010,74 @@ class Home_model extends CI_Model
             'data' => $lp_document_lists
         );
     }
+
+    public function insertLpDocType($data = array(), $table = '') 
+    {
+        if (empty($table)) {
+            $table = 'pct_lp_document_types';
+        }
+        if(!empty($data)){
+
+        	$data['created_at'] = date("Y-m-d H:i:s");
+
+            // Insert data
+            $insert = $this->db->insert($table, $data);
+            
+            // Return the status
+            return $insert?$this->db->insert_id():false;
+        }
+        return false;
+    }
+
+    public function deleteLpDocType($condition = array(), $table = '') 
+    {
+        if (empty($table)) {
+            $table = 'pct_lp_document_types';
+        }
+        if(!empty($condition)){
+            // Delete data
+            return $this->db->delete($table, $condition);
+        }
+        return false;
+    }
+
+    public function getLpDocType($params = array())
+    {
+        $this->db->select('*');
+        $this->db->from('pct_lp_document_types');
+        
+        if (array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        
+        if (array_key_exists("id", $params)){
+            $this->db->where('id', $params['id']);
+            $query = $this->db->get();
+            $result = $query->row_array();
+        }
+        // Return fetched data
+        return $result;
+    }
+
+    public function updateLpDocType($data, $condition = array(), $table = '') 
+    {
+        if (empty($table)) {
+            $table = 'pct_lp_document_types';
+        }
+
+        if(!empty($condition)){
+            // Update data
+            $data['updated_at'] = date("Y-m-d H:i:s");
+
+            // Update data
+            $update = $this->db->update($table, $data, $condition);
+            
+            // Return the status
+            return $update?true:false;
+        }
+        return false;
+    }
+    
 }

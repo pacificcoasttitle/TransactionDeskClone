@@ -855,7 +855,7 @@ class Home extends MX_Controller {
         $this->load->view('order/home/add_new_user', $data);
         $this->load->view('order/layout/footer', $data);
     }
-
+    
     function get_company_list()
     {
     	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
@@ -3957,7 +3957,10 @@ class Home extends MX_Controller {
                 }
                 $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $action = "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' class='btn btn-action'  title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $editUrl = base_url().'order/admin/edit-lp-document-type/'.$value['id'];
+                    $action = "<a href='".$editUrl."' class='btn btn-action edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+
+                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' class='btn btn-action'  title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -4031,6 +4034,127 @@ class Home extends MX_Controller {
         }
 		$this->load->view('order/layout/header', $data);
         $this->load->view('order/home/import_lp_document_types', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function addLpDocumentTypes()
+    {
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('admin');
+        $data = array();
+        $data['title'] = 'PCT Order: Add New LP Document Types';
+        $salesRepData = array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('category', 'Category', 'required', array('required'=> 'Please Enter Category'));
+            $this->form_validation->set_rules('description', 'Description', 'required', array('required'=> 'Please Enter Description'));
+            $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
+            $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
+            
+            if ($this->form_validation->run() == true) {
+                // $this->load->model('order/agent_model');
+                $input = $this->input->post();
+                $lpDocData = array(
+                    'category' => $this->input->post('category'),
+                    'description' =>  $this->input->post('description'),
+                    'doc_type' => $this->input->post('doc_type'),
+                    'doc_sub_type' => $this->input->post('doc_sub_type'),
+                    'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
+                );
+                $insert = $this->home_model->insertLpDocType($lpDocData);
+                $successMsg = 'Document Data saved successfully';
+                $this->session->set_userdata('success', $successMsg);
+                redirect(base_url().'order/admin/lp-document-types');
+            } else {
+                $data['category_error_msg'] = form_error('category');
+                $data['description_error_msg'] = form_error('description');
+                $data['doc_type_error_msg'] = form_error('doc_type');
+                $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_lp_document_types', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function deleteLpDocumentType()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+        if($id)
+        {
+            $condition = array('id' => $id);
+            $status = $this->home_model->deleteLpDocType($condition,'pct_lp_document_types');
+            if($status)
+            {
+                $successMsg = 'Record deleted successfully.';
+                $response = array('status'=>'success', 'message'=>$successMsg);
+            }
+        }
+        else
+        {
+            $msg = 'ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+
+        echo json_encode($response);
+    }
+
+    public function editLpDocumentType() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $data['title'] = 'PCT Order: Edit LP Document Types';
+        $lpDocData = array();
+
+        if(isset($id) && !empty($id))
+        {
+            if ($this->input->post()) 
+            {
+                $this->form_validation->set_rules('category', 'Category', 'required', array('required'=> 'Please Enter Category'));
+                $this->form_validation->set_rules('description', 'Description', 'required', array('required'=> 'Please Enter Description'));
+                $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
+                $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
+                
+                if ($this->form_validation->run() == true) 
+                {
+                    $input = $this->input->post();
+                    $lpDocData = array(
+                        'category' => $this->input->post('category'),
+                        'description' =>  $this->input->post('description'),
+                        'doc_type' => $this->input->post('doc_type'),
+                        'doc_sub_type' => $this->input->post('doc_sub_type'),
+                        'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
+                    );
+
+                    // print_r($lpDocData);die;
+                    $condition = array('id' => $id);
+                    $update = $this->home_model->updateLpDocType($lpDocData,$condition,'pct_lp_document_types');
+                        
+                    if ($update) {
+                        $successMsg = 'LP Document Types updated successfully.';
+                        $this->session->set_userdata('success', $successMsg);
+                        redirect(base_url().'order/admin/lp-document-types');
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating LP Document Types.';
+                    }              
+                } else {
+                    $data['category_error_msg'] = form_error('category');
+                    $data['description_error_msg'] = form_error('description');
+                    $data['doc_type_error_msg'] = form_error('doc_type');
+                    $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['lp_document_info'] = $this->home_model->getLpDocType($con);
+            // print_r($data['lp_document_info']);die;
+        }
+        else
+        {
+            redirect(base_url().'order/admin/lp-document-types');
+        }
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_lp_document_type', $data);
         $this->load->view('order/layout/footer', $data);
     }
 }
