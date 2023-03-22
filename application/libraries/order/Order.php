@@ -2648,7 +2648,7 @@ class Order
             
         $this->CI->db->where('is_display', 1);
         $this->CI->db->where('is_notice', 0);
-        $this->db->group_by('doc_type');
+        $this->CI->db->group_by('doc_type');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();
@@ -2664,7 +2664,7 @@ class Order
             
         $this->CI->db->where('is_display', 1);
         $this->CI->db->where('is_notice', 1);
-        $this->db->group_by('doc_type');
+        $this->CI->db->group_by('doc_type');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();

@@ -617,7 +617,7 @@ class Order extends MX_Controller {
                     }
                     $j++;
                 } else if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
-                    echo $instrumentRecord['document_type']."----";
+                    //echo $instrumentRecord['document_type']."----";
                     //print_r($displayDocList);
                     if (!empty($filterArr)) {
                         if (isset($instrumentRecord['document_type']) && isset($instrumentRecord['document_sub_type']) && strlen($instrumentRecord['document_sub_type']) > 1) {
@@ -647,8 +647,8 @@ class Order extends MX_Controller {
                 $i++;
             }
         }
-        print_r($filterArr);
-        print_r($noticeArr);exit;
+       // print_r($filterArr);
+       // print_r($noticeArr);exit;
           
         $i = 0;
         if (!empty($instrumentRecords)) {

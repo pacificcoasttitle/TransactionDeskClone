@@ -1288,7 +1288,7 @@ class Titlepoint
 					}
 				} 
                  End Address based instrument number details fetched  */
-                
+                print_r($recordArray);exit;
                 $this->CI->db->delete('pct_title_point_document_records', array('title_point_id' => $titlePointId)); 
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			}
