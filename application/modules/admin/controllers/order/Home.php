@@ -3991,7 +3991,7 @@ class Home extends MX_Controller {
                                 'category' => $row['Category'],
                                 'description' => $row['Description'],
                                 'doc_type' => $row['Doc Type'],
-                                'doc_sub_type' => $row['Doc Subtype'],
+                                'doc_sub_type' => $row['Doc Subtype'] ? $row['Doc Subtype'] : null,
                                 'is_display' => ($row['Doc Subtype'] == 'DEG' || $val['Doc Subtype'] == 'TDD' || $val['Doc Subtype'] == 'ASE' || $val['Doc Subtype'] == 'LIS' || $val['Doc Subtype'] == 'FIN' || $row['Doc Subtype'] == 'NOC' || $val['Doc Subtype'] == 'NOD' || $val['Doc Subtype'] == 'NOT' || $val['Doc Subtype'] == 'NOS') ? 1 : 0,
                                 'is_notice' => ($row['Doc Subtype'] == 'NOC' || $val['Doc Subtype'] == 'NOD' || $val['Doc Subtype'] == 'NOT' || $val['Doc Subtype'] == 'NOS') ? 1 : 0
                             );
@@ -4006,7 +4006,7 @@ class Home extends MX_Controller {
                             $prevCount = $this->home_model->get_rows($con, 'pct_lp_document_types');
                             
                             if ($prevCount > 0) {
-                                $condition = array('doc_type' => $row['Doc Type'], 'doc_sub_type' => $row['Doc Subtype']);
+                                $condition = array('category' => $row['Category'], 'doc_type' => $row['Doc Type'], 'doc_sub_type' => ($row['Doc Subtype']) ? $row['Doc Subtype'] : null);
                                 $update = $this->home_model->update($lpDocumentTypeData, $condition, 'pct_lp_document_types');
                                 if ($update) {
                                     $updateCount++;
