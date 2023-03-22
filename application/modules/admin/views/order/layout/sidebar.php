@@ -154,6 +154,9 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
 				Holidays
 			</a>
+			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-document-type*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-document-types'; ?>">
+				LP Document Types
+			</a>
         </div>
 	</li>
 	<?php 
