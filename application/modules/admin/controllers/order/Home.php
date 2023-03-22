@@ -3909,5 +3909,129 @@ class Home extends MX_Controller {
 		$this->document->delete($documentData, $condition);
 		$this->document->insert($documentData);
 	}
+
+    public function lpDocumentTypes()
+    {
+    	$data = array();
+        $data['title'] = 'PCT Order: LP Document Types';
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/lp_document_types', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_lp_document_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 1;
+            $pageno = ($params['start'] / $params['length'])+1;
+            $lp_document_lists = $this->home_model->get_lp_document_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $lp_document_lists = $this->home_model->get_customers($params);            
+        }
+
+        $data = array(); 
+	    if (isset($lp_document_lists['data']) && !empty($lp_document_lists['data'])) {
+            $i = $params['start'] + 1;
+	    	foreach ($lp_document_lists['data'] as $key => $value) {
+	    		$nestedData = array();
+                $id = $value['id'];
+                $nestedData[] = $i;
+	            $nestedData[] = $value['category'];
+	            $nestedData[] = $value['description'];
+	            $nestedData[] = $value['doc_type'];
+	            $nestedData[] = $value['doc_sub_type'];
+	            $nestedData[] = $value['is_notice'] == 1 ? 'Yes' : 'No';
+                if ($value['is_display'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $action = "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' class='btn btn-action'  title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+	            $data[] = $nestedData;            
+	            $i++;
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $lp_document_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $lp_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
+
+    public function importLpDocumentTypes()
+    {    
+        $data = array();
+        $data['title'] = 'PCT Order: Import LP Document Types';
+    	if ($this->input->post()) {
+        
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            if ($this->form_validation->run($this) == true) {
+                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+                
+                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $this->load->library('CSVReader');
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+            
+                    if (!empty($csvData)) {                        
+                        foreach($csvData as $row) {
+                            $rowCount++;
+                            $lpDocumentTypeData = array(
+                                'category' => $row['Category'],
+                                'description' => $row['Description'],
+                                'doc_type' => $row['Doc Type'],
+                                'doc_sub_type' => $row['Doc Subtype'],
+                                'is_display' => ($row['Doc Subtype'] == 'DEG' || $val['Doc Subtype'] == 'TDD' || $val['Doc Subtype'] == 'ASE' || $val['Doc Subtype'] == 'LIS' || $val['Doc Subtype'] == 'FIN' || $row['Doc Subtype'] == 'NOC' || $val['Doc Subtype'] == 'NOD' || $val['Doc Subtype'] == 'NOT' || $val['Doc Subtype'] == 'NOS') ? 1 : 0,
+                                'is_notice' => ($row['Doc Subtype'] == 'NOC' || $val['Doc Subtype'] == 'NOD' || $val['Doc Subtype'] == 'NOT' || $val['Doc Subtype'] == 'NOS') ? 1 : 0
+                            );
+
+                            $con = array(
+                                'where' => array(
+                                    'doc_type' => $row['Doc Type'],
+                                    'doc_sub_type' => $row['Doc Subtype']
+                                ),
+                                'returnType' => 'count'
+                            );
+                            $prevCount = $this->home_model->get_rows($con, 'pct_lp_document_types');
+                            
+                            if ($prevCount > 0) {
+                                $condition = array('doc_type' => $row['Doc Type'], 'doc_sub_type' => $row['Doc Subtype']);
+                                $update = $this->home_model->update($lpDocumentTypeData, $condition, 'pct_lp_document_types');
+                                if ($update) {
+                                    $updateCount++;
+                                }
+                            } else {
+                                $insert = $this->home_model->insert($lpDocumentTypeData, 'pct_lp_document_types');
+                                if ($insert) {
+                                    $insertCount++;
+                                }
+                            }
+                        }
+                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
+                        $successMsg = 'LP Document Types imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                        $data['success_msg'] = $successMsg;
+                    }
+                } else {
+                    $data['error_msg'] = 'Error on file upload, please try again.';
+                }
+            } else {
+                $data['error_msg'] = 'Invalid file, please select only CSV file.';
+            }
+        }
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/import_lp_document_types', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 }
 
