@@ -393,6 +393,7 @@ $route['order/admin/delete-lp-document-type'] = 'admin/order/home/deleteLpDocume
 $route['order/admin/edit-lp-document-type/:num'] = 'admin/order/home/editLpDocumentType';
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
 
+$route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeFlag';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
