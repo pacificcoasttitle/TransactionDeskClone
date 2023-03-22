@@ -3992,12 +3992,13 @@ class Home extends MX_Controller {
                                 'description' => $row['Description'],
                                 'doc_type' => $row['Doc Type'],
                                 'doc_sub_type' => $row['Doc Subtype'] ? $row['Doc Subtype'] : null,
-                                'is_display' => ($row['Doc Subtype'] == 'DEG' || $val['Doc Subtype'] == 'TDD' || $val['Doc Subtype'] == 'ASE' || $val['Doc Subtype'] == 'LIS' || $val['Doc Subtype'] == 'FIN' || $row['Doc Subtype'] == 'NOC' || $val['Doc Subtype'] == 'NOD' || $val['Doc Subtype'] == 'NOT' || $val['Doc Subtype'] == 'NOS') ? 1 : 0,
-                                'is_notice' => ($row['Doc Subtype'] == 'NOC' || $val['Doc Subtype'] == 'NOD' || $val['Doc Subtype'] == 'NOT' || $val['Doc Subtype'] == 'NOS') ? 1 : 0
+                                'is_display' => ($row['Doc Type'] == 'DEG' || $row['Doc Type'] == 'TDD' || $row['Doc Type'] == 'ASE' || $row['Doc Type'] == 'LIS' || $row['Doc Type'] == 'FIN' || $row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0,
+                                'is_notice' => ($row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0
                             );
 
                             $con = array(
                                 'where' => array(
+                                    'category' => $row['Category'],
                                     'doc_type' => $row['Doc Type'],
                                     'doc_sub_type' => $row['Doc Subtype']
                                 ),
@@ -4032,6 +4033,20 @@ class Home extends MX_Controller {
 		$this->load->view('order/layout/header', $data);
         $this->load->view('order/home/import_lp_document_types', $data);
         $this->load->view('order/layout/footer', $data);
+    }
+    
+    public function updateLpDocumentTypeFlag()
+    {
+        $lp_document_type_id = $this->input->post('lp_document_type_id');
+        $displayFlag = $this->input->post('displayFlag');
+        $data['is_display'] = $displayFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $lp_document_type_id
+        );
+        $this->db->update('pct_lp_document_types', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'LP document type flag updated successfully.');
+        echo json_encode($data);
     }
 }
 

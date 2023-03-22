@@ -388,6 +388,7 @@ $route['order/admin/get-instrument-data'] = 'admin/order/order/getInstrumentData
 $route['order/admin/store-lp-document-info'] = 'admin/order/home/storeLpDocumentInfo';
 $route['order/admin/lp-document-types'] = 'admin/order/home/lpDocumentTypes';
 $route['order/admin/import-lp-document-types'] = 'admin/order/home/importLpDocumentTypes';
+$route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeFlag';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
