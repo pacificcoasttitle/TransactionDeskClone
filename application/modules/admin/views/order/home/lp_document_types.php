@@ -5,9 +5,9 @@
 }
 </style>
 <div class="container-fluid">
-    <?php if(!empty($successMsg)){ ?>
+    <?php if(!empty($this->session->userdata('success'))){ ?>
         <div class="col-xs-12">
-            <div class="alert alert-success"><?php echo $successMsg; ?></div>
+            <div class="alert alert-success"><?php echo $this->session->userdata('success'); ?></div>
         </div>
     <?php } ?>
 
