@@ -418,7 +418,7 @@
             box-sizing: border-box;
         }
         .size_a4 { width: 8.3in; height: 11.7in; }
-        .size_letter { width: 9.5in; height: 13in; }
+        .size_letter { width: 8.5in; height: 11in; }
         .size_executive { width: 7.25in; height: 10.5in; }
         .pdf_page {
             margin: 0 auto;
@@ -1160,7 +1160,7 @@
             <div class="pdf_body">
                 <!-- <div class="table_title"><em>Section G:</em> Open Loans:</div> -->
                 <div style="height:20px"></div>
-                <img src="https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/<?php echo $orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center; max-height: 11in;" alt=""/>
+                <img src="https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/<?php echo $orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center; max-height: 9in;" alt=""/>
             </div>           
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
