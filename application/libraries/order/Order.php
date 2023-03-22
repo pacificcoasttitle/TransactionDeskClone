@@ -2640,4 +2640,36 @@ class Order
             return true;
         } 
     }
+
+    public function getDocumetTypes()
+    {
+        $this->CI->db->select('*')
+            ->from('pct_lp_document_types');
+            
+        $this->CI->db->where('is_display', 1);
+        $this->CI->db->where('is_notice', 0);
+        $this->db->group_by('doc_type');
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function getNoticeDocumetTypes()
+    {
+        $this->CI->db->select('*')
+            ->from('pct_lp_document_types');
+            
+        $this->CI->db->where('is_display', 1);
+        $this->CI->db->where('is_notice', 1);
+        $this->db->group_by('doc_type');
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
 }

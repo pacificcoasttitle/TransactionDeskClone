@@ -553,7 +553,7 @@ class Order extends MX_Controller {
     public function getInstrumentData()
     {
         $file_id = $this->input->post('file_id');
-
+        $this->load->library('order/order');
         $this->db->select('*');
         $this->db->from('pct_order_title_point_data');
         $this->db->where('file_id', $file_id);
@@ -564,7 +564,13 @@ class Order extends MX_Controller {
         $this->db->from('pct_title_point_document_records');
         $this->db->where('title_point_id', $titlePointData->id);
         $query = $this->db->get();
-        $instrumentRecords = $query->result(); 
+        $instrumentRecords = $query->result_array(); 
+
+        $displayDocList = $this->home_model->getDocumetTypes();
+        $displayNoticeDocList = $this->home_model->getNoticeDocumetTypes();
+
+        //echo in_array('NOT', array_column($displayNoticeDocList, 'doc_type'));
+        //print_r($displayNoticeDocList);exit;
 
         $data = "<input type='hidden' id='title_point_id' name='title_point_id' value='$titlePointData->id'>
         <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
@@ -579,20 +585,91 @@ class Order extends MX_Controller {
             </thead>
         <tbody>";
 
-        $i = 1;
+        $i = 0;
+        $j = 0;
+        $k = 0;
+        $noticeArr = array();
+        $filterArr = array();
         if (!empty($instrumentRecords)) {
             foreach ($instrumentRecords as $instrumentRecord) {
-                if ($instrumentRecord->is_display == 1) {
+                if (in_array($instrumentRecord['document_type'], array_column($displayNoticeDocList, 'doc_type'))) {
+                    
+                    if (!empty($noticeArr)) {
+                        if (isset($instrumentRecord['document_type']) && isset($instrumentRecord['document_sub_type']) && strlen($instrumentRecord['document_sub_type']) > 1) {
+                            $docType = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                            $filterNoticeExistKey = array_search($docType, array_column($noticeArr, 'document_type'));
+                        } else if (isset($instrumentRecord['document_type'])) {
+                            $filterNoticeExistKey = array_search($instrumentRecord['document_type'], array_column($noticeArr, 'document_type'));
+                        }
+                
+                        if (strlen($filterNoticeExistKey) > 0) {
+                            unset($noticeArr[$filterNoticeExistKey]);
+                            $noticeArr = array_values($noticeArr); 
+                            $j--;
+                        }
+                    }
+
+                    $noticeArr[$j]['instrument'] = $instrumentRecord['instrument'];
+                    if (isset($instrumentRecord['document_sub_type'])) {
+                        $noticeArr[$j]['document_type'] = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                    } else {
+                        $noticeArr[$j]['document_type'] = $instrumentRecord['document_type'];
+                    }
+                    $j++;
+                } else if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
+                    echo $instrumentRecord['document_type']."----";
+                    //print_r($displayDocList);
+                    if (!empty($filterArr)) {
+                        if (isset($instrumentRecord['document_type']) && isset($instrumentRecord['document_sub_type']) && strlen($instrumentRecord['document_sub_type']) > 1) {
+                            $docType = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                            $filterExistKey = array_search($docType, array_column($filterArr, 'document_type'));
+                        } else if (isset($instrumentRecord['document_type'])) {
+                            $filterExistKey = array_search($instrumentRecord['document_type'], array_column($filterArr, 'document_type'));
+                        }
+                
+                        if (strlen($filterExistKey) > 0) {
+                            unset($filterArr[$filterExistKey]);
+                            $filterArr = array_values($filterArr); 
+                            $k--;
+                        }
+                    }
+
+                    $filterArr[$k]['instrument'] = $instrumentRecord['instrument'];
+                    if (isset($instrumentRecord['document_sub_type'])) {
+                        $filterArr[$k]['document_type'] = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                    } else {
+                        $filterArr[$k]['document_type'] = $instrumentRecord['document_type'];
+                    }
+                    $k++;
+                } else {
+                    $instrumentRecords[$i]['is_display'] = 0;
+                }
+                $i++;
+            }
+        }
+        print_r($filterArr);
+        print_r($noticeArr);exit;
+          
+        $i = 0;
+        if (!empty($instrumentRecords)) {
+            foreach ($instrumentRecords as $instrumentRecord) {
+                if (strlen(array_search($instrumentRecord['instrument'], array_column($filterArr, 'instrument')))) {
+                    $checked = "checked";                
+                } else if (strlen(array_search($instrumentRecord['instrument'], array_column($noticeArr, 'instrument')))) {
                     $checked = "checked";                    
                 } else {
                     $checked = "";
                 }
+                $document_name = $instrumentRecord['document_name'];
+                $instrument = $instrumentRecord['instrument'];
+                $recorded_date = $instrumentRecord['recorded_date'];
+                $id = $instrumentRecord['id'];
                 $data .= "<tr>
                             <td>$i</td>
-                            <td>$instrumentRecord->document_name</td>
-                            <td>$instrumentRecord->instrument</td>
-                            <td>$instrumentRecord->recorded_date</td>
-                            <td><input type='checkbox' id='$instrumentRecord->id' $checked name='instrument_number_ids[]' value='$instrumentRecord->id'></td>
+                            <td>$document_name</td>
+                            <td>$instrument</td>
+                            <td>$recorded_date</td>
+                            <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
                         </tr>";
                 $i++;
             }
@@ -608,6 +685,4 @@ class Order extends MX_Controller {
         }
         echo json_encode($result); exit;
     }
-
-    
 }

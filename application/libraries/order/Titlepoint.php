@@ -1152,6 +1152,9 @@ class Titlepoint
 			print_r($docIds);*/
 			$documentIdentifications = $result['DocumentIdentifications']['DocumentIdentification'];
             $items = $result['Items'];
+            $displayDocList = $this->CI->order->getDocumetTypes();
+            $displayNoticeDocList = $this->CI->order->getNoticeDocumetTypes();
+            $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'legal-vesting');
 			if (isset($items['Item'])) {
                 /*
                 $docIdentificationId = [];
@@ -1176,24 +1179,20 @@ class Titlepoint
                             $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
                             $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
                             $recordArray[$i]['document_name'] = $val['DocumentFullName'];
-                            if (isset($val['DocumentSubType'])) {
-                                $recordArray[$i]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
-                            } else {
-                                $recordArray[$i]['document_type'] = $val['DocumentType'];
-                            }
+                            $recordArray[$i]['document_type'] = $val['DocumentType'];
                             $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
                             $recordArray[$i]['is_display'] = 0;
-                            $recordArray[$i]['is_notice'] = ($val['DocumentType'] == 'NOC' || $val['DocumentType'] == 'NOD' || $val['DocumentType'] == 'NOT' || $val['DocumentType'] == 'NOS') ? 1 : 0;
+                            $recordArray[$i]['is_notice'] = in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type')) ? 1 : 0;
                             $i++;
                         }
 
-                        if ($val['DocumentType'] == 'NOC' || $val['DocumentType'] == 'NOD' || $val['DocumentType'] == 'NOT' || $val['DocumentType'] == 'NOS') {
+                        if (in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type'))) {
                             if (!empty($noticeArr)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    $filterNoticeExistKey = array_search($docType, array_column($filterArr, 'document_type'));
+                                    $filterNoticeExistKey = array_search($docType, array_column($noticeArr, 'document_type'));
                                 } else if (isset($val['DocumentType'])) {
                                     $filterNoticeExistKey = array_search($val['DocumentType'], array_column($noticeArr, 'document_type'));
                                 }
@@ -1201,23 +1200,23 @@ class Titlepoint
                                 if (strlen($filterNoticeExistKey) > 0) {
                                     unset($noticeArr[$filterNoticeExistKey]);
                                     $noticeArr = array_values($noticeArr); 
-                                    $j--;
+                                    $k--;
                                 }
                             }
 
                             if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
                                 $noticeArr[$k]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
                                 if (isset($val['DocumentSubType'])) {
-                                    $noticeArr[$j]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
+                                    $noticeArr[$k]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
                                 } else {
-                                    $noticeArr[$j]['document_type'] = $val['DocumentType'];
+                                    $noticeArr[$k]['document_type'] = $val['DocumentType'];
                                 }
                                 $k++;
                             }
 
                         }
 
-                        if ($val['DocumentType'] == 'DEG' || $val['DocumentType'] == 'TDD' || $val['DocumentType'] == 'ASE' || $val['DocumentType'] == 'LIS' || $val['DocumentType'] == 'FIN') {
+                        if (in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type'))) {
                             if (!empty($filterArr)) {
                                 if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
                                     $docType = $val['DocumentType'].$val['DocumentSubType'];

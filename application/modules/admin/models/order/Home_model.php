@@ -2080,4 +2080,35 @@ class Home_model extends CI_Model
         return false;
     }
     
+    public function getDocumetTypes()
+    {
+        $this->db->select('*')
+            ->from('pct_lp_document_types');
+            
+        $this->db->where('is_display', 1);
+        $this->db->where('is_notice', 0);
+        $this->db->group_by('doc_type');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
+
+    public function getNoticeDocumetTypes()
+    {
+        $this->db->select('*')
+            ->from('pct_lp_document_types');
+            
+        $this->db->where('is_display', 1);
+        $this->db->where('is_notice', 1);
+        $this->db->group_by('doc_type');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }         
+    }
 }
