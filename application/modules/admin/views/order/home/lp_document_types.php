@@ -28,6 +28,7 @@
                             <th>Doc Type</th>
                             <th>Doc Subtype</th>
                             <th>Is Notice</th>
+                            <th>Is Display</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

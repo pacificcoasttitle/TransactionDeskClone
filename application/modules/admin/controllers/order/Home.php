@@ -3950,7 +3950,6 @@ class Home extends MX_Controller {
 	            $nestedData[] = $value['doc_type'];
 	            $nestedData[] = $value['doc_sub_type'];
 	            $nestedData[] = $value['is_notice'] == 1 ? 'Yes' : 'No';
-	            $nestedData[] = $value['city'];
                 if ($value['is_display'] == 1) {
                     $checked = 'checked';
                 } else {
