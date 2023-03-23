@@ -343,14 +343,14 @@
 										placeholder="Loan Number">
 								</label>
 										
-								<div class="section spacer-t20">
+								<!-- <div class="section spacer-t20">
 									<label class="field prepend-icon">
 										<textarea class="gui-textarea" id="notes" name="notes" placeholder="Additional details"></textarea>
 										<span class="field-icon"><i class="fa fa-comments"></i></span>        
 									</label>
 								</div>
 								<div class="spacer-t30">
-									<div class="tagline"><span> Special Instructions </span></div><!-- .tagline -->
+									<div class="tagline"><span> Special Instructions </span></div>
 								</div>
 								<div class="frm-row">
 									<div class="section colm colm4">
@@ -359,8 +359,8 @@
 												<input type="checkbox" name="CCR" value="CCR's">
 												<span class="checkbox"></span> CCR's
 											</label>
-										</div><!-- end .option-group section -->
-									</div><!-- end .colm section -->
+										</div>
+									</div>
 
 									<div class="section colm colm4">
 										<div class="option-group field">
@@ -368,8 +368,8 @@
 												<input type="checkbox" name="Docs" value="Underlying Docs">
 												<span class="checkbox"></span> Underlying Docs
 											</label>
-										</div><!-- end .option-group section -->
-									</div><!-- end .colm section -->
+										</div>
+									</div>
 
 									<div class="section colm colm4">
 										<div class="option-group field">
@@ -377,9 +377,9 @@
 												<input type="checkbox" name="Ease" value="Plotted Easements">
 												<span class="checkbox"></span> Plotted Easements
 											</label>
-										</div><!-- end .option-group section -->
-									</div><!-- end .colm section -->
-								</div>
+										</div>
+									</div>
+								</div> -->
 								<!-- end section -->
 								<div class="spacer-b30 spacer-t30">
 									<div class="tagline"><span>Add Deliverables</span></div>

@@ -3851,11 +3851,15 @@ class Home extends MX_Controller {
         );
         $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
         $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData['file_number']);
-        $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
+        $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1); });
+        $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1); });
+
+        $instrumentRecordDetails['itemsForReview'] = array_chunk($itemsForReview, 25);
+        $instrumentRecordDetails['foreclosure'] = array_chunk($foreclosure, 25);
+        
         $orderDetails = $this->order->get_order_details($file_id);
         $instrumentRecordDetails['orderDetails'] = $orderDetails;
         $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
-        $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
         $plat_map_url = '';
 		if ($this->order->fileExistOrNotOnS3('plat-map/'.$titlePointData['file_number'].'.png'))  {
             $plat_map_url = env('AWS_PATH')."plat-map/".$titlePointData['file_number'].'.png';
