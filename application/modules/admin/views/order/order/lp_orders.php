@@ -20,6 +20,10 @@
         height: 20px !important;
         width: 20px !important;
     }
+	.FilterOrderListing {
+		display: flex;
+		width: 100%
+	}
 </style>
 <div class="container-fluid">
 	<!-- DataTables Example -->
