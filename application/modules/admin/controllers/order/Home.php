@@ -3459,7 +3459,9 @@ class Home extends MX_Controller {
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
-            $message = "LP Report is ready for file number ".$order_details['lp_file_number'];
+        
+            $lpReportUrl = env('AWS_PATH')."pre-listing-doc/pre_listing_report_".$order_details['lp_file_number'].".pdf";
+            $message = "LP Report is ready for file number <a href='$lpReportUrl'>".$order_details['lp_file_number']."</a>";
             $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
 
             $order_details['sales_rep_phone'] = '12133097286';
@@ -3663,7 +3665,7 @@ class Home extends MX_Controller {
                     $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
                 }
                 $condition = array('id' => $order_details['order_id']);
-                $data = array('file_id' => $file_id, 'file_number' => $fileNumber);
+                $data = array('file_id' => $file_id, 'file_number' => $fileNumber, 'lp_file_number' => null);
                 $update = $this->order_model->update($data, $condition);
                 $data = array('status'=>'success', 'message'=> 'Order synced successfully on Resware side with file number '. $fileNumber);
                 echo json_encode($data);exit;
