@@ -672,7 +672,7 @@ class Order extends MX_Controller {
                 $i++;
             }
         } else {
-            $data .= "<tr>No records found.</tr>";  
+            $data .= "<tr><td colspan='5'>No records found.</td></tr>";  
         }
         $data .= '</tbody></table>';
         if(!empty($data)) {
