@@ -1589,7 +1589,7 @@ $(document).ready(function () {
               options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
             });
             
-            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
+            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline;padding-right: 0;text-align: right;"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
         }
 
         if(product_type)
@@ -1664,7 +1664,7 @@ $(document).ready(function () {
             $.each( obj, function( key, value ) {
                 options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
             });
-            $("div.FilterOrderListing").html('<label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label>');   
+            $("div.FilterOrderListing").html('<div class="col-sm-6" style="padding-left: 0;"><label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label></div>');   
         }
 
         // if (lp_master_users) {
@@ -1674,7 +1674,7 @@ $(document).ready(function () {
             //   options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
             // });
             
-            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Start Date: <input type="date" name="FilterLpStartDate" id="FilterLpStartDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div><div class="col-sm-3" style="display:inline"><label> End Date: <input type="date" name="FilterLpEndDate" id="FilterLpEndDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div>'); 
+            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Start Date: <input type="date" name="FilterLpStartDate" id="FilterLpStartDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div><div class="col-sm-3" style="display:inline; text-align: right;padding-right: 0;"><label> End Date: <input type="date" name="FilterLpEndDate" id="FilterLpEndDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div>'); 
         // }
 
         if (lp_product_type) {
