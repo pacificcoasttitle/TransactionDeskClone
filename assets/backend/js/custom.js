@@ -1589,7 +1589,7 @@ $(document).ready(function () {
               options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
             });
             
-            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
+            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline;padding-right: 0;text-align: right;"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
         }
 
         if(product_type)
@@ -1624,9 +1624,6 @@ $(document).ready(function () {
                 "emptyTable": "Record(s) not found.",
             },
             initComplete: function() {
-                
-
-
             },
             "dom": 'lf<"FilterOrderListing">rtip',
             "drawCallback": function () {               
@@ -1641,8 +1638,9 @@ $(document).ready(function () {
                 type: "post", // method  , by default get
                 data   : function( d ) {
                   d.sales_rep= $('#FilterLpOrderListing').val();
-                  d.created_by= $('#FilterLpCreatedBy').val();
-                  d.product_type= lp_product_type;
+                  d.start_date= $('#FilterLpStartDate').val();
+                  d.end_date= $('#FilterLpEndDate').val();
+                //   d.product_type= lp_product_type;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -1659,25 +1657,25 @@ $(document).ready(function () {
                 }
             }            
         });
-
+        console.log('sales_rep==', lp_sales_rep);
         if (lp_sales_rep) {
             var obj = jQuery.parseJSON(lp_sales_rep);
             var options='';
             $.each( obj, function( key, value ) {
                 options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
             });
-            $("div.FilterLpOrderListing").html('<label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label>');   
+            $("div.FilterOrderListing").html('<div class="col-sm-6" style="padding-left: 0;"><label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label></div>');   
         }
 
-        if (lp_master_users) {
-            var obj = jQuery.parseJSON(lp_master_users);
-            var options='';
-            $.each( obj, function( key, value ) {
-              options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
-            });
+        // if (lp_master_users) {
+            // var obj = jQuery.parseJSON(lp_master_users);
+            // var options='';
+            // $.each( obj, function( key, value ) {
+            //   options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
+            // });
             
-            $("div.FilterLpOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Created By: <select name="FilterLpCreatedBy" id="FilterLpCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"'+options+'"</select></label></div>'); 
-        }
+            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Start Date: <input type="date" name="FilterLpStartDate" id="FilterLpStartDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div><div class="col-sm-3" style="display:inline; text-align: right;padding-right: 0;"><label> End Date: <input type="date" name="FilterLpEndDate" id="FilterLpEndDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div>'); 
+        // }
 
         if (lp_product_type) {
             lp_order_list.ajax.reload();  
@@ -1685,11 +1683,13 @@ $(document).ready(function () {
        
     }
     $("#FilterLpOrderListing").on("change", function(){
-        order_list.ajax.reload();
+        lp_order_list.ajax.reload();
     });
 
-    $("#FilterLpCreatedBy").on("change", function(){
-        order_list.ajax.reload();
+    $("#FilterLpEndDate, #FilterLpStartDate").on("change", function(){
+        if ($('#FilterLpEndDate').val() != '' && $('#FilterLpStartDate').val() != '' ) {
+            lp_order_list.ajax.reload();
+        }
     });
 
     if ($('#tbl-cpl-documents-listing').length) 

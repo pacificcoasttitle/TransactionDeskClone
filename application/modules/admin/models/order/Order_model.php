@@ -447,6 +447,8 @@ class Order_model extends CI_Model
         $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
         $product_type = isset($params['product_type']) && !empty($params['product_type']) ? $params['product_type'] : '';
         $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
+        $start_date = isset($params['start_date']) && !empty($params['start_date']) ? $params['start_date'] : '';
+        $end_date = isset($params['end_date']) && !empty($params['end_date']) ? $params['end_date'] : '';
 
         if (isset($sales_rep) && !empty($sales_rep)) {
             $this->db->where('transaction_details.sales_representative', $sales_rep);
@@ -471,6 +473,11 @@ class Order_model extends CI_Model
                 $this->db->where('order_details.file_number', 0);
             }
             
+        }
+        
+        if (!empty($end_date)) {
+            $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s',strtotime($start_date)));
+            $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59',strtotime($end_date)));
         }
 
         if (isset($params['searchValue']) && !empty($params['searchValue'])) {
@@ -514,6 +521,11 @@ class Order_model extends CI_Model
                 
             }
 
+            if (!empty($end_date)) {
+                $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s',strtotime($start_date)));
+                $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59',strtotime($end_date)));
+            }
+            
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
@@ -580,7 +592,10 @@ class Order_model extends CI_Model
                 }
                 
             }
-            
+            if (!empty($end_date)) {
+                $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s',strtotime($start_date)));
+                $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59',strtotime($end_date)));
+            }
             $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
@@ -591,7 +606,6 @@ class Order_model extends CI_Model
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
             $this->db->order_by("order_details.id", "desc");
-
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }

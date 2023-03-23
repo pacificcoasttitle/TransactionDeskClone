@@ -18,6 +18,11 @@
     width: 250px !important;
     float: left;
 }
+.FilterOrderListing {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
 </style>
 <div class="container-fluid">
     <!-- DataTables Example -->
