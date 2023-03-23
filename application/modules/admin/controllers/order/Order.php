@@ -480,11 +480,12 @@ class Order extends MX_Controller {
         $params['order_type'] = 'lp_orders';
         $params['searchValue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value']: '';
         $params['sales_rep'] = $this->input->post('sales_rep');
-        $params['created_by'] = $this->input->post('created_by');
+        $params['start_date'] = $this->input->post('start_date');
+        $params['end_date'] = $this->input->post('end_date');
         $params['product_type'] = $this->input->post('product_type');
        
         $pageno = ($params['start'] / $params['length'])+1; 
-        $ordersList = $this->order_model->get_lp_orders($params);   
+        $ordersList = $this->order_model->get_lp_orders($params);
         
         $data = array(); 
         $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
