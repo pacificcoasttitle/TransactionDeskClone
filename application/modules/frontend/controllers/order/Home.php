@@ -1711,7 +1711,7 @@ class Home extends MX_Controller {
 					//$this->generateAllDocumentFromTitlePoint($fileNumber);
 					$param = $fileNumber;
 					$command = "php ".FCPATH."index.php frontend/order/home generateAllDocumentFromTitlePoint $param";
-					echo substr(php_uname(), 0, 7); exit;
+					//echo substr(php_uname(), 0, 7); exit;
 					if (substr(php_uname(), 0, 7) == "Windows") {
 						pclose(popen("start /B ". $command, "r")); 
 					} else {
