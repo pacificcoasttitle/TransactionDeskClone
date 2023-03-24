@@ -1657,7 +1657,7 @@ $(document).ready(function () {
                 }
             }            
         });
-        console.log('sales_rep==', lp_sales_rep);
+        
         if (lp_sales_rep) {
             var obj = jQuery.parseJSON(lp_sales_rep);
             var options='';
@@ -4321,6 +4321,52 @@ function exportOrders()
 
             setTimeout(function () {
                 $('#order_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
+}
+
+function exportLPOrders()
+{
+    var sales_rep = $('#FilterLpOrderListing').val();
+    var seachValue = $('.dataTables_filter input').val();
+    d = {};
+    d.sales_rep = sales_rep;
+    d.seachValue = seachValue;
+    d.start_date = $('#FilterLpStartDate').val();
+    d.end_date = $('#FilterLpEndDate').val();
+    console.log('data ==', d);
+    $.ajax({
+        url: base_url+"order/admin/export_lp_orders",
+        method: "POST",
+        data : d,
+        success: function(data){
+            console.log('rsponse data =', data);
+            if(data.status == 'success')
+            {
+                download('lp-orders.csv', data.data);
+            }
+            else 
+            {
+                $('#lp_order_error_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#lp_order_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#lp_order_error_msg').html('').hide();
+                }, 4000);
+            }
+            
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#lp_order_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#lp_order_error_msg').html('').hide();
             }, 4000);
         }
     });

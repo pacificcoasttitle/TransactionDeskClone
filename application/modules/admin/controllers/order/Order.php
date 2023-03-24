@@ -551,6 +551,79 @@ class Order extends MX_Controller {
         echo json_encode($json_data);
     }
 
+    function exportLpOrders()
+    {
+    	$sales_rep = $this->input->post('sales_rep');
+    	$seachValue = $this->input->post('seachValue');
+        
+    	$params = array();
+        $params['order_type'] = 'lp_orders';
+    	$params['sales_rep'] = $sales_rep;
+    	$params['seachValue'] = $seachValue;
+        $params['start_date'] = $this->input->post('start_date');
+        $params['end_date'] = $this->input->post('end_date');
+        
+    	$ordersList = $this->order_model->get_lp_orders($params);
+        
+    	if(isset($ordersList['data']) && !empty($ordersList['data']))
+    	{
+			$export_data = array();
+    		foreach ($ordersList['data'] as $key => $value) 
+    		{
+    			$file_id = isset($value['file_id']) && !empty(!empty($value['file_id'])) ? $value['file_id'] : '';
+    			if($file_id)
+    			{
+    				$export_data[] = array(
+    					'order' => $value['lp_file_number'],
+    					'file_id' => $value['file_id'],
+    					'property_address' => $value['full_address'],
+    					'product_type' => $value['product_type'],
+    					'sales_rep' => $value['sales_rep_name'],
+    					'owner_name' => $value['first_name'] . ' ' . $value['last_name'],
+    					'report_status' => !empty($value['document_name']) ? $value['document_name'] : '',
+    					'status' => $value['lp_report_status'],
+    					'created_at' => $value['created_at']
+    				);					
+    			}    			
+    		}
+    		if(isset($export_data) && !empty($export_data))
+    		{
+    			if (!is_dir('uploads/orders')) {
+			    	mkdir('./uploads/orders', 0777, TRUE);
+				}
+
+				$outputPath = './uploads/orders/output.csv';
+	    		$output = fopen($outputPath, "w");
+
+    			$header = array("Order #","File ID","Property Address","Product Type","Sales Rep","Lp Document Name","Report Status","Status","Created At");
+				fputcsv($output, $header);
+
+    			foreach ($export_data as $key => $value) 
+    			{
+    				fputcsv($output, $value);
+    			}
+
+    			header('Content-Type: application/json');
+    			$contents = file_get_contents($outputPath);
+    			$binaryData   = base64_encode($contents);
+    			unlink($outputPath);
+    			fclose($output);
+
+    			$res = array('status'=>'success','data'=>$binaryData);	
+    		}
+    		else
+	    	{
+	    		$res = array('status'=>'error','data'=>'No data found.');
+	    	}		
+    	}
+    	else
+    	{
+    		$res = array('status'=>'error','data'=>'No data found.');
+    	}
+
+    	echo json_encode($res); exit;
+    }
+
     public function getInstrumentData()
     {
         $file_id = $this->input->post('file_id');
