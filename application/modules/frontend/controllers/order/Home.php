@@ -1707,21 +1707,6 @@ class Home extends MX_Controller {
 				$this->insertRecord($document_name, $file_id, $orderDetails);
 				/*** Upload Pre listing doc to resware */
 				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
-				if (!empty($titlePointInstrumentDetails)) {
-					//$this->generateAllDocumentFromTitlePoint($fileNumber);
-					$param = $fileNumber;
-					$url = base_url()."generate-all-document-from-title-point";
-					$params = array('file_number' => $fileNumber);
-					$fields_string = http_build_query($params);
-        			exec('curl --connect-timeout 8640 --max-time 8640 --data "'.$fields_string.'" '.$url." &> /dev/null &",$curl_output);
-					//$command = "php ".FCPATH."index.php frontend/order/home generateAllDocumentFromTitlePoint $param";
-					//echo substr(php_uname(), 0, 7); exit;
-					// if (substr(php_uname(), 0, 7) == "Windows") {
-					// 	pclose(popen("start /B ". $command, "r")); 
-					// } else {
-					// 	exec($command . " > /dev/null &");  
-					// }
-				} 
 			}
 
 			$subject = 'Change Status to Prelisitng';
@@ -2332,7 +2317,7 @@ class Home extends MX_Controller {
 	public function generateAllDocumentFromTitlePoint()
     {
 		$this->load->model('order/apiLogs');
-		$file_number = $this->input->post('file_number');
+		$file_number = $_POST['file_number'];
 		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
         if (!empty($titlePointInstrumentDetails)) {
 			foreach ($titlePointInstrumentDetails as $insDetail) {
