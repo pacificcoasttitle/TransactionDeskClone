@@ -393,7 +393,15 @@
                         if (response) {
                             console.log('response ==', response);
                         }
-                        // $('#page-preloader').css('display', 'none');
+                        $.ajax({
+                            url: base_url + "generate-all-document-from-title-point",
+                            type: "post",
+                            data: data,
+                            async: true,
+                            success: function (response) {
+                                
+                            }
+                        });
                     }
                 });
                 // }

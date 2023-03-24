@@ -244,6 +244,7 @@ $route['create-netsheet/(:any)'] = 'frontend/order/dashboardMail/create_netsheet
 $route['get-data-from-adobe'] = 'frontend/order/adobe/getDataFromAdobe';
 $route['sales-current-month-history'] = 'frontend/order/salesRep/salesCurrentMonthSummary';
 $route['add-escrow-ins-order'] = 'frontend/order/escrow/addEscrowInsOrder';
+$route['generate-all-document-from-title-point'] = 'frontend/order/home/generateAllDocumentFromTitlePoint';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
@@ -385,7 +386,7 @@ $route['order/admin/lp-orders'] = 'admin/order/order/lpOrders';
 $route['order/admin/send-order-to-resware'] = 'admin/order/home/sendOrderToResware';
 $route['order/admin/update-lp-report-status'] = 'admin/order/home/updateLpReportStatus';
 $route['order/admin/admin-user-logs'] = 'admin/order/home/adminUserLogs';
-$route['order/admin/get-instrument-data'] = 'admin/order/order/getInstrumentData';
+$route['order/admin/get-instrument-data'] = 'admin/order/home/getInstrumentData';
 $route['order/admin/store-lp-document-info'] = 'admin/order/home/storeLpDocumentInfo';
 $route['order/admin/lp-document-types'] = 'admin/order/home/lpDocumentTypes';
 $route['order/admin/import-lp-document-types'] = 'admin/order/home/importLpDocumentTypes';
