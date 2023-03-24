@@ -1696,7 +1696,7 @@ class Home extends MX_Controller {
 				
 				$this->load->library('snappy_pdf');
 				// $this->snappy_pdf->pdf->setOption('page-size', 'A4');
-				$this->snappy_pdf->pdf->setOption('zoom', '1.1');
+				$this->snappy_pdf->pdf->setOption('zoom', '1.15');
 				$document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
 				if (!is_dir('uploads/pre-listing-doc')) {
 					mkdir('./uploads/pre-listing-doc', 0777, TRUE);
