@@ -1676,6 +1676,7 @@ class Home extends MX_Controller {
 					);
 				// $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 				// $file_id = $titlePointDetails[0]['file_id'];
+				$this->checkGrantDoc($fileNumber);
 				$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($fileNumber);
 				// $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
 				// $orderDetails = $this->order->get_order_details($file_id);
@@ -1828,6 +1829,50 @@ class Home extends MX_Controller {
 		}
 	}
 
+	/**
+	 * Check and generated new grant deed document for latest Instrument number
+	 */
+	public function checkGrantDoc($fileNumber)
+	{
+		$titlePointInstrumentDetails = $this->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
+		if (!empty($titlePointInstrumentDetails)) {
+			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
+			$grantDeedInstuNum = $titlePointInstrumentDetails[0]['cs4_instrument_no'];
+			$latestInstuNum = $titlePointInstrumentDetails[0]['instrument'];
+			$titlePointId = $titlePointInstrumentDetails[0]['title_point_id'];
+			$fileId = $titlePointInstrumentDetails[0]['file_id'];
+			$fileNumber = $titlePointInstrumentDetails[0]['file_number'];
+			$fips = $titlePointInstrumentDetails[0]['fips'];
+			$count = substr_count($grantDeedInstuNum, $latestInstuNum);
+			if(!isset($count) || empty($count)) {
+				if(isset($recordedDate) && !empty($recordedDate))
+				{
+					$time = strtotime($recordedDate);
+					$year = date('Y',$time);
+				}
+				$newInstuNum = $year.'-'.$latestInstuNum;
+				$condition = array(
+					'id' => $titlePointId
+				);
+				$tpData = array(
+					'cs4_instrument_no' => $newInstuNum,
+					'cs4_recorded_date' => $recordedDate,
+				);
+
+				$orderCondition = array(
+					'where' => array(
+						'file_id' => $fileId,
+					)
+				);
+				
+				$orderDetails = $this->order->get_rows($orderCondition);
+				$orderId = $orderDetails['id'];
+				$this->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
+				$this->titlePointData->update($tpData,$condition);
+			}
+		}
+	}
+	
 	function logout()
 	{
 		$this->session->sess_destroy();
