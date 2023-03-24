@@ -551,5 +551,210 @@ class Order extends MX_Controller {
         echo json_encode($json_data);
     }
 
+    function exportLpOrders()
+    {
+    	$sales_rep = $this->input->post('sales_rep');
+    	$seachValue = $this->input->post('seachValue');
+        
+    	$params = array();
+        $params['order_type'] = 'lp_orders';
+    	$params['sales_rep'] = $sales_rep;
+    	$params['seachValue'] = $seachValue;
+        $params['start_date'] = $this->input->post('start_date');
+        $params['end_date'] = $this->input->post('end_date');
+        
+    	$ordersList = $this->order_model->get_lp_orders($params);
+        
+    	if(isset($ordersList['data']) && !empty($ordersList['data']))
+    	{
+			$export_data = array();
+    		foreach ($ordersList['data'] as $key => $value) 
+    		{
+    			$file_id = isset($value['file_id']) && !empty(!empty($value['file_id'])) ? $value['file_id'] : '';
+    			if($file_id)
+    			{
+    				$export_data[] = array(
+    					'order' => $value['lp_file_number'],
+    					'file_id' => $value['file_id'],
+    					'property_address' => $value['full_address'],
+    					'product_type' => $value['product_type'],
+    					'sales_rep' => $value['sales_rep_name'],
+    					'owner_name' => $value['first_name'] . ' ' . $value['last_name'],
+    					'report_status' => !empty($value['document_name']) ? $value['document_name'] : '',
+    					'status' => $value['lp_report_status'],
+    					'created_at' => $value['created_at']
+    				);					
+    			}    			
+    		}
+    		if(isset($export_data) && !empty($export_data))
+    		{
+    			if (!is_dir('uploads/orders')) {
+			    	mkdir('./uploads/orders', 0777, TRUE);
+				}
+
+				$outputPath = './uploads/orders/output.csv';
+	    		$output = fopen($outputPath, "w");
+
+    			$header = array("Order #","File ID","Property Address","Product Type","Sales Rep","Lp Document Name","Report Status","Status","Created At");
+				fputcsv($output, $header);
+
+    			foreach ($export_data as $key => $value) 
+    			{
+    				fputcsv($output, $value);
+    			}
+
+    			header('Content-Type: application/json');
+    			$contents = file_get_contents($outputPath);
+    			$binaryData   = base64_encode($contents);
+    			unlink($outputPath);
+    			fclose($output);
+
+    			$res = array('status'=>'success','data'=>$binaryData);	
+    		}
+    		else
+	    	{
+	    		$res = array('status'=>'error','data'=>'No data found.');
+	    	}		
+    	}
+    	else
+    	{
+    		$res = array('status'=>'error','data'=>'No data found.');
+    	}
+
+    	echo json_encode($res); exit;
+    }
+
+    public function getInstrumentData()
+    {
+        $file_id = $this->input->post('file_id');
+        $this->load->library('order/order');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+
+        $this->db->select('*');
+        $this->db->from('pct_title_point_document_records');
+        $this->db->where('title_point_id', $titlePointData->id);
+        $query = $this->db->get();
+        $instrumentRecords = $query->result_array(); 
+
+        $displayDocList = $this->home_model->getDocumetTypes();
+        $displayNoticeDocList = $this->home_model->getNoticeDocumetTypes();
+
+        //echo in_array('NOT', array_column($displayNoticeDocList, 'doc_type'));
+        //print_r($displayNoticeDocList);exit;
+
+        $data = "<input type='hidden' id='title_point_id' name='title_point_id' value='$titlePointData->id'>
+        <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>Document Name</th>
+                    <th>Instrument</th>
+                    <th>Recorded Date</th>
+                    <th>Action</th>        
+                </tr>
+            </thead>
+        <tbody>";
+
+        $i = 0;
+        $j = 0;
+        $k = 0;
+        $noticeArr = array();
+        $filterArr = array();
+        if (!empty($instrumentRecords)) {
+            foreach ($instrumentRecords as $instrumentRecord) {
+                if (in_array($instrumentRecord['document_type'], array_column($displayNoticeDocList, 'doc_type'))) {
+                    
+                    if (!empty($noticeArr)) {
+                        if (isset($instrumentRecord['document_type']) && isset($instrumentRecord['document_sub_type']) && strlen($instrumentRecord['document_sub_type']) > 1) {
+                            $docType = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                            $filterNoticeExistKey = array_search($docType, array_column($noticeArr, 'document_type'));
+                        } else if (isset($instrumentRecord['document_type'])) {
+                            $filterNoticeExistKey = array_search($instrumentRecord['document_type'], array_column($noticeArr, 'document_type'));
+                        }
+                
+                        if (strlen($filterNoticeExistKey) > 0) {
+                            unset($noticeArr[$filterNoticeExistKey]);
+                            $noticeArr = array_values($noticeArr); 
+                            $j--;
+                        }
+                    }
+
+                    $noticeArr[$j]['instrument'] = $instrumentRecord['instrument'];
+                    if (isset($instrumentRecord['document_sub_type'])) {
+                        $noticeArr[$j]['document_type'] = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                    } else {
+                        $noticeArr[$j]['document_type'] = $instrumentRecord['document_type'];
+                    }
+                    $j++;
+                } else if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
+                    //echo $instrumentRecord['document_type']."----";
+                    //print_r($displayDocList);
+                    if (!empty($filterArr)) {
+                        if (isset($instrumentRecord['document_type']) && isset($instrumentRecord['document_sub_type']) && strlen($instrumentRecord['document_sub_type']) > 1) {
+                            $docType = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                            $filterExistKey = array_search($docType, array_column($filterArr, 'document_type'));
+                        } else if (isset($instrumentRecord['document_type'])) {
+                            $filterExistKey = array_search($instrumentRecord['document_type'], array_column($filterArr, 'document_type'));
+                        }
+                
+                        if (strlen($filterExistKey) > 0) {
+                            unset($filterArr[$filterExistKey]);
+                            $filterArr = array_values($filterArr); 
+                            $k--;
+                        }
+                    }
+
+                    $filterArr[$k]['instrument'] = $instrumentRecord['instrument'];
+                    if (isset($instrumentRecord['document_sub_type'])) {
+                        $filterArr[$k]['document_type'] = $instrumentRecord['document_type'].$instrumentRecord['document_sub_type'];
+                    } else {
+                        $filterArr[$k]['document_type'] = $instrumentRecord['document_type'];
+                    }
+                    $k++;
+                } else {
+                    $instrumentRecords[$i]['is_display'] = 0;
+                }
+                $i++;
+            }
+        }
+          
+        $i = 1;
+        if (!empty($instrumentRecords)) {
+            foreach ($instrumentRecords as $instrumentRecord) {
+                if (strlen(array_search($instrumentRecord['instrument'], array_column($filterArr, 'instrument')))) {
+                    $checked = "checked";                
+                } else if (strlen(array_search($instrumentRecord['instrument'], array_column($noticeArr, 'instrument')))) {
+                    $checked = "checked";                    
+                } else {
+                    $checked = "";
+                }
+                $document_name = $instrumentRecord['document_name'];
+                $instrument = $instrumentRecord['instrument'];
+                $recorded_date = $instrumentRecord['recorded_date'];
+                $id = $instrumentRecord['id'];
+                $data .= "<tr>
+                            <td>$i</td>
+                            <td>$document_name</td>
+                            <td>$instrument</td>
+                            <td>$recorded_date</td>
+                            <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
+                        </tr>";
+                $i++;
+            }
+        } else {
+            $data .= "<tr><td colspan='5'>No records found.</td></tr>";  
+        }
+        $data .= '</tbody></table>';
+        if(!empty($data)) {
+            $result = array('status'=> 'success', 'data' => $data);    
+        } else {
+            $result = array('status'=> 'error', 'data' => $data);   
+        }
+        echo json_encode($result); exit;
+    }
     
 }
