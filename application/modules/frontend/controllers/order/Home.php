@@ -1708,8 +1708,10 @@ class Home extends MX_Controller {
 				/*** Upload Pre listing doc to resware */
 				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 				if (!empty($titlePointInstrumentDetails)) {
+					//$this->generateAllDocumentFromTitlePoint($fileNumber);
 					$param = $fileNumber;
 					$command = "php ".FCPATH."index.php frontend/order/home generateAllDocumentFromTitlePoint $param";
+					echo substr(php_uname(), 0, 7);exit;
 					if (substr(php_uname(), 0, 7) == "Windows") {
 						pclose(popen("start /B ". $command, "r")); 
 					} else {
@@ -2325,6 +2327,7 @@ class Home extends MX_Controller {
 
 	public function generateAllDocumentFromTitlePoint($file_number)
     {
+		$this->load->model('order/apiLogs');
 		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
         if (!empty($titlePointInstrumentDetails)) {
 			foreach ($titlePointInstrumentDetails as $insDetail) {
@@ -2365,12 +2368,12 @@ class Home extends MX_Controller {
 				);
 		
 				$context = stream_context_create($opts);
-				$logid = $this->CI->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $file_number, 0);
+				$logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $file_number, 0);
 				$file = file_get_contents($request,false,$context);
 				$xmlData = simplexml_load_string($file);
 				$response = json_encode($xmlData);
 				$result = json_decode($response, TRUE);
-				$this->CI->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $file_number, $logid);
+				$this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $file_number, $logid);
 				$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
 				$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
 				$docStatus = strtolower($docStatus);
@@ -2386,7 +2389,7 @@ class Home extends MX_Controller {
 						}
 						$pdfFilePath = './uploads/title-point/'.$insDetail['id'].'.pdf';
 						file_put_contents($pdfFilePath, $bin);
-						$this->CI->order->uploadDocumentOnAwsS3($insDetail['id'].'.pdf', 'title-point');
+						$this->order->uploadDocumentOnAwsS3($insDetail['id'].'.pdf', 'title-point');
 					}
 				}
 			}           
