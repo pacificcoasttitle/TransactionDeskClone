@@ -455,6 +455,7 @@
         }
         .page_title{
             float: left;
+            width: 170px;
         }
         .pdf_body {
             position: absolute;
