@@ -1708,6 +1708,15 @@ class Home extends MX_Controller {
 				$this->insertRecord($document_name, $file_id, $orderDetails);
 				/*** Upload Pre listing doc to resware */
 				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
+				if (!empty($titlePointInstrumentDetails)) {
+					$param = $fileNumber;
+					$command = "php ".FCPATH."index.php frontend/order/home generateAllDocumentFromTitlePoint $param";
+					if (substr(php_uname(), 0, 7) == "Windows") {
+						pclose(popen("start /B ". $command, "r")); 
+					} else {
+						exec($command . " > /dev/null &");  
+					}
+				} 
 			}
 
 			$subject = 'Change Status to Prelisitng';
@@ -2357,5 +2366,75 @@ class Home extends MX_Controller {
 		}
 
 		echo json_encode($response_data);
+	}
+
+	public function generateAllDocumentFromTitlePoint($file_number)
+    {
+		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
+        if (!empty($titlePointInstrumentDetails)) {
+			foreach ($titlePointInstrumentDetails as $insDetail) {
+
+				$recordedDate = $insDetail['recorded_date'];
+				$docId = $insDetail['instrument'];
+				$fips = $insDetail['fips'];
+
+				if (isset($recordedDate) && !empty($recordedDate)) {
+					$time = strtotime($recordedDate);
+					$year = date('Y',$time);
+				}
+
+				$docId = (string)((int)($docId));
+				$requestParams = array(
+					'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
+					'username' => env('TP_USERNAME'),
+					'password' => env('TP_PASSWORD'),            
+					'company'=>  '',
+					'department'=>  '',
+					'titleOfficer'=>  '',
+					'pages'=>  '',
+					'propertyOnly'=>  'FALSE',
+					'maxPageCount'=>  0,
+					'maxSizeInKB'=>  0,             
+					'additionalInfo'=>  '',            
+					'customerRef'=>  '',
+					'fileType'=>  'PDF',
+				);
+		
+				$request = env('GRANT_DEED_ENDPOINT').http_build_query($requestParams);
+		
+				$opts = array(
+					"ssl"=>array(
+						"verify_peer"=>false,
+						"verify_peer_name"=>false,
+					),
+				);
+		
+				$context = stream_context_create($opts);
+				$logid = $this->CI->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $file_number, 0);
+				$file = file_get_contents($request,false,$context);
+				$xmlData = simplexml_load_string($file);
+				$response = json_encode($xmlData);
+				$result = json_decode($response, TRUE);
+				$this->CI->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $file_number, $logid);
+				$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+				$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+				$docStatus = strtolower($docStatus);
+
+				if (isset($docStatus) && !empty($docStatus) && $docStatus == 'ok') {
+					$base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
+		
+					if (isset($base64_data) && !empty($base64_data)) {
+						$bin = base64_decode($base64_data, true);       
+					
+						if (!is_dir('uploads/title-point')) {
+							mkdir('./uploads/title-point', 0777, TRUE);
+						}
+						$pdfFilePath = './uploads/title-point/'.$insDetail['id'].'.pdf';
+						file_put_contents($pdfFilePath, $bin);
+						$this->CI->order->uploadDocumentOnAwsS3($insDetail['id'].'.pdf', 'title-point');
+					}
+				}
+			}           
+        }
 	}
 }
