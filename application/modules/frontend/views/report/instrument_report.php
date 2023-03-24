@@ -894,14 +894,11 @@
                 </table>
                 <div class="table_title"><em>Section E:</em> Full Legal Description:</div>
                 <div class="legal_desc">
-                    The land referred to herein below is situated in the city of <?php echo $orderDetails['property_city']; ?>, county of <?php echo $orderDetails['county']; ?>,
-                    state of <?php echo $orderDetails['property_state']; ?>, and is described as follows: lot 1 of tract no. 13005, in the city of <?php echo $orderDetails['property_city']; ?>,
-                    county of <?php echo $orderDetails['county']; ?>, state of <?php echo $orderDetails['property_state']; ?>, as per map recorded in book 259, pages 7 through 10
-                    inclusive of maps in the office of the county recorder of said county
+                    <?php echo $titlePointDetails[0]['legal_description']; ?>
                 </div>
                 <div class="table_title"><em>Section F:</em> Property Vesting:</div>
                 <div class="legal_desc">
-                    <?php echo $orderDetails['legal_description']; ?> <a target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/grant-deed/<?php echo $titlePointDetails[0]['file_number'] ?>.pdf">
+                    <?php echo $titlePointDetails[0]['vesting_information'] ? $titlePointDetails[0]['vesting_information'] : 'Refer to grant deed below' ?> <br><a target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/grant-deed/<?php echo $titlePointDetails[0]['file_number'] ?>.pdf">
                         <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>  
                     </a> 
                 </div>
