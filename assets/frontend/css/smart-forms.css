@@ -171,7 +171,7 @@ html, body{
 .smart-forms .form-body{ padding:40px 0px; padding-bottom:20px; }
 .smart-forms .form-footer {
 	overflow:hidden;
-	padding:20px 25px;
+	padding:50px 15px;
 	padding-top:25px;
 	/*background:#f0f0f0 url(../images/foobg.png) top left repeat-x;*/
 }
