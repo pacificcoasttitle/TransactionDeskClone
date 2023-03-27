@@ -502,6 +502,17 @@
             font-size: 16px;
             line-height: 19px;
         }
+        .listing_report-alt {
+            text-align: center;
+            padding-bottom: 8px;
+            margin-bottom: 0px;
+        }
+        .listing_report-alt-1 {
+            text-align: center;
+            border-bottom: 2px solid;
+            padding-bottom: 50px;
+            margin-bottom: 8px;
+        }
         .report_info {
             font-size: 16px;
             font-weight: 700;
@@ -609,6 +620,7 @@
         .w-250 {
             width: 250px;
         }
+        
     </style>
 </head>
 <body>
