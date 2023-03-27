@@ -475,7 +475,7 @@
             text-align: right; 
             color: #121212;
             font-size: 16px;
-            line-height: 30px
+            line-height: 19px
         }
         .main_title{
             font-size: 36px;
@@ -500,17 +500,21 @@
             padding-bottom: 8px;
             margin-bottom: 8px;
             font-size: 16px;
-            line-height: 30px;
+            line-height: 19px;
         }
         .report_info {
             font-size: 16px;
             font-weight: 700;
-            line-height: 21px;
+            line-height: 20px;
         }
         .billing_info{
             margin: 20px 0;
             font-size: 16px;
-            line-height: 21px;
+            line-height: 20px;
+        }
+
+        .billing_info-m-40{
+            margin: 40px 0;
         }
         .float_left{
             float: left;
@@ -533,14 +537,20 @@
         .mt-30{
             margin-top: 30px;
         }
+        .mt-50 {
+            margin-top: 50px;
+        }
         .mb-80{
             margin-bottom: 80px;
         }
-        .py-10{
+        .mb-50 {
+            margin-bottom: 50px;
+        }
+        .py-10 {
             padding-top: 10px;
             padding-bottom: 10px;
         }
-        .f900{
+        .f900 {
             font-weight: 900;
         }
         .table_title {
@@ -596,6 +606,9 @@
         .table_g td:nth-child(2){
             width: 30%;
         }
+        .w-250 {
+            width: 250px;
+        }
     </style>
 </head>
 <body>
@@ -636,7 +649,7 @@
                                         </tr>
                                         <tr>
                                             <td style="font-size: 22px; font-weight: 500;color: #fff;text-transform: uppercase;padding-left: 70px;font-family: 'Montserrat';">
-                                                Prepared For: <br/><span style="font-size: 18px;font-weight: 300;"><?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?>John Smith</span>
+                                                Prepared For: <br/><span style="font-size: 18px;font-weight: 300;"><?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?></span>
                                             </td>
                                             <td align="right" style="padding-right: 70px;">
                                                 <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="width: 250px;" alt=""/>
@@ -652,6 +665,74 @@
                     </tbody>        
                 </table>
             </div>    
+        </div>
+    </div>
+    <div class="page-break" style="page-break-after: always;"></div>
+    <div class="page_container">
+        <div class="pdf_page size_letter">
+            <div class="pdf_header">
+                <div class="logo_container">
+                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
+                </div>
+                <div class="header_address">
+                    Pacific Coast Title Company <br>
+                    1111 E. Katella Ave Ste. 120<br>
+                    Orange, CA 92867
+                </div>
+            </div>
+            <div class="pdf_body">
+                <div class="listing_report mb-50"><b>Listing Prelim Report</b></div>
+                <div class="report_info">
+                    <div class="float_left w-250">
+                        <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
+                        Escrow No: <?php echo $orderDetails['escrow_number']; ?>
+                    </div>
+                    <div class="float_right text_right w-250">
+                        Title Order #:<?php echo $orderDetails['lp_file_number']; ?><br>
+                        Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="billing_info billing_info-m-40">
+                    <div class="float_left">
+                        Nations Equity<br>
+                        <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name'] ?><br>
+                        <?php echo $orderDetails['address']; ?><br>
+                        <?php echo $orderDetails['county']; ?>, <?php echo $orderDetails['property_state']; ?> <?php echo $orderDetails['property_zip']; ?>
+                    </div>
+                    <div class="float_right text_right">
+                        Transaction: <?php echo ($orderDetails['transaction_type'] == 2) ? 'Loan' : 'Sale' ?><br>
+                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sale_amount']; ?>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+				 <div class="listing_report-alt text_left mt-50"><b>Subject Property: <?php echo $orderDetails['full_address']; ?></b></div>
+                <div class="listing_report-alt-1 text_left mb-50"><b>On behalf of: <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?></b></div>
+                <!--<div class="mb-80"></div>-->
+             <!--   <div class="table_title"><em>Section A:</em> Property</div>
+                <table class="table_a table">
+                    <tr>
+                        <td>Prepared For:</td>
+                        <td>123 Main St. Los Angeles, CA 90150</td>
+                    </tr>
+                    <tr>
+                        <td>APN</td>
+                        <td>000-000-0000</td>
+                    </tr>
+                    <tr>
+                        <td>County</td>
+                        <td>Los Angeles</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><p class="py-10">Brief Legal: N TR 9977 BLK LOT 57</p></td>
+                    </tr>
+                </table>  -->
+                
+            </div>           
+            <div class="pdf_footer">
+                <p class="page_title">Listing Prelim Report</p>
+                <p class="page_text">Cover</p>
+            </div>
         </div>
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
@@ -710,7 +791,7 @@
                 <div class="listing_report"><b>Listing Prelim Report</b></div>
                 <div class="report_info">
                     <div class="float_left">
-                        Feb 2nd. 4:50pm<br>
+                        <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
                         Escrow No: <?php echo $orderDetails['escrow_number']; ?>
                     </div>
                     <div class="float_right text_right">
@@ -808,7 +889,7 @@
                 <div class="report_info float_right text_right">
                     Title Order #:<?php echo $orderDetails['lp_file_number']; ?><br>
                     Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    Feb 2nd. 4:50pm<br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
                     Escrow No: <?php echo $orderDetails['escrow_number']; ?>
                 </div>
             </div>
@@ -928,7 +1009,7 @@
                 <div class="report_info float_right text_right">
                     Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
                     Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    Feb 2nd. 4:50pm<br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
                     Escrow No: <?php echo $orderDetails['escrow_number'] ?>
                 </div>
             </div>
@@ -1074,7 +1155,7 @@
                 <div class="report_info float_right text_right">
                     Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
                     Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    Feb 2nd. 4:50pm<br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
                     Escrow No: <?php echo $orderDetails['escrow_number'] ?>
                 </div>
             </div>
@@ -1151,7 +1232,7 @@
                 <div class="report_info float_right text_right">
                     Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
                     Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    Feb 2nd. 4:50pm<br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
                     Escrow No: <?php echo $orderDetails['escrow_number'] ?>
                 </div>
             </div>
@@ -1179,7 +1260,7 @@
                 <div class="report_info float_right text_right">
                     Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
                     Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    Feb 2nd. 4:50pm<br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
                     Escrow No: <?php echo $orderDetails['escrow_number'] ?>
                 </div>
             </div>
