@@ -669,6 +669,7 @@
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
     <div class="page_container">
+        <div style="height:50px"></div>
         <div class="pdf_page size_letter">
             <div class="pdf_header">
                 <div class="logo_container">
