@@ -624,7 +624,7 @@
     </style>
 </head>
 <body>
-    <div class="page_container">
+    <!-- <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
                 <table cellpadding="0" cellspacing="0" border="0" style="width:100%;margin: 0 auto;height:90vh;background-position: center;background-size: cover;background-image: url('<?php echo base_url('assets/frontend/images/bg.jpg') ?>'); background-repeat: no-repeat;">
@@ -679,7 +679,7 @@
             </div>    
         </div>
     </div>
-    <div class="page-break" style="page-break-after: always;"></div>
+    <div class="page-break" style="page-break-after: always;"></div> -->
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
