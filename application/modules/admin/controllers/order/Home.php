@@ -3302,6 +3302,18 @@ class Home extends MX_Controller {
         }
     }
 
+    public function sendLPReports()
+    {
+        // echo "admin/order/home";die;
+        $this->load->library('order/order');
+        $result = $this->order->sendLPReports(1);
+        if ($result) {
+            echo json_encode(array('status'=>'success', 'message'=> 'LP Report mail sent successfully.'));   
+        } else {
+            echo json_encode(array('status'=>'error'));
+        }
+    }
+
     public function updateDualCplUser()
     {
         $user_id = $this->input->post('user_id');
