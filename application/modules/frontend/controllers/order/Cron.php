@@ -5288,12 +5288,7 @@ class Cron extends MX_Controller {
 
     public function generateAllDocumentFromTitlePoint($file_number)
     {
-        if (!is_dir('uploads/pre-listing-docydiabc')) {
-			mkdir('./uploads/pre-listing-docydiabc', 0777, TRUE);
-		}
-        // die;
 		$this->load->model('order/apiLogs');
-		// $file_number = $_POST['file_number'];
 		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
         if (!empty($titlePointInstrumentDetails)) {
 			foreach ($titlePointInstrumentDetails as $insDetail) {
@@ -5337,12 +5332,12 @@ class Cron extends MX_Controller {
 				);
 		
 				$context = stream_context_create($opts);
-				$logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $file_number, 0);
+				$logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'generate_instrument_document', $request, $requestParams, array(), $file_number, 0);
 				$file = file_get_contents($request,false,$context);
 				$xmlData = simplexml_load_string($file);
 				$response = json_encode($xmlData);
 				$result = json_decode($response, TRUE);
-				$this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $file_number, $logid);
+				$this->apiLogs->syncLogs(0, 'titlepoint', 'generate_instrument_document', $request, $requestParams, $result, $file_number, $logid);
 				$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
 				$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
 				$docStatus = strtolower($docStatus);
