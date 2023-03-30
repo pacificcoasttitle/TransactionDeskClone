@@ -926,6 +926,7 @@ class Home extends MX_Controller {
 					'underwriter' => $underWriter,
 					'escrow_officer_id' => $this->input->post('escrow_officer'),
 					'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
+					'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
 					'status'=> 1
 				);
 
@@ -1715,10 +1716,8 @@ class Home extends MX_Controller {
 				//code...
 				$command = "php ".FCPATH."index.php frontend/order/cron generatealldocumentfromtitlepoint $fileNumber > /dev/null &";
 				exec($command);
-				// echo "Command execute";
 			} catch (\Throwable $th) {
 				// print_r($th->getMessages());
-				//throw $th;
 			}
 			/** End Execute all document creation in background */
 			
