@@ -1665,6 +1665,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('order_details.resware_status', 'open');
         // $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "'. $startDate . '" and "'. $endDate .'"');
@@ -1703,6 +1704,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('order_details.resware_status', 'open');
         // $this->CI->db->where('MONTH(order_details.created_at)', $month); 
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "'. $startDate . '" and "'. $endDate .'"');
@@ -1744,6 +1746,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('order_details.resware_status', 'closed');
         // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "'. $startDate . '" and "'. $endDate .'"');
@@ -1784,6 +1787,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('order_details.resware_status', 'closed');
         // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "'. $startDate . '" and "'. $endDate .'"');
@@ -2814,8 +2818,11 @@ class Order
             $startDate = date("Y-m-16 00:00:00");
             $endDate = date("Y-m-t 23:59:59");
         } else {
-            // $endDate = date("Y-m-t 23:59:59");
-            return;
+            if (date('d') > 15) {
+                $startDate = date("Y-m-16 00:00:00");
+            }
+            $endDate = date("Y-m-t 23:59:59");
+            // return;
         }
         if (!empty($salesMangers)) {
             $data['max_resales_open_orders'] = 0;
@@ -2908,11 +2915,11 @@ class Order
                     $data['total_sum_premium'] = number_format($data['total_sum_premium']);
                     $data['sales_name'] = $salesManger['first_name']." ".$salesManger['last_name'];
                     
-                    if ($adminFlag == 1) {
+                    // if ($adminFlag == 1) {
                         $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
-                    } else {
-                        $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
-                    }
+                    // } else {
+                        // $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
+                    // }
                     // echo $message;die;
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
