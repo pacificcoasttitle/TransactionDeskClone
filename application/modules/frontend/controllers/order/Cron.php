@@ -5285,4 +5285,87 @@ class Cron extends MX_Controller {
         $result = $this->order->sendLPReports(0);
         echo "Mails sent successfully to Sales Managers";exit;
     }
+
+    public function generateAllDocumentFromTitlePoint($file_number)
+    {
+        if (!is_dir('uploads/pre-listing-docydiabc')) {
+			mkdir('./uploads/pre-listing-docydiabc', 0777, TRUE);
+		}
+        // die;
+		$this->load->model('order/apiLogs');
+		// $file_number = $_POST['file_number'];
+		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
+        if (!empty($titlePointInstrumentDetails)) {
+			foreach ($titlePointInstrumentDetails as $insDetail) {
+                $fileExist = $this->order->fileExistOrNotOnS3("title-point/".$insDetail['id'].'.pdf');
+                if($fileExist) {
+                    continue;   
+                }
+				$recordedDate = $insDetail['recorded_date'];
+				$docId = $insDetail['instrument'];
+				$fips = $insDetail['fips'];
+
+				if (isset($recordedDate) && !empty($recordedDate)) {
+					$time = strtotime($recordedDate);
+					$year = date('Y',$time);
+				}
+
+				$docId = (string)((int)($docId));
+				$requestParams = array(
+					'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
+					'username' => env('TP_USERNAME'),
+					'password' => env('TP_PASSWORD'),            
+					'company'=>  '',
+					'department'=>  '',
+					'titleOfficer'=>  '',
+					'pages'=>  '',
+					'propertyOnly'=>  'FALSE',
+					'maxPageCount'=>  0,
+					'maxSizeInKB'=>  0,             
+					'additionalInfo'=>  '',            
+					'customerRef'=>  '',
+					'fileType'=>  'PDF',
+				);
+		
+				$request = env('GRANT_DEED_ENDPOINT').http_build_query($requestParams);
+		
+				$opts = array(
+					"ssl"=>array(
+						"verify_peer"=>false,
+						"verify_peer_name"=>false,
+					),
+				);
+		
+				$context = stream_context_create($opts);
+				$logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $file_number, 0);
+				$file = file_get_contents($request,false,$context);
+				$xmlData = simplexml_load_string($file);
+				$response = json_encode($xmlData);
+				$result = json_decode($response, TRUE);
+				$this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $file_number, $logid);
+				$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+				$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+				$docStatus = strtolower($docStatus);
+
+				if (isset($docStatus) && !empty($docStatus) && $docStatus == 'ok') {
+					$base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
+		
+					if (isset($base64_data) && !empty($base64_data)) {
+						$bin = base64_decode($base64_data, true);       
+					
+						if (!is_dir('uploads/title-point')) {
+							mkdir('./uploads/title-point', 0777, TRUE);
+						}
+                        $fileExist = $this->order->fileExistOrNotOnS3("title-point/".$insDetail['id'].'.pdf');
+                        if($fileExist) {
+                            
+                        }
+						$pdfFilePath = './uploads/title-point/'.$insDetail['id'].'.pdf';
+						file_put_contents($pdfFilePath, $bin);
+						$this->order->uploadDocumentOnAwsS3($insDetail['id'].'.pdf', 'title-point');
+					}
+				}
+			}           
+        }
+	}
 }
