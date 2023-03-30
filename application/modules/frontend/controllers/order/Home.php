@@ -1710,123 +1710,20 @@ class Home extends MX_Controller {
 				//$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
 			}
 
-			$subject = 'Change Status to Prelisitng';
-    		$body = 'Please change order status to Prelisting';
-    		
-			$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
-			 
-			$request = array();
-			$endPoint = 'files/'.$file_id.'/notes';
-			$request['Subject'] = $subject;
-			$request['Body'] = $body;
-			$request['FileID'] = $file_id;
-			$notes_data = json_encode($request);
-			$user_data = array();
-
-			//if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
-				$user_data['admin_api'] = 1; 
-			//}
-			
-			// $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
-			// $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-			// $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
-			
-			// if (isset($result) && !empty($result)) {
-			// 	$response = json_decode($result, TRUE);
-
-			// 	if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-			// 		$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-			// 		$errors[] = $message;
-			// 	} else {
-			// 		$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
-			// 		$notesData = array(
-			// 			'resware_note_id' => $noteId,
-			// 			'subject' => $subject,
-			// 			'note' => $body,
-			// 			'user_id' => $userdata['id'],
-			// 			'order_id' => $orderId,
-			// 			'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0
-			// 		);
-			// 		$id = $this->note->insert($notesData);
-			// 		if ($noteId && $id) {
-			// 			$success[] = 'Note created successfully.';
-			// 		} else {
-			// 			$errors[] = 'Something went wrong. Please try again.';
-			// 		}
-			// 	}
-			// }
-
-			// if (!empty($orderDetails['sales_representative'])) {
-			// 	$parties_email = array();
-			// 	$from_name = 'Pacific Coast Title Company';
-			// 	$from_mail = env('FROM_EMAIL');
-			// 	$condition = array(
-	        //         'id' => $orderDetails['sales_representative']	                
-	        //     );
-			// 	$salesRepDetails = $this->home_model->getSalesRepDetails($condition);
-			// 	$to = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
-
-			// 	$file = array();
-			// 	if (!empty($to)) {
-			// 		$file[] = env('AWS_PATH').'pre-listing-doc/'.$geoFileName;
-			// 		$agentDetails = array();
-			// 		if (!empty($orderDetails['buyer_agent_id'])) {
-			// 			$condition = array(
-			// 				'id' => $orderDetails['buyer_agent_id']
-			// 			);
-			// 			$agentDetails = $this->agent_model->get_agents($condition);
-			// 			$parties_email[] = $agentDetails['email_address'];
-			// 		}
-
-			// 		if (!empty($orderDetails['listing_agent_id'])) {
-			// 			$condition = array(
-			// 				'id' => $orderDetails['listing_agent_id']
-			// 			);
-			// 			$agentDetails = $this->agent_model->get_agents($condition);
-			// 			$parties_email[] = $agentDetails['email_address'];
-			// 		}
-
-			// 		if (!empty($orderDetails['escrow_lender_id'])) {
-			// 			$condition = array(
-			// 				'id' => $orderDetails['escrow_lender_id']
-			// 			);
-			// 			$customerDetails = $this->home_model->get_customers($condition);
-			// 			$parties_email[] = $customerDetails['email_address'];
-			// 		}
-
-			// 		if (!empty($orderDetails['cpl_lender_id'])) {
-			// 			$condition = array(
-			// 				'id' => $orderDetails['cpl_lender_id']
-			// 			);
-			// 			$customerDetails = $this->home_model->get_customers($condition);
-			// 			$parties_email[] = $customerDetails['email_address'];
-			// 		}
-
-			// 		$message = 'Hi <br> Please find attachment for pre listing document'; 
-			// 		$subject = $fileNumber. ' - Pre Listing Document';
-			// 		$parties_email[] = env('ORDER_ADMIN_EMAIL');
-			// 		$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
-			// 		$this->load->helper('sendemail');
-			// 		$to = 'hitesh.p@crestinfosystems.com';
-			// 		$cc = array();
-			// 		$mailParams = array(
-			// 			'from_mail' => $from_mail, 
-			// 			'from_name' => $from_name, 
-			// 			'to' => $to,
-			// 			'subject' => $subject,
-			// 			'message' => $message,
-			// 			'cc' => json_encode($cc)
-			// 		);
-			// 		$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array(), $orderId, 0);
-
-			// 		$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
-
-			// 		$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
-			// 	}
-				
-			// }
+			/** Start Execute all document creation in background */
+			try {
+				//code...
+				$command = "php ".FCPATH."index.php frontend/order/cron generatealldocumentfromtitlepoint $fileNumber > /dev/null &";
+				exec($command);
+				// echo "Command execute";
+			} catch (\Throwable $th) {
+				// print_r($th->getMessages());
+				//throw $th;
+			}
+			/** End Execute all document creation in background */
 			
 		}
+		
 	}
 
 	/**
@@ -2359,75 +2256,4 @@ class Home extends MX_Controller {
 		echo json_encode($response_data);
 	}
 
-	public function generateAllDocumentFromTitlePoint()
-    {
-		$this->load->model('order/apiLogs');
-		$file_number = $_POST['file_number'];
-		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
-        if (!empty($titlePointInstrumentDetails)) {
-			foreach ($titlePointInstrumentDetails as $insDetail) {
-
-				$recordedDate = $insDetail['recorded_date'];
-				$docId = $insDetail['instrument'];
-				$fips = $insDetail['fips'];
-
-				if (isset($recordedDate) && !empty($recordedDate)) {
-					$time = strtotime($recordedDate);
-					$year = date('Y',$time);
-				}
-
-				$docId = (string)((int)($docId));
-				$requestParams = array(
-					'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
-					'username' => env('TP_USERNAME'),
-					'password' => env('TP_PASSWORD'),            
-					'company'=>  '',
-					'department'=>  '',
-					'titleOfficer'=>  '',
-					'pages'=>  '',
-					'propertyOnly'=>  'FALSE',
-					'maxPageCount'=>  0,
-					'maxSizeInKB'=>  0,             
-					'additionalInfo'=>  '',            
-					'customerRef'=>  '',
-					'fileType'=>  'PDF',
-				);
-		
-				$request = env('GRANT_DEED_ENDPOINT').http_build_query($requestParams);
-		
-				$opts = array(
-					"ssl"=>array(
-						"verify_peer"=>false,
-						"verify_peer_name"=>false,
-					),
-				);
-		
-				$context = stream_context_create($opts);
-				$logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $file_number, 0);
-				$file = file_get_contents($request,false,$context);
-				$xmlData = simplexml_load_string($file);
-				$response = json_encode($xmlData);
-				$result = json_decode($response, TRUE);
-				$this->apiLogs->syncLogs(0, 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $file_number, $logid);
-				$responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
-				$docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
-				$docStatus = strtolower($docStatus);
-
-				if (isset($docStatus) && !empty($docStatus) && $docStatus == 'ok') {
-					$base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
-		
-					if (isset($base64_data) && !empty($base64_data)) {
-						$bin = base64_decode($base64_data, true);       
-					
-						if (!is_dir('uploads/title-point')) {
-							mkdir('./uploads/title-point', 0777, TRUE);
-						}
-						$pdfFilePath = './uploads/title-point/'.$insDetail['id'].'.pdf';
-						file_put_contents($pdfFilePath, $bin);
-						$this->order->uploadDocumentOnAwsS3($insDetail['id'].'.pdf', 'title-point');
-					}
-				}
-			}           
-        }
-	}
 }

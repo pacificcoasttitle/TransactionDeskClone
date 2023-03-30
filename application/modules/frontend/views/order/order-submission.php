@@ -393,15 +393,15 @@
                         if (response) {
                             console.log('response ==', response);
                         }
-                        $.ajax({
-                            url: base_url + "generate-all-document-from-title-point",
-                            type: "post",
-                            data: data,
-                            async: true,
-                            success: function (response) {
+                        // $.ajax({
+                        //     url: base_url + "generate-all-document-from-title-point",
+                        //     type: "post",
+                        //     data: data,
+                        //     async: true,
+                        //     success: function (response) {
                                 
-                            }
-                        });
+                        //     }
+                        // });
                     }
                 });
                 // }
