@@ -5297,10 +5297,10 @@ class Cron extends MX_Controller {
 		$titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
         if (!empty($titlePointInstrumentDetails)) {
 			foreach ($titlePointInstrumentDetails as $insDetail) {
-                $fileExist = $this->order->fileExistOrNotOnS3("title-point/".$insDetail['id'].'.pdf');
-                if($fileExist) {
-                    continue;   
-                }
+                // $fileExist = $this->order->fileExistOrNotOnS3("title-point/".$insDetail['id'].'.pdf');
+                // if($fileExist) {
+                //     continue;   
+                // }
 				$recordedDate = $insDetail['recorded_date'];
 				$docId = $insDetail['instrument'];
 				$fips = $insDetail['fips'];
