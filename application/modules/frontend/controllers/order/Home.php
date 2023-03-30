@@ -292,7 +292,7 @@ class Home extends MX_Controller {
 				}
 
 				$underWriter = '';
-				if (isset($_POST['EscrowId']) && !empty($_POST['EscrowId'])) {
+				if (isset($_POST['EscrowId']) && !empty($_POST['EscrowId']) || (isset($_POST['escrow_officer']) && !empty($_POST['escrow_officer']))) {
 					$place_order = array();
 					$loanFlag = 1;
 					$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
@@ -800,8 +800,12 @@ class Home extends MX_Controller {
 					}
 				} else {
 					$lpOrderFlag = 1;
+					$loanFlag = 1;
+					if(strpos($ProductTypeTxt, 'Sale') !== false) {
+						$loanFlag = 0;
+					}
 				}
-					
+				
 				$lp_file_number = null;
 				$customer_id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 				if ($lpOrderFlag == 1) {
