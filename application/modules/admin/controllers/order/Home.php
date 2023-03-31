@@ -3858,42 +3858,8 @@ class Home extends MX_Controller {
         }
 
         $file_id = $titlePointData['file_id'];
-        $condition = array(
-            'where' => array(
-                'file_number' => $titlePointData['file_number'],
-            )
-        );
-        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-        $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($titlePointData['file_number']);
-        $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1); });
-        $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1); });
-
-        $instrumentRecordDetails['itemsForReview'] = array_chunk($itemsForReview, 25);
-        $instrumentRecordDetails['foreclosure'] = array_chunk($foreclosure, 25);
+        $this->order->createLpReport($titlePointData['file_number'], true);
         
-        $orderDetails = $this->order->get_order_details($file_id);
-        $instrumentRecordDetails['orderDetails'] = $orderDetails;
-        $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
-        $plat_map_url = '';
-		if ($this->order->fileExistOrNotOnS3('plat-map/'.$titlePointData['file_number'].'.png'))  {
-            $plat_map_url = env('AWS_PATH')."plat-map/".$titlePointData['file_number'].'.png';
-        } 
-        $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
-        $html = $this->load->view('report/instrument_report',$instrumentRecordDetails,true);
-        // echo $html;die;
-        
-        $this->load->library('snappy_pdf');
-        // $this->snappy_pdf->pdf->setOption('page-size', 'A4');
-        $this->snappy_pdf->pdf->setOption('zoom', '1.15');
-        $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
-        if (!is_dir('uploads/pre-listing-doc')) {
-            mkdir('./uploads/pre-listing-doc', 0777, TRUE);
-        }
-        $pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
-        $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
-        $this->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
-        $this->order->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
-        $this->insertRecord($document_name, $file_id, $orderDetails);
         $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');

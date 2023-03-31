@@ -2982,8 +2982,13 @@ class Order
     /** 
      * Generate LP Report for LP Order
      */
-    public function createLpReport($fileNumber) 
+    public function createLpReport($fileNumber, $regenerate=false) 
     {
+        $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
+        if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$document_name) && !$regenerate) {
+            return;
+        }
+        
         $this->CI->load->model('order/titlePointData');
         $this->CI->load->library('order/titlepoint');
         $userdata = $this->CI->session->userdata('user');
@@ -3143,7 +3148,7 @@ class Order
             $this->CI->load->library('snappy_pdf');
             // $this->snappy_pdf->pdf->setOption('page-size', 'A4');
             $this->CI->snappy_pdf->pdf->setOption('zoom', '1.15');
-            $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
+            
             if (!is_dir('uploads/pre-listing-doc')) {
                 mkdir('./uploads/pre-listing-doc', 0777, TRUE);
             }
