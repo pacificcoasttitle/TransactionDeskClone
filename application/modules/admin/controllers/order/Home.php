@@ -3840,6 +3840,7 @@ class Home extends MX_Controller {
     }
 
     public function storeLpDocumentInfo()
+
     {
         $this->load->library('order/order');
         $this->load->model('order/titlePointData');
@@ -3865,34 +3866,6 @@ class Home extends MX_Controller {
         redirect(base_url().'order/admin/lp-orders');
 
     }
-
-    public function insertRecord($document_name, $fileId, $orderDetails)
-	{
-		$this->load->model('frontend/order/document');
-		// $this->load->library('order/resware');
-		// $this->load->model('order/apiLogs');
-		
-		$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
-		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
-		// $binaryData   = base64_encode($contents); 
-
-		$documentData = array(
-			'document_name' => $document_name,
-			'original_document_name' => $document_name,
-			'document_type_id' => 1037,
-			'document_size' => $fileSize,
-			'user_id' => 0,
-			'order_id' => $orderDetails['order_id'],
-			'description' => 'Pre Listing Report Document',
-			'is_sync' => 1,
-			'is_prelim_document' => 0,
-			'is_pre_listing_doc' => 0,
-			'is_pre_listing_report_doc' => 1
-		);
-		$condition = array('is_pre_listing_report_doc' => 1, 'order_id' => $orderDetails['order_id']);
-		$this->document->delete($documentData, $condition);
-		$this->document->insert($documentData);
-	}
 
     public function lpDocumentTypes()
     {

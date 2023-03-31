@@ -98,6 +98,19 @@ class TitlePointData extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function getLatestGrantDeedInstrumentDetails($fileNumber)
+    {
+        $table = $this->table;
+
+        $this->db->select('pct_title_point_document_records.*, pct_order_title_point_data.cs4_instrument_no, pct_order_title_point_data.cs4_recorded_date, pct_order_title_point_data.fips, pct_order_title_point_data.file_id, pct_order_title_point_data.file_number')
+            ->from($table)
+            ->join('pct_title_point_document_records', 'pct_order_title_point_data.id = pct_title_point_document_records.title_point_id', 'left');
+        $this->db->where('pct_order_title_point_data.file_number', $fileNumber);
+        $this->db->where('pct_title_point_document_records.document_name', 'Grant Deed')->order_by('id',"desc")->limit(1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
 
 ?>

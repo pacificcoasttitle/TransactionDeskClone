@@ -2988,7 +2988,7 @@ class Order
         if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$document_name) && !$regenerate) {
             return;
         }
-        
+
         $this->CI->load->model('order/titlePointData');
         $this->CI->load->library('order/titlepoint');
         $userdata = $this->CI->session->userdata('user');
@@ -3001,8 +3001,6 @@ class Order
         $file_id = $titlePointDetails[0]['file_id'];
         // print_r($file_id);die;
         $orderDetails = $this->get_order_details($file_id);
-        // echo "<pre>";
-        // print_r($orderDetails);die;
 
         /************** Plat map url integration Start ************** */
         
@@ -3113,7 +3111,6 @@ class Order
         $postData['state'] = $orderDetails['state'];
         $postData['county'] = $orderDetails['county'];
         $postData['property'] = $orderDetails['address'];
-
         $this->CI->titlepoint->generateGeoDoc($postData);
         $orderId = $_POST['order_id'];
         $geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
@@ -3171,7 +3168,10 @@ class Order
 		$this->CI->load->model('order/document');
 		// $this->load->library('order/resware');
 		$userdata = $this->CI->session->userdata('user');
-		$fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
+        if (empty($userdata)) {
+            $userdata = $this->CI->session->userdata('admin');
+        }
+        $fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
 		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
 		// $binaryData   = base64_encode($contents); 
 
