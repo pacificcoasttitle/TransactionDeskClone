@@ -245,13 +245,10 @@
 	}
 
 	function downloadDocumentFromAws(url, documentType) {
-		console.log('url ==', url);
-		console.log('documentType ==', documentType);
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		var fileNameIndex = url.lastIndexOf("/") + 1;
 		var filename = url.substr(fileNameIndex);
-		console.log('filename ==', filename);
 		$.ajax({
 			url: base_url + "download-aws-document-admin",
 			type: "post",
