@@ -715,7 +715,7 @@
                     </div>
                     <div class="float_right text_right">
                         Transaction: <?php echo ($orderDetails['transaction_type'] == 2) ? 'Loan' : 'Sale' ?><br>
-                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sale_amount']; ?>
+                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sales_amount']; ?>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -771,7 +771,7 @@
                 <div class="title_divider"></div>
                 <div class="f26">And its contents</div>
                 <div class="body_text">
-                    The information is available through public sources as of <b><span class="red_text">02/28/2023</span></b>. Information provided by the
+                    The information is available through public sources as of <b><span class="red_text"><?php echo date('m/d/Y', strtotime($orderDetails['opened_date'])); ?></span></b>. Information provided by the
                     vendor and public records may not always match exactly depending on how often the information is
                     updated by each source. The items presented or those found that are directly tied to the property in
                     question. Items that are directly associated with the owner will require a statement of
@@ -822,7 +822,7 @@
                     </div>
                     <div class="float_right text_right">
                         Transaction: <?php echo ($orderDetails['transaction_type'] == 2) ? 'Loan' : 'Sale' ?><br>
-                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sale_amount']; ?>
+                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sales_amount']; ?>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -1056,7 +1056,7 @@
                     <tr>
                         <td></td>
                         <td>Document Name</td>
-                        <td>Amount</td>
+                        <!-- <td>Amount</td> -->
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
@@ -1068,9 +1068,9 @@
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <td style="width: 15%;">$<?php echo  $val['amount']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
-                        <td class="text_center"><b class="orange_text"><?php echo  $val['instrument']; ?></b></td>
+                        <td class="text_center"><b class="orange_text"><a  style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >
@@ -1178,7 +1178,7 @@
                     <tr>
                         <td></td>
                         <td>Document Name</td>
-                        <td>Amount</td>
+                        <!-- <td>Amount</td> -->
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
@@ -1190,9 +1190,10 @@
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <td style="width: 15%;">$<?php echo  $val['amount']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
-                        <td class="text_center"><b class="orange_text"><?php echo  $val['instrument']; ?></b></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        
                     </tr>
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >

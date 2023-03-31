@@ -2978,4 +2978,262 @@ class Order
             return array();
         }         
     }
+
+    /** 
+     * Generate LP Report for LP Order
+     */
+    public function createLpReport($fileNumber, $regenerate=false) 
+    {
+        $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
+        if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$document_name) && !$regenerate) {
+            return;
+        }
+
+        $this->CI->load->model('order/titlePointData');
+        $this->CI->load->library('order/titlepoint');
+        $userdata = $this->CI->session->userdata('user');
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+                )
+            );
+        $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
+        $file_id = $titlePointDetails[0]['file_id'];
+        // print_r($file_id);die;
+        $orderDetails = $this->get_order_details($file_id);
+
+        /************** Plat map url integration Start ************** */
+        
+        $plat_map_url = '';
+        if ($this->fileExistOrNotOnS3('plat-map/'.$fileNumber.'.png')) 
+        {
+            $plat_map_url = env('AWS_PATH')."plat-map/".$fileNumber.'.png';
+            
+        } 
+        else
+        {
+            $address = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
+            $locale = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';
+            $propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
+            $PropertyZip = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';        
+            if (($locale)) 
+            {
+                if(!empty($propertyState))
+                {
+                    $locale .= ', '.$propertyState;
+                } 
+                else 
+                {
+                    $locale .= ', CA';
+                }
+            }
+            $stdcls=new stdClass();
+            $stdcls->Address= $address;
+            $stdcls->LastLine= (string) $locale;
+            $stdcls->ClientReference= '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
+            $stdcls->OwnerName= '';
+            $stdcls->key= env('BLACK_KNIGHT_KEY');
+            $stdcls->ReportType= '111';
+            $request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
+    
+            $requestUrl = $request.http_build_query($stdcls);
+            $query_string = parse_url($request,PHP_URL_QUERY);
+            parse_str($query_string, $requestParams);
+            $getsortedresults = 'false';
+            
+            $opts = array(
+                'http'=>array(
+                    'header' => "User-Agent:MyAgent/1.0\r\n"
+                ),
+                "ssl"=>array(
+                    "verify_peer"=>false,
+                    "verify_peer_name"=>false,
+                )
+            );
+    
+            $context = stream_context_create($opts);
+            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'black knight plat map', 'address_search', $requestUrl, $requestParams, array(), $orderDetails['order_id'], 0);
+            
+            $file = file_get_contents($requestUrl,false,$context);
+            $xmlData = simplexml_load_string($file);
+            $response = json_encode($xmlData);
+            $result = json_decode($response,TRUE);
+            // echo "<pre>";
+            $this->CI->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $requestUrl, $requestParams, $result, $orderDetails['order_id'], $logid);
+            // $property_info = array();
+            if(isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK')
+            {
+                $reportUrl = (isset($result['ReportURL']) && !empty($result['ReportURL'])) ? $result['ReportURL'] : '';
+                // $reportUrl = "https://api.sitexdata.com/111/A9848F79-B03E-5199-87B5-9D7A01B8A111.asmx/GetXMLWithFilter?reportInfo=dKagb-JSbWexO13idLleU6jTy7YyY-gG4_QVbq5sHOWWHuYyviAIfxaZ3rNiK_YGA8I26ioLlWrZUPvQNXjgra6PdYeNsVlNxhIMu3hnlAnSGmSKaTfcYg2&filter=<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>";
+                // print_r($reportUrl);die;
+    
+                if($reportUrl)
+                {
+                    $rdata=new stdClass();
+                    $rdata->key= env('BLACK_KNIGHT_KEY');
+                    $requestUrl = $reportUrl.http_build_query($rdata);
+                    $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - request', 'address_search', $requestUrl, $requestParams, array(), $orderDetails['order_id'], 0);
+                    $reportFile = file_get_contents($requestUrl,false,$context);
+                    $reportData = simplexml_load_string($reportFile);
+                    $response = json_encode($reportData);
+                    $this->CI->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - response', 'address_search', $requestUrl, $requestParams, $response, $orderDetails['order_id'],  $logid);
+                    $details = json_decode($response,TRUE);
+                    if (isset($details['PlatMap']) && !empty($details['PlatMap']['Content'])) {
+                        $imagedata = isset($details['PlatMap']['Content']) && !empty($details['PlatMap']['Content']) ? $details['PlatMap']['Content'] : '';
+                        if($imagedata)
+                        {
+                            if (!is_dir('uploads/plat-map')) 
+                            {
+                                mkdir('./uploads/plat-map', 0777, TRUE);
+                            }
+                            $path = './uploads/plat-map/'.$fileNumber.'.png';
+    
+                            file_put_contents($path, base64_decode($imagedata,true));
+                            if (env('AWS_ENABLE_FLAG') == 1) { 
+                                $plat_map_url = env('AWS_PATH')."plat-map/".$fileNumber.'.png';
+                            } else {
+                                $plat_map_url = base_url().'uploads/plat-map/'.$fileNumber.'.png';
+                            }
+                            $this->uploadDocumentOnAwsS3($fileNumber.'.png', 'plat-map');
+                        }
+                    }
+                }
+            }
+        }
+        
+        /************** Plat map url integration end ************** */
+
+        // $orderDetails = $this->get_order_details($file_id);
+        // $_POST['primary_owner'] = $orderDetails['primary_owner'];
+        // $_POST['secondary_owner'] = $orderDetails['secondary_owner'];
+        $postData['file_number'] = $fileNumber;
+        $postData['order_id'] = $orderDetails['order_id'];
+        $postData['state'] = $orderDetails['state'];
+        $postData['county'] = $orderDetails['county'];
+        $postData['property'] = $orderDetails['address'];
+        $this->CI->titlepoint->generateGeoDoc($postData);
+        $orderId = $_POST['order_id'];
+        $geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
+        if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
+            /** Generate Pre listing report document */
+            // $fileNumber = "LP-00000013";
+            $condition = array(
+                'where' => array(
+                    'file_number' => $fileNumber,
+                    )
+                );
+            // $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+            // $file_id = $titlePointDetails[0]['file_id'];
+            $this->checkGrantDoc($fileNumber);
+            $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
+            // $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
+            // $orderDetails = $this->get_order_details($file_id);
+            $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1); });
+            $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1); });
+            
+            // $instrumentRecordDetails['orderDetails'] = $orderDetails;
+            // $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
+            $instrumentRecordDetails['orderDetails'] = $orderDetails;
+            $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
+            $instrumentRecordDetails['itemsForReview'] = array_chunk($itemsForReview, 25);
+            $instrumentRecordDetails['foreclosure'] = array_chunk($foreclosure, 25);
+            // $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
+            $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
+            
+            $html = $this->CI->load->view('report/instrument_report',$instrumentRecordDetails,true);
+            
+            $this->CI->load->library('snappy_pdf');
+            // $this->snappy_pdf->pdf->setOption('page-size', 'A4');
+            $this->CI->snappy_pdf->pdf->setOption('zoom', '1.15');
+            
+            if (!is_dir('uploads/pre-listing-doc')) {
+                mkdir('./uploads/pre-listing-doc', 0777, TRUE);
+            }
+            $pdfFilePath = FCPATH.'/uploads/pre-listing-doc/'.$document_name;
+            $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+            $this->CI->snappy_pdf->pdf->generateFromHtml($html,$pdfFilePath);
+            // die;
+            $this->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
+            $this->insertRecord($document_name, $file_id, $orderDetails);
+            /*** Upload Pre listing doc to resware */
+            //$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
+        }
+    }
+
+    /**
+	 * Insert pre listing document record in document table 
+	 */
+    public function insertRecord($document_name, $fileId, $orderDetails)
+	{
+		$this->CI->load->model('order/document');
+		// $this->load->library('order/resware');
+		$userdata = $this->CI->session->userdata('user');
+        if (empty($userdata)) {
+            $userdata = $this->CI->session->userdata('admin');
+        }
+        $fileSize = filesize(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
+		// $binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Pre Listing Report Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_pre_listing_doc' => 0,
+			'is_pre_listing_report_doc' => 1
+		);
+		$condition = array('is_pre_listing_report_doc' => 1, 'order_id' => $orderDetails['order_id']);
+		$this->CI->document->delete($documentData, $condition);
+		$this->CI->document->insert($documentData);
+	}
+
+    /**
+	 * Check and generated new grant deed document for latest Instrument number
+	 */
+	public function checkGrantDoc($fileNumber)
+	{
+		$titlePointInstrumentDetails = $this->CI->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
+		if (!empty($titlePointInstrumentDetails)) {
+			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
+			$grantDeedInstuNum = $titlePointInstrumentDetails[0]['cs4_instrument_no'];
+			$latestInstuNum = $titlePointInstrumentDetails[0]['instrument'];
+			$titlePointId = $titlePointInstrumentDetails[0]['title_point_id'];
+			$fileId = $titlePointInstrumentDetails[0]['file_id'];
+			$fileNumber = $titlePointInstrumentDetails[0]['file_number'];
+			$fips = $titlePointInstrumentDetails[0]['fips'];
+			$count = substr_count($grantDeedInstuNum, $latestInstuNum);
+			if(!isset($count) || empty($count)) {
+				if(isset($recordedDate) && !empty($recordedDate))
+				{
+					$time = strtotime($recordedDate);
+					$year = date('Y',$time);
+				}
+				$newInstuNum = $year.'-'.$latestInstuNum;
+				$condition = array(
+					'id' => $titlePointId
+				);
+				$tpData = array(
+					'cs4_instrument_no' => $newInstuNum,
+					'cs4_recorded_date' => $recordedDate,
+				);
+
+				$orderCondition = array(
+					'where' => array(
+						'file_id' => $fileId,
+					)
+				);
+				
+				$orderDetails = $this->get_rows($orderCondition);
+				$orderId = $orderDetails['id'];
+				$this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
+				$this->CI->titlePointData->update($tpData,$condition);
+			}
+		}
+	}
 }
