@@ -1674,6 +1674,7 @@ class Home extends MX_Controller {
 			$geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
 			if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
 				/** Generate Pre listing report document */
+				// $fileNumber = "LP-00000013";
 				$condition = array(
 					'where' => array(
 						'file_number' => $fileNumber,
