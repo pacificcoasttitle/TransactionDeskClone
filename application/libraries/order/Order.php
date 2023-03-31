@@ -3108,7 +3108,7 @@ class Order
         // $_POST['secondary_owner'] = $orderDetails['secondary_owner'];
         $postData['file_number'] = $fileNumber;
         $postData['order_id'] = $orderDetails['order_id'];
-        $postData['state'] = $orderDetails['state'];
+        $postData['state'] = $orderDetails['property_state'];
         $postData['county'] = $orderDetails['county'];
         $postData['property'] = $orderDetails['address'];
         $this->CI->titlepoint->generateGeoDoc($postData);
