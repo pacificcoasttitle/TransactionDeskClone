@@ -3116,7 +3116,7 @@ class Order
         }
         $orderId = $_POST['order_id'];
         $geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
-        if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
+        // if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
             /** Generate Pre listing report document */
             // $fileNumber = "LP-00000013";
             $condition = array(
@@ -3159,7 +3159,7 @@ class Order
             $this->insertRecord($document_name, $file_id, $orderDetails);
             /*** Upload Pre listing doc to resware */
             //$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
-        }
+        // }
     }
 
     /**
