@@ -1009,6 +1009,7 @@
         //is_notice = 1 and is_display = 1
         $i = 0; 
         $page = 4;
+        if (!empty($itemsForReview)) {
         foreach ($itemsForReview as $k => $data) {  
             // is_notice = 0 and is_display = 1
     ?>
@@ -1070,7 +1071,7 @@
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
                         <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
-                        <td class="text_center"><b class="orange_text"><a  style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >
@@ -1150,7 +1151,45 @@
         </div>
     </div>
     <?php 
-    $page++; } ?>
+    $page++; } } else { ?> 
+        <div class="page_container">
+        <div style="height:50px"></div>
+        <div class="pdf_page size_letter">
+            <div class="pdf_header">
+                <div class="logo_container">
+                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
+                </div>
+                <div class="report_info float_right text_right">
+                    Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
+                    Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
+                    Escrow No: <?php echo $orderDetails['escrow_number'] ?>
+                </div>
+            </div>
+            <div class="pdf_body">
+                <div class="table_title"><em>Section G:</em> Liens & Items for Review</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    
+                    <tr style="text-align: center;" >
+                        <td colspan="4" > No Record Found</td>
+                    </tr>
+                    
+                </table>
+                
+            </div>           
+            <div class="pdf_footer">
+                <p class="page_title">Listing Prelim Report</p>
+                <p class="page_text"><?php echo $page; ?></p>
+            </div>
+        </div>
+    </div>
+    <?php  $page++;} ?>
     <div class="page-break" style="page-break-after: always;"></div>
     <?php
         $i = 0; 
@@ -1191,9 +1230,8 @@
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
                         <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
-                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>                        
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
-                        
                     </tr>
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >
