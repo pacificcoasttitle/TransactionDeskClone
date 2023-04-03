@@ -3111,7 +3111,9 @@ class Order
         $postData['state'] = $orderDetails['property_state'];
         $postData['county'] = $orderDetails['county'];
         $postData['property'] = $orderDetails['address'];
-        $this->CI->titlepoint->generateGeoDoc($postData);
+        if (!$regenerate) {
+            $this->CI->titlepoint->generateGeoDoc($postData);
+        }
         $orderId = $_POST['order_id'];
         $geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
         if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
