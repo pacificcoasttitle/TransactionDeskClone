@@ -3130,22 +3130,24 @@ class Order
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
             // $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
             // $orderDetails = $this->get_order_details($file_id);
-            $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1); });
-            $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1); });
+            $openDeedTrust = array_filter($titlePointInstrumentDetails, function($v) { return ($v['document_type'] == 'TDD') || ($v['document_type'] == 'TDA'); });
+            $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1) && ($v['document_type'] != 'TDD') && ($v['document_type'] != 'TDA'); });
+            $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1) && ($v['document_type'] != 'TDD') && ($v['document_type'] != 'TDA'); });
             
             // $instrumentRecordDetails['orderDetails'] = $orderDetails;
             // $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
             $instrumentRecordDetails['orderDetails'] = $orderDetails;
             $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
             $instrumentRecordDetails['itemsForReview'] = array_chunk($itemsForReview, 25);
-            $instrumentRecordDetails['foreclosure'] = array_chunk($foreclosure, 25);
+            $instrumentRecordDetails['foreclosure'] = array_values($foreclosure);
+            $instrumentRecordDetails['openDeedTrust'] = array_values($openDeedTrust);
             // $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
             $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
             
             $html = $this->CI->load->view('report/instrument_report',$instrumentRecordDetails,true);
             
             $this->CI->load->library('snappy_pdf');
-            // $this->snappy_pdf->pdf->setOption('page-size', 'A4');
+            // $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
             $this->CI->snappy_pdf->pdf->setOption('zoom', '1.15');
             
             if (!is_dir('uploads/pre-listing-doc')) {
