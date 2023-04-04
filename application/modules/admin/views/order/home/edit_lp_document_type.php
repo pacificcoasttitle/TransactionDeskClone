@@ -10,27 +10,9 @@
         </div>
     <?php } ?>
     <div class="card mx-auto mt-5">
-      <div class="card-header">Edit Escrow Officer</div>
+      <div class="card-header">Edit LP Document type</div>
         <div class="card-body">        
-            <form id="frm-edit-document-type" method="POST"> 
-                <div class="form-group row">
-                    <label for="category" class="col-sm-2 col-form-label">Category<span class="required">*</span></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="category" id="category"  class="form-control" placeholder="Category" value="<?php echo isset($lp_document_info['category']) && !empty($lp_document_info['category']) ? $lp_document_info['category']: ''; ?>">
-                        <?php if(!empty($category_error_msg)){ ?>                     
-                            <span class="error"><?php echo $category_error_msg; ?></span>
-                        <?php } ?>
-                    </div>
-                </div>       
-                <div class="form-group row">
-                    <label for="description" class="col-sm-2 col-form-label">Description<span class="required"> *</span></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="description" id="description" class="form-control" placeholder="Description" value="<?php echo isset($lp_document_info['description']) && !empty($lp_document_info['description']) ? $lp_document_info['description']: ''; ?>">
-                        <?php if(!empty($description_error_msg)){ ?>                     
-                            <span class="error"><?php echo $description_error_msg; ?></span>
-                        <?php } ?>
-                    </div>
-                </div>
+            <form id="frm-edit-document-type" method="POST">
                 <div class="form-group row">
                     <label for="doc_type" class="col-sm-2 col-form-label">Doc Type<span class="required"> *</span></label>
                     <div class="col-sm-10">
@@ -40,7 +22,15 @@
                         <?php } ?>
                     </div>
                 </div>
-
+                <div class="form-group row">
+                    <label for="doc_type_description" class="col-sm-2 col-form-label">Doc Type Description<span class="required">*</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="doc_type_description" id="doc_type_description"  class="form-control" placeholder="Doc Type Description" value="<?php echo isset($lp_document_info['doc_type_description']) && !empty($lp_document_info['doc_type_description']) ? $lp_document_info['doc_type_description']: ''; ?>">
+                        <?php if(!empty($doc_type_description_error_msg)){ ?>                     
+                            <span class="error"><?php echo $doc_type_description_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div> 
                 <div class="form-group row">
                     <label for="doc_sub_type" class="col-sm-2 col-form-label">Doc Sub Type<span class="required"> *</span></label>
                     <div class="col-sm-10">
@@ -49,7 +39,17 @@
                             <span class="error"><?php echo $doc_sub_type_error_msg; ?></span>
                         <?php } ?>
                     </div>
+                </div>      
+                <div class="form-group row">
+                    <label for="doc_sub_type_description" class="col-sm-2 col-form-label">Doc Sub Type Description<span class="required"> *</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="doc_sub_type_description" id="doc_sub_type_description" class="form-control" placeholder="Doc Sub Type Description" value="<?php echo isset($lp_document_info['doc_sub_type_description']) && !empty($lp_document_info['doc_sub_type_description']) ? $lp_document_info['doc_sub_type_description']: ''; ?>">
+                        <?php if(!empty($doc_sub_type_description_error_msg)){ ?>                     
+                            <span class="error"><?php echo $doc_sub_type_description_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
                 </div>
+                
 
                 <div class="form-group row">
                     <label for="is_notice" class="col-sm-2 col-form-label">Is_ Notice</label>
