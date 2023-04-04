@@ -1177,7 +1177,7 @@
                     </tr>
                     
                     <tr style="text-align: center;" >
-                        <td colspan="4" > No Record Found</td>
+                        <td colspan="4" > There is No Liens & Items found.</td>
                     </tr>
                     
                 </table>
@@ -1194,7 +1194,7 @@
     <?php
         $i = 0; 
         // $page = 4;
-        foreach ($foreclosure as $key => $data) {  
+        // foreach ($foreclosure as $key => $data) {  
             //is_notice = 0 and is_display = 1
     ?>
     <div class="page_container">
@@ -1212,7 +1212,34 @@
                 </div>
             </div>
             <div class="pdf_body">
-                <div class="table_title"><em>Section H:</em> Foreclosure Activity</div>
+                <div class="table_title"><em>Section H:</em> Opens Deeds of Trust</div>
+                <table class="table table_g" >
+                    <tr>
+                        <td></td>
+                        <td>Lender</td>
+                        <!-- <td>Amount</td> -->
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php 
+                        $i = 0;
+                        if(!empty($openDeedTrust)) { 
+                            foreach($openDeedTrust as $k => $val) {
+                        ?>
+                    <tr>
+                        <td><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td><?php echo  $val['document_name']; ?></td>
+                        <td><?php echo  $val['recorded_date']; ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                    </tr>
+                    <?php $i++;} } else { ?>
+                    <tr>
+                        <td></td>
+                        <td colspan="3">There is No Opens Deeds of Trust found.</td>
+                    </tr>
+                    <?php } ?>
+                </table>
+                <div class="table_title"><em>Section I:</em> Foreclosure Activity</div>
                 <table class="table_g table">
                     <tr>
                         <td></td>
@@ -1223,9 +1250,9 @@
                     </tr>
                     <?php  
                     
-                    if (!empty($data)) { 
-                        
-                    foreach ($data as $key => $val) {  ?>
+                    if (!empty($foreclosure)) { 
+                    $i = 0;
+                    foreach ($foreclosure as $key => $val) {  ?>
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
@@ -1235,34 +1262,10 @@
                     </tr>
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >
-                            <td colspan="5" > No Record Found</td>
+                            <td > </td>
+                            <td colspan="3" > There is No Foreclosure activity found.</td>
                         </tr>
                     <?php } ?>
-                    
-                </table>
-                <div class="table_title" style="display: none;"><em>Section G:</em> Foreclosure Activity</div>
-                <table class="table table_g" style="display: none;" >
-                    <tr>
-                        <td></td>
-                        <td>Lender</td>
-                        <td>Amount</td>
-                        <td>Recorded</td>
-                        <td class="text_center">Instrument #</td>
-                    </tr>
-                    <tr>
-                        <td>1st</td>
-                        <td>Notice Of Default</td>
-                        <td>$456,000</td>
-                        <td>04/31/2021</td>
-                        <td class="text_center"><b class="orange_text">4645654654</b></td>
-                    </tr>
-                    <tr>
-                        <td>2nd</td>
-                        <td>Notice of Sale</td>
-                        <td>$75,000</td>
-                        <td>03/21/2022</td>
-                        <td class="text_center"><b class="orange_text">21313156</b></td>
-                    </tr>
                 </table>
             </div>           
             <div class="pdf_footer">
@@ -1271,7 +1274,7 @@
             </div>
         </div>
     </div>
-    <?php $page++; } ?>
+    <?php $page++;  ?>
     <?php if($is_plat_map_exist == 1) { ?>
     <div class="page-break" style="page-break-after: always;"></div>
     <div class="page_container">
