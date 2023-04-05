@@ -20,7 +20,7 @@ div.dataTables_wrapper div.dataTables_filter {
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
-            Pre Listing Logs
+            LP Logs
             <!-- <div class="float-right">
                 <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
             </div> -->

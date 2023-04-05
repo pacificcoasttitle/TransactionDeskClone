@@ -160,7 +160,7 @@ class TitlePoint extends MX_Controller {
                     if ($this->order->fileExistOrNotOnS3('pre-listing-doc/'.$value['file_number'].'.pdf')) {
                         $nestedData[] = 'Success';
                     } else if ((strtolower($value['geo_file_status']) != 'success') && !empty($value['geo_file_status'])) {
-                        $nestedData[] = $value['geo_file_status'];
+                        $nestedData[] = $value['geo_file_status'] . ' : ' . $value['geo_file_message'];
                     } else if (empty($value['geo_file_status']) && (strtolower($value['geo_file_status']) == 'success')) { 
                         $nestedData[] = 'Failed';
                     } else {
