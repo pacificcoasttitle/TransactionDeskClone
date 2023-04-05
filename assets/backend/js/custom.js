@@ -2403,7 +2403,10 @@ $(document).ready(function () {
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
-                { "searchable": false, "targets": [0,1] }
+                { "searchable": false, "targets": [0,1] },
+                { "targets": [0,5], "orderable": false },
+                { "targets": [0,6], "orderable": false },
+                { "targets": [0,7], "orderable": false }
             ],
             "language": {
                 searchPlaceholder: "Search",
@@ -2416,18 +2419,22 @@ $(document).ready(function () {
             initComplete: function() {
                 
             },
-            dom: 'Blfrtip',
+            // dom: 'Blfrtip',
+            "dom": 'lf<"FilterOrderListing">rtip',
             buttons: [],
             "drawCallback": function () {               
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
                 $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
             },
-            "ordering": false,            
+            "ordering": true,            
             "serverSide": true,
             "ajax": {                
                 url: base_url+"admin/order/home/get_lp_document_list", 
                 type: "post", 
+                data: function( d ) {
+                    d.is_display= $('#isDisplayFilter').val();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2442,6 +2449,13 @@ $(document).ready(function () {
 
                 }
             }            
+        });
+
+        var options = '<option value="1">Checked</option><option value="0">Unchecked</option>';
+        
+        $("div.FilterOrderListing").html('<label> Is Display filter: <select style="width:auto;" name="isDisplayFilter" id="isDisplayFilter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"'+options+'"</select></label>');   
+        $("#isDisplayFilter").on("change", function(){
+            lp_document_list.ajax.reload();
         });
     }
 

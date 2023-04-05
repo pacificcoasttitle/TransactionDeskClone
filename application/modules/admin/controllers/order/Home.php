@@ -3886,6 +3886,9 @@ class Home extends MX_Controller {
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            if (isset($_POST['is_display']) && $_POST['is_display'] != null) {
+                $params['is_display'] = $_POST['is_display'];
+            }
             $params['is_escrow'] = 1;
             $pageno = ($params['start'] / $params['length'])+1;
             $lp_document_lists = $this->home_model->get_lp_document_list($params);

@@ -1957,10 +1957,19 @@ class Home_model extends CI_Model
 
     public function get_lp_document_list($params)
     {
+        $orderColumnList = [
+            0 => 'doc_type',
+            1 => 'doc_type',
+            2 => 'doc_type_description',
+            3 => 'doc_sub_type',
+            4 => 'doc_sub_type_description',
+        ];
     	$this->db->from('pct_lp_document_types');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $orderBy = $orderColumnList[$params['orderColumn']];
+        $orderDir = $params['orderDir'];
         $lp_document_lists =array();
         
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
@@ -1975,6 +1984,9 @@ class Home_model extends CI_Model
                     ->group_end();
 			}
             $this->db->from('pct_lp_document_types');
+            if((isset($params['is_display']))) {
+                $this->db->where('is_display', $params['is_display']);
+            }
 			$filter_total_records =  $this->db->count_all_results();
 			if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
@@ -1985,20 +1997,31 @@ class Home_model extends CI_Model
                     ->group_end();
 			}
             
+            if((isset($params['is_display']))) {
+                $this->db->where('is_display', $params['is_display']);
+            }
+
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }			
+            }
+            $this->db->order_by($orderBy, $orderDir);
 			$query = $this->db->get('pct_lp_document_types');
 			if ($query->num_rows() > 0) {
 	            $lp_document_lists = $query->result_array();
 	        }
     	} else {    		
 	    	$this->db->from('pct_lp_document_types');
+            if((isset($params['is_display']))) {
+                $this->db->where('is_display', $params['is_display']);
+            }
             $filter_total_records =  $this->db->count_all_results();
+            if((isset($params['is_display']))) {
+                $this->db->where('is_display', $params['is_display']);
+            }
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-
+            $this->db->order_by($orderBy, $orderDir);
 			$query = $this->db->get('pct_lp_document_types');
 			if ($query->num_rows() > 0) {
 	            $lp_document_lists = $query->result_array();
