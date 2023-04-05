@@ -71,8 +71,8 @@
 	</div>
 </div><!-- /.container-fluid -->
 
-<div class="modal fade" width="1000px" id="instrument_model" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document" style="width:80%;">
+<div class="modal fade" width="1200px" id="instrument_model" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document" style="width:90%;">
                 <div class="modal-content">
                     <form method="POST" action="<?php echo base_url();?>order/admin/store-lp-document-info">
                         <div class="smart-forms smart-container" style="margin:30px">
