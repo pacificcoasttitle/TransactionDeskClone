@@ -714,8 +714,8 @@
                         <?php echo $orderDetails['county']; ?>, <?php echo $orderDetails['property_state']; ?> <?php echo $orderDetails['property_zip']; ?>
                     </div>
                     <div class="float_right text_right">
-                        Transaction: <?php echo ($orderDetails['transaction_type'] == 2) ? 'Loan' : 'Sale' ?><br>
-                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sales_amount']; ?>
+                        Transaction: <?php echo ($orderDetails['prod_type'] == 'loan') ? 'Loan' : 'Sale' ?><br>
+                        Price: $<?php echo ($orderDetails['prod_type'] == 'loan') ? $orderDetails['loan_amount'] : $orderDetails['sales_amount']; ?>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -821,8 +821,8 @@
                         <?php echo $orderDetails['county']; ?>, <?php echo $orderDetails['property_state']; ?> <?php echo $orderDetails['property_zip']; ?>
                     </div>
                     <div class="float_right text_right">
-                        Transaction: <?php echo ($orderDetails['transaction_type'] == 2) ? 'Loan' : 'Sale' ?><br>
-                        Price: $<?php echo ($orderDetails['transaction_type'] == 2) ? $orderDetails['loan_amount'] : $orderDetails['sales_amount']; ?>
+                        Transaction: <?php echo ($orderDetails['prod_type'] == 'loan') ? 'Loan' : 'Sale' ?><br>
+                        Price: $<?php echo ($orderDetails['prod_type'] == 'loan') ? $orderDetails['loan_amount'] : $orderDetails['sales_amount']; ?>
                     </div>
                 </div>
                 <div class="clearfix"></div>
