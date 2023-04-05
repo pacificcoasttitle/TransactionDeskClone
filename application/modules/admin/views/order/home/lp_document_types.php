@@ -34,10 +34,10 @@
                     <thead>
                         <tr>
                             <th>Sr No</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Doc Type</th>
-                            <th>Doc Subtype</th>
+                            <th>Code</th>
+                            <th>Instrument Type</th>
+                            <th>Subtype Code</th>
+                            <th>Instrument Subtype</th>
                             <th>Is Notice</th>
                             <th>Is Display</th>
                             <th>Action</th>

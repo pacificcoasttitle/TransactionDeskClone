@@ -3902,10 +3902,10 @@ class Home extends MX_Controller {
 	    		$nestedData = array();
                 $id = $value['id'];
                 $nestedData[] = $i;
-	            $nestedData[] = $value['category'];
-	            $nestedData[] = $value['description'];
 	            $nestedData[] = $value['doc_type'];
+	            $nestedData[] = $value['doc_type_description'];
 	            $nestedData[] = $value['doc_sub_type'];
+	            $nestedData[] = $value['doc_sub_type_description'];
 	            $nestedData[] = $value['is_notice'] == 1 ? 'Yes' : 'No';
                 if ($value['is_display'] == 1) {
                     $checked = 'checked';
@@ -3943,31 +3943,33 @@ class Home extends MX_Controller {
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                     $this->load->library('CSVReader');
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-            
+                    // echo "<pre>";
                     if (!empty($csvData)) {                        
                         foreach($csvData as $row) {
                             $rowCount++;
                             $lpDocumentTypeData = array(
-                                'category' => $row['Category'],
-                                'description' => $row['Description'],
-                                'doc_type' => $row['Doc Type'],
-                                'doc_sub_type' => $row['Doc Subtype'] ? $row['Doc Subtype'] : null,
+                                'doc_type_description' => trim($row['Doc Type Description']),
+                                'doc_sub_type_description' => trim($row['Doc Subtype Description']),
+                                'doc_type' => trim($row['Doc Type']),
+                                'doc_sub_type' => $row['Doc Subtype'] ? trim($row['Doc Subtype']) : null,
                                 'is_display' => ($row['Doc Type'] == 'DEG' || $row['Doc Type'] == 'TDD' || $row['Doc Type'] == 'ASE' || $row['Doc Type'] == 'LIS' || $row['Doc Type'] == 'FIN' || $row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0,
                                 'is_notice' => ($row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0
                             );
-
+                            
+                            // print_r($lpDocumentTypeData);die;
                             $con = array(
                                 'where' => array(
-                                    'category' => $row['Category'],
-                                    'doc_type' => $row['Doc Type'],
-                                    'doc_sub_type' => $row['Doc Subtype']
+                                    'doc_type' => trim($row['Doc Type']),
+                                    'doc_type_description' => trim($row['Doc Type Description']),
+                                    'doc_sub_type_description' => trim($row['Doc Subtype Description']),
+                                    'doc_sub_type' => trim($row['Doc Subtype'])
                                 ),
                                 'returnType' => 'count'
                             );
                             $prevCount = $this->home_model->get_rows($con, 'pct_lp_document_types');
                             
                             if ($prevCount > 0) {
-                                $condition = array('category' => $row['Category'], 'doc_type' => $row['Doc Type'], 'doc_sub_type' => ($row['Doc Subtype']) ? $row['Doc Subtype'] : null);
+                                $condition = array('doc_type' => trim($row['Doc Type']),'doc_type_description' => trim($row['Doc Type Description']), 'doc_sub_type_description' => trim($row['Doc Subtype Description']), 'doc_sub_type' => ($row['Doc Subtype']) ? trim($row['Doc Subtype']) : null);
                                 $update = $this->home_model->update($lpDocumentTypeData, $condition, 'pct_lp_document_types');
                                 if ($update) {
                                     $updateCount++;
@@ -4004,8 +4006,8 @@ class Home extends MX_Controller {
         $salesRepData = array();
 
         if ($this->input->post()) {
-            $this->form_validation->set_rules('category', 'Category', 'required', array('required'=> 'Please Enter Category'));
-            $this->form_validation->set_rules('description', 'Description', 'required', array('required'=> 'Please Enter Description'));
+            $this->form_validation->set_rules('doc_type_description', 'Doc Type Description', 'required', array('required'=> 'Please Enter Doc Type Description'));
+            $this->form_validation->set_rules('doc_sub_type_description', 'Doc Sub Type Description', 'required', array('required'=> 'Please Enter Doc Sub Type Description'));
             $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
             $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
             
@@ -4013,8 +4015,8 @@ class Home extends MX_Controller {
                 // $this->load->model('order/agent_model');
                 $input = $this->input->post();
                 $lpDocData = array(
-                    'category' => $this->input->post('category'),
-                    'description' =>  $this->input->post('description'),
+                    'doc_type_description' => $this->input->post('doc_type_description'),
+                    'doc_sub_type_description' =>  $this->input->post('doc_sub_type_description'),
                     'doc_type' => $this->input->post('doc_type'),
                     'doc_sub_type' => $this->input->post('doc_sub_type'),
                     'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
@@ -4024,8 +4026,8 @@ class Home extends MX_Controller {
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'order/admin/lp-document-types');
             } else {
-                $data['category_error_msg'] = form_error('category');
-                $data['description_error_msg'] = form_error('description');
+                $data['doc_type_description_error_msg'] = form_error('doc_type_description');
+                $data['doc_sub_type_description_error_msg'] = form_error('doc_sub_type_description');
                 $data['doc_type_error_msg'] = form_error('doc_type');
                 $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
             }                                       
@@ -4068,8 +4070,8 @@ class Home extends MX_Controller {
         {
             if ($this->input->post()) 
             {
-                $this->form_validation->set_rules('category', 'Category', 'required', array('required'=> 'Please Enter Category'));
-                $this->form_validation->set_rules('description', 'Description', 'required', array('required'=> 'Please Enter Description'));
+                $this->form_validation->set_rules('doc_type_description', 'Doc Type Description', 'required', array('required'=> 'Please Enter Doc Type Description'));
+                $this->form_validation->set_rules('doc_sub_type_description', 'Doc Sub Type Description', 'required', array('required'=> 'Please Enter Doc Sub Type Description'));
                 $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
                 $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
                 
@@ -4077,10 +4079,10 @@ class Home extends MX_Controller {
                 {
                     $input = $this->input->post();
                     $lpDocData = array(
-                        'category' => $this->input->post('category'),
-                        'description' =>  $this->input->post('description'),
-                        'doc_type' => $this->input->post('doc_type'),
-                        'doc_sub_type' => $this->input->post('doc_sub_type'),
+                        'doc_type_description' => trim($this->input->post('doc_type_description')),
+                        'doc_sub_type_description' =>  trim($this->input->post('doc_sub_type_description')),
+                        'doc_type' => trim($this->input->post('doc_type')),
+                        'doc_sub_type' => trim($this->input->post('doc_sub_type')),
                         'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
                     );
 
@@ -4096,8 +4098,8 @@ class Home extends MX_Controller {
                         $data['error_msg'] = 'Error occurred while updating LP Document Types.';
                     }              
                 } else {
-                    $data['category_error_msg'] = form_error('category');
-                    $data['description_error_msg'] = form_error('description');
+                    $data['doc_type_description_error_msg'] = form_error('doc_type_description');
+                    $data['doc_sub_type_description_error_msg'] = form_error('doc_sub_type_description');
                     $data['doc_type_error_msg'] = form_error('doc_type');
                     $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
                 }                                       

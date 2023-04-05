@@ -1968,8 +1968,8 @@ class Home_model extends CI_Model
 
     		if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                    ->like("category", $keyword)
-                    ->or_like('description',$keyword)
+                    ->like("doc_type_description", $keyword)
+                    ->or_like('doc_sub_type_description',$keyword)
                     ->or_like('doc_type',$keyword)
                     ->or_like('doc_sub_type', $keyword)
                     ->group_end();
@@ -1978,8 +1978,8 @@ class Home_model extends CI_Model
 			$filter_total_records =  $this->db->count_all_results();
 			if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                    ->like("category", $keyword)
-                    ->or_like('description',$keyword)
+                    ->like("doc_type_description", $keyword)
+                    ->or_like('doc_sub_type_description',$keyword)
                     ->or_like('doc_type',$keyword)
                     ->or_like('doc_sub_type', $keyword)
                     ->group_end();
