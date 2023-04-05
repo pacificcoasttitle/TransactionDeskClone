@@ -4006,8 +4006,8 @@ class Home extends MX_Controller {
         $salesRepData = array();
 
         if ($this->input->post()) {
-            $this->form_validation->set_rules('category', 'Category', 'required', array('required'=> 'Please Enter Category'));
-            $this->form_validation->set_rules('description', 'Description', 'required', array('required'=> 'Please Enter Description'));
+            $this->form_validation->set_rules('doc_type_description', 'Doc Type Description', 'required', array('required'=> 'Please Enter Doc Type Description'));
+            $this->form_validation->set_rules('doc_sub_type_description', 'Doc Sub Type Description', 'required', array('required'=> 'Please Enter Doc Sub Type Description'));
             $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
             $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
             
@@ -4015,8 +4015,8 @@ class Home extends MX_Controller {
                 // $this->load->model('order/agent_model');
                 $input = $this->input->post();
                 $lpDocData = array(
-                    'category' => $this->input->post('category'),
-                    'description' =>  $this->input->post('description'),
+                    'doc_type_description' => $this->input->post('doc_type_description'),
+                    'doc_sub_type_description' =>  $this->input->post('doc_sub_type_description'),
                     'doc_type' => $this->input->post('doc_type'),
                     'doc_sub_type' => $this->input->post('doc_sub_type'),
                     'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
@@ -4026,8 +4026,8 @@ class Home extends MX_Controller {
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'order/admin/lp-document-types');
             } else {
-                $data['category_error_msg'] = form_error('category');
-                $data['description_error_msg'] = form_error('description');
+                $data['doc_type_description_error_msg'] = form_error('doc_type_description');
+                $data['doc_sub_type_description_error_msg'] = form_error('doc_sub_type_description');
                 $data['doc_type_error_msg'] = form_error('doc_type');
                 $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
             }                                       

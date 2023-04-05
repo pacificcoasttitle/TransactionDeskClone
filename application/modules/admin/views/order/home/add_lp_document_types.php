@@ -26,38 +26,38 @@
             <form id="add-new-user" method="POST">
 
                 <div class="form-group row">
-                    <label for="category" class="col-sm-2 col-form-label">Category<span class="required">*</span></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="category" id="category" value="<?php echo set_value('category')?>" class="form-control" placeholder="Category">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="description" class="col-sm-2 col-form-label">Description<span class="required"> *</span></label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="description" id="description" value="<?php echo set_value('description')?>" class="form-control" placeholder="Description">
-                        <?php if(!empty($description_error_msg)){ ?>                     
-                            <span class="error"><?php echo $description_error_msg; ?></span>
-                        <?php } ?>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label for="doc_type" class="col-sm-2 col-form-label">Doc Type<span class="required"> *</span></label>
-                    <div class="col-sm-10">
+                    <label for="doc_type" class="col-sm-4 col-form-label">Doc Type<span class="required"> *</span></label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" name="doc_type" id="doc_type" value="<?php echo set_value('doc_type')?>" class="form-control" placeholder="Doc Type">
                         <?php if(!empty($doc_type_error_msg)){ ?>                     
                             <span class="error"><?php echo $doc_type_error_msg; ?></span>
                         <?php } ?>
                     </div>
                 </div>
-
+                
                 <div class="form-group row">
-                    <label for="doc_sub_type" class="col-sm-2 col-form-label">Doc Sub Type<span class="required"> *</span></label>
-                    <div class="col-sm-10">
+                    <label for="doc_type_description" class="col-sm-4 col-form-label">Doc Type Description<span class="required">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="doc_type_description" id="doc_type_description" value="<?php echo set_value('doc_type_description')?>" class="form-control" placeholder="Doc Type Description">
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label for="doc_sub_type" class="col-sm-4 col-form-label">Doc Sub Type<span class="required"> *</span></label>
+                    <div class="col-sm-8">
                         <input type="text" value="<?php echo set_value('doc_sub_type')?>" class="form-control" name="doc_sub_type" id="doc_sub_type" class="form-control" placeholder="Doc Sub Type">
                         <?php if(!empty($doc_sub_type_error_msg)){ ?>                     
                             <span class="error"><?php echo $doc_sub_type_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label for="doc_sub_type_description" class="col-sm-4 col-form-label">Doc Sub Type Description<span class="required"> *</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="doc_sub_type_description" id="doc_sub_type_description" value="<?php echo set_value('doc_sub_type_description')?>" class="form-control" placeholder="Doc Sub Type Description">
+                        <?php if(!empty($doc_sub_type_description_error_msg)){ ?>                     
+                            <span class="error"><?php echo $doc_sub_type_description_error_msg; ?></span>
                         <?php } ?>
                     </div>
                 </div>
