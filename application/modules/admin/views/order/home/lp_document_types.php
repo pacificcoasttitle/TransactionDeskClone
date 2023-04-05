@@ -3,6 +3,10 @@
     width: 250px !important;
     float: left;
 }
+.FilterOrderListing {
+    width: 100%;
+    display: flex;
+}
 </style>
 <div class="container-fluid">
     <?php if(!empty($this->session->userdata('success'))){ ?>
