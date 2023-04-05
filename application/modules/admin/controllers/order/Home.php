@@ -4236,9 +4236,9 @@ class Home extends MX_Controller {
         $i = 1;
         if (!empty($instrumentRecords)) {
             foreach ($instrumentRecords as $instrumentRecord) {
-                if (strlen(array_search($instrumentRecord['instrument'], array_column($filterArr, 'instrument')))) {
+                if (strlen(array_search($instrumentRecord['instrument'], array_column($filterArr, 'instrument'))) && $instrumentRecord['is_display'] == 1) {
                     $checked = "checked";                
-                } else if (strlen(array_search($instrumentRecord['instrument'], array_column($noticeArr, 'instrument')))) {
+                } else if (strlen(array_search($instrumentRecord['instrument'], array_column($noticeArr, 'instrument'))) && $instrumentRecord['is_display'] == 1) {
                     $checked = "checked";                    
                 } else {
                     $checked = "";
