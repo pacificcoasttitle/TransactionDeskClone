@@ -720,7 +720,7 @@
                 </div>
                 <div class="clearfix"></div>
 				 <div class="listing_report-alt text_left mt-50"><b>Subject Property: <?php echo $orderDetails['full_address']; ?></b></div>
-                <div class="listing_report-alt-1 text_left mb-50"><b>On behalf of: <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?></b></div>
+                <div class="listing_report-alt-1 text_left mb-50"><b>On behalf of: <?php echo $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name']; ?></b></div>
                 <!--<div class="mb-80"></div>-->
              <!--   <div class="table_title"><em>Section A:</em> Property</div>
                 <table class="table_a table">
@@ -763,7 +763,7 @@
                     Sincerely<br>
                 </div>
                 <div style="font-size: 50px; font-weight: 400; color: #276fa8;font-family: 'LushScript';font-style: italic;">
-                    <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?>
+                    <?php echo $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name']; ?>
                 </div>
                 <!-- <img src="img/sign.png" class="sign_img" alt=""> -->
                 <div class="h150"></div>
@@ -1006,194 +1006,8 @@
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
     <?php
-        //is_notice = 1 and is_display = 1
         $i = 0; 
         $page = 4;
-        if (!empty($itemsForReview)) {
-        foreach ($itemsForReview as $k => $data) {  
-            // is_notice = 0 and is_display = 1
-    ?>
-    <div class="page_container">
-        <div style="height:50px"></div>
-        <div class="pdf_page size_letter">
-            <div class="pdf_header">
-                <div class="logo_container">
-                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
-                </div>
-                <div class="report_info float_right text_right">
-                    Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
-                    Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
-                    Escrow No: <?php echo $orderDetails['escrow_number'] ?>
-                </div>
-            </div>
-            <div class="pdf_body">
-                <!-- <div class="table_title" style="display: none;"><em>Section G:</em> Open Loans:</div>
-                <table class="table_g table" style="display: none;" >
-                    <tr>
-                        <td></td>
-                        <td>Lender</td>
-                        <td>Amount</td>
-                        <td>Recorded</td>
-                        <td class="text_center">Instrument #</td>
-                    </tr>
-                    <tr>
-                        <td>1st</td>
-                        <td>Sterlings Bank</td>
-                        <td>$456,000</td>
-                        <td>04/31/2021</td>
-                        <td class="text_center"><b class="orange_text">4645654654</b></td>
-                    </tr>
-                    <tr>
-                        <td>2nd</td>
-                        <td>Private Benny</td>
-                        <td>$75,000</td>
-                        <td>03/21/2022</td>
-                        <td class="text_center"><b class="orange_text">21313156</b></td>
-                    </tr>
-                </table> -->
-                <div class="table_title"><em>Section G:</em> Liens & Items for Review</div>
-                <table class="table_g table">
-                    <tr>
-                        <td></td>
-                        <td>Document Name</td>
-                        <!-- <td>Amount</td> -->
-                        <td>Recorded</td>
-                        <td class="text_center">Instrument #</td>
-                    </tr>
-                    <?php  
-                    
-                    if (!empty($data)) { 
-                        
-                    foreach ($data as $key => $val) {  ?>
-                    <tr>
-                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
-                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
-                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
-                    </tr>
-                    <?php $i++; } } else {?>
-                        <tr style="text-align: center;" >
-                            <td colspan="5" > No Record Found</td>
-                        </tr>
-                    <?php } ?>
-                    <!-- <tr>
-                        <td>2nd</td>
-                        <td>Ficticious Doc #2</td>
-                        <td>$7,000</td>
-                        <td>03/21/2022</td>
-                        <td class="text_center"><b class="orange_text">65465466</b></td>
-                    </tr>
-                    <tr>
-                        <td>3rd</td>
-                        <td>Ficticious Doc #3</td>
-                        <td>N/A</td>
-                        <td>02/01/2000</td>
-                        <td class="text_center"><b class="orange_text">895854466</b></td>
-                    </tr>
-                    <tr>
-                        <td>4th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>09/09/1992</td>
-                        <td class="text_center"><b class="orange_text">98585523</b></td>
-                    </tr>
-                    <tr>
-                        <td>5th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td class="text_center"><b class="orange_text">42985855</b></td>
-                    </tr>
-                    <tr>
-                        <td>6th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td class="text_center"><b class="orange_text">3423985855</b></td>
-                    </tr>
-                    <tr>
-                        <td>7th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td class="text_center"><b class="orange_text">9853423855</b></td>
-                    </tr>
-                    <tr>
-                        <td>8th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td class="text_center"><b class="orange_text">985855544</b></td>
-                    </tr>
-                    <tr>
-                        <td>9th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>N/A </td>
-                        <td class="text_center"><b class="orange_text">985855343</b></td>
-                    </tr>
-                    <tr>
-                        <td>10th</td>
-                        <td>Ficticious Doc #4</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td class="text_center"><b class="orange_text">2323985855</b></td>
-                    </tr> -->
-                </table>
-                
-            </div>           
-            <div class="pdf_footer">
-                <p class="page_title">Listing Prelim Report</p>
-                <p class="page_text"><?php echo $page; ?></p>
-            </div>
-        </div>
-    </div>
-    <?php 
-    $page++; } } else { ?> 
-        <div class="page_container">
-        <div style="height:50px"></div>
-        <div class="pdf_page size_letter">
-            <div class="pdf_header">
-                <div class="logo_container">
-                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
-                </div>
-                <div class="report_info float_right text_right">
-                    Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
-                    Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
-                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
-                    Escrow No: <?php echo $orderDetails['escrow_number'] ?>
-                </div>
-            </div>
-            <div class="pdf_body">
-                <div class="table_title"><em>Section G:</em> Liens & Items for Review</div>
-                <table class="table_g table">
-                    <tr>
-                        <td></td>
-                        <td>Document Name</td>
-                        <td>Recorded</td>
-                        <td class="text_center">Instrument #</td>
-                    </tr>
-                    
-                    <tr style="text-align: center;" >
-                        <td colspan="4" > There is No Liens & Items found.</td>
-                    </tr>
-                    
-                </table>
-                
-            </div>           
-            <div class="pdf_footer">
-                <p class="page_title">Listing Prelim Report</p>
-                <p class="page_text"><?php echo $page; ?></p>
-            </div>
-        </div>
-    </div>
-    <?php  $page++;} ?>
-    <div class="page-break" style="page-break-after: always;"></div>
-    <?php
-        $i = 0; 
-        // $page = 4;
         // foreach ($foreclosure as $key => $data) {  
             //is_notice = 0 and is_display = 1
     ?>
@@ -1212,7 +1026,7 @@
                 </div>
             </div>
             <div class="pdf_body">
-                <div class="table_title"><em>Section H:</em> Opens Deeds of Trust</div>
+                <div class="table_title"><em>Section G:</em> Opens Deeds of Trust</div>
                 <table class="table table_g" >
                     <tr>
                         <td></td>
@@ -1239,7 +1053,7 @@
                     </tr>
                     <?php } ?>
                 </table>
-                <div class="table_title"><em>Section I:</em> Foreclosure Activity</div>
+                <div class="table_title"><em>Section H:</em> Foreclosure Activity</div>
                 <table class="table_g table">
                     <tr>
                         <td></td>
@@ -1274,6 +1088,71 @@
             </div>
         </div>
     </div>
+    <div class="page-break" style="page-break-after: always;"></div>
+    <?php
+        //is_notice = 1 and is_display = 1
+        $i = 0; 
+        $page = 4;
+        // if (!empty($itemsForReview)) {
+        // foreach ($itemsForReview as $k => $data) {  
+            // is_notice = 0 and is_display = 1
+    ?>
+    <div class="page_container">
+        <div style="height:50px"></div>
+        <div class="pdf_page size_letter">
+            <div class="pdf_header">
+                <div class="logo_container">
+                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
+                </div>
+                <div class="report_info float_right text_right">
+                    Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
+                    Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
+                    Escrow No: <?php echo $orderDetails['escrow_number'] ?>
+                </div>
+            </div>
+            <div class="pdf_body">
+                <div class="table_title"><em>Section I:</em> Liens & Items for Review</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <!-- <td>Amount</td> -->
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php  
+                    
+                    if (!empty($itemsForReview)) { 
+                        
+                    foreach ($itemsForReview as $key => $val) {  ?>
+                    <tr>
+                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                    </tr>
+                    <?php $i++; } } else {?>
+                        <tr style="text-align: center;" >
+                            <td ></td>
+                            <td colspan="3" > There is No Liens & Items found.</td>
+                        </tr>
+                    <?php } ?>
+                    
+                </table>
+                
+            </div>           
+            <div class="pdf_footer">
+                <p class="page_title">Listing Prelim Report</p>
+                <p class="page_text"><?php echo $page; ?></p>
+            </div>
+        </div>
+    </div>
+        
+    <?php  $page++; //} ?>
+    <div class="page-break" style="page-break-after: always;"></div>
+    
     <?php $page++;  ?>
     <?php if($is_plat_map_exist == 1) { ?>
     <div class="page-break" style="page-break-after: always;"></div>

@@ -570,6 +570,8 @@ class Order
             customer_basic_details.telephone_no as lender_telephone_no,
             cbd.first_name as cust_first_name,
             cbd.last_name as cust_last_name,
+            salerep.first_name as salerep_first_name,
+            salerep.last_name as salerep_last_name,
             titleofficer.first_name as titleofficer_first_name,
             titleofficer.last_name as titleofficer_last_name,
             agents.name as agent_name,
@@ -590,6 +592,7 @@ class Order
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
             ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+            ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
@@ -3138,7 +3141,7 @@ class Order
             // $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
             $instrumentRecordDetails['orderDetails'] = $orderDetails;
             $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
-            $instrumentRecordDetails['itemsForReview'] = array_chunk($itemsForReview, 25);
+            $instrumentRecordDetails['itemsForReview'] = array_values($itemsForReview);
             $instrumentRecordDetails['foreclosure'] = array_values($foreclosure);
             $instrumentRecordDetails['openDeedTrust'] = array_values($openDeedTrust);
             // $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
