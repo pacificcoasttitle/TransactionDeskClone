@@ -4257,7 +4257,7 @@ class Home extends MX_Controller {
                 $recorded_date = $instrumentRecord['recorded_date'];
                 $parties = ucwords(strtolower($instrumentRecord['parties']));
                 $coupling = $instrumentRecord['coupling'] != '0' ? $instrumentRecord['coupling'] : '';
-                $remarks = $instrumentRecord['remarks'];
+                $remarks = ucwords(strtolower($instrumentRecord['remarks']));
                 $id = $instrumentRecord['id'];
                 $data .= "<tr>
                             <td>$i</td>
