@@ -26,7 +26,7 @@
 	}
 	@media (min-width: 992px) {
 		.modal-lg {
-			max-width: 1100px !important;
+			max-width: 1400px !important;
 		}
 	}	
 </style>
