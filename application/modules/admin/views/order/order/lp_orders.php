@@ -24,6 +24,11 @@
 		display: flex;
 		width: 100%
 	}
+	@media (min-width: 992px) {
+		.modal-lg {
+			max-width: 900px;
+		}
+	}	
 </style>
 <div class="container-fluid">
 	<!-- DataTables Example -->

@@ -4165,6 +4165,9 @@ class Home extends MX_Controller {
                     <th>Document Name</th>
                     <th>Instrument</th>
                     <th>Recorded Date</th>
+                    <th>Parties</th>
+                    <th>Coupling</th>
+                    <th>Remarks</th>
                     <th>Type</th>
                     <th>Sub Type</th>
                     <th>Action</th>        
@@ -4252,12 +4255,18 @@ class Home extends MX_Controller {
                 $docUrl = env('AWS_PATH')."title-point/".$fileName;
                 $instrument = "<a target='_blank' href='$docUrl'>".$instrumentRecord['instrument']."</a>";
                 $recorded_date = $instrumentRecord['recorded_date'];
+                $parties = $instrumentRecord['parties'];
+                $coupling = $instrumentRecord['coupling'];
+                $remarks = $instrumentRecord['remarks'];
                 $id = $instrumentRecord['id'];
                 $data .= "<tr>
                             <td>$i</td>
                             <td>$document_name</td>
                             <td>$instrument</td>
                             <td>$recorded_date</td>
+                            <td>$parties</td>
+                            <td>$coupling</td>
+                            <td>$remarks</td>
                             <td>$document_type</td>
                             <td>$document_sub_type</td>
                             <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
