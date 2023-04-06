@@ -4311,8 +4311,8 @@ class Home extends MX_Controller {
                 $docUrl = env('AWS_PATH')."title-point/".$fileName;
                 $instrument = "<a target='_blank' href='$docUrl'>".$instrumentRecord['instrument']."</a>";
                 $recorded_date = $instrumentRecord['recorded_date'];
-                $parties = $instrumentRecord['parties'];
-                $coupling = $instrumentRecord['coupling'];
+                $parties = ucwords(strtolower($instrumentRecord['parties']));
+                $coupling = $instrumentRecord['coupling'] != '0' ? $instrumentRecord['coupling'] : '';
                 $remarks = $instrumentRecord['remarks'];
                 $id = $instrumentRecord['id'];
                 $data .= "<tr>
