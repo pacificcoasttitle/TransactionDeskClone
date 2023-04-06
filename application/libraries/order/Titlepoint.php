@@ -1227,16 +1227,16 @@ class Titlepoint
                         $parties .= "Party1: ".implode(" And ", array_column($party1Arr, 'Name'));
                     }
                     if (!empty($party2Arr)) {
-                        $parties .= "<br>Party2: ".implode(" And ", array_column($party2Arr, 'Name'));
+                        $parties .= " <br> Party2: ".implode(" And ", array_column($party2Arr, 'Name'));
                     }
                     if (!empty($party3Arr)) {
-                        $parties .= "<br>Party3: ".implode(" And ", array_column($party3Arr, 'Name'));
+                        $parties .= " <br> Party3: ".implode(" And ", array_column($party3Arr, 'Name'));
                     }
                     if (!empty($party4Arr)) {
-                        $parties .= "<br>Party4: ".implode(" And ", array_column($party4Arr, 'Name'));
+                        $parties .= " <br> Party4: ".implode(" And ", array_column($party4Arr, 'Name'));
                     }
                     if (!empty($party5Arr)) {
-                        $parties .= "<br>Party5: ".implode(" And ", array_column($party5Arr, 'Name'));
+                        $parties .= " <br> Party5: ".implode(" And ", array_column($party5Arr, 'Name'));
                     }
                     
                     $id = $val['DocumentIdentification'];
@@ -1319,7 +1319,6 @@ class Titlepoint
                         }
                     }
                 }
-                exit;
                
                 if (!empty($noticeArr)) {
                     foreach ($noticeArr as $arr) {
