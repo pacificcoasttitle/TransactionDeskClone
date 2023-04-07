@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                     <label for="doc_sub_type" class="col-sm-4 col-form-label">Doc Sub Type<span class="required"> *</span></label>
                     <div class="col-sm-8">
                         <input type="text" value="<?php echo set_value('doc_sub_type')?>" class="form-control" name="doc_sub_type" id="doc_sub_type" class="form-control" placeholder="Doc Sub Type">
@@ -60,8 +60,29 @@
                             <span class="error"><?php echo $doc_sub_type_description_error_msg; ?></span>
                         <?php } ?>
                     </div>
+                </div> -->
+                <div class="form-group row">
+                    <label for="subtype_flag" class="col-sm-2 col-form-label">Is Subtype</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="subtype_flag" id="subtype_flag" class="form-control">
+                    </div>
                 </div>
-
+                <div class="form-group row selectsubtype ">
+                    <label for="zipcode" class="col-sm-4 col-form-label">Select Sub types.</label>
+                    <div class="col-sm-8">
+                        <select name="subtype[]"  class="selectpicker" multiple data-live-search="true" data-actions-box="true">
+                            <?php foreach($subtypeList as $list) {?>
+                                <?php 
+                                $selected = '';
+                                    // if(set_value('sales_rep_users') && in_array($salesUser['id'], set_value('sales_rep_users')))  {
+                                    //     $selected = 'selected';
+                                    // } 
+                                ?> 
+                                <option <?php echo $selected;?> value="<?php echo $list['doc_type'];?>"><?php echo $list['doc_type'];?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label for="is_notice" class="col-sm-2 col-form-label">Is_ Notice</label>
                     <div class="col-sm-2">
@@ -71,7 +92,7 @@
 
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Add</button>
-                    <a href="<?php echo base_url().'order/admin/new-pct-lp-document-types'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                    <a href="<?php echo base_url().'order/admin/lp-document-types'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>      
             </form>
         </div>

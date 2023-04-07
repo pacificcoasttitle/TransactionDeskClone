@@ -5399,3 +5399,14 @@ function deleteDocumentType(id)
         return false;
     }
 }
+
+$('#subtype_flag').change(function() {
+    if(this.checked) {
+        $('.selectpicker').selectpicker('refresh');
+        $('.selectpicker').selectpicker('val', '');
+        $('.selectsubtype').hide();
+    } else {
+        // $('.selectsubtype').show();
+        $('.selectsubtype').removeClass('hide');
+    }
+});

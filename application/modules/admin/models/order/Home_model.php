@@ -1962,7 +1962,7 @@ class Home_model extends CI_Model
             1 => 'doc_type',
             2 => 'doc_type_description',
             3 => 'doc_sub_type',
-            4 => 'doc_sub_type_description',
+            4 => 'sub_type_list',
         ];
     	$this->db->from('pct_lp_document_types');
 		$total_records =  $this->db->count_all_results();
@@ -1978,12 +1978,13 @@ class Home_model extends CI_Model
     		if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
-                    ->or_like('doc_sub_type_description',$keyword)
+                    // ->or_like('doc_sub_type_description',$keyword)
                     ->or_like('doc_type',$keyword)
-                    ->or_like('doc_sub_type', $keyword)
+                    ->or_like('sub_type_list', $keyword)
                     ->group_end();
 			}
             $this->db->from('pct_lp_document_types');
+            // $this->db->where('subtype_flag', 0);
             if((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
@@ -1991,12 +1992,12 @@ class Home_model extends CI_Model
 			if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
-                    ->or_like('doc_sub_type_description',$keyword)
+                    // ->or_like('doc_sub_type_description',$keyword)
                     ->or_like('doc_type',$keyword)
-                    ->or_like('doc_sub_type', $keyword)
+                    ->or_like('sub_type_list', $keyword)
                     ->group_end();
 			}
-            
+            // $this->db->where('subtype_flag', 0);
             if((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
@@ -2011,10 +2012,12 @@ class Home_model extends CI_Model
 	        }
     	} else {    		
 	    	$this->db->from('pct_lp_document_types');
+            // $this->db->where('subtype_flag', 0);
             if((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
             $filter_total_records =  $this->db->count_all_results();
+            // $this->db->where('subtype_flag', 0);
             if((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
@@ -2034,6 +2037,14 @@ class Home_model extends CI_Model
         );
     }
 
+    public function getSubtypeLPDocumentList(Type $var = null)
+    {
+        $this->db->select('id,doc_type');
+        $this->db->from('pct_lp_document_types');
+        $this->db->where('subtype_flag', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
     public function insertLpDocType($data = array(), $table = '') 
     {
         if (empty($table)) {
