@@ -3907,7 +3907,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $i;
 	            $nestedData[] = $value['doc_type'];
 	            $nestedData[] = $value['doc_type_description'];
-	            $nestedData[] = ($value['has_subtype'] == 1) ? 'Yes': 'No';
+	            $nestedData[] = ($value['subtype_flag'] == 1) ? 'Yes': 'No';
 	            $nestedData[] = $value['sub_type_list'];
                 $sectionG = ($value["display_in_section"] == "G") ? 'selected' : '';
                 $sectionH = ($value["display_in_section"] == "H") ? 'selected' : '';
