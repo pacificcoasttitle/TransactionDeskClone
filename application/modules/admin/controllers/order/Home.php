@@ -3920,10 +3920,8 @@ class Home extends MX_Controller {
                                 <option '. $sectionI .' value="I">Section I</option>
                                 <option '. $sectionJ .' value="J">Section J</option>
                             </select>'; 
-                // $lpReportStatusSelection = str_replace('value="' .  $lp_report_status . '"','value="' .  $lp_report_status . '" selected', $lpReportStatusSelection);          
                 $nestedData[] = $lpDocTypeSectionSelection;
-	            // $nestedData[] = '';
-	            $nestedData[] = $value['is_notice'] == 1 ? 'Yes' : 'No';
+	            // $nestedData[] = $value['is_notice'] == 1 ? 'Yes' : 'No';
                 if ($value['is_display'] == 1) {
                     $checked = 'checked';
                 } else {
@@ -3971,7 +3969,7 @@ class Home extends MX_Controller {
                                 // 'doc_sub_type_description' => trim($row['Doc Subtype Description']),
                                 // 'doc_sub_type' => $row['Doc Subtype'] ? trim($row['Doc Subtype']) : null,
                                 'is_display' => ($row['Doc Type'] == 'DEG' || $row['Doc Type'] == 'TDD' || $row['Doc Type'] == 'ASE' || $row['Doc Type'] == 'LIS' || $row['Doc Type'] == 'FIN' || $row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0,
-                                'is_notice' => ($row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0
+                                // 'is_notice' => ($row['Doc Type'] == 'NOC' || $row['Doc Type'] == 'NOD' || $row['Doc Type'] == 'NOT' || $row['Doc Type'] == 'NOS') ? 1 : 0
                             );
                             
                             // print_r($lpDocumentTypeData);die;
@@ -4042,7 +4040,7 @@ class Home extends MX_Controller {
                     // 'doc_sub_type_description' =>  $input['doc_sub_type_description'],
                     // 'doc_sub_type' => $input['doc_sub_type'],
                     'subtype_flag' => (isset($input['subtype_flag'])) ? $input['subtype_flag'] : 0,
-                    'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
+                    // 'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
                 );
                 
                 if (isset($input['subtype'])) {
@@ -4110,7 +4108,7 @@ class Home extends MX_Controller {
                         'doc_type' => trim($this->input->post('doc_type')),
                         'doc_type_description' => trim($this->input->post('doc_type_description')),
                         'subtype_flag' => (isset($input['subtype_flag'])) ? $input['subtype_flag'] : 0,
-                        'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
+                        // 'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
                         // 'doc_sub_type_description' =>  trim($this->input->post('doc_sub_type_description')),
                         // 'doc_sub_type' => trim($this->input->post('doc_sub_type')),
                     );

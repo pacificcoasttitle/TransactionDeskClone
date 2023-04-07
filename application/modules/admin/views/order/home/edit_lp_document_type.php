@@ -55,12 +55,12 @@
                     </div>
                 </div> -->
                 
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                     <label for="is_notice" class="col-sm-4 col-form-label">Is Subtype</label>
                     <div class="col-sm-4">
                         <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="subtype_flag" id="subtype_flag" class="form-control" placeholder="Is Notice" <?php echo isset($lp_document_info['subtype_flag']) && !empty($lp_document_info['subtype_flag']) ? 'Checked' : ''; ?>>
                     </div>
-                </div>
+                </div> -->
                 <?php $selectedList = explode(',',$lp_document_info['sub_type_list']); 
                 
                 // echo "<pre>";
@@ -85,12 +85,12 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                     <label for="is_notice" class="col-sm-4 col-form-label">Is_ Notice</label>
                     <div class="col-sm-4">
-                        <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="is_notice" id="is_notice" class="form-control" placeholder="Is Notice" <?php echo isset($lp_document_info['is_notice']) && !empty($lp_document_info['is_notice']) ? 'Checked' : ''; ?>>
+                        <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="is_notice" id="is_notice" class="form-control" placeholder="Is Notice" <?php //echo isset($lp_document_info['is_notice']) && !empty($lp_document_info['is_notice']) ? 'Checked' : ''; ?>>
                     </div>
-                </div>               
+                </div>                -->
                 
                 <div class="pull-right">
                     <button type="submit" id="add-sales-rep" name="add-sales-rep" class="btn btn-secondary">Update</button>

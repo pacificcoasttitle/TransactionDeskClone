@@ -1037,8 +1037,8 @@
                     </tr>
                     <?php 
                         $i = 0;
-                        if(!empty($openDeedTrust)) { 
-                            foreach($openDeedTrust as $k => $val) {
+                        if(!empty($sectionGRecord)) { 
+                            foreach($sectionGRecord as $k => $val) {
                         ?>
                     <tr>
                         <td><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
@@ -1064,9 +1064,9 @@
                     </tr>
                     <?php  
                     
-                    if (!empty($foreclosure)) { 
+                    if (!empty($sectionHRecord)) { 
                     $i = 0;
-                    foreach ($foreclosure as $key => $val) {  ?>
+                    foreach ($sectionHRecord as $key => $val) {  ?>
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
@@ -1123,9 +1123,9 @@
                     </tr>
                     <?php  
                     
-                    if (!empty($itemsForReview)) { 
+                    if (!empty($sectionIRecord)) { 
                         
-                    foreach ($itemsForReview as $key => $val) {  ?>
+                    foreach ($sectionIRecord as $key => $val) {  ?>
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>

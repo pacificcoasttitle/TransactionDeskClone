@@ -43,9 +43,8 @@
                             <th>Code</th>
                             <th>Instrument Type</th>
                             <th>Is Subtype</th>
-                            <th>Subtype Code</th>
+                            <th>Selected Subtype Code</th>
                             <th>Select Section</th>
-                            <th>Is Notice</th>
                             <th>Is Display</th>
                             <th>Action</th>
                         </tr>

@@ -2037,7 +2037,7 @@ class Home_model extends CI_Model
         );
     }
 
-    public function getSubtypeLPDocumentList(Type $var = null)
+    public function getSubtypeLPDocumentList()
     {
         $this->db->select('id,doc_type');
         $this->db->from('pct_lp_document_types');
@@ -2136,7 +2136,7 @@ class Home_model extends CI_Model
             ->from('pct_lp_document_types');
             
         $this->db->where('is_display', 1);
-        $this->db->where('is_notice', 1);
+        // $this->db->where('is_notice', 1);
         $this->db->group_by('doc_type');
         $query = $this->db->get();
         if ($query->num_rows() > 0)  {
@@ -2144,5 +2144,15 @@ class Home_model extends CI_Model
         } else {
             return array();
         }         
+    }
+
+    public function getSectionWiseLPDocumentList($section)
+    {
+        $this->db->select('doc_type');
+        $this->db->from('pct_lp_document_types');
+        $this->db->where('display_in_section', $section);
+        // $this->db->where('is_display', 1);
+        $query = $this->db->get();
+        return $query->result_array();
     }
 }
