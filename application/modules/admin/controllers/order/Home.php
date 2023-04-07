@@ -4234,15 +4234,15 @@ class Home extends MX_Controller {
             foreach ($instrumentRecords as $instrumentRecord) {
                 if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
                     $key = array_search($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'));
+                    $displaySection = $displayDocList[$key]['display_in_section'];
+
                     if (isset($instrumentRecord['document_sub_type']) && !empty($instrumentRecord['document_sub_type'])) {
                         $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
-                        $displaySection = $displayDocList[$key]['display_in_section'];
-
                         if (!empty($documentSubTypeList)) {
                             $documentSubTypeListArr = implode(',', $documentSubTypeList);
                             if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
                                 if ($displaySection == 'G') {
-                                    if ($instrumentRecord['ColorCoding'] == 'FFFF00') {
+                                    if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                         $instrumentRecords[$i]['is_display'] = 1;
                                     } else {
                                         $instrumentRecords[$i]['is_display'] = 0;
@@ -4255,7 +4255,7 @@ class Home extends MX_Controller {
                             }
                         } else {
                             if ($displaySection == 'G') {
-                                if ($instrumentRecord['ColorCoding'] == 'FFFF00') {
+                                if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                     $instrumentRecords[$i]['is_display'] = 1;
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0;
@@ -4266,7 +4266,7 @@ class Home extends MX_Controller {
                         }
                     } else {
                         if ($displaySection == 'G') {
-                            if ($instrumentRecord['ColorCoding'] == 'FFFF00') {
+                            if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                 $instrumentRecords[$i]['is_display'] = 1;
                             } else {
                                 $instrumentRecords[$i]['is_display'] = 0;
