@@ -721,25 +721,6 @@
                 <div class="clearfix"></div>
 				 <div class="listing_report-alt text_left mt-50"><b>Subject Property: <?php echo $orderDetails['full_address']; ?></b></div>
                 <div class="listing_report-alt-1 text_left mb-50"><b>On behalf of: <?php echo $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name']; ?></b></div>
-                <!--<div class="mb-80"></div>-->
-             <!--   <div class="table_title"><em>Section A:</em> Property</div>
-                <table class="table_a table">
-                    <tr>
-                        <td>Prepared For:</td>
-                        <td>123 Main St. Los Angeles, CA 90150</td>
-                    </tr>
-                    <tr>
-                        <td>APN</td>
-                        <td>000-000-0000</td>
-                    </tr>
-                    <tr>
-                        <td>County</td>
-                        <td>Los Angeles</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><p class="py-10">Brief Legal: N TR 9977 BLK LOT 57</p></td>
-                    </tr>
-                </table>  -->
                 
             </div>           
             <div class="pdf_footer">
@@ -1045,7 +1026,9 @@
     <?php
         $i = 0; 
         $page = 4;
-    ?>
+        $totalRecordForPage = count($sectionGRecord) + count($sectionHRecord) + 3 + count($sectionIRecord) + 3;
+        $pageForRecord = ($totalRecordForPage > 20) ? 2 : 1;
+   ?>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
@@ -1116,6 +1099,37 @@
                         </tr>
                     <?php } ?>
                 </table>
+                <?php if ($pageForRecord == 1) {?>
+                <div class="table_title"><em>Section I:</em> Liens & Items for Review</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <!-- <td>Amount</td> -->
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php  
+                    
+                    if (!empty($sectionIRecord)) { 
+                    $i = 0;
+                    foreach ($sectionIRecord as $key => $val) {  ?>
+                    <tr>
+                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                    </tr>
+                    <?php $i++; } } else {?>
+                        <tr style="text-align: center;" >
+                            <td ></td>
+                            <td colspan="3" > There is No Liens & Items found.</td>
+                        </tr>
+                    <?php } ?>
+                    
+                </table>
+                <?php }?>
             </div>           
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
@@ -1124,14 +1138,7 @@
         </div>
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
-    <?php
-        //is_notice = 1 and is_display = 1
-        $i = 0; 
-        $page = 4;
-        // if (!empty($itemsForReview)) {
-        // foreach ($itemsForReview as $k => $data) {  
-            // is_notice = 0 and is_display = 1
-    ?>
+    <?php if ($pageForRecord == 2) {?>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
@@ -1184,11 +1191,10 @@
             </div>
         </div>
     </div>
-        
-    <?php  $page++; //} ?>
+    
+    <?php  } $page++; ?>
     <div class="page-break" style="page-break-after: always;"></div>
     
-    <?php $page++;  ?>
     <?php if($is_plat_map_exist == 1) { ?>
     <div class="page-break" style="page-break-after: always;"></div>
     <div class="page_container">
