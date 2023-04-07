@@ -80,7 +80,7 @@
             max-width: 280px;
         }
         .h150{
-            height: 100px;
+            height: 50px;
         }
         .red_text{
             color: #d3353e;
@@ -752,6 +752,44 @@
     <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
+                <div class="main_title">Table of Contents</div>
+                <div class="title_divider"></div>
+                <div class="f26">What this report includes</div>
+                <div class="body_text">
+                    This report contains important information that gives you the insight needed in regards to the property and potentional obstacles that the seller might face when selling their property. Here are the sections:<br><br>
+					<strong>Section:&nbsp A </strong>- <span style="color:red;">Property Information</span><br>
+					<strong>Section:&nbsp B</strong> - <span style="color:red;">Beds, Baths, Zoning</span><br>
+					<strong>Section:&nbsp C</strong> - <span style="color:red;">Current Ownership</span><br>
+					<strong>Section:&nbsp D</strong> - <span style="color:red;">Taxes - 1st & 2nd Installment</span><br>
+					<strong>Section:&nbsp E</strong> - <span style="color:red;">Legal Description</span><br>
+					<strong>Section:&nbsp F</strong> - <span style="color:red;">Property Vesting</span><br>
+                    <strong>Section:&nbsp G</strong> - <span style="color:red;">Open Deeds of Trust</span><br>
+					<strong>Section:&nbsp H</strong> - <span style="color:red;">Foreclosure Activity</span><br>
+					<strong>Section:&nbsp I</strong> - <span style="color:red;">Liens & Items for Review</span><br>
+                </div>
+               
+                <div class="h150"></div>
+                <div class="main_title">About This Report</div>
+                <div class="title_divider"></div>
+                <div class="f26">And its contents</div>
+                <div class="body_text">
+                    The information is available through public sources as of <b><span class="red_text">02/28/2023</span></b>. Information provided by the
+                    vendor and public records may not always match exactly depending on how often the information is
+                    updated by each source. The items presented or those found that are directly tied to the property in
+                    question. Items that are directly associated with the owner will require a statement of
+                    information form to be fill out in order for us to conduct a more
+                    thorough search. This docment is not a preliminary title report.
+                </div>
+            </div>           
+            <div class="pdf_footer">
+                <p class="page_title">Listing Prelim Report</p>
+                <p class="page_text">Welcome</p>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="page_container">
+        <div class="pdf_page size_letter">
+            <div class="pdf_body">
                 <div class="main_title">Congratulations</div>
                 <div class="title_divider"></div>
                 <div class="f26">On your journey to selling</div>
@@ -765,7 +803,6 @@
                 <div style="font-size: 50px; font-weight: 400; color: #276fa8;font-family: 'LushScript';font-style: italic;">
                     <?php echo $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name']; ?>
                 </div>
-                <!-- <img src="img/sign.png" class="sign_img" alt=""> -->
                 <div class="h150"></div>
                 <div class="main_title">About This Report</div>
                 <div class="title_divider"></div>
@@ -785,7 +822,7 @@
                 <p class="page_text">Welcome</p>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="page-break" style="page-break-after: always;"></div>
     <div class="page_container">
         <div style="height:50px"></div>
@@ -1008,8 +1045,6 @@
     <?php
         $i = 0; 
         $page = 4;
-        // foreach ($foreclosure as $key => $data) {  
-            //is_notice = 0 and is_display = 1
     ?>
     <div class="page_container">
         <div style="height:50px"></div>
