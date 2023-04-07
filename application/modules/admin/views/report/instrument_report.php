@@ -754,7 +754,7 @@
                 <div class="title_divider"></div>
                 <div class="f26">And its contents</div>
                 <div class="body_text">
-                    The information is available through public sources as of <b><span class="red_text">02/28/2023</span></b>. Information provided by the
+                    The information is available through public sources as of <b><span class="red_text"><?php echo date('m/d/Y', strtotime($orderDetails['opened_date'])); ?></span></b>. Information provided by the
                     vendor and public records may not always match exactly depending on how often the information is
                     updated by each source. The items presented or those found that are directly tied to the property in
                     question. Items that are directly associated with the owner will require a statement of
