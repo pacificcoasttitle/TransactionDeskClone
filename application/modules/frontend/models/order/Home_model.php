@@ -428,4 +428,14 @@ class Home_model extends CI_Model
             return array();
         }
 	}
+
+    public function getSectionWiseLPDocumentList($section)
+    {
+        $this->db->select('doc_type');
+        $this->db->from('pct_lp_document_types');
+        $this->db->where('display_in_section', $section);
+        // $this->db->where('is_display', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }

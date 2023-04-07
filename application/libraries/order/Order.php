@@ -2956,7 +2956,7 @@ class Order
             ->from('pct_lp_document_types');
             
         $this->CI->db->where('is_display', 1);
-        $this->CI->db->where('is_notice', 0);
+        // $this->CI->db->where('is_notice', 0);
         $this->CI->db->group_by('doc_type');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
@@ -2972,7 +2972,7 @@ class Order
             ->from('pct_lp_document_types');
             
         $this->CI->db->where('is_display', 1);
-        $this->CI->db->where('is_notice', 1);
+        // $this->CI->db->where('is_notice', 1);
         $this->CI->db->group_by('doc_type');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
@@ -2988,9 +2988,9 @@ class Order
     public function createLpReport($fileNumber, $regenerate=false) 
     {
         $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
-        if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$document_name) && !$regenerate) {
-            return;
-        }
+        // if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$document_name) && !$regenerate) {
+        //     return;
+        // }
 
         $this->CI->load->model('order/titlePointData');
         $this->CI->load->library('order/titlepoint');
@@ -3131,19 +3131,45 @@ class Order
             // $file_id = $titlePointDetails[0]['file_id'];
             $this->checkGrantDoc($fileNumber);
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
+            $sectionGList = $this->home_model->getSectionWiseLPDocumentList('G');
+            $sectionHList = $this->home_model->getSectionWiseLPDocumentList('H');
+            $sectionIList = $this->home_model->getSectionWiseLPDocumentList('I');
+            $sectionJList = $this->home_model->getSectionWiseLPDocumentList('J');
+            $sectionGList = array_map (function($value){
+                return $value['doc_type'];
+            } , $sectionGList);
+            $sectionHList = array_map (function($value){
+                return $value['doc_type'];
+            } , $sectionHList);
+            $sectionIList = array_map (function($value){
+                return $value['doc_type'];
+            } , $sectionIList);
+            $sectionJList = array_map (function($value){
+                return $value['doc_type'];
+            } , $sectionJList);
+            
+            $sectionGRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionGList) { return (in_array($v['document_type'], $sectionGList) || in_array($v['document_sub_type'], $sectionGList));}); 
+            $sectionHRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionHList) { return (in_array($v['document_type'], $sectionHList) || in_array($v['document_sub_type'], $sectionHList));});
+            $sectionIRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionIList) { return (in_array($v['document_type'], $sectionIList) || in_array($v['document_sub_type'], $sectionIList));});
+            $sectionJRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionJList) { return (in_array($v['document_type'], $sectionJList) || in_array($v['document_sub_type'], $sectionJList));});
+            
             // $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
             // $orderDetails = $this->get_order_details($file_id);
-            $openDeedTrust = array_filter($titlePointInstrumentDetails, function($v) { return ($v['document_type'] == 'TDD') || ($v['document_type'] == 'TDA'); });
-            $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1) && ($v['document_type'] != 'TDD') && ($v['document_type'] != 'TDA'); });
-            $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1) && ($v['document_type'] != 'TDD') && ($v['document_type'] != 'TDA'); });
+            // $openDeedTrust = array_filter($titlePointInstrumentDetails, function($v) { return ($v['document_type'] == 'TDD') || ($v['document_type'] == 'TDA'); });
+            // $itemsForReview = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 0) && ($v['is_display'] == 1) && ($v['document_type'] != 'TDD') && ($v['document_type'] != 'TDA'); });
+            // $foreclosure = array_filter($titlePointInstrumentDetails, function($v) { return ($v['is_notice'] == 1) && ($v['is_display'] == 1) && ($v['document_type'] != 'TDD') && ($v['document_type'] != 'TDA'); });
             
             // $instrumentRecordDetails['orderDetails'] = $orderDetails;
             // $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
             $instrumentRecordDetails['orderDetails'] = $orderDetails;
             $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
-            $instrumentRecordDetails['itemsForReview'] = array_values($itemsForReview);
-            $instrumentRecordDetails['foreclosure'] = array_values($foreclosure);
-            $instrumentRecordDetails['openDeedTrust'] = array_values($openDeedTrust);
+            $instrumentRecordDetails['sectionGRecord'] = array_values($sectionGRecord);
+            $instrumentRecordDetails['sectionHRecord'] = array_values($sectionHRecord);
+            $instrumentRecordDetails['sectionIRecord'] = array_values($sectionIRecord);
+            $instrumentRecordDetails['sectionJRecord'] = array_values($sectionJRecord);
+            // $instrumentRecordDetails['itemsForReview'] = array_values($itemsForReview);
+            // $instrumentRecordDetails['foreclosure'] = array_values($foreclosure);
+            // $instrumentRecordDetails['openDeedTrust'] = array_values($openDeedTrust);
             // $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
             $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
             

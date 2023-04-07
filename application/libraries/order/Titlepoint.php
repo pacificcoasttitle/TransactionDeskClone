@@ -1258,7 +1258,7 @@ class Titlepoint
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
                             $recordArray[$i]['is_display'] = 0;
-                            $recordArray[$i]['is_notice'] = in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type')) ? 1 : 0;
+                            // $recordArray[$i]['is_notice'] = in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type')) ? 1 : 0;
                             $i++;
                         }
                         

@@ -83,12 +83,12 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                     <label for="is_notice" class="col-sm-2 col-form-label">Is_ Notice</label>
                     <div class="col-sm-2">
                         <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="is_notice" id="is_notice" class="form-control" placeholder="Is Notice">
                     </div>
-                </div>
+                </div> -->
 
                 <div class="pull-right">
                     <button type="submit" class="btn btn-secondary">Add</button>
