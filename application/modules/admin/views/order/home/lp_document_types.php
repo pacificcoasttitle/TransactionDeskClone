@@ -20,6 +20,8 @@
             <div class="alert alert-danger"><?php echo $error_msg; ?></div>
         </div>
     <?php } ?>
+    <div id="lp_order_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+    <div id="lp_order_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
@@ -40,8 +42,9 @@
                             <th>Sr No</th>
                             <th>Code</th>
                             <th>Instrument Type</th>
+                            <th>Is Subtype</th>
                             <th>Subtype Code</th>
-                            <th>Instrument Subtype</th>
+                            <th>Select Section</th>
                             <th>Is Notice</th>
                             <th>Is Display</th>
                             <th>Action</th>
@@ -80,7 +83,7 @@ function isDisplayDocumentType()
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#lp_document_types_success_msg").offset().top
                     }, 1000);
-                    order_list.ajax.reload( null, false );
+                    lp_document_list.ajax.reload( null, false );
                     setTimeout(function () {
                         $('#lp_document_types_success_msg').html('').hide();
                     }, 4000);
@@ -108,4 +111,53 @@ function isDisplayDocumentType()
         });
     });
 }
+
+function updateDocumentSection(id, section) {
+		$('body').animate({
+			opacity: 0.5
+		}, "slow");
+		$.ajax({
+			url: base_url + "order/admin/update-doc-section",
+			method: "POST",
+			data: {
+				id: id,
+				section: section
+			},
+			success: function (data) {
+				var result = jQuery.parseJSON(data);
+				if (result.status == 'success') {
+					$('body').animate({
+						opacity: 1.0
+					}, "slow");
+					$('#lp_order_success_msg').html(result.msg).show();
+					$([document.documentElement, document.body]).animate({
+						scrollTop: $("#lp_order_success_msg").offset().top
+					}, 1000);
+					companies_list.ajax.reload(null, false);
+					setTimeout(function () {
+						$('#lp_order_success_msg').html('').hide();
+					}, 4000);
+				} else {
+					$('#lp_order_error_msg').html(result.message).show();
+					$([document.documentElement, document.body]).animate({
+						scrollTop: $("#lp_order_error_msg").offset().top
+					}, 1000);
+
+					setTimeout(function () {
+						$('#lp_order_error_msg').html('').hide();
+					}, 4000);
+				}
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $("#lp_order_error_msg").offset().top
+				}, 1000);
+
+				setTimeout(function () {
+					$('#lp_order_error_msg').html('').hide();
+				}, 4000);
+			}
+		});
+	}
 </script>
