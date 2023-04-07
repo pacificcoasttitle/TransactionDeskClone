@@ -2956,8 +2956,8 @@ class Order
             ->from('pct_lp_document_types');
             
         $this->CI->db->where('is_display', 1);
-        // $this->CI->db->where('is_notice', 0);
-        $this->CI->db->group_by('doc_type');
+        //$this->CI->db->where('is_notice', 0);
+        //$this->CI->db->group_by('doc_type');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0)  {
             return $query->result_array();

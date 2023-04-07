@@ -1255,88 +1255,133 @@ class Titlepoint
                             $recordArray[$i]['parties'] = isset($parties) ? $parties : null;
                             $recordArray[$i]['coupling'] = isset($val['CouplingIndicatorAll']) ? $val['CouplingIndicatorAll'] : null;
                             $recordArray[$i]['remarks'] = isset($val['PropertyRemark']) ? $val['PropertyRemark'] : null;
+                            $recordArray[$i]['color_coding'] = isset($val['ColorCoding']) ? $val['ColorCoding'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
-                            $recordArray[$i]['is_display'] = 0;
-                            // $recordArray[$i]['is_notice'] = in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type')) ? 1 : 0;
+                            
+                            if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
+                                $key = array_search($val['DocumentType'], array_column($displayDocList, 'doc_type'));
+                                $displaySection = $displayDocList[$key]['display_in_section'];
+
+                                if (isset($val['DocumentSubType']) && !empty($val['DocumentSubType'])) {
+                                    $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
+                                    if (!empty($documentSubTypeList)) {
+                                        $documentSubTypeListArr = implode(',', $documentSubTypeList);
+                                        if (in_array($val['DocumentSubType'], $documentSubTypeListArr)) {
+                                            if (isset($displaySection) && $displaySection == 'G') {
+                                                if ($val['ColorCoding'] == 'FFFF00') {
+                                                    $recordArray[$i]['is_display'] = 1;
+                                                } else {
+                                                    $recordArray[$i]['is_display'] = 0;
+                                                }
+                                            } else {
+                                                $recordArray[$i]['is_display'] = 1;
+                                            }
+                                        } else {
+                                            $recordArray[$i]['is_display'] = 0;
+                                        }
+                                    } else {
+                                        if (isset($displaySection) && $displaySection == 'G') {
+                                            if ($val['ColorCoding'] == 'FFFF00') {
+                                                $recordArray[$i]['is_display'] = 1;
+                                            } else {
+                                                $recordArray[$i]['is_display'] = 0;
+                                            }
+                                        } else {
+                                            $recordArray[$i]['is_display'] = 1;
+                                        }
+                                    }
+                                } else {
+                                    if (isset($displaySection) && $displaySection == 'G') {
+                                        if ($val['ColorCoding'] == 'FFFF00') {
+                                            $recordArray[$i]['is_display'] = 1;
+                                        } else {
+                                            $recordArray[$i]['is_display'] = 0;
+                                        }
+                                    } else {
+                                        $recordArray[$i]['is_display'] = 1;
+                                    }
+                                } 
+                            } else {
+                                $recordArray[$i]['is_display'] = 0;
+                            }
                             $i++;
                         }
                         
-
-                        if (in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type'))) {
-                            if (!empty($noticeArr)) {
-                                if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
-                                    $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    $filterNoticeExistKey = array_search($docType, array_column($noticeArr, 'document_type'));
-                                } else if (isset($val['DocumentType'])) {
-                                    $filterNoticeExistKey = array_search($val['DocumentType'], array_column($noticeArr, 'document_type'));
-                                }
+                        // if (in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type'))) {
+                        //     if (!empty($noticeArr)) {
+                        //         if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
+                        //             $docType = $val['DocumentType'].$val['DocumentSubType'];
+                        //             $filterNoticeExistKey = array_search($docType, array_column($noticeArr, 'document_type'));
+                        //         } else if (isset($val['DocumentType'])) {
+                        //             $filterNoticeExistKey = array_search($val['DocumentType'], array_column($noticeArr, 'document_type'));
+                        //         }
                         
-                                if (strlen($filterNoticeExistKey) > 0) {
-                                    unset($noticeArr[$filterNoticeExistKey]);
-                                    $noticeArr = array_values($noticeArr); 
-                                    $k--;
-                                }
-                            }
+                        //         if (strlen($filterNoticeExistKey) > 0) {
+                        //             unset($noticeArr[$filterNoticeExistKey]);
+                        //             $noticeArr = array_values($noticeArr); 
+                        //             $k--;
+                        //         }
+                        //     }
 
-                            if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
-                                $noticeArr[$k]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
-                                if (isset($val['DocumentSubType'])) {
-                                    $noticeArr[$k]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
-                                } else {
-                                    $noticeArr[$k]['document_type'] = $val['DocumentType'];
-                                }
-                                $k++;
-                            }
+                        //     if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
+                        //         $noticeArr[$k]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                        //         if (isset($val['DocumentSubType'])) {
+                        //             $noticeArr[$k]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
+                        //         } else {
+                        //             $noticeArr[$k]['document_type'] = $val['DocumentType'];
+                        //         }
+                        //         $k++;
+                        //     }
 
-                        }
+                        // }
 
-                        if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
-                            if (!empty($filterArr)) {
-                                if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
-                                    $docType = $val['DocumentType'].$val['DocumentSubType'];
-                                    $filterExistKey = array_search($docType, array_column($filterArr, 'document_type'));
-                                } else if (isset($val['DocumentType'])) {
-                                    $filterExistKey = array_search($val['DocumentType'], array_column($filterArr, 'document_type'));
-                                }
+                        // if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
+                        //     if (!empty($filterArr)) {
+                        //         if (isset($val['DocumentType']) && isset($val['DocumentSubType']) && strlen($val['DocumentSubType']) > 1) {
+                        //             $docType = $val['DocumentType'].$val['DocumentSubType'];
+                        //             $filterExistKey = array_search($docType, array_column($filterArr, 'document_type'));
+                        //         } else if (isset($val['DocumentType'])) {
+                        //             $filterExistKey = array_search($val['DocumentType'], array_column($filterArr, 'document_type'));
+                        //         }
                         
-                                if (strlen($filterExistKey) > 0) {
-                                    unset($filterArr[$filterExistKey]);
-                                    $filterArr = array_values($filterArr); 
-                                    $j--;
-                                }
-                            }
+                        //         if (strlen($filterExistKey) > 0) {
+                        //             unset($filterArr[$filterExistKey]);
+                        //             $filterArr = array_values($filterArr); 
+                        //             $j--;
+                        //         }
+                        //     }
 
-                            if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
-                                $filterArr[$j]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
-                                if (isset($val['DocumentSubType'])) {
-                                    $filterArr[$j]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
-                                } else {
-                                    $filterArr[$j]['document_type'] = $val['DocumentType'];
-                                }
-                                $j++;
-                            }
-                        }
+                        //     if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
+                        //         $filterArr[$j]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                        //         if (isset($val['DocumentSubType'])) {
+                        //             $filterArr[$j]['document_type'] = $val['DocumentType'].$val['DocumentSubType'];
+                        //         } else {
+                        //             $filterArr[$j]['document_type'] = $val['DocumentType'];
+                        //         }
+                        //         $j++;
+                        //     }
+                        // }
                     }
                 }
                
-                if (!empty($noticeArr)) {
-                    foreach ($noticeArr as $arr) {
-                        $filterNoticeKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
-                        if (strlen($filterNoticeKey) > 0) {
-                            $recordArray[$filterNoticeKey]['is_display'] = 1;
-                        }
-                    }
-                }
+                // if (!empty($noticeArr)) {
+                //     foreach ($noticeArr as $arr) {
+                //         $filterNoticeKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
+                //         if (strlen($filterNoticeKey) > 0) {
+                //             $recordArray[$filterNoticeKey]['is_display'] = 1;
+                //         }
+                //     }
+                // }
                 
-                if (!empty($filterArr)) {
-                    foreach ($filterArr as $arr) {
-                        $filterKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
-                        if (strlen($filterKey) > 0) {
-                            $recordArray[$filterKey]['is_display'] = 1;
-                        }
-                    }
-                }
+                // if (!empty($filterArr)) {
+                //     foreach ($filterArr as $arr) {
+                //         $filterKey = array_search($arr['instrument'], array_column($recordArray, 'instrument'));
+                //         if (strlen($filterKey) > 0) {
+                //             $recordArray[$filterKey]['is_display'] = 1;
+                //         }
+                //     }
+                // }
                 $this->CI->db->delete('pct_title_point_document_records', array('title_point_id' => $titlePointId)); 
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
 			} else {
