@@ -1131,6 +1131,114 @@ class Titlepoint
 			if (isset($items['Item'])) {
                 /** Start All instrument number details fetched */
                 foreach($items['Item'] as $key => $val) {
+                    $party1Arr = $party2Arr = $party3Arr = $party4Arr = $party5Arr= array();
+                    if (!empty($val['Parties1st']['DocumentParty'])) {
+                        if (count($val['Parties1st']['DocumentParty']) == 1) {
+                            $partyId = $val['Parties1st']['DocumentParty']['@attributes']['Id'];
+                            $party1Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                            });
+                            $party1Arr = array_merge($party1Arr, $party1Array);
+                        } else {
+                            foreach($val['Parties1st']['DocumentParty'] as $party1) {
+                                $partyId = $party1['@attributes']['Id'];
+                                $party1Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                    return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                                }); 
+                                $party1Arr = array_merge($party1Arr, $party1Array); 
+                            }
+                        }
+                    }
+
+                    if (!empty($val['Parties2nd']['DocumentParty'])) {
+                        if (count($val['Parties2nd']['DocumentParty']) == 1) {
+                            $partyId = $val['Parties2nd']['DocumentParty']['@attributes']['Id'];
+                            $party2Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                            });
+                            $party2Arr = array_merge($party2Arr, $party2Array);
+                        } else {
+                            foreach($val['Parties2nd']['DocumentParty'] as $party2) {
+                                $partyId = $party2['@attributes']['Id'];
+                                $party2Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                    return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                                }); 
+                                $party2Arr = array_merge($party2Arr, $party2Array); 
+                            }
+                        }
+                    }
+
+                    if (!empty($val['Parties3rd']['DocumentParty'])) {
+                        if (count($val['Parties3rd']['DocumentParty']) == 1) {
+                            $partyId = $val['Parties3rd']['DocumentParty']['@attributes']['Id'];
+                            $party3Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                            });
+                            $party3Arr = array_merge($party3Arr, $party3Array);
+                        } else {
+                            foreach($val['Parties3rd']['DocumentParty'] as $party3) {
+                                $partyId = $party3['@attributes']['Id'];
+                                $party3Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                    return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                                }); 
+                                $party3Arr = array_merge($party3Arr, $party3Array); 
+                            }
+                        }
+                    }
+
+                    if (!empty($val['Parties4th']['DocumentParty'])) {
+                        if (count($val['Parties4th']['DocumentParty']) == 1) {
+                            $partyId = $val['Parties4th']['DocumentParty']['@attributes']['Id'];
+                            $party4Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                            });
+                            $party4Arr = array_merge($party4Arr, $party4Array);
+                        } else {
+                            foreach($val['Parties4th']['DocumentParty'] as $party4) {
+                                $partyId = $party4['@attributes']['Id'];
+                                $party4Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                    return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                                }); 
+                                $party4Arr = array_merge($party4Arr, $party4Array); 
+                            }
+                        }
+                    }
+
+                    if (!empty($val['Parties5th']['DocumentParty'])) {
+                        if (count($val['Parties5th']['DocumentParty']) == 1) {
+                            $partyId = $val['Parties5th']['DocumentParty']['@attributes']['Id'];
+                            $party5Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                            });
+                            $party5Arr = array_merge($party5Arr, $party5Array);
+                        } else {
+                            foreach($val['Parties5th']['DocumentParty'] as $party5) {
+                                $partyId = $party5['@attributes']['Id'];
+                                $party5Array = array_filter($result['Parties']['DocumentParty'], function($elem) use($partyId){
+                                    return ($elem['Id'] == $partyId) ? $elem['Name'] : '';
+                                }); 
+                                $party5Arr = array_merge($party5Arr, $party5Array); 
+                            }
+                        }
+                    }
+
+                    $parties = '';
+                    if (!empty($party1Arr)) {
+                        $parties .= "Party1: ".implode(" And ", array_column($party1Arr, 'Name'));
+                    }
+                    if (!empty($party2Arr)) {
+                        $parties .= " <br> Party2: ".implode(" And ", array_column($party2Arr, 'Name'));
+                    }
+                    if (!empty($party3Arr)) {
+                        $parties .= " <br> Party3: ".implode(" And ", array_column($party3Arr, 'Name'));
+                    }
+                    if (!empty($party4Arr)) {
+                        $parties .= " <br> Party4: ".implode(" And ", array_column($party4Arr, 'Name'));
+                    }
+                    if (!empty($party5Arr)) {
+                        $parties .= " <br> Party5: ".implode(" And ", array_column($party5Arr, 'Name'));
+                    }
+                    
                     $id = $val['DocumentIdentification'];
                     if (isset($id['@attributes']['Id'])) {
                         $docId = $id['@attributes']['Id'];
@@ -1144,12 +1252,16 @@ class Titlepoint
                             $recordArray[$i]['document_name'] = $val['DocumentFullName'];
                             $recordArray[$i]['document_type'] = $val['DocumentType'];
                             $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
+                            $recordArray[$i]['parties'] = isset($parties) ? $parties : null;
+                            $recordArray[$i]['coupling'] = isset($val['CouplingIndicatorAll']) ? $val['CouplingIndicatorAll'] : null;
+                            $recordArray[$i]['remarks'] = isset($val['PropertyRemark']) ? $val['PropertyRemark'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
                             $recordArray[$i]['is_display'] = 0;
                             $recordArray[$i]['is_notice'] = in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type')) ? 1 : 0;
                             $i++;
                         }
+                        
 
                         if (in_array($val['DocumentType'], array_column($displayNoticeDocList, 'doc_type'))) {
                             if (!empty($noticeArr)) {
