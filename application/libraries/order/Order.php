@@ -2993,7 +2993,9 @@ class Order
         // }
 
         $this->CI->load->model('order/titlePointData');
+        $this->CI->load->model('order/home_model');
         $this->CI->load->library('order/titlepoint');
+
         $userdata = $this->CI->session->userdata('user');
         $condition = array(
             'where' => array(
@@ -3131,10 +3133,10 @@ class Order
             // $file_id = $titlePointDetails[0]['file_id'];
             $this->checkGrantDoc($fileNumber);
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
-            $sectionGList = $this->home_model->getSectionWiseLPDocumentList('G');
-            $sectionHList = $this->home_model->getSectionWiseLPDocumentList('H');
-            $sectionIList = $this->home_model->getSectionWiseLPDocumentList('I');
-            $sectionJList = $this->home_model->getSectionWiseLPDocumentList('J');
+            $sectionGList = $this->CI->home_model->getSectionWiseLPDocumentList('G');
+            $sectionHList = $this->CI->home_model->getSectionWiseLPDocumentList('H');
+            $sectionIList = $this->CI->home_model->getSectionWiseLPDocumentList('I');
+            $sectionJList = $this->CI->home_model->getSectionWiseLPDocumentList('J');
             $sectionGList = array_map (function($value){
                 return $value['doc_type'];
             } , $sectionGList);
