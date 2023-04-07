@@ -4242,7 +4242,7 @@ class Home extends MX_Controller {
                             $documentSubTypeListArr = implode(',', $documentSubTypeList);
                             if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
                                 if ($displaySection == 'G') {
-                                    if ($instrumentRecord['ColorCoding'] == 'FFFF00') {
+                                    if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                         $instrumentRecords[$i]['is_display'] = 1;
                                     } else {
                                         $instrumentRecords[$i]['is_display'] = 0;
@@ -4255,7 +4255,7 @@ class Home extends MX_Controller {
                             }
                         } else {
                             if ($displaySection == 'G') {
-                                if ($instrumentRecord['ColorCoding'] == 'FFFF00') {
+                                if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                     $instrumentRecords[$i]['is_display'] = 1;
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0;
@@ -4266,7 +4266,7 @@ class Home extends MX_Controller {
                         }
                     } else {
                         if ($displaySection == 'G') {
-                            if ($instrumentRecord['ColorCoding'] == 'FFFF00') {
+                            if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                 $instrumentRecords[$i]['is_display'] = 1;
                             } else {
                                 $instrumentRecords[$i]['is_display'] = 0;
