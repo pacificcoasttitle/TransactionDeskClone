@@ -19,7 +19,7 @@ final class AddSectionColumns extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_title_point_document_records');
-        $table->addColumn('color_coding', 'string', ['after' => 'display_in_section','null' => true])
+        $table->addColumn('color_coding', 'string', ['after' => 'is_display','null' => true])
 			->update();
     }
 }
