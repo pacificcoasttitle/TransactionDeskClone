@@ -944,7 +944,7 @@
                         <td></td>
                     </tr>
                 </table>
-                <div class="table_title"><em>Section D:</em> Property Taxes</div>
+                <div class="table_title"><em>Section D:</em> Property Taxes  <a href="<?php echo $taxFileUrl?>" target="_blank"><?php echo $orderDetails['apn']; ?></a></div>
                 <table class="table_b table">
                     <tr>
                         <td colspan="2" class="text_center f900">1st Installment </td>
@@ -1005,7 +1005,7 @@
                         <td><?php echo $secondInstallment['TaxYear']; ?></td>
                     </tr>
                 </table>
-                <div class="table_title"><em>Section E:</em> Full Legal Description:</div>
+                <div class="table_title"><em>Section E:</em> Legal Description:</div>
                 <div class="legal_desc">
                     <?php echo $titlePointDetails[0]['legal_description']; ?>
                 </div>
@@ -1013,7 +1013,14 @@
                 <div class="legal_desc">
                     <?php echo $titlePointDetails[0]['vesting_information'] ? $titlePointDetails[0]['vesting_information'] : 'Refer to grant deed below' ?> <br><a target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/grant-deed/<?php echo $titlePointDetails[0]['file_number'] ?>.pdf">
                         <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>  
-                    </a> 
+                    </a> <br>
+                    <?php  
+                        foreach ($vestingInstrumentDetails as $key => $vesting) { ?>
+                            <a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $vesting['id'] ?>.pdf">
+                            <?php echo  $vesting['instrument']; ?>
+                            </a> <br>
+                    <?php }
+                    ?>
                 </div>
             </div>           
             <div class="pdf_footer">
@@ -1100,7 +1107,7 @@
                     <?php } ?>
                 </table>
                 <?php if ($pageForRecord == 1) {?>
-                <div class="table_title"><em>Section I:</em> Liens & Items for Review</div>
+                <div class="table_title"><em>Section I:</em> Liens, Notices, and Violations</div>
                 <table class="table_g table">
                     <tr>
                         <td></td>
@@ -1124,7 +1131,7 @@
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >
                             <td ></td>
-                            <td colspan="3" > There is No Liens & Items found.</td>
+                            <td colspan="3" > There is No Liens, Notices, and Violations found.</td>
                         </tr>
                     <?php } ?>
                     
@@ -1154,7 +1161,7 @@
                 </div>
             </div>
             <div class="pdf_body">
-                <div class="table_title"><em>Section I:</em> Liens & Items for Review</div>
+                <div class="table_title"><em>Section I:</em> Liens, Notices, and Violations</div>
                 <table class="table_g table">
                     <tr>
                         <td></td>
@@ -1178,7 +1185,7 @@
                     <?php $i++; } } else {?>
                         <tr style="text-align: center;" >
                             <td ></td>
-                            <td colspan="3" > There is No Liens & Items found.</td>
+                            <td colspan="3" > There is No Liens, Notices, and Violations found.</td>
                         </tr>
                     <?php } ?>
                     

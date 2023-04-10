@@ -18,7 +18,7 @@ final class DropColumnTablePctTitlePointDocumentRecordsIsNotice extends Abstract
      */
     public function change(): void
     {
-        $table = $this-('pct_title_point_document_records');
+        $table = $this->table('pct_title_point_document_records');
         $table->removeColumn('is_notice')->update();
     }
 }

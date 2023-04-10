@@ -3124,6 +3124,18 @@ class Order
         // if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
             /** Generate Pre listing report document */
             // $fileNumber = "LP-00000013";
+            $tax_file_url = '';
+            if (env('AWS_ENABLE_FLAG') == 1) {
+                if($this->CI->order->fileExistOrNotOnS3('tax/'.$fileNumber.'.pdf')) {
+                    $tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
+                } 
+            } else {
+                $tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
+                if (file_exists($tax_file_path)) {
+                    $tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
+                }
+            }
+            $taxFileUrl = empty($tax_file_url) ? '#' : $tax_file_url;
             $condition = array(
                 'where' => array(
                     'file_number' => $fileNumber,
@@ -3133,6 +3145,9 @@ class Order
             // $file_id = $titlePointDetails[0]['file_id'];
             $this->checkGrantDoc($fileNumber);
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
+            $vestingAllInstrumentDetails = $this->CI->titlePointData->getVestingInstrumentDetails($fileNumber);
+		    $temp = array_unique(array_column($vestingAllInstrumentDetails, 'document_type'));
+		    $vestingInstrumentDetails = array_intersect_key($vestingAllInstrumentDetails, $temp);
             $sectionGList = $this->CI->home_model->getSectionWiseLPDocumentList('G');
             $sectionHList = $this->CI->home_model->getSectionWiseLPDocumentList('H');
             $sectionIList = $this->CI->home_model->getSectionWiseLPDocumentList('I');
@@ -3174,7 +3189,20 @@ class Order
             // $instrumentRecordDetails['openDeedTrust'] = array_values($openDeedTrust);
             // $instrumentRecordDetails['titlePointInstrumentDetails'] = $titlePointInstrumentDetails;
             $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
-            
+            $instrumentRecordDetails['taxFileUrl'] = $taxFileUrl;
+            $instrumentRecordDetails['vestingInstrumentDetails'] = $vestingInstrumentDetails;
+            if (env('AWS_ENABLE_FLAG') == 1) {
+                if($this->CI->order->fileExistOrNotOnS3('tax/'.$fileNumber.'.pdf')) {
+                    $tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
+                } 
+            } else {
+                $tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
+                if (file_exists($tax_file_path)) {
+                    $tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
+                }
+            }
+            $taxFileUrl = empty($tax_file_url) ? '#' : $tax_file_url;
+            $instrumentRecordDetails['taxFileUrl'] = $taxFileUrl;          
             $html = $this->CI->load->view('report/instrument_report',$instrumentRecordDetails,true);
             
             $this->CI->load->library('snappy_pdf');
