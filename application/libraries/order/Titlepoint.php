@@ -1249,6 +1249,9 @@ class Titlepoint
                             $recordArray[$i]['title_point_id'] = $titlePointId;
                             $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
                             $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
+                            $recordArray[$i]['type'] = $documentIdentifications[$key]['Type'];
+                            $recordArray[$i]['sub_type'] = $documentIdentifications[$key]['SubType'];
+                            $recordArray[$i]['order_number'] = isset($documentIdentifications[$key]['OrderNumber']) ? $documentIdentifications[$key]['OrderNumber'] : null;
                             $recordArray[$i]['document_name'] = $val['DocumentFullName'];
                             $recordArray[$i]['document_type'] = $val['DocumentType'];
                             $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
@@ -1270,12 +1273,20 @@ class Titlepoint
                                         if (in_array($val['DocumentSubType'], $documentSubTypeListArr)) {
                                             if (isset($displaySection) && $displaySection == 'G') {
                                                 if ($val['ColorCoding'] == 'FFFF00') {
-                                                    $recordArray[$i]['is_display'] = 1;
+                                                    if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                                                        $recordArray[$i]['is_display'] = 1;
+                                                    } else {
+                                                        $recordArray[$i]['is_display'] = 0;
+                                                    }
                                                 } else {
                                                     $recordArray[$i]['is_display'] = 0;
                                                 }
                                             } else {
-                                                $recordArray[$i]['is_display'] = 1;
+                                                if ($val['ColorCoding'] != 'A0A0FF') {
+                                                    $recordArray[$i]['is_display'] = 1;
+                                                } else {
+                                                    $recordArray[$i]['is_display'] = 0; 
+                                                }
                                             }
                                         } else {
                                             $recordArray[$i]['is_display'] = 0;
@@ -1283,23 +1294,39 @@ class Titlepoint
                                     } else {
                                         if (isset($displaySection) && $displaySection == 'G') {
                                             if ($val['ColorCoding'] == 'FFFF00') {
-                                                $recordArray[$i]['is_display'] = 1;
+                                                if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                                                    $recordArray[$i]['is_display'] = 1;
+                                                } else {
+                                                    $recordArray[$i]['is_display'] = 0;
+                                                }
                                             } else {
                                                 $recordArray[$i]['is_display'] = 0;
                                             }
                                         } else {
-                                            $recordArray[$i]['is_display'] = 1;
+                                            if ($val['ColorCoding'] != 'A0A0FF') {
+                                                $recordArray[$i]['is_display'] = 1;
+                                            } else {
+                                                $recordArray[$i]['is_display'] = 0; 
+                                            }
                                         }
                                     }
                                 } else {
                                     if (isset($displaySection) && $displaySection == 'G') {
                                         if ($val['ColorCoding'] == 'FFFF00') {
-                                            $recordArray[$i]['is_display'] = 1;
+                                            if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                                                $recordArray[$i]['is_display'] = 1;
+                                            } else {
+                                                $recordArray[$i]['is_display'] = 0;
+                                            }
                                         } else {
                                             $recordArray[$i]['is_display'] = 0;
                                         }
                                     } else {
-                                        $recordArray[$i]['is_display'] = 1;
+                                        if ($val['ColorCoding'] != 'A0A0FF') {
+                                            $recordArray[$i]['is_display'] = 1;
+                                        } else {
+                                            $recordArray[$i]['is_display'] = 0; 
+                                        }
                                     }
                                 } 
                             } else {
