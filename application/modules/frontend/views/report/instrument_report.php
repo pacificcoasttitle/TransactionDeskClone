@@ -1033,8 +1033,20 @@
     <?php
         $i = 0; 
         $page = 4;
-        $totalRecordForPage = count($sectionGRecord) + count($sectionHRecord) + 3 + count($sectionIRecord) + 3;
-        $pageForRecord = ($totalRecordForPage > 20) ? 2 : 1;
+        $sectionGonPage = $sectionHonPage = $sectionIonPage = 1;
+        $totalRecordForPage = count($sectionGRecord) + count($sectionHRecord) + 3;
+        $totalInstumentSection = 1;
+        if ($totalRecordForPage > 25) {
+            $sectionHonPage = $sectionIonPage = 2;
+            $totalInstumentSection = 2;
+        }
+        $totalRecordForPage = count($sectionGRecord) + count($sectionHRecord) + 3 + count($sectionIRecord);
+        
+        if ($totalRecordForPage > 45) {
+            $sectionIonPage = 3;
+            $totalInstumentSection = 3;
+        }
+        // $pageForRecord = ($totalRecordForPage > 20) ? 2 : 1;
    ?>
     <div class="page_container">
         <div style="height:50px"></div>
@@ -1078,6 +1090,7 @@
                     </tr>
                     <?php } ?>
                 </table>
+                <?php if ($sectionHonPage == 1) {?>
                 <div class="table_title"><em>Section H:</em> Foreclosure Activity</div>
                 <table class="table_g table">
                     <tr>
@@ -1106,7 +1119,8 @@
                         </tr>
                     <?php } ?>
                 </table>
-                <?php if ($pageForRecord == 1) {?>
+                <?php } ?>
+                <?php if ($sectionIonPage == 1) {?>
                 <div class="table_title"><em>Section I:</em> Liens, Notices, and Violations</div>
                 <table class="table_g table">
                     <tr>
@@ -1145,7 +1159,7 @@
         </div>
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
-    <?php if ($pageForRecord == 2) {?>
+    <?php if ($totalInstumentSection > 1) {?>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
@@ -1161,6 +1175,37 @@
                 </div>
             </div>
             <div class="pdf_body">
+            <?php if ($sectionHonPage == 2) {?>
+                <div class="table_title"><em>Section H:</em> Foreclosure Activity</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <!-- <td>Amount</td> -->
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php  
+                    
+                    if (!empty($sectionHRecord)) { 
+                    $i = 0;
+                    foreach ($sectionHRecord as $key => $val) {  ?>
+                    <tr>
+                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>                        
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                    </tr>
+                    <?php $i++; } } else {?>
+                        <tr style="text-align: center;" >
+                            <td > </td>
+                            <td colspan="3" > There is No Foreclosure activity found.</td>
+                        </tr>
+                    <?php } ?>
+                </table>
+                <?php } ?>
+                <?php if ($sectionIonPage == 2) {?>
                 <div class="table_title"><em>Section I:</em> Liens, Notices, and Violations</div>
                 <table class="table_g table">
                     <tr>
@@ -1173,7 +1218,7 @@
                     <?php  
                     
                     if (!empty($sectionIRecord)) { 
-                        
+                    $i = 0;
                     foreach ($sectionIRecord as $key => $val) {  ?>
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
@@ -1190,6 +1235,96 @@
                     <?php } ?>
                     
                 </table>
+                <?php }?>
+                
+            </div>           
+            <div class="pdf_footer">
+                <p class="page_title">Listing Prelim Report</p>
+                <p class="page_text"><?php echo $page; ?></p>
+            </div>
+        </div>
+    </div>
+    
+    <?php  } $page++; ?>
+
+    <div class="page-break" style="page-break-after: always;"></div>
+    <?php if ($totalInstumentSection > 2) {?>
+    <div class="page_container">
+        <div style="height:50px"></div>
+        <div class="pdf_page size_letter">
+            <div class="pdf_header">
+                <div class="logo_container">
+                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
+                </div>
+                <div class="report_info float_right text_right">
+                    Title Order #:<?php echo $orderDetails['lp_file_number'] ?><br>
+                    Title Officer: <?php echo $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name']; ?><br>
+                    <?php echo date('M jS g:i a', strtotime($orderDetails['opened_date'])); ?><br>
+                    Escrow No: <?php echo $orderDetails['escrow_number'] ?>
+                </div>
+            </div>
+            <div class="pdf_body">
+            <?php if ($sectionHonPage == 3) {?>
+                <div class="table_title"><em>Section H:</em> Foreclosure Activity</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <!-- <td>Amount</td> -->
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php  
+                    
+                    if (!empty($sectionHRecord)) { 
+                    $i = 0;
+                    foreach ($sectionHRecord as $key => $val) {  ?>
+                    <tr>
+                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>                        
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                    </tr>
+                    <?php $i++; } } else {?>
+                        <tr style="text-align: center;" >
+                            <td > </td>
+                            <td colspan="3" > There is No Foreclosure activity found.</td>
+                        </tr>
+                    <?php } ?>
+                </table>
+                <?php } ?>
+                <?php if ($sectionIonPage == 3) {?>
+                <div class="table_title"><em>Section I:</em> Liens, Notices, and Violations</div>
+                <table class="table_g table">
+                    <tr>
+                        <td></td>
+                        <td>Document Name</td>
+                        <!-- <td>Amount</td> -->
+                        <td>Recorded</td>
+                        <td class="text_center">Instrument #</td>
+                    </tr>
+                    <?php  
+                    
+                    if (!empty($sectionIRecord)) { 
+                    $i = 0;
+                    foreach ($sectionIRecord as $key => $val) {  ?>
+                    <tr>
+                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
+                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                    </tr>
+                    <?php $i++; } } else {?>
+                        <tr style="text-align: center;" >
+                            <td ></td>
+                            <td colspan="3" > There is No Liens, Notices, and Violations found.</td>
+                        </tr>
+                    <?php } ?>
+                    
+                </table>
+                <?php }?>
                 
             </div>           
             <div class="pdf_footer">
