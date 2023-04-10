@@ -5299,15 +5299,24 @@ class Cron extends MX_Controller {
 				$recordedDate = $insDetail['recorded_date'];
 				$docId = $insDetail['instrument'];
 				$fips = $insDetail['fips'];
+                $type = $insDetail['type'];
+                $sub_type = $insDetail['sub_type'];
+                $order_number = $insDetail['order_number'];
 
 				if (isset($recordedDate) && !empty($recordedDate)) {
 					$time = strtotime($recordedDate);
 					$year = date('Y',$time);
 				}
 
+                if (!empty($order_number)) {
+                    $parameters = 'FIPS='.$fips.',TYPE='.$type.',ORDER='.$order_number.'SUBTYPE='.$sub_type.',YEAR='.$year.',INST='.$docId.'';
+                } else {
+                    $parameters = 'FIPS='.$fips.',TYPE='.$type.',SUBTYPE='.$sub_type.',YEAR='.$year.',INST='.$docId.'';
+                }
+
 				$docId = (string)((int)($docId));
 				$requestParams = array(
-					'parameters'=>'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'',
+					'parameters'=> $parameters,
 					'username' => env('TP_USERNAME'),
 					'password' => env('TP_PASSWORD'),            
 					'company'=>  '',

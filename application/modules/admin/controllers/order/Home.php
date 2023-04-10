@@ -4243,12 +4243,20 @@ class Home extends MX_Controller {
                             if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
                                 if ($displaySection == 'G') {
                                     if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                        $instrumentRecords[$i]['is_display'] = 1;
+                                        if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
+                                            $instrumentRecords[$i]['is_display'] = 1;
+                                        } else {
+                                            $instrumentRecords[$i]['is_display'] = 0;
+                                        }
                                     } else {
                                         $instrumentRecords[$i]['is_display'] = 0;
                                     }
                                 } else {
-                                    $instrumentRecords[$i]['is_display'] = 1;
+                                    if ($instrumentRecord['color_coding'] != 'A0A0FF') {
+                                        $instrumentRecords[$i]['is_display'] = 1;
+                                    } else {
+                                        $instrumentRecords[$i]['is_display'] = 0; 
+                                    }
                                 }
                             } else {
                                 $instrumentRecords[$i]['is_display'] = 0;
@@ -4256,23 +4264,39 @@ class Home extends MX_Controller {
                         } else {
                             if ($displaySection == 'G') {
                                 if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                    $instrumentRecords[$i]['is_display'] = 1;
+                                    if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
+                                        $instrumentRecords[$i]['is_display'] = 1;
+                                    } else {
+                                        $instrumentRecords[$i]['is_display'] = 0;
+                                    }
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0;
                                 }
                             } else {
-                                $instrumentRecords[$i]['is_display'] = 1;
+                                if ($instrumentRecord['color_coding'] != 'A0A0FF') {
+                                    $instrumentRecords[$i]['is_display'] = 1;
+                                } else {
+                                    $instrumentRecords[$i]['is_display'] = 0; 
+                                }
                             }
                         }
                     } else {
                         if ($displaySection == 'G') {
                             if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                $instrumentRecords[$i]['is_display'] = 1;
+                                if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
+                                    $instrumentRecords[$i]['is_display'] = 1;
+                                } else {
+                                    $instrumentRecords[$i]['is_display'] = 0;
+                                }
                             } else {
                                 $instrumentRecords[$i]['is_display'] = 0;
                             }
                         } else {
-                            $instrumentRecords[$i]['is_display'] = 1;
+                            if ($instrumentRecord['color_coding'] != 'A0A0FF') {
+                                $instrumentRecords[$i]['is_display'] = 1;
+                            } else {
+                                $instrumentRecords[$i]['is_display'] = 0; 
+                            }
                         }
                     } 
                 } else {
@@ -4347,33 +4371,34 @@ class Home extends MX_Controller {
                 // }
                 if ($instrumentRecord['is_display'] == 1) {
                     $checked = "checked";                
-                }  else {
-                    $checked = "";
+                // }  else {
+                //     $checked = "";
+                // }
+                    $document_name = $instrumentRecord['document_name'];
+                    $document_type = $instrumentRecord['document_type'];
+                    $document_sub_type = $instrumentRecord['document_sub_type'];
+                    $fileName = $instrumentRecord['id'].'.pdf';
+                    $docUrl = env('AWS_PATH')."title-point/".$fileName;
+                    $instrument = "<a target='_blank' href='$docUrl'>".$instrumentRecord['instrument']."</a>";
+                    $recorded_date = $instrumentRecord['recorded_date'];
+                    $parties = ucwords(strtolower($instrumentRecord['parties']));
+                    $coupling = $instrumentRecord['coupling'] != '0' ? $instrumentRecord['coupling'] : '';
+                    $remarks = ucwords(strtolower($instrumentRecord['remarks']));
+                    $id = $instrumentRecord['id'];
+                    $data .= "<tr>
+                                <td>$i</td>
+                                <td>$document_name</td>
+                                <td>$instrument</td>
+                                <td>$recorded_date</td>
+                                <td>$parties</td>
+                                <td>$coupling</td>
+                                <td>$remarks</td>
+                                <td>$document_type</td>
+                                <td>$document_sub_type</td>
+                                <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
+                            </tr>";
+                    $i++;
                 }
-                $document_name = $instrumentRecord['document_name'];
-                $document_type = $instrumentRecord['document_type'];
-                $document_sub_type = $instrumentRecord['document_sub_type'];
-                $fileName = $instrumentRecord['id'].'.pdf';
-                $docUrl = env('AWS_PATH')."title-point/".$fileName;
-                $instrument = "<a target='_blank' href='$docUrl'>".$instrumentRecord['instrument']."</a>";
-                $recorded_date = $instrumentRecord['recorded_date'];
-                $parties = ucwords(strtolower($instrumentRecord['parties']));
-                $coupling = $instrumentRecord['coupling'] != '0' ? $instrumentRecord['coupling'] : '';
-                $remarks = ucwords(strtolower($instrumentRecord['remarks']));
-                $id = $instrumentRecord['id'];
-                $data .= "<tr>
-                            <td>$i</td>
-                            <td>$document_name</td>
-                            <td>$instrument</td>
-                            <td>$recorded_date</td>
-                            <td>$parties</td>
-                            <td>$coupling</td>
-                            <td>$remarks</td>
-                            <td>$document_type</td>
-                            <td>$document_sub_type</td>
-                            <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
-                        </tr>";
-                $i++;
             }
         } else {
             $data .= "<tr><td colspan='5'>No records found.</td></tr>";  
