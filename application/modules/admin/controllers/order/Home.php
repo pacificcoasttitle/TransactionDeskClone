@@ -4406,6 +4406,7 @@ class Home extends MX_Controller {
         $data .= '</tbody></table>';
         if(!empty($data)) {
             $result = array('status'=> 'success', 'data' => $data);    
+            // $result = array('status'=> 'success', 'data' => mb_convert_encoding($data, 'UTF-8', 'UTF-8'));    
         } else {
             $result = array('status'=> 'error', 'data' => $data);   
         }
