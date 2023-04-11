@@ -42,6 +42,7 @@ class Order
     public function get_orders($params)
     {
         $userdata = $this->CI->session->userdata('user');
+        $email = $userdata['email'];
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
         $salesFlag = isset($params['salesFlag']) && !empty($params['salesFlag']) ? $params['salesFlag'] : '';
@@ -98,6 +99,11 @@ class Order
                 $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
             }
 
+            if (in_array($email, ['daphne@joindaphne.com'])) {
+                $this->CI->db->where('order_details.lp_file_number is null');
+                $this->CI->db->where('order_details.file_number is not null'); 
+            }
+            
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     $this->CI->db->where('order_details.lp_file_number is null');
@@ -187,6 +193,11 @@ class Order
 
             if (isset($yearFlag) && !empty($yearFlag)) {
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
+            }
+
+            if (in_array($email, ['daphne@joindaphne.com'])) {
+                $this->CI->db->where('order_details.lp_file_number is null');
+                $this->CI->db->where('order_details.file_number is not null'); 
             }
 
             if (isset($order_type) && !empty($order_type)) {
@@ -296,6 +307,11 @@ class Order
                 $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
             }
 
+            if (in_array($email, ['daphne@joindaphne.com'])) {
+                $this->CI->db->where('order_details.lp_file_number is null');
+                $this->CI->db->where('order_details.file_number is not null'); 
+            }
+            
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     $this->CI->db->where('order_details.lp_file_number is null');
@@ -383,6 +399,11 @@ class Order
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
 
+            if (in_array($email, ['daphne@joindaphne.com'])) {
+                $this->CI->db->where('order_details.lp_file_number is null');
+                $this->CI->db->where('order_details.file_number is not null'); 
+            }
+            
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     $this->CI->db->where('order_details.lp_file_number is null');
