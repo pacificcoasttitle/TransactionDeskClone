@@ -1122,6 +1122,7 @@ class Titlepoint
 			$result = $result['Result']['DocumentList'];
             $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
 			$documentIdentifications = $result['DocumentIdentifications']['DocumentIdentification'];
+            $images = $result['Images']['Item'];
             $items = $result['Items'];
             $displayDocList = $this->CI->order->getDocumetTypes();
             $displayNoticeDocList = $this->CI->order->getNoticeDocumetTypes();
@@ -1249,9 +1250,9 @@ class Titlepoint
                             $recordArray[$i]['title_point_id'] = $titlePointId;
                             $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
                             $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
-                            $recordArray[$i]['type'] = $documentIdentifications[$key]['Type'];
-                            $recordArray[$i]['sub_type'] = $documentIdentifications[$key]['SubType'];
-                            $recordArray[$i]['order_number'] = isset($documentIdentifications[$key]['OrderNumber']) ? $documentIdentifications[$key]['OrderNumber'] : null;
+                            $recordArray[$i]['type'] = $images[$key]['Type'];
+                            $recordArray[$i]['sub_type'] = $images[$key]['SubType'];
+                            $recordArray[$i]['order_number'] = isset($images[$key]['OrderNumber']) ? $images[$key]['OrderNumber'] : null;
                             $recordArray[$i]['document_name'] = $val['DocumentFullName'];
                             $recordArray[$i]['document_type'] = $val['DocumentType'];
                             $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
