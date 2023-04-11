@@ -110,7 +110,7 @@ class TitlePointData extends CI_Model
             ->join('pct_title_point_document_records', 'pct_order_title_point_data.id = pct_title_point_document_records.title_point_id');
         $this->db->where('pct_order_title_point_data.file_number', $fileNumber);
         // $this->db->where('pct_title_point_document_records.title_point_id', "83127");
-        $this->db->where_in('pct_title_point_document_records.document_type', ['AFD','AFF','DCD','DCR','DDU','DEE','DEF','DED','DEG','DEJ','DEQ','DEW','DEX','DQT','JTY','ORS','SWD','TDR','CFS','CMP','DTH','FCL','TSC','QUI','TDD']);
+        $this->db->where_in('pct_title_point_document_records.document_type', ['AFD','AFF','DCD','DCR','DDU','DEE','DEF','DED','DEG','DEJ','DEQ','DEW','DEX','DQT','JTY','ORS','SWD','TDR','CFS','CMP','DTH','FCL','TSC','QUI']);
         $this->db->order_by('pct_title_point_document_records.id',"desc");
         $query = $this->db->get();
         return $query->result_array();
