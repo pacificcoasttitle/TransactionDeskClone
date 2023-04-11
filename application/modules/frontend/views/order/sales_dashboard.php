@@ -311,7 +311,7 @@
 <script defer>
 	var myarray = ["daphne@joindaphne.com"];
 	var sessionValue = <?php echo json_encode($this->session->userdata('user'));?>;
-	if(!myarray.includes(sessionValue.email)) {
+	if(myarray.includes(sessionValue.email)) {
 		setTimeout(() => {
 			$('#order_type_filter').removeClass('hide');
 			console.log('sessionValue ==', sessionValue.email);

@@ -99,7 +99,9 @@ class Order
                 $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
             }
 
-            if (in_array($email, ['daphne@joindaphne.com'])) {
+            //,'daphne@joindaphne.com'
+            // 'dburrascano@pct.com'
+            if (!in_array($email, ['daphne@joindaphne.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
@@ -195,7 +197,9 @@ class Order
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
 
-            if (in_array($email, ['daphne@joindaphne.com'])) {
+            //,'daphne@joindaphne.com'
+            // 'dburrascano@pct.com'
+            if (!in_array($email, ['daphne@joindaphne.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
@@ -307,7 +311,9 @@ class Order
                 $select .= ', sales_users.first_name as sales_first_name, sales_users.last_name as sales_last_name';
             }
 
-            if (in_array($email, ['daphne@joindaphne.com'])) {
+            //,'daphne@joindaphne.com'
+            // 'dburrascano@pct.com'
+            if (!in_array($email, ['daphne@joindaphne.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
@@ -398,8 +404,9 @@ class Order
             if (isset($yearFlag) && !empty($yearFlag)) {
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));  
             }
-
-            if (in_array($email, ['daphne@joindaphne.com'])) {
+            //,'daphne@joindaphne.com'
+            // 'dburrascano@pct.com'
+            if (!in_array($email, ['daphne@joindaphne.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
