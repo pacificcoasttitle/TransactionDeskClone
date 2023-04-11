@@ -101,7 +101,7 @@ class Order
 
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com'])) {
+            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
@@ -199,7 +199,7 @@ class Order
 
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com'])) {
+            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
@@ -313,7 +313,7 @@ class Order
 
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com'])) {
+            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
@@ -406,7 +406,7 @@ class Order
             }
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com'])) {
+            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             }
