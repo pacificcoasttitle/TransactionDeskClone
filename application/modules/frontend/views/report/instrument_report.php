@@ -1007,7 +1007,8 @@
                 </table>
                 <div class="table_title"><em>Section E:</em> Legal Description:</div>
                 <div class="legal_desc">
-                    <?php echo $titlePointDetails[0]['legal_description']; ?>
+                    <?php echo $titlePointDetails[0]['legal_description']; ?><br>
+                    For the most up to date and accurate legal description please see grant deed below. 
                 </div>
                 <div class="table_title"><em>Section F:</em> Property Vesting:</div>
                 <div class="legal_desc">
