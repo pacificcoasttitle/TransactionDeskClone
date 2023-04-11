@@ -182,6 +182,13 @@ class Home extends MX_Controller {
                     $checked = '';
                 }
                 $nestedData[] = "<input $checked onclick='isDualCplUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                if ($value['is_allow_only_resware_orders'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+	                     
 	                     
 	            
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
@@ -555,6 +562,13 @@ class Home extends MX_Controller {
                     $checked = '';
                 }
                 $nestedData[] = "<input $checked onclick='isDualCplUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+
+                if ($value['is_allow_only_resware_orders'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
 	            
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
@@ -4411,6 +4425,20 @@ class Home extends MX_Controller {
             $result = array('status'=> 'error', 'data' => $data);   
         }
         echo json_encode($result); exit;
+    }
+
+    public function updateAllOnlyReswareOrder()
+    {
+        $user_id = $this->input->post('user_id');
+        $allowOnlyReswareOrderFlag = $this->input->post('allowOnlyReswareOrderFlag');
+        $data['is_allow_only_resware_orders'] = $allowOnlyReswareOrderFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'Allow only Resware order value updated successfully for user.');
+        echo json_encode($data);
     }
 }
 

@@ -292,7 +292,7 @@ class Home extends MX_Controller {
 				}
 
 				$underWriter = '';
-				if (isset($_POST['EscrowId']) && !empty($_POST['EscrowId']) || (isset($_POST['escrow_officer']) && !empty($_POST['escrow_officer']))) {
+				if (isset($_POST['EscrowId']) && !empty($_POST['EscrowId']) || (isset($_POST['escrow_officer']) && !empty($_POST['escrow_officer'])) || $orderUser['is_allow_only_resware_orders'] == 1) {
 					$place_order = array();
 					$loanFlag = 1;
 					$legalEntity = array('EntityType'=>'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary'=> array('First'=>$OwnerFirstName,'Last'=>$OwnerLastName),'Address'=>array('Address1'=>$PropertyAddress, 'City'=> $PropertyCity, 'State'=> $PropertyState, 'Zip'=>$PropertyZip));
