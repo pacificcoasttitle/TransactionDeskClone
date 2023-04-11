@@ -32,6 +32,7 @@
                             <th>Mortgage User</th>
                             <th>User Type</th>
                             <th>Dual CPL</th>
+                            <th>Allow Only Resware Order</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

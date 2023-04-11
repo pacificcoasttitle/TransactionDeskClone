@@ -32,6 +32,7 @@
                             <th>City</th>
                             <th>Zipcode</th>
                             <th>Dual CPL</th>
+                            <th>Allow Only Resware Order</th>
                             <th>Action</th>
                         </tr>
                     </thead>                
