@@ -5309,9 +5309,9 @@ class Cron extends MX_Controller {
 				}
 
                 if (!empty($order_number)) {
-                    $parameters = 'FIPS='.$fips.',TYPE='.$type.',ORDER='.$order_number.'SUBTYPE='.$sub_type.',YEAR='.$year.',INST='.$docId.'';
+                    $parameters = 'FIPS='.$fips.',TYPE='.$type.',ORDER='.$order_number.',SUBTYPE='.$sub_type.',YEAR='.$year.',INST='.$docId.'';
                 } else {
-                    $parameters = 'FIPS='.$fips.',TYPE='.$type.',SUBTYPE='.$sub_type.',YEAR='.$year.',INST='.$docId.'';
+                    $parameters = 'FIPS='.$fips.',TYPE=REC,SUBTYPE=ALL,YEAR='.$year.',INST='.$docId.'';
                 }
 
 				$docId = (string)((int)($docId));
