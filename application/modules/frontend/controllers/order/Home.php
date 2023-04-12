@@ -2144,7 +2144,7 @@ class Home extends MX_Controller {
 		$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 		$this->load->helper('sendemail');
 		
-		$cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+		// $cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
 		
 		$mailParams = array(
 			'from_mail'=>$from_mail, 
