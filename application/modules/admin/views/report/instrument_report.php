@@ -1058,7 +1058,7 @@
         $countI = count($sectionIRecord);
         $countJ = count($sectionJRecord);
         $noRecordG = $noRecordH = $noRecordI = $noRecordJ = false;
-        $sectionGonPage = $sectionHonPage = $sectionIonPage = 1;
+        $sectionGRecordNumber = $sectionHRecordNumber = $sectionIRecordNumber = 0;
         $totalRecordForPage = count($sectionGRecord);
         $totalInstumentSection = 1;
         if ($totalRecordForPage > 10) {
@@ -1115,14 +1115,14 @@
                             foreach($displayInG as $k => $val) {
                         ?>
                     <tr>
-                        <td><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td><?php echo $sectionGRecordNumber + 1 . (($sectionGRecordNumber == 0) ? 'st' : (($sectionGRecordNumber == 1) ? 'nd' : (($sectionGRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td><?php echo  $val['document_name']; ?></td>
                         <td><?php echo  $val['loan_amount']; ?></td>
                         <td><?php echo  $val['parties']; ?></td>
                         <td><?php echo  $val['recorded_date']; ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
-                    <?php $i++;} } else { $noRecordG = true;?>
+                    <?php $sectionGRecordNumber++;} } else { $noRecordG = true;?>
                     <tr>
                         <td></td>
                         <td colspan="3">There is No Opens Deeds of Trust found.</td>
@@ -1143,17 +1143,17 @@
                     <?php  
                     // print_r($displayInH);
                     if (!empty($displayInH) && !strpos(json_encode($displayInH), 'message') > 0) { 
-                    $i = 0;
+                    // $i = 0;
                     foreach ($displayInH as $key => $val) {  ?>
                     <tr>
-                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 5%;"><?php echo $sectionHRecordNumber + 1 . (($sectionHRecordNumber == 0) ? 'st' : (($sectionHRecordNumber == 1) ? 'nd' : (($sectionHRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
                         <td><?php echo  $val['loan_amount']; ?></td>
                         <td><?php echo  $val['parties']; ?></td>
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>                        
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
-                    <?php $i++; } } else {
+                    <?php $sectionHRecordNumber++; } } else {
                         $noRecordH = true;
                         ?>
                         <tr style="text-align: center;" >
@@ -1177,17 +1177,17 @@
                     <?php  
                     
                     if (!empty($displayInI && !strpos(json_encode($displayInI), 'message') > 0)) { 
-                    $i = 0;
+                    
                     foreach ($displayInI as $key => $val) {  ?>
                     <tr>
-                        <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
+                        <td style="width: 5%;"><?php echo $sectionIRecordNumber + 1 . (($sectionIRecordNumber == 0) ? 'st' : (($sectionIRecordNumber == 1) ? 'nd' : (($sectionIRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
                         <td><?php echo  $val['loan_amount']; ?></td>
                         <td><?php echo  $val['parties']; ?></td>
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
-                    <?php $i++; } } else {
+                    <?php $sectionIRecordNumber++; } } else {
                         $noRecordI = true;?>
                         <tr style="text-align: center;" >
                             <td ></td>
