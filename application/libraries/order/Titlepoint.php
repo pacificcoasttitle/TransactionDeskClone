@@ -1260,6 +1260,7 @@ class Titlepoint
                             $recordArray[$i]['coupling'] = isset($val['CouplingIndicatorAll']) ? $val['CouplingIndicatorAll'] : null;
                             $recordArray[$i]['remarks'] = isset($val['PropertyRemark']) ? $val['PropertyRemark'] : null;
                             $recordArray[$i]['color_coding'] = isset($val['ColorCoding']) ? $val['ColorCoding'] : null;
+                            $recordArray[$i]['loan_amount'] = isset($val['LoanAmount']) ? $val['LoanAmount'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
                             

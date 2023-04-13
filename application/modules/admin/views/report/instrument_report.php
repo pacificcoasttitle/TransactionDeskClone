@@ -1069,7 +1069,8 @@
                     <tr>
                         <td></td>
                         <td>Lender</td>
-                        <!-- <td>Amount</td> -->
+                        <td>Loan Amount</td>
+                        <td>Party</td>
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
@@ -1081,6 +1082,8 @@
                     <tr>
                         <td><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td><?php echo  $val['document_name']; ?></td>
+                        <td><?php echo  $val['loan_amount']; ?></td>
+                        <td><?php echo  $val['parties']; ?></td>
                         <td><?php echo  $val['recorded_date']; ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
@@ -1097,7 +1100,8 @@
                     <tr>
                         <td></td>
                         <td>Document Name</td>
-                        <!-- <td>Amount</td> -->
+                        <td>Loan Amount</td>
+                        <td>Party</td>
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
@@ -1109,7 +1113,8 @@
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td><?php echo  $val['loan_amount']; ?></td>
+                        <td><?php echo  $val['parties']; ?></td>
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>                        
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
@@ -1127,7 +1132,8 @@
                     <tr>
                         <td></td>
                         <td>Document Name</td>
-                        <!-- <td>Amount</td> -->
+                        <td>Loan Amount</td>
+                        <td>Party</td>
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
@@ -1139,7 +1145,8 @@
                     <tr>
                         <td style="width: 5%;"><?php echo $i + 1 . (($i == 0) ? 'st' : (($i == 1) ? 'nd' : (($i == 2) ? 'rd' : 'th'))); ?></td>
                         <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <!-- <td style="width: 15%;">$<?php //echo  $val['amount']; ?></td> -->
+                        <td><?php echo  $val['loan_amount']; ?></td>
+                        <td><?php echo  $val['parties']; ?></td>
                         <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
