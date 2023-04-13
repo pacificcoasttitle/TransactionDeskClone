@@ -3201,6 +3201,30 @@ class Order
             $sectionHRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionHList) { return (in_array($v['document_type'], $sectionHList) || in_array($v['document_sub_type'], $sectionHList));});
             $sectionIRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionIList) { return (in_array($v['document_type'], $sectionIList) || in_array($v['document_sub_type'], $sectionIList));});
             $sectionJRecord = array_filter($titlePointInstrumentDetails, function($v) use ($sectionJList) { return (in_array($v['document_type'], $sectionJList) || in_array($v['document_sub_type'], $sectionJList));});
+
+            $sectionGRecord = array_map(function($arr){
+                return $arr + ['section' => 'G'];
+            }, $sectionGRecord); 
+            if (empty($sectionGRecord)) {
+                $sectionGRecord = [['message' => 'There is No Foreclosure activity found', 'section' => 'G']];
+            }
+            $sectionHRecord = array_map(function($arr){
+                return $arr + ['section' => 'H'];
+            }, $sectionHRecord); 
+            if (empty($sectionHRecord)) {
+                $sectionHRecord = [['message' => 'There is No Foreclosure activity found', 'section' => 'H']];
+            }
+            $sectionIRecord = array_map(function($arr){
+                return $arr + ['section' => 'I'];
+            }, $sectionIRecord); 
+            if (empty($sectionIRecord)) {
+                $sectionIRecord = [['message' => 'There is No Liens, Notices, and Violations found', 'section' => 'I']];
+            }
+            $sectionJRecord = array_map(function($arr){
+                return $arr + ['section' => 'J'];
+            }, $sectionJRecord); 
+            
+            $allSectionRecord = array_merge($sectionGRecord,$sectionHRecord,$sectionIRecord);
             
             // $titlePointInstrumentDetails = array_chunk($titlePointInstrumentDetails, 25);
             // $orderDetails = $this->get_order_details($file_id);
@@ -3216,6 +3240,7 @@ class Order
             $instrumentRecordDetails['sectionHRecord'] = array_values($sectionHRecord);
             $instrumentRecordDetails['sectionIRecord'] = array_values($sectionIRecord);
             $instrumentRecordDetails['sectionJRecord'] = array_values($sectionJRecord);
+            $instrumentRecordDetails['allSectionRecord'] = array_values($allSectionRecord);
             // $instrumentRecordDetails['itemsForReview'] = array_values($itemsForReview);
             // $instrumentRecordDetails['foreclosure'] = array_values($foreclosure);
             // $instrumentRecordDetails['openDeedTrust'] = array_values($openDeedTrust);
