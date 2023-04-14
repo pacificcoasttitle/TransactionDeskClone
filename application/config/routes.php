@@ -395,6 +395,10 @@ $route['order/admin/import-lp-document-types'] = 'admin/order/home/importLpDocum
 $route['order/admin/add-lp-document-types'] = 'admin/order/home/addLpDocumentTypes';
 $route['order/admin/delete-lp-document-type'] = 'admin/order/home/deleteLpDocumentType';
 $route['order/admin/edit-lp-document-type/:num'] = 'admin/order/home/editLpDocumentType';
+$route['order/admin/lp-alert'] = 'admin/order/home/lpAlert';
+$route['order/admin/add-lp-alert'] = 'admin/order/home/addLpAlert';
+$route['order/admin/delete-lp-alert'] = 'admin/order/home/deleteLpAlert';
+$route['order/admin/edit-lp-alert/:num'] = 'admin/order/home/editLpAlert';
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
 
 $route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeFlag';
