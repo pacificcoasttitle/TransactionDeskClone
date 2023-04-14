@@ -2037,6 +2037,61 @@ class Home_model extends CI_Model
         );
     }
 
+    public function get_lp_alert_list($params)
+    {
+    	$this->db->from('pct_lp_alert');
+		$total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $orderDir = $params['orderDir'];
+        $lp_alert =array();
+        
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("days", $keyword)
+                    ->or_like('color_code',$keyword)
+                    ->group_end();
+			}
+            $this->db->from('pct_lp_alert');
+            
+			$filter_total_records =  $this->db->count_all_results();
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("days", $keyword)
+                    ->or_like('color_code',$keyword)
+                    ->group_end();
+			}
+
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by($orderBy, $orderDir);
+			$query = $this->db->get('pct_lp_alert');
+			if ($query->num_rows() > 0) {
+	            $lp_alert = $query->result_array();
+	        }
+    	} else {    		
+	    	$this->db->from('pct_lp_alert');
+            $filter_total_records =  $this->db->count_all_results();
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by($orderBy, $orderDir);
+			$query = $this->db->get('pct_lp_alert');
+			if ($query->num_rows() > 0) {
+	            $lp_alert = $query->result_array();
+	        } 
+    	}
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $lp_alert
+        );
+    }
+
     public function getSubtypeLPDocumentList()
     {
         $this->db->select('id,doc_type');
@@ -2063,10 +2118,39 @@ class Home_model extends CI_Model
         return false;
     }
 
+    public function insertLpAlert($data = array(), $table = '') 
+    {
+        if (empty($table)) {
+            $table = 'pct_lp_alert';
+        }
+        if(!empty($data)){
+        	$data['created_at'] = date("Y-m-d H:i:s");
+
+            // Insert data
+            $insert = $this->db->insert($table, $data);
+            
+            // Return the status
+            return $insert?$this->db->insert_id():false;
+        }
+        return false;
+    }
+
     public function deleteLpDocType($condition = array(), $table = '') 
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
+        }
+        if(!empty($condition)){
+            // Delete data
+            return $this->db->delete($table, $condition);
+        }
+        return false;
+    }
+
+    public function deleteLpAlert($condition = array(), $table = '') 
+    {
+        if (empty($table)) {
+            $table = 'pct_lp_alert';
         }
         if(!empty($condition)){
             // Delete data
@@ -2095,10 +2179,49 @@ class Home_model extends CI_Model
         return $result;
     }
 
+    public function getLpAlert($params = array())
+    {
+        $this->db->select('*');
+        $this->db->from('pct_lp_alert');
+        
+        if (array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        
+        if (array_key_exists("id", $params)){
+            $this->db->where('id', $params['id']);
+            $query = $this->db->get();
+            $result = $query->row_array();
+        }
+        // Return fetched data
+        return $result;
+    }
+
     public function updateLpDocType($data, $condition = array(), $table = '') 
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
+        }
+
+        if(!empty($condition)){
+            // Update data
+            $data['updated_at'] = date("Y-m-d H:i:s");
+
+            // Update data
+            $update = $this->db->update($table, $data, $condition);
+            
+            // Return the status
+            return $update?true:false;
+        }
+        return false;
+    }
+
+    public function updateLpAlert($data, $condition = array(), $table = '') 
+    {
+        if (empty($table)) {
+            $table = 'pct_lp_alert';
         }
 
         if(!empty($condition)){

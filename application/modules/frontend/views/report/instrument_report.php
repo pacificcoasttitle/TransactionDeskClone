@@ -1050,8 +1050,6 @@
         $i = 0; 
         $page = 4;
         $allSectionRecordChunk = array_chunk($allSectionRecord, 7);
-        // echo "<pre>";
-        // print_r($allSectionRecordChunk);die;
 
         $countG = count($sectionGRecord);
         $countH = count($sectionHRecord);
@@ -1059,21 +1057,7 @@
         $countJ = count($sectionJRecord);
         $noRecordG = $noRecordH = $noRecordI = $noRecordJ = false;
         $sectionGRecordNumber = $sectionHRecordNumber = $sectionIRecordNumber = 0;
-        $totalRecordForPage = count($sectionGRecord);
-        $totalInstumentSection = 1;
-        if ($totalRecordForPage > 10) {
-            $sectionHonPage = $sectionIonPage = 2;
-            $totalInstumentSection = 2;
-        } 
-
-        $totalRecordForPage = count($sectionGRecord) + count($sectionHRecord) + 3;
-        $totalRecordForPage = count($sectionGRecord) + count($sectionHRecord) + 3 + count($sectionIRecord);
         
-        if ($totalRecordForPage > 20) {
-            $sectionIonPage = 3;
-            $totalInstumentSection = 3;
-        }
-        // $pageForRecord = ($totalRecordForPage > 20) ? 2 : 1;
         foreach($allSectionRecordChunk as $recordKey => $chunk) {
             $displaySectionG = ((array_search('G', array_column($chunk, 'section')) !== FALSE)) ? '' : 'hide';
             $displaySectionH = (array_search('H', array_column($chunk, 'section')) !== FALSE) ? '' : 'hide';
@@ -1117,8 +1101,8 @@
                     <tr>
                         <td><?php echo $sectionGRecordNumber + 1 . (($sectionGRecordNumber == 0) ? 'st' : (($sectionGRecordNumber == 1) ? 'nd' : (($sectionGRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  $val['loan_amount']; ?></td>
-                        <td><?php echo  $val['parties']; ?></td>
+                        <td><?php echo  number_format($val['loan_amount']); ?></td>
+                        <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
                         <td><?php echo  $val['recorded_date']; ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
@@ -1129,7 +1113,6 @@
                     </tr>
                     <?php } ?>
                 </table>
-                <?php //if ($sectionHonPage == 1) {?>
                 <div class="table_title <?php echo (strpos(json_encode($displayInH), 'message') && !$noRecordH) ? '' : $displaySectionH; ?>"><em>Section H:</em> Foreclosure Activity</div>
                 <table class="table_g table <?php echo (strpos(json_encode($displayInH), 'message') && !$noRecordH) ? '' :  $displaySectionH; ?>">
                     <tr>
@@ -1140,17 +1123,15 @@
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
-                    <?php  
-                    // print_r($displayInH);
+                    <?php
                     if (!empty($displayInH) && !strpos(json_encode($displayInH), 'message') > 0) { 
-                    // $i = 0;
                     foreach ($displayInH as $key => $val) {  ?>
                     <tr>
-                        <td style="width: 5%;"><?php echo $sectionHRecordNumber + 1 . (($sectionHRecordNumber == 0) ? 'st' : (($sectionHRecordNumber == 1) ? 'nd' : (($sectionHRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
-                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  $val['loan_amount']; ?></td>
-                        <td><?php echo  $val['parties']; ?></td>
-                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>                        
+                        <td><?php echo $sectionHRecordNumber + 1 . (($sectionHRecordNumber == 0) ? 'st' : (($sectionHRecordNumber == 1) ? 'nd' : (($sectionHRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
+                        <td><?php echo  $val['document_name']; ?></td>
+                        <td><?php echo  number_format($val['loan_amount']); ?></td>
+                        <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
+                        <td><?php echo  $val['recorded_date']; ?></td>                        
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionHRecordNumber++; } } else {
@@ -1162,8 +1143,6 @@
                         </tr>
                     <?php } ?>
                 </table>
-                <?php //} ?>
-                <?php //if ($sectionIonPage == 1) {?>
                 <div class="table_title <?php echo (strpos(json_encode($displayInI), 'message') && !$noRecordI) ? '' : $displaySectionI; ?>"><em>Section I:</em> Liens, Notices, and Violations</div>
                 <table class="table_g table <?php echo (strpos(json_encode($displayInI), 'message') && !$noRecordI) ? '' :  $displaySectionI; ?>">
                     <tr>
@@ -1180,11 +1159,11 @@
                     
                     foreach ($displayInI as $key => $val) {  ?>
                     <tr>
-                        <td style="width: 5%;"><?php echo $sectionIRecordNumber + 1 . (($sectionIRecordNumber == 0) ? 'st' : (($sectionIRecordNumber == 1) ? 'nd' : (($sectionIRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
-                        <td style="width: 45%;"><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  $val['loan_amount']; ?></td>
-                        <td><?php echo  $val['parties']; ?></td>
-                        <td style="width: 15%;"><?php echo  $val['recorded_date']; ?></td>
+                        <td ><?php echo $sectionIRecordNumber + 1 . (($sectionIRecordNumber == 0) ? 'st' : (($sectionIRecordNumber == 1) ? 'nd' : (($sectionIRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
+                        <td ><?php echo  $val['document_name']; ?></td>
+                        <td><?php echo  number_format($val['loan_amount']); ?></td>
+                        <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
+                        <td ><?php echo  $val['recorded_date']; ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionIRecordNumber++; } } else {
@@ -1205,7 +1184,7 @@
         </div>
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
-    <?php } ?>
+    <?php $page++;} ?>
     <div class="page-break" style="page-break-after: always;"></div>
     
     <?php if($is_plat_map_exist == 1) { ?>

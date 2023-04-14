@@ -157,6 +157,9 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-document-type*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-document-types'; ?>">
 				LP Document Types
 			</a>
+			<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-alert'; ?>">
+				LP Alert
+			</a>
         </div>
 	</li>
 	<?php 

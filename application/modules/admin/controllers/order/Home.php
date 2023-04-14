@@ -3889,6 +3889,15 @@ class Home extends MX_Controller {
         $this->load->view('order/home/lp_document_types', $data);
         $this->load->view('order/layout/footer', $data);
     }
+    
+    public function lpAlert()
+    {
+    	$data = array();
+        $data['title'] = 'PCT Order: LP Alert';
+		$this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/lp_alert', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
 
     public function get_lp_document_list()
     {
@@ -3955,6 +3964,53 @@ class Home extends MX_Controller {
 	    }
         $json_data['recordsTotal'] = intval( $lp_document_lists['recordsTotal'] );
         $json_data['recordsFiltered'] = intval( $lp_document_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+	    echo json_encode($json_data);
+    }
+
+    public function get_lp_alert_list()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            
+            $pageno = ($params['start'] / $params['length'])+1;
+            $lp_alerts = $this->home_model->get_lp_alert_list($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $lp_alerts = $this->home_model->get_customers($params);            
+        }
+
+        $data = array(); 
+	    if (isset($lp_alerts['data']) && !empty($lp_alerts['data'])) {
+            $i = $params['start'] + 1;
+	    	foreach ($lp_alerts['data'] as $key => $value) {
+	    		$nestedData = array();
+                $id = $value['id'];
+                $nestedData[] = $i;
+	            $nestedData[] = $value['days'];
+	            $nestedData[] = $value['color_code'];
+	            $nestedData[] = ($value['delete'] == 1) ? 'Yes': 'No';
+                // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editUrl = base_url().'order/admin/edit-lp-alert/'.$value['id'];
+                    $action = "<a href='".$editUrl."' class='btn btn-action edit-alert' title ='Edit Alert Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+
+                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' class='btn btn-action'  title='Delete Alert'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+	            $data[] = $nestedData;            
+	            $i++;
+	    	}
+	    }
+        $json_data['recordsTotal'] = intval( $lp_alerts['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $lp_alerts['recordsFiltered'] );
         $json_data['data'] = $data;
 	    echo json_encode($json_data);
     }
@@ -4163,6 +4219,110 @@ class Home extends MX_Controller {
         
         $this->load->view('order/layout/header', $data);
         $this->load->view('order/home/edit_lp_document_type', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function addLpAlert()
+    {
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('admin');
+        $data = array();
+        $data['title'] = 'PCT Order: Add New LP Alert';
+        
+        $salesRepData = array();
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('days', 'Days', 'required', array('required'=> 'Please Enter Days'));
+            
+            if ($this->form_validation->run() == true) {
+                $input = $this->input->post();
+                $lpAlertData = array(
+                    'days' => $input['days'],
+                    'color_code' => $input['color_code'] ?? null,
+                    'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
+                );
+                
+                $insert = $this->home_model->insertLpAlert($lpAlertData);
+                $successMsg = 'Alert Data saved successfully';
+                $this->session->set_userdata('success', $successMsg);
+                redirect(base_url().'order/admin/lp-alert');
+            } else {
+                $data['days_error_msg'] = form_error('days');
+            }                                       
+        }
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/add_lp_alert', $data);
+        $this->load->view('order/layout/footer', $data);
+    }
+
+    public function deleteLpAlert()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+        if($id)
+        {
+            $condition = array('id' => $id);
+            $status = $this->home_model->deleteLpAlert($condition,'pct_lp_alert');
+            if($status)
+            {
+                $successMsg = 'Record deleted successfully.';
+                $response = array('status'=>'success', 'message'=>$successMsg);
+            }
+        }
+        else
+        {
+            $msg = 'ID is required.';
+            $response = array('status' => 'error','message'=>$msg);
+        }
+
+        echo json_encode($response);
+    }
+
+    public function editLpAlert() {
+        $data = array();
+        $id = $this->uri->segment(4);
+        $data['title'] = 'PCT Order: Edit LP Document Types';
+
+        if(isset($id) && !empty($id))
+        {
+            if ($this->input->post()) 
+            {
+                $this->form_validation->set_rules('days', 'Days', 'required', array('required'=> 'Please Enter Days'));
+                
+                if ($this->form_validation->run() == true) 
+                {
+                    $input = $this->input->post();
+                    $lpAlertData = array(
+                        'days' => $input['days'],
+                        'color_code' => $input['color_code'] ?? null,
+                        'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
+                    );
+                    $condition = array('id' => $id);
+                    $update = $this->home_model->updateLpAlert($lpAlertData,$condition,'pct_lp_alert');
+                    
+                    if ($update) {
+                        $successMsg = 'LP Alert updated successfully.';
+                        $this->session->set_userdata('success', $successMsg);
+                        redirect(base_url().'order/admin/lp-alert');
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating LP Alert.';
+                    }
+                } else {
+                    $data['days_error_msg'] = form_error('days');
+                    $data['color_code_error_msg'] = form_error('color_code');
+                }                                       
+            }
+            $con = array('id' => $id);
+            $data['lp_alert'] = $this->home_model->getLpAlert($con);
+            // echo "<pre>";
+            // print_r($data);die;
+        }
+        else
+        {
+            redirect(base_url().'order/admin/lp-alert');
+        }
+        
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/edit_lp_alert', $data);
         $this->load->view('order/layout/footer', $data);
     }
     
