@@ -25,7 +25,7 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fas fa-table"></i>
-            LP Document Types
+            LP Alert
             <div class="float-right">
                 <a href="<?php echo base_url()?>order/admin/add-lp-alert" class="btn btn-secondary"> Add LP Alert </a>
             </div>
