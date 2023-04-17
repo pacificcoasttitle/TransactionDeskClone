@@ -29,8 +29,8 @@
                 </div>
                 <div class="form-group row">
                     <label for="color_code" class="col-sm-4 col-form-label">Color Code<span class="required">*</span></label>
-                    <div class="col-sm-8">
-                        <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" placeholder="Doc Type Description" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 7%; border-radious:50;">
+                    <div class="col-sm-2">
+                        <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" placeholder="Doc Type Description" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 40%; border-radious:50;">
                         <?php if(!empty($doc_type_description_error_msg)){ ?>                     
                             <span class="error"><?php echo $doc_type_description_error_msg; ?></span>
                         <?php } ?>
