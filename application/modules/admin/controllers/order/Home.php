@@ -3995,7 +3995,7 @@ class Home extends MX_Controller {
                 $id = $value['id'];
                 $nestedData[] = $i;
 	            $nestedData[] = $value['days'];
-	            $nestedData[] = $value['color_code'];
+	            $nestedData[] = $value['color_code'] . "&nbsp; <input type='color' value= ". $value['color_code'] ." disabled>";
 	            $nestedData[] = ($value['delete'] == 1) ? 'Yes': 'No';
                 // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
