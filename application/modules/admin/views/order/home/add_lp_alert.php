@@ -38,12 +38,12 @@
                 <div class="form-group row">
                     <label for="color_code" class="col-sm-4 col-form-label">Color Code</label>
                     <div class="col-sm-2">
-                        <input type="color" class="form-control" name="color_code" id="color_code" value="#FFFFFF" class="form-control" placeholder="Color Code" style="width: 30%; border-radious:50;" >
+                        <input type="color" class="form-control" name="color_code" id="color_code" value="#FFFFFF" class="form-control" placeholder="Color Code" style="width: 40%;" >
                     </div>
                 </div>
                 
                 <div class="form-group row">
-                    <label for="delete" class="col-sm-2 col-form-label">Delete</label>
+                    <label for="delete" class="col-sm-4 col-form-label">Delete</label>
                     <div class="col-sm-2">
                         <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="delete" id="delete" class="form-control">
                     </div>
