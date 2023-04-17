@@ -118,9 +118,9 @@ class Order
             } else {
                 $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
-                    $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAYS))";
+                    $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) OR  " . $lpOrderCondition;
+                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -222,9 +222,9 @@ class Order
             } else {
                 $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
-                    $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAYS))";
+                    $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) OR  " . $lpOrderCondition;
+                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -340,13 +340,11 @@ class Order
                     $this->CI->db->where("order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()", null);
                 }
             } else {
-                $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0))";
+                $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
-                    $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()))";
-                    // $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAYS)))";
-                    
+                    $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) OR  " . $lpOrderCondition;
+                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -445,9 +443,9 @@ class Order
             } else {
                 $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
-                    $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()))";
+                    $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) OR  " . $lpOrderCondition;
+                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
