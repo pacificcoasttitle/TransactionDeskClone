@@ -2043,7 +2043,7 @@ class Home_model extends CI_Model
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $orderDir = $params['orderDir'];
+        // $orderDir = $params['orderDir'];
         $lp_alert =array();
         
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
@@ -2068,7 +2068,7 @@ class Home_model extends CI_Model
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by($orderBy, $orderDir);
+            $this->db->order_by('days', 'asc');
 			$query = $this->db->get('pct_lp_alert');
 			if ($query->num_rows() > 0) {
 	            $lp_alert = $query->result_array();
@@ -2079,7 +2079,7 @@ class Home_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            $this->db->order_by($orderBy, $orderDir);
+            $this->db->order_by('days', 'asc');
 			$query = $this->db->get('pct_lp_alert');
 			if ($query->num_rows() > 0) {
 	            $lp_alert = $query->result_array();

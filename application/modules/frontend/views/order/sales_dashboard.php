@@ -314,7 +314,6 @@
 	if(myarray.includes(sessionValue.email)) {
 		setTimeout(() => {
 			$('#order_type_filter').removeClass('hide');
-			console.log('sessionValue ==', sessionValue.email);
 		}, 1000);
 	}
 </script>
