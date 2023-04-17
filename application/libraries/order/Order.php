@@ -116,7 +116,7 @@ class Order
                     $this->CI->db->where("order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()", null);
                 }
             } else {
-                $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
+                $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
@@ -220,7 +220,7 @@ class Order
                     $this->CI->db->where('order_details.created_at BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE()', null);
                 }
             } else {
-                $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
+                $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
@@ -340,7 +340,7 @@ class Order
                     $this->CI->db->where("order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()", null);
                 }
             } else {
-                $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
+                $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
@@ -441,7 +441,7 @@ class Order
                     
                 }
             } else {
-                $lpOrderCondition = "(order_details.lp_file_number is not null AND order_details.file_number = 0)";
+                $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0)";
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
