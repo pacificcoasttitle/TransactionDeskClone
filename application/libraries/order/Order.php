@@ -103,7 +103,7 @@ class Order
 
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
+            if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
@@ -207,7 +207,7 @@ class Order
 
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
+            if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
@@ -327,7 +327,7 @@ class Order
 
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
+            if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
@@ -428,7 +428,7 @@ class Order
             }
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
-            if (!in_array($email, ['daphne@joindaphne.com', 'info@retech.company', 'Ccota@pct.com'])) {
+            if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com'])) {
                 $this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
