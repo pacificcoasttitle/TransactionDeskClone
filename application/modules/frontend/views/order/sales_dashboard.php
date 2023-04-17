@@ -177,11 +177,11 @@
 								<?php } ?>
 							</div>
 
-							<div class="col-sm-5 text-right">
+							<!-- <div class="col-sm-5 text-right">
 								<h2 class="ui-title-block ui-title-block_light">$<?php echo number_format($sales_commission,2); ?></h2>
 								<div class="ui-decor-1a bg-accent"></div>
 								<h4 class="ui-title-block_light">Estimated commission for the month of <b><?php echo date('F');?></b></h3>
-							</div>
+							</div> -->
 
 						</div>
 					</div>
