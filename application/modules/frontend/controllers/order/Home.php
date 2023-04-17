@@ -1481,42 +1481,42 @@ class Home extends MX_Controller {
 	        
 	        $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] :'';
 			$escrowId = isset($propertyData['escrow_lender_id']) && !empty($propertyData['escrow_lender_id']) ? $propertyData['escrow_lender_id'] :'';
-			
+			$fileNumber = ((isset($file_number) && !empty($file_number)) ? $file_number : ((isset($lpFileNumber) && !empty($lpFileNumber)) ? $lpFileNumber : ''));
 			$lv_file_url = ''; 
 			if (env('AWS_ENABLE_FLAG') == 1) {
-				if($this->order->fileExistOrNotOnS3('legal-vesting/'.$file_number.'.pdf')) {
-					$lv_file_url = env('AWS_PATH')."legal-vesting/".$file_number.'.pdf';
+				if($this->order->fileExistOrNotOnS3('legal-vesting/'.$fileNumber.'.pdf')) {
+					$lv_file_url = env('AWS_PATH')."legal-vesting/".$fileNumber.'.pdf';
 				} 
 			} else {
-				$lv_file_path = FCPATH.'uploads/legal-vesting/'.$file_number.'.pdf';
+				$lv_file_path = FCPATH.'uploads/legal-vesting/'.$fileNumber.'.pdf';
 				if (file_exists($lv_file_path)) {
-					$lv_file_url = base_url().'uploads/legal-vesting/'.$file_number.'.pdf';
+					$lv_file_url = base_url().'uploads/legal-vesting/'.$fileNumber.'.pdf';
 				}
 			}
 			$data['lv_file_url'] = $lv_file_url;
 
 			$deed_file_url = ''; 
 			if (env('AWS_ENABLE_FLAG') == 1) {
-				if($this->order->fileExistOrNotOnS3('grant-deed/'.$file_number.'.pdf')) {
-					$deed_file_url = env('AWS_PATH')."grant-deed/".$file_number.'.pdf';
+				if($this->order->fileExistOrNotOnS3('grant-deed/'.$fileNumber.'.pdf')) {
+					$deed_file_url = env('AWS_PATH')."grant-deed/".$fileNumber.'.pdf';
 				} 
 			} else {
-				$deed_file_path = FCPATH.'uploads/grant-deed/'.$file_number.'.pdf';
+				$deed_file_path = FCPATH.'uploads/grant-deed/'.$fileNumber.'.pdf';
 				if (file_exists($deed_file_path)) {
-					$deed_file_url = base_url().'uploads/grant-deed/'.$file_number.'.pdf';
+					$deed_file_url = base_url().'uploads/grant-deed/'.$fileNumber.'.pdf';
 				}
 			}
 			$data['deed_file_url'] = $deed_file_url;
 
 			$tax_file_url = '';
 			if (env('AWS_ENABLE_FLAG') == 1) {
-				if($this->order->fileExistOrNotOnS3('tax/'.$file_number.'.pdf')) {
-					$tax_file_url = env('AWS_PATH')."tax/".$file_number.'.pdf';
+				if($this->order->fileExistOrNotOnS3('tax/'.$fileNumber.'.pdf')) {
+					$tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
 				} 
 			} else {
-				$tax_file_path = FCPATH.'uploads/tax/'.$file_number.'.pdf';
+				$tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
 				if (file_exists($tax_file_path)) {
-					$tax_file_url = base_url().'uploads/tax/'.$file_number.'.pdf';
+					$tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
 				}
 			}
 			$data['tax_file_url'] = $tax_file_url;
