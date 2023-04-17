@@ -19,6 +19,13 @@ $(document).ready(function () {
                 
                 
             },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                if (aData[5] !== undefined) {
+                    if (aData[5] != 'delete') {
+                        $(nRow).css("background-color", aData[5]);
+                    }
+                }
+            },
             // dom: 'Bfrtip',
             "dom": 'lf<"orders_listing_filter">rtip',
             buttons: [],

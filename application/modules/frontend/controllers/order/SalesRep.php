@@ -204,6 +204,24 @@ class SalesRep extends MX_Controller
 	function get_sales_orders()
     {
         $params = array();  $data = array();
+        $lp_alerts = $this->home_model->get_lp_alert_list();
+        $lp_alerts = array_values($lp_alerts);
+        $lpAlertRange = [];
+        $numItems = count($lp_alerts);
+        $k = 0;
+        foreach($lp_alerts as $key => $alert) {
+            ++$k;
+            if($k != $numItems) {
+                $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key + 1]['days'] - 1));
+                // $lpAlertRange[$k]['delete'] = $alert['delete'];
+            } else {
+                $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key]['days']));
+                // $lpAlertRange[$k]['delete'] = $alert['delete'];
+            }
+        }
+
 		$userdata = $this->session->userdata('user');
         $status = $this->input->post('status');
 		$month = $this->input->post('month') ? $this->input->post('month') :  '';
@@ -277,14 +295,31 @@ class SalesRep extends MX_Controller
                 }
                 $action .= "</ul></div>";
                	$nestedData[] = $action;
-
+                $now = time(); 
+                $your_date = strtotime($order['created_at']);
+                $datediff = $now - $your_date;
+                $datediff = round($datediff / (60 * 60 * 24));
+                if (!empty($order['lp_file_number'])) {
+                    foreach ($lpAlertRange as $key => $val) {
+                        // if ($val['delete'] == 1) {
+                        //     $nestedData[] = 'delete';
+                        //     break;
+                        // }
+                        if (in_array($datediff, $val['range'])) {
+                            $nestedData[] = $val['color_code'];
+                            break;
+                        }
+                    }
+                }
                 $data[] = $nestedData; 
                 $i++; 
             }	
         } 
-        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+        $json_data['recordsTotal'] = intval( $order_lists['recordsTotal']);
         $json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
         $json_data['data'] = $data;
+        $json_data['lpAlertRange'] = $lpAlertRange;
+        
         echo json_encode($json_data);
     }
 
