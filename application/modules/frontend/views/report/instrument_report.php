@@ -639,6 +639,9 @@
     </style>
 </head>
 <body>
+    <?php 
+        $awsPath = env('AWS_PATH');
+    ?>
     <!-- <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
@@ -1027,12 +1030,12 @@
                 </div>
                 <div class="table_title"><em>Section F:</em> Property Vesting:</div>
                 <div class="legal_desc">
-                    <?php echo $titlePointDetails[0]['vesting_information'] ? $titlePointDetails[0]['vesting_information'] : 'Refer to grant deed below' ?> <br><a target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/grant-deed/<?php echo $titlePointDetails[0]['file_number'] ?>.pdf">
+                    <?php echo $titlePointDetails[0]['vesting_information'] ? $titlePointDetails[0]['vesting_information'] : 'Refer to grant deed below' ?> <br><a target="_blank" href="<?php echo $awsPath . 'grant-deed/' . $titlePointDetails[0]['file_number'] ?>.pdf">
                         <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>  
                     </a> <br>
                     <?php  
                         foreach ($vestingInstrumentDetails as $key => $vesting) { ?>
-                            <a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $vesting['id'] ?>.pdf">
+                            <a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' .$vesting['id'] ?>.pdf">
                             <?php echo  $vesting['instrument']; ?>
                             </a> <br>
                     <?php }
@@ -1104,7 +1107,7 @@
                         <td><?php echo  number_format($val['loan_amount']); ?></td>
                         <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
                         <td><?php echo  $val['recorded_date']; ?></td>
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionGRecordNumber++;} } else { $noRecordG = true;?>
                     <tr>
@@ -1132,7 +1135,7 @@
                         <td><?php echo  number_format($val['loan_amount']); ?></td>
                         <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
                         <td><?php echo  $val['recorded_date']; ?></td>                        
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionHRecordNumber++; } } else {
                         $noRecordH = true;
@@ -1164,7 +1167,7 @@
                         <td><?php echo  number_format($val['loan_amount']); ?></td>
                         <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
                         <td ><?php echo  $val['recorded_date']; ?></td>
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="https://sandbox-pct.s3-us-west-2.amazonaws.com/title-point/<?php echo $val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionIRecordNumber++; } } else {
                         $noRecordI = true;?>
@@ -1206,7 +1209,7 @@
             <div class="pdf_body">
                 <!-- <div class="table_title"><em>Section G:</em> Open Loans:</div> -->
                 <div style="height:20px"></div>
-                <img src="https://sandbox-pct.s3-us-west-2.amazonaws.com/plat-map/<?php echo $orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center; max-height: 9in;" alt=""/>
+                <img src="<?php echo $awsPath . 'plat-map/'.$orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center; max-height: 9in;" alt=""/>
             </div>           
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
