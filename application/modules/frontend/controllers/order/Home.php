@@ -1166,7 +1166,7 @@ class Home extends MX_Controller {
 				}
 					
 				/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
-				$parties_email[] = env('ORDER_ADMIN_EMAIL');
+				//$parties_email[] = env('ORDER_ADMIN_EMAIL');
 				$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 				$this->load->helper('sendemail');
 				
@@ -2130,6 +2130,8 @@ class Home extends MX_Controller {
 			$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
 		}
 
+		$parties_email[] = 'rudy@pct.com';
+		$parties_email[] = 'lvelasquez@pct.com';
 		$file = array();
 		$lvfilename = $orderNumber.'.pdf';
 		$deedfilename = $orderNumber.'.pdf';
@@ -2138,9 +2140,8 @@ class Home extends MX_Controller {
 		$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
 		$file[] = env('AWS_PATH')."tax/".$taxfilename;
 		
-		$parties_email[] = env('ORDER_ADMIN_EMAIL');
-		$parties_email[] = env('ORDER_ADMIN_EMAIL');
-		$parties_email[] = env('ORDER_ADMIN_EMAIL');
+		
+		//$parties_email[] = env('ORDER_ADMIN_EMAIL');
 		$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
 		$this->load->helper('sendemail');
 		
