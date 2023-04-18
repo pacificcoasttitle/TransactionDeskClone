@@ -3536,6 +3536,8 @@ class Home extends MX_Controller {
 
     public function sendOrderToResware() 
     {
+        $this->load->model('order/partnerApiLogs');
+        
         $file_id = $this->input->post('file_id');
         $order_details = $this->order_model->get_order_details($file_id);
         $splitName = explode(' ', $order_details['primary_owner']);
@@ -4194,7 +4196,7 @@ class Home extends MX_Controller {
                     $order_message_body = $this->load->view('emails/order.php',$data,TRUE);
                     $message = $order_message_body; 
                     $subject = $orderNumber. ' - PCT Title Order Placed';
-                    $to = 'hitesh.p@crestinfosystems.com';//$order_details['salerep_email_address'];
+                    $to = $order_details['salerep_email_address'];
                     $mailParams = array(
                         'from_mail' => $from_mail, 
                         'from_name' => $from_name, 
@@ -4204,6 +4206,7 @@ class Home extends MX_Controller {
                     );
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail_from_admin', '', $mailParams, array(), $order_details['order_id'], 0);
                     try {
+                        $this->load->helper('sendemail');
                         $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,[],[],array());
                     }  catch (Exception $e) {
                     }
