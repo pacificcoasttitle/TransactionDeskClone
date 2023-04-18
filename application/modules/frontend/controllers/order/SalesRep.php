@@ -306,7 +306,7 @@ class SalesRep extends MX_Controller
                         //     break;
                         // }
                         if (in_array($datediff, $val['range'])) {
-                            $nestedData[] = $val['color_code'];
+                            $nestedData[] = "color~".$val['color_code'];
                             break;
                         }
                     }
