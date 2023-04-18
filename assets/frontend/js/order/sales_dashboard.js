@@ -20,10 +20,10 @@ $(document).ready(function () {
                 
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex) {
-                if (aData[5] !== undefined) {
-                    if (aData[5] != 'delete') {
-                        $(nRow).css("background-color", aData[5]);
-                    }
+                let lastElement = aData.slice(-1)[0];
+                if (lastElement.includes("color~")) {
+                    let colorString = lastElement.split('color~');
+                    $(nRow).css("background-color", colorString[1]);
                 }
             },
             // dom: 'Bfrtip',
