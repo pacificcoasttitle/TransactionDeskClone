@@ -292,7 +292,7 @@ class Home extends MX_Controller {
 				}
 
 				$underWriter = '';
-				if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($SalesRep == '11971' || $SalesRep == '11942' || $SalesRep == '15340') && ($orderUser['is_allow_only_resware_orders'] == 0) && $orderUser['is_escrow'] == 1) {
+				if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($SalesRep == '11971' || $SalesRep == '11942' || $SalesRep == '15340') && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0)) {
 					$lpOrderFlag = 1;
 					$loanFlag = 1;
 					if(strpos($ProductTypeTxt, 'Sale') !== false) {
