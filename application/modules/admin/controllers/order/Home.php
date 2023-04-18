@@ -3683,7 +3683,8 @@ class Home extends MX_Controller {
             )
         );
         $companyData = $this->home_model->get_company_rows($con);
-        
+        // echo "<pre>";
+        // print_r($place_order);die;
         $order_data = json_encode($place_order);
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
@@ -4065,7 +4066,7 @@ class Home extends MX_Controller {
                     $condition = array(
                         'id' => $TitleOfficer
                     );
-                    $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+                    $titleOfficerDetails = $this->home_model->getTitleOfficerDetails($condition);
                     if (!empty($titleOfficerDetails)) {
                         if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
                             $titleOfficerKey = array_search((int)$titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
