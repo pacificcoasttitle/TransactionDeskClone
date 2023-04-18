@@ -259,7 +259,12 @@ class SalesRep extends MX_Controller
 				}
                 $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = ucfirst($order['resware_status']);
+                if ($order['file_number'] == 0 && !empty($order['lp_file_number'])) {
+                    $nestedData[] = ucfirst($order['lp_report_status']);
+                } else {
+                    $nestedData[] = ucfirst($order['resware_status']);
+                }
+                
                 // $action = '<select style="width:auto;margin-left:10px;" name="order_type_filter" id="order_type_filter" class="custom-select custom-select-sm form-control form-control-sm">';
                 // if ($order['prelim_summary_id'] != 0) {
 				// 	$action .= "<option value='REVIEW FILE' ><a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a></option>";
