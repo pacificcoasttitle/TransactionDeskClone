@@ -117,7 +117,32 @@
 			text-align: center;
 		}
 
-
+		#title_officer_orders_listing {
+			margin-right: 25px;
+			width: 100%;
+		}
+		.custom-select {
+			border-radius: 5px;
+		}
+		.ui-title-block {
+			font-size: 36px;
+		}
+		.section-type-4a .btn {
+			border-radius: 5px;
+		}
+		.pagination > li > a {
+			border-radius: 5px;
+		}
+		.dropdown-menu {
+			margin-top: 0px !important
+		}
+		.dropdown-menu > li > a {
+			padding: 5px 0px 5px 0px;
+		}
+		.dropdown .click-action-type {
+			color: #222222;
+			text-decoration: none;
+		}
 	</style>
 	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 		<div class="container">

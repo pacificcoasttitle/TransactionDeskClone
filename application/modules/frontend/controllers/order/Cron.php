@@ -3670,6 +3670,7 @@ class Cron extends MX_Controller {
                                         $closedFileNumbers[] = (int)$file_number;
                                     }
                                 }
+                                
                                 $updateArray[] = array(
                                     'file_number'=> (int)$file_number,
                                     'resware_status' => strtolower($fileStatus),
@@ -3692,6 +3693,11 @@ class Cron extends MX_Controller {
                     }
                 }
                 
+                $updateData = array('resware_status' => 'open');
+                $this->db->set($updateData);
+                $this->db->where('lp_file_number IS NOT NULL');      
+                $this->db->update('order_details'); 
+
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
                 rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
