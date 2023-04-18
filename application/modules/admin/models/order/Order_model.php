@@ -335,7 +335,6 @@ class Order_model extends CI_Model
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
             pct_order_product_types.product_type,
-            pct_order_product_types.transaction_type,
             pct_order_documents.created, 
             p.created as proposed_document_created_date,
             a.name as listing_agent_name,
