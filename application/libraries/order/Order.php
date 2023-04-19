@@ -112,7 +112,7 @@ class Order
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
-                    $this->CI->db->where('order_details.file_number', 0);
+                    //$this->CI->db->where('order_details.file_number', 0);
                     if (!empty($lp_alerts)) {
                         $this->CI->db->where("order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()", null);
                     }
@@ -218,7 +218,7 @@ class Order
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
-                    $this->CI->db->where('order_details.file_number', 0);
+                    // $this->CI->db->where('order_details.file_number', 0);
                     if (!empty($lp_alerts)) {
                         $this->CI->db->where("order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()", null);
                     }
@@ -441,7 +441,7 @@ class Order
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
-                    $this->CI->db->where('order_details.file_number', 0);
+                    // $this->CI->db->where('order_details.file_number', 0);
                     if (!empty($lp_alerts)) {
                         $this->CI->db->where("order_details.created_at BETWEEN CURDATE() - INTERVAL ". $lp_alerts['days'] ." DAY AND CURDATE()", null);
                     }
