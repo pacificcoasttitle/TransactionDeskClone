@@ -255,7 +255,7 @@ class SalesRep extends MX_Controller
             foreach ($order_lists['data'] as $order)  {
 
                 $nestedData = array();
-                $nestedData[] = (empty($order['file_number'])  ? $order['lp_file_number'] : ((empty($order['lp_file_number'])) ? $order['file_number'] : $order['file_number'] .'&nbsp; <i class="fa fa-info-circle" aria-hidden="true"></i> <span class="tooltiptext">it\'s LP order '.$order['lp_file_number'].' and it\'s converted into normal order </span>' ));
+                $nestedData[] = (empty($order['file_number'])  ? $order['lp_file_number'] : ((empty($order['lp_file_number'])) ? $order['file_number'] : $order['file_number'] .'&nbsp; <i class="fa fa-info-circle" aria-hidden="true"></i> <span class="tooltiptext">It\'s LP order '.$order['lp_file_number'].' and it\'s converted into normal order </span>' ));
 				if ($userdata['is_sales_rep_manager'] == 1) {
 					$nestedData[] = $order['sales_first_name']." ".$order['sales_last_name'];
 				}
@@ -306,7 +306,7 @@ class SalesRep extends MX_Controller
                 $your_date = strtotime($order['created_at']);
                 $datediff = $now - $your_date;
                 $datediff = round($datediff / (60 * 60 * 24));
-                if (!empty($order['lp_file_number'])) {
+                if (!empty($order['lp_file_number']) && empty($order['file_number'])) {
                     foreach ($lpAlertRange as $key => $val) {
                         // if ($val['delete'] == 1) {
                         //     $nestedData[] = 'delete';

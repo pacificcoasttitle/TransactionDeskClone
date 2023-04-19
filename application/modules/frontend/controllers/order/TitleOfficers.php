@@ -67,7 +67,7 @@ class TitleOfficers extends MX_Controller
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order)  {
                 $nestedData = array();
-                $nestedData[] = (empty($order['file_number'])  ? $order['lp_file_number'] : ((empty($order['lp_file_number'])) ? $order['file_number'] : $order['file_number'] .'&nbsp; <i class="fa fa-info-circle" aria-hidden="true"></i> <span class="tooltiptext">it\'s LP order '.$order['lp_file_number'].' and it\'s converted into normal order </span>' ));
+                $nestedData[] = (empty($order['file_number'])  ? $order['lp_file_number'] : ((empty($order['lp_file_number'])) ? $order['file_number'] : $order['file_number'] .'&nbsp; <i class="fa fa-info-circle" aria-hidden="true"></i> <span class="tooltiptext">It\'s LP order '.$order['lp_file_number'].' and it\'s converted into normal order </span>' ));
 				$nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
                 if ($order['file_number'] == 0 && !empty($order['lp_file_number'])) {
