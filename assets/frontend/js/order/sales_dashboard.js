@@ -22,8 +22,11 @@ $(document).ready(function () {
             "fnRowCallback": function (nRow, aData, iDisplayIndex) {
                 let lastElement = aData.slice(-1)[0];
                 if (lastElement.includes("color~")) {
-                    let colorString = lastElement.split('color~');
+                    let splitEle = lastElement.split('|');
+                    let colorString = splitEle[0].split('color~');
                     $(nRow).css("background-color", colorString[1]);
+                    let textColor = splitEle[1].split('text_color~');
+                    $(nRow).css("color", textColor[1]);
                 }
             },
             // dom: 'Bfrtip',
