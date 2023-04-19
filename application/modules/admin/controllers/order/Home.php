@@ -4266,7 +4266,7 @@ class Home extends MX_Controller {
 			'is_sync' => 1,
 			'is_prelim_document' => 0,
 			'is_lv_doc' => 1,
-            'created_at' => date('Y-m-d H:i:s')
+            'created' => date('Y-m-d H:i:s')
 		);
         $this->db->insert('pct_order_documents', $documentData);
 		
@@ -4324,7 +4324,7 @@ class Home extends MX_Controller {
 			'is_sync' => 1,
 			'is_prelim_document' => 0,
 			'is_grant_doc' => 1,
-            'created_at' => date('Y-m-d H:i:s')
+            'created' => date('Y-m-d H:i:s')
 		);
 		$this->db->insert('pct_order_documents', $documentData);
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
@@ -4383,7 +4383,7 @@ class Home extends MX_Controller {
 			'is_sync' => 1,
 			'is_prelim_document' => 0,
 			'is_tax_doc' => 1,
-            'created_at' => date('Y-m-d H:i:s')
+            'created' => date('Y-m-d H:i:s')
 		);
 		$this->db->insert('pct_order_documents', $documentData);
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
