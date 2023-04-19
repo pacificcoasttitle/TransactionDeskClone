@@ -304,7 +304,7 @@ class SalesRep extends MX_Controller
                 $your_date = strtotime($order['created_at']);
                 $datediff = $now - $your_date;
                 $datediff = round($datediff / (60 * 60 * 24));
-                if ($_SERVER['SERVER_NAME'] != 'app.pacificcoasttitle.com' && !empty($order['lp_file_number'])) {
+                if (!empty($order['lp_file_number'])) {
                     foreach ($lpAlertRange as $key => $val) {
                         // if ($val['delete'] == 1) {
                         //     $nestedData[] = 'delete';
