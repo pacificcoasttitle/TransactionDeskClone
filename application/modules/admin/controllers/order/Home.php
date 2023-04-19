@@ -3540,6 +3540,7 @@ class Home extends MX_Controller {
         
         $file_id = $this->input->post('file_id');
         $order_details = $this->order_model->get_order_details($file_id);
+        $lpFileNumber = $order_details['lp_file_number'];
         $splitName = explode(' ', $order_details['primary_owner']);
         $ownerLastName = end($splitName);
         $primaryName = array_slice($splitName, 0, -1);
@@ -3690,10 +3691,10 @@ class Home extends MX_Controller {
         $order_data = json_encode($place_order);
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
+       
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order_from_admin', env('RESWARE_ORDER_API').'orders', $order_data, array(), 0, 0);
         $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API').'orders', $order_data, $result, 0, $logid);
-        
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order_from_admin', env('RESWARE_ORDER_API').'orders', $order_data, $result, 0, $logid);
         if(isset($result) && !empty($result)) {
             $response = json_decode($result,true);
 
@@ -4147,9 +4148,9 @@ class Home extends MX_Controller {
                     /* Add partner api logs */
 
                     /** Upload document to resware */
-                    $lvfilename = $orderNumber.'.pdf';
-                    $deedfilename = $orderNumber.'.pdf';
-                    $taxfilename = $orderNumber.'.pdf';
+                    $lvfilename = $lpFileNumber.'.pdf';
+                    $deedfilename = $lpFileNumber.'.pdf';
+                    $taxfilename = $lpFileNumber.'.pdf';
                     $this->load->library('order/order');
                     if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$lvfilename)) {
                         $this->uploadLvDocsToResware($lvfilename, $file_id, $order_details);
@@ -4289,9 +4290,9 @@ class Home extends MX_Controller {
 			$user_data = array();
 		}
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
         $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -4346,9 +4347,9 @@ class Home extends MX_Controller {
 			$user_data = array();
 		}
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
         $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -4405,9 +4406,9 @@ class Home extends MX_Controller {
 			$user_data = array();
 		}
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
         $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
