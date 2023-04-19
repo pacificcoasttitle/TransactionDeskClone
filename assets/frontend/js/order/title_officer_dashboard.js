@@ -24,6 +24,13 @@ $(document).ready(function () {
             "drawCallback": function () {
 
             },
+            "fnInitComplete": function (oSettings, json) {               
+                $(".fa-info-circle").mouseenter(function() {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "visible").css("border-radius", "3px");
+                }).mouseleave(function() {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "hidden").css("border-radius", "0px");
+                });
+            },
             "ordering": false,
             "serverSide": true,
             "ajax": {
