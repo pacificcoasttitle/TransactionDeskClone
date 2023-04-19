@@ -61,10 +61,10 @@
 							<th>Property Address</th>
 							<th>Product Type</th>
 							<th>Sales Rep</th>
+							<th>Created By</th>
 							<th>Lp Document Name</th>
 							<th>Report Status</th>
-							<th>Created By</th>
-							<!-- <th>Avoid Duplication</th>            -->
+							<th>Sync To Resware</th>      
 							<th>Created At</th>
 							<th>Action</th>
 						</tr>
