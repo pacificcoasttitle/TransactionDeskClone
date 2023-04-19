@@ -160,6 +160,9 @@
 		position: absolute;
 		z-index: 1;
 	}
+	.fa-info-circle {
+		font-size: 16px;
+	}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 	<div class="container">
