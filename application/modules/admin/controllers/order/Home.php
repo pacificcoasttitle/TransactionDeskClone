@@ -4146,7 +4146,26 @@ class Home extends MX_Controller {
                     $partnerApiId = $this->partnerApiLogs->insert($partnerApiData);
                     /* Add partner api logs */
 
+                    /** Upload document to resware */
+                    $lvfilename = $orderNumber.'.pdf';
+                    $deedfilename = $orderNumber.'.pdf';
+                    $taxfilename = $orderNumber.'.pdf';
+                    $this->load->library('order/order');
+                    if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$lvfilename)) {
+                        $this->uploadLvDocsToResware($lvfilename, $file_id, $order_details);
+                    }
+
+                    if ($this->order->fileExistOrNotOnS3('grant-deed/'.$deedfilename)) {
+                        $this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $order_details);
+                    }
+
+                    if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
+                        $this->uploadTaxDocsToResware($taxfilename, $file_id, $order_details);
+                    }
+                    /** End upload document to resware */
+
                     /** Send email to sales rep */
+                    $timezone  = -8;
                     $data = array(
                         'orderNumber'=> $orderNumber,
                         'orderId'=> $file_id,
@@ -4220,6 +4239,179 @@ class Home extends MX_Controller {
             }
         }
     }
+
+    public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."legal-vesting/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."legal-vesting/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
+		}
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Legal & Vesting Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_lv_doc' => 1,
+            'created_at' => date('Y-m-d H:i:s')
+		);
+        $this->db->insert('pct_order_documents', $documentData);
+		
+        $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Legal & Vesting Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }
+
+    public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		// $this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."grant-deed/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."grant-deed/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
+		}
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Grant Deed Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_grant_doc' => 1,
+            'created_at' => date('Y-m-d H:i:s')
+		);
+		$this->db->insert('pct_order_documents', $documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Grant Deed Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
+
+	public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
+	{
+		// $this->load->model('order/document');
+		$this->load->library('order/resware');
+		$this->load->model('order/apiLogs');
+		$userdata = $this->session->userdata('user');
+		if (env('AWS_ENABLE_FLAG') == 1) {
+			$fileSize = filesize(env('AWS_PATH')."tax/".$document_name);
+			$contents = file_get_contents(env('AWS_PATH')."tax/".$document_name);
+		} else {
+			$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
+			$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
+		}
+		
+		
+		$binaryData   = base64_encode($contents); 
+
+		$documentData = array(
+			'document_name' => $document_name,
+			'original_document_name' => $document_name,
+			'document_type_id' => 1037,
+			'document_size' => $fileSize,
+			'user_id' => $userdata['id'],
+			'order_id' => $orderDetails['order_id'],
+			'description' => 'Tax Document',
+			'is_sync' => 1,
+			'is_prelim_document' => 0,
+			'is_tax_doc' => 1,
+            'created_at' => date('Y-m-d H:i:s')
+		);
+		$this->db->insert('pct_order_documents', $documentData);
+		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+		$documentApiData = array(			
+			'DocumentName' => $document_name,
+			'DocumentType' => array(
+				'DocumentTypeID' => 1037,
+			),
+			'Description' => 'Tax Document',
+			'InternalOnly' => false,
+			'DocumentBody' => $binaryData
+		);
+		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+		if ($userdata['is_master'] == 1) {
+			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+			$user_data['email'] = $orderUser['email_address'];
+			$user_data['password'] = $orderUser['random_password'];
+		} else {
+			$user_data = array();
+		}
+		
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$res = json_decode($result);
+        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+	}
 
     public function importDocumentTypes()
     {    
