@@ -41,6 +41,7 @@
                             <th>Sr No</th>
                             <th>Days</th>
                             <th>Color Code</th>
+                            <th>Text Color</th>
                             <th>Delete flag</th>
                             <th>Action</th>
                         </tr>

@@ -143,6 +143,22 @@
 			color: #222222;
 			text-decoration: none;
 		}
+		.tooltiptext {
+			visibility: hidden;
+			/* width: 120px; */
+			background-color: #969393;
+			color: #fff;
+			text-align: center;
+			border-radius: 6px;
+			padding: 5px;
+			margin-left: 5px;
+			margin-top: 15px;
+			position: absolute;
+			z-index: 1;
+		}
+		.fa-info-circle {
+			font-size: 16px;
+		}
 	</style>
 	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 		<div class="container">

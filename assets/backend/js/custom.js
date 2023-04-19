@@ -2486,7 +2486,7 @@ $(document).ready(function () {
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
                 $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
             },
-            "ordering": true,            
+            "ordering": true,
             "serverSide": true,
             "ajax": {                
                 url: base_url+"admin/order/home/get_lp_alert_list", 

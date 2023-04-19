@@ -22,8 +22,11 @@ $(document).ready(function () {
             "fnRowCallback": function (nRow, aData, iDisplayIndex) {
                 let lastElement = aData.slice(-1)[0];
                 if (lastElement.includes("color~")) {
-                    let colorString = lastElement.split('color~');
+                    let splitEle = lastElement.split('|');
+                    let colorString = splitEle[0].split('color~');
                     $(nRow).css("background-color", colorString[1]);
+                    let textColor = splitEle[1].split('text_color~');
+                    $(nRow).css("color", textColor[1]);
                 }
             },
             // dom: 'Bfrtip',
@@ -31,6 +34,13 @@ $(document).ready(function () {
             buttons: [],
             "drawCallback": function () {
                 
+            },
+            "fnInitComplete": function (oSettings, json) {               
+                $(".fa-info-circle").mouseenter(function() {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "visible").css("border-radius", "3px");
+                }).mouseleave(function() {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "hidden").css("border-radius", "0px");
+                });
             },
             "ordering": false,
             "serverSide": true,

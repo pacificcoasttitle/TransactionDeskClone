@@ -213,10 +213,12 @@ class SalesRep extends MX_Controller
             ++$k;
             if($k != $numItems) {
                 $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                $lpAlertRange[$k]['text_color'] = $alert['text_color'];
                 $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key + 1]['days'] - 1));
                 // $lpAlertRange[$k]['delete'] = $alert['delete'];
             } else {
                 $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                $lpAlertRange[$k]['text_color'] = $alert['text_color'];
                 $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key]['days']));
                 // $lpAlertRange[$k]['delete'] = $alert['delete'];
             }
@@ -253,7 +255,7 @@ class SalesRep extends MX_Controller
             foreach ($order_lists['data'] as $order)  {
 
                 $nestedData = array();
-                $nestedData[] = !empty($order['file_number'])  ? $order['file_number'] : $order['lp_file_number'];
+                $nestedData[] = (empty($order['file_number'])  ? $order['lp_file_number'] : ((empty($order['lp_file_number'])) ? $order['file_number'] : $order['file_number'] .'&nbsp; <i class="fa fa-info-circle" aria-hidden="true"></i> <span class="tooltiptext">It\'s LP order '.$order['lp_file_number'].' and it\'s converted into normal order </span>' ));
 				if ($userdata['is_sales_rep_manager'] == 1) {
 					$nestedData[] = $order['sales_first_name']." ".$order['sales_last_name'];
 				}
@@ -304,14 +306,14 @@ class SalesRep extends MX_Controller
                 $your_date = strtotime($order['created_at']);
                 $datediff = $now - $your_date;
                 $datediff = round($datediff / (60 * 60 * 24));
-                if (!empty($order['lp_file_number'])) {
+                if (!empty($order['lp_file_number']) && empty($order['file_number'])) {
                     foreach ($lpAlertRange as $key => $val) {
                         // if ($val['delete'] == 1) {
                         //     $nestedData[] = 'delete';
                         //     break;
                         // }
                         if (in_array($datediff, $val['range'])) {
-                            $nestedData[] = "color~".$val['color_code'];
+                            $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
                             break;
                         }
                     }

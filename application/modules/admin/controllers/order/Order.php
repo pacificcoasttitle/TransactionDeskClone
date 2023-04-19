@@ -523,11 +523,15 @@ class Order extends MX_Controller {
             // $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
             
             
-
+            $nestedData[] = !empty($value['file_number']) ? 'Yes' : 'No';
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:8px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a>";
+
+            if (empty($value['file_number'])) {
+                $action .= "<a style='margin-left:8px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+            } 
 
             $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];
             if (!empty($value['document_name'])) {
