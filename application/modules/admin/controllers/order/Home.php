@@ -3710,6 +3710,7 @@ class Home extends MX_Controller {
                 }
                 $condition = array('id' => $order_details['order_id']);
                 $data = array('file_id' => $file_id, 'file_number' => $fileNumber);
+                $order_details['file_id'] = $file_id;
                 $update = $this->order_model->update($data, $condition);
                 
                 /** Party details */
@@ -4245,7 +4246,7 @@ class Home extends MX_Controller {
 	{
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
-		$userdata = $this->session->userdata('user');
+		
 		if (env('AWS_ENABLE_FLAG') == 1) {
 			$fileSize = filesize(env('AWS_PATH')."legal-vesting/".$document_name);
 			$contents = file_get_contents(env('AWS_PATH')."legal-vesting/".$document_name);
@@ -4260,7 +4261,7 @@ class Home extends MX_Controller {
 			'original_document_name' => $document_name,
 			'document_type_id' => 1037,
 			'document_size' => $fileSize,
-			'user_id' => $userdata['id'],
+			'user_id' => 0,
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'Legal & Vesting Document',
 			'is_sync' => 1,
@@ -4282,17 +4283,12 @@ class Home extends MX_Controller {
 		);
 		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
-		}
+		$user_data = array();
+		$user_data['admin_api'] = 1;
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs(0, 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs(0, 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
         $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -4303,7 +4299,7 @@ class Home extends MX_Controller {
 		// $this->load->model('order/document');
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
-		$userdata = $this->session->userdata('user');
+		
 		if (env('AWS_ENABLE_FLAG') == 1) {
 			$fileSize = filesize(env('AWS_PATH')."grant-deed/".$document_name);
 			$contents = file_get_contents(env('AWS_PATH')."grant-deed/".$document_name);
@@ -4318,7 +4314,7 @@ class Home extends MX_Controller {
 			'original_document_name' => $document_name,
 			'document_type_id' => 1037,
 			'document_size' => $fileSize,
-			'user_id' => $userdata['id'],
+			'user_id' => 0,
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'Grant Deed Document',
 			'is_sync' => 1,
@@ -4339,17 +4335,12 @@ class Home extends MX_Controller {
 		);
 		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
-		}
+        $user_data = array();
+		$user_data['admin_api'] = 1;
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs(0, 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs(0, 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
         $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -4360,7 +4351,7 @@ class Home extends MX_Controller {
 		// $this->load->model('order/document');
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
-		$userdata = $this->session->userdata('user');
+		
 		if (env('AWS_ENABLE_FLAG') == 1) {
 			$fileSize = filesize(env('AWS_PATH')."tax/".$document_name);
 			$contents = file_get_contents(env('AWS_PATH')."tax/".$document_name);
@@ -4377,7 +4368,7 @@ class Home extends MX_Controller {
 			'original_document_name' => $document_name,
 			'document_type_id' => 1037,
 			'document_size' => $fileSize,
-			'user_id' => $userdata['id'],
+			'user_id' => 0,
 			'order_id' => $orderDetails['order_id'],
 			'description' => 'Tax Document',
 			'is_sync' => 1,
@@ -4398,17 +4389,12 @@ class Home extends MX_Controller {
 		);
 		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
-		}
+		$user_data = array();
+		$user_data['admin_api'] = 1;
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+		$logid = $this->apiLogs->syncLogs(0, 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+		$this->apiLogs->syncLogs(0, 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
         $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
