@@ -3708,7 +3708,7 @@ class Home extends MX_Controller {
                     $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
                 }
                 $condition = array('id' => $order_details['order_id']);
-                $data = array('file_id' => $file_id, 'file_number' => $fileNumber, 'lp_file_number' => null);
+                $data = array('file_id' => $file_id, 'file_number' => $fileNumber);
                 $update = $this->order_model->update($data, $condition);
                 
                 /** Party details */

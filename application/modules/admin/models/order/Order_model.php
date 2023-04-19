@@ -547,7 +547,7 @@ class Order_model extends CI_Model
 
         if (isset($order_type) && !empty($order_type)) {
             if ($order_type == 'resware_orders') {
-                $this->db->where('order_details.lp_file_number is null');
+                //$this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null'); 
             } else if ($order_type == 'lp_orders') {
                 $this->db->where('order_details.lp_file_number is not null');
@@ -593,7 +593,7 @@ class Order_model extends CI_Model
 
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->db->where('order_details.lp_file_number is null');
+                    //$this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->db->where('order_details.lp_file_number is not null');
@@ -665,7 +665,7 @@ class Order_model extends CI_Model
 
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->db->where('order_details.lp_file_number is null');
+                    //$this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->db->where('order_details.lp_file_number is not null');
