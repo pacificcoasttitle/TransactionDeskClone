@@ -104,11 +104,11 @@ class Order
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
             if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
-                $this->CI->db->where('order_details.lp_file_number is null');
+                //$this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->CI->db->where('order_details.lp_file_number is null');
+                    //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
@@ -122,7 +122,7 @@ class Order
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -210,11 +210,11 @@ class Order
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
             if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
-                $this->CI->db->where('order_details.lp_file_number is null');
+                //$this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->CI->db->where('order_details.lp_file_number is null');
+                    //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
@@ -228,7 +228,7 @@ class Order
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -332,11 +332,11 @@ class Order
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
             if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
-                $this->CI->db->where('order_details.lp_file_number is null');
+                //$this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->CI->db->where('order_details.lp_file_number is null');
+                    //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
@@ -350,7 +350,7 @@ class Order
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -433,11 +433,11 @@ class Order
             //,'daphne@joindaphne.com'
             // 'dburrascano@pct.com'
             if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
-                $this->CI->db->where('order_details.lp_file_number is null');
+                //$this->CI->db->where('order_details.lp_file_number is null');
                 $this->CI->db->where('order_details.file_number is not null'); 
             } else if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->CI->db->where('order_details.lp_file_number is null');
+                    //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
@@ -453,7 +453,7 @@ class Order
                 if (!empty($lp_alerts)) {
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL " . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.lp_file_number is null AND order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL) " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
