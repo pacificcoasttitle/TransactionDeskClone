@@ -471,7 +471,7 @@ class Home_model extends CI_Model
                         ->group_end();
 			}
 
-            $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
@@ -491,7 +491,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_grant_doc', 1);
             $filter_total_records =  $this->db->count_all_results();
 
-            $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
@@ -547,7 +547,7 @@ class Home_model extends CI_Model
                         ->group_end();
 			}
 
-            $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
@@ -567,7 +567,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_lv_doc', 1);
             $filter_total_records =  $this->db->count_all_results();
 
-            $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
@@ -699,7 +699,7 @@ class Home_model extends CI_Model
                         ->group_end();
 			}
 
-            $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_tax_doc', 1);
@@ -719,7 +719,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_tax_doc', 1);
             $filter_total_records =  $this->db->count_all_results();
 
-            $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_tax_doc', 1);

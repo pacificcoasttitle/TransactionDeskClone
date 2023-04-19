@@ -1138,7 +1138,7 @@ class Home extends MX_Controller {
             foreach ($grant_document_lists['data'] as $key => $value) {
                 $nestedData=array();
                 $nestedData[] = $i;
-                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
                 if ($value['api_document_id'] > 0) {
@@ -1199,7 +1199,7 @@ class Home extends MX_Controller {
             foreach ($lv_document_lists['data'] as $key => $value) {
                 $nestedData=array();
                 $nestedData[] = $i;
-                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
                 if ($value['api_document_id'] > 0) {
@@ -1453,7 +1453,7 @@ class Home extends MX_Controller {
             foreach ($tax_document_lists['data'] as $key => $value) {
                 $nestedData=array();
                 $nestedData[] = $i;
-                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
                 if ($value['api_document_id'] > 0) {
