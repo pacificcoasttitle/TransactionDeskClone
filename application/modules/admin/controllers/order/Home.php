@@ -4518,6 +4518,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $i;
 	            $nestedData[] = $value['days'];
 	            $nestedData[] = $value['color_code'] . "&nbsp; <input type='color' value= ". $value['color_code'] ." disabled>";
+	            $nestedData[] = $value['text_color'] . "&nbsp; <input type='color' value= ". $value['text_color'] ." disabled>";
 	            $nestedData[] = ($value['delete'] == 1) ? 'Yes': 'No';
                 // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -4760,6 +4761,7 @@ class Home extends MX_Controller {
                 $lpAlertData = array(
                     'days' => $input['days'],
                     'color_code' => $input['color_code'] ?? null,
+                    'text_color' => $input['text_color'] ?? null,
                     'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
                 );
                 
@@ -4816,6 +4818,7 @@ class Home extends MX_Controller {
                     $lpAlertData = array(
                         'days' => $input['days'],
                         'color_code' => $input['color_code'] ?? null,
+                        'text_color' => $input['text_color'] ?? null,
                         'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
                     );
                     $condition = array('id' => $id);

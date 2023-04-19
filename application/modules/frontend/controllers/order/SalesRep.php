@@ -213,10 +213,12 @@ class SalesRep extends MX_Controller
             ++$k;
             if($k != $numItems) {
                 $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                $lpAlertRange[$k]['text_color'] = $alert['text_color'];
                 $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key + 1]['days'] - 1));
                 // $lpAlertRange[$k]['delete'] = $alert['delete'];
             } else {
                 $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                $lpAlertRange[$k]['text_color'] = $alert['text_color'];
                 $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key]['days']));
                 // $lpAlertRange[$k]['delete'] = $alert['delete'];
             }
@@ -311,7 +313,7 @@ class SalesRep extends MX_Controller
                         //     break;
                         // }
                         if (in_array($datediff, $val['range'])) {
-                            $nestedData[] = "color~".$val['color_code'];
+                            $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
                             break;
                         }
                     }

@@ -30,12 +30,16 @@
                 <div class="form-group row">
                     <label for="color_code" class="col-sm-4 col-form-label">Color Code<span class="required">*</span></label>
                     <div class="col-sm-2">
-                        <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" placeholder="Doc Type Description" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 40%; border-radious:50;">
-                        <?php if(!empty($doc_type_description_error_msg)){ ?>                     
-                            <span class="error"><?php echo $doc_type_description_error_msg; ?></span>
-                        <?php } ?>
+                        <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 40%; border-radious:50;">
                     </div>
-                </div> 
+                </div>
+                
+                <div class="form-group row">
+                    <label for="text_color" class="col-sm-4 col-form-label">Text Color<span class="required">*</span></label>
+                    <div class="col-sm-2">
+                        <input type="color" class="form-control" name="text_color" id="text_color"  class="form-control" value="<?php echo isset($lp_alert['text_color']) && !empty($lp_alert['text_color']) ? $lp_alert['text_color']: ''; ?>" style="width: 40%; border-radious:50;">
+                    </div>
+                </div>
 
                 <div class="form-group row">
                     <label for="delete" class="col-sm-4 col-form-label">Is_ Notice</label>

@@ -41,6 +41,13 @@
                         <input type="color" class="form-control" name="color_code" id="color_code" value="#FFFFFF" class="form-control" placeholder="Color Code" style="width: 40%;" >
                     </div>
                 </div>
+
+                <div class="form-group row">
+                    <label for="text_color" class="col-sm-4 col-form-label">Text Color</label>
+                    <div class="col-sm-2">
+                        <input type="color" class="form-control" name="text_color" id="text_color" value="#FFFFFF" class="form-control" placeholder="Text Code" style="width: 40%;" >
+                    </div>
+                </div>
                 
                 <div class="form-group row">
                     <label for="delete" class="col-sm-4 col-form-label">Delete</label>
