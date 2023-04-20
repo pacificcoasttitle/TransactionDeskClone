@@ -454,25 +454,15 @@ class Home_model extends CI_Model
                     ->or_like('color_code',$keyword)
                     ->group_end();
 			}
-            $this->db->from('pct_lp_alert');
-            
-			$filter_total_records =  $this->db->count_all_results();
-			if (isset($keyword) && !empty($keyword)) {
-                $this->db->group_start()
-                    ->like("days", $keyword)
-                    ->or_like('color_code',$keyword)
-                    ->group_end();
-			}
-
+            $this->db->where('delete', 0);
             $this->db->order_by('days', 'asc');
 			$query = $this->db->get('pct_lp_alert');
 			if ($query->num_rows() > 0) {
 	            $lp_alert = $query->result_array();
 	        }
     	} else {    		
-	    	$this->db->from('pct_lp_alert');
-            $filter_total_records =  $this->db->count_all_results();
-			
+	    	
+			$this->db->where('delete', 0);
             $this->db->order_by('days', 'asc');
 			$query = $this->db->get('pct_lp_alert');
 			if ($query->num_rows() > 0) {

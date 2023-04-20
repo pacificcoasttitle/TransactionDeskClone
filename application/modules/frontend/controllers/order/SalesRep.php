@@ -312,7 +312,7 @@ class SalesRep extends MX_Controller
                         //     $nestedData[] = 'delete';
                         //     break;
                         // }
-                        if (in_array($datediff, $val['range'])) {
+                        if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
                             $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
                             break;
                         }
