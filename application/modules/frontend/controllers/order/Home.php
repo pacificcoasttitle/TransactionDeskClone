@@ -816,6 +816,11 @@ class Home extends MX_Controller {
 					} else {
 						$lp_file_number = ++$orderInfo['lp_file_number'];
 						$file_id = ++$orderInfo['file_id'];
+						$splitNum = explode('-', $lp_file_number);
+						if (count($splitNum) > 1) {
+							$number = ltrim($splitNum[1], '0');
+							$file_id = 90000000 + (int)$number;
+						}
 					}
 
 				}
