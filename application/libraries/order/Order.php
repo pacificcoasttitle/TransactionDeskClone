@@ -109,7 +109,8 @@ class Order
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
-                    $this->CI->db->where('order_details.file_number is not null'); 
+                    $this->CI->db->where('order_details.file_number is not null');
+                    $this->CI->db->where('order_details.file_number !=', 0);  
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     $this->CI->db->where('order_details.file_number', 0);
@@ -216,6 +217,7 @@ class Order
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
+                    $this->CI->db->where('order_details.file_number !=', 0); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     $this->CI->db->where('order_details.file_number', 0);
@@ -338,6 +340,7 @@ class Order
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
+                    $this->CI->db->where('order_details.file_number !=', 0); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     $this->CI->db->where('order_details.file_number', 0);
@@ -439,6 +442,7 @@ class Order
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->where('order_details.file_number is not null'); 
+                    $this->CI->db->where('order_details.file_number !=', 0); 
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     $this->CI->db->where('order_details.file_number', 0);
