@@ -304,15 +304,22 @@ class SalesRep extends MX_Controller
                	$nestedData[] = $action;
                 $now = time(); 
                 $your_date = strtotime($order['created_at']);
-                $datediff = $now - $your_date;
-                $datediff = round($datediff / (60 * 60 * 24));
+                $new_date = date('Y-m-d', $your_date);
+                $nowDate = date('Y-m-d');
+                $datetime1 = new DateTime($new_date);
+                $datetime2 = new DateTime($nowDate);
+
+                $datediff = $datetime1->diff($datetime2)->format("%a");
+
+                // $datediff = $now - $your_date;
+                // $datediff = round($datediff / (60 * 60 * 24));
                 if (!empty($order['lp_file_number']) && empty($order['file_number'])) {
                     foreach ($lpAlertRange as $key => $val) {
                         // if ($val['delete'] == 1) {
                         //     $nestedData[] = 'delete';
                         //     break;
                         // }
-                        if (in_array($datediff, $val['range'])) {
+                        if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
                             $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
                             break;
                         }

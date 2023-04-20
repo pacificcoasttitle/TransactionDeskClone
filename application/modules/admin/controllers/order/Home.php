@@ -4685,7 +4685,7 @@ class Home extends MX_Controller {
             $json_data['draw'] = intval( $params['draw'] );
         } else {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $lp_alerts = $this->home_model->get_customers($params);            
+            $lp_alerts = $this->home_model->get_lp_alert_list($params);
         }
 
         $data = array(); 
