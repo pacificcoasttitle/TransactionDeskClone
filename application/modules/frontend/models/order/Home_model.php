@@ -441,8 +441,6 @@ class Home_model extends CI_Model
 
     public function get_lp_alert_list()
     {
-    	$this->db->from('pct_lp_alert');
-		$total_records =  $this->db->count_all_results();
 		$lp_alert =array();
         
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
