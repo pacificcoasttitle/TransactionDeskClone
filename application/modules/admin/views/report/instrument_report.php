@@ -726,10 +726,10 @@
                 <div class="clearfix"></div>
                 <div class="billing_info billing_info-m-40">
                     <div class="float_left">
-                        Nations Equity<br>
-                        <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name'] ?><br>
-                        <?php echo $orderDetails['address']; ?><br>
-                        <?php echo $orderDetails['county']; ?>, <?php echo $orderDetails['property_state']; ?> <?php echo $orderDetails['property_zip']; ?>
+                        <?php echo $orderDetails['cust_company_name']; ?><br>
+                        <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?><br>
+                        <?php echo $orderDetails['cust_address']; ?><br>
+                        <?php echo $orderDetails['cust_city']; ?>, <?php echo $orderDetails['cust_state']; ?> <?php echo $orderDetails['cust_zipcode']; ?>
                     </div>
                     <div class="float_right text_right">
                         Transaction: <?php echo ($orderDetails['prod_type'] == 'loan') ? 'Loan' : 'Sale' ?><br>
@@ -851,10 +851,10 @@
                 <div class="clearfix"></div>
                 <div class="billing_info">
                     <div class="float_left">
-                        Nations Equity<br>
-                        <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name'] ?><br>
-                        <?php echo $orderDetails['address']; ?><br>
-                        <?php echo $orderDetails['county']; ?>, <?php echo $orderDetails['property_state']; ?> <?php echo $orderDetails['property_zip']; ?>
+                        <?php echo $orderDetails['cust_company_name']; ?><br>
+                        <?php echo $orderDetails['cust_first_name'] . ' ' . $orderDetails['cust_last_name']; ?><br>
+                        <?php echo $orderDetails['cust_address']; ?><br>
+                        <?php echo $orderDetails['cust_city']; ?>, <?php echo $orderDetails['cust_state']; ?> <?php echo $orderDetails['cust_zipcode']; ?>
                     </div>
                     <div class="float_right text_right">
                         Transaction: <?php echo ($orderDetails['prod_type'] == 'loan') ? 'Loan' : 'Sale' ?><br>

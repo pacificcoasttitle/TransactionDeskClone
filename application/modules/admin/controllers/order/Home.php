@@ -4247,30 +4247,10 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		
-		if (env('AWS_ENABLE_FLAG') == 1) {
-			$fileSize = filesize(env('AWS_PATH')."legal-vesting/".$document_name);
-			$contents = file_get_contents(env('AWS_PATH')."legal-vesting/".$document_name);
-		} else {
-			$fileSize = filesize(FCPATH.'uploads/legal-vesting/'.$document_name);
-			$contents = file_get_contents(base_url().'uploads/legal-vesting/'.$document_name);
-		}
+        $fileSize = filesize(env('AWS_PATH')."legal-vesting/".$document_name);
+        $contents = file_get_contents(env('AWS_PATH')."legal-vesting/".$document_name);
 		$binaryData   = base64_encode($contents); 
 
-		$documentData = array(
-			'document_name' => $document_name,
-			'original_document_name' => $document_name,
-			'document_type_id' => 1037,
-			'document_size' => $fileSize,
-			'user_id' => 0,
-			'order_id' => $orderDetails['order_id'],
-			'description' => 'Legal & Vesting Document',
-			'is_sync' => 1,
-			'is_prelim_document' => 0,
-			'is_lv_doc' => 1,
-            'created' => date('Y-m-d H:i:s')
-		);
-        $this->db->insert('pct_order_documents', $documentData);
-		
         $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
@@ -4290,7 +4270,7 @@ class Home extends MX_Controller {
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 		$this->apiLogs->syncLogs(0, 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
-        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('order_id' => $orderDetails['order_id'], 'is_lv_doc' => 1));
 		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 
@@ -4300,29 +4280,10 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		
-		if (env('AWS_ENABLE_FLAG') == 1) {
-			$fileSize = filesize(env('AWS_PATH')."grant-deed/".$document_name);
-			$contents = file_get_contents(env('AWS_PATH')."grant-deed/".$document_name);
-		} else {
-			$fileSize = filesize(FCPATH.'uploads/grant-deed/'.$document_name);
-			$contents = file_get_contents(base_url().'uploads/grant-deed/'.$document_name);
-		}
+        $fileSize = filesize(env('AWS_PATH')."grant-deed/".$document_name);
+        $contents = file_get_contents(env('AWS_PATH')."grant-deed/".$document_name);
 		$binaryData   = base64_encode($contents); 
 
-		$documentData = array(
-			'document_name' => $document_name,
-			'original_document_name' => $document_name,
-			'document_type_id' => 1037,
-			'document_size' => $fileSize,
-			'user_id' => 0,
-			'order_id' => $orderDetails['order_id'],
-			'description' => 'Grant Deed Document',
-			'is_sync' => 1,
-			'is_prelim_document' => 0,
-			'is_grant_doc' => 1,
-            'created' => date('Y-m-d H:i:s')
-		);
-		$this->db->insert('pct_order_documents', $documentData);
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
@@ -4342,8 +4303,8 @@ class Home extends MX_Controller {
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 		$this->apiLogs->syncLogs(0, 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
-        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('order_id' => $orderDetails['order_id'], 'is_grant_doc' => 1));
+        // $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 	}
 
 	public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
@@ -4352,31 +4313,11 @@ class Home extends MX_Controller {
 		$this->load->library('order/resware');
 		$this->load->model('order/apiLogs');
 		
-		if (env('AWS_ENABLE_FLAG') == 1) {
-			$fileSize = filesize(env('AWS_PATH')."tax/".$document_name);
-			$contents = file_get_contents(env('AWS_PATH')."tax/".$document_name);
-		} else {
-			$fileSize = filesize(FCPATH.'uploads/tax/'.$document_name);
-			$contents = file_get_contents(base_url().'uploads/tax/'.$document_name);
-		}
-		
+        $fileSize = filesize(env('AWS_PATH')."tax/".$document_name);
+        $contents = file_get_contents(env('AWS_PATH')."tax/".$document_name);
 		
 		$binaryData   = base64_encode($contents); 
 
-		$documentData = array(
-			'document_name' => $document_name,
-			'original_document_name' => $document_name,
-			'document_type_id' => 1037,
-			'document_size' => $fileSize,
-			'user_id' => 0,
-			'order_id' => $orderDetails['order_id'],
-			'description' => 'Tax Document',
-			'is_sync' => 1,
-			'is_prelim_document' => 0,
-			'is_tax_doc' => 1,
-            'created' => date('Y-m-d H:i:s')
-		);
-		$this->db->insert('pct_order_documents', $documentData);
 		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 		$documentApiData = array(			
 			'DocumentName' => $document_name,
@@ -4396,8 +4337,8 @@ class Home extends MX_Controller {
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 		$this->apiLogs->syncLogs(0, 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
-        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-		// $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+        $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('order_id' => $orderDetails['order_id'], 'is_tax_doc' => 1));
+        // $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 	}
 
     public function importDocumentTypes()
