@@ -1144,17 +1144,17 @@ class Home extends MX_Controller {
 
 				if ($this->order->fileExistOrNotOnS3('legal-vesting/'.$lvfilename)) {
 					$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
-					$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails);
+					$this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails, $lpOrderFlag);
 				}
 
 				if ($this->order->fileExistOrNotOnS3('grant-deed/'.$deedfilename)) {
 					$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
-					$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails);
+					$this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails, $lpOrderFlag);
 				}
 
 				if ($this->order->fileExistOrNotOnS3('tax/'.$taxfilename)) {
 					$file[] = env('AWS_PATH')."tax/".$taxfilename;
-					$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails);
+					$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
 				}
 
 				$escrow_officer_email = '';
@@ -1689,7 +1689,7 @@ class Home extends MX_Controller {
     	echo json_encode($product_types); exit;
 	}
 	
-	public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
+	public function uploadLvDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
 	{
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
@@ -1717,35 +1717,37 @@ class Home extends MX_Controller {
 			'is_lv_doc' => 1
 		);
 		$documentId = $this->document->insert($documentData);
-		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
-		$documentApiData = array(			
-			'DocumentName' => $document_name,
-			'DocumentType' => array(
-				'DocumentTypeID' => 1037,
-			),
-			'Description' => 'Legal & Vesting Document',
-			'InternalOnly' => false,
-			'DocumentBody' => $binaryData
-		);
-		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
+		if ($lpOrderFlag == 0) {
+			$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+			$documentApiData = array(			
+				'DocumentName' => $document_name,
+				'DocumentType' => array(
+					'DocumentTypeID' => 1037,
+				),
+				'Description' => 'Legal & Vesting Document',
+				'InternalOnly' => false,
+				'DocumentBody' => $binaryData
+			);
+			$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+	
+			if ($userdata['is_master'] == 1) {
+				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+				$user_data['email'] = $orderUser['email_address'];
+				$user_data['password'] = $orderUser['random_password'];
+			} else {
+				$user_data = array();
+			}
+			
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+			$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+			$res = json_decode($result);
+			$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		}
-		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-		$res = json_decode($result);
-		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
     
 
-    public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails)
+    public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
 	{
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
@@ -1773,34 +1775,37 @@ class Home extends MX_Controller {
 			'is_grant_doc' => 1
 		);
 		$documentId = $this->document->insert($documentData);
-		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
-		$documentApiData = array(			
-			'DocumentName' => $document_name,
-			'DocumentType' => array(
-				'DocumentTypeID' => 1037,
-			),
-			'Description' => 'Grant Deed Document',
-			'InternalOnly' => false,
-			'DocumentBody' => $binaryData
-		);
-		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
+		if ($lpOrderFlag == 0) {
+			$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+			$documentApiData = array(			
+				'DocumentName' => $document_name,
+				'DocumentType' => array(
+					'DocumentTypeID' => 1037,
+				),
+				'Description' => 'Grant Deed Document',
+				'InternalOnly' => false,
+				'DocumentBody' => $binaryData
+			);
+			$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+			
+			if ($userdata['is_master'] == 1) {
+				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+				$user_data['email'] = $orderUser['email_address'];
+				$user_data['password'] = $orderUser['random_password'];
+			} else {
+				$user_data = array();
+			}
+			
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+			$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+			$res = json_decode($result);
+			$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		}
-		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-		$res = json_decode($result);
-		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+
 	}
 
-	public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
+	public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
 	{
 		$this->load->model('order/document');
 		$this->load->library('order/resware');
@@ -1830,31 +1835,35 @@ class Home extends MX_Controller {
 			'is_tax_doc' => 1
 		);
 		$documentId = $this->document->insert($documentData);
-		$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
-		$documentApiData = array(			
-			'DocumentName' => $document_name,
-			'DocumentType' => array(
-				'DocumentTypeID' => 1037,
-			),
-			'Description' => 'Tax Document',
-			'InternalOnly' => false,
-			'DocumentBody' => $binaryData
-		);
-		$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-
-		if ($userdata['is_master'] == 1) {
-			$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-			$user_data['email'] = $orderUser['email_address'];
-			$user_data['password'] = $orderUser['random_password'];
-		} else {
-			$user_data = array();
-		}
 		
-		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-		$res = json_decode($result);
-		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		if ($lpOrderFlag == 0) {
+			$endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+			$documentApiData = array(			
+				'DocumentName' => $document_name,
+				'DocumentType' => array(
+					'DocumentTypeID' => 1037,
+				),
+				'Description' => 'Tax Document',
+				'InternalOnly' => false,
+				'DocumentBody' => $binaryData
+			);
+			$document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+		
+			if ($userdata['is_master'] == 1) {
+				$orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+				$user_data['email'] = $orderUser['email_address'];
+				$user_data['password'] = $orderUser['random_password'];
+			} else {
+				$user_data = array();
+			}
+			
+			$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+			$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+			$res = json_decode($result);
+			$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+		}
+
 	}
 
 
