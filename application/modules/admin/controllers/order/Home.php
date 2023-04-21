@@ -3710,8 +3710,19 @@ class Home extends MX_Controller {
                 }
                 $condition = array('id' => $order_details['order_id']);
                 $data = array('file_id' => $file_id, 'file_number' => $fileNumber);
-                $order_details['file_id'] = $file_id;
                 $update = $this->order_model->update($data, $condition);
+                /** Update in title point table */
+                $this->db->select('id');
+                $this->db->from('pct_order_title_point_data');
+                $this->db->where('file_number', $lpFileNumber);
+                $query = $this->db->get();
+                $tpRecord = $query->row_array(); 
+                if (!empty($tpRecord)){
+                    $tpRecordId = $tpRecord['id'];
+                    $this->db->update('pct_order_title_point_data', array('file_number' => $fileNumber, 'file_id' => $file_id), array('id' => $tpRecordId));
+                }
+                /** End update in title point table */
+                $order_details['file_id'] = $file_id;
                 
                 /** Party details */
                 if ($orderNumber) {
