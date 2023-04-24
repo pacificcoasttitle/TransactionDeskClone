@@ -1029,7 +1029,7 @@ class Titlepoint
             {
                 if($this->taxcount < 3)
                 {
-                    sleep(1);
+                    sleep(2);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->getTaxImageRequestStatus($requestId,$orderId);                    
                 }
