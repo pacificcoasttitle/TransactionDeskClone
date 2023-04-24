@@ -325,14 +325,3 @@
 	</div>
 </div>
 
-<script defer>
-	// var myarray = ["info@retech.company", "awu@pct.com", "teammeza@pct.com"];
-
-	var sessionValue = <?php echo json_encode($this->session->userdata('user'));?>;
-	if(sessionValue.is_sales_rep == 1 || sessionValue.is_title_officer == 1) {
-		// console.log('sessionValue =================',sessionValue);
-		setTimeout(() => {
-			$('#order_type_filter').removeClass('hide');
-		}, 1500);
-	}
-</script>
