@@ -104,6 +104,7 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->where('order_details.file_number is not null');
+                $this->CI->db->where('order_details.file_number !=', 0); 
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
@@ -210,6 +211,7 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->where('order_details.file_number is not null');
+                $this->CI->db->where('order_details.file_number !=', 0); 
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
@@ -332,6 +334,7 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->where('order_details.file_number is not null');
+                $this->CI->db->where('order_details.file_number !=', 0); 
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
@@ -434,6 +437,7 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->where('order_details.file_number is not null'); 
+                $this->CI->db->where('order_details.file_number !=', 0); 
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
