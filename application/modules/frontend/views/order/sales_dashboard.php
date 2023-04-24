@@ -326,12 +326,5 @@
 </div>
 
 <script defer>
-	var myarray = ["info@retech.company", "awu@pct.com", "teammeza@pct.com"];
-
-	var sessionValue = <?php echo json_encode($this->session->userdata('user'));?>;
-	if(myarray.includes(sessionValue.email)) {
-		setTimeout(() => {
-			$('#order_type_filter').removeClass('hide');
-		}, 1000);
-	}
+	
 </script>
