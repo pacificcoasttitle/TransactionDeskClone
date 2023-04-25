@@ -5037,6 +5037,18 @@ class Home extends MX_Controller {
         $query = $this->db->get();
         $instrumentRecords = $query->result_array(); 
 
+        $this->db->select('count(*) as ves_count');
+        $this->db->from('pct_title_point_document_records');
+        $this->db->where('title_point_id', $titlePointData->id);
+        $this->db->where('is_ves_display', 1);
+        $query = $this->db->get();
+        $vesCountData = $query->row_array(); 
+
+        if ($vesCountData['ves_count'] == 0) {
+            $this->load->model('order/titlePointData'); 
+            $titlePointInstrumentDetails = $this->titlePointData->getLatestGrantDeedInstrumentDetails($titlePointData->file_number);
+        }
+
         $displayDocList = $this->home_model->getDocumetTypes();
         $displayNoticeDocList = $this->home_model->getNoticeDocumetTypes();
 
@@ -5211,7 +5223,13 @@ class Home extends MX_Controller {
                 // }  else {
                 //     $checked = "";
                 // }
-                    $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? 'checked' : '';
+                    
+                    if ($vesCountData['ves_count'] == 0) {
+                        $vesChecked = $instrumentRecord['instrument'] == $titlePointInstrumentDetails[0]['instrument'] ? 'checked' : '';
+                    } else {
+                        $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? 'checked' : '';
+                    }
+                    
                     $document_name = $instrumentRecord['document_name'];
                     $document_type = $instrumentRecord['document_type'];
                     $document_sub_type = $instrumentRecord['document_sub_type'];
