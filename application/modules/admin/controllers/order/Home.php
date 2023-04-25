@@ -4512,6 +4512,7 @@ class Home extends MX_Controller {
         $this->load->library('order/order');
         $this->load->model('order/titlePointData');
         $instrument_number_ids = $this->input->post('instrument_number_ids');
+        $ves_instrument_number_ids = $this->input->post('ves_instrument_number_ids');
         $title_point_id = $this->input->post('title_point_id');
 
         $this->db->select('*');
@@ -4523,6 +4524,11 @@ class Home extends MX_Controller {
         $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
         foreach($instrument_number_ids as $instrument_number_id) {
             $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
+        }
+
+        $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0),array('title_point_id' => $title_point_id));
+        foreach($ves_instrument_number_ids as $ves_instrument_number_id) {
+            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1),array('id' => $ves_instrument_number_id)); 
         }
 
         $file_id = $titlePointData['file_id'];
@@ -5050,6 +5056,7 @@ class Home extends MX_Controller {
                     <th>Remarks</th>
                     <th>Type</th>
                     <th>Sub Type</th>
+                    <th>VES</th>
                     <th>Action</th>        
                 </tr>
             </thead>
@@ -5204,6 +5211,7 @@ class Home extends MX_Controller {
                 // }  else {
                 //     $checked = "";
                 // }
+                    $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? 'checked' : '';
                     $document_name = $instrumentRecord['document_name'];
                     $document_type = $instrumentRecord['document_type'];
                     $document_sub_type = $instrumentRecord['document_sub_type'];
@@ -5225,6 +5233,7 @@ class Home extends MX_Controller {
                                 <td>$remarks</td>
                                 <td>$document_type</td>
                                 <td>$document_sub_type</td>
+                                <td><input type='checkbox' id='$id' $vesChecked name='ves_instrument_number_ids[]' value='$id'></td>
                                 <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
                             </tr>";
                     $i++;
