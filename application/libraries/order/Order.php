@@ -3225,7 +3225,8 @@ class Order
             // $file_id = $titlePointDetails[0]['file_id'];
             $this->checkGrantDoc($fileNumber);
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
-            $vestingAllInstrumentDetails = $this->CI->titlePointData->getVestingInstrumentDetails($fileNumber);
+            $vestingAllInstrumentDetails = $this->CI->titlePointData->getSelectedVestingInstrumentDetails($fileNumber);
+            // $vestingAllInstrumentDetails = $this->CI->titlePointData->getVestingInstrumentDetails($fileNumber);
 		    $temp = array_unique(array_column($vestingAllInstrumentDetails, 'document_type'));
 		    $vestingInstrumentDetails = array_intersect_key($vestingAllInstrumentDetails, $temp);
             $sectionGList = $this->CI->home_model->getSectionWiseLPDocumentList('G');
@@ -3404,7 +3405,7 @@ class Order
 				$this->CI->titlePointData->update($tpData,$condition);
 
 			}
-            
+
             if (!empty($latestInstuNum)) {
                 $updateData = array(
                     'is_ves_display' => 1
