@@ -20,6 +20,10 @@ final class ChangeTablePCTTitlePointDocumentrecords extends AbstractMigration
     {
         $table = $this->table('pct_title_point_document_records');
         $table->changeColumn('recorded_date', 'date', ['null' => true, 'default' => null])
-              ->update();
+            ->update();
+
+        $table = $this->table('pct_title_point_document_records');
+        $table->addColumn('is_ves_display', 'boolean', ['after' => 'is_display', 'default' => 0])
+            ->update();
     }
 }
