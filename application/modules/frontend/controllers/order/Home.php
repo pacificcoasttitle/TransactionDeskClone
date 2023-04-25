@@ -2130,6 +2130,7 @@ class Home extends MX_Controller {
 			$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
 		}
 
+		$parties_email[] = 'hitesh.p@crestinfosystems.com';
 		$parties_email[] = 'rudy@pct.com';
 		$parties_email[] = 'lvelasquez@pct.com';
 		$file = array();
