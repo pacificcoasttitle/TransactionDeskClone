@@ -114,6 +114,20 @@ class TitlePointData extends CI_Model
         return $query->result_array();
     }
 
+    public function getSelectedVestingInstrumentDetails($fileNumber)
+    {
+        $table = $this->table;
+
+        $this->db->select('pct_title_point_document_records.*, pct_order_title_point_data.fips')
+            ->from($table)
+            ->join('pct_title_point_document_records', 'pct_order_title_point_data.id = pct_title_point_document_records.title_point_id');
+        $this->db->where('pct_order_title_point_data.file_number', $fileNumber);
+        $this->db->where_in('pct_title_point_document_records.is_ves_display', 1);
+        $this->db->order_by('pct_title_point_document_records.id',"desc");
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function getLatestGrantDeedInstrumentDetails($fileNumber)
     {
         $table = $this->table;
@@ -122,7 +136,7 @@ class TitlePointData extends CI_Model
             ->from($table)
             ->join('pct_title_point_document_records', 'pct_order_title_point_data.id = pct_title_point_document_records.title_point_id', 'left');
         $this->db->where('pct_order_title_point_data.file_number', $fileNumber);
-        $this->db->where('pct_title_point_document_records.document_name', 'Grant Deed')->order_by('id',"desc")->limit(1);
+        $this->db->where('pct_title_point_document_records.document_name', 'Grant Deed')->order_by('recorded_date',"desc")->limit(1);
         $query = $this->db->get();
         return $query->result_array();
     }
