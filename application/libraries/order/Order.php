@@ -3366,6 +3366,7 @@ class Order
 	 */
 	public function checkGrantDoc($fileNumber)
 	{
+        $this->CI->load->model('order/titlePointDocumentRecords');
 		$titlePointInstrumentDetails = $this->CI->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
 		if (!empty($titlePointInstrumentDetails)) {
 			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
@@ -3401,7 +3402,19 @@ class Order
 				$orderId = $orderDetails['id'];
 				$this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
 				$this->CI->titlePointData->update($tpData,$condition);
+
 			}
+            
+            if (!empty($latestInstuNum)) {
+                $updateData = array(
+                    'is_ves_display' => 1
+                );
+    
+                $condition = array(
+                    'instrument' => $latestInstuNum           
+                );
+                $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+            }
 		}
 	}
 }
