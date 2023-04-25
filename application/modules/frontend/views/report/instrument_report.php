@@ -1034,7 +1034,13 @@
                         <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>  
                     </a> <br>
                     <?php  
-                        foreach ($vestingInstrumentDetails as $key => $vesting) { ?>
+                        foreach ($vestingInstrumentDetails as $key => $vesting) { 
+                            $arr = explode('-', $titlePointDetails[0]['cs4_instrument_no']);
+		                    if (count($arr) > 1 && in_array($vesting['instrument'], $arr)) {
+		                        continue; 
+                            }
+                            ?>
+
                             <a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' .$vesting['id'] ?>.pdf">
                             <?php echo  $vesting['instrument']; ?>
                             </a> <br>
