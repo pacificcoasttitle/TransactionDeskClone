@@ -1035,10 +1035,13 @@
                     </a> <br>
                     <?php  
                         foreach ($vestingInstrumentDetails as $key => $vesting) { 
-                            $arr = explode('-', $titlePointDetails[0]['cs4_instrument_no']);
-		                    if (count($arr) > 1 && in_array($vesting['instrument'], $arr)) {
-		                        continue; 
+                            $count = substr_count($titlePointDetails[0]['cs4_instrument_no'], $vesting['instrument']);
+                            if(isset($count) && !empty($count)) {
+                                continue; 
                             }
+                            // $arr = explode('-', $titlePointDetails[0]['cs4_instrument_no']);
+		                    // if (count($arr) > 1 && in_array($vesting['instrument'], $arr)) {
+                            // }
                             ?>
 
                             <a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' .$vesting['id'] ?>.pdf">
