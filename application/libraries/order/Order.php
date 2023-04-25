@@ -3225,10 +3225,10 @@ class Order
             // $file_id = $titlePointDetails[0]['file_id'];
             $this->checkGrantDoc($fileNumber);
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
-            $vestingAllInstrumentDetails = $this->CI->titlePointData->getSelectedVestingInstrumentDetails($fileNumber);
+            $vestingInstrumentDetails = $this->CI->titlePointData->getSelectedVestingInstrumentDetails($fileNumber);
             // $vestingAllInstrumentDetails = $this->CI->titlePointData->getVestingInstrumentDetails($fileNumber);
-		    $temp = array_unique(array_column($vestingAllInstrumentDetails, 'document_type'));
-		    $vestingInstrumentDetails = array_intersect_key($vestingAllInstrumentDetails, $temp);
+		    // $temp = array_unique(array_column($vestingAllInstrumentDetails, 'document_type'));
+		    // $vestingInstrumentDetails = array_intersect_key($vestingAllInstrumentDetails, $temp);
             $sectionGList = $this->CI->home_model->getSectionWiseLPDocumentList('G');
             $sectionHList = $this->CI->home_model->getSectionWiseLPDocumentList('H');
             $sectionIList = $this->CI->home_model->getSectionWiseLPDocumentList('I');
