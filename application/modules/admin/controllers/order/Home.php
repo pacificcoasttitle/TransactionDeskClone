@@ -5306,79 +5306,118 @@ class Home extends MX_Controller {
         $query = $this->db->get();
         $instrumentRecords = $query->result_array();
 
+        $displayDocList = $this->home_model->getDocumetTypes();
         if (!empty($instrumentRecords)) {
-
-        }
-        if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
-            $key = array_search($val['DocumentType'], array_column($displayDocList, 'doc_type'));
-            $displaySection = $displayDocList[$key]['display_in_section'];
-
-            if (isset($val['DocumentSubType']) && !empty($val['DocumentSubType'])) {
-                $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
-                if (!empty($documentSubTypeList)) {
-                    $documentSubTypeListArr = implode(',', $documentSubTypeList);
-                    if (in_array($val['DocumentSubType'], $documentSubTypeListArr)) {
-                        if (isset($displaySection) && $displaySection == 'G') {
-                            if ($val['ColorCoding'] == 'FFFF00') {
-                                if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
-                                    $recordArray[$i]['is_display'] = 1;
+            foreach($instrumentRecords as $val) {
+                if (in_array($val['document_type'], array_column($displayDocList, 'doc_type'))) {
+                    $key = array_search($val['document_type'], array_column($displayDocList, 'doc_type'));
+                    $displaySection = $displayDocList[$key]['display_in_section'];
+        
+                    if (isset($val['document_sub_type']) && !empty($val['document_sub_type'])) {
+                        $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
+                        if (!empty($documentSubTypeList)) {
+                            $documentSubTypeListArr = implode(',', $documentSubTypeList);
+                            if (in_array($val['document_sub_type'], $documentSubTypeListArr)) {
+                                if (isset($displaySection) && $displaySection == 'G') {
+                                    if ($val['color_coding'] == 'FFFF00') {
+                                        if (($val['document_type'] != 'TDD') || ($val['document_type'] == 'TDD' && $val['document_sub_type'] === null)) {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 1) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                            }
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        }
+                                    }
                                 } else {
-                                    $recordArray[$i]['is_display'] = 0;
+                                    if ($val['color_coding'] != 'A0A0FF') {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        }
+                                    }
                                 }
                             } else {
-                                $recordArray[$i]['is_display'] = 0;
+                                if ($val['is_display'] == 1) {
+                                    $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                }
                             }
                         } else {
-                            if ($val['ColorCoding'] != 'A0A0FF') {
-                                $recordArray[$i]['is_display'] = 1;
+                            if (isset($displaySection) && $displaySection == 'G') {
+                                if ($val['color_coding'] == 'FFFF00') {
+                                    if (($val['document_type'] != 'TDD') || ($val['document_type'] == 'TDD' && $val['document_sub_type'] === null)) {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        }
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 1) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                    }
+                                }
                             } else {
-                                $recordArray[$i]['is_display'] = 0; 
+                                if ($val['color_coding'] != 'A0A0FF') {
+                                    if ($val['is_display'] == 0) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 1) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                    }
+                                }
                             }
                         }
                     } else {
-                        $recordArray[$i]['is_display'] = 0;
-                    }
+                        if (isset($displaySection) && $displaySection == 'G') {
+                            if ($val['color_coding'] == 'FFFF00') {
+                                if (($val['document_type'] != 'TDD') || ($val['document_type'] == 'TDD' && $val['document_sub_type'] === null)) {
+                                    if ($val['is_display'] == 0) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 1) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                    }
+                                }
+                            } else {
+                                if ($val['is_display'] == 1) {
+                                    $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                }
+                            }
+                        } else {
+                            if ($val['color_coding'] != 'A0A0FF') {
+                                if ($val['is_display'] == 0) {
+                                    $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                }
+                            } else {
+                                if ($val['is_display'] == 1) {
+                                    $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                }
+                            }
+                        }
+                    } 
                 } else {
-                    if (isset($displaySection) && $displaySection == 'G') {
-                        if ($val['ColorCoding'] == 'FFFF00') {
-                            if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
-                                $recordArray[$i]['is_display'] = 1;
-                            } else {
-                                $recordArray[$i]['is_display'] = 0;
-                            }
-                        } else {
-                            $recordArray[$i]['is_display'] = 0;
-                        }
-                    } else {
-                        if ($val['ColorCoding'] != 'A0A0FF') {
-                            $recordArray[$i]['is_display'] = 1;
-                        } else {
-                            $recordArray[$i]['is_display'] = 0; 
-                        }
+                    if ($val['is_display'] == 1) {
+                        $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                     }
                 }
-            } else {
-                if (isset($displaySection) && $displaySection == 'G') {
-                    if ($val['ColorCoding'] == 'FFFF00') {
-                        if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
-                            $recordArray[$i]['is_display'] = 1;
-                        } else {
-                            $recordArray[$i]['is_display'] = 0;
-                        }
-                    } else {
-                        $recordArray[$i]['is_display'] = 0;
-                    }
-                } else {
-                    if ($val['ColorCoding'] != 'A0A0FF') {
-                        $recordArray[$i]['is_display'] = 1;
-                    } else {
-                        $recordArray[$i]['is_display'] = 0; 
-                    }
-                }
-            } 
-        } else {
-            $recordArray[$i]['is_display'] = 0;
+            }
         }
+        $this->order->createLpReport($titlePointData->file_number, true);
+        $data = array('status' => 'success', 'message' => 'Lp report regenerated successfully.');
+        echo json_encode($data);
     }
 }
 

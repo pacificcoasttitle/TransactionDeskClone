@@ -167,13 +167,15 @@
                 $('body').animate({
 						opacity: 1.0
                 }, "slow");
-				if (result.status == 'success') {
-					$('#instrument_number_container').html(result.data);
-					$('#instrument_model').modal('show');
-				} else {
-					$('#instrument_number_container').html(result.data);
-					$('#instrument_model').modal('show');
-				}
+				$('#lp_order_success_msg').html(result.message).show();
+				$([document.documentElement, document.body]).animate({
+						scrollTop: $("#lp_order_success_msg").offset().top
+				}, 1000);
+				lp_order_list.ajax.reload(null, false);
+				setTimeout(function () {
+					$('#lp_order_success_msg').html('').hide();
+				}, 5000);
+				
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
 				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
