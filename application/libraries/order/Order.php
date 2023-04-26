@@ -3087,7 +3087,7 @@ class Order
         $file_id = $titlePointDetails[0]['file_id'];
         // print_r($file_id);die;
         $orderDetails = $this->get_order_details($file_id);
-
+        $orderDetails['opened_date'] = convertTimezone($orderDetails['opened_date']);
         /************** Plat map url integration Start ************** */
         
         $plat_map_url = '';
