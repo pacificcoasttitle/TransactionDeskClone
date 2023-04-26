@@ -3077,6 +3077,9 @@ class Order
         $this->CI->load->library('order/titlepoint');
 
         $userdata = $this->CI->session->userdata('user');
+        if (empty($userdata)) {
+            $userdata = $this->CI->session->userdata('admin');
+        }
         $this->checkGrantDoc($fileNumber);
         $condition = array(
             'where' => array(
