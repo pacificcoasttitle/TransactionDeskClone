@@ -5043,6 +5043,20 @@ class Home extends MX_Controller {
 
     public function getInstrumentData()
     {
+        $file_id = $this->input->post('file_id');
+        $this->load->library('order/order');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+        
+        $this->db->select('*');
+        $this->db->from('pct_title_point_document_records');
+        $this->db->where('title_point_id', $titlePointData->id);
+        $query = $this->db->get();
+        $instrumentRecords = $query->result_array(); 
+
         $this->db->select('count(*) as ves_count');
         $this->db->from('pct_title_point_document_records');
         $this->db->where('title_point_id', $titlePointData->id);
