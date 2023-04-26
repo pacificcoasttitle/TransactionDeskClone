@@ -5043,20 +5043,6 @@ class Home extends MX_Controller {
 
     public function getInstrumentData()
     {
-        $file_id = $this->input->post('file_id');
-        $this->load->library('order/order');
-        $this->db->select('*');
-        $this->db->from('pct_order_title_point_data');
-        $this->db->where('file_id', $file_id);
-        $query = $this->db->get();
-        $titlePointData = $query->row(); 
-
-        $this->db->select('*');
-        $this->db->from('pct_title_point_document_records');
-        $this->db->where('title_point_id', $titlePointData->id);
-        $query = $this->db->get();
-        $instrumentRecords = $query->result_array(); 
-
         $this->db->select('count(*) as ves_count');
         $this->db->from('pct_title_point_document_records');
         $this->db->where('title_point_id', $titlePointData->id);
@@ -5302,6 +5288,97 @@ class Home extends MX_Controller {
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Allow only Resware order value updated successfully for user.');
         echo json_encode($data);
+    }
+
+    public function regenerateReport()
+    {
+        $file_id = $this->input->post('file_id');
+        $this->load->library('order/order');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row(); 
+
+        $this->db->select('*');
+        $this->db->from('pct_title_point_document_records');
+        $this->db->where('title_point_id', $titlePointData->id);
+        $query = $this->db->get();
+        $instrumentRecords = $query->result_array();
+
+        if (!empty($instrumentRecords)) {
+
+        }
+        if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
+            $key = array_search($val['DocumentType'], array_column($displayDocList, 'doc_type'));
+            $displaySection = $displayDocList[$key]['display_in_section'];
+
+            if (isset($val['DocumentSubType']) && !empty($val['DocumentSubType'])) {
+                $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
+                if (!empty($documentSubTypeList)) {
+                    $documentSubTypeListArr = implode(',', $documentSubTypeList);
+                    if (in_array($val['DocumentSubType'], $documentSubTypeListArr)) {
+                        if (isset($displaySection) && $displaySection == 'G') {
+                            if ($val['ColorCoding'] == 'FFFF00') {
+                                if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                                    $recordArray[$i]['is_display'] = 1;
+                                } else {
+                                    $recordArray[$i]['is_display'] = 0;
+                                }
+                            } else {
+                                $recordArray[$i]['is_display'] = 0;
+                            }
+                        } else {
+                            if ($val['ColorCoding'] != 'A0A0FF') {
+                                $recordArray[$i]['is_display'] = 1;
+                            } else {
+                                $recordArray[$i]['is_display'] = 0; 
+                            }
+                        }
+                    } else {
+                        $recordArray[$i]['is_display'] = 0;
+                    }
+                } else {
+                    if (isset($displaySection) && $displaySection == 'G') {
+                        if ($val['ColorCoding'] == 'FFFF00') {
+                            if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                                $recordArray[$i]['is_display'] = 1;
+                            } else {
+                                $recordArray[$i]['is_display'] = 0;
+                            }
+                        } else {
+                            $recordArray[$i]['is_display'] = 0;
+                        }
+                    } else {
+                        if ($val['ColorCoding'] != 'A0A0FF') {
+                            $recordArray[$i]['is_display'] = 1;
+                        } else {
+                            $recordArray[$i]['is_display'] = 0; 
+                        }
+                    }
+                }
+            } else {
+                if (isset($displaySection) && $displaySection == 'G') {
+                    if ($val['ColorCoding'] == 'FFFF00') {
+                        if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                            $recordArray[$i]['is_display'] = 1;
+                        } else {
+                            $recordArray[$i]['is_display'] = 0;
+                        }
+                    } else {
+                        $recordArray[$i]['is_display'] = 0;
+                    }
+                } else {
+                    if ($val['ColorCoding'] != 'A0A0FF') {
+                        $recordArray[$i]['is_display'] = 1;
+                    } else {
+                        $recordArray[$i]['is_display'] = 0; 
+                    }
+                }
+            } 
+        } else {
+            $recordArray[$i]['is_display'] = 0;
+        }
     }
 }
 
