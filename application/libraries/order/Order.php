@@ -3369,7 +3369,7 @@ class Order
 	{
         $this->CI->load->model('order/titlePointDocumentRecords');
 		$titlePointInstrumentDetails = $this->CI->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
-		if (!empty($titlePointInstrumentDetails)) {
+        if (!empty($titlePointInstrumentDetails)) {
 			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
 			$grantDeedInstuNum = $titlePointInstrumentDetails[0]['cs4_instrument_no'];
 			$latestInstuNum = $titlePointInstrumentDetails[0]['instrument'];
@@ -3377,8 +3377,9 @@ class Order
 			$fileId = $titlePointInstrumentDetails[0]['file_id'];
 			$fileNumber = $titlePointInstrumentDetails[0]['file_number'];
 			$fips = $titlePointInstrumentDetails[0]['fips'];
-			$count = substr_count($grantDeedInstuNum, $latestInstuNum);
-			if(!isset($count) || empty($count)) {
+			// $count = substr_count($grantDeedInstuNum, $latestInstuNum);
+			// if(!isset($count) || empty($count)) {
+            if (!empty($latestInstuNum)) {
 				if(isset($recordedDate) && !empty($recordedDate))
 				{
 					$time = strtotime($recordedDate);
@@ -3404,9 +3405,6 @@ class Order
 				$this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
 				$this->CI->titlePointData->update($tpData,$condition);
 
-			}
-
-            if (!empty($latestInstuNum)) {
                 $updateData = array(
                     'is_ves_display' => 1
                 );
@@ -3415,7 +3413,9 @@ class Order
                     'instrument' => $latestInstuNum           
                 );
                 $this->CI->titlePointDocumentRecords->update($updateData,$condition);
-            }
+			}
+
+
 		}
 	}
 }

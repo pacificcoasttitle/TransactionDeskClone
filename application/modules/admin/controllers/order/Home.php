@@ -4609,7 +4609,13 @@ class Home extends MX_Controller {
                 } else {
                     $checked = '';
                 }
-                $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                if ($value['is_ves'] == 1) {
+                    $vesChecked = 'checked';
+                } else {
+                    $vesChecked = '';
+                }
+                $nestedData[] = "<input $vesChecked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                $nestedData[] = "<input $vesChecked onclick='isVesDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-document-type/'.$value['id'];
                     $action = "<a href='".$editUrl."' class='btn btn-action edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
@@ -5018,6 +5024,20 @@ class Home extends MX_Controller {
         );
         $this->db->update('pct_lp_document_types', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'LP document type flag updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function updateLpDocumentTypeIsVesFlag()
+    {
+        $lp_document_type_id = $this->input->post('lp_document_type_id');
+        $isVesFlag = $this->input->post('isVesFlag');
+        $data['is_ves'] = $isVesFlag;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $lp_document_type_id
+        );
+        $this->db->update('pct_lp_document_types', $data, $condition);
+        $data = array('status'=>'success', 'msg'=> 'LP document type Ves flag updated successfully.');
         echo json_encode($data);
     }
 
