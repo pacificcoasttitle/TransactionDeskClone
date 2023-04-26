@@ -3077,6 +3077,7 @@ class Order
         $this->CI->load->library('order/titlepoint');
 
         $userdata = $this->CI->session->userdata('user');
+        $this->checkGrantDoc($fileNumber);
         $condition = array(
             'where' => array(
                 'file_number' => $fileNumber,
@@ -3223,7 +3224,7 @@ class Order
                 );
             // $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
             // $file_id = $titlePointDetails[0]['file_id'];
-            $this->checkGrantDoc($fileNumber);
+            
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
             $vestingInstrumentDetails = $this->CI->titlePointData->getSelectedVestingInstrumentDetails($fileNumber);
             // $vestingAllInstrumentDetails = $this->CI->titlePointData->getVestingInstrumentDetails($fileNumber);
@@ -3368,6 +3369,7 @@ class Order
 	public function checkGrantDoc($fileNumber)
 	{
         $this->CI->load->model('order/titlePointDocumentRecords');
+        $this->CI->load->library('order/titlepoint');
 		$titlePointInstrumentDetails = $this->CI->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
         if (!empty($titlePointInstrumentDetails)) {
 			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
