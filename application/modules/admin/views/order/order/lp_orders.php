@@ -215,11 +215,13 @@
 						$('#lp_order_success_msg').html('').hide();
 					}, 5000);
 				} else {
+					$('body').animate({
+						opacity: 1.0
+					}, "slow");
 					$('#lp_order_error_msg').html(result.message).show();
 					$([document.documentElement, document.body]).animate({
 						scrollTop: $("#lp_order_error_msg").offset().top
 					}, 1000);
-
 					setTimeout(function () {
 						$('#lp_order_error_msg').html('').hide();
 					}, 5000);

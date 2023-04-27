@@ -3575,7 +3575,7 @@ class Home extends MX_Controller {
                 'IsPrimaryTransactee' => 'true', 
                 'primary' => array(
                     'First' => $borrowerFirstName,
-                    'Last' => $borrowerLastName
+                    'Last' => !empty($borrowerLastName) ? $borrowerLastName : $borrowerFirstName
                 )
             );
             $place_order['Sellers'][] = $legalEntity;

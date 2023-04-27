@@ -292,7 +292,7 @@ class Home extends MX_Controller {
 				}
 
 				$underWriter = '';
-				if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0)) {
+				if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '3') {
 					$lpOrderFlag = 1;
 					$loanFlag = 1;
 					if(strpos($ProductTypeTxt, 'Sale') !== false) {
@@ -2144,9 +2144,9 @@ class Home extends MX_Controller {
 			$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
 		}
 
-		$parties_email[] = 'hitesh.p@crestinfosystems.com';
+		//$parties_email[] = 'hitesh.p@crestinfosystems.com';
 		$parties_email[] = 'rudy@pct.com';
-		$parties_email[] = 'lvelasquez@pct.com';
+		$parties_email[] = 'evelasquez@pct.com';
 		$file = array();
 		$lvfilename = $orderNumber.'.pdf';
 		$deedfilename = $orderNumber.'.pdf';
