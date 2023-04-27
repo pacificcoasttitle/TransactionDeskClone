@@ -152,6 +152,44 @@
 		});
 	}
 
+	function regenerateReport(file_id) {
+        $('body').animate({
+			opacity: 0.5
+		}, "slow");
+		$.ajax({
+			url: base_url + "order/admin/regenerate-report",
+			method: "POST",
+			data: {
+				file_id: file_id
+			},
+			success: function (data) {
+				var result = jQuery.parseJSON(data);
+                $('body').animate({
+						opacity: 1.0
+                }, "slow");
+				$('#lp_order_success_msg').html(result.message).show();
+				$([document.documentElement, document.body]).animate({
+						scrollTop: $("#lp_order_success_msg").offset().top
+				}, 1000);
+				lp_order_list.ajax.reload(null, false);
+				setTimeout(function () {
+					$('#lp_order_success_msg').html('').hide();
+				}, 5000);
+				
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
+				$([document.documentElement, document.body]).animate({
+					scrollTop: $("#lp_order_success_msg").offset().top
+				}, 1000);
+
+				setTimeout(function () {
+					$('#lp_order_error_msg').html('').hide();
+				}, 5000);
+			}
+		});
+	}
+
 	function sendOrderToResware(file_id) {
 		$('body').animate({
 			opacity: 0.5
@@ -177,11 +215,13 @@
 						$('#lp_order_success_msg').html('').hide();
 					}, 5000);
 				} else {
+					$('body').animate({
+						opacity: 1.0
+					}, "slow");
 					$('#lp_order_error_msg').html(result.message).show();
 					$([document.documentElement, document.body]).animate({
 						scrollTop: $("#lp_order_error_msg").offset().top
 					}, 1000);
-
 					setTimeout(function () {
 						$('#lp_order_error_msg').html('').hide();
 					}, 5000);

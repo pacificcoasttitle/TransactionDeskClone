@@ -527,10 +527,10 @@ class Order extends MX_Controller {
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a>";
+            $action = "<div style='display:flex;'><a href='".$editOrderUrl."' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:8px;' href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'><i class='fas fa-file' aria-hidden='true'></i></a>";
 
             if (empty($value['file_number'])) {
-                $action .= "<a style='margin-left:8px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                $action .= "<a style='margin-left:5px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
             } 
 
             $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];

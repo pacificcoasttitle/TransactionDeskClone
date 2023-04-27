@@ -402,6 +402,8 @@ $route['order/admin/edit-lp-alert/:num'] = 'admin/order/home/editLpAlert';
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
 
 $route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeFlag';
+$route['update-lp-document-is-ves-type-flag'] = 'admin/order/home/updateLpDocumentTypeIsVesFlag';
+$route['order/admin/regenerate-report'] = 'admin/order/home/regenerateReport';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */

@@ -3065,7 +3065,7 @@ class Order
     /** 
      * Generate LP Report for LP Order
      */
-    public function createLpReport($fileNumber, $regenerate=false) 
+    public function createLpReport($fileNumber, $regerateGeoDoc=false, $regenerate=false) 
     {
         $document_name = 'pre_listing_report_'.$fileNumber.'.pdf';
         // if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$document_name) && !$regenerate) {
@@ -3077,6 +3077,10 @@ class Order
         $this->CI->load->library('order/titlepoint');
 
         $userdata = $this->CI->session->userdata('user');
+        if (empty($userdata)) {
+            $userdata = $this->CI->session->userdata('admin');
+        }
+        $this->checkGrantDoc($fileNumber, $regenerate);
         $condition = array(
             'where' => array(
                 'file_number' => $fileNumber,
@@ -3084,10 +3088,10 @@ class Order
             );
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $file_id = $titlePointDetails[0]['file_id'];
-        // print_r($file_id);die;
         $orderDetails = $this->get_order_details($file_id);
-
+        $orderDetails['opened_date'] = convertTimezone($orderDetails['opened_date']);
         /************** Plat map url integration Start ************** */
+        
         
         $plat_map_url = '';
         if ($this->fileExistOrNotOnS3('plat-map/'.$fileNumber.'.png')) 
@@ -3196,7 +3200,7 @@ class Order
         $postData['state'] = $orderDetails['property_state'];
         $postData['county'] = $orderDetails['county'];
         $postData['property'] = $orderDetails['address'];
-        if (!$regenerate) {
+        if (!$regerateGeoDoc) {
             $this->CI->titlepoint->generateGeoDoc($postData);
         }
         $orderId = $_POST['order_id'];
@@ -3223,7 +3227,7 @@ class Order
                 );
             // $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
             // $file_id = $titlePointDetails[0]['file_id'];
-            $this->checkGrantDoc($fileNumber);
+            
             $titlePointInstrumentDetails = $this->CI->titlePointData->getInstrumentDetails($fileNumber);
             $vestingInstrumentDetails = $this->CI->titlePointData->getSelectedVestingInstrumentDetails($fileNumber);
             // $vestingAllInstrumentDetails = $this->CI->titlePointData->getVestingInstrumentDetails($fileNumber);
@@ -3365,11 +3369,13 @@ class Order
     /**
 	 * Check and generated new grant deed document for latest Instrument number
 	 */
-	public function checkGrantDoc($fileNumber)
+	public function checkGrantDoc($fileNumber, $regenerate)
 	{
         $this->CI->load->model('order/titlePointDocumentRecords');
+        $this->CI->load->library('order/titlepoint');
 		$titlePointInstrumentDetails = $this->CI->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
-		if (!empty($titlePointInstrumentDetails)) {
+        
+        if (!empty($titlePointInstrumentDetails)) {
 			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
 			$grantDeedInstuNum = $titlePointInstrumentDetails[0]['cs4_instrument_no'];
 			$latestInstuNum = $titlePointInstrumentDetails[0]['instrument'];
@@ -3377,8 +3383,9 @@ class Order
 			$fileId = $titlePointInstrumentDetails[0]['file_id'];
 			$fileNumber = $titlePointInstrumentDetails[0]['file_number'];
 			$fips = $titlePointInstrumentDetails[0]['fips'];
-			$count = substr_count($grantDeedInstuNum, $latestInstuNum);
-			if(!isset($count) || empty($count)) {
+			// $count = substr_count($grantDeedInstuNum, $latestInstuNum);
+			// if(!isset($count) || empty($count)) {
+            if (!empty($latestInstuNum)) {
 				if(isset($recordedDate) && !empty($recordedDate))
 				{
 					$time = strtotime($recordedDate);
@@ -3403,19 +3410,19 @@ class Order
 				$orderId = $orderDetails['id'];
 				$this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
 				$this->CI->titlePointData->update($tpData,$condition);
+                if ($regenerate == true) {
+                    $updateData = array('is_ves_display' => 0);
+                    $condition = array('title_point_id' => $titlePointInstrumentDetails[0]['title_point_id']);
+                    $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+                    
+                    $updateData = array('is_ves_display' => 1);
+                    $condition = array('instrument' => $latestInstuNum);
+                    $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+                }
 
 			}
 
-            if (!empty($latestInstuNum)) {
-                $updateData = array(
-                    'is_ves_display' => 1
-                );
-    
-                $condition = array(
-                    'instrument' => $latestInstuNum           
-                );
-                $this->CI->titlePointDocumentRecords->update($updateData,$condition);
-            }
+
 		}
 	}
 }
