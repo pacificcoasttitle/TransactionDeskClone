@@ -4532,7 +4532,7 @@ class Home extends MX_Controller {
         }
 
         $file_id = $titlePointData['file_id'];
-        $this->order->createLpReport($titlePointData['file_number'], true);
+        $this->order->createLpReport($titlePointData['file_number'], true, false);
         
         $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
         $this->session->set_userdata('success', $successMsg);
@@ -5429,7 +5429,7 @@ class Home extends MX_Controller {
                 }
             }
         }
-        $this->order->createLpReport($titlePointData->file_number, true);
+        $this->order->createLpReport($titlePointData->file_number, false, true);
         $data = array('status' => 'success', 'message' => 'Lp report regenerated successfully.');
         echo json_encode($data);
     }

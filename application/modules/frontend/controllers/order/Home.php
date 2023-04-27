@@ -1559,7 +1559,7 @@ class Home extends MX_Controller {
 		if((!isset($escrowId) || empty($escrowId)) || (!empty($orderUser) && $orderUser['is_escrow'] == 0)) {
 			$fileNumber = $_POST['file_number'];
 			
-			$this->order->createLpReport($fileNumber);
+			$this->order->createLpReport($fileNumber, false, true);
 			$this->sendLpOrderEmail($fileNumber);
 			/** Start Execute all document creation in background */
 			try {
