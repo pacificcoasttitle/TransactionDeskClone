@@ -1356,8 +1356,8 @@ class Home extends MX_Controller {
 			$this->template->addJS( base_url('assets/frontend/js/additional-methods.min.js'));
 			$this->template->addJS( base_url('assets/frontend/js/smart-form.js'));
 			$this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
-			$this->template->addJS( base_url('assets/frontend/js/custom.js?v=custom_'.$this->custom_js_version));
-			$this->template->addJS( base_url('assets/frontend/js/order.js?v=order_'.$this->order_js_version));
+			$this->template->addJS( base_url('assets/frontend/js/custom.js?v=custom_'.time()));
+			$this->template->addJS( base_url('assets/frontend/js/order.js?v=order_'.time()));
 			
 	        if ($is_master) {
 				$this->template->show("order", "master_order", $data);
