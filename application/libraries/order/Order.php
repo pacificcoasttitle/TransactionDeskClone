@@ -3080,7 +3080,7 @@ class Order
         if (empty($userdata)) {
             $userdata = $this->CI->session->userdata('admin');
         }
-        $this->checkGrantDoc($fileNumber, $regenerate);
+
         $condition = array(
             'where' => array(
                 'file_number' => $fileNumber,
@@ -3089,6 +3089,20 @@ class Order
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $file_id = $titlePointDetails[0]['file_id'];
         $orderDetails = $this->get_order_details($file_id);
+
+        $postData['file_number'] = $fileNumber;
+        $postData['order_id'] = $orderDetails['order_id'];
+        $postData['state'] = $orderDetails['property_state'];
+        $postData['county'] = $orderDetails['county'];
+        $postData['property'] = $orderDetails['address'];
+
+        if (!$regerateGeoDoc) {
+            $this->CI->titlepoint->generateGeoDoc($postData);
+        }
+
+        $this->checkGrantDoc($fileNumber, $regenerate);
+        // die;
+        $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $orderDetails['opened_date'] = convertTimezone($orderDetails['opened_date']);
         /************** Plat map url integration Start ************** */
         
@@ -3195,14 +3209,16 @@ class Order
         // $orderDetails = $this->get_order_details($file_id);
         // $_POST['primary_owner'] = $orderDetails['primary_owner'];
         // $_POST['secondary_owner'] = $orderDetails['secondary_owner'];
-        $postData['file_number'] = $fileNumber;
-        $postData['order_id'] = $orderDetails['order_id'];
-        $postData['state'] = $orderDetails['property_state'];
-        $postData['county'] = $orderDetails['county'];
-        $postData['property'] = $orderDetails['address'];
-        if (!$regerateGeoDoc) {
-            $this->CI->titlepoint->generateGeoDoc($postData);
-        }
+        
+        // $postData['file_number'] = $fileNumber;
+        // $postData['order_id'] = $orderDetails['order_id'];
+        // $postData['state'] = $orderDetails['property_state'];
+        // $postData['county'] = $orderDetails['county'];
+        // $postData['property'] = $orderDetails['address'];
+        // if (!$regerateGeoDoc) {
+        //     $this->CI->titlepoint->generateGeoDoc($postData);
+        // }
+
         $orderId = $_POST['order_id'];
         $geoFileName = $fileNumber.'.pdf';//$titlePointDetails[0]['geo_file_message'];
         // if ($this->fileExistOrNotOnS3('pre-listing-doc/'.$geoFileName)) {
@@ -3377,53 +3393,118 @@ class Order
         $this->CI->load->model('order/titlePointDocumentRecords');
         $this->CI->load->library('order/titlepoint');
 		$titlePointInstrumentDetails = $this->CI->titlePointData->getLatestGrantDeedInstrumentDetails($fileNumber);
-        
         if (!empty($titlePointInstrumentDetails)) {
-			$recordedDate = $titlePointInstrumentDetails[0]['recorded_date'];
-			$grantDeedInstuNum = $titlePointInstrumentDetails[0]['cs4_instrument_no'];
-			$latestInstuNum = $titlePointInstrumentDetails[0]['instrument'];
-			$titlePointId = $titlePointInstrumentDetails[0]['title_point_id'];
-			$fileId = $titlePointInstrumentDetails[0]['file_id'];
-			$fileNumber = $titlePointInstrumentDetails[0]['file_number'];
-			$fips = $titlePointInstrumentDetails[0]['fips'];
+            $titlePointInstrumentDetails = $titlePointInstrumentDetails[0];
+            
+			$recordedDate = $titlePointInstrumentDetails['recorded_date'];
+			$grantDeedRecordedDate = $titlePointInstrumentDetails['cs4_recorded_date'];
+			$grantDeedInstuNum = $titlePointInstrumentDetails['cs4_instrument_no'];
+			$latestInstuNum = $titlePointInstrumentDetails['instrument'];
+			$titlePointId = $titlePointInstrumentDetails['title_point_id'];
+			$fileId = $titlePointInstrumentDetails['file_id'];
+			$fileNumber = $titlePointInstrumentDetails['file_number'];
+			$fips = $titlePointInstrumentDetails['fips'];
+            
+            if (strtotime($grantDeedRecordedDate) > strtotime($recordedDate)) {
+                // echo "<pre>";
+                // print_r($titlePointInstrumentDetails);die;
+                $insertData = array(
+                    'title_point_id' => $titlePointId,
+                    'instrument' => $grantDeedInstuNum,
+                    'recorded_date' => $grantDeedRecordedDate,
+                    'type' => 'REC',
+                    'sub_type' => 'ALL',
+                    'order_number' => $titlePointInstrumentDetails['order_number'],
+                    'document_name' => 'Grant Deed',
+                    'document_type' => 'DEG',
+                    'document_sub_type' => $titlePointInstrumentDetails['document_sub_type'],
+                    'parties' => null,
+                    'coupling' => 0,
+                    'remarks' => null,
+                    'color_coding' => "80FF80",
+                    'loan_amount' => $titlePointInstrumentDetails['loan_amount'],
+                    'amount' => 0,
+                    'is_display' => 1,
+                    'is_ves_display' => 1,
+                    'is_csinstrument_record' => 1
+                );
+                $this->CI->titlePointDocumentRecords->insert($insertData);
+            } else {
+                if (!empty($latestInstuNum)) {
+                    if(isset($recordedDate) && !empty($recordedDate))
+                    {
+                        $time = strtotime($recordedDate);
+                        $year = date('Y',$time);
+                    }
+                    
+                    $newInstuNum = $year.'-'.$latestInstuNum;
+                    $condition = array(
+                        'id' => $titlePointId
+                    );
+                    $tpData = array(
+                        'cs4_instrument_no' => $newInstuNum,
+                        'cs4_recorded_date' => $recordedDate,
+                    );
+
+                    $orderCondition = array(
+                        'where' => array(
+                            'file_id' => $fileId,
+                        )
+                    );
+                    
+                    $orderDetails = $this->get_rows($orderCondition);
+                    $orderId = $orderDetails['id'];
+                    $this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
+                    $this->CI->titlePointData->update($tpData,$condition);
+                    if ($regenerate == true) {
+                        $updateData = array('is_ves_display' => 0);
+                        $condition = array('title_point_id' => $titlePointInstrumentDetails['title_point_id']);
+                        $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+                        
+                        $updateData = array('is_ves_display' => 1);
+                        $condition = array('instrument' => $latestInstuNum);
+                        $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+                    }
+                } 
+            }
 			// $count = substr_count($grantDeedInstuNum, $latestInstuNum);
 			// if(!isset($count) || empty($count)) {
-            if (!empty($latestInstuNum)) {
-				if(isset($recordedDate) && !empty($recordedDate))
-				{
-					$time = strtotime($recordedDate);
-					$year = date('Y',$time);
-				}
-				$newInstuNum = $year.'-'.$latestInstuNum;
-				$condition = array(
-					'id' => $titlePointId
-				);
-				$tpData = array(
-					'cs4_instrument_no' => $newInstuNum,
-					'cs4_recorded_date' => $recordedDate,
-				);
+            // if (!empty($latestInstuNum)) {
+				// if(isset($recordedDate) && !empty($recordedDate))
+				// {
+				// 	$time = strtotime($recordedDate);
+				// 	$year = date('Y',$time);
+				// }
+				// $newInstuNum = $year.'-'.$latestInstuNum;
+				// $condition = array(
+				// 	'id' => $titlePointId
+				// );
+				// $tpData = array(
+				// 	'cs4_instrument_no' => $newInstuNum,
+				// 	'cs4_recorded_date' => $recordedDate,
+				// );
 
-				$orderCondition = array(
-					'where' => array(
-						'file_id' => $fileId,
-					)
-				);
+				// $orderCondition = array(
+				// 	'where' => array(
+				// 		'file_id' => $fileId,
+				// 	)
+				// );
 				
-				$orderDetails = $this->get_rows($orderCondition);
-				$orderId = $orderDetails['id'];
-				$this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
-				$this->CI->titlePointData->update($tpData,$condition);
-                if ($regenerate == true) {
-                    $updateData = array('is_ves_display' => 0);
-                    $condition = array('title_point_id' => $titlePointInstrumentDetails[0]['title_point_id']);
-                    $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+				// $orderDetails = $this->get_rows($orderCondition);
+				// $orderId = $orderDetails['id'];
+				// $this->CI->titlepoint->generateGrantDeed($newInstuNum,$recordedDate,$fips,$fileNumber,$orderId);
+				// $this->CI->titlePointData->update($tpData,$condition);
+                // if ($regenerate == true) {
+                //     $updateData = array('is_ves_display' => 0);
+                //     $condition = array('title_point_id' => $titlePointInstrumentDetails['title_point_id']);
+                //     $this->CI->titlePointDocumentRecords->update($updateData,$condition);
                     
-                    $updateData = array('is_ves_display' => 1);
-                    $condition = array('instrument' => $latestInstuNum);
-                    $this->CI->titlePointDocumentRecords->update($updateData,$condition);
-                }
+                //     $updateData = array('is_ves_display' => 1);
+                //     $condition = array('instrument' => $latestInstuNum);
+                //     $this->CI->titlePointDocumentRecords->update($updateData,$condition);
+                // }
 
-			}
+			// }
 
 
 		}
