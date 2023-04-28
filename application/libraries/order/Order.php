@@ -3287,6 +3287,9 @@ class Order
             
             // $instrumentRecordDetails['orderDetails'] = $orderDetails;
             // $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
+            if (!$regenerate) {
+                $titlePointDetails[0]['cs4_instrument_no'] = '';
+            }
             $instrumentRecordDetails['orderDetails'] = $orderDetails;
             $instrumentRecordDetails['titlePointDetails'] = $titlePointDetails;
             $instrumentRecordDetails['sectionGRecord'] = array_values($sectionGRecord);
