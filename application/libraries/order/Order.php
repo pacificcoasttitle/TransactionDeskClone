@@ -3405,7 +3405,7 @@ class Order
 			$fileNumber = $titlePointInstrumentDetails['file_number'];
 			$fips = $titlePointInstrumentDetails['fips'];
             
-            if (strtotime($grantDeedRecordedDate) > strtotime($recordedDate)) {
+            if (!empty($grantDeedInstuNum) && strtotime($grantDeedRecordedDate) > strtotime($recordedDate)) {
                 // echo "<pre>";
                 // print_r($titlePointInstrumentDetails);die;
                 $insertData = array(
