@@ -500,8 +500,8 @@ class TitlePoint extends MX_Controller {
 		            	{
 		            		$docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
 		            		$docType = strtolower($docType);
-		            		
-		            		if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution')
+		            		$instruNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
+		            		if(!empty($instruNumber) && ($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution'))
 		            		{
 		            			$instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
 		            			$recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
