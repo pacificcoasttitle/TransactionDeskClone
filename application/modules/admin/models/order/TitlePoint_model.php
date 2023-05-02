@@ -559,4 +559,69 @@ class TitlePoint_model extends CI_Model
             'data' => $logs_lists
         );
     }
+
+    public function getLPOrderLogs($params)
+    {
+        $this->db->where('lp_file_number IS NOT NULL');
+        $this->db->from('order_details');
+        $total_records =  $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange']))) {
+            $keyword = $params['searchvalue'];
+            $dateRange = trim($params['dateRange']);
+            
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('lp_file_number', $keyword);
+            }
+            
+            // $this->db->where('file_id IS NOT NULL');
+            $this->db->from('order_details');
+            $filter_total_records =  $this->db->count_all_results();
+
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('lp_file_number', $keyword);
+            }
+            
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('order_details');
+
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            }
+        }
+        else
+        {
+            $this->db->where('lp_file_number IS NOT NULL');
+            $this->db->from('order_details');
+            $filter_total_records =  $this->db->count_all_results();
+
+            $this->db->where('lp_file_number IS NOT NULL');
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('order_details');
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists
+        );
+    }
 }

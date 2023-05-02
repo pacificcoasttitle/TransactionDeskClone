@@ -77,6 +77,7 @@ $role_id = isset($this->session->userdata('admin')['role_id']) ?$this->session->
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">Tax</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/partner-api-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/partner-api-log'; ?>">Partner Api</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/cpl-error-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/cpl-error-logs'; ?>">CPL Error</a>
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/lp-xml-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-xml-logs'; ?>">LP Xml</a>
 			<?php if($role_id == 1) : ?>
 				<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/admin-user-logs' ) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/admin-user-logs'; ?>">Admin User</a>
 			<?php endif; ?>

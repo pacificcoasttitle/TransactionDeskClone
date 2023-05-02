@@ -58,7 +58,7 @@ $(document).ready(function () {
 
     $('select').selectpicker();
 
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length)
+    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length)
     {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
         
@@ -380,6 +380,21 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-notifications-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }else if(this.context[0].sTableId == 'tbl-lp-xml-listing')
+                {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url+"admin/order/home/getLpXmlLogs",
+                        data: {
+                            keyword: $('#tbl-lp-xml-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-lp-xml-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else 
                 {
@@ -2343,6 +2358,54 @@ $(document).ready(function () {
                     }
                     $("#tbl-lp-listing-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-listing-documents-listing_processing").css("display", "none");
+
+                }
+            }            
+        });
+    }
+
+    if ($('#tbl-lp-xml-listing').length) 
+    {
+        pre_listing_documents = $('#tbl-lp-xml-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function() {
+                
+            },
+            dom: 'Blfrtip',
+            buttons: [],
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"order/admin/get-lp-xml-logs", 
+                type: "post", 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-lp-xml-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-lp-xml-listing_processing").css("display", "none");
 
                 }
             }            
