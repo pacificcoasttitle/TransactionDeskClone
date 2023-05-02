@@ -5117,12 +5117,26 @@ class Home extends MX_Controller {
                                         } else {
                                             $instrumentRecords[$i]['is_display'] = 0;
                                         }
+                                    } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                                        if ($instrumentRecord['icon_text'] == 'Exx') {
+                                            $instrumentRecords[$i]['is_display'] = 1;
+                                        } else {
+                                            $instrumentRecords[$i]['is_display'] = 0; 
+                                        }
                                     } else {
                                         $instrumentRecords[$i]['is_display'] = 0;
                                     }
                                 } else {
                                     if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                                        $instrumentRecords[$i]['is_display'] = 1;
+                                        if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                                            if ($instrumentRecord['icon_text'] == 'Exx') {
+                                                $instrumentRecords[$i]['is_display'] = 1;
+                                            } else {
+                                                $instrumentRecords[$i]['is_display'] = 0; 
+                                            }
+                                        } else {
+                                            $instrumentRecords[$i]['is_display'] = 1;
+                                        }
                                     } else {
                                         $instrumentRecords[$i]['is_display'] = 0; 
                                     }
@@ -5138,12 +5152,26 @@ class Home extends MX_Controller {
                                     } else {
                                         $instrumentRecords[$i]['is_display'] = 0;
                                     }
+                                } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                                    if ($instrumentRecord['icon_text'] == 'Exx') {
+                                        $instrumentRecords[$i]['is_display'] = 1;
+                                    } else {
+                                        $instrumentRecords[$i]['is_display'] = 0; 
+                                    }
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0;
                                 }
                             } else {
                                 if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                                    $instrumentRecords[$i]['is_display'] = 1;
+                                    if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                                        if ($instrumentRecord['icon_text'] == 'Exx') {
+                                            $instrumentRecords[$i]['is_display'] = 1;
+                                        } else {
+                                            $instrumentRecords[$i]['is_display'] = 0; 
+                                        }
+                                    } else {
+                                        $instrumentRecords[$i]['is_display'] = 1;
+                                    }
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0; 
                                 }
@@ -5157,12 +5185,26 @@ class Home extends MX_Controller {
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0;
                                 }
+                            } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                                if ($instrumentRecord['icon_text'] == 'Exx') {
+                                    $instrumentRecords[$i]['is_display'] = 1;
+                                } else {
+                                    $instrumentRecords[$i]['is_display'] = 0; 
+                                }
                             } else {
                                 $instrumentRecords[$i]['is_display'] = 0;
                             }
                         } else {
                             if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                                $instrumentRecords[$i]['is_display'] = 1;
+                                if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                                    if ($instrumentRecord['icon_text'] == 'Exx') {
+                                        $instrumentRecords[$i]['is_display'] = 1;
+                                    } else {
+                                        $instrumentRecords[$i]['is_display'] = 0; 
+                                    }
+                                } else {
+                                    $instrumentRecords[$i]['is_display'] = 1;
+                                }
                             } else {
                                 $instrumentRecords[$i]['is_display'] = 0; 
                             }
