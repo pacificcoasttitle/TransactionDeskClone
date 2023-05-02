@@ -384,6 +384,10 @@ $route['order/admin/dashboard'] = 'admin/order/home/index';
 $route['order/admin/pre-listing-documents'] = 'admin/order/home/pre_listing_document';
 $route['order/admin/lp-listing-documents'] = 'admin/order/home/lp_listing_document';
 $route['order/admin/lp-orders'] = 'admin/order/order/lpOrders';
+
+$route['order/admin/lp-xml-logs'] = 'admin/order/titlePoint/lpXmlLogs';
+$route['order/admin/get-lp-xml-logs'] = 'admin/order/titlePoint/getLpXmlLogs';
+
 $route['order/admin/send-order-to-resware'] = 'admin/order/home/sendOrderToResware';
 $route['order/admin/update-lp-report-status'] = 'admin/order/home/updateLpReportStatus';
 $route['order/admin/update-doc-section'] = 'admin/order/home/updateDocumentSection';

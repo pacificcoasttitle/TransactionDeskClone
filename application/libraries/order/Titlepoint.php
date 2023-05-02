@@ -1093,7 +1093,15 @@ class Titlepoint
         $request = $requestUrl.http_build_query($requestParams);
         // print_r($request);
         $file = file_get_contents($request,false,$context);
-
+        
+        /** Start: Save lp document xml in S3 */
+        if (!is_dir('uploads/lp-xml')) {
+            mkdir('./uploads/lp-xml', 0777, TRUE);
+        }
+        $pdfFilePath = './uploads/lp-xml/'.$fileNumber.'.xml';
+        file_put_contents($pdfFilePath, $file); 
+        $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.xml', 'lp-xml');
+        /** End: Save lp document xml in S3 */
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, array(), $orderId, 0);
 
         $xmlData = simplexml_load_string($file);
@@ -1260,6 +1268,7 @@ class Titlepoint
                             $recordArray[$i]['coupling'] = isset($val['CouplingIndicatorAll']) ? $val['CouplingIndicatorAll'] : null;
                             $recordArray[$i]['remarks'] = isset($val['PropertyRemark']) ? $val['PropertyRemark'] : null;
                             $recordArray[$i]['color_coding'] = isset($val['ColorCoding']) ? $val['ColorCoding'] : null;
+                            $recordArray[$i]['icon_text'] = isset($val['ChainIconName']) ? $val['ChainIconName'] : null;
                             $recordArray[$i]['loan_amount'] = isset($val['LoanAmount']) ? $val['LoanAmount'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
@@ -1280,12 +1289,26 @@ class Titlepoint
                                                     } else {
                                                         $recordArray[$i]['is_display'] = 0;
                                                     }
+                                                } else if ($val['ColorCoding'] == 'C0C0C0') {
+                                                    if ($val['ChainIconName'] == 'Exx') {
+                                                        $recordArray[$i]['is_display'] = 1;
+                                                    } else {
+                                                        $recordArray[$i]['is_display'] = 0; 
+                                                    }
                                                 } else {
                                                     $recordArray[$i]['is_display'] = 0;
                                                 }
                                             } else {
                                                 if ($val['ColorCoding'] != 'A0A0FF') {
-                                                    $recordArray[$i]['is_display'] = 1;
+                                                    if ($val['ColorCoding'] == 'C0C0C0') {
+                                                        if ($val['ChainIconName'] == 'Exx') {
+                                                            $recordArray[$i]['is_display'] = 1;
+                                                        } else {
+                                                            $recordArray[$i]['is_display'] = 0; 
+                                                        }
+                                                    } else {
+                                                        $recordArray[$i]['is_display'] = 1;
+                                                    }
                                                 } else {
                                                     $recordArray[$i]['is_display'] = 0; 
                                                 }
@@ -1301,12 +1324,26 @@ class Titlepoint
                                                 } else {
                                                     $recordArray[$i]['is_display'] = 0;
                                                 }
+                                            } else if ($val['ColorCoding'] == 'C0C0C0') {
+                                                if ($val['ChainIconName'] == 'Exx') {
+                                                    $recordArray[$i]['is_display'] = 1;
+                                                } else {
+                                                    $recordArray[$i]['is_display'] = 0; 
+                                                }
                                             } else {
                                                 $recordArray[$i]['is_display'] = 0;
                                             }
                                         } else {
                                             if ($val['ColorCoding'] != 'A0A0FF') {
-                                                $recordArray[$i]['is_display'] = 1;
+                                                if ($val['ColorCoding'] == 'C0C0C0') {
+                                                    if ($val['ChainIconName'] == 'Exx') {
+                                                        $recordArray[$i]['is_display'] = 1;
+                                                    } else {
+                                                        $recordArray[$i]['is_display'] = 0; 
+                                                    }
+                                                } else {
+                                                    $recordArray[$i]['is_display'] = 1;
+                                                }
                                             } else {
                                                 $recordArray[$i]['is_display'] = 0; 
                                             }
@@ -1320,12 +1357,26 @@ class Titlepoint
                                             } else {
                                                 $recordArray[$i]['is_display'] = 0;
                                             }
+                                        } else if ($val['ColorCoding'] == 'C0C0C0') {
+                                            if ($val['ChainIconName'] == 'Exx') {
+                                                $recordArray[$i]['is_display'] = 1;
+                                            } else {
+                                                $recordArray[$i]['is_display'] = 0; 
+                                            }
                                         } else {
                                             $recordArray[$i]['is_display'] = 0;
                                         }
                                     } else {
                                         if ($val['ColorCoding'] != 'A0A0FF') {
-                                            $recordArray[$i]['is_display'] = 1;
+                                            if ($val['ColorCoding'] == 'C0C0C0') {
+                                                if ($val['ChainIconName'] == 'Exx') {
+                                                    $recordArray[$i]['is_display'] = 1;
+                                                } else {
+                                                    $recordArray[$i]['is_display'] = 0; 
+                                                }
+                                            } else {
+                                                $recordArray[$i]['is_display'] = 1;
+                                            }
                                         } else {
                                             $recordArray[$i]['is_display'] = 0; 
                                         }
