@@ -1093,7 +1093,15 @@ class Titlepoint
         $request = $requestUrl.http_build_query($requestParams);
         // print_r($request);
         $file = file_get_contents($request,false,$context);
-
+        
+        /** Start: Save lp document xml in S3 */
+        if (!is_dir('uploads/lp-xml')) {
+            mkdir('./uploads/lp-xml', 0777, TRUE);
+        }
+        $pdfFilePath = './uploads/lp-xml/'.$fileNumber.'.xml';
+        file_put_contents($pdfFilePath, $file); 
+        $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.xml', 'lp-xml');
+        /** End: Save lp document xml in S3 */
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, array(), $orderId, 0);
 
         $xmlData = simplexml_load_string($file);

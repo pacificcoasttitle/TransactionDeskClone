@@ -34,6 +34,15 @@ class TitlePoint extends MX_Controller {
         $this->load->view('order/layout/footer', $data);
 	}
 
+    public function lpXmlLogs()
+	{
+		$data = array();
+        $data['title'] = 'PCT Order: Pre Listing Log';
+        $this->load->view('order/layout/header', $data);
+        $this->load->view('order/home/lp_xml_log', $data);
+        $this->load->view('order/layout/footer', $data);
+	}
+
     public function get_logs()
     {
         $params = array();
@@ -169,6 +178,74 @@ class TitlePoint extends MX_Controller {
 
                     // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 					$nestedData[] = convertTimezone($value['created_at']);
+
+                    $data[] = $nestedData;
+                    $count++;
+                }
+            }
+        }
+        $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $logs_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function getLpXmlLogs()
+    {
+        $params = array();
+
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['preListingLog'] = isset($_POST['preListingLog']) && !empty($_POST['preListingLog']) ? $_POST['preListingLog'] : '';
+
+            $pageno = ($params['start'] / $params['length'])+1;
+            $logs_list = $this->titlePoint_model->getLPOrderLogs($params);
+            // echo "<pre>";
+            // print_r($logs_list);die;
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            
+            $logs_list = $this->titlePoint_model->getLPOrderLogs($params);          
+        }
+        $data = array();
+
+        if(isset($logs_list['data']) && !empty($logs_list['data']))
+        {
+            $count = $params['start'] + 1;
+            foreach ($logs_list['data'] as $key => $value) 
+            {
+                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                if(isset($file_id) && !empty($file_id))
+                {
+
+                    $nestedData=array();
+                    
+                    $nestedData[] = $count;
+                    $nestedData[] = $value['lp_file_number'];
+                    $nestedData[] = convertTimezone($value['created_at']);
+
+                    $documentUrl = env('AWS_PATH').'lp-xml/'.$value['lp_file_number'].'.xml';
+                    if ($this->order->fileExistOrNotOnS3('lp-xml/'.$value['lp_file_number'].'.xml')) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"xml"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    } else {
+                        $nestedData[] = 'XML not exist';
+                    }
+
+                    // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 
                     $data[] = $nestedData;
                     $count++;
