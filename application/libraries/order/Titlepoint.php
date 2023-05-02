@@ -1314,15 +1314,7 @@ class Titlepoint
                                                 }
                                             }
                                         } else {
-                                            if ($val['ColorCoding'] == 'C0C0C0') {
-                                                if ($val['ChainIconName'] == 'Exx') {
-                                                    $recordArray[$i]['is_display'] = 1;
-                                                } else {
-                                                    $recordArray[$i]['is_display'] = 0; 
-                                                }
-                                            } else {
-                                                $recordArray[$i]['is_display'] = 0;
-                                            }
+                                            $recordArray[$i]['is_display'] = 0;
                                         }
                                     } else {
                                         if (isset($displaySection) && $displaySection == 'G') {
