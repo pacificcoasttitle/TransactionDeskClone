@@ -2044,6 +2044,7 @@ class Home extends MX_Controller {
 
 	public function sendLpOrderEmail($fileNumber)
 	{
+		$this->load->model('order/apiLogs');
 		$userdata = $this->session->userdata('user');
 		$condition = array(
             'where' => array(
@@ -2089,6 +2090,7 @@ class Home extends MX_Controller {
 		);
 
 		$buyerDetails =  $listingDetails = $parties_email = array();
+		$parties_email = explode(',', $orderDetails['additional_email']);
 		if (isset($orderDetails['lender_id']) && !empty($orderDetails['lender_id'])) {
 			$parties_email[] = $orderDetails['lender_email'];
 			$data['lender_details'] = array(
