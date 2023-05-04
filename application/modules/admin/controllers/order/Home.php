@@ -3490,7 +3490,7 @@ class Home extends MX_Controller {
             $message = "LP Report is ready for file number <a href='$lpReportUrl'>".$order_details['lp_file_number']."</a>";
             $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
 
-            $order_details['sales_rep_phone'] = '12133097286';
+            //$order_details['sales_rep_phone'] = '12133097286';
             try {
                 $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
                 $response = $result->toArray();
