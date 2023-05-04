@@ -950,7 +950,7 @@ class Titlepoint
             {           
                 if($this->count < 3)
                 {
-                    sleep(2);
+                    sleep(5);
                     $this->count = $this->count + 1;
                     return $this->getImageRequestStatus($requestId,$orderId,$requestFrom);                    
                 }
@@ -1029,7 +1029,7 @@ class Titlepoint
             {
                 if($this->taxcount < 3)
                 {
-                    sleep(3);
+                    sleep(5);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->getTaxImageRequestStatus($requestId,$orderId);                    
                 }
@@ -1524,7 +1524,7 @@ class Titlepoint
             {
                 if($this->geocount < 3)
                 {
-                    sleep(2);
+                    sleep(5);
                     $this->geocount = $this->geocount + 1;
                     return $this->getGeoImageRequestStatus($requestId,$orderId);                    
                 }
