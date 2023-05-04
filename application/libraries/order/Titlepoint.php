@@ -68,7 +68,7 @@ class Titlepoint
 
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $response = $this->getImageRequestStatus($requestId,$orderId);
+                    /*$response = $this->getImageRequestStatus($requestId,$orderId);
                     
                     $imgResult = json_decode($response, TRUE);
                     
@@ -79,7 +79,7 @@ class Titlepoint
                         $imgReturnStatus = strtolower($imgReturnStatus);
                         $status = strtolower($status);
                         if($imgReturnStatus == 'success' && $status == 'success')
-                        {
+                        {*/
                             $generateImgResponse = $this->generateImage($requestId,$orderId);
 
                             $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -143,7 +143,7 @@ class Titlepoint
                                 );
                             $this->CI->titlePointData->update($tpData,$condition); 
 
-                        }
+                        /*}
                         else if($imgReturnStatus == 'success' && $status != 'success')
                         {
                             $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -171,7 +171,7 @@ class Titlepoint
                             );
                             $this->CI->titlePointData->update($tpData,$condition);  
                         }
-                    }
+                    }*/
                     
                 }
             }
@@ -348,7 +348,7 @@ class Titlepoint
                 $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
+                    /*$imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
                     $imgResult = json_decode($imgresponse, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -356,7 +356,7 @@ class Titlepoint
                     $imgReturnStatus = strtolower($imgReturnStatus);
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
-                    {
+                    {*/
                         $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -413,7 +413,7 @@ class Titlepoint
                             );
                         $this->CI->titlePointData->update($tpData,$condition); 
 
-                    }
+                    /*}
                     else if($imgReturnStatus == 'success' && $status != 'success')
                     {
                         $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -440,7 +440,7 @@ class Titlepoint
                             'file_number' => $fileNumber
                         );
                         $this->CI->titlePointData->update($tpData,$condition);  
-                    }
+                    }*/
                 }
             }
             else
@@ -523,16 +523,14 @@ class Titlepoint
             
             if(isset($requestId) && !empty($requestId))
             {
-                $imgresponse = $this->getGeoImageRequestStatus($requestId,$orderId);
+                /*$imgresponse = $this->getGeoImageRequestStatus($requestId,$orderId);
                 $imgResult = json_decode($imgresponse, TRUE);
                 $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
                 $status = isset($imgResult['RequestSummaries']['RequestSummary']) && !empty($imgResult['RequestSummaries']['RequestSummary']) ? $imgResult['RequestSummaries']['RequestSummary']['Status'] : '';
                 $imgReturnStatus = strtolower($imgReturnStatus);
                 $status = strtolower($status);
-                // print_r($status);
-                // print_r($imgReturnStatus == 'success');
                 if($imgReturnStatus == 'success' && $status == 'complete')
-                {
+                {*/
                     $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services']['Service'];
                     $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
                     $serviceId = $requestSummary['ID'];
@@ -565,7 +563,7 @@ class Titlepoint
                         );
                         $this->CI->titlePointData->update($tpData,$condition);
                     }
-                }
+                /*}
                 else if($imgReturnStatus == 'success' && $status != 'success')
                 {
                     $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -592,7 +590,7 @@ class Titlepoint
                         'file_number' => $fileNumber
                     );
                     $this->CI->titlePointData->update($tpData,$condition);  
-                }
+                }*/
             }
         }
         else
@@ -657,7 +655,7 @@ class Titlepoint
                 // $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $response = $this->getImageRequestStatus($requestId,$orderId, 'Geo');
+                    /*$response = $this->getImageRequestStatus($requestId,$orderId, 'Geo');
                     
                     $imgResult = json_decode($response, TRUE);
                     
@@ -668,7 +666,7 @@ class Titlepoint
                         $imgReturnStatus = strtolower($imgReturnStatus);
                         $status = strtolower($status);
                         if($imgReturnStatus == 'success' && $status == 'success')
-                        {
+                        {*/
                             $generateImgResponse = $this->generateImage($requestId,$orderId, 'Geo');
 
                             $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -739,7 +737,7 @@ class Titlepoint
                                 );
                             return $this->CI->titlePointData->update($tpData,$condition); 
 
-                        }
+                        /*}
                         else if($imgReturnStatus == 'success' && $status != 'success')
                         {
                             $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -767,7 +765,7 @@ class Titlepoint
                             );
                             return $this->CI->titlePointData->update($tpData,$condition);  
                         }
-                    }
+                    }*/
                     
                 }
             }
@@ -1592,14 +1590,14 @@ class Titlepoint
             $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
             $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
             if (isset($requestId) && !empty($requestId)) {
-                $imgresponse = $this->getGeoImageRequestStatus($requestId, $orderId);
+                /*$imgresponse = $this->getGeoImageRequestStatus($requestId, $orderId);
                 $imgResult = json_decode($imgresponse, TRUE);
                 $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
                 $status = isset($imgResult['RequestSummaries']['RequestSummary']) && !empty($imgResult['RequestSummaries']['RequestSummary']) ? $imgResult['RequestSummaries']['RequestSummary']['Status'] : '';
                 $imgReturnStatus = strtolower($imgReturnStatus);
                 $status = strtolower($status);
         
-                if ($imgReturnStatus == 'success' && $status == 'complete') {
+                if ($imgReturnStatus == 'success' && $status == 'complete') {*/
                     $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services']['Service'];
                     $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
                     $serviceId = $requestSummary['ID'];
@@ -1624,7 +1622,7 @@ class Titlepoint
                         );
                         $this->CI->titlePointData->update($tpData,$condition);
                     }
-                } else if($imgReturnStatus == 'success' && $status != 'success') {
+                /*} else if($imgReturnStatus == 'success' && $status != 'success') {
                     $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
                     $tpData = array(
                         'geo_file_status' => $status,
@@ -1646,7 +1644,7 @@ class Titlepoint
                         'file_number' => $fileNumber
                     );
                     $this->CI->titlePointData->update($tpData,$condition);  
-                }
+                }*/
             }
         } else {
             $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
