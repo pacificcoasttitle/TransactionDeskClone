@@ -12,5 +12,21 @@
 .state-error,
 .required,
 .error {
-	color: #ff0000;
+	color: #ff0000!important;
+    font-size: 1rem!important;
+    width: 100%!important;
+    padding-top: 10px!important;
+}
+
+.datatable-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.datatable-header-titles {
+    display: flex;
+    align-items: center;
+}
+.pl-10 {
+    padding-left: 10px;
 }

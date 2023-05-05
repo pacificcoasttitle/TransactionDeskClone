@@ -26,13 +26,34 @@
 </style>
 <div class="container-fluid">
     <!-- DataTables Example -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Orders
-            <div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" onclick="exportOrders();" id="export-orders-data" class="btn btn-secondary"> Export </a>
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Orders Listing</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="javascript:void(0);" data-export-type="csv" onclick="exportOrders();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <span class="text"> Export </span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Orders Listing</h6> 
             </div>
+            
+            <!-- <div class="float-right">
+                <a href="javascript:void(0);" data-export-type="csv" onclick="exportOrders();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <span class="text"> Export </span> </a>
+            </div> -->
         </div>
 
                 

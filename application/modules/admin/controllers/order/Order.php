@@ -8,6 +8,7 @@ class Order extends MX_Controller {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
         $this->load->library('session');
+        $this->load->library('order/adminTemplate');
         $this->load->model('order/order_model');
         $this->load->model('order/sales_model');
         $this->load->model('order/title_model');
@@ -31,9 +32,14 @@ class Order extends MX_Controller {
         $master_users = $this->home_model->get_rows($con);
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
-    	$this->load->view('order/layout/header', $data);
-        $this->load->view('order/order/orders', $data);
-        $this->load->view('order/layout/footer', $data);
+        // $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
+        // $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->show("order/order", "orders", $data);
+        
+    	// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/order/orders', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     function get_order_list()
@@ -72,7 +78,7 @@ class Order extends MX_Controller {
             // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
-            $action = "<a href='".$editOrderUrl."' class='btn btn-xs view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
+            $action = "<a href='".$editOrderUrl."' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $count++;          
@@ -467,9 +473,10 @@ class Order extends MX_Controller {
         $master_users = $this->home_model->get_rows($con);
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
-    	$this->load->view('order/layout/header', $data);
-        $this->load->view('order/order/lp_orders', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/order", "lp_orders", $data);
+    	// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/order/lp_orders', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     function get_lp_order_list()
@@ -536,7 +543,7 @@ class Order extends MX_Controller {
             $documentUrl = env('AWS_PATH')."pre-listing-doc/".$value['document_name'];
             if (!empty($value['document_name'])) {
                 $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"report"'.");'><i class='fas fa-fw fa-download'></i></a>
-                     <a style='margin-left:5px;' title ='Select Document' onclick='getInstrumentData($file_id);'><i class='fa fa-external-link'></i></a></div> ";
+                     <a href='#' style='margin-left:5px;' title ='Select Document' onclick='getInstrumentData($file_id);'><i class='fa fa-external-link'></i></a></div> ";
             } else {
                 $action .= "</div>";
             }
