@@ -2359,4 +2359,82 @@ class Home_model extends CI_Model
         // Return fetched data
         return $result;
     }
+
+    public function get_customers_details($params = array(), $is_master_search = 0)
+    {
+    	$table = 'customer_basic_details';
+
+        $this->db->select('*');
+        $this->db->from($table);
+        
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);
+            }
+        }
+        
+        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+            $result = $this->db->count_all_results();
+        }else{
+            if(array_key_exists("id", $params)){
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            }
+            else
+            {
+                $this->db->order_by('id', 'asc');
+                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
+                {
+                    $this->db->limit($params['limit'],$params['start']);
+                }
+                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
+                {
+                    $this->db->limit($params['limit']);
+                }
+                elseif(array_key_exists("name", $params) && array_key_exists("is_escrow", $params))
+                {
+                    $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    $this->db->where('is_escrow', $params['is_escrow']);
+                    $this->db->like('first_name', $params['name']);
+                    $this->db->where('is_password_updated', 1);
+                }elseif(array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params))
+                {
+                    if(isset($params['is_from_order_form']) && !empty($params['is_from_order_form']))
+                    {
+                        $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    }
+                    else
+                    {
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    }
+                    
+                    $this->db->where('is_escrow', $params['is_escrow']);
+                    $this->db->group_start()
+                        ->like('company_name', $params['company_name'])
+                        ->or_like("email_address", $params['company_name'])
+                        ->group_end();
+                        $this->db->where('is_password_updated', 1);
+                }elseif(array_key_exists("company_name", $params))
+                {
+                	$this->db->select("CONCAT(company_name, ' - ',email_address) AS value");
+                    if ($is_master_search == 1 ) {
+                        $this->db->group_start()
+                            ->like('company_name', $params['company_name'])
+                            ->or_like("email_address", $params['company_name'])
+                            ->group_end();
+                    } else {
+                        $this->db->like('company_name', $params['company_name']);
+                    }
+                    $this->db->where('is_password_updated', 1);
+                    
+                }
+                
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+            }
+        }
+        // Return fetched data
+        return $result;
+    }
 }

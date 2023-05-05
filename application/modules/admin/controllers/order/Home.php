@@ -3528,8 +3528,108 @@ class Home extends MX_Controller {
             } else {
                 $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
             }
+
+            $timezone  = -8;
+            $orderNumber = $order_details['lp_file_number'];
+            $data = array(
+                'orderNumber'=> $order_details['lp_file_number'],
+                'orderId'=> $file_id,
+                'OpenName'=> $order_details['cust_first_name'].' '.$order_details['cust_last_name'],
+                'Opentelephone'=> $order_details['cust_telephone_no'],
+                'OpenEmail'=> $order_details['cust_email_address'],
+                'CompanyName'=> $order_details['cust_company_name'],
+                'StreetAddress'=> $order_details['cust_street_address'],
+                'City'=> $order_details['cust_city'],
+                'Zipcode'=> $order_details['cust_zip_code'],
+                'openAt'=> gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I"))),
+                'PropertyAddress'=> $order_details['address'],
+                'FullProperty'=> $order_details['full_address'],
+                'APN'=> $order_details['apn'],
+                'County'=> $order_details['county'],
+                'LegalDescription'=> $order_details['legal_description'],
+                'PrimaryOwner'=> $order_details['primary_owner'],
+                'SecondaryOwner'=> $order_details['secondary_owner'],
+                'SalesRep'=> $order_details['salerep_first_name'] . ' ' . $order_details['salerep_last_name'],
+                'TitleOfficer'=> $order_details['titleofficer_first_name'] . ' ' . $order_details['titleofficer_last_name'],
+                'ProductType'=> $order_details['product_type'],
+                'SalesAmount'=> $order_details['sales_amount'],
+                'LoanAmount'=> $order_details['loan_amount'],
+                'LoanNumber'=> $order_details['loan_number'],
+                'EscrowNumber'=> $order_details['escrow_officer_id'],
+                'randomString'=> $order_details['random_number']
+            );
+
+            $buyerDetails =  $listingDetails = $parties_email = array();
+    
+            if (isset($order_details['lender_id']) && !empty($order_details['lender_id'])) {
+                $data['lender_details'] = array(
+                    'name' => $order_details['lender_first_name'], 
+                    'email' => $order_details['lender_email'], 
+                    'telephone' => $order_details['lender_telephone_no'],
+                    'company' => $order_details['lender_company_name']
+                );
+            }
+
+            if (isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id'])) {
+                $buyerDetails = $this->agent_model->get_agents(array('id' => $order_details['buyer_agent_id']));
+                if (!empty($buyerDetails)) {
+                    $data['buyers_agent'] = array(
+                        'name'=>$buyerDetails['name'], 
+                        'email'=>$buyerDetails['email_address'], 
+                        'telephone'=> $buyerDetails['telephone_no'],
+                        'company'=>$buyerDetails['company']
+                    );
+                }
+                
+            }
+
+            if (isset($order_details['listing_agent_id']) && !empty($order_details['listing_agent_id'])) {
+                $listingDetails = $this->agent_model->get_agents(array('id' => $order_details['listing_agent_id']));
+                if (!empty($listingDetails)) {
+                    $data['listing_agent'] = array(
+                        'name' => $listingDetails['name'], 
+                        'email' => $listingDetails['email_address'], 
+                        'telephone' => $listingDetails['telephone_no'],
+                        'company' => $listingDetails['company']
+                    );
+                }
+            }
+            
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $order_message_body = $this->load->view('emails/order.php',$data,TRUE);
+            $message = $order_message_body; 
+            $subject = 'PDF:'.$orderNumber;
+            $to = $order_details['cust_email_address'];
+            $parties_email[] = $order_details['salerep_email_address'];
+            $file = array();
+            $lpReportName = 'pre_listing_report_'.$orderNumber.'.pdf';
+            $file[] = env('AWS_PATH')."pre-listing-doc/".$lpReportName;
+            $parties_email[] = 'hitesh.p@crestinfosystems.com';
+            $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
+            $this->load->helper('sendemail');
+            //$cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+            
+            $mailParams = array(
+                'from_mail'=>$from_mail, 
+                'from_name'=>$from_name, 
+                'to'=>$to,
+                'subject'=>$subject,
+                'message'=>json_encode($data),
+                'file'=>json_encode($file),
+                'cc'=>json_encode($cc)
+            );
+
+            if (isset($order_details['lp_file_number']) && !empty($order_details['lp_file_number'])) {
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $order_details['order_id'], 0);
+                try {
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+                }  catch (Exception $e) {
+
+                }
+                $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $order_details['order_id'], $logid);
+            }
         }
-        
         $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
         echo json_encode($data);exit;
     }
