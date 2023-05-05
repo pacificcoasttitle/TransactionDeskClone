@@ -3605,7 +3605,7 @@ class Home extends MX_Controller {
             $file = array();
             $lpReportName = 'pre_listing_report_'.$orderNumber.'.pdf';
             $file[] = env('AWS_PATH')."pre-listing-doc/".$lpReportName;
-            $parties_email[] = 'hitesh.p@crestinfosystems.com';
+            //$parties_email[] = 'hitesh.p@crestinfosystems.com';
             $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
             $this->load->helper('sendemail');
             //$cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
