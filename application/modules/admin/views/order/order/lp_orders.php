@@ -94,7 +94,7 @@
                                                         
                                                     </label>
                                                 </div>
-                                                
+                                                <input type="hidden" name="file_id" id="file_id" value="">
                                             </div>
 										</div>
 									</div>
@@ -112,6 +112,43 @@
         </div>
     </div>
 </div><!-- /.container-fluid -->
+
+
+<div class="modal fade" width="1200px" id="vesting_model" tabindex="-1" role="dialog" aria-labelledby="Vesting Infromation" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document" style="width:40%;">
+                <div class="modal-content">
+                    <form method="POST" action="<?php echo base_url();?>order/admin/store-vesting-info">
+                        <div class="smart-forms smart-container" style="margin:30px">
+                            <div class="modal-body search-result">
+                                <div id="deliverables-details-fields">
+                                    <div class="spacer-b20">
+                                        <div class="tagline"><span>Add Vesting Info</span></div>
+                                    </div>
+                                    <div class="frm-row" id="clone_container">
+										<div class="section colm colm12" id="clone-email-address" style="margin-bottom: 0px !important;">
+                                            <div class="toclone">
+                                                <div class="spacer-b10">
+                                                    <label class="field" id="vesting_container">
+                                                        <textarea id="vesting_info" name="vesting_info" class="smart-forms" rows="8" cols="60" required=""></textarea>
+                                                    </label>
+                                                </div>
+                                            </div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+                            <div class="form-footer" style="padding: 0px 1rem !important;">
+                                <button type="submit" data-btntext-sending="Sending..."
+                                    class="button btn-primary">Submit</button>
+                                <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 	
@@ -327,6 +364,12 @@
 				$('#page-preloader').css('display', 'none');
 			}
 		});
+	}
+
+	function addVesting(file_id)
+	{
+		$('#file_id').val(file_id);
+		$('#vesting_model').modal('show');
 	}
 
 </script>

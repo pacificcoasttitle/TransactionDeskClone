@@ -5575,5 +5575,17 @@ class Home extends MX_Controller {
         $data = array('status' => 'success', 'message' => 'Lp report regenerated successfully.');
         echo json_encode($data);
     }
+
+    public function addVestingInfo()
+    {
+        $file_id = $this->input->post('file_id');
+        $vesting_info = $this->input->post('vesting_info');
+        $this->db->update('pct_order_title_point_data', array('vesting_information' => $vesting_info), array('file_id' => $file_id));
+        $this->load->library('order/order');
+        $this->order->createLpReport($titlePointData['file_number'], true, false);
+        $successMsg = 'Vesting info saved successfully and LP report generated successfully for new data.';
+        $this->session->set_userdata('success', $successMsg);
+        redirect(base_url().'order/admin/lp-orders');
+    }
 }
 
