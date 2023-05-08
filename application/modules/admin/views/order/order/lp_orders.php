@@ -94,7 +94,6 @@
                                                         
                                                     </label>
                                                 </div>
-                                                <input type="hidden" name="file_id" id="file_id" value="">
                                             </div>
 										</div>
 									</div>
@@ -131,6 +130,7 @@
                                                     <label class="field" id="vesting_container">
                                                         <textarea id="vesting_info" name="vesting_info" class="smart-forms" rows="8" cols="60" required=""></textarea>
                                                     </label>
+													<input type="hidden" name="file_id" id="file_id" value="">
                                                 </div>
                                             </div>
 										</div>
