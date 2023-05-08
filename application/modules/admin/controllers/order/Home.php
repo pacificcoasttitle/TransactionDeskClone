@@ -5579,8 +5579,14 @@ class Home extends MX_Controller {
     public function addVestingInfo()
     {
         $file_id = $this->input->post('file_id');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row_array(); 
+
         $vesting_info = $this->input->post('vesting_info');
-        $this->db->update('pct_order_title_point_data', array('vesting_information' => $vesting_info), array('file_id' => $file_id));
+        $this->db->update('pct_order_title_point_data', array('vesting_information' => $vesting_info), array('id' => $titlePointData['id']));
         $this->load->library('order/order');
         $this->order->createLpReport($titlePointData['file_number'], true, false);
         $successMsg = 'Vesting info saved successfully and LP report generated successfully for new data.';
