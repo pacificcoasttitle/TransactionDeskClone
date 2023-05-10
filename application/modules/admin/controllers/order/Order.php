@@ -108,9 +108,10 @@ class Order extends MX_Controller {
         	$data['order_details'] = $order_details;
         	$data['customer_details'] = $customer_details;
         	// echo "<pre>"; print_r($data); exit;
-        	$this->load->view('order/layout/header', $data);
-	        $this->load->view('order/order/order_details', $data);
-	        $this->load->view('order/layout/footer', $data);
+            $this->admintemplate->show("order/order", "order_details", $data);
+        	// $this->load->view('order/layout/header', $data);
+	        // $this->load->view('order/order/order_details', $data);
+	        // $this->load->view('order/layout/footer', $data);
         	
         }
         else
