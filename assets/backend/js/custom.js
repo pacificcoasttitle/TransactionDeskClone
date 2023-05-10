@@ -4102,6 +4102,8 @@ $(document).ready(function () {
             }
         }); 
 	}
+
+    $('#holiday_date').datepicker().datepicker("setDate", new Date());
 });
 
 if(('.threshold-remove-btn').length) {

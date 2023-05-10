@@ -41,6 +41,7 @@ class TitlePoint extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Pre Listing Log';
+        $this->admintemplate->addJS( base_url('assets/backend/js/lp-xml-log.js'));
         $this->admintemplate->show("order/home", "lp_xml_log", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/lp_xml_log', $data);

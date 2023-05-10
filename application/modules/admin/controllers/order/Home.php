@@ -510,6 +510,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Lenders';
+        $this->admintemplate->addJS( base_url('assets/backend/js/lender.js'));
         $this->admintemplate->show("order/home", "lenders", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/lenders', $data);
@@ -605,6 +606,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: CPL Documents';
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
         $this->admintemplate->show("order/home", "cpl_document", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/cpl_document', $data);
@@ -880,6 +882,11 @@ class Home extends MX_Controller {
                 }
             }                                       
         }
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/jquery-ui.css'));
+        $this->admintemplate->addJS( base_url('assets/libs/jquery-1.12.4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-new-user.js'));
         $this->admintemplate->show("order/home", "add_new_user", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_new_user', $data);
@@ -1113,6 +1120,8 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Grant Deed Documents';
+        $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
         $this->admintemplate->show("order/home", "grant_deed_document", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/grant_deed_document', $data);
@@ -1123,6 +1132,8 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Legal & Vesting Documents';
+        $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
         $this->admintemplate->show("order/home", "lv_document", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/lv_document', $data);
@@ -1442,6 +1453,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Tax Documents';
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
         $this->admintemplate->show("order/home", "tax_document", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/tax_document', $data);
@@ -1514,6 +1526,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Curative Documents';
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
         $this->admintemplate->show("order/home", "curative_document", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/curative_document', $data);
@@ -1656,6 +1669,7 @@ class Home extends MX_Controller {
         $data['title'] = 'PCT Order: Files';
         $this->load->model('order/title_model');
         $data['titleOfficers'] = $this->title_model->getTitleOfficers();
+        $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
         $this->admintemplate->show("order/home", "file_document", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/file_document', $data);
@@ -1721,6 +1735,10 @@ class Home extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
         $data['title'] = 'PCT Order: Companies';
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
         $this->admintemplate->show("order/home", "companies", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/companies', $data);
@@ -2603,6 +2621,7 @@ class Home extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Send Password Listing';
+        $this->admintemplate->addJS( base_url('assets/backend/js/password-listing.js'));
         $this->admintemplate->show("order/home", "password_listing", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/password_listing', $data);
@@ -2819,6 +2838,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Notification';
+        $this->admintemplate->addJS( base_url('assets/backend/js/order.js'));
         $this->admintemplate->show("order/home", "notifications", $data);
         
         // $this->load->view('order/layout/header', $data);
@@ -3037,6 +3057,9 @@ class Home extends MX_Controller {
                 $data['zip_error_msg'] = form_error('zip');
             }                                       
         }
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-escrow.js'));
         $this->admintemplate->show("order/home", "add_escrow_officer", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_escrow_officer', $data);
@@ -3130,6 +3153,9 @@ class Home extends MX_Controller {
         {
             redirect(base_url().'escrow-officers');
         }
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-escrow.js'));
         $this->admintemplate->show("order/home", "edit_escrow_officer", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/edit_escrow_officer', $data);
@@ -3175,6 +3201,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Mortgage Brokers';
+        $this->admintemplate->addJS( base_url('assets/backend/js/mortgage-brokers.js'));
         $this->admintemplate->show("order/home", "mortgage_brokers", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/mortgage_brokers', $data);
@@ -4585,6 +4612,7 @@ class Home extends MX_Controller {
     {
     	$data = array();
         $data['title'] = 'PCT Order: LP Document Types';
+        $this->admintemplate->addJS( base_url('assets/backend/js/lp-document-type.js'));
         $this->admintemplate->show("order/home", "lp_document_types", $data);
 		// $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/lp_document_types', $data);

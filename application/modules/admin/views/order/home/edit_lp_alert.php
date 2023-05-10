@@ -81,24 +81,3 @@
         </div>
     </div>
 </div>
-<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/js/jquery.validate.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        if(jQuery('#frm-edit-alert').length)
-        {
-           jQuery('#frm-edit-alert').validate({
-                ignore:":not(:visible)",
-                rules: {
-                    days:"required"
-                },
-                messages: {
-                    days:"Please Enter Days"
-                },
-                submitHandler: function(form) {
-                    form.submit();  
-                }
-            }); 
-        }
-    });
-</script>

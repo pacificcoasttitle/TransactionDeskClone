@@ -96,13 +96,3 @@
 
     </div>
 </div>
-
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
-
-
-<script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
-
-<script type="text/javascript">
-</script>

@@ -362,6 +362,10 @@ class Sales extends MX_Controller {
 
 		$data['is_super_admin'] =$this->common->if_super_admin();
 		
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-sales-rep.js'));
+        
 		$this->admintemplate->show("order/sales", "add_sales_rep", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/sales/add_sales_rep', $data);

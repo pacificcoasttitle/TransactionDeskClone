@@ -22,6 +22,8 @@ class Cpl extends MX_Controller {
         $data['title'] = 'North American Branches';
         $this->load->library('order/natic');
         $data['branchesData'] = $this->natic->getBranches();
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/branches.js'));
         $this->admintemplate->show("order/cpl", "north_american_branches", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/cpl/north_american_branches', $data);
@@ -46,6 +48,8 @@ class Cpl extends MX_Controller {
         $data['title'] = 'Westcor Branches';
         $this->load->library('order/westcor');
         $data['branchesData'] = $this->westcor->getBranches();
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/branches.js'));
         $this->admintemplate->show("order/cpl", "westcor_branches", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/cpl/westcor_branches', $data);
@@ -70,6 +74,8 @@ class Cpl extends MX_Controller {
         $data['title'] = 'Commonwealth Branches';
         $this->load->library('order/fnf');
         $data['branchesData'] = $this->fnf->getAgents();
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/branches.js'));
         $this->admintemplate->show("order/cpl", "commonwealth_branches", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/cpl/commonwealth_branches', $data);

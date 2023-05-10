@@ -34,7 +34,7 @@ class Order extends MX_Controller {
         $data['product_type'] = $product_type;
         // $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
         // $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
-        // $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/order.js'));
         $this->admintemplate->show("order/order", "orders", $data);
         
     	// $this->load->view('order/layout/header', $data);
@@ -474,6 +474,8 @@ class Order extends MX_Controller {
         $master_users = $this->home_model->get_rows($con);
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/lp-order.js'));
         $this->admintemplate->show("order/order", "lp_orders", $data);
     	// $this->load->view('order/layout/header', $data);
         // $this->load->view('order/order/lp_orders', $data);

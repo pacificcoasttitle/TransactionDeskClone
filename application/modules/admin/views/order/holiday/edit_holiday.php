@@ -64,8 +64,6 @@
     </div>
 </div>
 
-<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $('#holiday_date').datepicker().datepicker("setDate", new Date());

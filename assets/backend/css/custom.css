@@ -34,6 +34,16 @@
 .table-action {
     display: flex;justify-content: space-evenly;
 }
+
 .ml-5 {
     margin-left: 5px;
+}
+
+#tbl-cpl-documents-listing_wrapper > .dt-buttons, 
+#tbl-grant-documents-listing_wrapper > .dt-buttons, 
+#tbl-tax-documents-listing_wrapper > .dt-buttons, 
+#tbl-curative-documents-listing_wrapper > .dt-buttons,
+#tbl-file-documents-listing_wrapper > .dt-buttons,
+#tbl-lv-documents-listing_wrapper > .dt-buttons {
+    display: none;
 }

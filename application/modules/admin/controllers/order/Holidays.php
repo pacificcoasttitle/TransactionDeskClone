@@ -54,6 +54,7 @@ class Holidays extends MX_Controller {
                 $data['holiday_date_error_msg'] = form_error('holiday_date');
             }                                       
         }
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
         $this->admintemplate->show("order/holiday", "add_holiday", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/holiday/add_holiday', $data);
@@ -152,6 +153,7 @@ class Holidays extends MX_Controller {
             redirect(base_url().'holidays');
         }
         $data['holiday_info'] = $holiday_info;
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
         $this->admintemplate->show("order/holiday", "edit_holiday", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/holiday/edit_holiday', $data);
