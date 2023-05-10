@@ -9,6 +9,7 @@ class Cpl extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->library('order/common');
 
@@ -21,9 +22,10 @@ class Cpl extends MX_Controller {
         $data['title'] = 'North American Branches';
         $this->load->library('order/natic');
         $data['branchesData'] = $this->natic->getBranches();
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/cpl/north_american_branches', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/cpl", "north_american_branches", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/cpl/north_american_branches', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function getNorthAmericanBranches()
@@ -44,9 +46,10 @@ class Cpl extends MX_Controller {
         $data['title'] = 'Westcor Branches';
         $this->load->library('order/westcor');
         $data['branchesData'] = $this->westcor->getBranches();
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/cpl/westcor_branches', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/cpl", "westcor_branches", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/cpl/westcor_branches', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function getWestcorBranches()
@@ -67,9 +70,10 @@ class Cpl extends MX_Controller {
         $data['title'] = 'Commonwealth Branches';
         $this->load->library('order/fnf');
         $data['branchesData'] = $this->fnf->getAgents();
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/cpl/commonwealth_branches', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/cpl", "commonwealth_branches", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/cpl/commonwealth_branches', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function getCommonwealthBranches()

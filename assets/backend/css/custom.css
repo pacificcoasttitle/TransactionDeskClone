@@ -30,3 +30,10 @@
 .pl-10 {
     padding-left: 10px;
 }
+
+.table-action {
+    display: flex;justify-content: space-evenly;
+}
+.ml-5 {
+    margin-left: 5px;
+}

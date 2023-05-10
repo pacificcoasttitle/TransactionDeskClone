@@ -13,15 +13,26 @@
     }
 </style>
 <div class="container-fluid">
-	<div class="card mb-3">
-		<div class="card-header">
-			<i class="fas fa-table"></i>
-			Forms
-			<div class="float-right">
-				<a href="javascript:void(0);" class="btn btn-secondary" data-toggle="modal"
-					data-target="#fileUploadModal"> Upload </a>
-			</div>
+    <!-- DataTables Example -->
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Forms</h1>
 		</div>
+		<div class="col-sm-6">
+            <a href="javascript:void(0);" data-export-type="csv" data-toggle="modal"
+                    data-target="#fileUploadModal" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fa fa-upload"></i></span><span class="text">Upload</span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Forms</h6> 
+            </div>
+        </div>
 
 		<div class="card-body">
 			<?php

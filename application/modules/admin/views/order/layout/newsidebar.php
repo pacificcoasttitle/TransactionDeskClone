@@ -156,7 +156,7 @@
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/fees' || $this->uri->segment(3) == 'add-fee' || $this->uri->segment(3) == 'edit-fee') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees'; ?>">
 				Fees
 			</a>
-			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/import-orders') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/code-book'; ?>">
+			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/code-book') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/code-book'; ?>">
 				Code Book
 			</a>
 			<a class="dropdown-item <?php if($this->uri->uri_string() == 'order/admin/rules-manager') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/rules-manager'; ?>">

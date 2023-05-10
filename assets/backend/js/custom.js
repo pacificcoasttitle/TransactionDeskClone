@@ -1146,13 +1146,13 @@ $(document).ready(function () {
                     self = this.api(),
                     $lvLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="lvLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
                     $lvLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="lvDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="lvDateRange" /></div>'),
-                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Search')
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-success btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-search"></i></span><span class="text">Search</span></button>')
+                    // .text('')
                     .click(function () {
                         self.search(input.val(), $('#customerDateRange').val()).draw();
                     }),
-                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Clear')
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-eraser"></i></span><span class="text">Clear</span></button>')
+                    // .text('Clear')
                     .click(function () {
                         input.val('');
                         $("#lvLog").val('');
@@ -1161,7 +1161,7 @@ $(document).ready(function () {
                         $searchButton.click();
                     })
                     
-                    $('.dataTables_filter').append($lvLogDropDown, $lvLogDateRange, $searchButton, $clearButton);
+                    $('.dataTables_filter').append($lvLogDropDown, $lvLogDateRange, $clearButton, $searchButton);
                     
             },
             "drawCallback": function () {               
@@ -1259,13 +1259,14 @@ $(document).ready(function () {
                     self = this.api(),
                     $preListingLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="preListingLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
                     $preListingLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="preListingDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="preListingDateRange" /></div>'),
-                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Search')
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-success btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-search"></i></span><span class="text">Search</span></button>')
+                    // .text('Search')
                     .click(function () {
                         self.search(input.val(), $('#customerDateRange').val()).draw();
                     }),
-                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Clear')
+                    // $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Clear')
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-eraser"></i></span><span class="text">Clear</span></button>')
                     .click(function () {
                         input.val('');
                         $("#preListingLog").val('');
@@ -1274,7 +1275,7 @@ $(document).ready(function () {
                         $searchButton.click();
                     })
                     
-                    $('.dataTables_filter').append($preListingLogDropDown, $preListingLogDateRange, $searchButton, $clearButton);
+                    $('.dataTables_filter').append($preListingLogDropDown, $preListingLogDateRange, $clearButton, $searchButton);
                     
             },
             "drawCallback": function () {               
@@ -1814,7 +1815,7 @@ $(document).ready(function () {
                         columns: [0, 1, 2],
                         format: {
                             body: function ( data, row, column, node ) {
-                                return (column === 0 || column === 1|| column === 2) ?
+                                return (column === 1|| column === 2) ?
                                     data.replace( /[$,]/g, '' ) :
                                     data;
                             }
@@ -1885,7 +1886,9 @@ $(document).ready(function () {
                         columns: [0, 1, 2],
                         format: {
                             body: function ( data, row, column, node ) {
-                                return (column === 0 || column === 1|| column === 2) ?
+                                console.log('data =======', data);
+                                console.log('column =======', column);
+                                return (column === 1|| column === 2) ?
                                     data.replace( /[$,]/g, '' ) :
                                     data;
                             }
@@ -2106,13 +2109,15 @@ $(document).ready(function () {
                     self = this.api(),
                     $taxLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="taxLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
                     $taxLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="taxDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="taxDateRange" /></div>'),
-                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Search')
+                    // $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Search')
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-success btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-search"></i></span><span class="text">Search</span></button>')
                     .click(function () {
                         self.search(input.val(), $('#customerDateRange').val()).draw();
                     }),
-                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Clear')
+                    // $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Clear')
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-eraser"></i></span><span class="text">Clear</span></button>')
                     .click(function () {
                         input.val('');
                         $("#taxLog").val('');
@@ -2121,7 +2126,7 @@ $(document).ready(function () {
                         $searchButton.click();
                     })
                     
-                    $('.dataTables_filter').append($taxLogDropDown, $taxLogDateRange, $searchButton, $clearButton);
+                    $('.dataTables_filter').append($taxLogDropDown, $taxLogDateRange, $clearButton, $searchButton);
                     
             },
             "drawCallback": function () {               
@@ -2234,7 +2239,7 @@ $(document).ready(function () {
                         columns: [0, 1, 2],
                         format: {
                             body: function ( data, row, column, node ) {
-                                return (column === 0 || column === 1|| column === 2) ?
+                                return (column === 1|| column === 2) ?
                                     data.replace( /[$,]/g, '' ) :
                                     data;
                             }
@@ -2617,13 +2622,15 @@ $(document).ready(function () {
                     self = this.api(),
                     $grantLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="grantLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
                     $grantLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="grantDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="grantDateRange" /></div>'),
-                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Search')
+                    // $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Search')
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-success btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-search"></i></span><span class="text">Search</span></button>')
                     .click(function () {
                         self.search(input.val(), $('#customerDateRange').val()).draw();
                     }),
-                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
-                    .text('Clear')
+                    // $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Clear')
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-eraser"></i></span><span class="text">Clear</span></button>')
                     .click(function () {
                         input.val('');
                         $("#grantLog").val('');
@@ -2632,7 +2639,7 @@ $(document).ready(function () {
                         $searchButton.click();
                     })
                     
-                    $('.dataTables_filter').append($grantLogDropDown, $grantLogDateRange, $searchButton, $clearButton);
+                    $('.dataTables_filter').append($grantLogDropDown, $grantLogDateRange, $clearButton, $searchButton);
                     
             },
             "drawCallback": function () {               
@@ -2745,7 +2752,7 @@ $(document).ready(function () {
                         columns: [0, 1, 2],
                         format: {
                             body: function ( data, row, column, node ) {
-                                return (column === 0 || column === 1|| column === 2) ?
+                                return (column === 1|| column === 2) ?
                                     data.replace( /[$,]/g, '' ) :
                                     data;
                             }

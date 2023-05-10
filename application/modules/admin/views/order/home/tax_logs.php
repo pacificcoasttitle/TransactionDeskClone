@@ -16,15 +16,22 @@ div.dataTables_wrapper div.dataTables_filter {
     text-align: left;
 }
 </style>
+
 <div class="container-fluid">
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Tax Logs</h1>
+		</div>
+	</div>
     <!-- DataTables Example -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Tax Logs
-            <!-- <div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
-            </div> -->
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-history"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Tax Logs</h6> 
+            </div>
         </div>
 
                 

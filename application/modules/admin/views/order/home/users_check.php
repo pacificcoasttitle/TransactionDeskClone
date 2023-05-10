@@ -1,15 +1,28 @@
-<?php 
-// echo "<pre>"; print_r($users); exit;
-?>
+<style>
+    .make-primary-btn {
+        background-color: #223D7F;
+    }
+</style>
 <div class="container-fluid">
     <!-- DataTables Example -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Primary Check
-            <div class="float-right">
-                <a href="<?php echo base_url()?>order/admin/import-lenders" class="btn btn-secondary"> Import </a>
-                <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Primary Check</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="<?php echo base_url()?>order/admin/import-lenders" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fas fa-file-import"></i></span><span class="text">Import</span> </a>
+            <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Primary Check</h6> 
             </div>
         </div>
 
@@ -23,8 +36,20 @@
                             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Search" value="<?php echo isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : ''; ?>">
                         </div>
                         <div class="">
-                            <button type="submit" class="btn btn-secondary" id="btnSearch">Search</button>
-                            <a href="javascript:void(0);" id="btnClear" name="cancel" class="btn btn-secondary">Clear</a>
+                            <!-- <button type="submit" class="btn btn-secondary" id="btnSearch">Search</button> -->
+                            <button type="submit" style="margin-left:20px;" id="btnSearch" class="btn btn-success btn-icon-split mr-2">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-search"></i>
+                                </span>
+                                <span class="text">Search</span>
+                            </button>
+                            <button style="margin-left:20px;" id="btnClear" name="cancel" class="btn btn-secondary btn-icon-split mr-2">
+                                <span class="icon text-white-50">
+                                    <i class="fa fa-eraser"></i>
+                                </span>
+                                <span class="text">Clear</span>
+                            </button>
+                            <!-- <a href="javascript:void(0);" id="btnClear" name="cancel" class="btn btn-secondary">Clear</a> -->
                         </div>
                 </div>
             </form>
@@ -101,7 +126,7 @@
                                                         $class = '';
                                                     }
                                             ?>
-                                                    <td style="vertical-align: middle; border-bottom: 3px solid black;" align="center" rowspan="<?php echo $count; ?>"><a href="javascript:void(0);" onclick="makePrimary(<?php echo $i; ?>);"  class="btn btn-secondary <?php echo $class; ?>"> Make Primary </a></td>
+                                                    <td style="vertical-align: middle; border-bottom: 3px solid black;" align="center" rowspan="<?php echo $count; ?>"><a href="javascript:void(0);" onclick="makePrimary(<?php echo $i; ?>);"  class="make-primary-btn btn btn-secondary <?php echo $class; ?>"> Make Primary </a></td>
                                             <?php
                                                 }
                                             ?>

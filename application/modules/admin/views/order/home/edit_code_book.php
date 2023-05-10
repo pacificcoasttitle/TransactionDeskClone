@@ -1,4 +1,4 @@
-<div class="container">
+<div class="content">
     <?php if(!empty($success_msg)){ ?>
         <div class="col-xs-12">
             <div class="alert alert-success"><?php echo $success_msg; ?></div>
@@ -11,8 +11,18 @@
         </div>
     <?php } ?>
 
-    <div class="card mx-auto mt-5">
-      <div class="card-header">Edit Code Book</div>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="h3 text-gray-800">Code Book</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Edit Code Book</h6>
+        </div>
         <div class="card-body">        
             <form id="add-new-master-user" method="POST">
                 <div class="form-group row">
@@ -74,11 +84,23 @@
                         <input <?php echo $codeBookInfo['required_number'] == 1 ? "checked" : "";?> type="checkbox" class="form-control" name="required_number" id="required_number" class="form-control">
                     </div>
                 </div>
-
-                <div class="pull-right">
-                    <button type="submit" class="btn btn-secondary">Save</button>
-                    <a href="<?php echo base_url().'order/admin/code-book'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
-                </div>      
+                
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-info btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span class="text">Save</span>
+                        </button>
+                        <a href="<?php echo base_url().'order/admin/code-book'; ?>" class="btn btn-secondary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span class="text">Cancel</span>
+                        </a>
+                    </div>
+                </div>  
             </form>
         </div>
     </div>

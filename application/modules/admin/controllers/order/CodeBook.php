@@ -9,6 +9,7 @@ class CodeBook extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/codeBook_model');
         $this->load->library('order/common');
@@ -19,9 +20,10 @@ class CodeBook extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Code Book';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/code_book', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "code_book", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/code_book', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_code_book()
@@ -80,7 +82,7 @@ class CodeBook extends MX_Controller {
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-code-book/'.$value['id'];
-                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit Code Book'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $nestedData[] = "<a href='".$editUrl."'   title='Edit Code Book'><span class='fa fa-edit' aria-hidden='true'></span></a>";
                 }
                
                 
@@ -149,9 +151,10 @@ class CodeBook extends MX_Controller {
                 $data['name_error_msg'] = form_error('fee_type');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_code_book', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "add_code_book", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_code_book', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function import_code_book()
@@ -330,8 +333,9 @@ class CodeBook extends MX_Controller {
             $con = array('id' => $id);
             $data['codeBookInfo'] = $this->codeBook_model->get_rows($con);
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_code_book', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_code_book", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_code_book', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 }

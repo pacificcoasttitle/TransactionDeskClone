@@ -238,10 +238,10 @@ class Order extends MX_Controller {
         $titleOfficer = $this->title_model->get_title_officers(array());
 
         $data['titleOfficer'] = $titleOfficer;
-
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/partner_api_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "partner_api_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/partner_api_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     function get_partner_api_logs()
@@ -361,9 +361,10 @@ class Order extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: CPL Api Error Logs';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/cpl_error_api_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "cpl_error_api_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/cpl_error_api_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     function getCplErrorLogs()

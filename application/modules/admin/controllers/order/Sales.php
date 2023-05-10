@@ -362,10 +362,10 @@ class Sales extends MX_Controller {
 
 		$data['is_super_admin'] =$this->common->if_super_admin();
 		
-		
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/add_sales_rep', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "add_sales_rep", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/add_sales_rep', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function edit_sales_rep()
@@ -830,9 +830,10 @@ class Sales extends MX_Controller {
 		$data['commission_sales_rep_override_id']=$existing_commission_override_user;
 		$data['commission_sales_rep_override_val']=$existing_commission_override;
 
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/edit_sales_rep', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/sales", "edit_sales_rep", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/edit_sales_rep', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_sales_rep()

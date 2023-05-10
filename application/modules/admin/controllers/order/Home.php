@@ -325,9 +325,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function file_check($str)
@@ -499,9 +500,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import_lender', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import_lender", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import_lender', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function lenders()
@@ -603,9 +605,10 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: CPL Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/cpl_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "cpl_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/cpl_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_cpl_document_list()
@@ -2663,7 +2666,7 @@ class Home extends MX_Controller {
                 $nestedData[] = "<input $checked onclick='isPasswordRequired();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";       
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
+                    $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -2849,7 +2852,7 @@ class Home extends MX_Controller {
 	            $nestedData[] = $value['name'];
                 $notification_id = $value['id'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a onclick='preview_email($notification_id)'><i class='fas fa-eye'></i></a>
+                    $nestedData[] = "<div style='display:flex;'><a href='javascript:void(0);' onclick='preview_email($notification_id)'><i class='fas fa-eye'></i></a>
                     </div>";
                 }
 	            $data[] = $nestedData;    
@@ -3071,7 +3074,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $id = $this->uri->segment(4);
-        $data['title'] = 'PCT Order: Add Escrow Officer';
+        $data['title'] = 'PCT Order: Edit Escrow Officer';
         $escrowData = array();
 
         if(isset($id) && !empty($id))
@@ -4488,9 +4491,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function adminUserLogs()
@@ -4657,9 +4661,9 @@ class Home extends MX_Controller {
                 $nestedData[] = "<input $vesChecked onclick='isVesDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-document-type/'.$value['id'];
-                    $action = "<a href='".$editUrl."' class='btn btn-action edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' class='btn btn-action'  title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -4705,9 +4709,9 @@ class Home extends MX_Controller {
                 // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-alert/'.$value['id'];
-                    $action = "<a href='".$editUrl."' class='btn btn-action edit-alert' title ='Edit Alert Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-alert' title ='Edit Alert Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' class='btn btn-action'  title='Delete Alert'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' title='Delete Alert'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -4783,9 +4787,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import_lp_document_types', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import_lp_document_types", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import_lp_document_types', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function addLpDocumentTypes()
