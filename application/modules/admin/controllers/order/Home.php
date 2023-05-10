@@ -5593,5 +5593,17 @@ class Home extends MX_Controller {
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');
     }
+
+    public function getVestingInfo()
+    {
+        $file_id = $this->input->post('file_id');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row_array(); 
+        $data = array('status'=>'success', 'vesting_information'=> $titlePointData['vesting_information']);
+        echo json_encode($data);exit;
+    }
 }
 

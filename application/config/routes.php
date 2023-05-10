@@ -409,6 +409,7 @@ $route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeF
 $route['update-lp-document-is-ves-type-flag'] = 'admin/order/home/updateLpDocumentTypeIsVesFlag';
 $route['order/admin/regenerate-report'] = 'admin/order/home/regenerateReport';
 $route['order/admin/store-vesting-info'] = 'admin/order/home/addVestingInfo';
+$route['order/admin/get-vesting-info'] = 'admin/order/home/getVestingInfo';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
