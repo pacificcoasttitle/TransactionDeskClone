@@ -1736,9 +1736,10 @@ class Home extends MX_Controller {
 		}
         $data['title'] = 'PCT Order: Companies';
         $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
-        $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
-        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
-        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/companies.js'));
         $this->admintemplate->show("order/home", "companies", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/companies', $data);
@@ -1777,7 +1778,7 @@ class Home extends MX_Controller {
                 } else {
                     $loan_underwriter = '';
                 }
-                $loanUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
+                $loanUnderwriterSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
                                     <option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
@@ -1791,7 +1792,7 @@ class Home extends MX_Controller {
                 } else {
                     $sales_underwriter = '';
                 }
-                $salesUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
+                $salesUnderwriterSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
                                     <option value="commonwealth">Commonwealth</option>

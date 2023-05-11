@@ -4436,7 +4436,7 @@ function exportOrders()
         success: function(data){
             if(data.status == 'success')
             {
-                download('users.csv', data.data);
+                download('orders.csv', data.data);
             }
             else 
             {

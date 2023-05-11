@@ -124,11 +124,11 @@ class Order extends MX_Controller {
     {
     	$sales_rep = $this->input->post('sales_rep');
     	$seachValue = $this->input->post('seachValue');
-
     	$params = array();
     	$params['sales_rep'] = $sales_rep;
     	$params['seachValue'] = $seachValue;
-
+        $params['order_type'] = 'resware_orders';
+        // print_r($params);die;
     	$ordersList = $this->order_model->get_orders($params);
 
     	if(isset($ordersList['data']) && !empty($ordersList['data']))
@@ -142,7 +142,6 @@ class Order extends MX_Controller {
     				$order_details = $this->order_model->get_order_details($file_id);
     				$con = array('id'=>$order_details['customer_id']);
         			$customer_details = $this->home_model->get_rows($con);
-    				
     				$export_data[] = array(
     					'file_number' => $order_details['file_number'],
     					'file_id' => $order_details['file_id'],
