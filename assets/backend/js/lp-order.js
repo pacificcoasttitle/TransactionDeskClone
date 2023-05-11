@@ -210,3 +210,38 @@ function downloadDocumentFromAws(url, documentType) {
         }
     });
 }
+
+function addVesting(file_id)
+{
+    $('#file_id').val(file_id);
+    $('body').animate({
+        opacity: 0.5
+    }, "slow");
+    $.ajax({
+        url: base_url + "order/admin/get-vesting-info",
+        method: "POST",
+        data: {
+            file_id: file_id
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            $('body').animate({
+                    opacity: 1.0
+            }, "slow");
+            if (result.status == 'success') {
+                $("textarea#vesting_info").val(result.vesting_information);
+                $('#vesting_model').modal('show');
+            } 
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#lp_order_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#lp_order_error_msg').html('').hide();
+            }, 5000);
+        }
+    });
+}
