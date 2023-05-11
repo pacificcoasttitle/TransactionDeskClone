@@ -3557,7 +3557,7 @@ class Home extends MX_Controller {
             $message = "LP Report is ready for file number <a href='$lpReportUrl'>".$order_details['lp_file_number']."</a>";
             $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=> $order_details['sales_rep_phone'], 'from'=>$from), array(), 0, 0);
 
-            $order_details['sales_rep_phone'] = '12133097286';
+            //$order_details['sales_rep_phone'] = '12133097286';
             try {
                 $result = $this->twilio->message($order_details['sales_rep_phone'], $message,'',array('from'=>$from));
                 $response = $result->toArray();
@@ -3595,8 +3595,108 @@ class Home extends MX_Controller {
             } else {
                 $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
             }
+
+            $timezone  = -8;
+            $orderNumber = $order_details['lp_file_number'];
+            $data = array(
+                'orderNumber'=> $order_details['lp_file_number'],
+                'orderId'=> $file_id,
+                'OpenName'=> $order_details['cust_first_name'].' '.$order_details['cust_last_name'],
+                'Opentelephone'=> $order_details['cust_telephone_no'],
+                'OpenEmail'=> $order_details['cust_email_address'],
+                'CompanyName'=> $order_details['cust_company_name'],
+                'StreetAddress'=> $order_details['cust_street_address'],
+                'City'=> $order_details['cust_city'],
+                'Zipcode'=> $order_details['cust_zip_code'],
+                'openAt'=> gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I"))),
+                'PropertyAddress'=> $order_details['address'],
+                'FullProperty'=> $order_details['full_address'],
+                'APN'=> $order_details['apn'],
+                'County'=> $order_details['county'],
+                'LegalDescription'=> $order_details['legal_description'],
+                'PrimaryOwner'=> $order_details['primary_owner'],
+                'SecondaryOwner'=> $order_details['secondary_owner'],
+                'SalesRep'=> $order_details['salerep_first_name'] . ' ' . $order_details['salerep_last_name'],
+                'TitleOfficer'=> $order_details['titleofficer_first_name'] . ' ' . $order_details['titleofficer_last_name'],
+                'ProductType'=> $order_details['product_type'],
+                'SalesAmount'=> $order_details['sales_amount'],
+                'LoanAmount'=> $order_details['loan_amount'],
+                'LoanNumber'=> $order_details['loan_number'],
+                'EscrowNumber'=> $order_details['escrow_officer_id'],
+                'randomString'=> $order_details['random_number']
+            );
+
+            $buyerDetails =  $listingDetails = $parties_email = array();
+    
+            if (isset($order_details['lender_id']) && !empty($order_details['lender_id'])) {
+                $data['lender_details'] = array(
+                    'name' => $order_details['lender_first_name'], 
+                    'email' => $order_details['lender_email'], 
+                    'telephone' => $order_details['lender_telephone_no'],
+                    'company' => $order_details['lender_company_name']
+                );
+            }
+
+            if (isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id'])) {
+                $buyerDetails = $this->agent_model->get_agents(array('id' => $order_details['buyer_agent_id']));
+                if (!empty($buyerDetails)) {
+                    $data['buyers_agent'] = array(
+                        'name'=>$buyerDetails['name'], 
+                        'email'=>$buyerDetails['email_address'], 
+                        'telephone'=> $buyerDetails['telephone_no'],
+                        'company'=>$buyerDetails['company']
+                    );
+                }
+                
+            }
+
+            if (isset($order_details['listing_agent_id']) && !empty($order_details['listing_agent_id'])) {
+                $listingDetails = $this->agent_model->get_agents(array('id' => $order_details['listing_agent_id']));
+                if (!empty($listingDetails)) {
+                    $data['listing_agent'] = array(
+                        'name' => $listingDetails['name'], 
+                        'email' => $listingDetails['email_address'], 
+                        'telephone' => $listingDetails['telephone_no'],
+                        'company' => $listingDetails['company']
+                    );
+                }
+            }
+            
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $order_message_body = $this->load->view('emails/order.php',$data,TRUE);
+            $message = $order_message_body; 
+            $subject = 'PDF:'.$orderNumber;
+            $to = $order_details['cust_email_address'];
+            $parties_email[] = $order_details['salerep_email_address'];
+            $file = array();
+            $lpReportName = 'pre_listing_report_'.$orderNumber.'.pdf';
+            $file[] = env('AWS_PATH')."pre-listing-doc/".$lpReportName;
+            //$parties_email[] = 'hitesh.p@crestinfosystems.com';
+            $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
+            $this->load->helper('sendemail');
+            //$cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+            
+            $mailParams = array(
+                'from_mail'=>$from_mail, 
+                'from_name'=>$from_name, 
+                'to'=>$to,
+                'subject'=>$subject,
+                'message'=>json_encode($data),
+                'file'=>json_encode($file),
+                'cc'=>json_encode($cc)
+            );
+
+            if (isset($order_details['lp_file_number']) && !empty($order_details['lp_file_number'])) {
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $order_details['order_id'], 0);
+                try {
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+                }  catch (Exception $e) {
+
+                }
+                $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $order_details['order_id'], $logid);
+            }
         }
-        
         $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
         echo json_encode($data);exit;
     }
@@ -5549,6 +5649,36 @@ class Home extends MX_Controller {
         $this->order->createLpReport($titlePointData->file_number, false, true);
         $data = array('status' => 'success', 'message' => 'Lp report regenerated successfully.');
         echo json_encode($data);
+    }
+
+    public function addVestingInfo()
+    {
+        $file_id = $this->input->post('file_id');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row_array(); 
+
+        $vesting_info = $this->input->post('vesting_info');
+        $this->db->update('pct_order_title_point_data', array('vesting_information' => $vesting_info), array('id' => $titlePointData['id']));
+        $this->load->library('order/order');
+        $this->order->createLpReport($titlePointData['file_number'], true, false);
+        $successMsg = 'Vesting info saved successfully and LP report generated successfully for new data.';
+        $this->session->set_userdata('success', $successMsg);
+        redirect(base_url().'order/admin/lp-orders');
+    }
+
+    public function getVestingInfo()
+    {
+        $file_id = $this->input->post('file_id');
+        $this->db->select('*');
+        $this->db->from('pct_order_title_point_data');
+        $this->db->where('file_id', $file_id);
+        $query = $this->db->get();
+        $titlePointData = $query->row_array(); 
+        $data = array('status'=>'success', 'vesting_information'=> $titlePointData['vesting_information']);
+        echo json_encode($data);exit;
     }
 }
 
