@@ -96,18 +96,18 @@
                         
                     </div> -->
                     <div class="col-md-6 col-sm-12">
-                        <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card border-left-success shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Refi Orders</div>
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Refi Orders</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $openLoanCount;?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-table fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails" href="<?php echo base_url().'order/admin/orders' ?>">
+                                <a class="clearfix small z-1 viewDetails text-success" href="<?php echo base_url().'order/admin/orders' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -137,24 +137,24 @@
         <div class="col-md-6 col-sm-12">
                 <div class="row">
                     <div class="col-sm-12 mb-4">
-                        <h1 class="h5 mb-0 text-primary">Closed Orders of <?=date('F Y')?></h1>
+                        <h1 class="h5 mb-0 text-info">Closed Orders of <?=date('F Y')?></h1>
                         <!-- <div class="card-header card-header-primary text-primary">Closed Orders of <?=date('F Y')?></div> -->
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
-                        <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sales Orders</div>
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sales Orders</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $closedSalesCount;?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-table fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails" href="<?php echo base_url().'order/admin/orders' ?>">
+                                <a class="clearfix small z-1 viewDetails text-info" href="<?php echo base_url().'order/admin/orders' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -180,18 +180,18 @@
                         
                     </div> -->
                     <div class="col-md-6 col-sm-12">
-                        <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card border-left-warning  shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Refi Orders</div>
+                                        <div class="text-xs font-weight-bold text-warning  text-uppercase mb-1">Refi Orders</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $closedLoanCount;?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-table fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails" href="<?php echo base_url().'order/admin/orders' ?>">
+                                <a class="clearfix small z-1 viewDetails text-warning" href="<?php echo base_url().'order/admin/orders' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -223,25 +223,25 @@
         <div class="col-sm-12">
                 <div class="row">
                     <div class="col-sm-12 mb-3">
-                        <h1 class="h5 mb-0 text-info"># Of Clients</h1>
+                        <h1 class="h5 mb-0 text-primary"># Of Clients</h1>
                         <!-- <div class="card-header card-header-info text-info"> # of Clients </div> -->
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-4 col-sm-12">
-                        <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Escrows</div>
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Escrows</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $escrowUsersCount;?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-users fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails text-info" href="<?php echo base_url().'order/admin/escrow' ?>">
+                                <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url().'order/admin/escrow' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -267,18 +267,18 @@
 
                     </div> -->
                     <div class="col-md-4 col-sm-12">
-                        <div class="card border-left-info shadow h-100 py-2">
+                        <div class="card border-left-success shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Lenders</div>
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Lenders</div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $lenderUsersCount;?></div>
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-users fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails text-info" href="<?php echo base_url().'order/admin/lenders' ?>">
+                                <a class="clearfix small z-1 viewDetails text-success" href="<?php echo base_url().'order/admin/lenders' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -344,13 +344,13 @@
     </div>
     <div class="row mb-4">
             <div class="col-md-6 col-sm-12">
-                <div class="card border-left-danger shadow h-100 py-2">
-                    <h1 class="card-header h5 mb-0 text-danger"># Of expired passwords</h1>
-                    <!-- <div class="card-header card-header-danger text-danger "># of expired passwords </div> -->
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <h1 class="card-header h5 mb-0 text-primary"># Of expired passwords</h1>
+                    <!-- <div class="card-header card-header-primary text-primary "># of expired passwords </div> -->
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Passwords expired</div>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Passwords expired</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $expiredPasswordCount;?></div>
                                 <!-- <button type="button" class="btn btn-danger text-right float-right" onclick="refreshExipredPasswords();"><i class="fas fa-refresh"></i></button> -->
                             </div>
@@ -358,7 +358,7 @@
                                 <i class="fas fa-refresh fa-2x text-gray-300"></i>
                             </div>
                         </div>
-                        <a class="clearfix small z-1 viewDetails text-danger" href="<?php echo base_url().'order/admin/orders' ?>">
+                        <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url().'order/admin/orders' ?>">
                             <span class="">View Details</span>
                             <span class="">
                                 <i class="fas fa-angle-right"></i>
@@ -392,13 +392,13 @@
 
             </div> -->
             <div class="col-md-6 col-sm-12">
-                <div class="card border-left-danger shadow h-100 py-2">
-                    <h1 class="card-header h5 mb-0 text-danger">Not received JSON</h1>
-                    <!-- <div class="card-header card-header-danger text-danger ">Not received JSON</div> -->
+                <div class="card border-left-info shadow h-100 py-2">
+                    <h1 class="card-header h5 mb-0 text-info">Not received JSON</h1>
+                    <!-- <div class="card-header card-header-info text-info ">Not received JSON</div> -->
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Files</div>
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Files</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $failedJsonCount;?></div>
                             </div>
                         </div>                        
@@ -426,6 +426,18 @@
             </div> -->
     </div>
 
+    <div class="row">
+		<div class="col-xl-12">
+			
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">Vacation Requests Calendar</h6>
+				</div>
+				<div id='loading'>loading...</div>	
+				<div id='calendar'></div>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- /.container-fluid -->
 

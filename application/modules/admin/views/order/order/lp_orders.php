@@ -69,17 +69,17 @@
 				<table class="table table-bordered" id="tbl-lp-orders-listing" width="100%" cellspacing="0">
 					<thead>
 						<tr>
-							<th>Sr No</th>
-							<th>Order#</th>
-							<th>Property Address</th>
-							<th>Product Type</th>
-							<th>Sales Rep</th>
-							<th>Created By</th>
-							<th>Lp Document Name</th>
-							<th>Report Status</th>
-							<th>Sync To Resware</th>      
-							<th>Created At</th>
-							<th>Action</th>
+							<th width="5%" >Sr No</th>
+							<th width="10%">Order#</th>
+							<th width="10%">Property Address</th>
+							<th width="10%">Product Type</th>
+							<th width="7%">Sales Rep</th>
+							<th width="7%">Created By</th>
+							<th width="10%">Lp Document Name</th>
+							<th width="15%">Report Status</th>
+							<th width="5%">Sync To Resware</th>      
+							<th width="10%">Created At</th>
+							<th width="10%">Action</th>
 						</tr>
 					</thead>
 					<tbody></tbody>

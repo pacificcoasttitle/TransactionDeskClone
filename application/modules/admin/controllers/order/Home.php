@@ -123,7 +123,7 @@ class Home extends MX_Controller {
 
         $this->admintemplate->addCSS( base_url('assets/libs/calendar/main.css'));
         $this->admintemplate->addJS( base_url('assets/libs/calendar/main.js'));
-        // $this->admintemplate->addJS( base_url('assets/backend/hr/js/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
+        $this->admintemplate->addJS( base_url('assets/backend/js/dashboard.js?v=dashboard_1') );
         $this->admintemplate->show("order/home", "index", $data);
     }
 
@@ -567,7 +567,7 @@ class Home extends MX_Controller {
                 $specialSel = $value['is_special_lender'] == 1 ? 'selected' : '';
                 $normalSel = $value['is_special_lender'] == 0 ? 'selected' : '';
                 $id = $value['id'];
-                $nestedData[] = "<select onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
+                $nestedData[] = "<select class='custom-select custom-select-sm form-control form-control-sm' onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
                 // $nestedData[] = $value['lender_type'];
                          
                 if ($value['is_dual_cpl'] == 1) {
@@ -4666,7 +4666,7 @@ class Home extends MX_Controller {
                 $sectionH = ($value["display_in_section"] == "H") ? 'selected' : '';
                 $sectionI = ($value["display_in_section"] == "I") ? 'selected' : '';
                 $sectionJ = ($value["display_in_section"] == "J") ? 'selected' : '';
-                $lpDocTypeSectionSelection ='<select onchange="updateDocumentSection('.$value['id'].',this.value);" id="lp_document_section" name="lp_document_section">
+                $lpDocTypeSectionSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateDocumentSection('.$value['id'].',this.value);" id="lp_document_section" name="lp_document_section">
                                 <option value="">Select</option>
                                 <option '. $sectionG .' value="G">Section G</option>
                                 <option '. $sectionH .' value="H">Section H</option>

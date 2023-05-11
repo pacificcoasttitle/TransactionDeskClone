@@ -516,7 +516,7 @@ class Order extends MX_Controller {
             if (empty($value['document_name'])) {
                 $disabled = "disabled";
             }
-            $lpReportStatusSelection ='<select '.$disabled.' onchange="updateLpReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
+            $lpReportStatusSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" '.$disabled.' onchange="updateLpReportStatus('.$value['file_id'].',this.value);" id="lp_report_status" name="lp_report_status">
                                 <option value="">Select</option>
                                 <option value="pending">Pending</option>
                                 <option value="approved">Approved</option>

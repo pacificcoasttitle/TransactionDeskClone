@@ -72,7 +72,7 @@ class CodeBook extends MX_Controller {
                     $type = $value['type'];
                 }
 
-                $type_dropdown = '<select onchange="updateType('.$value['id'].', this.value);" id="type" name="type"><option value="">Select</option><option value="Easement">Easement</option><option value="Lien">Lien</option><option value="Requirement">Requirement</option><option value="Restriction">Restriction</option><option value="Tax">Tax</option></select>';
+                $type_dropdown = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateType('.$value['id'].', this.value);" id="type" name="type"><option value="">Select</option><option value="Easement">Easement</option><option value="Lien">Lien</option><option value="Requirement">Requirement</option><option value="Restriction">Restriction</option><option value="Tax">Tax</option></select>';
 
                 $type_dropdown = str_replace('value="' .  $type . '"','value="' .  $type . '" selected', $type_dropdown);
 

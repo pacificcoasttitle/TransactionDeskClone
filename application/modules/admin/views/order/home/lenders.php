@@ -43,16 +43,16 @@
                 <table class="table table-bordered" id="tbl-lenders-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Email Address</th>
-                            <th>Company Name</th>
-                            <th>Address</th>
-                            <th>Mortgage User</th>
-                            <th>User Type</th>
-                            <th>Dual CPL</th>
-                            <th>Allow Only Resware Order</th>
-                            <th>Action</th>
+                            <th width="7%" >First Name</th>
+                            <th width="7%">Last Name</th>
+                            <th width="15%">Email Address</th>
+                            <th width="15%">Company Name</th>
+                            <th width="15%">Address</th>
+                            <th width="5%">Mortgage User</th>
+                            <th width="10%">User Type</th>
+                            <th width="5%">Dual CPL</th>
+                            <th width="5%">Allow Only Resware Order</th>
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
