@@ -5,15 +5,24 @@
 }
 </style>
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Grant Deed Documents
-            <div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" id="export_grant_documents" class="btn btn-secondary"> Export </a>
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Orders Listing</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="javascript:void(0);" data-export-type="csv" id="export_grant_documents" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Grant Deed Documents</h6> 
             </div>
         </div>
-
         <div class="card-body">
             <div id="cpl_document_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="cpl_document_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
@@ -36,46 +45,4 @@
     </div>
 </div>
 
-<script src="https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js"></script>
-<script>
-function downloadDocumentFromAws(url, documentType)
-{
-    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-    $('#page-preloader').css('display', 'block');
-    var fileNameIndex = url.lastIndexOf("/") + 1;
-    var filename = url.substr(fileNameIndex);
-    $.ajax({
-        url: base_url + "download-aws-document-admin",
-        type: "post",
-        data: {
-            url : url
-        },
-        async: false,
-        success: function (response) {
-            if (response) {
-                if (navigator.msSaveBlob) {
-                    var csvData = base64toBlob(response, 'application/octet-stream');
-                    var csvURL = navigator.msSaveBlob(csvData, filename);
-                    var element = document.createElement('a');
-                    element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
-                    element.style.display = 'none';
-                    document.body.appendChild(element);
-                    document.body.removeChild(element);
-                } else {
-                    console.log(response);
-                    var csvURL = 'data:application/octet-stream;base64,' + response;
-                    var element = document.createElement('a');
-                    element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
-                    element.style.display = 'none';
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
-                }
-            }
-            $('#page-preloader').css('display', 'none');
-        }
-    });
-}
-</script>
+<!-- <script src="https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js"></script> -->

@@ -9,6 +9,7 @@ class Title extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/title_model');
         $this->load->library('order/common');
@@ -19,9 +20,10 @@ class Title extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Title Officers';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/title/title', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/title", "title", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/title/title', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function get_title_officer_list()
@@ -54,8 +56,8 @@ class Title extends MX_Controller {
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-title-officer/'.$value['id'];
-                    $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Title Officer Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
-                    $action .= "<a href='javascript:void(0);' onclick='deleteTitleOfficer(".$value['id'].")' class='btn btn-action'  title='Delete Title Officer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action = "<div style='display: flex;justify-content: space-evenly;' ><a href='".$editOrderUrl."' class='edit-agent'title ='Edit Title Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteTitleOfficer(".$value['id'].")' title='Delete Title Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
                     $nestedData[] = $action;
                 }
                 $data[] = $nestedData;            
@@ -111,9 +113,11 @@ class Title extends MX_Controller {
                 $data['partner_type_id_error_msg'] = form_error('partner_type_id');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/title/add_title_officer', $data);
-        $this->load->view('order/layout/footer', $data);
+
+        $this->admintemplate->show("order/title", "add_title_officer", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/title/add_title_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function edit_title_officer()
@@ -168,9 +172,10 @@ class Title extends MX_Controller {
         }
 
         $data['title_officer_info'] = $title_officer_info;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/title/edit_title_officer', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/title", "edit_title_officer", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/title/edit_title_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_title_officer()

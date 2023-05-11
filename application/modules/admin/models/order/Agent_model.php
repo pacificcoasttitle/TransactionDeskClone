@@ -23,6 +23,7 @@ class Agent_model extends CI_Model
 
     		if(isset($keyword) && !empty($keyword))
 			{
+                $this->db->group_start();
 				$this->db->like('name', $keyword);
                 /*$this->db->or_like('last_name', $keyword);*/
                 $this->db->or_like('email_address', $keyword);
@@ -30,6 +31,7 @@ class Agent_model extends CI_Model
                 $this->db->or_like('address', $keyword);
                 $this->db->or_like('city', $keyword);
                 $this->db->or_like('zipcode', $keyword);
+                $this->db->group_end();
 			}
 
 			$this->db->where('status', 1);
@@ -38,6 +40,7 @@ class Agent_model extends CI_Model
 
 			if(isset($keyword) && !empty($keyword))
 			{
+                $this->db->group_start();
 				$this->db->like('name', $keyword);
                 /*$this->db->or_like('last_name', $keyword);*/
                 $this->db->or_like('email_address', $keyword);
@@ -45,6 +48,7 @@ class Agent_model extends CI_Model
                 $this->db->or_like('address', $keyword);
                 $this->db->or_like('city', $keyword);
                 $this->db->or_like('zipcode', $keyword);
+                $this->db->group_end();
 			}
 
 			$this->db->where('status', 1);
@@ -53,7 +57,6 @@ class Agent_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 			$query = $this->db->get('agents');
-			
 
 			if ($query->num_rows() > 0) 
 	        {
@@ -73,7 +76,6 @@ class Agent_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 			$query = $this->db->get('agents');
-
 			if ($query->num_rows() > 0) 
 	        {
 	            $agent_lists = $query->result_array();

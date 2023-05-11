@@ -9,6 +9,7 @@ class FeesTypes extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/feesTypes_model');
         $this->load->library('order/common');
@@ -19,9 +20,10 @@ class FeesTypes extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Fees Types';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/fees_types', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "fees_types", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/fees_types', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function add_fee_type()
@@ -78,9 +80,10 @@ class FeesTypes extends MX_Controller {
                 $data['name_error_msg'] = form_error('fee_type');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_fee_type', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "add_fee_type", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_fee_type', $data);
+        // $this->load->view('order/layout/footer', $data);
         
        // redirect('index.php?admin/fees');
     }
@@ -126,8 +129,8 @@ class FeesTypes extends MX_Controller {
                 $editUrl = base_url().'order/admin/edit-fee-type/'.$value['id'];
                 
 
-                $action = '<a href="'.$editUrl.'" class="btn btn-action"><span class="fa fa-pencil" aria-hidden="true"></span></a>';
-                $action .= '<a href="javascript:void(0);" onclick="deleteFeesType('.$value['id'].');" class="btn btn-action"><span class="fa fa-trash" aria-hidden="true"></span></a>';
+                $action = '<div class="table-action" ><a href="'.$editUrl.'" ><span class="fa fa-pencil" aria-hidden="true"></span></a>';
+                $action .= '<a href="javascript:void(0);" onclick="deleteFeesType('.$value['id'].');" ><span class="fa fa-trash" aria-hidden="true"></span></a></div>';
                 $nestedData[] = $action;
                 $data[] = $nestedData;
                 $count++;
@@ -215,8 +218,9 @@ class FeesTypes extends MX_Controller {
         }
 
         $data['fees_info'] = $fees_info;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_fee_type', $data);
-		$this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_fee_type", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_fee_type', $data);
+		// $this->load->view('order/layout/footer', $data);
     }
 }

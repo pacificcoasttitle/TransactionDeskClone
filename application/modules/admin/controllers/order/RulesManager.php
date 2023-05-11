@@ -9,6 +9,7 @@ class RulesManager extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/rulesManager_model');
         $this->load->model('order/counties_model');
@@ -20,9 +21,12 @@ class RulesManager extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Rules Manager';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/rules_manager', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/libs/jquery-1.12.4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->show("order/home", "rules_manager", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/rules_manager', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function get_rules()

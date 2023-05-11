@@ -1,11 +1,23 @@
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Code Book
-            <div class="float-right">
-                <a href="<?php echo base_url(); ?>order/admin/import-code-book" class="btn btn-secondary"> Import </a>
-                <a href="<?php echo base_url(); ?>order/admin/add-code-book" class="btn btn-secondary" style="display: none;"> Add </a>
+    <!-- DataTables Example -->
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Code Book</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="<?php echo base_url(); ?>order/admin/add-code-book" class="btn btn-success btn-icon-split float-right mr-2" style="display: none;"> 
+                <span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">Add</span> </a>
+            <a href="<?php echo base_url(); ?>order/admin/import-code-book" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fas fa-file-import"></i></span><span class="text">Import</span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Code Book</h6> 
             </div>
         </div>
         <div class="card-body">

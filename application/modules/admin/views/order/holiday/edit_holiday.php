@@ -1,4 +1,4 @@
-<div class="container">
+<div class="content">
 <?php if(!empty($success_msg)){ ?>
     <div class="col-xs-12">
         <div class="alert alert-success"><?php echo $success_msg; ?></div>
@@ -9,13 +9,23 @@
         <div class="alert alert-danger"><?php echo $error_msg; ?></div>
     </div>
 <?php } ?>
-    <div class="card mx-auto mt-5">
-      <div class="card-header">Add Holiday</div>
+<div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="h3 text-gray-800">Edit Holiday</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Edit Holiday</h6>
+        </div>
         <div class="card-body">        
             <form id="frm-add-holiday" method="POST">
-                <div class="form-group row">
+                <div class="form-group">
                     <label for="holiday_name" class="col-sm-2 col-form-label">Holiday Name<span class="required"> *</span></label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-6">
                         <input type="text" value="<?php echo  $holiday_info['name'];?>" class="form-control" name="holiday_name" id="holiday_name" class="form-control" placeholder="Holiday Name">
                         <?php if(!empty($holiday_name_error_msg)){ ?>                     
                             <span class="error"><?php echo $holiday_name_error_msg; ?></span>
@@ -23,9 +33,9 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
+                <div class="form-group">
                     <label for="holiday_date" class="col-sm-2 col-form-label">Holiday Date<span class="required"> *</span></label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-6">
                         <input type="text" class="form-control" value="<?php echo date("m/d/Y", strtotime($holiday_info['holiday_date']));?>" name="holiday_date" id="holiday_date" class="form-control" placeholder="Holiday Date">
                         <?php if(!empty($holiday_date_error_msg)){ ?>                     
                             <span class="error"><?php echo $holiday_date_error_msg; ?></span>
@@ -33,16 +43,26 @@
                     </div>
                 </div>
                 
-                <div class="pull-right">
-                    <button type="submit" id="addFee" name="addHoliday" class="btn btn-secondary">Add</button>
-                    <a href="<?php echo base_url().'order/admin/holidays'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <button type="submit" id="addFee" name="addHoliday" class="btn btn-info btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span class="text">Update</span>
+                        </button>
+                        <a href="<?php echo base_url().'order/admin/holidays'; ?>" class="btn btn-secondary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-arrow-left"></i>
+                            </span>
+                            <span class="text">Cancel</span>
+                        </a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

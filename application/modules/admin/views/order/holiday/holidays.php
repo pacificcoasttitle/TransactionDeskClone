@@ -1,10 +1,21 @@
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Holidays
-            <div class="float-right">
-                <a href="<?php echo base_url(); ?>order/admin/add-holiday" class="btn btn-secondary"> Add Holiday </a>
+    <!-- DataTables Example -->
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Holidays</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="<?php echo base_url(); ?>order/admin/add-holiday"class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">Add Holiday</span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Holidays</h6> 
             </div>
         </div>
         <div class="card-body">

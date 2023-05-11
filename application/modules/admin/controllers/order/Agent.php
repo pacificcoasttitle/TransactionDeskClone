@@ -9,6 +9,7 @@ class Agent extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/agent_model');
         $this->load->library('order/common');
@@ -19,9 +20,10 @@ class Agent extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Agents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/agent/agents', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/agent", "agents", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/agent/agents', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function import_agents()
@@ -208,15 +210,14 @@ class Agent extends MX_Controller {
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
                     $editOrderUrl = base_url().'order/admin/edit-agent/'.$value['id'];
-                    $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Agent Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div style='display: flex;justify-content: space-evenly;'><a href='".$editOrderUrl."' class='edit-agent' title ='Edit Agent Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteAgent(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteAgent(".$value['id'].")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
 
                     $nestedData[] = $action;
                 }
                 
-                $data[] = $nestedData;            
-               // $cnt++;
+                $data[] = $nestedData;
             }
         }
 
@@ -327,9 +328,9 @@ class Agent extends MX_Controller {
             redirect(base_url().'agents');
         }
 
-
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/agent/edit-agent', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/agent", "edit-agent", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/agent/edit-agent', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 }

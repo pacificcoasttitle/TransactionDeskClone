@@ -3,10 +3,26 @@
     width: 250px !important;
     float: left;
 }
+.btn-secondary {
+    background-color: #223D7F;
+}
 </style>
 <div class="container-fluid">
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Incorrect users </h1>
+		</div>
+	</div>
     <!-- DataTables Example -->
-    <div class="card mb-3">                
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-users"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Incorrect users</h6> 
+            </div>
+        </div>            
         <div class="card-body">
             <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>

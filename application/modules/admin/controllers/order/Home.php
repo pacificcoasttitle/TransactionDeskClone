@@ -25,6 +25,7 @@ class Home extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/home_model'); 
         $this->load->model('order/order_model'); 
@@ -116,18 +117,27 @@ class Home extends MX_Controller {
             // 'totalFailCount' => $totalFailCount
         );
         
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/index', $data);
-        $this->load->view('order/layout/footer', $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/index', $data);
+        // $this->load->view('order/layout/footer', $data);
+
+        $this->admintemplate->addCSS( base_url('assets/libs/calendar/main.css'));
+        $this->admintemplate->addJS( base_url('assets/libs/calendar/main.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/dashboard.js?v=dashboard_1') );
+        $this->admintemplate->show("order/home", "index", $data);
     }
 
     public function dashboard()
     {
     	$data = array();
         $data['title'] = 'PCT Order: Escrow';
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/dashboard', $data);
-        $this->load->view('order/layout/footer', $data);
+        // $this->admintemplate->addCSS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.css'));
+        // $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/jquery.dataTables.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/backend/hr/vendor/datatables/dataTables.bootstrap4.min.js'));
+        $this->admintemplate->show("order/home", "dashboard", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/dashboard', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_customer_list()
@@ -195,7 +205,7 @@ class Home extends MX_Controller {
                 {
                     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";*/
 
-                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
                 }
 	            
@@ -315,9 +325,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function file_check($str)
@@ -489,18 +500,21 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import_lender', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import_lender", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import_lender', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function lenders()
     {
         $data = array();
         $data['title'] = 'PCT Order: Lenders';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lenders', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/lender.js'));
+        $this->admintemplate->show("order/home", "lenders", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lenders', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_lender_list()
@@ -553,7 +567,7 @@ class Home extends MX_Controller {
                 $specialSel = $value['is_special_lender'] == 1 ? 'selected' : '';
                 $normalSel = $value['is_special_lender'] == 0 ? 'selected' : '';
                 $id = $value['id'];
-                $nestedData[] = "<select onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
+                $nestedData[] = "<select class='custom-select custom-select-sm form-control form-control-sm' onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
                 // $nestedData[] = $value['lender_type'];
                          
                 if ($value['is_dual_cpl'] == 1) {
@@ -574,7 +588,7 @@ class Home extends MX_Controller {
                 {
                     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";*/
 
-                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a>";
                     $nestedData[] = $action;
                 }
                 
@@ -592,9 +606,11 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: CPL Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/cpl_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "cpl_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/cpl_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_cpl_document_list()
@@ -668,9 +684,10 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: New Users';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/new_users', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "new_users", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/new_users', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_new_users_list()
@@ -865,9 +882,15 @@ class Home extends MX_Controller {
                 }
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_new_user', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/jquery-ui.css'));
+        $this->admintemplate->addJS( base_url('assets/libs/jquery-1.12.4.min.js'));
+        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-new-user.js'));
+        $this->admintemplate->show("order/home", "add_new_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_new_user', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
     
     function get_company_list()
@@ -1097,18 +1120,24 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Grant Deed Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/grant_deed_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "grant_deed_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/grant_deed_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function lv_document()
     {
         $data = array();
         $data['title'] = 'PCT Order: Legal & Vesting Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lv_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "lv_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lv_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_grant_deed_document_list()
@@ -1238,9 +1267,10 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Master Users';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/master_users', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "master_users", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/master_users', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_master_users_list()
@@ -1271,7 +1301,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-master-user/'.$value['id'];
-                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit Master User'><span class='fa fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")' class='btn btn-action'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;' ><a href='".$editUrl."'   title='Edit Master User'><span class='fa fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
                 }
                 $data[] = $nestedData;            
             }
@@ -1341,9 +1371,10 @@ class Home extends MX_Controller {
                 $data['zipcode_error_msg'] = form_error('zipcode');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_new_master_user', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "add_new_master_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_new_master_user', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function editMasterUser()
@@ -1412,18 +1443,21 @@ class Home extends MX_Controller {
             $con = array('id' => $id);
             $data['master_user_info'] = $this->home_model->get_rows($con);
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_master_user', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_master_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_master_user', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function tax_document()
     {
         $data = array();
         $data['title'] = 'PCT Order: Tax Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/tax_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "tax_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/tax_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_tax_document_list()
@@ -1492,9 +1526,11 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Curative Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/curative_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "curative_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/curative_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_curative_document_list()
@@ -1633,9 +1669,11 @@ class Home extends MX_Controller {
         $data['title'] = 'PCT Order: Files';
         $this->load->model('order/title_model');
         $data['titleOfficers'] = $this->title_model->getTitleOfficers();
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/file_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "file_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/file_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_file_document_list()
@@ -1697,9 +1735,15 @@ class Home extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
         $data['title'] = 'PCT Order: Companies';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/companies', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
+        // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/companies.js'));
+        $this->admintemplate->show("order/home", "companies", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/companies', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_companies_list()
@@ -1734,7 +1778,7 @@ class Home extends MX_Controller {
                 } else {
                     $loan_underwriter = '';
                 }
-                $loanUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
+                $loanUnderwriterSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter('.$value['partner_id'].',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
                                     <option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
@@ -1748,7 +1792,7 @@ class Home extends MX_Controller {
                 } else {
                     $sales_underwriter = '';
                 }
-                $salesUnderwriterSelection ='<select onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
+                $salesUnderwriterSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter('.$value['partner_id'].',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
                                     <option value="commonwealth">Commonwealth</option>
@@ -1761,10 +1805,10 @@ class Home extends MX_Controller {
                     foreach($deliverables as $deliverable) {
                         $deliverablesInfo .= $deliverable."<br>";
                     }
-                    $deliverablesInfo .= "<a style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].");'><i class='fas fa-edit'></i></a>";
+                    $deliverablesInfo .= "<a href='javascript:void(0)' style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].");'><i class='fas fa-edit'></i></a>";
                     $nestedData[] = $deliverablesInfo;
                 } else {
-                    $nestedData[] = "<a style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].")'><i class='fas fa-plus-circle'></i></a>";
+                    $nestedData[] = "<a href='javascript:void(0)' style='margin-top:10px;' onclick='addOrUpdateDeliverables(".$value['partner_id'].")'><i class='fas fa-plus-circle'></i></a>";
                 }
                 $data[] = $nestedData; 
                 $i++;           
@@ -1837,9 +1881,10 @@ class Home extends MX_Controller {
                 $data['resware_company_id_error_msg'] = form_error('resware_company_id');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_company', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "add_company", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_company', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function primaryCheck()
@@ -1866,9 +1911,10 @@ class Home extends MX_Controller {
         }
         
         $data['users'] = $new_users;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/users_check', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "users_check", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/users_check', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function make_customer_primary()
@@ -2138,9 +2184,10 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Incorrect Users';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/incorrect_users', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "incorrect_users", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/incorrect_users', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_incorrect_customer_list()
@@ -2373,9 +2420,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import_underwriter', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import_underwriter", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import_underwriter', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function updateUnderwriter()
@@ -2408,9 +2456,10 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: CPL/Proposed Users';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/cpl_proposed_users', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "cpl_proposed_users", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/cpl_proposed_users', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_cpl_proposed_users_list()
@@ -2449,7 +2498,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $lenderStatus;
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-cpl-proposed-user/'.$value['id'];
-                    $nestedData[] = "<a href='".$editUrl."'  class='btn btn-action'  title='Edit CPL/Proposed User'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $nestedData[] = "<a href='".$editUrl."'  title='Edit CPL/Proposed User'><span class='fa fa-edit' aria-hidden='true'></span></a>";
                 }
                 $data[] = $nestedData;            
             }
@@ -2549,9 +2598,10 @@ class Home extends MX_Controller {
             $con = array('id' => $id);
             $data['cpl_proposed_user_info'] = $this->home_model->get_rows($con);
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_cpl_proposed_user', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_cpl_proposed_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_cpl_proposed_user', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function rejectCplProposedUser()
@@ -2572,9 +2622,11 @@ class Home extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Send Password Listing';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/password_listing', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/password-listing.js'));
+        $this->admintemplate->show("order/home", "password_listing", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/password_listing', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
     
     public function get_password_list()
@@ -2634,7 +2686,7 @@ class Home extends MX_Controller {
                 $nestedData[] = "<input $checked onclick='isPasswordRequired();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";       
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
+                    $action = "<a href='javascript:void(0);' onclick='sendPasswordMail(".$value['id'].")'  title='Delete Customer'><span class='fa fa-envelope' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -2702,19 +2754,20 @@ class Home extends MX_Controller {
                 $data['resware_password_error_msg'] = form_error('resware_password');
             }                                       
         }
-        
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/resware_admin_credential', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "resware_admin_credential", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/resware_admin_credential', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function importOrders($value='')
     {
         $data = array();
         $data['title'] = 'PCT Order: Import Orders';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import_order', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import_order", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import_order', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_import_order_customer_list()
@@ -2786,10 +2839,12 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Notification';
-        //$data['notifications'] = $this->home_model->getNotifications();
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/notifications', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/order.js'));
+        $this->admintemplate->show("order/home", "notifications", $data);
+        
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/notifications', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_notifications_list()
@@ -2818,7 +2873,7 @@ class Home extends MX_Controller {
 	            $nestedData[] = $value['name'];
                 $notification_id = $value['id'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a onclick='preview_email($notification_id)'><i class='fas fa-eye'></i></a>
+                    $nestedData[] = "<div style='display:flex;'><a href='javascript:void(0);' onclick='preview_email($notification_id)'><i class='fas fa-eye'></i></a>
                     </div>";
                 }
 	            $data[] = $nestedData;    
@@ -2887,9 +2942,10 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Escrow Officers';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/escrow_officers', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "escrow_officers", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/escrow_officers', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_escrow_officers_list()
@@ -2935,9 +2991,9 @@ class Home extends MX_Controller {
                
                 $action = "";
                 $editUrl = base_url().'order/admin/edit-escrow-officer/'.$value['id'];
-                $action = "<a href='".$editUrl."' class='btn btn-action edit-agent'title ='Edit Escrow Officer Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                $action = "<div style='display: flex;justify-content: space-evenly;'><a href='".$editUrl."' class='edit-agent'title ='Edit Escrow Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
 
-                $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(".$value['id'].")' class='btn btn-action'  title='Delete Escrow Officer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(".$value['id'].")' title='Delete Escrow Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
                 $nestedData[] = $action;       
                           
                 $data[] = $nestedData;            
@@ -3002,9 +3058,13 @@ class Home extends MX_Controller {
                 $data['zip_error_msg'] = form_error('zip');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_escrow_officer', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-escrow.js'));
+        $this->admintemplate->show("order/home", "add_escrow_officer", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_escrow_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_escrow_officer()
@@ -3038,7 +3098,7 @@ class Home extends MX_Controller {
     {
         $data = array();
         $id = $this->uri->segment(4);
-        $data['title'] = 'PCT Order: Add Escrow Officer';
+        $data['title'] = 'PCT Order: Edit Escrow Officer';
         $escrowData = array();
 
         if(isset($id) && !empty($id))
@@ -3094,10 +3154,13 @@ class Home extends MX_Controller {
         {
             redirect(base_url().'escrow-officers');
         }
-        
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_escrow_officer', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-escrow.js'));
+        $this->admintemplate->show("order/home", "edit_escrow_officer", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_escrow_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function downloadAwsDocument()
@@ -3139,9 +3202,11 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Mortgage Brokers';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/mortgage_brokers', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/mortgage-brokers.js'));
+        $this->admintemplate->show("order/home", "mortgage_brokers", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/mortgage_brokers', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_mortgage_brokers_list()
@@ -3346,18 +3411,20 @@ class Home extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Pre Listing Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/pre_listing_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "pre_listing_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/pre_listing_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function lp_listing_document()
     {
         $data = array();
         $data['title'] = 'PCT Order: Pre Listing Report Documents';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lp_listing_document', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "lp_listing_document", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lp_listing_document', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_pre_listing_document_list()
@@ -4552,18 +4619,20 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function adminUserLogs()
     {
         $data = array();
         $data['title'] = 'PCT Order: Admin User Logs';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/admin_user_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "admin_user_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/admin_user_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_admin_user_logs()
@@ -4644,18 +4713,21 @@ class Home extends MX_Controller {
     {
     	$data = array();
         $data['title'] = 'PCT Order: LP Document Types';
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lp_document_types', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/lp-document-type.js'));
+        $this->admintemplate->show("order/home", "lp_document_types", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lp_document_types', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
     
     public function lpAlert()
     {
     	$data = array();
         $data['title'] = 'PCT Order: LP Alert';
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lp_alert', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "lp_alert", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lp_alert', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_lp_document_list()
@@ -4695,7 +4767,7 @@ class Home extends MX_Controller {
                 $sectionH = ($value["display_in_section"] == "H") ? 'selected' : '';
                 $sectionI = ($value["display_in_section"] == "I") ? 'selected' : '';
                 $sectionJ = ($value["display_in_section"] == "J") ? 'selected' : '';
-                $lpDocTypeSectionSelection ='<select onchange="updateDocumentSection('.$value['id'].',this.value);" id="lp_document_section" name="lp_document_section">
+                $lpDocTypeSectionSelection ='<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateDocumentSection('.$value['id'].',this.value);" id="lp_document_section" name="lp_document_section">
                                 <option value="">Select</option>
                                 <option '. $sectionG .' value="G">Section G</option>
                                 <option '. $sectionH .' value="H">Section H</option>
@@ -4718,9 +4790,9 @@ class Home extends MX_Controller {
                 $nestedData[] = "<input $vesChecked onclick='isVesDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-document-type/'.$value['id'];
-                    $action = "<a href='".$editUrl."' class='btn btn-action edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' class='btn btn-action'  title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -4766,9 +4838,9 @@ class Home extends MX_Controller {
                 // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-alert/'.$value['id'];
-                    $action = "<a href='".$editUrl."' class='btn btn-action edit-alert' title ='Edit Alert Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-alert' title ='Edit Alert Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' class='btn btn-action'  title='Delete Alert'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' title='Delete Alert'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -4844,9 +4916,10 @@ class Home extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/import_lp_document_types', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "import_lp_document_types", $data);
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/import_lp_document_types', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function addLpDocumentTypes()
@@ -4893,9 +4966,10 @@ class Home extends MX_Controller {
                 $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_lp_document_types', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "add_lp_document_types", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_lp_document_types', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function deleteLpDocumentType()
@@ -4982,10 +5056,10 @@ class Home extends MX_Controller {
         {
             redirect(base_url().'order/admin/lp-document-types');
         }
-        
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_lp_document_type', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_lp_document_type", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_lp_document_type', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function addLpAlert()
@@ -5016,9 +5090,10 @@ class Home extends MX_Controller {
                 $data['days_error_msg'] = form_error('days');
             }                                       
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/add_lp_alert', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "add_lp_alert", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_lp_alert', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function deleteLpAlert()
@@ -5088,10 +5163,10 @@ class Home extends MX_Controller {
         {
             redirect(base_url().'order/admin/lp-alert');
         }
-        
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/edit_lp_alert', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_lp_alert", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/edit_lp_alert', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
     
     public function updateDocumentSection()

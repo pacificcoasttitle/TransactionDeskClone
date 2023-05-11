@@ -32,14 +32,27 @@
 </style>
 <div class="container-fluid">
 	<!-- DataTables Example -->
-	<div class="card mb-3">
-		<div class="card-header">
-			<i class="fas fa-table"></i>
-			Lp Orders
-			<div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" onclick="exportLPOrders();" id="export-orders-data" class="btn btn-secondary"> Export </a>
-            </div>
+	<div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Lp Orders</h1>
 		</div>
+		<div class="col-sm-6">
+            <a href="javascript:void(0);" data-export-type="csv" onclick="exportLPOrders();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <span class="text"> Export </span> </a>
+		</div>
+	</div>
+	<div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Orders Listing</h6> 
+            </div>
+        </div>
 
 
 		<div class="card-body">
@@ -56,17 +69,17 @@
 				<table class="table table-bordered" id="tbl-lp-orders-listing" width="100%" cellspacing="0">
 					<thead>
 						<tr>
-							<th>Sr No</th>
-							<th>Order#</th>
-							<th>Property Address</th>
-							<th>Product Type</th>
-							<th>Sales Rep</th>
-							<th>Created By</th>
-							<th>Lp Document Name</th>
-							<th>Report Status</th>
-							<th>Sync To Resware</th>      
-							<th>Created At</th>
-							<th>Action</th>
+							<th width="5%" >Sr No</th>
+							<th width="10%">Order#</th>
+							<th width="10%">Property Address</th>
+							<th width="10%">Product Type</th>
+							<th width="7%">Sales Rep</th>
+							<th width="7%">Created By</th>
+							<th width="10%">Lp Document Name</th>
+							<th width="15%">Report Status</th>
+							<th width="5%">Sync To Resware</th>      
+							<th width="10%">Created At</th>
+							<th width="10%">Action</th>
 						</tr>
 					</thead>
 					<tbody></tbody>
@@ -149,256 +162,3 @@
         </div>
     </div>
 </div>
-
-<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
-	
-<script>
-	function getInstrumentData(file_id) {
-        $('body').animate({
-			opacity: 0.5
-		}, "slow");
-		$.ajax({
-			url: base_url + "order/admin/get-instrument-data",
-			method: "POST",
-			data: {
-				file_id: file_id
-			},
-			success: function (data) {
-				var result = jQuery.parseJSON(data);
-                $('body').animate({
-						opacity: 1.0
-                }, "slow");
-				if (result.status == 'success') {
-					$('#instrument_number_container').html(result.data);
-					$('#instrument_model').modal('show');
-				} else {
-					$('#instrument_number_container').html(result.data);
-					$('#instrument_model').modal('show');
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $("#lp_order_success_msg").offset().top
-				}, 1000);
-
-				setTimeout(function () {
-					$('#lp_order_error_msg').html('').hide();
-				}, 5000);
-			}
-		});
-	}
-
-	function regenerateReport(file_id) {
-        $('body').animate({
-			opacity: 0.5
-		}, "slow");
-		$.ajax({
-			url: base_url + "order/admin/regenerate-report",
-			method: "POST",
-			data: {
-				file_id: file_id
-			},
-			success: function (data) {
-				var result = jQuery.parseJSON(data);
-                $('body').animate({
-						opacity: 1.0
-                }, "slow");
-				$('#lp_order_success_msg').html(result.message).show();
-				$([document.documentElement, document.body]).animate({
-						scrollTop: $("#lp_order_success_msg").offset().top
-				}, 1000);
-				lp_order_list.ajax.reload(null, false);
-				setTimeout(function () {
-					$('#lp_order_success_msg').html('').hide();
-				}, 5000);
-				
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $("#lp_order_success_msg").offset().top
-				}, 1000);
-
-				setTimeout(function () {
-					$('#lp_order_error_msg').html('').hide();
-				}, 5000);
-			}
-		});
-	}
-
-	function sendOrderToResware(file_id) {
-		$('body').animate({
-			opacity: 0.5
-		}, "slow");
-		$.ajax({
-			url: base_url + "order/admin/send-order-to-resware",
-			method: "POST",
-			data: {
-				file_id: file_id
-			},
-			success: function (data) {
-				var result = jQuery.parseJSON(data);
-				if (result.status == 'success') {
-					$('body').animate({
-						opacity: 1.0
-					}, "slow");
-					$('#lp_order_success_msg').html(result.message).show();
-					$([document.documentElement, document.body]).animate({
-						scrollTop: $("#lp_order_success_msg").offset().top
-					}, 1000);
-					lp_order_list.ajax.reload(null, false);
-					setTimeout(function () {
-						$('#lp_order_success_msg').html('').hide();
-					}, 5000);
-				} else {
-					$('body').animate({
-						opacity: 1.0
-					}, "slow");
-					$('#lp_order_error_msg').html(result.message).show();
-					$([document.documentElement, document.body]).animate({
-						scrollTop: $("#lp_order_error_msg").offset().top
-					}, 1000);
-					setTimeout(function () {
-						$('#lp_order_error_msg').html('').hide();
-					}, 5000);
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $("#lp_order_success_msg").offset().top
-				}, 1000);
-
-				setTimeout(function () {
-					$('#lp_order_error_msg').html('').hide();
-				}, 5000);
-			}
-		});
-	}
-
-	function updateLpReportStatus(file_id, status) {
-		$('body').animate({
-			opacity: 0.5
-		}, "slow");
-		$.ajax({
-			url: base_url + "order/admin/update-lp-report-status",
-			method: "POST",
-			data: {
-				file_id: file_id,
-				status: status
-			},
-			success: function (data) {
-				var result = jQuery.parseJSON(data);
-				if (result.status == 'success') {
-					$('body').animate({
-						opacity: 1.0
-					}, "slow");
-					$('#lp_order_success_msg').html(result.msg).show();
-					$([document.documentElement, document.body]).animate({
-						scrollTop: $("#lp_order_success_msg").offset().top
-					}, 1000);
-					companies_list.ajax.reload(null, false);
-					setTimeout(function () {
-						$('#lp_order_success_msg').html('').hide();
-					}, 4000);
-				} else {
-					$('#lp_order_error_msg').html(result.message).show();
-					$([document.documentElement, document.body]).animate({
-						scrollTop: $("#lp_order_error_msg").offset().top
-					}, 1000);
-
-					setTimeout(function () {
-						$('#lp_order_error_msg').html('').hide();
-					}, 4000);
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $("#lp_order_error_msg").offset().top
-				}, 1000);
-
-				setTimeout(function () {
-					$('#lp_order_error_msg').html('').hide();
-				}, 4000);
-			}
-		});
-	}
-
-	function downloadDocumentFromAws(url, documentType) {
-		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-		$('#page-preloader').css('display', 'block');
-		var fileNameIndex = url.lastIndexOf("/") + 1;
-		var filename = url.substr(fileNameIndex);
-		$.ajax({
-			url: base_url + "download-aws-document-admin",
-			type: "post",
-			data: {
-				url: url
-			},
-			async: false,
-			success: function (response) {
-				if (response) {
-					if (navigator.msSaveBlob) {
-						var csvData = base64toBlob(response, 'application/octet-stream');
-						var csvURL = navigator.msSaveBlob(csvData, filename);
-						var element = document.createElement('a');
-						element.setAttribute('href', csvURL);
-						element.setAttribute('download', documentType + "_" + filename);
-						element.style.display = 'none';
-						document.body.appendChild(element);
-						document.body.removeChild(element);
-					} else {
-						console.log(response);
-						var csvURL = 'data:application/octet-stream;base64,' + response;
-						var element = document.createElement('a');
-						element.setAttribute('href', csvURL);
-						element.setAttribute('download', documentType + "_" + filename);
-						element.style.display = 'none';
-						document.body.appendChild(element);
-						element.click();
-						document.body.removeChild(element);
-					}
-				}
-				$('#page-preloader').css('display', 'none');
-			}
-		});
-	}
-
-	function addVesting(file_id)
-	{
-		$('#file_id').val(file_id);
-		$('body').animate({
-			opacity: 0.5
-		}, "slow");
-		$.ajax({
-			url: base_url + "order/admin/get-vesting-info",
-			method: "POST",
-			data: {
-				file_id: file_id
-			},
-			success: function (data) {
-				var result = jQuery.parseJSON(data);
-                $('body').animate({
-						opacity: 1.0
-                }, "slow");
-				if (result.status == 'success') {
-					$("textarea#vesting_info").val(result.vesting_information);
-					$('#vesting_model').modal('show');
-				} 
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				$('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
-				$([document.documentElement, document.body]).animate({
-					scrollTop: $("#lp_order_success_msg").offset().top
-				}, 1000);
-
-				setTimeout(function () {
-					$('#lp_order_error_msg').html('').hide();
-				}, 5000);
-			}
-		});
-	}
-
-</script>

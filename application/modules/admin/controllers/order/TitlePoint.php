@@ -9,6 +9,7 @@ class TitlePoint extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/titlePoint_model');
@@ -20,27 +21,31 @@ class TitlePoint extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: LV Log';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lv_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "lv_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lv_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function preListing()
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Pre Listing Log';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/pre_listing_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "pre_listing_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/pre_listing_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function lpXmlLogs()
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Pre Listing Log';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/lp_xml_log', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/backend/js/lp-xml-log.js'));
+        $this->admintemplate->show("order/home", "lp_xml_log", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/lp_xml_log', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function get_logs()
@@ -290,9 +295,10 @@ class TitlePoint extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Tax Log';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/tax_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "tax_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/tax_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_tax_logs()
@@ -402,9 +408,10 @@ class TitlePoint extends MX_Controller {
     {
         $data = array();
         $data['title'] = 'PCT Order: Grant Deed Log';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/grant_deed_logs', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "grant_deed_logs", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/grant_deed_logs', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_grant_deed_logs()

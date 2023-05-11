@@ -1,10 +1,21 @@
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            North American Branches
-            <div class="float-right">
-                <a href="javascript:void(0);" id="refresh_north_american_branches" class="btn btn-secondary">Refresh</a>
+    <!-- DataTables Example -->
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">North American Branches</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="javascript:void(0);" id="refresh_north_american_branches" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50"><i class="fas fa-refresh"></i></span><span class="text">Refresh</span> </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">North American Branches</h6> 
             </div>
         </div>
         <div class="card-body">
@@ -48,44 +59,3 @@
         </div>
     </div>
 </div>
-
-
-<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#refresh_north_american_branches').click(function(e){
-            $('body').animate({ opacity: 0.5 }, "slow");
-            $.ajax({
-                url: base_url+"get-north-american-branches",
-                method: "POST",
-                success: function(data){
-                    var result = jQuery.parseJSON(data);
-                    if (result.status == 'success') {
-                        location.reload();
-                    } else {
-                        $('#north_american_error_msg').html(result.message).show();
-                        $([document.documentElement, document.body]).animate({
-                            scrollTop: $("#north_american_error_msg").offset().top
-                        }, 1000);
-
-                        setTimeout(function () {
-                            $('#north_american_error_msg').html('').hide();
-                        }, 4000);
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    $('#north_american_error_msg').html('Something went wrong. Please try it again.').show();
-                    $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#north_american_error_msg").offset().top
-                    }, 1000);
-
-                    setTimeout(function () {
-                        $('#north_american_error_msg').html('').hide();
-                    }, 4000);
-                }
-            })
-        });
-    });
-</script>
-
