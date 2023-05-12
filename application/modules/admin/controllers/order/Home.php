@@ -5655,13 +5655,11 @@ class Home extends MX_Controller {
                 $document_name = $id.'.pdf';
                 rename(FCPATH."/uploads/title-point/".$data['file_name'], FCPATH."/uploads/title-point/".$document_name);
                 $this->order->uploadDocumentOnAwsS3($document_name, 'title-point');
-                $this->order->createLpReport($titlePointData['file_number'], true, false);
-                $successMsg = 'Document info saved successfully and LP report generated successfully for new data.';
+                //$this->order->createLpReport($titlePointData['file_number'], true, false);
+                $successMsg = 'Document info saved successfully.';
                 $this->session->set_userdata('success', $successMsg);
             } 
         }
-        
-        
         redirect(base_url().'order/admin/lp-orders');
     }
 }
