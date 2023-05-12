@@ -150,75 +150,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="fileUploadModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<form method="post" id="instrument-file-upload-form" name="instrument-file-upload-form" enctype="multipart/form-data" action="<?php echo base_url();?>order/admin/add-instrument-info">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Add Document</h5>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<div class="row">
-							<div class="col-sm-6">
-								<label for="document_type" class="col-form-label">Document Type</label>
-								<input name="document_type" required="" type="text" class="form-control" id="document_type">
-							</div>
-							<div class="col-sm-6">
-								<label for="document_sub_type" class="col-form-label">Document Sub Type</label>
-								<input name="document_sub_type" type="text" class="form-control" id="document_sub_type">
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="row">
-							<div class="col-sm-6">
-								<label for="instrument_number" class="col-form-label">Instrument Number</label>
-								<input required="" name="instrument_number" type="text" id="instrument_number" class="form-control">
-							</div>
-							<div class="col-sm-6">
-								<label for="lender" class="col-form-label">Lender</label>
-								<input name="lender" type="text" class="form-control" id="lender">
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="row">
-							<div class="col-sm-6">
-								<label for="recorded_date" class="col-form-label">Recorded Date</label>
-								<input required="" name="recorded_date" type="text" id="recorded_date" class="form-control">
-							</div>
-							<div class="col-sm-6">
-								<label for="amount" class="col-form-label">Amount</label>
-								<input name="amount" type="text" class="form-control" id="amount">
-							</div>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<label for="recorded_date" class="col-form-label">Parties</label>
-						<input required="" name="parties" type="text" id="parties" class="form-control">
-					</div>
-
-					<div class="form-group">
-						<label for="recorded_date" class="col-form-label">Upload File</label>
-						<input required="" name="file_upload" type="file" id="file_upload" class="form-control">
-					</div>
-					<input type="hidden" name="upload_file_id" id="upload_file_id" value="">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button class="btn btn-primary">Submit</button>
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-
-
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 	
 <script>
@@ -470,9 +401,4 @@
 		});
 	}
 
-	function fileUpload(file_id)
-	{
-		$('#upload_file_id').val(file_id);
-		$('#fileUploadModel').modal('show');	
-	}
 </script>
