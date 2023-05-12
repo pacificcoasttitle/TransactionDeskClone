@@ -5212,11 +5212,11 @@ class Home extends MX_Controller {
                             if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
                                 if ($displaySection == 'G') {
                                     if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                        if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
+                                        //if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
                                             $instrumentRecords[$i]['is_display'] = 1;
-                                        } else {
-                                            $instrumentRecords[$i]['is_display'] = 0;
-                                        }
+                                        //} else {
+                                            //$instrumentRecords[$i]['is_display'] = 0;
+                                        //}
                                     } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
                                         if ($instrumentRecord['icon_text'] == 'Exx') {
                                             $instrumentRecords[$i]['is_display'] = 1;
