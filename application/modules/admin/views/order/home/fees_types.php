@@ -25,9 +25,9 @@
                 <table class="table table-bordered" id="tbl-fees-types" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Sr No</th>
-                            <th>Name</th>
-                            <th>Action</th>
+                            <th width="20%" >Sr No</th>
+                            <th width="70%">Name</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

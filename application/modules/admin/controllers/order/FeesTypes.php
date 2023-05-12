@@ -129,7 +129,7 @@ class FeesTypes extends MX_Controller {
                 $editUrl = base_url().'order/admin/edit-fee-type/'.$value['id'];
                 
 
-                $action = '<div class="table-action" ><a href="'.$editUrl.'" ><span class="fa fa-pencil" aria-hidden="true"></span></a>';
+                $action = '<div class="table-action" ><a href="'.$editUrl.'" ><span class="fas fa-edit " aria-hidden="true"></span></a>';
                 $action .= '<a href="javascript:void(0);" onclick="deleteFeesType('.$value['id'].');" ><span class="fa fa-trash" aria-hidden="true"></span></a></div>';
                 $nestedData[] = $action;
                 $data[] = $nestedData;

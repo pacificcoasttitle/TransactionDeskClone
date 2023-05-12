@@ -20,15 +20,7 @@
 		</a>
 	</li>
     <?php endif; ?>
-	<?php if($userdata['user_type_id'] == 4 && $userdata['department_id'] == 4) : ?>
-		<li class="nav-item <?php if($this->uri->uri_string() == 'hr/admin/orders' || $this->uri->segment(3) == 'order-tasks') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url().'hr/admin/orders'; ?>">
-				<i class="fas fa-list"></i>
-				<span>Orders</span>
-			</a>
-		</li>
-	<?php endif; ?>
-    
+	
     <li class="nav-item <?php if($this->uri->uri_string() == 'order/admin/orders' || $this->uri->uri_string() == 'order/admin/lp-orders' || $this->uri->segment(3) == 'order-details') { echo 'active'; } ?>">
 		<a class="nav-link collapsed" href="#" id="ordersDropdown" role="button" data-toggle="collapse" data-target="#ordersDropdown_list" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-list"></i>

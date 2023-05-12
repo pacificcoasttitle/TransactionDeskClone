@@ -1624,8 +1624,10 @@ class Home_model extends CI_Model
     		$keyword = $params['searchvalue'];
 
     		if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
                 $this->db->or_like('email_address',$keyword);
+                $this->db->group_end();
 			}
 
             $this->db->where('status', 1);
@@ -1633,8 +1635,10 @@ class Home_model extends CI_Model
 	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
 			if(isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
                 $this->db->or_like('email_address', $keyword);
+                $this->db->group_end();
 			}
 
 			$this->db->where('status', 1);

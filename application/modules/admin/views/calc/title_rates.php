@@ -38,7 +38,7 @@
                                <td><?php echo "$".number_format($row['resi_loan_rate']); ?></td>
                                <td><?php echo "$".number_format($row['con_full_loan_rate']); ?></td>
                                <td>
-                                <a href="<?php echo base_url(); ?>calculator/admin/edit_title_rates/<?php echo $row['title_rate_id_pk']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                <a href="<?php echo base_url(); ?>calculator/admin/edit_title_rates/<?php echo $row['title_rate_id_pk']; ?>"><i class="fas fa-edit" aria-hidden="true"></i></a>
                                 <a href="javascript:void(0);" onclick="delete_rates(<?php echo $row['title_rate_id_pk']; ?>);" class="grey button small2"><i class="fa fa-trash" aria-hidden="true"></i></a>
                               </td>
                             </tr>
