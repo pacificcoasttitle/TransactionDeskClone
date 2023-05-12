@@ -25,11 +25,11 @@
                 <table class="table table-bordered" id="tbl-fees" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Sr No</th>
-                            <th>Transaction Type</th>
-                            <th>Name</th>
-                            <th>Value</th>
-                            <th>Action</th>
+                            <th width="10%">Sr No</th>
+                            <th width="30%">Transaction Type</th>
+                            <th width="33%">Name</th>
+                            <th width="18%">Value</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

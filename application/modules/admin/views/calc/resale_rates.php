@@ -44,7 +44,7 @@
                               
                               <td>
                                 <a href="<?php echo base_url(); ?>calculator/admin/edit_resale_rates/<?php echo $row['escrow_resale_id_pk']; ?>"><i class="fas fa-edit" aria-hidden="true"></i></a>
-                                <a href="javascript:void(0);" onclick="delete_rates(<?php echo $row['escrow_resale_id_pk']; ?>);" class="grey button small2"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                <a href="javascript:void(0);" onclick="delete_rates(<?php echo $row['escrow_resale_id_pk']; ?>);" class="grey button small2"><i class="fas fa-trash" aria-hidden="true"></i></a>
                               </td>
                           </tr>
                           <?php } } ?>

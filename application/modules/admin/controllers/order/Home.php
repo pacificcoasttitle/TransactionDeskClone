@@ -203,9 +203,9 @@ class Home extends MX_Controller {
 	            
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
-                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";*/
+                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
 
-                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
                 }
 	            
@@ -586,7 +586,7 @@ class Home extends MX_Controller {
 	            
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
-                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";*/
+                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
 
                     $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a>";
                     $nestedData[] = $action;
@@ -1301,7 +1301,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $value['street_address'].", ".$value['city'].", ".$value['state'].", ".$value['zip_code'];
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-master-user/'.$value['id'];
-                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;' ><a href='".$editUrl."'   title='Edit Master User'><span class='fa fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")'  title='Delete Master User'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
+                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;' ><a href='".$editUrl."'   title='Edit Master User'><span class='fas fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(".$value['id'].")'  title='Delete Master User'><span class='fas fa-trash' aria-hidden='true'></span></a></div>";
                 }
                 $data[] = $nestedData;            
             }
@@ -2498,7 +2498,7 @@ class Home extends MX_Controller {
                 $nestedData[] = $lenderStatus;
                 if(isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-cpl-proposed-user/'.$value['id'];
-                    $nestedData[] = "<a href='".$editUrl."'  title='Edit CPL/Proposed User'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $nestedData[] = "<a href='".$editUrl."'  title='Edit CPL/Proposed User'><span class='fas fa-edit' aria-hidden='true'></span></a>";
                 }
                 $data[] = $nestedData;            
             }
@@ -3245,7 +3245,7 @@ class Home extends MX_Controller {
                 }
                 $nestedData[] = "<input $checked onclick='isMortgagePrimaryUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action = "<a href='javascript:void(0);' onclick='deleteCustomer(".$value['id'].")' class='btn btn-action'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
                     $nestedData[] = $action;
                 }
                 $data[] = $nestedData;            
@@ -4790,9 +4790,9 @@ class Home extends MX_Controller {
                 $nestedData[] = "<input $vesChecked onclick='isVesDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-document-type/'.$value['id'];
-                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-document-type' title ='Edit Document Type Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-document-type' title ='Edit Document Type Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' title='Delete Document Type'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteDocumentType(".$value['id'].")' title='Delete Document Type'><span class='fas fa-trash' aria-hidden='true'></span></a></div>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -4838,9 +4838,9 @@ class Home extends MX_Controller {
                 // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-lp-alert/'.$value['id'];
-                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-alert' title ='Edit Alert Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $action = "<div class='table-action'><a href='".$editUrl."' class='edit-alert' title ='Edit Alert Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";
 
-                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' title='Delete Alert'><span class='fa fa-trash' aria-hidden='true'></span></a></div>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteAlert(".$value['id'].")' title='Delete Alert'><span class='fas fa-trash' aria-hidden='true'></span></a></div>";
                     $nestedData[] = $action;
                 }
 	            $data[] = $nestedData;            
@@ -5488,8 +5488,8 @@ class Home extends MX_Controller {
                                 <td>$remarks</td>
                                 <td>$document_type</td>
                                 <td>$document_sub_type</td>
-                                <td><input type='checkbox' id='$id' $vesChecked name='ves_instrument_number_ids[]' value='$id'></td>
-                                <td><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'></td>
+                                <td><label class='option block'><input type='checkbox' id='$id' $vesChecked name='ves_instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
+                                <td><label class='option block'><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
                             </tr>";
                     $i++;
                 }

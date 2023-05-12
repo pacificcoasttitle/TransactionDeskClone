@@ -40,7 +40,7 @@
 							<td><?=($key+1)?></td>
 							<td><?=ucfirst($config_record->title)?></td>
 							<td><?=($config_record->value)?>%</td>
-							<td><a href="<?php echo base_url('order/admin/edit-commission-config/'.$config_record->id)?>" class='btn btn-action 'title ='Edit Record'><span class='fa fa-edit' aria-hidden='true'></span></a></td>
+							<td><a href="<?php echo base_url('order/admin/edit-commission-config/'.$config_record->id)?>" class='btn btn-action 'title ='Edit Record'><span class='fas fa-edit' aria-hidden='true'></span></a></td>
 						</tr>
 						<?php endforeach;?>
 					</tbody>

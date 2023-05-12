@@ -25,10 +25,10 @@
                 <table class="table table-bordered" id="tbl-holidays" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Sr No</th>
-                            <th>Name</th>
-                            <th>Date</th>
-                            <th>Action</th>
+                            <th width="10%">Sr No</th>
+                            <th width="40%">Name</th>
+                            <th width="40%">Date</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

@@ -48,12 +48,12 @@
                 <table class="table table-bordered" id="tbl-lp-alert-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Sr No</th>
-                            <th>Days</th>
-                            <th>Color Code</th>
-                            <th>Text Color</th>
-                            <th>Delete flag</th>
-                            <th>Action</th>
+                            <th width="10%">Sr No</th>
+                            <th width="20%">Days</th>
+                            <th width="20%">Color Code</th>
+                            <th width="20%">Text Color</th>
+                            <th width="20%">Delete flag</th>
+                            <th width="10%">Action</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

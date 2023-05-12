@@ -82,7 +82,7 @@ class CodeBook extends MX_Controller {
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url().'order/admin/edit-code-book/'.$value['id'];
-                    $nestedData[] = "<a href='".$editUrl."'   title='Edit Code Book'><span class='fa fa-edit' aria-hidden='true'></span></a>";
+                    $nestedData[] = "<a href='".$editUrl."'   title='Edit Code Book'><span class='fas fa-edit' aria-hidden='true'></span></a>";
                 }
                
                 

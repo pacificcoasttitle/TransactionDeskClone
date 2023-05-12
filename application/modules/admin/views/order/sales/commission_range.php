@@ -114,8 +114,8 @@
 							<td><?php echo $commission_record->max_revenue; ?></td>
 							<td><?php echo $commission_record->premium; ?></td>
 							<td><?php echo ($commission_record->underwriter_tier_obj) ? $commission_record->underwriter_tier_obj->commission : '0.00' ?> %</td>
-							<td> <a href="<?php echo base_url('order/admin/edit-commission-range/'.$commission_record->id)?>" class='btn btn-action 'title ='Edit Commission Range'><span class='fa fa-edit' aria-hidden='true'></span></a>
-								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-commission-range/'.$commission_record->id)?>" title ='Delete Commission Range'><span class='fa fa-trash' aria-hidden='true'></span></button>
+							<td> <a href="<?php echo base_url('order/admin/edit-commission-range/'.$commission_record->id)?>" class='btn btn-action 'title ='Edit Commission Range'><span class='fas fa-edit' aria-hidden='true'></span></a>
+								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-commission-range/'.$commission_record->id)?>" title ='Delete Commission Range'><span class='fas fa-trash' aria-hidden='true'></span></button>
 							</td>
 						</tr>
 						<?php endforeach;?>
