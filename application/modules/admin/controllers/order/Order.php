@@ -78,7 +78,7 @@ class Order extends MX_Controller {
             // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 			$nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url().'order/admin/order-details/'.$value['file_id'];
-            $action = "<a href='".$editOrderUrl."' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fa fa-eye' aria-hidden='true'></span></a>";
+            $action = "<a href='".$editOrderUrl."' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fas fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
             $data[] = $nestedData;            
             $count++;          

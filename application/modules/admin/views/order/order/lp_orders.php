@@ -93,7 +93,52 @@
             <div class="modal-dialog modal-lg" role="document" style="width:90%;">
                 <div class="modal-content">
                     <form method="POST" action="<?php echo base_url();?>order/admin/store-lp-document-info">
-                        <div class="smart-forms smart-container" style="margin:30px">
+                    <div class="row">
+					<div class="col-lg-12">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary" >Select Documents</h6>
+							</div>
+							
+							<div class="card-body"> 
+                                <div class="smart-forms smart-container" style="margin:30px">
+                                    <div class="modal-body search-result">
+                                        <div id="deliverables-details-fields">
+                                            <div class="frm-row" id="clone_container">
+                                                <div class="section colm colm12" id="clone-email-address" style="margin-bottom: 0px !important;">
+                                                    <div class="toclone">
+                                                        <div class="spacer-b10">
+                                                            <label class="field" id="instrument_number_container">
+                                                                
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-footer" style="padding: 0px 1rem !important;">
+                                        <button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Submit</span>
+                                        </button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Cancel</span>
+                                        </button>
+                                        <!-- <button type="submit" data-btntext-sending="Sending..." class="button btn-primary">Submit</button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button> -->
+                                    </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+                        <!-- <div class="smart-forms smart-container" style="margin:30px">
                             <div class="modal-body search-result">
                                 <div id="deliverables-details-fields">
                                     <div class="spacer-b20">
@@ -117,7 +162,7 @@
                                     class="button btn-primary">Submit</button>
                                 <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
                             </div>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
             </div>

@@ -90,7 +90,7 @@ class Holidays extends MX_Controller {
                 $nestedData[] = date("m/d/Y", strtotime($value['holiday_date']));
                 $editUrl = base_url().'order/admin/edit-holiday/'.$value['id'];
                 $action = '<div class="table-action"><a href="'.$editUrl.'"><span class="fas fa-edit " aria-hidden="true"></span></a>';
-                $action .= '<a href="javascript:void(0);" onclick="deleteHoliday('.$value['id'].');"><span class="fa fa-trash" aria-hidden="true"></span></a></div>';
+                $action .= '<a href="javascript:void(0);" onclick="deleteHoliday('.$value['id'].');"><span class="fas fa-trash" aria-hidden="true"></span></a></div>';
                 $nestedData[] = $action;
                 $data[] = $nestedData;
                 $count++;

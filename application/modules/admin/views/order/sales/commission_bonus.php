@@ -43,8 +43,8 @@
 							<td><?php echo ($disp_key + 1); ?></td>
 							<td>$ <?php echo $commission_record->min_range; ?></td>
 							<td>$ <?php echo $commission_record->bonus_amount; ?></td>
-							<td> <a href="<?php echo base_url('order/admin/edit-commission-bonus/'.$commission_record->id)?>" class='btn btn-action 'title ='Edit Bonus'><span class='fa fa-edit' aria-hidden='true'></span></a>
-								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-commission-bonus/'.$commission_record->id)?>" title ='Delete Bonus'><span class='fa fa-trash' aria-hidden='true'></span></button>
+							<td> <a href="<?php echo base_url('order/admin/edit-commission-bonus/'.$commission_record->id)?>" class='btn btn-action 'title ='Edit Bonus'><span class='fas fa-edit' aria-hidden='true'></span></a>
+								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-commission-bonus/'.$commission_record->id)?>" title ='Delete Bonus'><span class='fas fa-trash' aria-hidden='true'></span></button>
 							</td>
 						</tr>
 						<?php endforeach;?>

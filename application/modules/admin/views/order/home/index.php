@@ -358,7 +358,7 @@
                                 <i class="fas fa-refresh fa-2x text-gray-300"></i>
                             </div>
                         </div>
-                        <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url().'order/admin/orders' ?>">
+                        <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url().'order/admin/incorrect-users' ?>">
                             <span class="">View Details</span>
                             <span class="">
                                 <i class="fas fa-angle-right"></i>

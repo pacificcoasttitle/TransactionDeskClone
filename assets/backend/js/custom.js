@@ -3099,7 +3099,7 @@ $(document).ready(function () {
             var obj = jQuery.parseJSON(title_officer);
             var options='';
             $.each( obj, function( key, value ) {
-              options += '<option value="'+value.id+'">'+value.name+'</option>'
+              options += '<option value="'+value.id+'">'+value.first_name + ' ' + value.last_name+'</option>'
             });
             $("div.custom_filter").append('<div class="col-sm-3" style="display:inline"><label> Title Officer: <select style="width:auto;" class="custom-select custom-select-sm form-control form-control-sm" name="log_title_officer" id="log_title_officer"> <option value="" > All </option>"'+options+'"</select></label>');   
         }

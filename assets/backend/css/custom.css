@@ -47,3 +47,16 @@
 #tbl-lv-documents-listing_wrapper > .dt-buttons {
     display: none;
 }
+
+.option.block .checkbox {
+    top: 0;
+}
+
+/* .smart-forms input:checked + .checkbox {
+    border: 3px solid #1fe61a !important;
+}
+
+.smart-forms .checkbox:before {
+    border: solid #52943e !important;
+    border-width: 0 0 3px 3px !important;
+} */
