@@ -5211,7 +5211,6 @@ class Home extends MX_Controller {
                             $documentSubTypeListArr = explode(',', $documentSubTypeList);        
                             if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
                                 if ($displaySection == 'G') {
-                                    echo $instrumentRecord['document_sub_type'];
                                     if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                         //if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
                                             $instrumentRecords[$i]['is_display'] = 1;
@@ -5370,9 +5369,6 @@ class Home extends MX_Controller {
                 $i++;
             }
         }
-
-        echo "<pre>";
-        print_r($instrumentRecords);exit;
           
         $i = 1;
         if (!empty($instrumentRecords)) {
