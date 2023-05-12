@@ -515,7 +515,7 @@
                                 if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
                                 {
                             ?>
-                                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+                            <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
                                 <div class="card-header" role="tab" id="deliverablesDetailsTab">
                                     <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="false"
                                     aria-controls="deliverablesDetails">
