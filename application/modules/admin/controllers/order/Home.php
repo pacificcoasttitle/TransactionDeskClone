@@ -5623,7 +5623,7 @@ class Home extends MX_Controller {
                 $file_upload_error_msg = 1;
             } else { 
                 $data = $this->upload->data();
-                $file_id = $this->input->post('upload_file_id');
+                $file_id = $this->input->post('file_id');
                 $this->db->select('*');
                 $this->db->from('pct_order_title_point_data');
                 $this->db->where('file_id', $file_id);
