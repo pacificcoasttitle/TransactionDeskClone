@@ -5551,15 +5551,15 @@ class Home extends MX_Controller {
                             if (in_array($val['document_sub_type'], $documentSubTypeListArr)) {
                                 if (isset($displaySection) && $displaySection == 'G') {
                                     if ($val['color_coding'] == 'FFFF00') {
-                                        if (($val['document_type'] != 'TDD') || ($val['document_type'] == 'TDD' && $val['document_sub_type'] === null)) {
+                                        //if (($val['document_type'] != 'TDD') || ($val['document_type'] == 'TDD' && $val['document_sub_type'] === null)) {
                                             if ($val['is_display'] == 0) {
                                                 $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
                                             }
-                                        } else {
-                                            if ($val['is_display'] == 1) {
-                                                $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
-                                            }
-                                        }
+                                        // } else {
+                                        //     if ($val['is_display'] == 1) {
+                                        //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        //     }
+                                        // }
                                     } else {
                                         if ($val['is_display'] == 1) {
                                             $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
