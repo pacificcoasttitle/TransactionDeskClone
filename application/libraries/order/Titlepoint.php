@@ -1284,11 +1284,11 @@ class Titlepoint
                                         if (in_array($val['DocumentSubType'], $documentSubTypeListArr)) {
                                             if (isset($displaySection) && $displaySection == 'G') {
                                                 if ($val['ColorCoding'] == 'FFFF00') {
-                                                    if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
+                                                   // if (($val['DocumentType'] != 'TDD') || ($val['DocumentType'] == 'TDD' && $val['DocumentSubType'] === null)) {
                                                         $recordArray[$i]['is_display'] = 1;
-                                                    } else {
-                                                        $recordArray[$i]['is_display'] = 0;
-                                                    }
+                                                   // } else {
+                                                       // $recordArray[$i]['is_display'] = 0;
+                                                   // }
                                                 } else if ($val['ColorCoding'] == 'C0C0C0') {
                                                     if ($val['ChainIconName'] == 'Exx') {
                                                         $recordArray[$i]['is_display'] = 1;
