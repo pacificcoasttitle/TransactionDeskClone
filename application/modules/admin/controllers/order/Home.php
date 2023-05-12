@@ -5208,9 +5208,10 @@ class Home extends MX_Controller {
                     if (isset($instrumentRecord['document_sub_type']) && !empty($instrumentRecord['document_sub_type'])) {
                         $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
                         if (!empty($documentSubTypeList)) {
-                            $documentSubTypeListArr = implode(',', $documentSubTypeList);
+                            $documentSubTypeListArr = explode(',', $documentSubTypeList);        
                             if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
                                 if ($displaySection == 'G') {
+                                    echo $instrumentRecord['document_sub_type'];
                                     if ($instrumentRecord['color_coding'] == 'FFFF00') {
                                         //if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
                                             $instrumentRecords[$i]['is_display'] = 1;
@@ -5475,7 +5476,7 @@ class Home extends MX_Controller {
                     if (isset($val['document_sub_type']) && !empty($val['document_sub_type'])) {
                         $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
                         if (!empty($documentSubTypeList)) {
-                            $documentSubTypeListArr = implode(',', $documentSubTypeList);
+                            $documentSubTypeListArr = explode(',', $documentSubTypeList);
                             if (in_array($val['document_sub_type'], $documentSubTypeListArr)) {
                                 if (isset($displaySection) && $displaySection == 'G') {
                                     if ($val['color_coding'] == 'FFFF00') {
