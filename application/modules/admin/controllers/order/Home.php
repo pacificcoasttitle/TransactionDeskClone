@@ -5560,6 +5560,16 @@ class Home extends MX_Controller {
                                         //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                                         //     }
                                         // }
+                                    } else if ($val['color_coding'] == 'C0C0C0') {
+                                        if ($val['icon_text'] == 'Exx') {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 1) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                            } 
+                                        }
                                     } else {
                                         if ($val['is_display'] == 1) {
                                             $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
@@ -5567,8 +5577,20 @@ class Home extends MX_Controller {
                                     }
                                 } else {
                                     if ($val['color_coding'] != 'A0A0FF') {
-                                        if ($val['is_display'] == 0) {
-                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        if ($val['color_coding'] == 'C0C0C0') {
+                                            if ($val['icon_text'] == 'Exx') {
+                                                if ($val['is_display'] == 0) {
+                                                    $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                                }
+                                            } else {
+                                                if ($val['is_display'] == 1) {
+                                                    $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                                } 
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
                                         }
                                     } else {
                                         if ($val['is_display'] == 1) {
@@ -5593,6 +5615,16 @@ class Home extends MX_Controller {
                                     //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                                     //     }
                                     // }
+                                } else if ($val['color_coding'] == 'C0C0C0') {
+                                    if ($val['icon_text'] == 'Exx') {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        } 
+                                    }
                                 } else {
                                     if ($val['is_display'] == 1) {
                                         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
@@ -5600,8 +5632,20 @@ class Home extends MX_Controller {
                                 }
                             } else {
                                 if ($val['color_coding'] != 'A0A0FF') {
-                                    if ($val['is_display'] == 0) {
-                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    if ($val['color_coding'] == 'C0C0C0') {
+                                        if ($val['icon_text'] == 'Exx') {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 1) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                            } 
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
                                     }
                                 } else {
                                     if ($val['is_display'] == 1) {
@@ -5622,6 +5666,16 @@ class Home extends MX_Controller {
                                 //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                                 //     }
                                 // }
+                            } else if ($val['color_coding'] == 'C0C0C0') {
+                                if ($val['icon_text'] == 'Exx') {
+                                    if ($val['is_display'] == 0) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 1) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                    } 
+                                }
                             } else {
                                 if ($val['is_display'] == 1) {
                                     $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
@@ -5629,8 +5683,20 @@ class Home extends MX_Controller {
                             }
                         } else {
                             if ($val['color_coding'] != 'A0A0FF') {
-                                if ($val['is_display'] == 0) {
-                                    $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                if ($val['color_coding'] == 'C0C0C0') {
+                                    if ($val['icon_text'] == 'Exx') {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        } 
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 0) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    }
                                 }
                             } else {
                                 if ($val['is_display'] == 1) {
@@ -5679,6 +5745,63 @@ class Home extends MX_Controller {
         $titlePointData = $query->row_array(); 
         $data = array('status'=>'success', 'vesting_information'=> $titlePointData['vesting_information']);
         echo json_encode($data);exit;
+    }
+
+    public function addInstrumentInfo()
+    {
+        $this->load->library('order/order');
+        $config['upload_path'] = './uploads/title-point/';
+        $config['allowed_types'] = 'pdf';   
+        $config['max_size'] = 12000;
+        $this->load->library('upload', $config);
+        if (!is_dir('/uploads/title-point')) {
+			mkdir('./uploads/title-point', 0777, TRUE);
+		}
+        if (!empty($_FILES['file_upload']['name'])) {
+            if (! $this->upload->do_upload('file_upload')) {
+                $errorMsg = $this->upload->display_errors();
+                $this->session->set_userdata('error', $errorMsg);
+                $file_upload_error_msg = 1;
+            } else { 
+                $data = $this->upload->data();
+                $file_id = $this->input->post('upload_file_id');
+                $this->db->select('*');
+                $this->db->from('pct_order_title_point_data');
+                $this->db->where('file_id', $file_id);
+                $query = $this->db->get();
+                $titlePointData = $query->row_array(); 
+
+                $instrumentData = array (
+                    'title_point_id' => $titlePointData['id'],
+                    'instrument' => $this->input->post('instrument_number'),
+                    'recorded_date' => $this->input->post('recorded_date'),
+                    'type' => 'REC',
+                    'sub_type' => 'ALL',
+                    'order_number' => null,
+                    'document_name' => $data['file_name'],
+                    'document_type' => $this->input->post('document_type'),
+                    'document_sub_type' => $this->input->post('document_sub_type') ? $this->input->post('document_sub_type') : null,
+                    'parties' => $this->input->post('parties') ? $this->input->post('parties') : null,
+                    'coupling' =>  null,
+                    'remarks' => null,
+                    'color_coding' => 'FFFF00',
+                    'icon_text' => null,
+                    'loan_amount' => $this->input->post('amount') ? $this->input->post('amount') : null,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'amount' => 0,
+                    'is_display' => 1
+                );
+                $id = $this->home_model->insert($instrumentData, 'pct_title_point_document_records');
+                
+                $document_name = $id.'.pdf';
+                rename(FCPATH."/uploads/title-point/".$data['file_name'], FCPATH."/uploads/title-point/".$document_name);
+                $this->order->uploadDocumentOnAwsS3($document_name, 'title-point');
+                //$this->order->createLpReport($titlePointData['file_number'], true, false);
+                $successMsg = 'Document info saved successfully.';
+                $this->session->set_userdata('success', $successMsg);
+            } 
+        }
+        redirect(base_url().'order/admin/lp-orders');
     }
 }
 
