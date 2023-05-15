@@ -5,16 +5,35 @@
 }
 </style>
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Title Officer
-            <div class="float-right">
-                <a href="<?php echo base_url()?>order/admin/add-title-officer" class="btn btn-secondary">Add Title Officer</a>
-                <a href="javascript:void(0);" data-export-type="csv" id="export-title-officer-data" class="btn btn-secondary">Export</a>
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Title Officer </h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="<?php echo base_url()?>order/admin/add-title-officer"  class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-plus"></i>
+                </span>
+                <span class="text"> Add Title Officer </span> 
+            </a>
+            <a href="javascript:void(0);" data-export-type="csv" id="export-title-officer-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <span class="text"> Export </span> 
+            </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-users"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Title Officer</h6> 
             </div>
         </div>
-  
+    
         <div class="card-body">
             <div id="title_officer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="title_officer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>

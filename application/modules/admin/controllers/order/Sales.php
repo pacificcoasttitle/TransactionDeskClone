@@ -12,6 +12,7 @@ class Sales extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/sales_model');
@@ -25,9 +26,10 @@ class Sales extends MX_Controller {
         $data = array();
         
         $data['title'] = 'PCT Order: Sales Rep.';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/sales', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/sales", "sales", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/sales', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_sales_rep_list()
@@ -63,11 +65,12 @@ class Sales extends MX_Controller {
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-sales-rep/'.$value['id'];
-                    $action = "<a href='".$editOrderUrl."' class='btn btn-action edit-agent'title ='Edit Sales Rep Detail'><span class='fa fa-edit' aria-hidden='true'></span></a>";
-                    $action .= "<a href='javascript:void(0);' onclick='deleteSalesRep(".$value['id'].")' class='btn btn-action'  title='Delete Sales Rep'><span class='fa fa-trash' aria-hidden='true'></span></a>";
+                    $action = "<div style='display:flex;justify-content: space-around;' ><a href='".$editOrderUrl."' class='edit-agent'title ='Edit Sales Rep Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
 					if($this->common->if_super_admin()) {
-						$action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  class='btn btn-action'  title='View Commissions'><span class='fa fa-dollar' aria-hidden='true'></span></a>";
+						$action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
 					}
+                    $action .= " </div>";
                     $nestedData[] = $action;
                 }
                 $data[] = $nestedData;            
@@ -359,10 +362,14 @@ class Sales extends MX_Controller {
 
 		$data['is_super_admin'] =$this->common->if_super_admin();
 		
-		
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/add_sales_rep', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-sales-rep.js'));
+        
+		$this->admintemplate->show("order/sales", "add_sales_rep", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/add_sales_rep', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function edit_sales_rep()
@@ -827,9 +834,10 @@ class Sales extends MX_Controller {
 		$data['commission_sales_rep_override_id']=$existing_commission_override_user;
 		$data['commission_sales_rep_override_val']=$existing_commission_override;
 
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/edit_sales_rep', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/sales", "edit_sales_rep", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/edit_sales_rep', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_sales_rep()

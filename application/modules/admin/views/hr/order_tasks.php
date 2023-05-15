@@ -458,7 +458,7 @@
 																	href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>"
 																	class="btn button btn-info btn-icon-split">
 																	<span class="icon text-white-50">
-																		<i class="fa fa-eye"></i>
+																		<i class="fas fa-eye"></i>
 																	</span>
 																	<span class="text">View</span>
 																</a>

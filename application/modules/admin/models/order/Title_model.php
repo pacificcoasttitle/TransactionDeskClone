@@ -19,12 +19,14 @@ class Title_model extends CI_Model
     	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
     		$keyword = $params['searchvalue'];
     		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
 				$this->db->like('first_name', $keyword);
                 $this->db->or_like('last_name', $keyword);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->or_like('telephone_no', $keyword);
                 $this->db->or_like('partner_id', $keyword);
                 $this->db->or_like('partner_type_id', $keyword);
+                $this->db->group_end();
             }
             $this->db->where('status', 1);
             $this->db->where('is_title_officer', 1);
@@ -32,12 +34,14 @@ class Title_model extends CI_Model
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
 				$this->db->like('first_name', $keyword);
                 $this->db->or_like('last_name', $keyword);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->or_like('telephone_no', $keyword);
                 $this->db->or_like('partner_id', $keyword);
                 $this->db->or_like('partner_type_id', $keyword);
+                $this->db->group_end();
 			}
 
             $this->db->where('status', 1);

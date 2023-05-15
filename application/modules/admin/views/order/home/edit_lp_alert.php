@@ -14,66 +14,70 @@
             <div class="alert alert-danger"><?php echo $error_msg; ?></div>
         </div>
     <?php } ?>
-    <div class="card mx-auto mt-5">
-      <div class="card-header">Edit LP Alert</div>
-        <div class="card-body">        
-            <form id="frm-edit-alert" method="POST">
-                <div class="form-group row">
-                    <label for="days" class="col-sm-4 col-form-label">Days<span class="required"> *</span></label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" name="days" id="days" class="form-control" placeholder="Doc Type" value="<?php echo isset($lp_alert['days']) && !empty($lp_alert['days']) ? $lp_alert['days']: ''; ?>">
-                        <?php if(!empty($days_error_msg)){ ?>                     
-                            <span class="error"><?php echo $days_error_msg; ?></span>
-                        <?php } ?>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="h3 text-gray-800">LP Alert</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Edit LP Alert</h6>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="color_code" class="col-sm-4 col-form-label">Color Code<span class="required">*</span></label>
-                    <div class="col-sm-2">
-                        <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 40%; border-radious:50;">
-                    </div>
-                </div>
-                
-                <div class="form-group row">
-                    <label for="text_color" class="col-sm-4 col-form-label">Text Color<span class="required">*</span></label>
-                    <div class="col-sm-2">
-                        <input type="color" class="form-control" name="text_color" id="text_color"  class="form-control" value="<?php echo isset($lp_alert['text_color']) && !empty($lp_alert['text_color']) ? $lp_alert['text_color']: ''; ?>" style="width: 40%; border-radious:50;">
-                    </div>
-                </div>
+                    <div class="card-body">        
+                        <form id="frm-edit-alert" method="POST">
+                            <div class="form-group">
+                                <label for="days" class="col-sm-4 col-form-label">Days<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="days" id="days" class="form-control" placeholder="Doc Type" value="<?php echo isset($lp_alert['days']) && !empty($lp_alert['days']) ? $lp_alert['days']: ''; ?>">
+                                    <?php if(!empty($days_error_msg)){ ?>                     
+                                        <span class="error"><?php echo $days_error_msg; ?></span>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="form-group row ml-1">
+                                <label for="color_code" class="col-sm-2 col-form-label">Color Code<span class="required">*</span></label>
+                                <div class="col-sm-2">
+                                    <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 40%; border-radious:50;">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row ml-1">
+                                <label for="text_color" class="col-sm-2 col-form-label">Text Color<span class="required">*</span></label>
+                                <div class="col-sm-2">
+                                    <input type="color" class="form-control" name="text_color" id="text_color"  class="form-control" value="<?php echo isset($lp_alert['text_color']) && !empty($lp_alert['text_color']) ? $lp_alert['text_color']: ''; ?>" style="width: 40%; border-radious:50;">
+                                </div>
+                            </div>
 
-                <div class="form-group row">
-                    <label for="delete" class="col-sm-4 col-form-label">Is_ Notice</label>
-                    <div class="col-sm-4">
-                        <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="delete" id="delete" class="form-control" <?php echo isset($lp_alert['delete']) && !empty($lp_alert['delete']) ? 'Checked' : ''; ?>>
+                            <div class="form-group row ml-1">
+                                <label for="delete" class="col-sm-2 col-form-label">Is Notice</label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="delete" id="delete" class="form-control" <?php echo isset($lp_alert['delete']) && !empty($lp_alert['delete']) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>               
+                            
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <button type="submit" class="btn btn-info btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-save"></i>
+                                        </span>
+                                        <span class="text">Update</span>
+                                    </button>
+                                    <a href="<?php echo site_url('order/admin/lp-alert'); ?>" class="btn btn-secondary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </span>
+                                        <span class="text">Cancel</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </div>               
-                
-                <div class="pull-right">
-                    <button type="submit" id="add-sales-rep" name="add-sales-rep" class="btn btn-secondary">Update</button>
-                    <a href="<?php echo site_url('order/admin/lp-alert'); ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-<script src="<?php echo base_url(); ?>assets/vendor/jquery/jquery.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/js/jquery.validate.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        if(jQuery('#frm-edit-alert').length)
-        {
-           jQuery('#frm-edit-alert').validate({
-                ignore:":not(:visible)",
-                rules: {
-                    days:"required"
-                },
-                messages: {
-                    days:"Please Enter Days"
-                },
-                submitHandler: function(form) {
-                    form.submit();  
-                }
-            }); 
-        }
-    });
-</script>

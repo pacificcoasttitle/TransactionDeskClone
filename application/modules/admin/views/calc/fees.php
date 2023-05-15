@@ -32,8 +32,8 @@
                                <td class="fee_name"><?php echo $row['name']; ?></td>
                                <td class="fee_value"><?php echo "$".number_format($row['value']); ?></td>
                                <td>
-                                   <a href="<?php echo base_url(); ?>calculator/admin/edit_fees/<?php echo $row['id']; ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                   <a href="javascript:void(0);" onclick="delete_fees(<?php echo $row['id']; ?>);" class="grey button small2"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                   <a href="<?php echo base_url(); ?>calculator/admin/edit_fees/<?php echo $row['id']; ?>"><i class="fas fa-edit " aria-hidden="true"></i></a>
+                                   <a href="javascript:void(0);" onclick="delete_fees(<?php echo $row['id']; ?>);" class="grey button small2"><i class="fas fa-trash" aria-hidden="true"></i></a>
                                 </td>
                             </tr>
                           <?php } } ?>

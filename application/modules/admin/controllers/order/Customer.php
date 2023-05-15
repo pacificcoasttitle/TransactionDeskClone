@@ -9,6 +9,7 @@ class Customer extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/customer_model');
         $this->load->library('order/common');
@@ -20,9 +21,10 @@ class Customer extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Credentials Check';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/home/customers', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "customers", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/customers', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function get_customer_list()
@@ -78,7 +80,7 @@ class Customer extends MX_Controller {
                     $nestedData[] = 'Duplicate Email'; 
                 } 
                 $nestedData[] = $value['resware_error_msg']; 
-                $nestedData[] = "<a href='javascript:void(0);' onclick='changePassword(".$value['id'].")' class='btn btn-action'  title='Reset Password'><span class='fa fa-key' aria-hidden='true'></span></a>";     
+                $nestedData[] = "<a href='javascript:void(0);' onclick='changePassword(".$value['id'].")' class='btn btn-action'  title='Reset Password'><span class='fas fa-key' aria-hidden='true'></span></a>";     
                           
                 $data[] = $nestedData;            
                 // $cnt++;

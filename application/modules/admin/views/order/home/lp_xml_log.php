@@ -5,10 +5,20 @@
 }
 </style>
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            LP XML Log
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">LP XML Log</h1>
+		</div>
+	</div>
+    <!-- DataTables Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">LP XML Log</h6> 
+            </div>
         </div>
 
         <div class="card-body">
@@ -30,46 +40,3 @@
         </div>
     </div>
 </div>
-
-<script>
-function downloadDocumentFromAws(url, documentType)
-{
-    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
-    $('#page-preloader').css('display', 'block');
-    var fileNameIndex = url.lastIndexOf("/") + 1;
-    var filename = url.substr(fileNameIndex);
-    $.ajax({
-        url: base_url + "download-aws-document-admin",
-        type: "post",
-        data: {
-            url : url
-        },
-        async: false,
-        success: function (response) {
-            if (response) {
-                if (navigator.msSaveBlob) {
-                    var csvData = base64toBlob(response, 'application/octet-stream');
-                    var csvURL = navigator.msSaveBlob(csvData, filename);
-                    var element = document.createElement('a');
-                    element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
-                    element.style.display = 'none';
-                    document.body.appendChild(element);
-                    document.body.removeChild(element);
-                } else {
-                    console.log(response);
-                    var csvURL = 'data:application/octet-stream;base64,' + response;
-                    var element = document.createElement('a');
-                    element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
-                    element.style.display = 'none';
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
-                }
-            }
-            $('#page-preloader').css('display', 'none');
-        }
-    });
-}
-</script>

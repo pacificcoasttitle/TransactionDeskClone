@@ -9,6 +9,7 @@ class Holidays extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/holidays_model');
         $this->load->library('order/common');
@@ -19,9 +20,10 @@ class Holidays extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Holidays';
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/holiday/holidays', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/holiday", "holidays", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/holiday/holidays', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
     public function add_holiday()
@@ -52,10 +54,11 @@ class Holidays extends MX_Controller {
                 $data['holiday_date_error_msg'] = form_error('holiday_date');
             }                                       
         }
-        
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/holiday/add_holiday', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->show("order/holiday", "add_holiday", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/holiday/add_holiday', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function get_holidays()
@@ -86,8 +89,8 @@ class Holidays extends MX_Controller {
                 $nestedData[] = $value['name'];
                 $nestedData[] = date("m/d/Y", strtotime($value['holiday_date']));
                 $editUrl = base_url().'order/admin/edit-holiday/'.$value['id'];
-                $action = '<a href="'.$editUrl.'" class="btn btn-action"><span class="fa fa-pencil" aria-hidden="true"></span></a>';
-                $action .= '<a href="javascript:void(0);" onclick="deleteHoliday('.$value['id'].');" class="btn btn-action"><span class="fa fa-trash" aria-hidden="true"></span></a>';
+                $action = '<div class="table-action"><a href="'.$editUrl.'"><span class="fas fa-edit " aria-hidden="true"></span></a>';
+                $action .= '<a href="javascript:void(0);" onclick="deleteHoliday('.$value['id'].');"><span class="fas fa-trash" aria-hidden="true"></span></a></div>';
                 $nestedData[] = $action;
                 $data[] = $nestedData;
                 $count++;
@@ -150,8 +153,10 @@ class Holidays extends MX_Controller {
             redirect(base_url().'holidays');
         }
         $data['holiday_info'] = $holiday_info;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/holiday/edit_holiday', $data);
-		$this->load->view('order/layout/footer', $data);
+        $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->show("order/holiday", "edit_holiday", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/holiday/edit_holiday', $data);
+		// $this->load->view('order/layout/footer', $data);
     }
 }

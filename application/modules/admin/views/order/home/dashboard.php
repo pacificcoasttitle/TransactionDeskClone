@@ -5,14 +5,33 @@
 }
 </style>
 <div class="container-fluid">
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Orders Listing</h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="<?php echo base_url()?>order/admin/import"  class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-import"></i>
+                </span>
+                <span class="text"> Import </span> 
+            </a>
+            <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <span class="text"> Export </span> 
+            </a>
+		</div>
+	</div>
     <!-- DataTables Example -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Escrows
-            <div class="float-right">
-                <a href="<?php echo base_url()?>order/admin/import" class="btn btn-secondary"> Import </a>
-                <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-secondary"> Export </a>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-users"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Escrows</h6> 
             </div>
         </div>
                 

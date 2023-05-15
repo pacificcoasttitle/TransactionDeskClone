@@ -4,13 +4,20 @@
 }
 </style>
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Rules Manager
-            <!-- <div class="float-right">
-                <a href="<?php // echo base_url(); ?>order/admin/add-fee" class="btn btn-secondary"> Add Fees </a>
-            </div> -->
+    <!-- DataTables Example -->
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Rules Manager</h1>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-table"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Rules Manager</h6> 
+            </div>
         </div>
         <div class="card-body">
             <div id="rules_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
@@ -30,11 +37,3 @@
         </div>
     </div>
 </div>
-<script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        
-  
-    }); 
-</script>

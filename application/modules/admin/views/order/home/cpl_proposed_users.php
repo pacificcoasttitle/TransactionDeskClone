@@ -5,15 +5,29 @@
 }
 </style>
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Master Users
-            <div class="float-right">
-                <a href="javascript:void(0);" data-export-type="csv" id="export_cpl_proposed_users" class="btn btn-secondary"> Export </a>
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800"> Master Users </h1>
+		</div>
+		<div class="col-sm-6">
+            <a href="javascript:void(0);" data-export-type="csv" id="export_cpl_proposed_users" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-file-export"></i>
+                </span>
+                <span class="text"> Export </span> 
+            </a>
+		</div>
+	</div>
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-users"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Master Users</h6> 
             </div>
         </div>
-
+    
         <div class="card-body">
             <div id="master_users_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="master_users_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>

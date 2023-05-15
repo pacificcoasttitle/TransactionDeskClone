@@ -46,8 +46,8 @@
 							<td><?php echo $underwriter_tier_record->title; ?></td>
 							<td><?php echo $underwriter_tier_record->commission; ?> %</td>
 							<td><?php echo substr($underwriter_tier_record->description,0,60); ?></td>
-							<td> <a href="<?php echo base_url('order/admin/edit-underwriter-tier/'.$underwriter_tier_record->id)?>" class='btn btn-action 'title ='Edit Underwriter Tier'><span class='fa fa-edit' aria-hidden='true'></span></a>
-								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-underwriter-tier/'.$underwriter_tier_record->id)?>" title ='Delete Underwriter Tier'><span class='fa fa-trash' aria-hidden='true'></span></button>
+							<td> <a href="<?php echo base_url('order/admin/edit-underwriter-tier/'.$underwriter_tier_record->id)?>" class='btn btn-action 'title ='Edit Underwriter Tier'><span class='fas fa-edit' aria-hidden='true'></span></a>
+								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-underwriter-tier/'.$underwriter_tier_record->id)?>" title ='Delete Underwriter Tier'><span class='fas fa-trash' aria-hidden='true'></span></button>
 							</td>
 						</tr>
 						<?php endforeach;?>

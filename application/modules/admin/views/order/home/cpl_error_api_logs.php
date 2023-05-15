@@ -15,16 +15,23 @@ div.dataTables_wrapper div.dataTables_filter {
     text-align: left;
 }
 </style>
-<div class="container-fluid">
-    <!-- DataTables Example -->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            CPL Error Logs
-            
-        </div>
 
-                
+<div class="container-fluid">
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">CPL Error Logs</h1>
+		</div>
+	</div>
+    <!-- DataTables Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-history"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">CPL Error Logs</h6> 
+            </div>
+        </div>                
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-cpl-log-listing" width="100%" cellspacing="0">
