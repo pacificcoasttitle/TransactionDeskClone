@@ -1060,7 +1060,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'lf<"FilterCredentialListing">rtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
