@@ -135,8 +135,8 @@
                                 </div>
                             </div>
                             <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                                <div class="card-header" role="tab" id="customerDetailsTab">
-                                    <a data-toggle="collapse" class="collapsed"  style="color: #000000;" data-parent="#accordionEx" href="#customerDetails" aria-expanded="false"
+                                <div class="card-header" id="customerDetailsTab">
+                                    <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#customerDetails" aria-expanded="false"
                                     aria-controls="customerDetails">
                                         <h5 class="mb-0 text-primary">
                                         Customer Details <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
@@ -388,12 +388,11 @@
                             </div>
 
                             <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                                <div class="card-header"  role="tab" id="transactionDetailsTab">
-                                    <a data-toggle="collapse" class="collapsed"  style="color: #000000;" data-parent="#accordionEx" href="#transactionDetails" aria-expanded="false"
+                                <div class="card-header" role="tab" id="transactionDetailsTab">
+                                    <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#transactionDetails" aria-expanded="false"
                                     aria-controls="transactionDetails">
                                         <h5 class="mb-0 text-primary">
-                                        Transaction Details 
-                                        <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
+                                        Transaction Details <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
                                         </h5>
                                     </a>
                                 </div>
@@ -516,7 +515,7 @@
                                 if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
                                 {
                             ?>
-                            <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+                                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
                                 <div class="card-header" role="tab" id="deliverablesDetailsTab">
                                     <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="false"
                                     aria-controls="deliverablesDetails">

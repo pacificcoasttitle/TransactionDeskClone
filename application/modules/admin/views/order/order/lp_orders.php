@@ -90,17 +90,17 @@
 </div><!-- /.container-fluid -->
 
 <div class="modal fade" width="1200px" id="instrument_model" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document" style="width:90%;">
-                <div class="modal-content">
-                    <form method="POST" action="<?php echo base_url();?>order/admin/store-lp-document-info">
-                    <div class="row">
-					<div class="col-lg-12">
-						<div class="card shadow mb-4">
-							<div class="card-header py-3">
-								<h6 class="m-0 font-weight-bold text-primary" >Select Documents</h6>
-							</div>
-							
-							<div class="card-body"> 
+    <div class="modal-dialog modal-lg" role="document" style="width:90%;">
+        <div class="modal-content">
+            <form method="POST" action="<?php echo base_url();?>order/admin/store-lp-document-info">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary" >Select Documents</h6>
+                            </div>
+                            
+                            <div class="card-body"> 
                                 <div class="smart-forms smart-container" style="margin:30px">
                                     <div class="modal-body search-result">
                                         <div id="deliverables-details-fields">
@@ -134,40 +134,38 @@
                                         <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button> -->
                                     </div>
                                 </div>
-							</div>
-						</div>
-					</div>
-				</div>
-                        <!-- <div class="smart-forms smart-container" style="margin:30px">
-                            <div class="modal-body search-result">
-                                <div id="deliverables-details-fields">
-                                    <div class="spacer-b20">
-                                        <div class="tagline"><span>Select Documents</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="smart-forms smart-container" style="margin:30px">
+                    <div class="modal-body search-result">
+                        <div id="deliverables-details-fields">
+                            <div class="spacer-b20">
+                                <div class="tagline"><span>Select Documents</span></div>
+                            </div>
+                            <div class="frm-row" id="clone_container">
+                                <div class="section colm colm12" id="clone-email-address" style="margin-bottom: 0px !important;">
+                                    <div class="toclone">
+                                        <div class="spacer-b10">
+                                            <label class="field" id="instrument_number_container">
+                                                
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="frm-row" id="clone_container">
-										<div class="section colm colm12" id="clone-email-address" style="margin-bottom: 0px !important;">
-                                            <div class="toclone">
-                                                <div class="spacer-b10">
-                                                    <label class="field" id="instrument_number_container">
-                                                        
-                                                    </label>
-                                                </div>
-                                            </div>
-										</div>
-									</div>
                                 </div>
                             </div>
-                            <div class="form-footer" style="padding: 0px 1rem !important;">
-                                <button type="submit" data-btntext-sending="Sending..."
-                                    class="button btn-primary">Submit</button>
-                                <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
-                            </div>
-                        </div> -->
-                    </form>
-                </div>
-            </div>
+                        </div>
+                    </div>
+                    <div class="form-footer" style="padding: 0px 1rem !important;">
+                        <button type="submit" data-btntext-sending="Sending..."
+                            class="button btn-primary">Submit</button>
+                        <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+                    </div>
+                </div> -->
+            </form>
         </div>
-    </div>
+    </div>    
 </div><!-- /.container-fluid -->
 
 
@@ -207,3 +205,105 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="fileUploadModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width: 50%;" >
+		<div class="modal-content">
+			<form method="post" id="instrument-file-upload-form" name="instrument-file-upload-form" enctype="multipart/form-data" action="<?php echo base_url();?>order/admin/add-instrument-info">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary" >Add Document</h6>
+                            </div>
+                            
+                            <div class="card-body"> 
+                                <div class="smart-forms smart-container">
+                                    <div class="modal-body search-result">
+                                    
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="document_type" class="col-form-label">Document Type</label>
+                                                    <input name="document_type" required="" type="text" class="form-control" id="document_type">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="document_sub_type" class="col-form-label">Document Sub Type</label>
+                                                    <input name="document_sub_type" type="text" class="form-control" id="document_sub_type">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="instrument_number" class="col-form-label">Instrument Number</label>
+                                                    <input required="" name="instrument_number" type="text" id="instrument_number" class="form-control">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="lender" class="col-form-label">Lender</label>
+                                                    <input name="lender" type="text" class="form-control" id="lender">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="recorded_date" class="col-form-label">Recorded Date</label>
+                                                    <input required="" name="recorded_date" type="text" id="recorded_date" class="form-control">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="amount" class="col-form-label">Amount</label>
+                                                    <input name="amount" type="text" class="form-control" id="amount">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="recorded_date" class="col-form-label">Parties</label>
+                                            <input required="" name="parties" type="text" id="parties" class="form-control">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="recorded_date" class="col-form-label">Upload File</label>
+                                            <input required="" name="file_upload" type="file" id="file_upload" class="form-control">
+                                        </div>
+                                        <input type="hidden" name="upload_file_id" id="upload_file_id" value="">
+                                    
+                                    </div>
+                                    <div class="form-footer" style="padding: 0px 1rem !important;">
+                                        <button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Submit</span>
+                                        </button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Cancel</span>
+                                        </button>
+                                        <!-- <button type="submit" data-btntext-sending="Sending..." class="button btn-primary">Submit</button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+<script>
+    function fileUpload(file_id)
+	{
+		$('#upload_file_id').val(file_id);
+		$('#fileUploadModel').modal('show');	
+	}
+</script>
