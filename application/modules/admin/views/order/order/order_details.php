@@ -515,30 +515,30 @@
                                 if(isset($order_details['additional_emails']) && !empty($order_details['additional_emails']))
                                 {
                             ?>
-                                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                                <div class="card-header" role="tab" id="deliverablesDetailsTab">
-                                    <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="false"
-                                    aria-controls="deliverablesDetails">
-                                        <h5 class="mb-0 text-primary">
-                                        Deliverables Details <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
-                                        </h5>
-                                    </a>
-                                </div>
+                                <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+                                    <div class="card-header" role="tab" id="deliverablesDetailsTab">
+                                        <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#deliverablesDetails" aria-expanded="false"
+                                        aria-controls="deliverablesDetails">
+                                            <h5 class="mb-0 text-primary">
+                                            Deliverables Details <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
+                                            </h5>
+                                        </a>
+                                    </div>
                                 
-                                        <div id="deliverablesDetails" class="collapse" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
-                                            <div class="card-body">
-                                                <div class="form-group row">
-                                                    <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
-                                                    <div class="col-sm-9 col-form-label">
-                                                        <?php echo $order_details['additional_emails']; ?>
-                                                    </div>
+                                    <div id="deliverablesDetails" class="collapse" role="tabpanel" aria-labelledby="deliverablesDetailsTab" data-parent="#accordionEx">
+                                        <div class="card-body">
+                                            <div class="form-group row">
+                                                <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
+                                                <div class="col-sm-9 col-form-label">
+                                                    <?php echo $order_details['additional_emails']; ?>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
                                 <?php
                                     }
                                 ?>
-                            </div>
                             
                             <?php 
                                 if(isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id']))
