@@ -348,15 +348,15 @@ class Titlepoint
                 $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
-                    $imgResult = json_decode($imgresponse, TRUE);
+                    // $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
+                    // $imgResult = json_decode($imgresponse, TRUE);
                     
-                    $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
-                    $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
-                    $imgReturnStatus = strtolower($imgReturnStatus);
-                    $status = strtolower($status);
-                    if($imgReturnStatus == 'success' && $status == 'success')
-                    {
+                    // $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
+                    // $status = isset($imgResult['Status']) && !empty($imgResult['Status']) ? $imgResult['Status'] : '';
+                    // $imgReturnStatus = strtolower($imgReturnStatus);
+                    // $status = strtolower($status);
+                    //if($imgReturnStatus == 'success' && $status == 'success')
+                    //{
                         $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -413,34 +413,34 @@ class Titlepoint
                             );
                         $this->CI->titlePointData->update($tpData,$condition); 
 
-                    }
-                    else if($imgReturnStatus == 'success' && $status != 'success')
-                    {
-                        $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
-                        $tpData = array(
-                            'tax_file_status' => $status,
-                            'tax_file_message' => $message,
-                            'tax_order_id' => $requestOrderId
-                        );
-                        $condition =array(
-                            'file_number' => $fileNumber
-                        );
-                        $this->CI->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                      $error = isset($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $imgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    //}
+                    // else if($imgReturnStatus == 'success' && $status != 'success')
+                    // {
+                    //     $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
+                    //     $tpData = array(
+                    //         'tax_file_status' => $status,
+                    //         'tax_file_message' => $message,
+                    //         'tax_order_id' => $requestOrderId
+                    //     );
+                    //     $condition =array(
+                    //         'file_number' => $fileNumber
+                    //     );
+                    //     $this->CI->titlePointData->update($tpData,$condition);
+                    // }
+                    // else
+                    // {
+                    //   $error = isset($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($imgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $imgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
 
-                        $tpData = array(
-                            'tax_file_status' => $imgReturnStatus,
-                            'tax_file_message' => $error,
-                            'tax_order_id' => $requestOrderId
-                        );
-                        $condition =array(
-                            'file_number' => $fileNumber
-                        );
-                        $this->CI->titlePointData->update($tpData,$condition);  
-                    }
+                    //     $tpData = array(
+                    //         'tax_file_status' => $imgReturnStatus,
+                    //         'tax_file_message' => $error,
+                    //         'tax_order_id' => $requestOrderId
+                    //     );
+                    //     $condition =array(
+                    //         'file_number' => $fileNumber
+                    //     );
+                    //     $this->CI->titlePointData->update($tpData,$condition);  
+                    // }
                 }
             }
             else
