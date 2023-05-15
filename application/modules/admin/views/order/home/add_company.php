@@ -42,7 +42,7 @@
                                         <span class="icon text-white-50">
                                             <i class="fas fa-save"></i>
                                         </span>
-                                        <span class="text">Update</span>
+                                        <span class="text">Add</span>
                                     </button>
                                     <a href="<?php echo base_url().'order/admin/companies'; ?>" class="btn btn-secondary btn-icon-split">
                                         <span class="icon text-white-50">

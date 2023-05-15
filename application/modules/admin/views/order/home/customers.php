@@ -11,7 +11,7 @@
 			<h1 class="h3 text-gray-800">Credentials Check</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="javascript:void(0);" data-export-type="csv" id="export_curative_documents" class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="javascript:void(0);" data-export-type="csv" id="export_customer" class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
             <a href="javascript:void(0);" id="refresh-new-users-data" class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50"><i class="fas fa-user"></i></span><span class="text">New Users</span> </a>
