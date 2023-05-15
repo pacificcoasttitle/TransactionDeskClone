@@ -241,10 +241,10 @@
                                                     <label for="instrument_number" class="col-form-label">Instrument Number</label>
                                                     <input required="" name="instrument_number" type="text" id="instrument_number" class="form-control">
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <!-- <div class="col-sm-6">
                                                     <label for="lender" class="col-form-label">Lender</label>
                                                     <input name="lender" type="text" class="form-control" id="lender">
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
 
@@ -268,7 +268,7 @@
 
                                         <div class="form-group">
                                             <label for="recorded_date" class="col-form-label">Upload File</label>
-                                            <input required="" name="file_upload" type="file" id="file_upload" class="form-control">
+                                            <input required="" name="file_upload" type="file" id="file_upload" class="form-control" accept="application/pdf">
                                         </div>
                                         <input type="hidden" name="upload_file_id" id="upload_file_id" value="">
                                     
