@@ -5560,6 +5560,16 @@ class Home extends MX_Controller {
                                         //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                                         //     }
                                         // }
+                                    } else if ($val['color_coding'] == 'C0C0C0') {
+                                        if ($val['icon_text'] == 'Exx') {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 1) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                            } 
+                                        }
                                     } else {
                                         if ($val['is_display'] == 1) {
                                             $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
@@ -5567,8 +5577,20 @@ class Home extends MX_Controller {
                                     }
                                 } else {
                                     if ($val['color_coding'] != 'A0A0FF') {
-                                        if ($val['is_display'] == 0) {
-                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        if ($val['color_coding'] == 'C0C0C0') {
+                                            if ($val['icon_text'] == 'Exx') {
+                                                if ($val['is_display'] == 0) {
+                                                    $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                                }
+                                            } else {
+                                                if ($val['is_display'] == 1) {
+                                                    $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                                } 
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
                                         }
                                     } else {
                                         if ($val['is_display'] == 1) {
@@ -5593,6 +5615,16 @@ class Home extends MX_Controller {
                                     //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                                     //     }
                                     // }
+                                } else if ($val['color_coding'] == 'C0C0C0') {
+                                    if ($val['icon_text'] == 'Exx') {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        } 
+                                    }
                                 } else {
                                     if ($val['is_display'] == 1) {
                                         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
@@ -5600,8 +5632,20 @@ class Home extends MX_Controller {
                                 }
                             } else {
                                 if ($val['color_coding'] != 'A0A0FF') {
-                                    if ($val['is_display'] == 0) {
-                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    if ($val['color_coding'] == 'C0C0C0') {
+                                        if ($val['icon_text'] == 'Exx') {
+                                            if ($val['is_display'] == 0) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                            }
+                                        } else {
+                                            if ($val['is_display'] == 1) {
+                                                $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                            } 
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
                                     }
                                 } else {
                                     if ($val['is_display'] == 1) {
@@ -5622,6 +5666,16 @@ class Home extends MX_Controller {
                                 //         $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
                                 //     }
                                 // }
+                            } else if ($val['color_coding'] == 'C0C0C0') {
+                                if ($val['icon_text'] == 'Exx') {
+                                    if ($val['is_display'] == 0) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 1) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                    } 
+                                }
                             } else {
                                 if ($val['is_display'] == 1) {
                                     $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
@@ -5629,8 +5683,20 @@ class Home extends MX_Controller {
                             }
                         } else {
                             if ($val['color_coding'] != 'A0A0FF') {
-                                if ($val['is_display'] == 0) {
-                                    $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                if ($val['color_coding'] == 'C0C0C0') {
+                                    if ($val['icon_text'] == 'Exx') {
+                                        if ($val['is_display'] == 0) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                        }
+                                    } else {
+                                        if ($val['is_display'] == 1) {
+                                            $this->db->update('pct_title_point_document_records', array('is_display' => 0), array('id' => $val['id']));
+                                        } 
+                                    }
+                                } else {
+                                    if ($val['is_display'] == 0) {
+                                        $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $val['id']));
+                                    }
                                 }
                             } else {
                                 if ($val['is_display'] == 1) {
