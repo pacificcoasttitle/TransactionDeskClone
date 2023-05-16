@@ -47,14 +47,15 @@ class Titlepoint
                 'fileType'=>  'pdf',
             );
             $requestUrl= env('TP_IMAGE_ENDPOINT');
-
+            
             $request = $requestUrl.http_build_query($requestParams);
 
             $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_lv_image_request', $request, $requestParams, array(), $orderId, 0);
+            $response = $this->CI->order->curl_post($requestUrl, $requestParams);
 
-            $file = file_get_contents($request,false,$context);
-            $xmlData = simplexml_load_string($file);
-            $response = json_encode($xmlData);
+            // $file = file_get_contents($request,false,$context);
+            // $xmlData = simplexml_load_string($file);
+            // $response = json_encode($xmlData);
             $result = json_decode($response,TRUE);
 
             $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_lv_image_request', $request, $requestParams, $result, $orderId, $logid);
@@ -244,12 +245,13 @@ class Titlepoint
 
         $context = stream_context_create($opts);
 
+        $requestUrl = env('GRANT_DEED_ENDPOINT');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_grant_deed', $request, $requestParams, array(), $orderId, 0);
-
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $file = file_get_contents($request,false,$context);
+        // $xmlData = simplexml_load_string($file);
         
-        $response = json_encode($xmlData);
+        // $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
 
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_grant_deed', $request, $requestParams, $result, $orderId, $logid);
@@ -331,10 +333,10 @@ class Titlepoint
             $request = $requestUrl.http_build_query($requestParams);
 
             $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, array(), $orderId, 0);
-
-            $file = file_get_contents($request,false,$context);
-            $xmlData = simplexml_load_string($file);
-            $response = json_encode($xmlData);
+            $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+            // $file = file_get_contents($request,false,$context);
+            // $xmlData = simplexml_load_string($file);
+            // $response = json_encode($xmlData);
             $result = json_decode($response,TRUE);
 
             $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, $result, $orderId, $logid);
@@ -348,7 +350,7 @@ class Titlepoint
                 $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
+                    /*$imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
                     $imgResult = json_decode($imgresponse, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -356,7 +358,7 @@ class Titlepoint
                     $imgReturnStatus = strtolower($imgReturnStatus);
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
-                    {
+                    {*/
                         $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -413,7 +415,7 @@ class Titlepoint
                             );
                         $this->CI->titlePointData->update($tpData,$condition); 
 
-                    }
+                    /*}
                     else if($imgReturnStatus == 'success' && $status != 'success')
                     {
                         $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -440,7 +442,7 @@ class Titlepoint
                             'file_number' => $fileNumber
                         );
                         $this->CI->titlePointData->update($tpData,$condition);  
-                    }
+                    }*/
                 }
             }
             else
@@ -503,10 +505,10 @@ class Titlepoint
         $request = $requestUrl.http_build_query($requestParams);
 
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, array(), $orderId, 0);
-
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $file = file_get_contents($request,false,$context);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
         
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, $result, $orderId, $logid);
@@ -641,10 +643,10 @@ class Titlepoint
             $request = $requestUrl.http_build_query($requestParams);
 
             $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_image_request', $request, $requestParams, array(), $orderId, 0);
-
-            $file = file_get_contents($request,false,$context);
-            $xmlData = simplexml_load_string($file);
-            $response = json_encode($xmlData);
+            $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+            // $file = file_get_contents($request,false,$context);
+            // $xmlData = simplexml_load_string($file);
+            // $response = json_encode($xmlData);
             $result = json_decode($response,TRUE);
             
             $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_image_request', $request, $requestParams, $result, $orderId, $logid);
@@ -925,13 +927,15 @@ class Titlepoint
                             'requestId'=>  $requestId
                         );
         $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
+        $requestUrl = env('TP_IMAGE_REQUEST_STATUS');
         $requestName = ($requestFrom == 'Geo') ? 'geo_image_request_status' : 'lv_image_request_status';
         
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, array(), $orderId, 0);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
 
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        // $file = file_get_contents($request,false,$context);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
 
         $imgResult = json_decode($response, TRUE);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $imgResult, $orderId, $logid);
@@ -983,11 +987,13 @@ class Titlepoint
 
         $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
         $requestName = ($requestFrom == 'Geo') ? 'generate_geo_image' : 'generate_lv_image';
+        $requestUrl = env('TP_GENERATE_IMAGE');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, array(), $orderId, 0);
-        $file = file_get_contents($request,false,$context);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $file = file_get_contents($request,false,$context);
 
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
 
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $result, $orderId, $logid);
@@ -1004,12 +1010,12 @@ class Titlepoint
                             'requestId'=>  $requestId
                         );
         $request = env('TP_IMAGE_REQUEST_STATUS').http_build_query($requestParams);
-
+        $requestUrl = env('TP_IMAGE_REQUEST_STATUS');
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'tax_image_request_status', $request, $requestParams, array(), $orderId, 0);
-
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $file = file_get_contents($request,false,$context);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
 
         $imgResult = json_decode($response, TRUE);
 
@@ -1061,16 +1067,46 @@ class Titlepoint
                         );
 
         $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
-        $file = file_get_contents($request,false,$context);
-
+        $requestUrl = env('TP_GENERATE_IMAGE');
+        // $file = file_get_contents($request,false,$context);
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $request, $requestParams, array(), $orderId, 0);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
 
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
 
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $request, $requestParams, $result, $orderId, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $request, $response, $result, $orderId, $logid);
+        // print_r($result);die;
+        
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
+        
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
+        $generateImgStatus = strtolower($generateImgStatus);
 
+        if($imgReturnStatus == 'success')
+        {
+            if($generateImgStatus == 'processing') 
+            {
+                if($this->taxcount <= 3)
+                {
+                    sleep(5);
+                    $this->taxcount = $this->taxcount + 1;
+                    return $this->generateTaxImage($requestId,$orderId);                    
+                }
+                else
+                {
+                    $this->taxcount = 0;
+                    return $response;
+                }   
+                
+            }
+            else
+            { 
+                return $response;
+            }
+        }
         return $response;
     }
 
@@ -1091,8 +1127,8 @@ class Titlepoint
         // echo "<pre>";
         $requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_GET_RESULT_URL;
         $request = $requestUrl.http_build_query($requestParams);
-        // print_r($request);
-        $file = file_get_contents($request,false,$context);
+        
+        // $file = file_get_contents($request,false,$context);
         
         /** Start: Save lp document xml in S3 */
         if (!is_dir('uploads/lp-xml')) {
@@ -1103,9 +1139,10 @@ class Titlepoint
         $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.xml', 'lp-xml');
         /** End: Save lp document xml in S3 */
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, array(), $orderId, 0);
-
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
         //print_r($result);exit;
         $condition = array(
@@ -1499,15 +1536,14 @@ class Titlepoint
         $request = $requestUrl.http_build_query($requestParams);
         // print_r($request);
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'geo_request_summary_status', $request, $requestParams, array(), $orderId, 0);
-
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
-        // echo "--------------------------";
-        // print_r($response);
+        
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $file = file_get_contents($request,false,$context);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
+        
         $imgResult = json_decode($response, TRUE);
-        // echo "<pre> Hello";
-        // print_r($imgResult);die;
+        
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'geo_request_summary_status', $request, $requestParams, $imgResult, $orderId, $logid);
 
         $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -1580,9 +1616,10 @@ class Titlepoint
         $requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_CREATE_SERVICE_URL;
         $request = $requestUrl.http_build_query($requestParams);
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, array(), $orderId, 0);
-        $file = file_get_contents($request,false,$context);
-        $xmlData = simplexml_load_string($file);
-        $response = json_encode($xmlData);
+        $response = $this->CI->order->curl_post($requestUrl, $requestParams);
+        // $file = file_get_contents($request,false,$context);
+        // $xmlData = simplexml_load_string($file);
+        // $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, $result, $orderId, $logid);
         $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
