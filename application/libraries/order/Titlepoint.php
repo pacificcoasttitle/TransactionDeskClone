@@ -952,7 +952,7 @@ class Titlepoint
             }
             else if($status == 'processing') 
             {           
-                if($this->count < 3)
+                if($this->count <= 3)
                 {
                     sleep(5);
                     $this->count = $this->count + 1;
