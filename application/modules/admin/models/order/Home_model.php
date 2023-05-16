@@ -1414,7 +1414,9 @@ class Home_model extends CI_Model
             }
             if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }           
+            }
+            
+            $this->db->order_by('order_id', 'desc');
             $query = $this->db->get('pct_order_cpl_api_logs');
 
             if ($query->num_rows() > 0)  {
@@ -1429,6 +1431,7 @@ class Home_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 
+            $this->db->order_by('order_id', 'desc');
             $query = $this->db->get('pct_order_cpl_api_logs');
             
             if ($query->num_rows() > 0) {
