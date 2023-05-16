@@ -3526,6 +3526,8 @@ class Order
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array_string);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $res = curl_exec($ch);
 		curl_close($ch);
 		$xmlData = simplexml_load_string($res);
