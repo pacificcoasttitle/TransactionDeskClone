@@ -1076,11 +1076,16 @@ class Titlepoint
         // $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
 
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $requestUrl, $requestParams, $result, $orderId, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $requestUrl, $response, $result, $orderId, $logid);
+        // print_r($result);die;
         
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
         
         $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
-        if($generateImgStatus == 'success')
+        $generateImgStatus = strtolower($generateImgStatus);
+        
+        if($imgReturnStatus == 'success')
         {
             if($generateImgStatus == 'processing') 
             {
