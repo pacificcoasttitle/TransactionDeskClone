@@ -3529,8 +3529,8 @@ class Order
         $res = curl_exec($ch);
 		curl_close($ch);
 		$xmlData = simplexml_load_string($res);
-		$response = json_encode($xmlData);
-        $result = json_decode($response,TRUE);
-        return $result;
+		return json_encode($xmlData);
+        // $result = json_decode($response,TRUE);
+        // return $result;
     }
 }
