@@ -350,7 +350,7 @@ class Titlepoint
                 $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
                 if(isset($requestId) && !empty($requestId))
                 {
-                    $imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
+                    /*$imgresponse = $this->getTaxImageRequestStatus($requestId,$orderId);
                     $imgResult = json_decode($imgresponse, TRUE);
                     
                     $imgReturnStatus = isset($imgResult['ReturnStatus']) && !empty($imgResult['ReturnStatus']) ? $imgResult['ReturnStatus'] : '';
@@ -358,7 +358,7 @@ class Titlepoint
                     $imgReturnStatus = strtolower($imgReturnStatus);
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
-                    {
+                    {*/
                         $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
@@ -415,7 +415,7 @@ class Titlepoint
                             );
                         $this->CI->titlePointData->update($tpData,$condition); 
 
-                    }
+                    /*}
                     else if($imgReturnStatus == 'success' && $status != 'success')
                     {
                         $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -442,7 +442,7 @@ class Titlepoint
                             'file_number' => $fileNumber
                         );
                         $this->CI->titlePointData->update($tpData,$condition);  
-                    }
+                    }*/
                 }
             }
             else
@@ -1077,7 +1077,31 @@ class Titlepoint
         $result = json_decode($response, TRUE);
 
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image', $requestUrl, $requestParams, $result, $orderId, $logid);
-
+        
+        
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
+        if($generateImgStatus == 'success')
+        {
+            if($generateImgStatus == 'processing') 
+            {
+                if($this->taxcount < 3)
+                {
+                    sleep(5);
+                    $this->taxcount = $this->taxcount + 1;
+                    return $this->generateTaxImage($requestId,$orderId);                    
+                }
+                else
+                {
+                    $this->taxcount = 0;
+                    return $response;
+                }   
+                
+            }
+            else
+            { 
+                return $response;
+            }
+        }
         return $response;
     }
 
