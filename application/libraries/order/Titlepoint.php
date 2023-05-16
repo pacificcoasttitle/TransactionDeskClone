@@ -1084,12 +1084,12 @@ class Titlepoint
         
         $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
         $generateImgStatus = strtolower($generateImgStatus);
-        
+
         if($imgReturnStatus == 'success')
         {
             if($generateImgStatus == 'processing') 
             {
-                if($this->taxcount < 3)
+                if($this->taxcount <= 3)
                 {
                     sleep(5);
                     $this->taxcount = $this->taxcount + 1;
