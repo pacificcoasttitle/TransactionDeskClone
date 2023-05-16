@@ -3510,4 +3510,27 @@ class Order
 
 		}
 	}
+
+    /**
+     * Curl request integration method
+     */
+    public function curl_post($end_point, $requestParams) {
+
+        foreach($requestParams as $key=>$value) 
+		{ 
+			$post_array_string .= $key.'='.$value.'&'; 
+		}
+        $ch = curl_init($end_point);
+        // curl_setopt($ch, CURLOPT_USERPWD, "$user:$passcode");
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, array('OCS-APIRequest: true'));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array_string);
+        $res = curl_exec($ch);
+		curl_close($ch);
+		$xmlData = simplexml_load_string($res);
+		$response = json_encode($xmlData);
+        $result = json_decode($response,TRUE);
+        return $result;
+    }
 }
