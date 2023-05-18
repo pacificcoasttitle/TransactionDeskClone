@@ -11,13 +11,28 @@
 .table > tbody > tr.custom__total > th ,.table > tbody > tr.custom__total > td {
 	border-top: 2px solid;
 }
+.align-center{
+	text-align: center;
+}
+.btn-secondary {
+    background-color: #223D7F;
+}
 </style>
 <div class="container-fluid">
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fas fa-table"></i>
-            Sales Rep Commissison
-          
+    <div class="row mb-3">
+		<div class="col-sm-6">
+			<h1 class="h3 text-gray-800">Sales Rep Commissison </h1>
+		</div>
+	</div>
+    <!-- DataTables Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header datatable-header py-3">
+            <div class="datatable-header-titles" > 
+                <span>
+                    <i class="fas fa-percent"></i>
+                </span>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Sales Rep Commissison</h6> 
+            </div>
         </div>
      
         <div class="card-body">
@@ -25,11 +40,11 @@
             <div class="table-responsive">
                 <table class="table " id="tbl-sales-rep-commission-listing" width="100%" cellspacing="0">
                     <thead>
-                        <tr>
-						<th >Month</th>
-						<th>Commission</th>
-						<th>File Name</th>
-						<th>Action</th>
+                        <tr class="align-center" >
+							<th >Month</th>
+							<th>Commission</th>
+							<th>File Name</th>
+							<th>Action</th>
                         </tr>
 						
                     </thead>                
@@ -135,7 +150,7 @@
 														 &nbsp;
 													<?php endif; ?>
 													
-													<a style="background-color: buttonface;color:black" href="#collapseCard_<?php echo $key; ?>" class="btn custom__collapse_arrow collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $key; ?>">
+													<a href="#collapseCard_<?php echo $key; ?>" class="btn btn-secondary custom__collapse_arrow collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $key; ?>">
 															<span class="div__expand">Expand</span>
 															<span class="div__collapse">Collapse</span>
 														</a>

@@ -10,6 +10,7 @@ class CommissionRange extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+		$this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/sales_model');
@@ -47,10 +48,10 @@ class CommissionRange extends MX_Controller {
 		else {
 			$data['commission_details'] = $this->commission_range_model->with('underwriter_tier_obj')->get_all();
 		}
-
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/commission_range', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "commission_range", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/commission_range', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
 	
@@ -107,9 +108,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
 		$data['product_types'] = PRODUCT_TYPE;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/add_commission_range', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "add_commission_range", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/add_commission_range', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
 
@@ -208,9 +210,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
 		$data['product_types'] = PRODUCT_TYPE;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/import_commission_range', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "import_commission_range", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/import_commission_range', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 	public function template_commission_range()
     {
@@ -287,9 +290,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
 		$data['product_types'] = PRODUCT_TYPE;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/export_commission_range', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "export_commission_range", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/export_commission_range', $data);
+        // $this->load->view('order/layout/footer', $data);
 
 	}
     
@@ -358,9 +362,10 @@ class CommissionRange extends MX_Controller {
         $data['record'] = $record;
 		$data['product_types'] = PRODUCT_TYPE;
 		
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/edit_commission_range', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "edit_commission_range", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/edit_commission_range', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_commission_range($id)
@@ -392,9 +397,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
 
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/underwriter_tiers', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "underwriter_tiers", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/underwriter_tiers', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
 	public function add_underwriter_tier()
@@ -441,9 +447,10 @@ class CommissionRange extends MX_Controller {
 		$data['product_types'] = PRODUCT_TYPE;
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/add_underwriter_tier', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "add_underwriter_tier", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/add_underwriter_tier', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
     
     public function edit_underwriter_tier($id)
@@ -496,9 +503,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $data['record'] = $record;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/edit_underwriter_tier', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "edit_underwriter_tier", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/edit_underwriter_tier', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_underwriter_tier($id)
@@ -634,9 +642,10 @@ class CommissionRange extends MX_Controller {
 
 		$this->load->model('order/customer_basic_details_model');
         $data['sales_reps'] = $this->customer_basic_details_model->get_many_by(['status'=>1,'is_sales_rep'=>1]);
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/commssion_files', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "commssion_files", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/commssion_files', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_commission_file($id)
@@ -675,9 +684,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
 
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/config/index', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/config", "index", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/config/index', $data);
+        // $this->load->view('order/layout/footer', $data);
 
 
 	}
@@ -727,9 +737,10 @@ class CommissionRange extends MX_Controller {
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
         $data['record'] = $record;
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/config/edit_config', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/config", "edit_config", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/config/edit_config', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
 	public function sales_rep_commission($sales_rep_id) {
@@ -764,9 +775,11 @@ class CommissionRange extends MX_Controller {
 		$data['commissionHistory'] = $commissionHistory;
 		// echo '<pre>';var_dump($data);die;
 
-		$this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/commission_list', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/sales", "commission_list", $data);
+
+		// $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/commission_list', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 	public function index_bonus()
     {
@@ -781,10 +794,10 @@ class CommissionRange extends MX_Controller {
 		
 		$data['bonus_details'] = $this->commission_bonus_model->order_by('min_range','ASC')->get_all();
 		
-
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/commission_bonus', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "commission_bonus", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/commission_bonus', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
 	public function add_bonus()
@@ -828,9 +841,10 @@ class CommissionRange extends MX_Controller {
 		
 		$data['success_msg'] = $this->session->flashdata('success');
 		$data['error_msg'] = $this->session->flashdata('error');
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/add_commission_bonus', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "add_commission_bonus", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/add_commission_bonus', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
 
@@ -887,10 +901,10 @@ class CommissionRange extends MX_Controller {
 		
         $data['record'] = $record;
 		
-		
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/sales/edit_commission_bonus', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/sales", "edit_commission_bonus", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/edit_commission_bonus', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function delete_bonus($id)

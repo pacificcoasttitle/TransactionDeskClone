@@ -9,12 +9,7 @@
 		<div class="col-sm-6">
 			<h1 class="h3 text-gray-800">Primary Check</h1>
 		</div>
-		<div class="col-sm-6">
-            <a href="<?php echo base_url()?>order/admin/import-lenders" class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50"><i class="fas fa-file-import"></i></span><span class="text">Import</span> </a>
-            <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
-		</div>
+		
 	</div>
     <div class="card shadow mb-4">
         <div class="card-header datatable-header py-3">

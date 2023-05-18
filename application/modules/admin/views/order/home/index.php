@@ -44,7 +44,7 @@
                 <div id="daily_prod_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
                 <div id="daily_prod_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
                 <div class="col-sm-12 mb-4">
-                    <button type="button" class="btn btn-info text-right float-right" onclick="sendDailyProductionReport();">Send Daily Production Email</button>
+                    <button type="button" class="btn btn-success text-right float-right" onclick="sendDailyProductionReport();">Send Daily Production Email</button>
                 </div>
             </div>
         </div>
