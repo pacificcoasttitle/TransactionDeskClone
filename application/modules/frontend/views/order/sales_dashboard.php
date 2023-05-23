@@ -223,7 +223,7 @@
 		margin-left: 5px;
 		width:180px;
 		font-weight:600;
-		
+		position: relative;
 	}
 
 	.card-body .btn1 {
@@ -462,11 +462,42 @@
 <div class="modal" id="partnersModal">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">Partners</h4>
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary" >Partners</h6>
+				</div>
+				
+				<div class="card-body"> 
+					<div class="table-responsive">
+						<table class="table table-bordered" id="tbl-partners-data" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>PartnerID</th>
+									<th>PartnerTypeID</th>
+									<th>PartnerTypeName</th>
+									<th>PartnerName</th>
+									<!-- <th>EmailAddress</th> -->
+								</tr>
+							</thead>            
+							<tbody></tbody>
+						</table>
+					</div>
+					<div class="form-footer">
+						<button type="reset" data-dismiss="modal" aria-label="Close" class="btn-danger btn-icon-split btn-sm">
+							<span class="icon text-white-50">
+								<i class="fas fa-ban"></i>
+							</span>
+							<span class="text">Cancel</span>
+						</button>
+						<!-- <button type="button" class="btn btn-success" data-dismiss="modal" >Close</button> -->
+					</div>
+				</div>
 			</div>
+			<!-- <div class="modal-header">
+				<h4 class="modal-title">Partners</h4>
+			</div> -->
 
-			<div class="modal-body">
+			<!-- <div class="modal-body">
 				<table class="table table-striped" id="tbl-partners-data">
 					<thead>
 					<tr>
@@ -474,7 +505,7 @@
 						<th>PartnerTypeID</th>
 						<th>PartnerTypeName</th>
 						<th>PartnerName</th>
-						<!-- <th>EmailAddress</th> -->
+						
 					</tr>
 					</thead>
 					<tbody></tbody>
@@ -482,7 +513,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-danger" data-dismiss="modal" style="background: #d35411;">Close</button>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </div>
