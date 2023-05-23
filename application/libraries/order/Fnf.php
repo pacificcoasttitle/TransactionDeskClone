@@ -118,7 +118,7 @@ class Fnf
         $endPoint = 'userToken';
        
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'generate_user_token', getenv('FNF_USER_URL').$endPoint, $postData, array(), $orderDetails['order_id'], 0);                
-        $resultUserToken = $this->make_request('POST', $endPoint, 'user', $postData);
+        $resultUserToken = $this->make_request('POST', $endPoint, 'user', $postData, $vendorTokenData['token']);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'fnf', 'generate_user_token', getenv('FNF_USER_URL').$endPoint, $postData, $resultUserToken, $orderDetails['order_id'], $logid);
         $resToken = json_decode($resultUserToken, true);
         $tokenData = array(
