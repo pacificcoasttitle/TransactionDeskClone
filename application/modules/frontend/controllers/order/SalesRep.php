@@ -12,6 +12,7 @@ class SalesRep extends MX_Controller
 		$this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/salesDashboardTemplate');
         $this->load->library('session');
 		$this->load->library('form_validation');
         $this->load->library('order/template');
@@ -195,10 +196,12 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->template->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+        $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
+        // $this->salesdashboardtemplate->addCSS(base_url('assets/css/theme.css'));
 		// echo "<pre>";
 		// var_dump($data);die;
-		$this->template->show("order", "sales_dashboard", $data);
+		// $this->template->show("order", "sales_dashboard", $data);
 	}
 
 	function get_sales_orders()
