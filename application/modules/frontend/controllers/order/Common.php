@@ -18,6 +18,7 @@ class Common extends MX_Controller {
 		$this->load->helper(
             array('file', 'url','form')
         );
+		$this->load->library('order/salesDashboardTemplate');
         $this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->library('order/template');
@@ -88,8 +89,11 @@ class Common extends MX_Controller {
 		$data['prelimDocument'] = $prelimDocument;
 		$data['orderDetails'] = $orderDetails;
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
-		$this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
-		$this->template->show("order", "view_review_file", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version) );
+		$this->salesdashboardtemplate->addCss( base_url('assets/css/theme.css?v=prelim_order_'.$this->prelim_order_js_version) );
+        $this->salesdashboardtemplate->show("order", "view_review_file", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
+		// $this->template->show("order", "view_review_file", $data);
 	}
 
 	public function summary()

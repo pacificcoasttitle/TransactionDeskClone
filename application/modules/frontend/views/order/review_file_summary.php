@@ -11,6 +11,9 @@
 	br {
 		line-height: 12px;
 	}
+	.bg-border {
+		border-radius: 5px;
+	}
 </style>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
@@ -19,13 +22,13 @@
 <div class="l-main-contenta">
 	<article class="b-post b-post-full clearfix">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-8">
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Borrower Vesting</span><br> <?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?></p>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Property Address</span><br> <?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?></p>
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Type of Policy</span><br> <?php echo isset($prelim_details['policy_type']) && !empty($prelim_details['policy_type']) ? $prelim_details['policy_type'] : '-'; ?></p>
 			</div>
-			<div class="col-md-6">
-				<p class="typography__highlights">&nbsp;<span class="bg-border">Order Number</span><br>
+			<div class="col-md-4">
+				<p class="typography__highlights">&nbsp;<span class="bg-border br-5">Order Number</span><br>
 					<?php echo isset($prelim_details['file_number']) && !empty($prelim_details['file_number']) ? $prelim_details['file_number'] : '-'; ?></p>
 				
 				<p class="typography__highlights">&nbsp;<span class="bg-border">Commitment Date</span><br> <?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
