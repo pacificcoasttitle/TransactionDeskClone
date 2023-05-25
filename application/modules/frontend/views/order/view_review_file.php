@@ -1,5 +1,7 @@
 <style>
-
+	body {
+		font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+	}
 	.dropdown-btn {
 		border: none;
 		background: none;
@@ -28,6 +30,11 @@
 	.review_li {
 		float: left;
 		width: 100%;
+		font-size: 20px;
+	}
+
+	.review_li ol  li {
+		font-size: 15px;
 	}
 
 	.linked_doc {
@@ -36,6 +43,7 @@
 		border: none !important;
 		font-weight:bold;
 	}
+
 	.yamm2 {
 		flex-direction: column;
 	}
@@ -59,6 +67,9 @@
 	.fn-36 {
 		font-size: 36px;
 	}
+	.fs-20 {
+		font-size: 20px;
+	}
 </style>
 
 <!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;"> -->
@@ -66,9 +77,9 @@
 		<div class="card shadow mb-4">
 			<div class="card-body">
 				<div class="col-xs-12">
-					<div class="typography-section__inner">
+					<div class="typography-section__inner mt-0">
 						<h2 class="ui-title-block ui-title-block_light fn-36">Preliminary Report Review</h2>
-						<div class="ui-decor-1a bg-accent"></div>
+						<div class="ui-decor-1a bg-accent mt-0 mb-0"></div>
 						<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number']; ?></h3>
 						<h3 class="ui-title-block_light"></h3>
 						<div class="wrapper-alignment">
@@ -143,10 +154,13 @@
 																if(!empty($linked_doc)) {
 																	$count = count($linked_doc);
 																	$i = 1;
+																	
 																	foreach($linked_doc as $document) { 
+																		if (!empty($document['original_document_name'])) {
+																			
 																		?>
-																		<li style="width: 100%;"><a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>display: list-item;" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>, <?php echo $document['id'];?>);" class="linked_doc" href="javascript:void(0);"><?php echo $document['index_number'].". ".$document['original_document_name'];?></a></li>
-																	<?php  $i++; } 
+																		<li ><a id="<?php echo $document['api_document_id'];?>" style="<?php echo $style;?>" onclick="load_doc(<?php echo $document['is_sync'];?>, <?php echo $document['api_document_id'];?>, <?php echo $document['order_id'];?>, <?php echo $document['id'];?>);" class="linked_doc" href="javascript:void(0);"><?php echo $document['index_number'].". ".$document['original_document_name'];?></a></li>
+																	<?php  } $i++; } 
 																	} else { ?>
 																	<a class="linked_doc" href="#">No Documents Found</a>
 																<?php } 
@@ -191,10 +205,10 @@
 									<section class="widget section-sidebar">
 										<div class="widget-content2">
 											<ul class="widget-list lista">
-												<li class="widget-list__item"><a class="widget-list__link"
+												<li class="widget-list__item"><a class="widget-list__link fs-20"
 														href="javascript:void(0)">Borrower Name</a><br><?php echo $orderDetails['primary_owner'];?></li>
 												<div class="ui-decor-3"></div>
-												<li class="widget-list__itema"><a class="widget-list__link"
+												<li class="widget-list__itema"><a class="widget-list__link fs-20"
 														href="javascript:void(0)">Transaction Type</a><br><?php echo $orderDetails['product_type']; ?></li>
 												<div class="ui-decor-3"></div>
 												<?php
@@ -205,7 +219,7 @@
 															$sales_amount = str_replace(",", "", $orderDetails['sales_amount']);
 														}
 												?>
-														<li class="widget-list__itema"><a class="widget-list__link"
+														<li class="widget-list__itema"><a class="widget-list__link fs-20"
 														href="javascript:void(0)">Sales Amount</a><br><?php echo isset($sales_amount) && !empty($sales_amount) ? "$".number_format($sales_amount) : '-' ;?></li>
 														<div class="ui-decor-3"></div>
 
@@ -218,10 +232,10 @@
 														$loan_amount = str_replace(",", "", $orderDetails['loan_amount']);
 													}
 												?>
-												<li class="widget-list__itema"><a class="widget-list__link"
+												<li class="widget-list__itema"><a class="widget-list__link fs-20"
 														href="javascript:void(0)">Loan Amount</a><br><?php echo isset($loan_amount) && !empty($loan_amount) ? "$".number_format($loan_amount) : '-' ;?></li>
 												<div class="ui-decor-3"></div>
-												<li class="widget-list__itema"><a class="widget-list__link"
+												<li class="widget-list__itema"><a class="widget-list__link fs-20"
 														href="javascript:void(0)">Open Date</a><br><?php echo date("m/d/Y", strtotime($orderDetails['opened_date'])); ?></li>
 											</ul>
 										</div>
