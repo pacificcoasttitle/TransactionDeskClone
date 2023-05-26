@@ -120,6 +120,7 @@
 	}
 	.sales-user-listing {
 		display: flex;
+		align-items: center;
 	}
 	#sales_user_listing {
 		float:left;
@@ -282,6 +283,10 @@
 	.button-color {
 		color: #888888;
 	}
+	.month-name {
+		text-decoration: underline;
+		color: #d35411
+	}
 </style>
 <!-- <section class="section-type-4a section-defaulta container-fluid" style="padding-bottom:0px;"> -->
 	<div class="container-fluid">
@@ -295,7 +300,7 @@
 								<h2 class="ui-title-block ui-title-block_light fs-28">Welcome <?php echo $name; ?>,</h2>
 								<div class="ui-decor-1a bg-accent"></div>
 								<div class="sales-user-listing mb-4">
-									<h4 class="ui-title-block_light fs-16">Production figures for the current month of <b><?php echo date('F');?></b></h3>
+									<h4 class="ui-title-block_light fs-16">Production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
 									<?php if(!empty($salesUsers) && $is_sales_rep_manager == 1) { ?>
 										<div id="sales_user_listing">
 											<label>

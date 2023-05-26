@@ -3,13 +3,17 @@
 	th {
 		text-align: center;
 	}
+	.month-name {
+		text-decoration: underline;
+		color: #d35411
+	}
 </style>
 <div class="container-fluid">
 		<div class="card shadow mb-4">
 			<div class="card-body">
 				<div class="col-xs-12">
 					<div class="order-count-cotainer">
-						<h4 class="ui-title-block_light">Production figures for the current month of <b><?php echo date('F');?></b></h3>
+						<h4 class="ui-title-block_light">Production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
 					</div>	
 					
 					<div class="card shadow mb-4">

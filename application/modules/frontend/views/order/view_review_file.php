@@ -33,6 +33,10 @@
 		font-size: 20px;
 	}
 
+	.review_li ol {
+		list-style-type: none;
+	}
+
 	.review_li ol  li {
 		font-size: 15px;
 	}
@@ -58,17 +62,30 @@
 	button:focus {
 		outline:0;
 	}
+
 	.wrapper-alignment {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		width: 100%;
 	}
+
 	.fn-36 {
 		font-size: 36px;
 	}
+
 	.fs-20 {
 		font-size: 20px;
+	}
+
+	.nav-bottom-border {
+		border-bottom: 2px #D35411 dotted !important;
+	}
+	.ui-decor-3 {
+		border-bottom: 1px solid #D35411
+	}
+	.ui-decor-3:after {
+		background-color: #D35411;
 	}
 </style>
 
@@ -144,12 +161,12 @@
 														<li class="review_li">
 															<a href="javascript:void(0);" >Prelim</a></li><br>
 													<?php } ?>
-													<li class="review_li">
+													<li class="review_li nav-bottom-border">
 														<button class="dropdown-btn">Linked Docs
 															<i style="font-size:16px;" class="fa fa-caret-down"></i>
 														</button>
 														<div class="dropdown-container">
-															<ol style="border-bottom: 2px #D35411 dotted !important;"> 
+															<ol> 
 															<?php 
 																if(!empty($linked_doc)) {
 																	$count = count($linked_doc);
@@ -171,12 +188,12 @@
 													<br>
 													<li class="review_li"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
 													<li class="review_li"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
-													<li class="review_li">
+													<li class="review_li nav-bottom-border">
 														<button class="dropdown-btn">Uploaded Docs
 															<i style="font-size:16px;" class="fa fa-caret-down"></i>
 														</button>
 														<div class="dropdown-container">
-															<ol style="border-bottom: 2px #D35411 dotted !important;"> 
+															<ol > 
 															<?php 
 																if(!empty($uploaded_docs)) {
 																	$count = count($uploaded_docs);
