@@ -155,10 +155,7 @@ class SalesRep extends MX_Controller
 		}
         $data['sales_commission'] = $sales_commission;
 		//Commission Logic Ends
-
-		
-		
-		
+        
         $data['sale_close_count'] =  !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
         $data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
 
@@ -197,6 +194,8 @@ class SalesRep extends MX_Controller
             $data['close_order_percetage'] = 0;
         }
         $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+        $this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/sales-dashboard.css?v='.$this->sales_dashboard_js_version) );
+
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
         // $this->salesdashboardtemplate->addCSS(base_url('assets/css/theme.css'));
 		// echo "<pre>";
@@ -427,6 +426,7 @@ class SalesRep extends MX_Controller
 		}
 		$data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+        $this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/sales-production-history.css?v='.$this->sales_dashboard_js_version) );
 		//$this->template->show("order", "sales_production_history", $data);
         $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
 	}
@@ -492,6 +492,7 @@ class SalesRep extends MX_Controller
 		$data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS( base_url('assets/plugins/chart/Chart.min.js') );
         $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
+        $this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/sales-trends.css?v='.$this->sales_dashboard_js_version) );
 		//$this->template->show("order", "sales_trends", $data);
         $this->salesdashboardtemplate->show("order", "sales_trends", $data);
     }
@@ -571,6 +572,7 @@ class SalesRep extends MX_Controller
         }
         $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_'.$this->sales_dashboard_js_version) );
         $this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
+        $this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/sales-summary.css?v=05') );
 		//$this->template->show("order", "sales_summary", $data);
         $this->salesdashboardtemplate->show("order", "sales_summary", $data);
     }

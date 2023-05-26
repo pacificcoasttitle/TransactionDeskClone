@@ -1,19 +1,3 @@
-
-<style type="text/css">
-	th {
-		text-align: center;
-	}
-	.month-name {
-		text-decoration: underline;
-		color: #d35411
-	}
-	.align-wrapper {
-		display: flex;
-		align-items: center;
-		flex-direction: row;
-		justify-content: space-between;
-	}
-</style>
 <div class="container-fluid">
 	<div class="card shadow mb-4">
 		<div class="card-body">

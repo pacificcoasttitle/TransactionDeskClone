@@ -1,26 +1,3 @@
-<style type="text/css">
-	.entry-content p {
-		font-size: 14px;
-	}
-
-	.entry-content strong, 
-	.entry-content b {
-		font-weight: 700;
-	}
-
-	br {
-		line-height: 12px;
-	}
-	.bg-border {
-		border-radius: 5px;
-	}
-	.ml-50 {
-		margin-left: 50px;
-	}
-	.p-6 {
-		padding: 6px;
-	}
-</style>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
 	<div class="ui-decor-1a bg-accent"></div>

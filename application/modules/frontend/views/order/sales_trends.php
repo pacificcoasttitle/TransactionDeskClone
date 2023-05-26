@@ -1,21 +1,3 @@
-
-<style type="text/css">
-	th {
-		text-align: center;
-	}
-
-	.chart-container {
-		background-color: #f8f6f6;
-		border: 1px solid rgba(000, 000, 000, 0.15);
-		margin-bottom: 50px;
-	}
-	.align-wrapper {
-		display: flex;
-		width: 30%;
-		justify-content: space-between;
-	}
-</style>
-
 <div class="container-fluid">
 	<div class="card shadow mb-4">
 		<div class="card-body">
