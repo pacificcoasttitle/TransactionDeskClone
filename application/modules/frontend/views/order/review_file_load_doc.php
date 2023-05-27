@@ -4,9 +4,12 @@
 }
 </style>
 <div class="typography-section__inner">
-	<a onclick="download_document(<?php echo $api_document_id;?>, <?php echo $order_id;?>, '<?php echo $document_name;?>');" href="javascript:void(0);"><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-	<!-- <a style="display:<?php echo $prelim_flag == 1 ?  "contents" : "none";?>" onclick="download_document(<?php echo $api_document_id;?>, <?php echo $order_id;?>, '<?php echo $doc_document_name;?>');" href="javascript:void(0);"><button class='btn btn-grad-2a' style='width:auto;background: #d35411;' type='button'>Download Doc File</button></a>
-	<a style="display:<?php echo $prelim_flag == 1 ?  "contents" : "none";?>" onclick="upload_document(<?php echo $api_document_id;?>, <?php echo $order_id;?>, '<?php echo $doc_document_name;?>');" href="javascript:void(0);"><button class='btn btn-grad-2a' style='width:auto;background: #d35411;' type='button'>Upload Doc File</button></a> -->
+	<a class="btn-success btn-icon-split btn-sm" onclick="download_document(<?php echo $api_document_id;?>, <?php echo $order_id;?>, '<?php echo $document_name;?>');" href="javascript:void(0);">
+		<span class="icon text-white-50">
+			<i class="fa fa-download"></i>
+		</span>
+		<span class="text">Download</span>
+	</a>
 </div>
 
 <div class="l-main-content">

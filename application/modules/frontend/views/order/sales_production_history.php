@@ -1,17 +1,9 @@
-
-<style type="text/css">
-	th {
-		text-align: center;
-	}
-</style>
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="typography-section__inner">
-						<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b><?php echo date('Y');?></b></h3>
-					</div>
+<div class="container-fluid">
+	<div class="card shadow mb-4">
+		<div class="card-body">
+			<div class="col-xs-12">
+				<div class="typography-section__inner align-wrapper">
+					<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b class="month-name"><?php echo date('Y');?></b></h3>
 					<?php if(!empty($salesUsers)) { ?>
 						<div id="sales_user_listing">
 							<label>
@@ -24,52 +16,47 @@
 							</label>
 						</div>
 					<?php } ?>
-					<div class="typography-sectiona">
-						<div class="col-md-12">
-							<div class="table-container">
-								<table class="table table-type-3 typography-last-elem" id="production_history_tab">
-									<thead>
-										<tr>
-											<th align="center">Month</th>
-											<th>Trending</th>
-											<th>Total Openings</th>
-											<th>Total Closings</th>
-											<th>Total Revenue</th>
-											<th>Closing %</th>
-										</tr>
-									</thead>
-									<?php if(!empty($salesHistory)) {?>
-										<tbody>
-											<?php foreach($salesHistory as $salesData) { ?>
-												<tr>
-													<td><?php echo $salesData['month'];?></td>
-													<th><?php echo $salesData['trending'];?></th>
-													<td><?php echo $salesData['total_open_count'];?></td>
-													<td><?php echo $salesData['total_close_count'];?></td>
-													<td><?php echo "$".number_format($salesData['total_premium']);?></td>
-													<td><?php echo $salesData['close_order_percetage']."%";?></td>
-												</tr> 
-											<?php } ?> 
-										</tbody>
-									<?php } else {?>
-										<tbody>
+				</div>
+				<div class="card shadow mb-4">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-bordered" id="production_history_tab" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th align="center">Month</th>
+										<th>Trending</th>
+										<th>Total Openings</th>
+										<th>Total Closings</th>
+										<th>Total Revenue</th>
+										<th>Closing %</th>
+									</tr>
+								</thead>
+								<?php if(!empty($salesHistory)) {?>
+									<tbody>
+										<?php foreach($salesHistory as $salesData) { ?>
 											<tr>
-												<td align="center" colspan="5"> No Records Found.</td>
-											</tr>
-										</tbody>
-									<?php } ?>
-								</table>
-								<div class="typography-sectionab">	
-								</div>
-							</div>
+												<td align="center"><?php echo $salesData['month'];?></td>
+												<td align="center"><?php echo $salesData['trending'];?></td>
+												<td align="center"><?php echo $salesData['total_open_count'];?></td>
+												<td align="center"><?php echo $salesData['total_close_count'];?></td>
+												<td align="center"><?php echo "$".number_format($salesData['total_premium']);?></td>
+												<td align="center"><?php echo $salesData['close_order_percetage']."%";?></td>
+											</tr> 
+										<?php } ?> 
+									</tbody>
+								<?php } else {?>
+									<tbody>
+										<tr>
+											<td align="center" colspan="5"> No Records Found.</td>
+										</tr>
+									</tbody>
+								<?php } ?>
+							</table>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</section>
-	
-
-
+</div>
 

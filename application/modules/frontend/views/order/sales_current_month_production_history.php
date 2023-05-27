@@ -3,20 +3,23 @@
 	th {
 		text-align: center;
 	}
+	.month-name {
+		text-decoration: underline;
+		color: #d35411
+	}
 </style>
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
-			<div class="row">
+<div class="container-fluid">
+		<div class="card shadow mb-4">
+			<div class="card-body">
 				<div class="col-xs-12">
-					<div class="typography-section__inner">
-						<h4 class="ui-title-block_light">Production figures for the current month of <b><?php echo date('F');?></b></h3>
-					</div>
+					<div class="order-count-cotainer">
+						<h4 class="ui-title-block_light">Production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
+					</div>	
 					
-					<div class="typography-sectiona">
-						<div class="col-md-12">
-							<div class="table-container">
-								<table class="table table-type-3 typography-last-elem" id="production_history_tab">
+					<div class="card shadow mb-4">
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered" id="production_history_tab" width="100%" cellspacing="0">
 									<thead>
 										<tr>
 											<th>Sales Rep.</th>
@@ -29,10 +32,10 @@
 										<tbody>
 											<?php foreach($salesHistory as $salesData) { ?>
 												<tr>
-													<td><?php echo $salesData['sales_rep'];?></td>
-													<td><?php echo $salesData['total_open_count'];?></td>
-													<td><?php echo $salesData['total_close_count'];?></td>
-													<td><?php echo "$".number_format($salesData['total_premium']);?></td>
+													<td align="center"><?php echo $salesData['sales_rep'];?></td>
+													<td align="center"><?php echo $salesData['total_open_count'];?></td>
+													<td align="center"><?php echo $salesData['total_close_count'];?></td>
+													<td align="center"><?php echo "$".number_format($salesData['total_premium']);?></td>
 												</tr> 
 											<?php } ?> 
 										</tbody>
@@ -44,8 +47,6 @@
 										</tbody>
 									<?php } ?>
 								</table>
-								<div class="typography-sectionab">	
-								</div>
 							</div>
 						</div>
 					</div>
@@ -53,8 +54,3 @@
 			</div>
 		</div>
 	</div>
-</section>
-	
-
-
-
