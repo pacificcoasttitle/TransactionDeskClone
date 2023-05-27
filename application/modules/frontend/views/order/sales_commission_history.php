@@ -26,27 +26,37 @@
     /* border-radius: 10px; */
     padding-right: 30px;
 }
+.month-name {
+	text-decoration: underline;
+	color: #d35411
+}
+.align-wrapper {
+	display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 	<div class="container">
 		<div class="row">
 			<div class="row">
 				<div class="col-xs-12">
-					<div class="typography-section__inner">
-						<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b><?php echo date('Y');?></b></h3>
+					<div class="typography-section__inner align-wrapper">
+						<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b class="month-name"><?php echo date('Y');?></b></h3>
+						<?php if(!empty($salesUsers)) { ?>
+							<div id="sales_user_listing">
+								<label>
+									<select style="width:auto;" name="sales_user_commission_filter" id="sales_user_commission_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
+										<!-- <option value="all"> All Sales Rep Users </option> -->
+										<?php foreach($salesUsers as $salesUser) { ?>
+											<option <?php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '' ;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+										<?php }?>
+									</select>
+								</label>
+							</div>
+						<?php } ?>
 					</div>
-					<?php if(!empty($salesUsers)) { ?>
-						<div id="sales_user_listing">
-							<label>
-								<select style="width:auto;" name="sales_user_commission_filter" id="sales_user_commission_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-									<!-- <option value="all"> All Sales Rep Users </option> -->
-									<?php foreach($salesUsers as $salesUser) { ?>
-										<option <?php echo ($sales_user_id == $salesUser['id']) ? 'selected' : '' ;?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
-									<?php }?>
-								</select>
-							</label>
-						</div>
-					<?php } ?>
 					<div class="typography-sectiona">
 						<div class="col-md-12">
 							<div class="table-container">

@@ -1,75 +1,5 @@
 <style>
-	body {
-		font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-	}
-	.dropdown-btn {
-		border: none;
-		background: none;
-		width: 100%;
-		text-align: left;
-		color: #04415D;
-		background: #ffffff;
-		width: 100%;
-		border-bottom: 2px #D0D0D0 dotted;
-		padding: 10px 15px 10px 0;
-	}
-
-	.dropdown-container {
-		display: none;
-	}
-
-	.active {
-		border :none;
-	}
-
-	.fa-caret-down {
-		float: right;
-		padding-right: 8px;
-	}
-
-	.review_li {
-		float: left;
-		width: 100%;
-		font-size: 20px;
-	}
-
-	.review_li ol  li {
-		font-size: 15px;
-	}
-
-	.linked_doc {
-		float: left;
-		padding: 5px 0px 10px 0;
-		border: none !important;
-		font-weight:bold;
-	}
-
-	.yamm2 {
-		flex-direction: column;
-	}
-	.yamm2 li a {
-		width:100%;
-	}
-
-	.yamm2 li a:hover {
-		width:100%;
-	}
-
-	button:focus {
-		outline:0;
-	}
-	.wrapper-alignment {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		width: 100%;
-	}
-	.fn-36 {
-		font-size: 36px;
-	}
-	.fs-20 {
-		font-size: 20px;
-	}
+	
 </style>
 
 <!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;"> -->
@@ -144,12 +74,12 @@
 														<li class="review_li">
 															<a href="javascript:void(0);" >Prelim</a></li><br>
 													<?php } ?>
-													<li class="review_li">
+													<li class="review_li nav-bottom-border">
 														<button class="dropdown-btn">Linked Docs
 															<i style="font-size:16px;" class="fa fa-caret-down"></i>
 														</button>
 														<div class="dropdown-container">
-															<ol style="border-bottom: 2px #D35411 dotted !important;"> 
+															<ol> 
 															<?php 
 																if(!empty($linked_doc)) {
 																	$count = count($linked_doc);
@@ -171,12 +101,12 @@
 													<br>
 													<li class="review_li"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
 													<li class="review_li"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
-													<li class="review_li">
+													<li class="review_li nav-bottom-border">
 														<button class="dropdown-btn">Uploaded Docs
 															<i style="font-size:16px;" class="fa fa-caret-down"></i>
 														</button>
 														<div class="dropdown-container">
-															<ol style="border-bottom: 2px #D35411 dotted !important;"> 
+															<ol > 
 															<?php 
 																if(!empty($uploaded_docs)) {
 																	$count = count($uploaded_docs);

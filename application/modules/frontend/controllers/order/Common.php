@@ -91,6 +91,7 @@ class Common extends MX_Controller {
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
 		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version) );
 		$this->salesdashboardtemplate->addCss( base_url('assets/css/theme.css?v=prelim_order_'.$this->prelim_order_js_version) );
+        $this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/view-review-file.css?v='.$this->prelim_order_js_version) );
         $this->salesdashboardtemplate->show("order", "view_review_file", $data);
 		// $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
 		// $this->template->show("order", "view_review_file", $data);

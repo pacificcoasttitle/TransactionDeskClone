@@ -1,51 +1,4 @@
 <style>
-tr {
-	text-align: center;
-}
-td {
-	border: none !important;
-}
-.table-type-3 {
-	border-bottom: none !important;
-}
-
-.custom__task_collapse {
-	background: #fff;
-}
-.spacer-b30 {
-	margin-bottom: 30px;
-}
-.spacer-t30 {
-	margin-top: 30px;
-}
-.smart-forms a.button {
-	height: 35px;
-	line-height: 35px;
-}
-.mt-105 {
-	margin-top: 105px;
-}
-.radio {
-	top: 5px !important;
-	margin: 0px 10px !important;
-}
-.radio:before {
-	background: none !important;
-}
-.check_box_text {
-	text-align: center;
-}
-.title_text {
-	font-size: 14px;
-	color: #888888;
-	font-weight: bold;
-}
-.select_user {
-	width:auto;
-	display:inline;
-	margin-right:5px;
-	border: 1px solid rgba(0, 0, 0, 0.2);
-}
 
 </style>
 <div class="container-fluid">
@@ -150,7 +103,7 @@ td {
 											<div class="collapse custom__task_collapse" id="collapseCard_<?php echo $summary['company_id']; ?>">
 												<div class="card-body">												
 													<div class="smart-forms spacer-b30 spacer-t30">
-														<div class="tagline"><span>Client Summary</span></div>
+														<div class="tagline text-success "><span>Client Summary</span></div>
 													</div>
 													<table class="table table-bordered" width="100%" cellspacing="0">
 														<thead>
