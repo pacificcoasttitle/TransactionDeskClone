@@ -106,7 +106,7 @@
 													</div>
 												</div>
 												<div class="clearfix small z-1 viewDetails text-info projected_goal_section">
-													Projected = $<span id="projected_revenue_section">$<?Php echo number_format($projected_revenue);?></span>
+												Projected = <span id="projected_revenue_section">$<?Php echo number_format($projected_revenue);?></span>
 													<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
 														<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
 													<?php } else { ?>

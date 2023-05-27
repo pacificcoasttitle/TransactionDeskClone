@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller 
 {
-    private $sales_dashboard_js_version = '05';
+    private $sales_dashboard_js_version = '06';
 
 	function __construct() 
     {
