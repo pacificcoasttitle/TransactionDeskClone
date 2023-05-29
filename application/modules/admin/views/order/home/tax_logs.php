@@ -84,6 +84,7 @@ div.dataTables_wrapper div.dataTables_filter {
                     }, 1000);
                     log_list.ajax.reload(null, false);
                     setTimeout(function () {
+                        $('#customer_success_msg').html('').hide();
                         $('#customer_error_msg').html('').hide();
                     }, 5000);
                 } else {
