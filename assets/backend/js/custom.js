@@ -2089,12 +2089,16 @@ $(document).ready(function () {
                     "width": "30%"
                 },
                 {
-                    "width": "20%"
+                    "width": "15%"
                 },
                 {
-                    "width": "17%"
-                },{
-                    "width": "18%"
+                    "width": "15%"
+                },
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "10%"
                 },
             ],
             "language": {
