@@ -388,6 +388,7 @@ class Titlepoint
                             $tpData = array(
                                 'tax_file_status' => $generateImgStatus,
                                 'tax_file_message' => $generateImgMsg,
+                                'tax_request_id' => $requestId,
                                 'tax_order_id' => $requestOrderId
                             );
                         }
@@ -397,6 +398,7 @@ class Titlepoint
                             $tpData = array(
                                 'tax_file_status' => $generateImgStatus,
                                 'tax_file_message' => $generateImgMsg,
+                                'tax_request_id' => $requestId,
                                 'tax_order_id' => $requestOrderId
                             );
                         }
@@ -407,6 +409,7 @@ class Titlepoint
                             $tpData = array(
                                 'tax_file_status' => $generateImgReturnStatus,
                                 'tax_file_message' => $error,
+                                'tax_request_id' => $requestId,
                                 'tax_order_id' => $requestOrderId
                             );  
                         }
