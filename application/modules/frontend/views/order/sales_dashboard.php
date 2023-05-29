@@ -49,9 +49,6 @@
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Refi's = <span id="refi_open_count"><?Php echo $refi_open_count;?></span></div>
 														</div>
 													</div>
-													<div class="col-auto">
-														<i class="fa fa-first-order fa-2x text-gray-300"></i>
-													</div>
 												</div>
 												<div class="clearfix small z-1 viewDetails text-primary projected_goal_section">
 													Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span>
@@ -74,9 +71,6 @@
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Sales = <span id="sale_close_count"><?Php echo $sale_close_count;?></span></div>
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Refi's = <span id="refi_close_count"><?Php echo $refi_close_count;?></span></div>
 														</div>
-													</div>
-													<div class="col-auto">
-														<i class="fa fa-first-order fa-2x text-gray-300"></i>
 													</div>
 												</div>
 												<div class="clearfix small z-1 viewDetails text-success projected_goal_section">
@@ -101,12 +95,9 @@
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Refi's = $<span id="refi_total_premium"><?Php echo $refi_total_premium;?></span></div>
 														</div>
 													</div>
-													<div class="col-auto">
-														<i class="fa fa-first-order fa-2x text-gray-300"></i>
-													</div>
 												</div>
 												<div class="clearfix small z-1 viewDetails text-info projected_goal_section">
-													Projected = $<span id="projected_revenue_section">$<?Php echo number_format($projected_revenue);?></span>
+													Projected = $<span id="projected_revenue_section"><?Php echo number_format($projected_revenue);?></span>
 													<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
 														<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
 													<?php } else { ?>
@@ -126,9 +117,6 @@
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Sales = <span id="sale_close_order_percetage"><?Php echo $sale_close_order_percetage;?></span>%</div>
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Refi's = <span id="refi_close_order_percetage"><?Php echo $refi_close_order_percetage;?></span>%</div>
 														</div>
-													</div>
-													<div class="col-auto">
-														<i class="fa fa-first-order fa-2x text-gray-300"></i>
 													</div>
 												</div>
 												
