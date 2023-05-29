@@ -56,7 +56,9 @@ $(document).ready(function () {
         }
     });
 
-    $('select').selectpicker();
+    if ($('select').length) {
+        $('select').selectpicker();
+    }
 
     if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length)
     {
@@ -4103,7 +4105,9 @@ $(document).ready(function () {
         }); 
 	}
 
-    $('#holiday_date').datepicker().datepicker("setDate", new Date());
+    if ($('#holiday_date').length) {
+        $('#holiday_date').datepicker().datepicker("setDate", new Date());
+    }
 });
 
 if(('.threshold-remove-btn').length) {
