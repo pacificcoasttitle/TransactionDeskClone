@@ -60,7 +60,6 @@ div.dataTables_wrapper div.dataTables_filter {
 
 <script>
     function regenerateTaxDocument(requestId, orderId, fileNumber) {
-        console.log("ServiceIs =", requestId);
         $('body').animate({
             opacity: 0.5
         }, "slow");
@@ -69,6 +68,59 @@ div.dataTables_wrapper div.dataTables_filter {
             method: "POST",
             data: {
                 request_id: requestId,
+                order_id: orderId,
+                file_number: fileNumber
+            },
+            success: function (data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('body').animate({
+                        opacity: 1.0
+                    }, "slow");
+                    $('#customer_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#customer_success_msg").offset().top
+                    }, 1000);
+                    log_list.ajax.reload(null, false);
+                    setTimeout(function () {
+                        $('#customer_success_msg').html('').hide();
+                        $('#customer_error_msg').html('').hide();
+                    }, 5000);
+                } else {
+                    $('body').animate({
+                        opacity: 1.0
+                    }, "slow");
+                    $('#customer_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#customer_error_msg").offset().top
+                    }, 1000);
+                    setTimeout(function () {
+                        $('#customer_error_msg').html('').hide();
+                    }, 5000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#customer_error_msg').html('').hide();
+                }, 5000);
+            }
+        });
+    }
+
+    function generateTaxDocument(serviceId, orderId, fileNumber) {
+        $('body').animate({
+            opacity: 0.5
+        }, "slow");
+        $.ajax({
+            url: base_url + "order/admin/generate-tax-document",
+            method: "POST",
+            data: {
+                cs3_service_id: serviceId,
                 order_id: orderId,
                 file_number: fileNumber
             },
