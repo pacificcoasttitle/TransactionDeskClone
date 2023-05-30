@@ -397,7 +397,7 @@ class TitlePoint extends MX_Controller {
                         $taxRequestId = $value['tax_request_id'];
                         $orderId = $order_details['order_id'];
                         $fileNumber = $value['file_number'];
-                        $nestedData[] = '<a style="margin-left:5px;" href="#" onclick="regenerateTaxDocument('.$taxRequestId.', '. $orderId .', ' . $fileNumber . ');" title="Regenerate Tax Document"><i class="fas fa-sync" aria-hidden="true"></i></a>';
+                        $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='regenerateTaxDocument(".'"'. $taxRequestId.'"' . ", " . '"'. $orderId .'"' . ", " .'"' . $fileNumber . '"'.");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
                     } else {
                         $nestedData[] = '';
                     }
