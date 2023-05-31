@@ -5378,4 +5378,42 @@ class Cron extends MX_Controller {
 			}           
         }
 	}
+
+    public function generateTaxDocument($requestId, $orderId) 
+    {
+        $userdata = $this->session->userdata('user');
+        $requestParams = array(
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'requestId'=>  $requestId
+                        );
+        // print_r($requestParams);die;
+        $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
+        $requestUrl = env('TP_GENERATE_IMAGE');
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image_BG', $request, $requestParams, array(), $orderId, 0);
+        $response = $this->order->curl_post($requestUrl, $requestParams);
+
+        $result = json_decode($response, TRUE);
+
+        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image_BG', $request, $response, $result, $orderId, $logid);
+        
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
+        
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
+        $generateImgStatus = strtolower($generateImgStatus);
+
+        if($imgReturnStatus == 'success')
+        {
+            if($generateImgStatus == 'processing') 
+            {
+                if($this->taxcount <= 10)
+                {
+                    sleep(3);
+                    $this->taxcount = $this->taxcount + 1;
+                    return $this->generateTaxDocument($requestId,$orderId);                    
+                }
+            }
+        }
+    }
 }
