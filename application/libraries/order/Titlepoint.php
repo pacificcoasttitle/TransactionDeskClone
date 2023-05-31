@@ -1091,7 +1091,7 @@ class Titlepoint
         {
             if($generateImgStatus == 'processing') 
             {
-                if($this->taxcount <= 6)
+                if($this->taxcount <= 3)
                 {
                     sleep(5);
                     $this->taxcount = $this->taxcount + 1;
