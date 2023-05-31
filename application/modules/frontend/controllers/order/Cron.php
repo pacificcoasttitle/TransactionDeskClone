@@ -5415,5 +5415,14 @@ class Cron extends MX_Controller {
                 }
             }
         }
+        $tpData = array(
+            'tax_file_status' => $generateImgStatus
+        );  
+    
+        $condition =array(
+            'tax_request_id' => $requestId
+        );
+        $this->CI->titlePointData->update($tpData,$condition);
+        
     }
 }
