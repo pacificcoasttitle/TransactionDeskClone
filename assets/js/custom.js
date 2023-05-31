@@ -80,206 +80,128 @@ if ($('.stellar').length > 0) {
 if ($('body').length) {
     $(window).on('scroll', function() {
         var winH = $(window).scrollTop();
-
-        $('.b-progress-list').waypoint(function() {
-            $('.js-chart').each(function() {
-                CharsStart();
+        if ($('.b-progress-list').length) {
+            $('.b-progress-list').waypoint(function() {
+                $('.js-chart').each(function() {
+                    CharsStart();
+                });
+            }, {
+                offset: '80%'
             });
-        }, {
-            offset: '80%'
-        });
+        }
     });
 }
-    
-    
     
 /////////////////////////////////////
 //  Effect Active
 /////////////////////////////////////  
     
-    
-    
-    
-    
-             
-$('.effect-active').waypoint(function() {
-    
-    
-       $(this).addClass("active");
-    
-    
-        }  , {
-            triggerOnce: true,
-            offset: '55%'
-        }); 
-    
-    
- 
+if ($('.effect-active').length) {
+    $('.effect-active').waypoint(function() {
+           $(this).addClass("active");
+    }  , {
+        triggerOnce: true,
+        offset: '55%'
+    }); 
+}
 
 $('.effect-active').on( "hover", function() {
    $(this).removeClass("active");
 });
-    
-    
-    
-    
-  $('.b-isotope-grid').on( "hover", function() {
+
+$('.b-isotope-grid').on( "hover", function() {
    $(this).children().removeClass("active");
 });
     
-      
-  $('.b-advantages-group').on( "hover", function() {
+$('.b-advantages-group').on( "hover", function() {
    $(this).children().children().removeClass("active");
 });
-    
-    
-    
     
 /////////////////////////////////////
 //  RevealFX Start
 /////////////////////////////////////
-    
-    
-    
 
-         
-$('#revealfx1').waypoint(function() {
-
-        
-      
-var rev1 = new RevealFx
-
-    (
-        
-        
-        document.querySelector('#revealfx1'), {
-					revealSettings : {
-						bgcolor: '#f8f8f8',
-						onCover: function(contentEl, revealerEl) {
-							contentEl.style.opacity = 1;
-						}
-					}
-   
+if ($('#revealfx1').length) {
+    $('#revealfx1').waypoint(function() {
+        var rev1 = new RevealFx(
+            document.querySelector('#revealfx1'), {
+                revealSettings : {
+                    bgcolor: '#f8f8f8',
+                    onCover: function(contentEl, revealerEl) {
+                        contentEl.style.opacity = 1;
+                    }
+                }
+            }
+        );
+        rev1.reveal();
+    }  , {
+        triggerOnce: true,
+        offset: '95%'
+    }); 
 }
+
+if ($('#revealfx2').length) {
+    $('#revealfx2').waypoint(function() {
+        var rev1 = new RevealFx
+        (
+            document.querySelector('#revealfx2'), {
+                revealSettings : {
+                    bgcolor: '#f8f8f8',
+                    onCover: function(contentEl, revealerEl) {
+                        contentEl.style.opacity = 1;
+                    }
+                }
+            }
+        );
     
-    );
-
-       rev1.reveal();    
-        
-
-        }  , {
-            triggerOnce: true,
-            offset: '95%'
-        }); 
-
-    
- 
-
-              
-$('#revealfx2').waypoint(function() {
-
-        
-      
-var rev1 = new RevealFx
-
-    (
-        
-        
-        document.querySelector('#revealfx2'), {
-					revealSettings : {
-						bgcolor: '#f8f8f8',
-						onCover: function(contentEl, revealerEl) {
-							contentEl.style.opacity = 1;
-						}
-					}
-   
+        rev1.reveal();
+    }  , {
+        triggerOnce: true,
+        offset: '95%'
+    });
 }
-    
-    );
 
-       rev1.reveal();    
-        
-
-        }  , {
-            triggerOnce: true,
-            offset: '95%'
-        }); 
-
-    
-             
-$('#revealfx3').waypoint(function() {
-
-        
-      
-var rev1 = new RevealFx
-
-    (
-        
-        
-        document.querySelector('#revealfx3'), {
-					revealSettings : {
-						bgcolor: '#f8f8f8',
-						onCover: function(contentEl, revealerEl) {
-							contentEl.style.opacity = 1;
-						}
-					}
-   
+if ($('#revealfx3').length) {
+    $('#revealfx3').waypoint(function() {
+        var rev1 = new RevealFx
+            (
+                document.querySelector('#revealfx3'), {
+                    revealSettings : {
+                        bgcolor: '#f8f8f8',
+                        onCover: function(contentEl, revealerEl) {
+                            contentEl.style.opacity = 1;
+                        }
+                    }
+            }
+        );
+        rev1.reveal();    
+    }  , {
+        triggerOnce: true,
+        offset: '95%'
+    });
 }
-    
-    );
 
-       rev1.reveal();    
-        
-
-        }  , {
-            triggerOnce: true,
-            offset: '95%'
-        }); 
-
-    
-             
-$('#revealfx4').waypoint(function() {
-
-        
-      
-var rev1 = new RevealFx
-
-    (
-        
-        
-        document.querySelector('#revealfx4'), {
-					revealSettings : {
-						bgcolor: '#f8f8f8',
-						onCover: function(contentEl, revealerEl) {
-							contentEl.style.opacity = 1;
-						}
-					}
-   
+if ($('#revealfx4').length) {
+    $('#revealfx4').waypoint(function() {
+    var rev1 = new RevealFx
+        (
+            document.querySelector('#revealfx4'), {
+                revealSettings : {
+                    bgcolor: '#f8f8f8',
+                    onCover: function(contentEl, revealerEl) {
+                        contentEl.style.opacity = 1;
+                    }
+                }
+            }
+        );
+        rev1.reveal();    
+    }  , {
+        triggerOnce: true,
+        offset: '95%'
+    }); 
 }
-    
-    );
-
-       rev1.reveal();    
-        
-
-        }  , {
-            triggerOnce: true,
-            offset: '95%'
-        }); 
-
-
-
-
-
-
-    
-    
-    
-
-
 
 function CharsStart() {
-
     $('.js-chart').easyPieChart({
         barColor: false,
         trackColor: false,
@@ -308,58 +230,45 @@ if ($('.player').length > 0) {
 }
 
 
-
 /////////////////////////////////////
 //  Loader blocks
 /////////////////////////////////////
 
-
-    $( ".js-scroll-next" ).on( "click", function() {
-
-        var hiddenContent =  $( ".js-scroll-next + .js-scroll-content") ;
-
-        $(".js-scroll-next").hide() ;
-        hiddenContent.show() ;
-        hiddenContent.addClass("animated");
-        hiddenContent.addClass("animation-done");
-        hiddenContent.addClass("bounceInUp");
-
-    });
-
-
+$( ".js-scroll-next" ).on( "click", function() {
+    var hiddenContent =  $( ".js-scroll-next + .js-scroll-content") ;
+    $(".js-scroll-next").hide() ;
+    hiddenContent.show() ;
+    hiddenContent.addClass("animated");
+    hiddenContent.addClass("animation-done");
+    hiddenContent.addClass("bounceInUp");
+});
 
 /////////////////////////////////////////////////////////////////
 // Accordion
 /////////////////////////////////////////////////////////////////
 
-    $(".btn-collapse").on('click', function () {
-            $(this).parents('.panel-group').children('.panel').removeClass('panel-default');
-            $(this).parents('.panel').addClass('panel-default');
-            if ($(this).is(".collapsed")) {
-                $('.panel-title').removeClass('panel-passive');
-            }
-            else {$(this).next().toggleClass('panel-passive');
-        };
-    });
-
-
-
+$(".btn-collapse").on('click', function () {
+        $(this).parents('.panel-group').children('.panel').removeClass('panel-default');
+        $(this).parents('.panel').addClass('panel-default');
+        if ($(this).is(".collapsed")) {
+            $('.panel-title').removeClass('panel-passive');
+        }
+        else {$(this).next().toggleClass('panel-passive');
+    };
+});
 
 /////////////////////////////////////
 //  Tooltip
 /////////////////////////////////////
 
 
-    $('.link-tooltip-1').tooltip({
+$('.link-tooltip-1').tooltip({
     template: '<div class="tooltip tooltip-1" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-  });
-    $('.link-tooltip-2').tooltip({
+});
+
+$('.link-tooltip-2').tooltip({
     template: '<div class="tooltip tooltip-2" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
-  });
-
-
-
-
+});
 
 /////////////////////////////////////
 //  Zoom Images
@@ -367,37 +276,37 @@ if ($('.player').length > 0) {
 
 
 
-  if ($('.js-zoom-gallery').length > 0) {
-      $('.js-zoom-gallery').each(function() { // the containers for all your galleries
-          $(this).magnificPopup({
-              delegate: '.js-zoom-gallery__item', // the selector for gallery item
-              type: 'image',
-              gallery: {
+if ($('.js-zoom-gallery').length > 0) {
+    $('.js-zoom-gallery').each(function() { // the containers for all your galleries
+        $(this).magnificPopup({
+                delegate: '.js-zoom-gallery__item', // the selector for gallery item
+                type: 'image',
+                gallery: {
                 enabled:true
-              },
-        mainClass: 'mfp-with-zoom', // this class is for CSS animation below
+            },
+            mainClass: 'mfp-with-zoom', // this class is for CSS animation below
 
-        zoom: {
-          enabled: true, // By default it's false, so don't forget to enable it
+            zoom: {
+                enabled: true, // By default it's false, so don't forget to enable it
 
-          duration: 300, // duration of the effect, in milliseconds
-          easing: 'ease-in-out', // CSS transition easing function
+                duration: 300, // duration of the effect, in milliseconds
+                easing: 'ease-in-out', // CSS transition easing function
 
-          // The "opener" function should return the element from which popup will be zoomed in
-          // and to which popup will be scaled down
-          // By defailt it looks for an image tag:
-          opener: function(openerElement) {
-            // openerElement is the element on which popup was initialized, in this case its <a> tag
-            // you don't need to add "opener" option if this code matches your needs, it's defailt one.
-            return openerElement.is('img') ? openerElement : openerElement.find('img');
-          }
-        }
-          });
-      });
-    }
+                // The "opener" function should return the element from which popup will be zoomed in
+                // and to which popup will be scaled down
+                // By defailt it looks for an image tag:
+                opener: function(openerElement) {
+                    // openerElement is the element on which popup was initialized, in this case its <a> tag
+                    // you don't need to add "opener" option if this code matches your needs, it's defailt one.
+                    return openerElement.is('img') ? openerElement : openerElement.find('img');
+                }
+            }
+        });
+    });
+}
 
 
-  if ($('.js-zoom-images').length > 0) {
+if ($('.js-zoom-images').length > 0) {
       $('.js-zoom-images').magnificPopup({
         type: 'image',
         mainClass: 'mfp-with-zoom', // this class is for CSS animation below
@@ -428,7 +337,7 @@ if ($('.player').length > 0) {
 ///////////////////////////////////////////
 
 
-  if ($('.b-isotope').length > 0) {
+if ($('.b-isotope').length > 0) {
 
     var $container = $('.b-isotope-grid');
 
@@ -458,7 +367,7 @@ if ($('.player').length > 0) {
           $('.b-isotope-filter').find('.current').removeClass('current');
           $( this ).addClass('current');
         });
-  }
+}
 
 
 
@@ -675,5 +584,5 @@ if ($('.enumerator').length > 0) {
 
 
 
- new WOW().init();
+//  new WOW().init();
 

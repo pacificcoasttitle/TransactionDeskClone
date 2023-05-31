@@ -5803,5 +5803,224 @@ class Home extends MX_Controller {
         }
         redirect(base_url().'order/admin/lp-orders');
     }
+
+    public function regenerateTaxDocument() {
+        $this->load->library('order/titlepoint');
+        $requestId = $this->input->post('request_id');
+        $orderId = $this->input->post('order_id');
+        $fileNumber = $this->input->post('file_number');
+        $generateImgResponse = $this->titlepoint->generateTaxImage($requestId,$orderId);
+
+        $generateImgResult = json_decode($generateImgResponse, TRUE);
+        $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
+        $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
+
+        $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
+        $generateImgReturnStatus = strtolower($generateImgReturnStatus);
+        $generateImgStatus = strtolower($generateImgStatus);
+        if($generateImgReturnStatus == 'success' && $generateImgStatus == 'success')
+        {
+            $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
+            
+            if(isset($base64_data) && !empty($base64_data))
+            {
+                $bin = base64_decode($base64_data, true);      
+            
+                if (!is_dir('uploads/tax')) {
+                    mkdir('./uploads/tax', 0777, TRUE);
+                }
+                
+                $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+                file_put_contents($pdfFilePath, $bin); 
+                $this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
+            }
+
+            $tpData = array(
+                'tax_file_status' => $generateImgStatus,
+                'tax_file_message' => $generateImgMsg,
+                'tax_request_id' => $requestId
+            );
+            
+            $condition =array(
+                'file_number' => $fileNumber
+            );
+            
+            $this->titlePointData->update($tpData,$condition);
+            $data = array('status' => 'success', 'message'=> 'Tax document generated successfully');
+            echo json_encode($data);exit;
+        }
+        else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
+        {
+            
+            $tpData = array(
+                'tax_file_status' => $generateImgStatus,
+                'tax_file_message' => $generateImgMsg,
+                'tax_request_id' => $requestId
+            );
+            
+            $condition =array(
+                'file_number' => $fileNumber
+            );
+            $this->titlePointData->update($tpData,$condition);
+            $data = array('status' => 'success', 'message'=> 'Tax document generation still in progress.');
+            echo json_encode($data);exit;
+        }
+        else
+        {
+            $error = isset($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+            $tpData = array(
+                'tax_file_status' => $generateImgReturnStatus,
+                'tax_file_message' => $error,
+                'tax_request_id' => $requestId
+            );
+            $condition =array(
+                'file_number' => $fileNumber
+            );
+            $this->titlePointData->update($tpData,$condition);
+            $data = array('status' => 'error', 'message'=> $error);
+            echo json_encode($data);exit;
+        }
+    }
+
+    public function generateTaxDocument() {
+        $this->load->library('order/titlepoint');
+        $this->load->model('order/apiLogs');
+        $serviceId = $this->input->post('cs3_service_id');
+        $orderId = $this->input->post('order_id');
+        $fileNumber = $this->input->post('file_number');
+        
+        
+        $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
+        $opts = array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
+        $context = stream_context_create($opts);
+        
+        if($serviceId)
+        {
+            $requestParams = array(
+                'username' => env('TP_USERNAME'),
+                'password' => env('TP_PASSWORD'),
+                'serviceId1' =>  $serviceId,
+                'serviceId2'=>  '',
+                'source'=>  '',
+                'clientKey1'=>  '',
+                'clientKey2'=>  '',
+                'sortOrder'=>  '',
+                'fileType'=>  'pdf',
+            );
+            $requestUrl= env('TP_IMAGE_ENDPOINT');
+
+            $request = $requestUrl.http_build_query($requestParams);
+
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, array(), $orderId, 0);
+            $response = $this->order->curl_post($requestUrl, $requestParams);
+            $result = json_decode($response,TRUE);
+
+            $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, $result, $orderId, $logid);
+
+            $returnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            $returnStatus = strtolower($returnStatus);
+            
+            if($returnStatus == 'success')
+            {
+                $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+                $requestOrderId = isset($result['OrderID']) && !empty($result['OrderID']) ? $result['OrderID'] : '';
+                if(isset($requestId) && !empty($requestId))
+                {
+                    $generateImgResponse = $this->titlepoint->generateTaxImage($requestId,$orderId);
+
+                    $generateImgResult = json_decode($generateImgResponse, TRUE);
+                    $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
+                    $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
+
+                    $generateImgMsg = isset($generateImgResult['Message']) && !empty($generateImgResult['Message']) ? $generateImgResult['Message'] : '';
+                    $generateImgReturnStatus = strtolower($generateImgReturnStatus);
+                    $generateImgStatus = strtolower($generateImgStatus);
+                    if($generateImgReturnStatus == 'success' && $generateImgStatus == 'success')
+                    {
+                        $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
+                        if(isset($base64_data) && !empty($base64_data))
+                        {
+                            $bin = base64_decode($base64_data, true);      
+                        
+                            if (!is_dir('uploads/tax')) {
+                                mkdir('./uploads/tax', 0777, TRUE);
+                            }
+                            
+                            $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+                            file_put_contents($pdfFilePath, $bin); 
+                            $this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
+                        }
+
+                        $tpData = array(
+                            'tax_file_status' => $generateImgStatus,
+                            'tax_file_message' => $generateImgMsg,
+                            'tax_request_id' => $requestId,
+                            'tax_order_id' => $requestOrderId
+                        );
+                        $condition =array(
+                            'file_number' => $fileNumber
+                        );
+                        $this->titlePointData->update($tpData,$condition); 
+                        $data = array('status' => 'success', 'message'=> 'Tax document generated successfully');
+                        echo json_encode($data);exit;
+                    }
+                    else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
+                    {
+                        
+                        $tpData = array(
+                            'tax_file_status' => $generateImgStatus,
+                            'tax_file_message' => $generateImgMsg,
+                            'tax_request_id' => $requestId,
+                            'tax_order_id' => $requestOrderId
+                        );
+                        $condition =array(
+                            'file_number' => $fileNumber
+                        );
+                        $this->titlePointData->update($tpData,$condition); 
+                        $data = array('status' => 'success', 'message'=> 'Tax document generation still in progress.');
+                        echo json_encode($data);exit;
+                    }
+                    else
+                    {
+                        $error = isset($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription']) ? $generateImgResult['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                        $tpData = array(
+                            'tax_file_status' => $generateImgReturnStatus,
+                            'tax_file_message' => $error,
+                            'tax_request_id' => $requestId,
+                            'tax_order_id' => $requestOrderId
+                        );  
+                        $condition =array(
+                                'file_number' => $fileNumber
+                            );
+                        $this->titlePointData->update($tpData,$condition); 
+                        $data = array('status' => 'error', 'message'=> $error);
+                        echo json_encode($data);exit;
+                    }
+                }
+            }
+            else
+            {
+              $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+
+                $tpData = array(
+                    'tax_file_status' => $returnStatus,
+                    'tax_file_message' => $error
+                );
+                $condition =array(
+                    'file_number' => $fileNumber
+                );
+                $this->titlePointData->update($tpData,$condition);
+                $data = array('status' => 'error', 'message'=> $error);
+                echo json_encode($data);exit;
+            }
+        }
+    }
 }
 

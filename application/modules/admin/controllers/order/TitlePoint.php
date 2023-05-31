@@ -393,6 +393,17 @@ class TitlePoint extends MX_Controller {
                     }
                     // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
 					$nestedData[] = convertTimezone($value['created_at']);
+                    $orderId = $order_details['order_id'];
+                    $fileNumber = $value['file_number'];
+                    if ($value['tax_file_status'] == 'processing' && !empty($value['tax_request_id'])) {
+                        $taxRequestId = $value['tax_request_id'];
+                        $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='regenerateTaxDocument(".'"'. $taxRequestId.'"' . ", " . '"'. $orderId .'"' . ", " .'"' . $fileNumber . '"'.");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                    } else if ($value['tax_file_status'] == 'processing' && empty($value['tax_request_id'])) {
+                        $cs3ServiceId = $value['cs3_service_id'];
+                        $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='generateTaxDocument(".'"'. $cs3ServiceId .'"' . ", " . '"'. $orderId .'"' . ", " .'"' . $fileNumber . '"'.");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                    } else {
+                        $nestedData[] = '';
+                    }
                     $data[] = $nestedData;
                     $count++;
                 }
