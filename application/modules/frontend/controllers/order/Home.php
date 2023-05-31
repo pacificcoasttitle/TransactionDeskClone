@@ -26,6 +26,7 @@ class Home extends MX_Controller {
     function index() 
     {
     	$userdata = $this->session->userdata('user');
+		$this->session->set_userdata('email_sent_flag', 0);
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/partnerApiLogs');
@@ -1185,9 +1186,11 @@ class Home extends MX_Controller {
 					'cc'=>json_encode($cc)
 				);
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && strtolower($titlePointDetails['tax_file_status']) != 'processing') {
+				$emailSentFlag = $this->session->userdata('email_sent_flag');
+				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && strtolower($titlePointDetails['tax_file_status']) != 'processing' && $emailSentFlag == 0) {
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
 					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+					$this->session->set_userdata('email_sent_flag', 1);
 					$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
 				}
 
