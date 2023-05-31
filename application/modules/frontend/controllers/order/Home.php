@@ -1184,8 +1184,8 @@ class Home extends MX_Controller {
 					'file'=>json_encode($file),
 					'cc'=>json_encode($cc)
 				);
-				
-				if (!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) {
+				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && strtolower($titlePointDetails['tax_file_status']) != 'processing') {
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
 					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
 					$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
@@ -1560,7 +1560,7 @@ class Home extends MX_Controller {
 			$fileNumber = $_POST['file_number'];
 			
 			$this->order->createLpReport($fileNumber, false, true);
-			$this->sendLpOrderEmail($fileNumber);
+			$this->order->sendOrderEmail($fileNumber);
 			/** Start Execute all document creation in background */
 			try {
 				//code...
@@ -2042,145 +2042,4 @@ class Home extends MX_Controller {
 		echo json_encode($response_data);
 	}
 
-	public function sendLpOrderEmail($fileNumber)
-	{
-		$this->load->model('order/apiLogs');
-		$userdata = $this->session->userdata('user');
-		$condition = array(
-            'where' => array(
-                'file_number' => $fileNumber,
-                )
-            );
-		$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-		$file_id = $titlePointDetails[0]['file_id'];
-        $orderDetails = $this->order->get_order_details($file_id);
-		$cond = array(
-			'id' => $orderDetails['customer_id']
-		);
-		$customerDetails = $this->home_model->get_customers($cond);
-
-		$timezone  = -8;
-		$orderNumber = $orderDetails['lp_file_number'];
-		$data = array(
-			'orderNumber'=> $orderDetails['lp_file_number'],
-			'orderId'=> $file_id,
-			'OpenName'=> $customerDetails['first_name'].' '.$customerDetails['last_name'],
-			'Opentelephone'=> $customerDetails['telephone_no'],
-			'OpenEmail'=> $customerDetails['email_address'],
-			'CompanyName'=> $customerDetails['company_name'],
-			'StreetAddress'=> $customerDetails['street_address'],
-			'City'=> $customerDetails['city'],
-			'Zipcode'=> $customerDetails['zip_code'],
-			'openAt'=> gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I"))),
-			'PropertyAddress'=> $orderDetails['address'],
-			'FullProperty'=> $orderDetails['full_address'],
-			'APN'=> $orderDetails['apn'],
-			'County'=> $orderDetails['county'],
-			'LegalDescription'=> $orderDetails['legal_description'],
-			'PrimaryOwner'=> $orderDetails['primary_owner'],
-			'SecondaryOwner'=> $orderDetails['secondary_owner'],
-			'SalesRep'=> $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name'],
-			'TitleOfficer'=> $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name'],
-			'ProductType'=> $orderDetails['product_type'],
-			'SalesAmount'=> $orderDetails['sales_amount'],
-			'LoanAmount'=> $orderDetails['loan_amount'],
-			'LoanNumber'=> $orderDetails['loan_number'],
-			'EscrowNumber'=> $orderDetails['escrow_officer_id'],
-			'randomString'=> $this->order->randomPassword()
-		);
-
-		$buyerDetails =  $listingDetails = $parties_email = array();
-		$parties_email = explode(',', $orderDetails['additional_email']);
-		if (isset($orderDetails['lender_id']) && !empty($orderDetails['lender_id'])) {
-			$parties_email[] = $orderDetails['lender_email'];
-			$data['lender_details'] = array(
-				'name' => $orderDetails['lender_first_name'], 
-				'email' => $orderDetails['lender_email'], 
-				'telephone' => $orderDetails['lender_telephone_no'],
-				'company' => $orderDetails['lender_company_name']
-			);
-		}
-
-		if (isset($orderDetails['buyer_agent_id']) && !empty($orderDetails['buyer_agent_id'])) {
-			$buyerDetails = $this->agent_model->get_agents(array('id' => $orderDetails['buyer_agent_id']));
-			if (!empty($buyerDetails)) {
-				$parties_email[] = $buyerDetails['email_address'];
-				$data['buyers_agent'] = array(
-					'name'=>$buyerDetails['name'], 
-					'email'=>$buyerDetails['email_address'], 
-					'telephone'=> $buyerDetails['telephone_no'],
-					'company'=>$buyerDetails['company']
-				);
-			}
-			
-		}
-
-		if (isset($orderDetails['listing_agent_id']) && !empty($orderDetails['listing_agent_id'])) {
-			$listingDetails = $this->agent_model->get_agents(array('id' => $orderDetails['listing_agent_id']));
-			if (!empty($listingDetails)) {
-				$parties_email[] = $listingDetails['email_address'];
-				$data['listing_agent'] = array(
-					'name' => $listingDetails['name'], 
-					'email' => $listingDetails['email_address'], 
-					'telephone' => $listingDetails['telephone_no'],
-					'company' => $listingDetails['company']
-				);
-			}
-		}
-		
-		$from_name = 'Pacific Coast Title Company';
-		$from_mail = env('FROM_EMAIL');
-		$order_message_body = $this->load->view('emails/order.php',$data,TRUE);
-		$message = $order_message_body; 
-		$subject = $orderNumber. ' - PCT Title Order Placed';
-		$email_notification = $this->session->userdata('email_notification');
-		$this->session->unset_userdata('email_notification');
-		if ($orderDetails["salerep_is_mail_notification"] == 1) {
-			$parties_email[] = isset($orderDetails["salerep_email_address"]) && !empty($orderDetails["salerep_email_address"]) ? $orderDetails["salerep_email_address"] : '';
-		}
-		
-		if((isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification))) {
-			$to = env('OPEN_ORDER_ADMIN_EMAIL');
-		} else {
-			$to = $customerDetails['email_address'];
-			$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
-		}
-
-		//$parties_email[] = 'hitesh.p@crestinfosystems.com';
-		$parties_email[] = 'rudy@pct.com';
-		$parties_email[] = 'evelasquez@pct.com';
-		$file = array();
-		$lvfilename = $orderNumber.'.pdf';
-		$deedfilename = $orderNumber.'.pdf';
-		$taxfilename = $orderNumber.'.pdf';
-		$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
-		$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
-		$file[] = env('AWS_PATH')."tax/".$taxfilename;
-		
-		
-		//$parties_email[] = env('ORDER_ADMIN_EMAIL');
-		$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
-		$this->load->helper('sendemail');
-		
-		// $cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
-		
-		$mailParams = array(
-			'from_mail'=>$from_mail, 
-			'from_name'=>$from_name, 
-			'to'=>$to,
-			'subject'=>$subject,
-			'message'=>json_encode($data),
-			'file'=>json_encode($file),
-			'cc'=>json_encode($cc)
-		);
-
-		if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
-			$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
-			try {
-				$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
-			}  catch (Exception $e) {
-			}
-			$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
-		}
-	}
 }
