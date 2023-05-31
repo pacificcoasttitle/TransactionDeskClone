@@ -16,7 +16,7 @@ class Cron extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->library('order/titlepoint');
     }
-
+    public $taxcount = 0;
     public function import_orders_all_users()
     {
         $condition = array(
@@ -5411,7 +5411,7 @@ class Cron extends MX_Controller {
                 {
                     sleep(3);
                     $this->taxcount = $this->taxcount + 1;
-                    return $this->generateTaxDocument($requestId,$orderId);                    
+                    return $this->generateTaxDocument($requestId, $orderId, $fileNumber);                    
                 }
             } else if ($generateImgStatus == 'success')
             {
@@ -5427,11 +5427,11 @@ class Cron extends MX_Controller {
                     
                     $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
                     file_put_contents($pdfFilePath, $bin); 
-                    $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
+                    $this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
                 }
             }
         }
-        
+
         $tpData = array(
             'tax_file_status' => $generateImgStatus
         );  
@@ -5439,7 +5439,7 @@ class Cron extends MX_Controller {
         $condition =array(
             'file_number' => $fileNumber
         );
-        $this->CI->titlePointData->update($tpData,$condition);
+        $this->titlePointData->update($tpData,$condition);
         
     }
 }
