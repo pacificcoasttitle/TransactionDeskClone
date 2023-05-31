@@ -1091,6 +1091,9 @@ class Titlepoint
         {
             if($generateImgStatus == 'processing') 
             {
+                $command = "php ".FCPATH."index.php frontend/order/cron generateTaxDocument $requestId $orderId $fileNumber > /dev/null &";
+                exec($command);
+                return $response;
                 if($this->taxcount <= 3)
                 {
                     sleep(5);
