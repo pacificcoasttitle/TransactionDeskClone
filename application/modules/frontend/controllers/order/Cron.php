@@ -5379,7 +5379,7 @@ class Cron extends MX_Controller {
         }
 	}
 
-    public function generateTaxDocument($requestId, $orderId) 
+    public function generateTaxDocument($requestId, $orderId, $fileNumber) 
     {
         $userdata = $this->session->userdata('user');
         $requestParams = array(
@@ -5413,14 +5413,31 @@ class Cron extends MX_Controller {
                     $this->taxcount = $this->taxcount + 1;
                     return $this->generateTaxDocument($requestId,$orderId);                    
                 }
+            } else if ($generateImgStatus == 'success')
+            {
+                $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
+                
+                if(isset($base64_data) && !empty($base64_data))
+                {
+                    $bin = base64_decode($base64_data, true);      
+                
+                    if (!is_dir('uploads/tax')) {
+                        mkdir('./uploads/tax', 0777, TRUE);
+                    }
+                    
+                    $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+                    file_put_contents($pdfFilePath, $bin); 
+                    $this->CI->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
+                }
             }
         }
+        
         $tpData = array(
             'tax_file_status' => $generateImgStatus
         );  
     
         $condition =array(
-            'tax_request_id' => $requestId
+            'file_number' => $fileNumber
         );
         $this->CI->titlePointData->update($tpData,$condition);
         

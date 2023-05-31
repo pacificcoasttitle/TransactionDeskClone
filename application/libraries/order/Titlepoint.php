@@ -359,7 +359,7 @@ class Titlepoint
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {*/
-                        $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
+                        $generateImgResponse = $this->generateTaxImage($requestId,$orderId, $fileNumber);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
                         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
@@ -1059,7 +1059,7 @@ class Titlepoint
         }
     }
 
-    public function generateTaxImage($requestId,$orderId)
+    public function generateTaxImage($requestId,$orderId, $fileNumber)
     {
         $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
@@ -1095,12 +1095,12 @@ class Titlepoint
                 {
                     sleep(5);
                     $this->taxcount = $this->taxcount + 1;
-                    return $this->generateTaxImage($requestId,$orderId);                    
+                    return $this->generateTaxImage($requestId,$orderId, $fileNumber);                    
                 }
                 else
                 {
                     try {
-                        $command = "php ".FCPATH."index.php frontend/order/cron generateTaxDocument $requestId $orderId > /dev/null &";
+                        $command = "php ".FCPATH."index.php frontend/order/cron generateTaxDocument $requestId $orderId $fileNumber > /dev/null &";
                         exec($command);
                     } catch (\Throwable $th) {
                         // print_r($th->getMessages());
