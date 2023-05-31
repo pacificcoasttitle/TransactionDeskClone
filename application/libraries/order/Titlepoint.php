@@ -393,8 +393,7 @@ class Titlepoint
                             );
                         }
                         else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
-                        {
-                            
+                        {   
                             $tpData = array(
                                 'tax_file_status' => $generateImgStatus,
                                 'tax_file_message' => $generateImgMsg,
@@ -1100,6 +1099,12 @@ class Titlepoint
                 }
                 else
                 {
+                    try {
+                        $command = "php ".FCPATH."index.php frontend/order/cron generateTaxDocument $requestId $orderId > /dev/null &";
+                        exec($command);
+                    } catch (\Throwable $th) {
+                        // print_r($th->getMessages());
+                    }
                     $this->taxcount = 0;
                     return $response;
                 }   
