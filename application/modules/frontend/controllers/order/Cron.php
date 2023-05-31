@@ -5441,5 +5441,11 @@ class Cron extends MX_Controller {
         );
         $this->titlePointData->update($tpData,$condition);
         
+        $emailSentFlag = $this->session->userdata('email_sent_flag');
+        if ($emailSentFlag == 0) {
+            $this->order->sendOrderEmail($fileNumber);
+            $this->session->set_userdata('email_sent_flag', 1);
+        }
+        
     }
 }
