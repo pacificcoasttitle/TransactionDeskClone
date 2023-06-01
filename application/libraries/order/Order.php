@@ -3671,8 +3671,8 @@ class Order
 		);
 
         $emailSentFlag = $this->CI->session->userdata('email_sent_flag');
-        $taxDocStatus = $this->CI->session->userdata('tax_doc_status', 'success');
-        $lvDocStatus = $this->CI->session->userdata('lv_doc_status', 'success');
+        $taxDocStatus = $this->CI->session->userdata('tax_doc_status');
+        $lvDocStatus = $this->CI->session->userdata('lv_doc_status');
         if ($emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
                 $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);

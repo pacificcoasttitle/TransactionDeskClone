@@ -1187,8 +1187,8 @@ class Home extends MX_Controller {
 				);
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 				$emailSentFlag = $this->session->userdata('email_sent_flag');
-				$taxDocStatus = $this->session->userdata('tax_doc_status', 'success');
-				$lvDocStatus = $this->session->userdata('lv_doc_status', 'success');
+				$taxDocStatus = $this->session->userdata('tax_doc_status');
+				$lvDocStatus = $this->session->userdata('lv_doc_status');
 				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && strtolower($titlePointDetails['tax_file_status']) != 'processing' && $emailSentFlag == 0 && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
 					$to = 'hitesh.p@crestinfosystems.com';
 					$cc = ['piyush.j@crestinfosystems.net'];
