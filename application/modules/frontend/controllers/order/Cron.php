@@ -5451,6 +5451,7 @@ class Cron extends MX_Controller {
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
+            $this->apiLogs->syncLogs($userdata['id'], 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
         }
     }
 
@@ -5520,6 +5521,7 @@ class Cron extends MX_Controller {
         $lvDocStatus = $this->session->userdata('lv_doc_status');
         if (!str_contains($fileNumber, 'LP') && $emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
+            $this->apiLogs->syncLogs($userdata['id'], 'email-check-LP', 'email-check-LP', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
         }
