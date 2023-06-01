@@ -1554,6 +1554,8 @@ class Home extends MX_Controller {
 		$data['order_id'] = $orderId;
 		$data['escrow_id'] = $escrowId;
 		$data['lpFileNumber'] = $lpFileNumber;
+		$data['lpFileStatus'] = $titlePointDetails[0]['lv_file_status'];
+		$data['taxFileStatus'] = $titlePointDetails[0]['tax_file_status'];
 		
         $this->load->view('layout/head',$data);
        	$this->load->view('order/order-submission',$data);
