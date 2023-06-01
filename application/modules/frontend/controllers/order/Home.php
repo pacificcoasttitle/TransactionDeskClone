@@ -26,6 +26,7 @@ class Home extends MX_Controller {
     function index() 
     {
     	$userdata = $this->session->userdata('user');
+    	
 		$this->session->set_userdata('email_sent_flag', 0);
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
@@ -1195,6 +1196,8 @@ class Home extends MX_Controller {
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
 					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
 					$this->session->set_userdata('email_sent_flag', 1);
+					$this->session->unset_userdata('tax_doc_status');
+					$this->session->unset_userdata('lv_doc_status');
 					$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
 				}
 
