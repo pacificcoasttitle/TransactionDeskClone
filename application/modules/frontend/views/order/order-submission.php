@@ -280,7 +280,7 @@
                                             <?php } ?>
                                     <?php } else if ($taxFileStatus == 'processing') { ?>
                                             <div class="tax-no-data">
-                                                <span class="orderinfo1">Document generation in under processing please refresh the page after sometime or check your email.</span>
+                                                <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
                                             </div>
                                     <?php } else {
                                             $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
