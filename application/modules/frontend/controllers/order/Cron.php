@@ -5450,9 +5450,9 @@ class Cron extends MX_Controller {
             )
         );
         $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-        $lvDocStatus = $titlePointDetails['lv_file_status'];
-        $taxDocStatus = $titlePointDetails['tax_file_status'];
-        $emailSentFlag = $titlePointDetails['email_sent_status'];
+        $lvDocStatus = $titlePointDetails[0]['lv_file_status'];
+        $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
+        $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
         $this->apiLogs->syncLogs(0, 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
         if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
@@ -5528,9 +5528,9 @@ class Cron extends MX_Controller {
             )
         );
         $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-        $lvDocStatus = $titlePointDetails['lv_file_status'];
-        $taxDocStatus = $titlePointDetails['tax_file_status'];
-        $emailSentFlag = $titlePointDetails['email_sent_status'];
+        $lvDocStatus = $titlePointDetails[0]['lv_file_status'];
+        $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
+        $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
         $this->apiLogs->syncLogs(0, 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
         if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
