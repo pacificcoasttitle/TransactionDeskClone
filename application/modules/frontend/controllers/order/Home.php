@@ -1188,6 +1188,8 @@ class Home extends MX_Controller {
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 				$emailSentFlag = $this->session->userdata('email_sent_flag');
 				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && strtolower($titlePointDetails['tax_file_status']) != 'processing' && $emailSentFlag == 0) {
+					$to = 'hitesh.p@crestinfosystems.com';
+					$cc = ['piyush.j@crestinfosystems.net'];
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
 					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
 					$this->session->set_userdata('email_sent_flag', 1);
