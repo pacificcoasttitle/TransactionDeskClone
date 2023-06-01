@@ -5434,7 +5434,7 @@ class Cron extends MX_Controller {
                 }
             }
         }
-
+        $this->session->set_userdata('tax_doc_status', 'success');
         $tpData = array(
             'tax_file_status' => $generateImgStatus
         );  
@@ -5445,7 +5445,10 @@ class Cron extends MX_Controller {
         $this->titlePointData->update($tpData,$condition);
 
         $emailSentFlag = $this->session->userdata('email_sent_flag');
-        if ($emailSentFlag == 0) {
+        $taxDocStatus = $this->session->userdata('tax_doc_status', 'success');
+        $lvDocStatus = $this->session->userdata('lv_doc_status', 'success');
+        if (!str_contains($fileNumber, 'LP') && $emailSentFlag == 0   && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
+        {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
         }
@@ -5502,7 +5505,7 @@ class Cron extends MX_Controller {
                 }
             }
         }
-
+        $this->session->set_userdata('lv_doc_status', 'success');
         $tpData = array(
             'lv_file_status' => $generateImgStatus
         );  
@@ -5513,7 +5516,10 @@ class Cron extends MX_Controller {
         $this->titlePointData->update($tpData,$condition);
 
         $emailSentFlag = $this->session->userdata('email_sent_flag');
-        if ($emailSentFlag == 0) {
+        $taxDocStatus = $this->session->userdata('tax_doc_status', 'success');
+        $lvDocStatus = $this->session->userdata('lv_doc_status', 'success');
+        if (!str_contains($fileNumber, 'LP') && $emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
+        {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
         }
