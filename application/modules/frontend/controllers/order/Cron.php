@@ -16,6 +16,9 @@ class Cron extends MX_Controller {
         $this->load->model('order/apiLogs');
         $this->load->library('order/titlepoint');
     }
+    
+    public $taxcount = 0;
+    public $lvcount = 0;
 
     public function import_orders_all_users()
     {
@@ -5378,4 +5381,162 @@ class Cron extends MX_Controller {
 			}           
         }
 	}
+
+    public function generateTaxDocument($requestId, $orderId, $fileNumber) 
+    {
+        $userdata = $this->session->userdata('user');
+        $requestParams = array(
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'requestId'=>  $requestId
+                        );
+        // print_r($requestParams);die;
+        $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
+        $requestUrl = env('TP_GENERATE_IMAGE');
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image_BG', $request, $requestParams, array(), $orderId, 0);
+        $response = $this->order->curl_post($requestUrl, $requestParams);
+
+        $result = json_decode($response, TRUE);
+
+        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image_BG', $request, $response, $result, $orderId, $logid);
+        
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
+        
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
+        $generateImgStatus = strtolower($generateImgStatus);
+
+        if($imgReturnStatus == 'success')
+        {
+            if($generateImgStatus == 'processing') 
+            {
+                if($this->taxcount <= 10)
+                {
+                    sleep(3);
+                    $this->taxcount = $this->taxcount + 1;
+                    return $this->generateTaxDocument($requestId, $orderId, $fileNumber);
+                }
+            } else if ($generateImgStatus == 'success')
+            {
+                $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
+                
+                if(isset($base64_data) && !empty($base64_data))
+                {
+                    $bin = base64_decode($base64_data, true);
+                
+                    if (!is_dir('uploads/tax')) {
+                        mkdir('./uploads/tax', 0777, TRUE);
+                    }
+                    
+                    $pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+                    file_put_contents($pdfFilePath, $bin); 
+                    $this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'tax');
+                }
+            }
+        }
+        
+        $tpData = array(
+            'tax_file_status' => $generateImgStatus
+        );  
+    
+        $condition =array(
+            'file_number' => $fileNumber
+        );
+        $this->titlePointData->update($tpData,$condition);
+
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            )
+        );
+        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+        $lvDocStatus = $titlePointDetails[0]['lv_file_status'];
+        $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
+        $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
+        $this->apiLogs->syncLogs(0, 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
+        if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
+        {
+            $this->order->sendOrderEmail($fileNumber);
+            $this->session->set_userdata('email_sent_flag', 1);
+        }
+    }
+
+    public function generateLVDocument($requestId, $orderId, $fileNumber)
+    {
+        $userdata = $this->session->userdata('user');
+        $requestParams = array(
+                            'username' => env('TP_USERNAME'),
+                            'password' => env('TP_PASSWORD'),                    
+                            'requestId'=>  $requestId
+                        );
+
+        $request = env('TP_GENERATE_IMAGE').http_build_query($requestParams);
+        $requestName = 'generate_lv_image';
+        $requestUrl = env('TP_GENERATE_IMAGE');
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image_BG', $request, $requestParams, array(), $orderId, 0);
+        $response = $this->order->curl_post($requestUrl, $requestParams);
+        
+        $result = json_decode($response, TRUE);
+        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image_BG', $request, $requestParams, $result, $orderId, $logid);
+
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = strtolower($imgReturnStatus);
+        
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
+        $generateImgStatus = strtolower($generateImgStatus);
+
+        if($imgReturnStatus == 'success')
+        {
+            if($generateImgStatus == 'processing') 
+            {
+                if($this->lvcount <= 10)
+                {
+                    sleep(3);
+                    $this->lvcount += 1;
+                    return $this->generateLVDocument($requestId, $orderId, $fileNumber);
+                }
+            } else if ($generateImgStatus == 'success')
+            {
+                $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
+                                
+                if(isset($base64_data) && !empty($base64_data))
+                {
+                    $bin = base64_decode($base64_data, true);      
+                
+                    if (!is_dir('uploads/legal-vesting')) {
+                        mkdir('./uploads/legal-vesting', 0777, TRUE);
+                    }
+                    $pdfFilePath = './uploads/legal-vesting/'.$fileNumber.'.pdf';
+                    file_put_contents($pdfFilePath, $bin); 
+                    $this->order->uploadDocumentOnAwsS3($fileNumber.'.pdf', 'legal-vesting');
+                }
+            }
+        }
+        
+        $tpData = array(
+            'lv_file_status' => $generateImgStatus
+        );  
+    
+        $condition =array(
+            'file_number' => $fileNumber
+        );
+        $this->titlePointData->update($tpData,$condition);
+
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            )
+        );
+        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+        $lvDocStatus = $titlePointDetails[0]['lv_file_status'];
+        $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
+        $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
+        $this->apiLogs->syncLogs(0, 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
+        if ($emailSentFlag != 1  && ($taxDocStatus == 'success' || $taxDocStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed')) 
+        {
+            $this->order->sendOrderEmail($fileNumber);
+            $this->session->set_userdata('email_sent_flag', 1);
+        }
+        
+    }
 }
