@@ -3669,9 +3669,9 @@ class Order
 			'file'=>json_encode($file),
 			'cc'=>json_encode($cc)
 		);
-        $lvDocStatus = $titlePointDetails['lv_file_status'];
-        $taxDocStatus = $titlePointDetails['tax_file_status'];
-        $emailSentFlag = $titlePointDetails['email_sent_status'];
+        $lvDocStatus = $titlePointDetails[0]['lv_file_status'];
+        $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
+        $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
         $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
         if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
