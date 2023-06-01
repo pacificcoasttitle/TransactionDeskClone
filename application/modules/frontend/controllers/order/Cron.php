@@ -5447,7 +5447,7 @@ class Cron extends MX_Controller {
         $emailSentFlag = $this->session->userdata('email_sent_flag');
         $taxDocStatus = $this->session->userdata('tax_doc_status');
         $lvDocStatus = $this->session->userdata('lv_doc_status');
-        $this->apiLogs->syncLogs($userdata['id'], 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
+        $this->apiLogs->syncLogs(0, 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
         if ($emailSentFlag == 0   && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
             $this->order->sendOrderEmail($fileNumber);
@@ -5519,7 +5519,7 @@ class Cron extends MX_Controller {
         $emailSentFlag = $this->session->userdata('email_sent_flag');
         $taxDocStatus = $this->session->userdata('tax_doc_status');
         $lvDocStatus = $this->session->userdata('lv_doc_status');
-        $this->apiLogs->syncLogs($userdata['id'], 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
+        $this->apiLogs->syncLogs(0, 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
         if ($emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
             $this->order->sendOrderEmail($fileNumber);
