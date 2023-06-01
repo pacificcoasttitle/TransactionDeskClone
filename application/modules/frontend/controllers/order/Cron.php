@@ -5532,7 +5532,7 @@ class Cron extends MX_Controller {
         $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
         $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
         $this->apiLogs->syncLogs(0, 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
-        if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $taxDocStatus == 'failed' && $lvDocStatus == 'success' && $lvDocStatus == 'failed') 
+        if ($emailSentFlag != 1  && ($taxDocStatus == 'success' || $taxDocStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed')) 
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
