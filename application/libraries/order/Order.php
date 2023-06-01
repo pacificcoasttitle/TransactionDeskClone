@@ -3669,11 +3669,11 @@ class Order
 			'file'=>json_encode($file),
 			'cc'=>json_encode($cc)
 		);
-        $emailSentFlag = $this->CI->session->userdata('email_sent_flag');
-        $taxDocStatus = $this->CI->session->userdata('tax_doc_status');
-        $lvDocStatus = $this->CI->session->userdata('lv_doc_status');
+        $lvDocStatus = $titlePointDetails['lv_file_status'];
+        $taxDocStatus = $titlePointDetails['tax_file_status'];
+        $emailSentFlag = $titlePointDetails['email_sent_status'];
         $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
-        if ($emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
+        if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
                 $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
                 try {
@@ -3693,9 +3693,14 @@ class Order
                 }
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
             }
-            $this->CI->session->set_userdata('email_sent_flag', 1);
-            $this->CI->session->unset_userdata('tax_doc_status');
-            $this->CI->session->unset_userdata('lv_doc_status');
+            $tpData = array(
+                'email_sent_status' => 1
+            );  
+        
+            $condition =array(
+                'file_number' => $fileNumber
+            );
+            $this->CI->titlePointData->update($tpData,$condition);
         }
 	}
 }

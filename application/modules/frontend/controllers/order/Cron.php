@@ -5434,7 +5434,7 @@ class Cron extends MX_Controller {
                 }
             }
         }
-        $this->session->set_userdata('tax_doc_status', 'success');
+        
         $tpData = array(
             'tax_file_status' => $generateImgStatus
         );  
@@ -5444,11 +5444,17 @@ class Cron extends MX_Controller {
         );
         $this->titlePointData->update($tpData,$condition);
 
-        $emailSentFlag = $this->session->userdata('email_sent_flag');
-        $taxDocStatus = $this->session->userdata('tax_doc_status');
-        $lvDocStatus = $this->session->userdata('lv_doc_status');
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            )
+        );
+        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+        $lvDocStatus = $titlePointDetails['lv_file_status'];
+        $taxDocStatus = $titlePointDetails['tax_file_status'];
+        $emailSentFlag = $titlePointDetails['email_sent_status'];
         $this->apiLogs->syncLogs(0, 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
-        if ($emailSentFlag == 0   && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
+        if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
@@ -5506,7 +5512,7 @@ class Cron extends MX_Controller {
                 }
             }
         }
-        $this->session->set_userdata('lv_doc_status', 'success');
+        
         $tpData = array(
             'lv_file_status' => $generateImgStatus
         );  
@@ -5516,11 +5522,17 @@ class Cron extends MX_Controller {
         );
         $this->titlePointData->update($tpData,$condition);
 
-        $emailSentFlag = $this->session->userdata('email_sent_flag');
-        $taxDocStatus = $this->session->userdata('tax_doc_status');
-        $lvDocStatus = $this->session->userdata('lv_doc_status');
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            )
+        );
+        $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
+        $lvDocStatus = $titlePointDetails['lv_file_status'];
+        $taxDocStatus = $titlePointDetails['tax_file_status'];
+        $emailSentFlag = $titlePointDetails['email_sent_status'];
         $this->apiLogs->syncLogs(0, 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
-        if ($emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
+        if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);

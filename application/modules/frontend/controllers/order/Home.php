@@ -27,7 +27,6 @@ class Home extends MX_Controller {
     {
     	$userdata = $this->session->userdata('user');
     	
-		$this->session->set_userdata('email_sent_flag', 0);
 		$this->load->model('order/apiLogs');
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/partnerApiLogs');
@@ -1187,18 +1186,24 @@ class Home extends MX_Controller {
 					'cc'=>json_encode($cc)
 				);
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-				$emailSentFlag = $this->session->userdata('email_sent_flag');
-				$taxDocStatus = $this->session->userdata('tax_doc_status');
-				$lvDocStatus = $this->session->userdata('lv_doc_status');
-				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && strtolower($titlePointDetails['tax_file_status']) != 'processing' && $emailSentFlag == 0 && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
+				$lvDocStatus = $titlePointDetails['lv_file_status'];
+				$taxDocStatus = $titlePointDetails['tax_file_status'];
+				$emailSentFlag = $titlePointDetails['email_sent_status'];
+				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
 					$to = 'hitesh.p@crestinfosystems.com';
 					$cc = ['piyush.j@crestinfosystems.net'];
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
 					$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
-					$this->session->set_userdata('email_sent_flag', 1);
-					$this->session->unset_userdata('tax_doc_status');
-					$this->session->unset_userdata('lv_doc_status');
 					$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderId, $logid);
+					
+					$tpData = array(
+						'email_sent_status' => 1
+					);  
+				
+					$condition =array(
+						'file_number' => $fileNumber
+					);
+					$this->titlePointData->update($tpData,$condition);
 				}
 
 				if ((!empty($escrowEmail) && $loanFlag == 1) || (!empty($escrow_officer_email))) {							
