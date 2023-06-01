@@ -1014,7 +1014,7 @@ class Titlepoint
                 if($generateImgStatus == 'processing') 
                 {
                     $this->CI->session->set_userdata('lv_doc_status', 'processing');
-                    if($this->lvcount <= 2)
+                    if($this->lvcount <= 1)
                     {
                         sleep(5);
                         $this->lvcount += 1;
@@ -1133,7 +1133,7 @@ class Titlepoint
             if($generateImgStatus == 'processing') 
             {
                 $this->CI->session->set_userdata('tax_doc_status', 'processing');
-                if($this->taxcount <= 2)
+                if($this->taxcount <= 1)
                 {
                     sleep(5);
                     $this->taxcount = $this->taxcount + 1;
