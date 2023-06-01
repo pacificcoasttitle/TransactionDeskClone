@@ -5487,7 +5487,7 @@ class Cron extends MX_Controller {
                 }
             } else if ($generateImgStatus == 'success')
             {
-                $base64_data = isset($generateImgResult['Data']) && !empty($generateImgResult['Data']) ? $generateImgResult['Data'] : '';
+                $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
                                 
                 if(isset($base64_data) && !empty($base64_data))
                 {
