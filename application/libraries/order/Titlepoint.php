@@ -7,7 +7,6 @@ class Titlepoint
     public $count = 0;
     public $taxcount = 0;
     public $geocount = 0;
-    public $lvcount = 0;
     public static $CI;
     
 	public function __construct($params = array())
@@ -70,7 +69,7 @@ class Titlepoint
 
                 if(isset($requestId) && !empty($requestId))
                 {
-                    /*$response = $this->getImageRequestStatus($requestId,$orderId);
+                    $response = $this->getImageRequestStatus($requestId,$orderId);
                     
                     $imgResult = json_decode($response, TRUE);
                     
@@ -81,8 +80,8 @@ class Titlepoint
                         $imgReturnStatus = strtolower($imgReturnStatus);
                         $status = strtolower($status);
                         if($imgReturnStatus == 'success' && $status == 'success')
-                        {*/
-                            $generateImgResponse = $this->generateImage($requestId,$orderId,$fileNumber, 'LV');
+                        {
+                            $generateImgResponse = $this->generateImage($requestId,$orderId);
 
                             $generateImgResult = json_decode($generateImgResponse, TRUE);
                             $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
@@ -110,16 +109,15 @@ class Titlepoint
                                 $tpData = array(
                                     'lv_file_status' => $generateImgStatus,
                                     'lv_file_message' => $generateImgMsg,
-                                    'lv_request_id' => $requestId,
                                     'lv_order_id' => $requestOrderId
                                 );
                             }
                             else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
                             {
+                                
                                 $tpData = array(
                                     'lv_file_status' => $generateImgStatus,
                                     'lv_file_message' => $generateImgMsg,
-                                    'lv_request_id' => $requestId,
                                     'lv_order_id' => $requestOrderId
                                 );
                                 /*$condition =array(
@@ -134,7 +132,6 @@ class Titlepoint
                                 $tpData = array(
                                     'lv_file_status' => $generateImgReturnStatus,
                                     'lv_file_message' => $error,
-                                    'lv_request_id' => $requestId,
                                     'lv_order_id' => $requestOrderId
                                 );
                                 /*$condition =array(
@@ -147,7 +144,7 @@ class Titlepoint
                                 );
                             $this->CI->titlePointData->update($tpData,$condition); 
 
-                        /*}
+                        }
                         else if($imgReturnStatus == 'success' && $status != 'success')
                         {
                             $message = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
@@ -175,7 +172,7 @@ class Titlepoint
                             );
                             $this->CI->titlePointData->update($tpData,$condition);  
                         }
-                    }*/
+                    }
                     
                 }
             }
@@ -362,7 +359,7 @@ class Titlepoint
                     $status = strtolower($status);
                     if($imgReturnStatus == 'success' && $status == 'success')
                     {*/
-                        $generateImgResponse = $this->generateTaxImage($requestId,$orderId, $fileNumber);
+                        $generateImgResponse = $this->generateTaxImage($requestId,$orderId);
 
                         $generateImgResult = json_decode($generateImgResponse, TRUE);
                         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
@@ -396,7 +393,8 @@ class Titlepoint
                             );
                         }
                         else if($generateImgReturnStatus == 'success' && $generateImgStatus != 'success')
-                        {   
+                        {
+                            
                             $tpData = array(
                                 'tax_file_status' => $generateImgStatus,
                                 'tax_file_message' => $generateImgMsg,
@@ -676,7 +674,7 @@ class Titlepoint
                         $status = strtolower($status);
                         if($imgReturnStatus == 'success' && $status == 'success')
                         {
-                            $generateImgResponse = $this->generateImage($requestId, $orderId, $fileNumber, 'Geo');
+                            $generateImgResponse = $this->generateImage($requestId,$orderId, 'Geo');
 
                             $generateImgResult = json_decode($generateImgResponse, TRUE);
                             // echo "<pre>";
@@ -981,7 +979,7 @@ class Titlepoint
         }
     }
 
-    public function generateImage($requestId, $orderId, $fileNumber, $requestFrom='')
+    public function generateImage($requestId,$orderId, $requestFrom='')
     {
         $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
@@ -1000,47 +998,9 @@ class Titlepoint
         // $xmlData = simplexml_load_string($file);
         // $response = json_encode($xmlData);
         $result = json_decode($response, TRUE);
+
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', $requestName, $request, $requestParams, $result, $orderId, $logid);
 
-        if ($requestFrom == 'LV') {
-            $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-            $imgReturnStatus = strtolower($imgReturnStatus);
-            
-            $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
-            $generateImgStatus = strtolower($generateImgStatus);
-
-            if($imgReturnStatus == 'success')
-            {
-                if($generateImgStatus == 'processing') 
-                {
-                    $this->CI->session->set_userdata('lv_doc_status', 'processing');
-                    if($this->lvcount <= 1)
-                    {
-                        sleep(5);
-                        $this->lvcount += 1;
-                        return $this->generateImage($requestId, $orderId, $fileNumber, 'LV');                    
-                    }
-                    else
-                    {
-                        try {
-                            $command = "php ".FCPATH."index.php frontend/order/cron generateLVDocument $requestId $orderId $fileNumber > /dev/null &";
-                            exec($command);
-                        } catch (\Throwable $th) {
-                            // print_r($th->getMessages());
-                        }
-                        $this->lvcount = 0;
-                        return $response;
-                    }   
-                    
-                }
-                else
-                { 
-                    $this->CI->session->set_userdata('lv_doc_status', 'success');
-                    return $response;
-                }
-            }
-        }
-        
         return $response;
     }
 
@@ -1100,7 +1060,7 @@ class Titlepoint
         }
     }
 
-    public function generateTaxImage($requestId,$orderId, $fileNumber)
+    public function generateTaxImage($requestId,$orderId)
     {
         $userdata = $this->CI->session->userdata('user');
         $requestParams = array(
@@ -1132,21 +1092,14 @@ class Titlepoint
         {
             if($generateImgStatus == 'processing') 
             {
-                $this->CI->session->set_userdata('tax_doc_status', 'processing');
-                if($this->taxcount <= 1)
+                if($this->taxcount <= 6)
                 {
                     sleep(5);
                     $this->taxcount = $this->taxcount + 1;
-                    return $this->generateTaxImage($requestId,$orderId, $fileNumber);                    
+                    return $this->generateTaxImage($requestId,$orderId);                    
                 }
                 else
                 {
-                    try {
-                        $command = "php ".FCPATH."index.php frontend/order/cron generateTaxDocument $requestId $orderId $fileNumber > /dev/null &";
-                        exec($command);
-                    } catch (\Throwable $th) {
-                        // print_r($th->getMessages());
-                    }
                     $this->taxcount = 0;
                     return $response;
                 }   
@@ -1154,7 +1107,6 @@ class Titlepoint
             }
             else
             { 
-                $this->CI->session->set_userdata('tax_doc_status', 'success');
                 return $response;
             }
         }
