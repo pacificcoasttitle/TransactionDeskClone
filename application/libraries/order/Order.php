@@ -3670,24 +3670,30 @@ class Order
 			'cc'=>json_encode($cc)
 		);
 
-		if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
-			$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
-			try {
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = ['piyush.j@crestinfosystems.net'];
-				$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
-			}  catch (Exception $e) {
-			}
-			$this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
-		} else {
-			$logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
-			try {
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = ['piyush.j@crestinfosystems.net'];
-				$mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
-			}  catch (Exception $e) {
-			}
-			$this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
-		}
+        $emailSentFlag = $this->CI->session->userdata('email_sent_flag');
+        $taxDocStatus = $this->CI->session->userdata('tax_doc_status', 'success');
+        $lvDocStatus = $this->CI->session->userdata('lv_doc_status', 'success');
+        if ($emailSentFlag == 0  && $taxDocStatus == 'success' && $lvDocStatus == 'success') {
+            if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
+                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
+                try {
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = ['piyush.j@crestinfosystems.net'];
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+                }  catch (Exception $e) {
+                }
+                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
+            } else {
+                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
+                try {
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = ['piyush.j@crestinfosystems.net'];
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+                }  catch (Exception $e) {
+                }
+                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
+            }
+            $this->CI->session->set_userdata('email_sent_flag', 1);
+        }
 	}
 }

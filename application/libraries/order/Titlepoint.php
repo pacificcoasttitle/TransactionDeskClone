@@ -1013,6 +1013,7 @@ class Titlepoint
             {
                 if($generateImgStatus == 'processing') 
                 {
+                    $this->CI->session->set_userdata('lv_doc_status', 'processing');
                     if($this->lvcount <= 2)
                     {
                         sleep(5);
@@ -1034,6 +1035,7 @@ class Titlepoint
                 }
                 else
                 { 
+                    $this->CI->session->set_userdata('lv_doc_status', 'success');
                     return $response;
                 }
             }
@@ -1130,6 +1132,7 @@ class Titlepoint
         {
             if($generateImgStatus == 'processing') 
             {
+                $this->CI->session->set_userdata('tax_doc_status', 'processing');
                 if($this->taxcount <= 2)
                 {
                     sleep(5);
@@ -1151,6 +1154,7 @@ class Titlepoint
             }
             else
             { 
+                $this->CI->session->set_userdata('tax_doc_status', 'success');
                 return $response;
             }
         }
