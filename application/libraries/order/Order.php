@@ -3694,6 +3694,8 @@ class Order
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
             }
             $this->CI->session->set_userdata('email_sent_flag', 1);
+            $this->CI->session->unset_userdata('tax_doc_status');
+            $this->CI->session->unset_userdata('lv_doc_status');
         }
 	}
 }
