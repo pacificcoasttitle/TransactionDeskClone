@@ -1186,10 +1186,10 @@ class Home extends MX_Controller {
 					'cc'=>json_encode($cc)
 				);
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-				$lvDocStatus = $titlePointDetails[0]['lv_file_status'];
-				$taxDocStatus = $titlePointDetails[0]['tax_file_status'];
-				$emailSentFlag = $titlePointDetails[0]['email_sent_status'];
-				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed')) {
+				$lvDocStatus = strtolower($titlePointDetails[0]['lv_file_status']);
+				$taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
+				$emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
+				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
 					$to = 'hitesh.p@crestinfosystems.com';
 					$cc = ['piyush.j@crestinfosystems.net'];
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
