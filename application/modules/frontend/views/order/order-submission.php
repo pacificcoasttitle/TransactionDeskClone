@@ -189,7 +189,11 @@
                                         <?php } ?>
 
                                 <?php
-                                    }
+                                    } else if ($lpFileStatus == 'processing') { ?>
+                                        <div class="legal-vesting-no-data">
+                                            <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
+                                        </div>
+                                    <?php }
                                     else
                                     {
                                 ?>
@@ -274,10 +278,11 @@
                                             <?php } else { ?>
                                                 <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
                                             <?php } ?>
-                                    <?php
-                                        }
-                                        else
-                                        {
+                                    <?php } else if ($taxFileStatus == 'processing') { ?>
+                                            <div class="tax-no-data">
+                                                <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
+                                            </div>
+                                    <?php } else {
                                             $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
                                     ?>
                                             <!-- <a href="javascript:void(0);" onclick='imageCreateRequest("<?php // echo $tax_serviceId; ?>",3,"<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-tax-doc">Download Tax Document</a> -->
