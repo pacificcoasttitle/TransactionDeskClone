@@ -893,12 +893,14 @@ class TitlePoint extends MX_Controller {
 			{
 				$tpData = 	array(
 								'cs4_message' => $error,
+								'lv_file_status' => 'failed'
 							);
 			}
 			elseif($methodId == 3)
 			{
 				$tpData = 	array(
 								'cs3_message' => $error,
+								'tax_file_status' => 'failed'
 							);
 			}
 			

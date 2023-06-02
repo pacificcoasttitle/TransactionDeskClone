@@ -3535,4 +3535,172 @@ class Order
         // $result = json_decode($response,TRUE);
         // return $result;
     }
+
+    public function sendOrderEmail($fileNumber)
+	{
+		$this->CI->load->model('order/apiLogs');
+        $this->CI->load->model('order/home_model');
+        $this->CI->load->model('order/agent_model');
+		$userdata = $this->CI->session->userdata('user');
+		$condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+                )
+            );
+		$titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
+		$file_id = $titlePointDetails[0]['file_id'];
+        $orderDetails = $this->CI->order->get_order_details($file_id);
+		$cond = array(
+			'id' => $orderDetails['customer_id']
+		);
+		$customerDetails = $this->CI->home_model->get_customers($cond);
+
+		$timezone  = -8;
+		$orderNumber = $orderDetails['file_number'] ? $orderDetails['file_number'] : $orderDetails['lp_file_number'];
+		$data = array(
+			'orderNumber'=> $orderNumber,
+			'orderId'=> $file_id,
+			'OpenName'=> $customerDetails['first_name'].' '.$customerDetails['last_name'],
+			'Opentelephone'=> $customerDetails['telephone_no'],
+			'OpenEmail'=> $customerDetails['email_address'],
+			'CompanyName'=> $customerDetails['company_name'],
+			'StreetAddress'=> $customerDetails['street_address'],
+			'City'=> $customerDetails['city'],
+			'Zipcode'=> $customerDetails['zip_code'],
+			'openAt'=> gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600*($timezone+date("I"))),
+			'PropertyAddress'=> $orderDetails['address'],
+			'FullProperty'=> $orderDetails['full_address'],
+			'APN'=> $orderDetails['apn'],
+			'County'=> $orderDetails['county'],
+			'LegalDescription'=> $orderDetails['legal_description'],
+			'PrimaryOwner'=> $orderDetails['primary_owner'],
+			'SecondaryOwner'=> $orderDetails['secondary_owner'],
+			'SalesRep'=> $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name'],
+			'TitleOfficer'=> $orderDetails['titleofficer_first_name'] . ' ' . $orderDetails['titleofficer_last_name'],
+			'ProductType'=> $orderDetails['product_type'],
+			'SalesAmount'=> $orderDetails['sales_amount'],
+			'LoanAmount'=> $orderDetails['loan_amount'],
+			'LoanNumber'=> $orderDetails['loan_number'],
+			'EscrowNumber'=> $orderDetails['escrow_officer_id'],
+			'randomString'=> $this->CI->order->randomPassword()
+		);
+
+		$buyerDetails =  $listingDetails = $parties_email = array();
+		$parties_email = explode(',', $orderDetails['additional_email']);
+		if (isset($orderDetails['lender_id']) && !empty($orderDetails['lender_id'])) {
+			$parties_email[] = $orderDetails['lender_email'];
+			$data['lender_details'] = array(
+				'name' => $orderDetails['lender_first_name'], 
+				'email' => $orderDetails['lender_email'], 
+				'telephone' => $orderDetails['lender_telephone_no'],
+				'company' => $orderDetails['lender_company_name']
+			);
+		}
+
+		if (isset($orderDetails['buyer_agent_id']) && !empty($orderDetails['buyer_agent_id'])) {
+			$buyerDetails = $this->CI->agent_model->get_agents(array('id' => $orderDetails['buyer_agent_id']));
+			if (!empty($buyerDetails)) {
+				$parties_email[] = $buyerDetails['email_address'];
+				$data['buyers_agent'] = array(
+					'name'=>$buyerDetails['name'], 
+					'email'=>$buyerDetails['email_address'], 
+					'telephone'=> $buyerDetails['telephone_no'],
+					'company'=>$buyerDetails['company']
+				);
+			}
+			
+		}
+
+		if (isset($orderDetails['listing_agent_id']) && !empty($orderDetails['listing_agent_id'])) {
+			$listingDetails = $this->CI->agent_model->get_agents(array('id' => $orderDetails['listing_agent_id']));
+			if (!empty($listingDetails)) {
+				$parties_email[] = $listingDetails['email_address'];
+				$data['listing_agent'] = array(
+					'name' => $listingDetails['name'], 
+					'email' => $listingDetails['email_address'], 
+					'telephone' => $listingDetails['telephone_no'],
+					'company' => $listingDetails['company']
+				);
+			}
+		}
+		
+		$from_name = 'Pacific Coast Title Company';
+		$from_mail = env('FROM_EMAIL');
+		$order_message_body = $this->CI->load->view('emails/order.php',$data,TRUE);
+		$message = $order_message_body; 
+		$subject = $orderNumber. ' - PCT Title Order Placed';
+		$email_notification = $this->CI->session->userdata('email_notification');
+		$this->CI->session->unset_userdata('email_notification');
+		if ($orderDetails["salerep_is_mail_notification"] == 1) {
+			$parties_email[] = isset($orderDetails["salerep_email_address"]) && !empty($orderDetails["salerep_email_address"]) ? $orderDetails["salerep_email_address"] : '';
+		}
+		
+		if((isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification))) {
+			$to = env('OPEN_ORDER_ADMIN_EMAIL');
+		} else {
+			$to = $customerDetails['email_address'];
+			$parties_email[] = env('OPEN_ORDER_ADMIN_EMAIL');
+		}
+
+		//$parties_email[] = 'hitesh.p@crestinfosystems.com';
+		$parties_email[] = 'rudy@pct.com';
+		$parties_email[] = 'evelasquez@pct.com';
+		$file = array();
+		$lvfilename = $orderNumber.'.pdf';
+		$deedfilename = $orderNumber.'.pdf';
+		$taxfilename = $orderNumber.'.pdf';
+		$file[] = env('AWS_PATH')."legal-vesting/".$lvfilename;
+		$file[] = env('AWS_PATH')."grant-deed/".$deedfilename;
+		$file[] = env('AWS_PATH')."tax/".$taxfilename;
+		
+		
+		//$parties_email[] = env('ORDER_ADMIN_EMAIL');
+		$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
+		$this->CI->load->helper('sendemail');
+		
+		// $cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+		
+		$mailParams = array(
+			'from_mail'=>$from_mail, 
+			'from_name'=>$from_name, 
+			'to'=>$to,
+			'subject'=>$subject,
+			'message'=>json_encode($data),
+			'file'=>json_encode($file),
+			'cc'=>json_encode($cc)
+		);
+        $lvDocStatus = strtolower($titlePointDetails[0]['lv_file_status']);
+        $taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
+        $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
+        if ($emailSentFlag != 1  && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception'))  {
+            if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
+                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
+                try {
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = ['piyush.j@crestinfosystems.net'];
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+                }  catch (Exception $e) {
+                }
+                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
+            } else {
+                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
+                try {
+                    $to = 'hitesh.p@crestinfosystems.com';
+                    $cc = ['piyush.j@crestinfosystems.net'];
+                    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,array());
+                }  catch (Exception $e) {
+                }
+                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status'=>$mail_result), $orderDetails['order_id'], $logid);
+            }
+            $tpData = array(
+                'email_sent_status' => 1
+            );  
+        
+            $condition =array(
+                'file_number' => $fileNumber
+            );
+            $this->CI->titlePointData->update($tpData,$condition);
+        }
+	}
 }

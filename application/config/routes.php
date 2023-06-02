@@ -615,6 +615,7 @@ $route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';
 $route['api/send_title_doc_to_resware'] = 'frontend/api/pctCalculator/send_title_rates_document_to_resware';
 $route['order/admin/regenerate-tax-document'] = 'admin/order/home/regenerateTaxDocument';
 $route['order/admin/generate-tax-document'] = 'admin/order/home/generateTaxDocument';
+$route['check-document'] = 'frontend/order/home/checkDocument'; 
 
 
 $route['404_override'] = '';
