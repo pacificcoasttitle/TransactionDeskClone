@@ -3556,9 +3556,9 @@ class Order
 		$customerDetails = $this->CI->home_model->get_customers($cond);
 
 		$timezone  = -8;
-		$orderNumber = $orderDetails['lp_file_number'];
+		$orderNumber = $orderDetails['file_number'] ? $orderDetails['file_number'] : $orderDetails['lp_file_number'];
 		$data = array(
-			'orderNumber'=> $orderDetails['lp_file_number'],
+			'orderNumber'=> $orderNumber,
 			'orderId'=> $file_id,
 			'OpenName'=> $customerDetails['first_name'].' '.$customerDetails['last_name'],
 			'Opentelephone'=> $customerDetails['telephone_no'],
