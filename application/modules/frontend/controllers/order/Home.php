@@ -1562,6 +1562,38 @@ class Home extends MX_Controller {
 
 	}
 	
+	public function checkDocument() {
+		$fileNumber = $this->input->post('file_number');
+		$docType = $this->input->post('doc_type');
+		$url = null;
+		if ($docType == 'tax') {
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				if($this->order->fileExistOrNotOnS3('tax/'.$fileNumber.'.pdf')) {
+					$url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
+				} 
+			} else {
+				$tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
+				if (file_exists($tax_file_path)) {
+					$url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
+				}
+			}
+		}
+
+		if ($docType == 'lv') {
+			if (env('AWS_ENABLE_FLAG') == 1) {
+				if($this->order->fileExistOrNotOnS3('legal-vesting/'.$fileNumber.'.pdf')) {
+					$url = env('AWS_PATH')."legal-vesting/".$fileNumber.'.pdf';
+				} 
+			} else {
+				$lv_file_path = FCPATH.'uploads/legal-vesting/'.$fileNumber.'.pdf';
+				if (file_exists($lv_file_path)) {
+					$url = base_url().'uploads/legal-vesting/'.$fileNumber.'.pdf';
+				}
+			}
+		}
+		echo json_encode(['url' => $url]);exit;
+	}
+
 	public function preListingDocs() 
 	{
 		$userdata = $this->session->userdata('user');

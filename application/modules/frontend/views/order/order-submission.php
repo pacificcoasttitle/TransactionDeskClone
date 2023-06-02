@@ -190,8 +190,10 @@
 
                                 <?php
                                     } else if ($lpFileStatus == 'processing') { ?>
-                                        <div class="legal-vesting-no-data">
+                                        <div class="legal-vesting-no-data processing-wrapper">
                                             <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
+                                            <br />
+                                            <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number;?>', 'lv')" > Click to fetch</button>
                                         </div>
                                     <?php }
                                     else
@@ -238,29 +240,13 @@
                                 </div>
                                 <div class="loader" style="display: none;"></div>
                             </div>
-                    <?php
-                        /*}
-                        else
-                        {*/
-                    ?>
                             <!-- <div class="col-md-6 grant-deed-no-data">
                                 <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
                             </div> -->
-                    <?php
-                        /*}*/
-                    ?>
-                        
-                <?php
-                    /*}
-                    else
-                    {*/
-                ?>
-                        <!-- <div class="col-md-6 grant-deed-no-data">
+                            <!-- <div class="col-md-6 grant-deed-no-data">
                             <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
                         </div> -->
-                <?php
-                    /*}*/
-                ?>
+                
                 <?php
                         $cs3_message = isset($tp_data['cs3_message']) && !empty($tp_data['cs3_message']) ? $tp_data['cs3_message'] : '';
                         
@@ -278,9 +264,11 @@
                                             <?php } else { ?>
                                                 <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
                                             <?php } ?>
-                                    <?php } else if ($taxFileStatus == 'processing') { ?>
-                                            <div class="tax-no-data">
+                                        <?php } else if ($taxFileStatus == 'processing') { ?>
+                                            <div class="tax-no-data  processing-wrapper">
                                                 <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
+                                                <br />
+                                                <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number;?>', 'tax')" > Click to fetch</button>
                                             </div>
                                     <?php } else {
                                             $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
@@ -380,11 +368,8 @@
         data.order_id = "<?php echo $order_id ?>";
         data.file_number = "<?php echo $lpFileNumber ?>";
         data.escrow_id = "<?php echo $escrow_id ?>";
-        // data.lpFileNumber = "<?php echo $lpFileNumber ?>";
-        console.log('data ===', data);
-        // let executeCall = false;
+        
         if (data.file_number != '') {
-            console.log(data.file_number);
             // $(document).ajaxStop(function() {
                 // place code to be executed on completion of last outstanding ajax call here
                 // if (!executeCall) {
@@ -413,6 +398,42 @@
             // });
         }
     });
+
+    function fetchLvDoc(obj,fileNumber, docType) {
+        // $(obj).text('Fetching ...');
+        $(obj).text('Fetching ...');
+        
+        $.ajax({
+			url: base_url + "check-document",
+			type: "post",
+			data: {
+				file_number : fileNumber,
+                doc_type: docType
+			},
+            // async: false,
+			success: function (response) {
+                response = JSON.parse(response);
+				if (response && response.url) {
+                    var buttonText = (docType == 'tax') ? 'Download Tax Document' : 'Download L & V';
+                    var downloadButton = '<a href="' + response.url + '" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">' + buttonText + '</a>';
+					$(obj).closest('.processing-wrapper').replaceWith(downloadButton)
+				} else {
+                    $(obj).text('Click to Fetch');
+                    alert('Document generation still in process, Please try afte sometime');
+                    return;
+                }
+                $('#page-preloader').css('display', 'none');
+			},
+            complete: function (data) {
+                if (data.status != 200) {
+                    $(obj).text('Click to Fetch');
+                    alert('Document generation still in process, Please try afte sometime');
+                    return;
+                }
+            }
+        });
+    }
+
     function downloadDocumentFromAws(url, documentType)
     {
         $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
