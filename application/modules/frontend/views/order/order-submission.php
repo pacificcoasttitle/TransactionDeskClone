@@ -414,15 +414,28 @@
 			success: function (response) {
                 response = JSON.parse(response);
 				if (response && response.url) {
-                    var buttonText = (docType == 'tax') ? 'Download Tax Document' : 'Download L & V';
-                    var downloadButton = '<a href="' + response.url + '" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">' + buttonText + '</a>';
+                    var buttonText = '';
+                    var downloadButton = '';
+                    var doc_type = '';
+                    if (docType == 'tax') {
+                        buttonText = 'Download Tax Document';
+                        doc_type = 'tax';
+                    } else {
+                        buttonText = 'Download L & V';
+                        doc_type = 'legal_vesting';
+                    }
+                    <?php if (env('AWS_ENABLE_FLAG') == 1) { ?>
+                        let url = response.url;
+                        downloadButton = "<a href='#' class='btn btn-default btn-sm btn_mrg-top_30' onclick='downloadDocumentFromAws("+ '"' +  url + '"' + ", " + '"' + doc_type +  '"' + ");'>" + buttonText + "</a>";
+                    <?php } else { ?>
+                        downloadButton = '<a href="' + response.url + '" target="_blank" class="btn btn-default btn-sm btn_mrg-top_30" >' + buttonText + '</a>';
+                    <?php } ?>
 					$(obj).closest('.processing-wrapper').replaceWith(downloadButton)
 				} else {
                     $(obj).text('Click to Fetch');
                     alert('Document generation still in process, Please try afte sometime');
                     return;
                 }
-                $('#page-preloader').css('display', 'none');
 			},
             complete: function (data) {
                 if (data.status != 200) {
