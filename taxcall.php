@@ -1,55 +1,69 @@
+<html>
+<body>    
+<form action="" method="post">
+  APN:  &nbsp;&nbsp;&nbsp;&nbsp;        <input type="text" name="apn"/><br/><br/>
+  County:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="county"/><br/><br/>
+  <input type="submit" name="SubmitButton"/><br/>
+</form>    
+</body>
+</html>
+
 <?php
 
+// echo "<pre>";
+// print_r($_GET);die;
 
+if(isset($_POST['SubmitButton'])) {
 
-$post = [
-    'apn'    => "445-013-05",
-    'state'  => "CA",
-    'county' => "Orange",
-];
+    $post = [
+        'apn'    => $_POST['apn'], // "445-013-05"
+        'state'  => "CA",
+        'county' => $_POST['county'], //Orange
+    ];
+    $result         = createService($post);
+    $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+    if ($responseStatus != 'Success') {
+        echo "Created service response failed";die;
+    }
+    $requestId = $result['RequestID'];
+    
+    // Get Summary
+    $result         = getSummury($requestId);
+    $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+    if ($responseStatus != 'Success') {
+        echo "Get summary response failed";die;
+    }
+    
+    $resultId  = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
+    $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+    
+    // Create tax image request
+    $requestParams = array(
+        'username'   => "PCTXML01",
+        'password'   => "AlphaOmega637#",
+        'serviceId1' => $serviceId,
+        'serviceId2' => '',
+        'source'     => '',
+        'clientKey1' => '',
+        'clientKey2' => '',
+        'sortOrder'  => '',
+        'fileType'   => 'tiff',
+    );
+    $requestUrl = 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/CreateRequest3?';
+    $requestUrl = $requestUrl.http_build_query($requestParams);
+    echo date('Y-m-d H:i:s') . ' <br/><b>Image Create Service Request Url: </b><br/>' . $requestUrl . '<br/><br/>';
+    
+    $response = curlPost($requestUrl, $requestParams);
+    $result   = json_decode($response, true);
+    echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/>' . $response . '<br/><br/><br/>';
+    if (isset($result['RequestID']) && !empty($result['RequestID'])) {
+        sleep(8);
+        generateTaxImage($result['RequestID']);
+    } else {
+        echo ' Create tax image request failed';die;
+    }
+}
 // Create Service
-$result         = createService($post);
-$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-if ($responseStatus != 'Success') {
-    echo "Created service response failed";die;
-}
-$requestId = $result['RequestID'];
-
-// Get Summary
-$result         = getSummury($requestId);
-$responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-if ($responseStatus != 'Success') {
-    echo "Get summary response failed";die;
-}
-
-$resultId  = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
-$serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-
-// Create tax image request
-$requestParams = array(
-    'username'   => "PCTXML01",
-    'password'   => "AlphaOmega637#",
-    'serviceId1' => $serviceId,
-    'serviceId2' => '',
-    'source'     => '',
-    'clientKey1' => '',
-    'clientKey2' => '',
-    'sortOrder'  => '',
-    'fileType'   => 'tiff',
-);
-$requestUrl = 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/CreateRequest3?';
-$requestUrl = $requestUrl.http_build_query($requestParams);
-echo date('Y-m-d H:i:s') . ' <br/><b>Image Create Service Request Url: </b><br/>' . $requestUrl . '<br/><br/>';
-
-$response = curlPost($requestUrl, $requestParams);
-$result   = json_decode($response, true);
-echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/>' . $response . '<br/><br/><br/>';
-if (isset($result['RequestID']) && !empty($result['RequestID'])) {
-	sleep(8);
-    generateTaxImage($result['RequestID']);
-} else {
-    echo ' Create tax image request failed';die;
-}
 
 // Generate tax image request (Final response)
 function generateTaxImage($requestId, $i = 1)
