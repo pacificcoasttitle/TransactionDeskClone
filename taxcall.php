@@ -69,7 +69,7 @@ function generateTaxImage($requestId, $i = 1)
     echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/>' . $res . '<br/><br/><br/>';
     $res        = json_decode($res, true);
     if ($res['Status'] == 'Processing' && $i < 10) {
-        sleep(5);
+        sleep(3);
         
         echo "<br>";
         $i++;
