@@ -237,13 +237,14 @@ class Home_model extends CI_Model
 
     public function get_user_with_duplicate_email($params)
     {
+        $where = ' where email_address != ""';
         if (isset($params['keyword']) && !empty($params['keyword'])) 
         {
             $keyword = $params['keyword'];
 
             /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
             $where .= ' OR last_name LIKE "%'.$keyword.'%"';*/
-            $where .= ' WHERE email_address LIKE "%'.$keyword.'%"';
+            $where .= ' AND email_address LIKE "%'.$keyword.'%"';
         }
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
         SELECT email_address FROM customer_basic_details'.$where.'
