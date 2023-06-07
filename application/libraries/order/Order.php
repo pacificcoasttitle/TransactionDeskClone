@@ -3703,4 +3703,11 @@ class Order
             $this->CI->titlePointData->update($tpData,$condition);
         }
 	}
+
+    public function getConfigData() {
+        $this->CI->db->select('is_lp_enable');
+        $this->CI->db->from('pct_configs');
+        $query = $this->CI->db->get();
+        return $query->row();
+    }
 }
