@@ -4709,6 +4709,37 @@ class Home extends MX_Controller {
 
     }
 
+    public function settings()
+    {
+    	$data = array();
+        $data['title'] = 'PCT Order: Settings';
+        if ($this->input->post()) {
+            $input = $this->input->post();
+            // echo "<pre>";
+            // print_r($input);die;
+            $is_lp_enable = isset($input['is_lp_enable']) && !empty($input['is_lp_enable']) ? 1 : 0;
+            $lpDocData = array(
+                'is_lp_enable' => $is_lp_enable,
+            );
+            // $condition = array(
+            //     'id' => $lp_document_type_id
+            // );
+            $this->db->update('pct_configs', $lpDocData);
+            $msg = ($is_lp_enable == 1) ? 'Lp Enabled' : 'Lp Disabled';
+            $successMsg = $msg . ' successfully';
+            $this->session->set_userdata('success', $successMsg);
+            redirect(base_url().'order/admin/settings');
+        }
+        $this->db->select('is_lp_enable');
+        $this->db->from('pct_configs');
+        $query = $this->db->get();
+        $res = $query->row();
+        $data['is_lp_enable'] = $res->is_lp_enable;
+        // echo "<pre>";
+        // print_r($data);die;
+        $this->admintemplate->show("order/home", "settings", $data);
+    }
+
     public function lpDocumentTypes()
     {
     	$data = array();
