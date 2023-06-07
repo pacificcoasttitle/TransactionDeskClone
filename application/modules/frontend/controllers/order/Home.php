@@ -366,6 +366,7 @@ class Home extends MX_Controller {
 
 					if (!empty($EscrowNumber)) {
 						$place_order['Note']['EscrowNumber'] = $EscrowNumber;
+						$place_order['ClientFileNumber'] = $EscrowNumber;
 					}
 
 					if (!empty($Notes)) {
