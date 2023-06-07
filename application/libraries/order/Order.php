@@ -3581,7 +3581,7 @@ class Order
 			'SalesAmount'=> $orderDetails['sales_amount'],
 			'LoanAmount'=> $orderDetails['loan_amount'],
 			'LoanNumber'=> $orderDetails['loan_number'],
-			'EscrowNumber'=> $orderDetails['escrow_officer_id'],
+			'EscrowNumber'=> $orderDetails['escrow_number'],
 			'randomString'=> $this->CI->order->randomPassword()
 		);
 
