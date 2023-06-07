@@ -921,6 +921,7 @@ class Home extends MX_Controller {
 					'additional_email' => implode(',', $AdditionalEmails),
 					'borrower' => $primaryBorrower,
 					'secondary_borrower' => $secondaryBorrower,
+					'escrow_number'=> $EscrowNumber,
 					'status'=> 1
 				);
 
