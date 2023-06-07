@@ -548,8 +548,8 @@ class Titlepoint
                         if ($lineNumArr[1] == 0 && (!isset($postData['is_suffix_adjustment']) || $postData['is_suffix_adjustment'] == 0)) {
                             $words = explode(" ", $property );
                             array_splice($words, -1);
-                            $property = implode(" ", $words);
                             $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'suffix_adjustment', $request, $property, [], $orderId, null);
+                            $property = implode(" ", $words);
                             $postData['property'] = $property;
                             $postData['is_suffix_adjustment'] = 1;
                             return $this->generateGeoDoc($postData);
