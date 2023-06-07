@@ -549,6 +549,7 @@ class Titlepoint
                             $words = explode(" ", $property );
                             array_splice($words, -1);
                             $property = implode(" ", $words);
+                            $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'suffix_adjustment', $request, $property, [], $orderId, null);
                             $postData['property'] = $property;
                             $postData['is_suffix_adjustment'] = 1;
                             return $this->generateGeoDoc($postData);
