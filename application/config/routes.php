@@ -404,6 +404,7 @@ $route['order/admin/add-lp-alert'] = 'admin/order/home/addLpAlert';
 $route['order/admin/delete-lp-alert'] = 'admin/order/home/deleteLpAlert';
 $route['order/admin/edit-lp-alert/:num'] = 'admin/order/home/editLpAlert';
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
+$route['order/admin/settings'] = 'admin/order/home/settings';
 
 $route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeFlag';
 $route['update-lp-document-is-ves-type-flag'] = 'admin/order/home/updateLpDocumentTypeIsVesFlag';

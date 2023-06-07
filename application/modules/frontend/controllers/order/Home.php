@@ -291,9 +291,12 @@ class Home extends MX_Controller {
 						$parties_email[] = $AdditionalEmail;
 					}	
 				}
-
+				
+				/** Start Get config value to check Lp Enable or not */
+				$configData = $this->order->getConfigData();
+				/** End Get config value to check Lp Enable or not */
 				$underWriter = '';
-				if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($SalesRep == '15340') && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') {
+				if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($configData->is_lp_enable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') {
 					$lpOrderFlag = 1;
 					$loanFlag = 1;
 					if(strpos($ProductTypeTxt, 'Sale') !== false) {
