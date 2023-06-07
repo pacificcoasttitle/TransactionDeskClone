@@ -542,6 +542,18 @@ class Titlepoint
                 {
                     $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services']['Service'];
                     $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
+                    if (isset($thumbnail['Highlights']['string'][2])) {
+                        $lineNum = $thumbnail['Highlights']['string'][2];
+                        $lineNumArr = explode("=",$lineNum);
+                        if ($lineNumArr[1] == 0 && (!isset($postData['is_suffix_adjustment']) || $postData['is_suffix_adjustment'] == 0)) {
+                            $words = explode(" ", $property );
+                            array_splice($words, -1);
+                            $property = implode(" ", $words);
+                            $postData['property'] = $property;
+                            $postData['is_suffix_adjustment'] = 1;
+                            return $this->generateGeoDoc($postData);
+                        }
+                    }
                     $serviceId = $requestSummary['ID'];
                     $resultId = $thumbnail['ID'];
                     // echo "Hello if";
