@@ -253,6 +253,9 @@
 				<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-alert'; ?>">
 					LP Alert
 				</a>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/settings') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/settings'; ?>">
+					Settings
+				</a>
 			</div>
         </div>
 	</li>
