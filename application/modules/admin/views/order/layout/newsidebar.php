@@ -207,6 +207,7 @@
 		$this->uri->uri_string() == 'order/admin/rules-manager' ||
 		$this->uri->uri_string() == 'order/admin/notifications' ||
 		$this->uri->uri_string() == 'order/admin/holidays' ||
+		$this->uri->uri_string() == 'order/admin/settings' || 
 		preg_match('/order\/admin\/([a-z\-])*lp-document-type*/',$this->uri->uri_string()) ||
 		preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())
 
