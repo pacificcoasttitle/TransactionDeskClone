@@ -237,22 +237,23 @@ class Home_model extends CI_Model
 
     public function get_user_with_duplicate_email($params)
     {
-        $where = ' where email_address != ""';
+        $where = ' AND email_address != "" AND partner_id is NOT NULL AND resware_user_id is NOT NULL ';
+        $innerCause = ' WHERE email_address != ""';
         if (isset($params['keyword']) && !empty($params['keyword'])) 
         {
             $keyword = $params['keyword'];
 
             /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
             $where .= ' OR last_name LIKE "%'.$keyword.'%"';*/
-            $where .= ' AND email_address LIKE "%'.$keyword.'%"';
+            $innerCause .= ' AND email_address LIKE "%'.$keyword.'%"';
         }
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
-        SELECT email_address FROM customer_basic_details'.$where.'
+        SELECT email_address FROM customer_basic_details' . $innerCause . '
         GROUP BY email_address HAVING COUNT(*) > 1 
-        ) ORDER BY email_address ASC, is_password_updated DESC');
+        ) '. $where .' ORDER BY email_address ASC, is_password_updated DESC');
 
         $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
-
+        // print_r($this->db->last_query());die;
         return $result;
     }
 
