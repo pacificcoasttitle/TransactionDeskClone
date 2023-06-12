@@ -4690,6 +4690,12 @@ class Home extends MX_Controller {
         $query = $this->db->get();
         $titlePointData = $query->row_array(); 
 
+        $isVesEnableData = $this->db->select('id')
+                                    ->from('pct_title_point_document_records')
+                                    ->where(array('title_point_id' => $title_point_id, 'is_ves_display' => 1))
+                                    ->get()
+                                    ->result_array();
+
         $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
         foreach($instrument_number_ids as $instrument_number_id) {
             $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
@@ -4703,6 +4709,11 @@ class Home extends MX_Controller {
         $file_id = $titlePointData['file_id'];
         $this->order->createLpReport($titlePointData['file_number'], true, false);
         
+        $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0),array('title_point_id' => $title_point_id));
+        foreach($isVesEnableData as $id) {
+            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1),array('id' => $id));
+        }
+
         $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');
