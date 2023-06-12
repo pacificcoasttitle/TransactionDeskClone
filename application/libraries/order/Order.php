@@ -3047,6 +3047,22 @@ class Order
         }         
     }
 
+    public function getAllSubCategory() 
+    {
+        $this->db->select('doc_type')
+            ->from('pct_lp_document_types');
+            
+        $this->db->where('subtype_flag', 1);
+        //$this->db->where('is_notice', 0);
+        //$this->db->group_by('doc_type');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+    
     public function getNoticeDocumetTypes()
     {
         $this->CI->db->select('*')

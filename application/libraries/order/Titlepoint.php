@@ -1235,6 +1235,20 @@ class Titlepoint
             $items = $result['Items'];
             $displayDocList = $this->CI->order->getDocumetTypes();
             $displayNoticeDocList = $this->CI->order->getNoticeDocumetTypes();
+
+
+            $getAllSubCategory = $this->CI->order->getAllSubCategory();
+            $getAllSubCategory = array_column($getAllSubCategory, 'doc_type');
+            
+            $filteredSubCategoryList = array_filter($displayDocList, function ($item) {
+                return $item['subtype_flag'] == 1;
+            });
+            $filteredSubCateList = array_column($filteredSubCategoryList, 'doc_type');
+
+            $filteredMainCategoryList = array_filter($displayDocList, function ($item) {
+                return $item['subtype_flag'] == 0;
+            });
+            $filteredMainCateList = array_column($filteredMainCategoryList, 'doc_type');
             //echo "here";
             //print_r($resultForProperty['Item']);exit;
 
@@ -1373,8 +1387,9 @@ class Titlepoint
                             $recordArray[$i]['loan_amount'] = isset($val['LoanAmount']) ? $val['LoanAmount'] : null;
                             $recordArray[$i]['created_at'] = date("Y-m-d H:i:s");
                             $recordArray[$i]['amount'] = 0;
-                            
-                            if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
+                            if ((in_array($val['DocumentSubType'], $getAllSubCategory) && in_array($val['DocumentSubType'], $filteredSubCateList)) || (empty($val['DocumentSubType']) && in_array($val['DocumentType'], $filteredMainCateList))) 
+                            {
+                            // if (in_array($val['DocumentType'], array_column($displayDocList, 'doc_type'))) {
                                 $key = array_search($val['DocumentType'], array_column($displayDocList, 'doc_type'));
                                 $displaySection = $displayDocList[$key]['display_in_section'];
 
