@@ -4690,6 +4690,12 @@ class Home extends MX_Controller {
         $query = $this->db->get();
         $titlePointData = $query->row_array(); 
 
+        $isVesEnableData = $this->db->select('id')
+                                    ->from('pct_title_point_document_records')
+                                    ->where(array('title_point_id' => $title_point_id, 'is_ves_display' => 1))
+                                    ->get()
+                                    ->result_array();
+
         $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
         foreach($instrument_number_ids as $instrument_number_id) {
             $this->db->update('pct_title_point_document_records', array('is_display' => 1),array('id' => $instrument_number_id)); 
@@ -4703,6 +4709,11 @@ class Home extends MX_Controller {
         $file_id = $titlePointData['file_id'];
         $this->order->createLpReport($titlePointData['file_number'], true, false);
         
+        $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0),array('title_point_id' => $title_point_id));
+        foreach($isVesEnableData as $id) {
+            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1),array('id' => $id));
+        }
+
         $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');
@@ -5276,6 +5287,20 @@ class Home extends MX_Controller {
         }
 
         $displayDocList = $this->home_model->getDocumetTypes();
+        $getAllSubCategory = $this->home_model->getAllSubCategory();
+        $getAllSubCategory = array_column($getAllSubCategory, 'doc_type');
+        // echo "<pre>";
+        // print_r($getAllSubCategory);die;
+        $filteredSubCategoryList = array_filter($displayDocList, function ($item) {
+            return $item['subtype_flag'] == 1;
+        });
+        $filteredSubCateList = array_column($filteredSubCategoryList, 'doc_type');
+
+        $filteredMainCategoryList = array_filter($displayDocList, function ($item) {
+            return $item['subtype_flag'] == 0;
+        });
+        $filteredMainCateList = array_column($filteredMainCategoryList, 'doc_type');
+        
         $displayNoticeDocList = $this->home_model->getNoticeDocumetTypes();
 
         //echo in_array('NOT', array_column($displayNoticeDocList, 'doc_type'));
@@ -5307,7 +5332,8 @@ class Home extends MX_Controller {
         $filterArr = array();
         if (!empty($instrumentRecords)) {
             foreach ($instrumentRecords as $instrumentRecord) {
-                if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
+                if ((in_array($instrumentRecord['document_sub_type'], $getAllSubCategory) && in_array($instrumentRecord['document_sub_type'], $filteredSubCateList)) || (empty($instrumentRecord['document_sub_type']) && in_array($instrumentRecord['document_type'], $filteredMainCateList))) {
+                // if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
                     $key = array_search($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'));
                     $displaySection = $displayDocList[$key]['display_in_section'];
 
@@ -5567,11 +5593,26 @@ class Home extends MX_Controller {
         $this->db->where('title_point_id', $titlePointData->id);
         $query = $this->db->get();
         $instrumentRecords = $query->result_array();
-
+        
         $displayDocList = $this->home_model->getDocumetTypes();
+
+        $getAllSubCategory = $this->home_model->getAllSubCategory();
+        $getAllSubCategory = array_column($getAllSubCategory, 'doc_type');
+        
+        $filteredSubCategoryList = array_filter($displayDocList, function ($item) {
+            return $item['subtype_flag'] == 1;
+        });
+        $filteredSubCateList = array_column($filteredSubCategoryList, 'doc_type');
+
+        $filteredMainCategoryList = array_filter($displayDocList, function ($item) {
+            return $item['subtype_flag'] == 0;
+        });
+        $filteredMainCateList = array_column($filteredMainCategoryList, 'doc_type');
+        
         if (!empty($instrumentRecords)) {
             foreach($instrumentRecords as $val) {
-                if (in_array($val['document_type'], array_column($displayDocList, 'doc_type'))) {
+                if ((in_array($instrumentRecord['document_sub_type'], $getAllSubCategory) && in_array($instrumentRecord['document_sub_type'], $filteredSubCateList)) || (empty($instrumentRecord['document_sub_type']) && in_array($instrumentRecord['document_type'], $filteredMainCateList))) {
+                // if (in_array($val['document_type'], array_column($displayDocList, 'doc_type'))) {
                     $key = array_search($val['document_type'], array_column($displayDocList, 'doc_type'));
                     $displaySection = $displayDocList[$key]['display_in_section'];
         
