@@ -1192,7 +1192,7 @@ class Titlepoint
         $requestUrl= env('TP_SERVICE_ENDPOINT') . TP_GEO_GET_RESULT_URL;
         $request = $requestUrl.http_build_query($requestParams);
         
-        // $file = file_get_contents($request,false,$context);
+        $file = file_get_contents($request,false,$context);
         
         /** Start: Save lp document xml in S3 */
         if (!is_dir('uploads/lp-xml')) {
