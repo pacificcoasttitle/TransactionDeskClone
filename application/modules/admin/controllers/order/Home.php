@@ -4694,7 +4694,7 @@ class Home extends MX_Controller {
                                     ->from('pct_title_point_document_records')
                                     ->where(array('title_point_id' => $title_point_id, 'is_ves_display' => 1))
                                     ->get()
-                                    ->row_array();
+                                    ->result_array();
 
         $this->db->update('pct_title_point_document_records', array('is_display' => 0),array('title_point_id' => $title_point_id));
         foreach($instrument_number_ids as $instrument_number_id) {
