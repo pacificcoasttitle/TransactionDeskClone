@@ -482,6 +482,30 @@ class Order extends MX_Controller {
         // $this->load->view('order/layout/footer', $data);
     }
 
+    public function searchDocumentType() 
+    {
+        $seachValue = $this->input->post('doc_type');
+        if (empty($seachValue)) {
+            return;
+        }
+        $displayDocList = $this->home_model->getSearchDocList($seachValue);
+        $result = array('status'=> 'success', 'data' => $displayDocList);    
+        
+        echo json_encode($result); exit;
+    }
+
+    public function searchDocumentSubType() 
+    {
+        $seachValue = $this->input->post('doc_type');
+        if (empty($seachValue)) {
+            return;
+        }
+        $displayDocList = $this->home_model->getSearchDocSubList($seachValue);
+        $result = array('status'=> 'success', 'data' => $displayDocList);    
+        
+        echo json_encode($result); exit;
+    }
+
     function get_lp_order_list()
     {
     	$params = array();
