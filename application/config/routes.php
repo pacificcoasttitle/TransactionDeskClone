@@ -384,6 +384,8 @@ $route['order/admin/dashboard'] = 'admin/order/home/index';
 $route['order/admin/pre-listing-documents'] = 'admin/order/home/pre_listing_document';
 $route['order/admin/lp-listing-documents'] = 'admin/order/home/lp_listing_document';
 $route['order/admin/lp-orders'] = 'admin/order/order/lpOrders';
+$route['order/admin/search-document-type'] = 'admin/order/order/searchDocumentType';
+$route['order/admin/search-document-sub-type'] = 'admin/order/order/searchDocumentSubType';
 
 $route['order/admin/lp-xml-logs'] = 'admin/order/titlePoint/lpXmlLogs';
 $route['order/admin/get-lp-xml-logs'] = 'admin/order/titlePoint/getLpXmlLogs';
