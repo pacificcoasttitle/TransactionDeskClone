@@ -28,7 +28,10 @@
 		.modal-lg {
 			max-width: 1400px !important;
 		}
-	}	
+    }
+    .ui-autocomplete {
+        max-height: 300px !important;
+    }
 </style>
 <div class="container-fluid">
 	<!-- DataTables Example -->
