@@ -1369,9 +1369,9 @@ class Titlepoint
                         $key = array_search($docId, array_column($documentIdentifications, 'Id'));
                         $filterNoticeExistKey = '';
                         $filterExistKey = '';
-                        if (isset($documentIdentifications[$key]) && !empty($documentIdentifications[$key]['InstrumentNumber'])) {
+                        if (isset($documentIdentifications[$key]) && (!empty($documentIdentifications[$key]['InstrumentNumber']) || strtolower($val['DocumentType']) == 'tdd')) {
                             $recordArray[$i]['title_point_id'] = $titlePointId;
-                            $recordArray[$i]['instrument'] = $documentIdentifications[$key]['InstrumentNumber'];
+                            $recordArray[$i]['instrument'] = isset($documentIdentifications[$key]['InstrumentNumber']) ? $documentIdentifications[$key]['InstrumentNumber'] : null;
                             $recordArray[$i]['recorded_date'] = $documentIdentifications[$key]['RecordingDate'];
                             $recordArray[$i]['type'] = $images[$key]['Type'];
                             $recordArray[$i]['sub_type'] = $images[$key]['SubType'];
