@@ -2262,6 +2262,37 @@ class Home_model extends CI_Model
         }         
     }
 
+    public function getSearchDocList($seachValue)
+    {
+        $this->db->select('id, doc_type')
+            ->from('pct_lp_document_types');
+            
+        $this->db->where('subtype_flag', 0);
+        // $this->db->where('is_display', 1);
+        $this->db->like('doc_type', $seachValue);
+        $query = $this->db->get();
+        // print_r($this->db->last_query());die;
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getSearchDocSubList($seachValue) {
+        $this->db->select('id, doc_type')
+            ->from('pct_lp_document_types');
+            
+        $this->db->where('subtype_flag', 1);
+        $this->db->like('doc_type', $seachValue);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
     public function getAllSubCategory() 
     {
         $this->db->select('doc_type')
