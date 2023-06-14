@@ -2264,12 +2264,15 @@ class Home_model extends CI_Model
 
     public function getSearchDocList($seachValue)
     {
-        $this->db->select('id, doc_type')
+        $this->db->select('id, doc_type');
+        $this->db->select("CONCAT(doc_type, ' - ', CONCAT_WS(',', doc_type_description)) AS value")
             ->from('pct_lp_document_types');
             
         $this->db->where('subtype_flag', 0);
-        // $this->db->where('is_display', 1);
-        $this->db->like('doc_type', $seachValue);
+        $this->db->group_start()
+            ->like('doc_type', $seachValue)
+            ->or_like('doc_type_description', $seachValue)
+        ->group_end();
         $query = $this->db->get();
         // print_r($this->db->last_query());die;
         if ($query->num_rows() > 0)  {
