@@ -149,7 +149,7 @@ class TitlePointData extends CI_Model
             ->from($table)
             ->join('pct_title_point_document_records', 'pct_order_title_point_data.id = pct_title_point_document_records.title_point_id', 'left');
         $this->db->where('pct_order_title_point_data.file_number', $fileNumber);
-        $this->db->where_in('pct_title_point_document_records.document_type', $isVesDocType)->order_by('recorded_date',"desc")->limit(1);
+        $this->db->where_in('pct_title_point_document_records.document_type', $isVesDocType)->order_by("recorded_date desc, instrument desc")->limit(1);
         // $this->db->where('pct_title_point_document_records.document_name', 'Grant Deed')->order_by('id',"desc")->limit(1);
         $query = $this->db->get();
         return $query->result_array();
