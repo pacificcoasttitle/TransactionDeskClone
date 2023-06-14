@@ -475,7 +475,7 @@ class Order extends MX_Controller {
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
         $this->admintemplate->addCSS( base_url('assets/frontend/css/smart-forms.css'));
-        $this->admintemplate->addJS( base_url('assets/backend/js/lp-order.js?v=1'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/lp-order.js?v=2'));
         $this->admintemplate->show("order/order", "lp_orders", $data);
     	// $this->load->view('order/layout/header', $data);
         // $this->load->view('order/order/lp_orders', $data);

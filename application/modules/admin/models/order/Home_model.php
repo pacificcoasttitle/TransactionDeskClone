@@ -2264,7 +2264,7 @@ class Home_model extends CI_Model
 
     public function getSearchDocList($seachValue)
     {
-        $this->db->select('id, doc_type');
+        $this->db->select('id, doc_type, doc_type_description');
         $this->db->select("CONCAT(doc_type, ' - ', CONCAT_WS(',', doc_type_description)) AS value")
             ->from('pct_lp_document_types');
             

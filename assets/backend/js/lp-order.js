@@ -257,7 +257,6 @@ jQuery(document).ready(function ($) {
                 type: "POST",
                 dataType: "json",
                 success: function (result) {
-                    console.log(result);
                     if (result.status == 'success') {
                         if (result.data.length > 0) {
                             response($.map(result.data, function (item) {
@@ -277,6 +276,7 @@ jQuery(document).ready(function ($) {
         select: function( event, ui ) {
             event.preventDefault();
             $("#document_type").val(ui.item.doc_type);
+            $("#document_name").val(ui.item.doc_type_description);
         },
         change: function( event, ui ) {
             if (ui.item == null) {
