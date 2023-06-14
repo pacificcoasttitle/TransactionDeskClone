@@ -5607,10 +5607,10 @@ class Home extends MX_Controller {
             return $item['subtype_flag'] == 0;
         });
         $filteredMainCateList = array_column($filteredMainCategoryList, 'doc_type');
-        
+
         if (!empty($instrumentRecords)) {
             foreach($instrumentRecords as $val) {
-                if ((in_array($instrumentRecord['document_sub_type'], $getAllSubCategory) && in_array($instrumentRecord['document_sub_type'], $filteredSubCateList)) || (empty($instrumentRecord['document_sub_type']) && in_array($instrumentRecord['document_type'], $filteredMainCateList))) {
+                if ((in_array($val['document_sub_type'], $getAllSubCategory) && in_array($val['document_sub_type'], $filteredSubCateList)) || (empty($val['document_sub_type']) && in_array($val['document_type'], $filteredMainCateList))) {
                 // if (in_array($val['document_type'], array_column($displayDocList, 'doc_type'))) {
                     $key = array_search($val['document_type'], array_column($displayDocList, 'doc_type'));
                     $displaySection = $displayDocList[$key]['display_in_section'];
@@ -5849,7 +5849,7 @@ class Home extends MX_Controller {
                     'type' => 'REC',
                     'sub_type' => 'ALL',
                     'order_number' => null,
-                    'document_name' => $data['file_name'],
+                    'document_name' => $this->input->post('document_name'),
                     'document_type' => $this->input->post('document_type'),
                     'document_sub_type' => $this->input->post('document_sub_type') ? $this->input->post('document_sub_type') : null,
                     'parties' => $this->input->post('parties') ? $this->input->post('parties') : null,

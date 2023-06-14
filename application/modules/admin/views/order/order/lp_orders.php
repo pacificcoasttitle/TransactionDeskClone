@@ -274,6 +274,7 @@
                                             <input required="" name="file_upload" type="file" id="file_upload" class="form-control" accept="application/pdf">
                                         </div>
                                         <input type="hidden" name="upload_file_id" id="upload_file_id" value="">
+                                        <input type="hidden" name="document_name" id="document_name" value="">
                                     
                                     </div>
                                     <div class="form-footer" style="padding: 0px 1rem !important;">
