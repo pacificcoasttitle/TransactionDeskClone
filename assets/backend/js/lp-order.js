@@ -261,7 +261,7 @@ jQuery(document).ready(function ($) {
                     if (result.status == 'success') {
                         if (result.data.length > 0) {
                             response($.map(result.data, function (item) {
-                                return item.doc_type;
+                                return item;
                             }));
                         } else {
                             response([{ label: 'No results found.', val: -1}]);
@@ -276,7 +276,7 @@ jQuery(document).ready(function ($) {
         minLength: 1,
         select: function( event, ui ) {
             event.preventDefault();
-            $("#document_type").val(ui.item.value);
+            $("#document_type").val(ui.item.doc_type);
         },
         change: function( event, ui ) {
             if (ui.item == null) {
