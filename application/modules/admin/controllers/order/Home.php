@@ -5784,7 +5784,7 @@ class Home extends MX_Controller {
                 }
             }
         }
-        $this->order->createLpReport($titlePointData->file_number, false, true);
+        $this->order->createLpReport($titlePointData->file_number, true, true);
         $data = array('status' => 'success', 'message' => 'Lp report regenerated successfully.');
         echo json_encode($data);
     }
