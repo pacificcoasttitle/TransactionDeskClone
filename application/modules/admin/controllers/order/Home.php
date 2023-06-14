@@ -4711,9 +4711,8 @@ class Home extends MX_Controller {
         
         $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0),array('title_point_id' => $title_point_id));
         foreach($isVesEnableData as $id) {
-            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1),array('id' => $id));
+            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1),array('id' => $id['id']));
         }
-
         $successMsg = 'Document Data saved successfully and LP report generated successfully for new data.';
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');
