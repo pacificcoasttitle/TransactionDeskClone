@@ -3,55 +3,64 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <?php
         $userdata = $this->session->userdata('user');
-		
+		$dashboardUrl = ($userdata['is_sales_rep'] == 1) ? base_url() . 'sales-dashboard/' . $userdata['id'] : 'dashboard';
 	?>
-
+	
 	<!-- Sidebar - Brand -->
 	<a class="sidebar-brand d-flex align-items-center justify-content-center"
-		href="<?php echo base_url(); ?>sales-dashboard/<?php echo $userdata['id']; ?>">
+		href="<?php echo $dashboardUrl; ?>">
 		<img style="width:200px;" src="<?php echo base_url();?>assets/backend/hr/img/logo2.png">
 	</a>
-
-	<!-- Divider -->
 	<hr class="sidebar-divider my-0">
-	<li class="nav-item <?php if($this->uri->segment(1) == 'sales-dashboard') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url(); ?>sales-dashboard/<?php echo $userdata['id']; ?>">
-			<i class="fas fa fa-dashboard"></i>
-			<span>Dashboard</span>
-		</a>
-	</li>
-    <li class="nav-item <?php if($this->uri->uri_string(1) == 'sales-current-month-history') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url(); ?>sales-current-month-history">
-			<i class="fas fa fa-calendar  "></i>
-			<span>Daily</span>
-		</a>
-	</li>
-    <li class="nav-item <?php if($this->uri->segment(1) == 'sales-production-history') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url(); ?>sales-production-history/<?php echo $userdata['id']; ?>">
-			<i class="fas fa fa-history"></i>
-			<span>Production History</span>
-		</a>
-	</li>
-    <li class="nav-item <?php if($this->uri->segment(1) == 'trends') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url(); ?>trends/<?php echo $userdata['id']; ?>">
-            <i class="fa fa-line-chart"></i>
-			<span>Trends</span>
-		</a>
-	</li>
-    <li class="nav-item <?php if($this->uri->segment(1) == 'sales-summary') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id']; ?>">
-			<i class="fa fa-list-alt"></i>
-			<span>Summary</span>
-		</a>
-	</li>
-    <li class="nav-item <?php if($this->uri->segment(1) == 'logout') { echo 'active'; } ?>">
-		<a class="nav-link" href="<?php echo base_url().'logout'; ?>">
-			<i class="fa fa-sign-out"></i>
-			<span>Logout</span>
-		</a>
-	</li>
-	
 
+	<?php if ($userdata['is_sales_rep'] == 1)  { ?>
+
+		<!-- Divider -->
+		<li class="nav-item <?php if($this->uri->segment(1) == 'sales-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>sales-dashboard/<?php echo $userdata['id']; ?>">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Dashboard</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->uri_string(1) == 'sales-current-month-history') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>sales-current-month-history">
+				<i class="fas fa fa-calendar  "></i>
+				<span>Daily</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'sales-production-history') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>sales-production-history/<?php echo $userdata['id']; ?>">
+				<i class="fas fa fa-history"></i>
+				<span>Production History</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'trends') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>trends/<?php echo $userdata['id']; ?>">
+				<i class="fa fa-line-chart"></i>
+				<span>Trends</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'sales-summary') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id']; ?>">
+				<i class="fa fa-list-alt"></i>
+				<span>Summary</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'logout') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'logout'; ?>">
+				<i class="fa fa-sign-out"></i>
+				<span>Logout</span>
+			</a>
+		</li>
+	
+	<?php } else if ($userdata['is_escrow_officer']) { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'escrow-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>escrow-dashboard">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Dashboard Home</span>
+			</a>
+		</li>
+	<?php } ?>
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 
