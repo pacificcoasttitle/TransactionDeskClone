@@ -152,7 +152,7 @@
 						<!-- <div class="col-md-12"> -->
 							<div class="form-group">
 								<label>Document #<?php echo $i;?><?php if ($i == 1) { ?> <span class="required"> * </span> <?php } ?></label>
-								<select class="form-control" name="document_type_<?php echo $i;?>" id="document_type_<?php echo $i;?>" class="dropdown-toggle" <?php echo $i == 1 ? 'required="required"' : '';?>>
+								<select class="form-control mb-2" name="document_type_<?php echo $i;?>" id="document_type_<?php echo $i;?>" class="dropdown-toggle" <?php echo $i == 1 ? 'required="required"' : '';?>>
 									<option value="">DOCUMENT TYPE:</option>
 									<?php foreach($documentTypes as $documentType) { ?>
 									<option
@@ -160,10 +160,10 @@
 										<?php echo $documentType['name'];?></option>
 									<?php } ?>
 								</select>
-								<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="form-control"
+								<input type="file" accept=".doc,.docx,.gif,.msg,.pdf,.tif,.tiff,.xls,.xlsx,.xml" class="form-control mb-2"
 											id="document_<?php echo $i;?>" name="document_<?php echo $i;?>" <?php echo $i == 1 ? 'required="required"' : '';?>>
 								<textarea name="description_<?php echo $i;?>" id="description_<?php echo $i;?>" placeholder="DESCRIPTION" rows="3" cols="52" type="file"
-											class="form-control dropdown-toggle" id="inputGroupFile01" <?php echo $i == 1 ? 'required="required"' : '';?>></textarea>
+											class="form-control dropdown-toggle mb-2" id="inputGroupFile01" <?php echo $i == 1 ? 'required="required"' : '';?>></textarea>
 								<?php if (!empty($tasks)) { ?>
 									<div class="header-language-nav dropdown">
 										<select style="width:100%;" name="task_id_<?php echo $i;?>" id="task_id_<?php echo $i;?>" class="form-control dropdown-toggle">
@@ -176,6 +176,7 @@
 								<?php } ?>
 						</div>
 					</div>
+					<!-- <div class="col-md-2"></div> -->
 				<?php } ?>
 				</div>
 				<div class="col-md-12">
