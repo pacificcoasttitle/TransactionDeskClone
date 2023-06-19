@@ -540,23 +540,35 @@ class Titlepoint
                 // print_r($imgReturnStatus == 'success');
                 if($imgReturnStatus == 'success' && $status == 'complete')
                 {
-                    $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services']['Service'];
-                    $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
-                    if (isset($thumbnail['Highlights']['string'][2])) {
+                    $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services'];
+                    $count = 0;
+                    foreach ($requestSummary as $service) {
+                        $thumbnail = $service['Service']['ThumbNails']['ResultThumbNail'];
                         $lineNum = $thumbnail['Highlights']['string'][2];
-                        $lineNumArr = explode("=",$lineNum);
-                        if ($lineNumArr[1] == 0 && (!isset($postData['is_suffix_adjustment']) || $postData['is_suffix_adjustment'] == 0)) {
-                            $words = explode(" ", $property );
-                            array_splice($words, -1);
-                            $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'suffix_adjustment', $request, $property, [], $orderId, null);
-                            $property = implode(" ", $words);
-                            $postData['property'] = $property;
-                            $postData['is_suffix_adjustment'] = 1;
-                            return $this->generateGeoDoc($postData);
+                        $lineNumArr = explode("=", $lineNum);
+                        if ($lineNumArr[1] > $count) {
+                            $count = $lineNumArr[1];
+                            $resultId = $thumbnail['ID'];
+                            $serviceId = $service['ID'];
                         }
                     }
-                    $serviceId = $requestSummary['ID'];
-                    $resultId = $thumbnail['ID'];
+                    
+
+                    // if (isset($thumbnail['Highlights']['string'][2])) {
+                    //     $lineNum = $thumbnail['Highlights']['string'][2];
+                    //     $lineNumArr = explode("=",$lineNum);
+                    //     if ($lineNumArr[1] == 0 && (!isset($postData['is_suffix_adjustment']) || $postData['is_suffix_adjustment'] == 0)) {
+                    //         $words = explode(" ", $property );
+                    //         array_splice($words, -1);
+                    //         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'suffix_adjustment', $request, $property, [], $orderId, null);
+                    //         $property = implode(" ", $words);
+                    //         $postData['property'] = $property;
+                    //         $postData['is_suffix_adjustment'] = 1;
+                    //         return $this->generateGeoDoc($postData);
+                    //     }
+                    // }
+                    //$serviceId = $requestSummary['ID'];
+                    //$resultId = $thumbnail['ID'];
                     // echo "Hello if";
                     $generateImgResponse = $this->generateGeoDocument($resultId, $orderId, $fileNumber, $postData);
 
