@@ -474,11 +474,9 @@ class Titlepoint
         $county = $postData['county'];
         $property = $postData['property'];
         $apn = $postData['apn'];
-        $full_address = $postData['full_address'];
-        $unit_num_arr = explode(',', $full_address);
-        $addressFlag = 0;
-
-        if (str_contains($unit_num_arr[0], ' ') || (isset($postData['search_by_address']) && $postData['search_by_address'] == 1)) {
+        $unit_number = $postData['unit_number'];
+       
+        if (empty($unit_number) || (isset($postData['search_by_address']) && $postData['search_by_address'] == 1)) {
             $parameters = 'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;Tax.CurrentYearTaxesOnly=False;General.AutoSearchProperty=True;General.AutoSearchOwnerNames=False;General.AutoSearchStarters=False;Property.IntelligentPropertyGrouping=true;';
             $addressFlag = 1;
         } else {
