@@ -148,7 +148,7 @@
 				<input type="hidden" id="order_id" name="order_id" value="<?php echo $orderDetails['order_id'];?>">
 				<div class="row">
 				<?php for($i= 1; $i <= 4; $i++) { ?>	
-					<div class="col-md-6">
+					<div class="col-md-6 <?php if ($i > 2) { ?> mt-5 <?php } ?>">
 						<!-- <div class="col-md-12"> -->
 							<div class="form-group">
 								<label>Document #<?php echo $i;?><?php if ($i == 1) { ?> <span class="required"> * </span> <?php } ?></label>
