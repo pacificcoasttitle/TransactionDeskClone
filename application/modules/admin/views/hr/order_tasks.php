@@ -104,7 +104,7 @@
 		background-color: initial;
 		border: initial;
 	}
-		
+
 	user agent stylesheet input, textarea, keygen, select, button, meter, progress {
 		-webkit-writing-mode: horizontal-tb;
 	}
@@ -141,12 +141,12 @@
 			</div>
 		</div>
 
-		<?php if(!empty($success)) {?>
-		<a href="#" class="btn btn-success btn-block mt-1 mb-3"><?php echo $success;?></a>
-		<?php }   
-		if(!empty($errors)) {?>
-		<a href="#" class="btn btn-danger btn-block mt-1 mb-3"><?php echo $errors;?></a>
-		<?php } ?>
+		<?php if (!empty($success)) {?>
+		<a href="#" class="btn btn-success btn-block mt-1 mb-3"><?php echo $success; ?></a>
+		<?php }
+		if (!empty($errors)) {?>
+		<a href="#" class="btn btn-danger btn-block mt-1 mb-3"><?php echo $errors; ?></a>
+		<?php }?>
 
 		<div id="order_tasks_success_msg" class="btn btn-success btn-block mt-1 mb-3" style="display:none;"></div>
 		<div id="order_tasks_error_msg" class="btn btn-danger btn-block mt-1 mb-3" style="display:none;"></div>
@@ -158,14 +158,14 @@
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">Tasks List</h6>
 						</div>
-						<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
-						<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
+						<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
+						<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
 						<div class="card-body">
 							<?php if (!empty($tasks)) {
-                                foreach($tasks as $task) { 
-									if ($task['parent_task_id'] == 0) {
-										$keys = array();
-										$keys = array_keys(array_column($tasks, 'parent_task_id'), $task['id']);?>
+    foreach ($tasks as $task) {
+        if ($task['parent_task_id'] == 0) {
+            $keys = array();
+            $keys = array_keys(array_column($tasks, 'parent_task_id'), $task['id']);?>
 							<div class="card custom__task_card">
 								<div class="card-header py-3">
 									<div class="row">
@@ -175,7 +175,10 @@
 													class="custom-control-input custom__task_checkbox"
 													id="check_<?php echo $task['id']; ?>" name="task_done[]"
 													value="<?php echo $task['id']; ?>"
-													<?php if(in_array($task['id'],$completedTaskIds)) echo "checked";?>>
+													<?php if (in_array($task['id'], $completedTaskIds)) {
+                echo "checked";
+            }
+            ?>>
 												<label class="custom-control-label"
 													for="check_<?php echo $task['id']; ?>"><?php echo $task['name']; ?></label>
 											</div>
@@ -193,21 +196,19 @@
 								<div class="collapse custom__task_collapse"
 									id="collapseCard_<?php echo $task['id']; ?>">
 									<div class="card-body">
-										<!-- <?php if(empty($task['notes'])) : ?>
+										<!-- <?php if (empty($task['notes'])): ?>
 															-
-															<?php else : ?>
+															<?php else: ?>
 															<?php echo nl2br($task['notes']); ?>
-														<?php endif; ?> -->
+														<?php endif;?> -->
 
-										<?php $j=0; if (!empty($keys)) { ?>
+										<?php $j = 0;if (!empty($keys)) {
+                ?>
 										<div class="mb-4" id="sub_task_<?php echo $task['id']; ?>">
 											<div class="card-header py-3 my-3">
-												<h6 class="m-0 font-weight-bold text-primary"
-													style="<?php echo ($task['id'] == 4 || $task['id'] == 6 || $task['id'] == 7) ? 'height:38px;' : '';?>">
-													Sub Tasks
+	<h6 class="m-0 font-weight-bold text-primary" style="<?php echo ($task['id'] == 4 || $task['id'] == 6 || $task['id'] == 7) ? 'height:38px;' : ''; ?>"> Sub Tasks
+		<?php if ($task['id'] == 4) {?>
 
-													<?php if ($task['id'] == 4) { ?>
-													
 													<a data-target="#borrower_information" data-toggle="modal"
 														role="button" href="#"
 														class="btn button btn-success btn-icon-split float-right"
@@ -217,7 +218,7 @@
 														</span>
 														<span class="text">Send Package</span>
 													</a>
-													
+
 													<a data-target="#seller_welcome" data-toggle="modal"
 														role="button" href="#"
 														class="btn button btn-success btn-icon-split float-right mr-2"
@@ -236,7 +237,7 @@
 														</span>
 														<span class="text">Send Buyer Welcome</span>
 													</a>
-													<?php } else if ($task['id'] == 6) { ?>
+													<?php } else if ($task['id'] == 6) {?>
 													<a data-target="#borrower_information_payoff" data-toggle="modal"
 														role="button" href="#"
 														class="btn button btn-success btn-icon-split float-right"
@@ -246,7 +247,7 @@
 														</span>
 														<span class="text">Send Package</span>
 													</a>
-													<?php } else if ($task['id'] == 7) { ?>
+													<?php } else if ($task['id'] == 7) {?>
 													<a data-target="#lender_information" data-toggle="modal"
 														role="button" href="#"
 														class="btn button btn-success btn-icon-split float-right"
@@ -256,22 +257,26 @@
 														</span>
 														<span class="text">Send Package</span>
 													</a>
-													<?php } ?>
+													<?php }?>
 												</h6>
 											</div>
-											<?php foreach($keys as $key) { $j++;?>
+											<?php foreach ($keys as $key) {
+                    $j++;?>
 											<div class="custom-control custom-checkbox" style="margin: 10px 25px;">
 												<input data-child="1" data-parent-task="<?php echo $task['id']; ?>"
 													type="checkbox" class="custom-control-input"
 													id="check_<?php echo $tasks[$key]['id']; ?>" name="task_done[]"
 													value="<?php echo $tasks[$key]['id']; ?>"
-													<?php if(in_array($tasks[$key]['id'],$completedTaskIds)) echo "checked";?>>
+													<?php if (in_array($tasks[$key]['id'], $completedTaskIds)) {
+                        echo "checked";
+                    }
+                    ?>>
 												<label class="custom-control-label"
 													for="check_<?php echo $tasks[$key]['id']; ?>"><?php echo $tasks[$key]['name']; ?></label>
 											</div>
-											<?php } ?>
+											<?php }?>
 										</div>
-										<?php } ?>
+										<?php }?>
 
 										<div class="mb-4">
 											<div class="card-header py-3 my-3">
@@ -290,20 +295,7 @@
 												</h6>
 											</div>
 
-											<!-- <ul id="notes_<?php echo $task['id']; ?>">
-												<?php $i = 0;
-															foreach($order_task_notes as $order_task_note) { 
-																if ($order_task_note['task_id'] == $task['id']) { 
-																	$i++; ?>
-												<li><b><?php echo $order_task_note['subject']?></b>:
-													<?php echo $order_task_note['note']?></li>
-												<?php }
-															} ?>
-												<?php if ($i == 0)  { ?>
-												<li>No notes found for this task.</li>
-												<?php } ?>
-											</ul> -->
-											<table class="table table-type-3 typography-last-elem no-footer"
+											<table class="table table-type-3 typography-last-elem no-footer  spacer-t30"
 												style="margin: 10px 15px;">
 												<thead>
 													<tr>
@@ -315,28 +307,29 @@
 												</thead>
 												<tbody>
 													<?php $j = 1;
-																	if(!empty($order_task_notes)) {
-																		foreach ($order_task_notes as $order_task_note) {
-																			if ($order_task_note['task_id'] == $task['id']) { ?>
+            if (!empty($order_task_notes)) {
+                foreach ($order_task_notes as $order_task_note) {
+                    if ($order_task_note['task_id'] == $task['id']) {
+                        ?>
 													<tr role="row" class="odd">
-														<td><?php echo $j;?></td>
-														<td><?php echo $order_task_note['subject']?></td>
+														<td><?php echo $j; ?></td>
+														<td><?php echo $order_task_note['subject']; ?></td>
 														<td>
-														<?php echo $order_task_note['note']?>
+														<?php echo $order_task_note['note']; ?>
 														</td>
 														<td>
-														<?php echo date("m/d/Y",strtotime($order_task_note['created_at']));?>
+														<?php echo date("m/d/Y", strtotime($order_task_note['created_at'])); ?>
 														</td>
 													</tr>
 													<?php $j++;
-																			} 
-																		}
-																	}
-																	if ($j == 1)  { ?>
+                    }
+                }
+            }
+            if ($j == 1) {?>
 													<tr role="row" class="odd">
 														<td colspan="4" class="text-center">No notes found</td>
 													</tr>
-													<?php } ?>
+													<?php }?>
 												</tbody>
 											</table>
 
@@ -427,7 +420,7 @@
 																<span class="text">Upload Documents</span>
 															</button>
 															<div class="clearfix"></div>
-															
+
 														</div>
 													</div>
 												</div>
@@ -445,24 +438,25 @@
 												</thead>
 												<tbody>
 													<?php $j = 1;
-																	if(!empty($borrowerDocuments)) {
-																		foreach ($borrowerDocuments as $document) {
-																			if ($document['task_id'] == $task['id']) { ?>
+            if (!empty($borrowerDocuments)) {
+                foreach ($borrowerDocuments as $document) {
+                    if ($document['task_id'] == $task['id']) {
+                        ?>
 													<tr role="row" class="odd">
-														<td><?php echo $j;?></td>
-														<td><?php echo $document['original_document_name'];?></td>
+														<td><?php echo $j; ?></td>
+														<td><?php echo $document['original_document_name']; ?></td>
 														<td>
 															<div class="custom__task_actions"
 																style="display: inline-block;">
 																<a target="_blank"
-																	href="<?php echo env('AWS_PATH').'borrower/'.$document['document_name'];?>"
+																	href="<?php echo env('AWS_PATH') . 'borrower/' . $document['document_name']; ?>"
 																	class="btn button btn-info btn-icon-split">
 																	<span class="icon text-white-50">
 																		<i class="fas fa-eye"></i>
 																	</span>
 																	<span class="text">View</span>
 																</a>
-																<?php if ($document['api_document_id'] > 0) { ?>
+																<?php if ($document['api_document_id'] > 0) {?>
 																<a href="#"
 																	class="btn button btn-success btn-icon-split"
 																	style="width:auto;">
@@ -471,40 +465,40 @@
 																	</span>
 																	<span class="text">Approved & Pushed</span>
 																</a>
-																<?php } else { ?>
+																<?php } else {?>
 																<a style="width:auto;"
-																	href="<?php echo base_url()."hr/admin/upload-documet-resware/".$document['id'];?>"
+																	href="<?php echo base_url() . "hr/admin/upload-documet-resware/" . $document['id']; ?>"
 																	class="btn button btn-success btn-icon-split">
 																	<span class="icon text-white-50">
 																		<i class="fa fa-check"></i>
 																	</span>
 																	<span class="text">Approve & Push</span>
 																</a>
-																<?php }  ?>
+																<?php }?>
 																<div class="clearfix"></div>
 															</div>
 														</td>
 													</tr>
 													<?php $j++;
-																			} 
-																		}
-																	}
-																	if ($j == 1)  { ?>
+                    }
+                }
+            }
+            if ($j == 1) {?>
 													<tr role="row" class="odd">
 														<td colspan="4" class="text-center">No documents found</td>
 													</tr>
-													<?php } ?>
+													<?php }?>
 												</tbody>
 											</table>
 										</div>
 									</div>
 								</div>
 							</div>
-							<?php } 
-								}
-                            } else { ?>
+							<?php }
+    }
+} else {?>
 							<div>No Task Found</div>
-							<?php } ?>
+							<?php }?>
 						</div>
 					</div>
 				</div>
@@ -517,7 +511,7 @@
 						</span>
 						<span class="text">Save</span>
 					</button>
-					<a href="<?php echo base_url().'hr/admin/orders'; ?>" class="btn btn-secondary btn-icon-split">
+					<a href="<?php echo base_url() . 'hr/admin/orders'; ?>" class="btn btn-secondary btn-icon-split">
 						<span class="icon text-white-50">
 							<i class="fas fa-arrow-right"></i>
 						</span>
@@ -532,7 +526,7 @@
 <div class="modal fade" width="500px" id="borrower_information" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>hr/admin/add-borrower-on-order"
+			<form method="POST" action="<?php echo base_url(); ?>hr/admin/add-borrower-on-order"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
@@ -540,9 +534,9 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Borrower Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
-							
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-12">
@@ -590,7 +584,7 @@
 <div class="modal fade" width="500px" id="borrower_information_payoff" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>hr/admin/add-borrower-on-order-for-payoff"
+			<form method="POST" action="<?php echo base_url(); ?>hr/admin/add-borrower-on-order-for-payoff"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
@@ -598,9 +592,9 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Borrower Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
-							
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-12">
@@ -636,7 +630,7 @@
 <div class="modal fade" width="500px" id="lender_information" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>hr/admin/add-lender-on-order"
+			<form method="POST" action="<?php echo base_url(); ?>hr/admin/add-lender-on-order"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
@@ -644,9 +638,9 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Lender Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
-							
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+
 							<div class="card-body">
 								<div class="row">
 									<div class="col-md-12">
@@ -683,7 +677,7 @@
 <div class="modal fade" width="500px" id="buyer_welcome" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>hr/admin/add-buyer-on-order"
+			<form method="POST" action="<?php echo base_url(); ?>hr/admin/add-buyer-on-order"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
@@ -691,9 +685,9 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Buyer Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
-							
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+
 							<div class="card-body">
 								<div id="buyer-info-clone-group-fields">
 									<div class="toclone clone-widget">
@@ -705,7 +699,7 @@
 														name="buyer_emails[]" id="buyer_email" value="" required="required">
 												</div>
 											</div>
-											
+
 											<div class="col-md-6">
 												<div class="form-group">
 													<label>First Name<span class="required"> *</span></label>
@@ -720,9 +714,9 @@
 												</div>
 											</div>
 
-											<div class="col-md-6">	
+											<div class="col-md-6">
 												<div class="form-group">
-													<input class="" type="radio" name="is_main_buyer" id="is_main_buyer" value="is_main_buyer0" required="required">&nbsp;&nbsp;Primary Buyer		
+													<input class="" type="radio" name="is_main_buyer" id="is_main_buyer" value="is_main_buyer0" required="required">&nbsp;&nbsp;Primary Buyer
 												</div>
 											</div>
 
@@ -758,7 +752,7 @@
 <div class="modal fade" width="500px" id="seller_welcome" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>hr/admin/add-seller-on-order"
+			<form method="POST" action="<?php echo base_url(); ?>hr/admin/add-seller-on-order"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
@@ -766,9 +760,9 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Seller Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id;?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id;?>">
-							
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+
 							<div class="card-body">
 								<div id="seller-info-clone-group-fields">
 									<div class="toclone clone-widget">
@@ -780,7 +774,7 @@
 														name="seller_emails[]" id="seller_email" value="" required="required">
 												</div>
 											</div>
-											
+
 											<div class="col-md-6">
 												<div class="form-group">
 													<label>First Name<span class="required"> *</span></label>
@@ -795,9 +789,9 @@
 												</div>
 											</div>
 
-											<div class="col-md-6">	
+											<div class="col-md-6">
 												<div class="form-group">
-													<input class="" type="radio" name="is_main_seller" id="is_main_seller" value="is_main_seller0" required="required">&nbsp;&nbsp;Primary Seller		
+													<input class="" type="radio" name="is_main_seller" id="is_main_seller" value="is_main_seller0" required="required">&nbsp;&nbsp;Primary Seller
 												</div>
 											</div>
 

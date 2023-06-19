@@ -11,6 +11,7 @@ class Escrow extends MX_Controller
 		$this->load->helper(
             array('file', 'url','form')
         );
+        $this->load->library('order/EscrowDashboardTemplate');
         $this->load->library('session');
 		$this->load->library('form_validation');
         $this->load->library('order/template');
@@ -40,8 +41,13 @@ class Escrow extends MX_Controller
 		$data['name'] = $name;
 		$data['user_email'] = $userdata['email'];
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->template->addJS( base_url('assets/frontend/js/order/escrow.js?v=escrow_'.$this->escrow_js_version));
-		$this->template->show("order/escrow", "dashboard", $data);
+        // $this->template->addJS( base_url('assets/frontend/js/order/escrow.js?v=escrow_'.$this->escrow_js_version));
+
+        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/order/escrow.js?v=escrow_'.$this->escrow_js_version));
+        // $this->escrowdashboardtemplate->addCss( base_url('assets/frontend/css/sales-dashboard.css?v='.$this->sales_dashboard_js_version) );
+
+        $this->escrowdashboardtemplate->show("order/escrow", "dashboard", $data);
+		// $this->template->show("order/escrow", "dashboard", $data);
 	}
 
 	function get_escrow_orders()
@@ -85,14 +91,14 @@ class Escrow extends MX_Controller
                 $nestedData[] = '<div class="percentage">'.$task_complete_ratio.'%</div>';
                 $editUrl = base_url().'order/escrow/order-tasks/'.$order['id'];
                 $nestedData[] = '<div style="display: flex;">
-                                    <a href="'.base_url().'order/escrow/order-tasks/'.$order['id'].'">
-                                        <button class="btn btn-grad-2a button-color" style="width: auto !important;padding: 9px 15px !important;background-color:#3e24ec;color:#fff;" type="button">Tasks</button>
+                                    <a href="'.base_url().'order/escrow/order-tasks/'.$order['id'].'" title="Tasks" >
+                                    <i class="fas fa-tasks" aria-hidden="true"></i>
                                     </a>
-                                    <a href="'.base_url().'get-notes/'.$order['file_id'].'">
-                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;background-color:#7024ec;color:#fff;" type="button">Notes</button>
+                                    <a style="margin-left:5px;" href="'.base_url().'get-notes/'.$order['file_id'].'" title="Notes">
+                                        <i class="fas fa-sticky-note"></i>
                                     </a>
-                                    <a href="'.base_url().'upload-documents/'.$order['file_id'].'">
-                                        <button class="btn btn-grad-2a button-color button-color" style="width: auto !important;padding: 9px 15px !important;background-color:#a324ec;color:#fff;" type="button">Documents</button>
+                                    <a style="margin-left:5px;" href="'.base_url().'upload-documents/'.$order['file_id'].'" title="Documents">
+                                        <i class="fas fa-file"></i>
                                     </a>
                                 </div>';
                 $data[] = $nestedData; 
@@ -252,11 +258,17 @@ class Escrow extends MX_Controller
         $data['completedTaskIds'] = $completedTaskIds;
         $data['order_task_notes'] = $this->order->get_order_notes($id);
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
-		$this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
-        $this->template->addJS( base_url('assets/plugins/ckeditor/ckeditor.js') );
-		$this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=09') );
-        $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
-		$this->template->show("order/escrow", "order_tasks", $data);
+		// $this->template->addCss( base_url('assets/frontend/css/escrow_tasks.css?v=05') );
+        // $this->template->addJS( base_url('assets/plugins/ckeditor/ckeditor.js') );
+		// $this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=09') );
+        // $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
+        $this->escrowdashboardtemplate->addCss( base_url('assets/frontend/css/escrow_tasks.css?v='.$this->sales_dashboard_js_version) );
+        $this->escrowdashboardtemplate->addJS( base_url('assets/plugins/ckeditor/ckeditor.js?v=escrow_'.$this->escrow_js_version));
+        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=escrow_'.$this->escrow_js_version));
+        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js?v=escrow_'.$this->escrow_js_version));
+        
+        $this->escrowdashboardtemplate->show("order/escrow", "order_tasks", $data);
+		// $this->template->show("order/escrow", "order_tasks", $data);
 	}
 
     public function uploadBorrowerDocumentResware($document_id)

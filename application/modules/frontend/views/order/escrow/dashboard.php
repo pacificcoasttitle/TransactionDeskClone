@@ -90,21 +90,28 @@ td.dataTables_empty {
 }
 
 .percentage {
-    font-weight: 900;
+    font-weight: 500;
     font-size: 21px;
-    color: #a324ec;
+    color: #223D7F;
 }
 
+.fs-28 {
+    font-size: 28px;
+}
+
+.fs-16 {
+    font-size: 16px;
+}
 </style>
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-<div class="container">
-    <div class="row">
-        <div class="row">
+<!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;"> -->
+<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-body">
             <div class="col-xs-12">
                 <div class="typography-section__inner">
-                    <h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
+                    <h2 class="ui-title-block ui-title-block_light fs-28">Welcome Back <?php echo $name; ?>,</h2>
                     <div class="ui-decor-1a bg-accent"></div>
-                    <h4 class="ui-title-block_light">Below is order list of pay off.</b></h3>
+                    <h4 class="ui-title-block_light fs-16">Below is order list of pay off.</b></h3>
                 </div>
                 <?php if(!empty($success)) {?>
                 <div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
@@ -120,10 +127,10 @@ td.dataTables_empty {
                         }?>
                 </div>
                 <?php } ?>
-                <div class="typography-sectiona">
-                    <div class="col-md-12">
-                        <div class="table-container">
-                            <table class="table table-type-3 typography-last-elem" id="escrow_orders_listing">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" width="100%" cellspacing="0" id="escrow_orders_listing">
                                 <thead>
                                     <tr>
                                         <th>No</th>

@@ -18,6 +18,7 @@ class Common extends MX_Controller {
 		$this->load->helper(
             array('file', 'url','form')
         );
+		$this->load->library('order/EscrowDashboardTemplate');
 		$this->load->library('order/salesDashboardTemplate');
         $this->load->library('session');
 		$this->load->library('form_validation');
@@ -759,11 +760,13 @@ class Common extends MX_Controller {
 				$data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
 			}
 		}
-		$this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
-		$this->template->show("order/common", "upload_documents", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+		// $this->template->show("order/common", "upload_documents", $data);
+		$this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+		$this->escrowdashboardtemplate->show("order/common", "upload_documents", $data);
 	}
 
-	function getOrderDocumentS() 
+	function getOrderDocuments() 
 	{
 		$userdata = $this->session->userdata('user');
 		$params = array();  $data = array();
@@ -801,7 +804,7 @@ class Common extends MX_Controller {
 				$apiDocumentId = $document['api_document_id'];
 				$documentName = $document['document_name'];
 				$documentUrl = env('AWS_PATH')."documents/".$documentName;
-				$nestedData[] = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$apiDocumentId.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";   
+				$nestedData[] = '<div style="display:inline-flex;"><a href="javascript:void(0)" onclick="downloadDocumentFromAws('."'".$documentUrl."'".', '."'".$apiDocumentId."'".');" class="btn btn-success btn-icon-split btn-sm"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a></div>';
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -2402,8 +2405,10 @@ class Common extends MX_Controller {
 			$data['notes'] = $this->order->get_order_notes($orderId);
 		}
 
-		$this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
-		$this->template->show("order/common", "get_notes", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
+		$this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/order/notes_js.js?v='.$this->notes_order_js));
+		$this->escrowdashboardtemplate->show("order/common", "get_notes", $data);
+		// $this->template->show("order/common", "get_notes", $data);
     }
 
 	public function create_note()
