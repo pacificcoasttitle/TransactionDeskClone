@@ -473,6 +473,7 @@ class Titlepoint
         $state = $postData['state'];
         $county = $postData['county'];
         $property = $postData['property'];
+        $apn = $postData['apn'];
         // $primaryOwner = $postData['primary_owner'];
         // $secondaryOwner = $postData['secondary_owner'];
 
@@ -491,7 +492,7 @@ class Titlepoint
             'password' => env('TP_PASSWORD'),
             'serviceType' => TP_GEO_SERVICE_TYPE,
             // 'parameters' =>  'Address.FullAddress=1358 5th St;General.AutoSearchTaxes=False;General.AutoSearchProperty=True',
-            'parameters' =>  'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;Tax.CurrentYearTaxesOnly=False;General.AutoSearchProperty=True;General.AutoSearchOwnerNames=False;General.AutoSearchStarters=False;Property.IntelligentPropertyGrouping=true;',
+            'parameters' =>  'Tax.APN='. $apn .';IncludeReferenceDocs=True;General.AutoSearchProperty=True;General.AutoSearchTaxes=True;Property.IntelligentPropertyGrouping=True;Property.IncludeReferenceDocs=TrueGeneral.AutoSearchTaxes=True;Tax.CurrentYearTaxesOnly=True;',
             'department'=> '',
             'orderNo'=>  '',
             'customerRef'=>  '',

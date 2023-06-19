@@ -3112,6 +3112,7 @@ class Order
         $postData['state'] = $orderDetails['property_state'];
         $postData['county'] = $orderDetails['county'];
         $postData['property'] = $orderDetails['address'];
+        $postData['apn'] = $orderDetails['apn'];
 
         if (!$regerateGeoDoc) {
             $this->CI->titlepoint->generateGeoDoc($postData);
