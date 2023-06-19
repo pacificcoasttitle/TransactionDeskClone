@@ -474,8 +474,14 @@ class Titlepoint
         $county = $postData['county'];
         $property = $postData['property'];
         $apn = $postData['apn'];
-        // $primaryOwner = $postData['primary_owner'];
-        // $secondaryOwner = $postData['secondary_owner'];
+        $unit_number = $postData['unit_number'];
+       
+        if (empty($unit_number) || (isset($postData['search_by_address']) && $postData['search_by_address'] == 1)) {
+            $parameters = 'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;Tax.CurrentYearTaxesOnly=False;General.AutoSearchProperty=True;General.AutoSearchOwnerNames=False;General.AutoSearchStarters=False;Property.IntelligentPropertyGrouping=true;';
+            $addressFlag = 1;
+        } else {
+            $parameters = 'Tax.APN='. $apn .';IncludeReferenceDocs=True;General.AutoSearchProperty=True;General.AutoSearchTaxes=True;Property.IntelligentPropertyGrouping=True;Property.IncludeReferenceDocs=TrueGeneral.AutoSearchTaxes=True;Tax.CurrentYearTaxesOnly=True;';
+        }
 
         $userdata = $this->CI->session->userdata('user');
         // $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
@@ -486,13 +492,15 @@ class Titlepoint
             ),
         );
         $context = stream_context_create($opts);
+
+
         
         $requestParams = array(
             'userID' => env('TP_USERNAME'),
             'password' => env('TP_PASSWORD'),
             'serviceType' => TP_GEO_SERVICE_TYPE,
             // 'parameters' =>  'Address.FullAddress=1358 5th St;General.AutoSearchTaxes=False;General.AutoSearchProperty=True',
-            'parameters' =>  'Tax.APN='. $apn .';IncludeReferenceDocs=True;General.AutoSearchProperty=True;General.AutoSearchTaxes=True;Property.IntelligentPropertyGrouping=True;Property.IncludeReferenceDocs=TrueGeneral.AutoSearchTaxes=True;Tax.CurrentYearTaxesOnly=True;',
+            'parameters' =>  $parameters,
             'department'=> '',
             'orderNo'=>  '',
             'customerRef'=>  '',
@@ -512,9 +520,6 @@ class Titlepoint
 
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, array(), $orderId, 0);
         $response = $this->CI->order->curl_post($requestUrl, $requestParams);
-        // $file = file_get_contents($request,false,$context);
-        // $xmlData = simplexml_load_string($file);
-        // $response = json_encode($xmlData);
         $result = json_decode($response,TRUE);
         
         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_geo_request', $request, $requestParams, $result, $orderId, $logid);
@@ -541,35 +546,63 @@ class Titlepoint
                 // print_r($imgReturnStatus == 'success');
                 if($imgReturnStatus == 'success' && $status == 'complete')
                 {
-                    $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services'];
-                    $count = 0;
-                    foreach ($requestSummary as $service) {
-                        $thumbnail = $service['Service']['ThumbNails']['ResultThumbNail'];
-                        $lineNum = $thumbnail['Highlights']['string'][2];
-                        $lineNumArr = explode("=", $lineNum);
-                        if ($lineNumArr[1] > $count) {
-                            $count = $lineNumArr[1];
-                            $resultId = $thumbnail['ID'];
-                            $serviceId = $service['ID'];
+                    $requestSummary = $imgResult['RequestSummaries']['RequestSummary']['Order']['Services']['Service'];
+                    if ($addressFlag == 1) {
+                        $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
+                        if (isset($thumbnail['Highlights']['string'][2])) {
+                            $lineNum = $thumbnail['Highlights']['string'][2];
+                            $lineNumArr = explode("=",$lineNum);
+                            if ($lineNumArr[1] == 0 && (!isset($postData['is_suffix_adjustment']) || $postData['is_suffix_adjustment'] == 0)) {
+                                $words = explode(" ", $property );
+                                array_splice($words, -1);
+                                $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'suffix_adjustment', $request, $property, [], $orderId, null);
+                                $property = implode(" ", $words);
+                                $postData['property'] = $property;
+                                $postData['is_suffix_adjustment'] = 1;
+                                return $this->generateGeoDoc($postData);
+                            }
                         }
+                        $serviceId = $requestSummary['ID'];
+                        $resultId = $thumbnail['ID'];
+                    } else {
+                        $count = 0;
+                        echo "<pre>";
+                        print_r($requestSummary);
+                        if (count($array) == count($array, COUNT_RECURSIVE)) {
+                            $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
+                            //print_r($thumbnail);
+                            $lineNum = $thumbnail['Highlights']['string'][2];
+                            $lineNumArr = explode("=", $lineNum);
+                            if ($lineNumArr[1] > $count) {
+                                $count = $lineNumArr[1];
+                                $resultId = $thumbnail['ID'];
+                                $serviceId = $requestSummary['ID'];
+                            } else {
+                                $postData['search_by_address'] = 1;
+                                return $this->generateGeoDoc($postData);
+                            }
+                        } else {
+                            foreach ($requestSummary as $service) {
+                                //print_r($service);
+                                $thumbnail = $service['ThumbNails']['ResultThumbNail'];
+                                //print_r($thumbnail);
+                                $lineNum = $thumbnail['Highlights']['string'][2];
+                                $lineNumArr = explode("=", $lineNum);
+                                if ($lineNumArr[1] >= $count) {
+                                    $count = $lineNumArr[1];
+                                    $resultId = $thumbnail['ID'];
+                                    $serviceId = $service['ID'];
+                                }
+                            }
+                        }
+                        echo $resultId."-----".$serviceId;exit;
                     }
                     
+                   
+                    
+                    
 
-                    // if (isset($thumbnail['Highlights']['string'][2])) {
-                    //     $lineNum = $thumbnail['Highlights']['string'][2];
-                    //     $lineNumArr = explode("=",$lineNum);
-                    //     if ($lineNumArr[1] == 0 && (!isset($postData['is_suffix_adjustment']) || $postData['is_suffix_adjustment'] == 0)) {
-                    //         $words = explode(" ", $property );
-                    //         array_splice($words, -1);
-                    //         $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'suffix_adjustment', $request, $property, [], $orderId, null);
-                    //         $property = implode(" ", $words);
-                    //         $postData['property'] = $property;
-                    //         $postData['is_suffix_adjustment'] = 1;
-                    //         return $this->generateGeoDoc($postData);
-                    //     }
-                    // }
-                    //$serviceId = $requestSummary['ID'];
-                    //$resultId = $thumbnail['ID'];
+                   
                     // echo "Hello if";
                     $generateImgResponse = $this->generateGeoDocument($resultId, $orderId, $fileNumber, $postData);
 
