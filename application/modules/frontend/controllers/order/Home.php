@@ -1615,6 +1615,16 @@ class Home extends MX_Controller {
 			
 			$this->order->createLpReport($fileNumber, false, true);
 			$this->order->sendOrderEmail($fileNumber);
+			
+			/** Save user Activity */
+			$data = array(
+				'user_id' => $userdata['id'],
+				'message' => 'New LP Order Created: '. $fileNumber,
+				'created_at' => date("Y-m-d H:i:s")
+			);
+			$this->db->insert('pct_admin_activity_logs', $data);
+			/** End Save user activity */
+
 			/** Start Execute all document creation in background */
 			try {
 				//code...

@@ -1,4 +1,7 @@
-<?php $userdata = $this->session->userdata('hr_admin');?>
+<?php 
+$userdata = $this->session->userdata('admin');
+$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+?>
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
