@@ -5052,7 +5052,7 @@ class Home extends MX_Controller {
                 /** Save user Activity */
                 $activity = 'Deleted lp document:  '. $lpDoc['doc_type'];
                 $this->order->logAdminActivity($activity);
-                /** End Save user activity */
+                /** End save user activity */
                 $successMsg = 'Record deleted successfully.';
                 $response = array('status'=>'success', 'message'=>$successMsg);
             }
