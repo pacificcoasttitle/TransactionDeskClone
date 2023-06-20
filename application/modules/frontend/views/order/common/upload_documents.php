@@ -27,7 +27,7 @@
 	.ui-decor {
 		margin-top: 22px;
 		margin-bottom: 22px;
-		background: #218838;
+		background: #36b9cc;
 		width: 60px;
 		height: 5px;
  	}
@@ -180,7 +180,7 @@
 				<?php } ?>
 				</div>
 				<div class="col-md-12">
-					<button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-round btn-icon-split btn-sm">
+					<button type="submit" data-btntext-sending="Sending..." class="btn btn-info btn-round btn-icon-split btn-sm">
 						<span class="icon text-white-50">
 							<i class="fas fa-upload"></i>
 						</span>
@@ -203,7 +203,7 @@
 						<div class="col-xs-12">
 							<div class="">
 								<h2 class="ui-title-block ui-title-block_light fs-28">Documents</h2>
-								<div class="ui-decor-1a bg-accent"></div>
+								<div class="ui-decor"></div>
 								<h3 class="ui-title-block_light fs-16">Below is list of all your documents.</h3>
 							</div>
 							<div class="typography-sectiona">
