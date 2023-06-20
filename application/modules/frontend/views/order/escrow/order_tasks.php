@@ -321,7 +321,7 @@
 																				<!-- <div class="smart-forms spacer-t30" style="margin-bottom: 50px;"> -->
 																					<!-- <div class="tagline" style="width:70%;"><span>  </span></div> -->
 																				<a data-target="#escrow_instruction" data-toggle="modal"
-																					role="button"  href="#" class="btn button btn-success btn-icon-split float-right" style="width:auto;float:right;">
+																					role="button"  href="#" class="btn button btn-primary btn-icon-split float-right" style="width:auto;float:right;">
 																					<span class="icon text-white-50">
 																						<i class="fa fa-plus"></i>
 																					</span>
