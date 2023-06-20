@@ -1895,8 +1895,7 @@ class Home_model extends CI_Model
     {
         // $this->db->from('admin')
         $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at')->from('pct_admin_activity_logs')
-                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id')
-                ->where('pct_admin_activity_logs.message != ', 'Logged');
+                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
         //          ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
         $total_records =  $this->db->count_all_results();
     
@@ -1918,8 +1917,7 @@ class Home_model extends CI_Model
 
             $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
-                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id')
-                ->where('pct_admin_activity_logs.message != ', 'Logged');
+                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
 			$filter_total_records =  $this->db->count_all_results();
 
 			if(isset($keyword) && !empty($keyword)) {
@@ -1932,8 +1930,7 @@ class Home_model extends CI_Model
 
             $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
-                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id')
-                ->where('pct_admin_activity_logs.message != ', 'Logged');
+                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $this->db->order_by('pct_admin_activity_logs.id', 'desc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -1946,14 +1943,12 @@ class Home_model extends CI_Model
     	} else {    		
     		$this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
-                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id')
-                ->where('pct_admin_activity_logs.message != ', 'Logged');
+                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $filter_total_records =  $this->db->count_all_results();
 
             $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
-                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id')
-                ->where('pct_admin_activity_logs.message != ', 'Logged');
+                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $this->db->order_by('pct_admin_activity_logs.id', 'desc');
 
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
