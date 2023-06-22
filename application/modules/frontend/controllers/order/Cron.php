@@ -3709,8 +3709,9 @@ class Cron extends MX_Controller {
                 $fileNumbers = implode(',', $duplicationUpdateArray);
                 $updateDuplicationData = array('allow_duplication' => 1);
                 $this->db->set($updateDuplicationData);
-                $this->db->where("id in (SELECT GROUP_CONCAT(property_id) FROM order_details where file_number in ($fileNumbers)");      
+                $this->db->where("id in (SELECT GROUP_CONCAT(property_id) FROM order_details where file_number in ($fileNumbers))");      
                 $this->db->update('property_details'); 
+                echo $this->db->last_query();
                 echo $fileNumbers;exit;
 
                 $documentName = pathinfo($filePath);
