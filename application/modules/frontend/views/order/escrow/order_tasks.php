@@ -576,8 +576,8 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Borrower Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id']; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id']; ?>">
 
 							<div class="card-body">
 								<div class="row">
@@ -635,8 +635,8 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Borrower Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id']; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id']; ?>">
 
 							<div class="card-body">
 								<div class="row">
@@ -682,8 +682,8 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Lender Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id']; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id']; ?>">
 
 							<div class="card-body">
 								<div class="row">
@@ -729,8 +729,8 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Buyer Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id']; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id']; ?>">
 
 							<div class="card-body">
 								<div id="buyer-info-clone-group-fields">
@@ -803,8 +803,8 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Seller Information</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id']; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id']; ?>">
 
 							<div class="card-body">
 								<div id="seller-info-clone-group-fields">
@@ -813,7 +813,7 @@
 											<div class="col-md-12">
 												<div class="form-group">
 													<label>Seller Email<span class="required"> *</span></label>
-													<input type="text" class="form-control" placeholder="Buyer Email"
+													<input type="text" class="form-control" placeholder="Seller Email"
 														name="seller_emails[]" id="seller_email" value="" required="required">
 												</div>
 											</div>
@@ -879,8 +879,8 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary">Escrow Instruction</h6>
 							</div>
-							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderInfo->id; ?>">
-							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderInfo->file_id; ?>">
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id']; ?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id']; ?>">
 
 							<div class="card-body">
 								<div id="seller-info-clone-group-fields">

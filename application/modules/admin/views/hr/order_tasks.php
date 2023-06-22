@@ -770,7 +770,7 @@
 											<div class="col-md-12">
 												<div class="form-group">
 													<label>Seller Email<span class="required"> *</span></label>
-													<input type="text" class="form-control" placeholder="Buyer Email"
+													<input type="text" class="form-control" placeholder="Seller Email"
 														name="seller_emails[]" id="seller_email" value="" required="required">
 												</div>
 											</div>
