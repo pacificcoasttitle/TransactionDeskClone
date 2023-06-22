@@ -3621,6 +3621,7 @@ class Cron extends MX_Controller {
                 $row = 1;
                 $headerColumns = array(); 
                 $updateArray = array();
+                $duplicationUpdateArray = array();
                 if (($handle = fopen($filePath, "r")) !== FALSE) {
                     while (($data = fgetcsv($handle,1000,",",'"')) !== FALSE) {
                         $num = count($data);
@@ -3682,6 +3683,10 @@ class Cron extends MX_Controller {
                                     'sales_amount'=> (int)$sales_amount,
                                     'updated_at' => date('Y-m-d H:i:s')
                                 );  
+
+                                if (strtolower($fileStatus) == 'closed' || strtolower($fileStatus) == 'clear for policy') {
+                                    $duplicationUpdateArray[] = $file_number;
+                                }
                             } 
                         }
                         $row++;
@@ -3700,6 +3705,12 @@ class Cron extends MX_Controller {
                 $this->db->set($updateData);
                 $this->db->where('lp_file_number IS NOT NULL');      
                 $this->db->update('order_details'); 
+
+                $fileNumbers = implode(',', $duplicationUpdateArray);
+                $updateDuplicationData = array('allow_duplication' => 1);
+                $this->db->set($updateDuplicationData);
+                $this->db->where("id in (SELECT GROUP_CONCAT(property_id) FROM order_details where file_number in ($fileNumbers)");      
+                $this->db->update('property_details'); 
 
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];

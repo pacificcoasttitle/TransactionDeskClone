@@ -30,6 +30,7 @@ class Home extends MX_Controller {
         $this->load->model('order/home_model'); 
         $this->load->model('order/order_model'); 
         $this->load->library('order/common');
+        $this->load->library('order/order');
         $this->common->is_admin();
     }
     
@@ -3180,6 +3181,13 @@ class Home extends MX_Controller {
             'id' => $property_id
         );
         $this->db->update('property_details', $data, $condition);
+        /** Save user Activity */
+        $propertyDetails = $this->db->select('full_address')->from('property_details')->where('id', $property_id)->get()->row_array();
+        $avoidStatus = ($avoidFlag) ? 'Enabled' : 'Disabled';
+        $userdata = $this->session->userdata('admin');
+        $activity = $avoidStatus . ' Avoid Duplication for Property :- '. $propertyDetails['full_address'];
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         $data = array('status'=>'success', 'msg'=> 'Avoid duplication flag updated successfully.');
         echo json_encode($data);
     }
@@ -3712,6 +3720,7 @@ class Home extends MX_Controller {
         $ownerLastName = end($splitName);
         $primaryName = array_slice($splitName, 0, -1);
         $ownerFirstName = implode(" ", $primaryName);
+        $userdata = $this->session->userdata('admin');
 
         $place_order = array();
         $loanFlag = 1;
@@ -4413,6 +4422,11 @@ class Home extends MX_Controller {
                     /** End send email to sales rep */
                 }
 
+                /** Save user Activity */
+                $activity = $lpFileNumber . ' Sync to resware order number: '. $fileNumber;
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
+
                 /** End party details */
                 $data = array('status'=>'success', 'message'=> 'Order synced successfully on Resware side with file number '. $fileNumber);
                 echo json_encode($data);exit;
@@ -4708,7 +4722,10 @@ class Home extends MX_Controller {
 
         $file_id = $titlePointData['file_id'];
         $this->order->createLpReport($titlePointData['file_number'], true, false);
-        
+        /** Save user Activity */
+        $activity = 'Regenerated LP Order from popup: '. $titlePointData['file_number'];
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0),array('title_point_id' => $title_point_id));
         foreach($isVesEnableData as $id) {
             $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1),array('id' => $id['id']));
@@ -4736,6 +4753,9 @@ class Home extends MX_Controller {
             // );
             $this->db->update('pct_configs', $lpDocData);
             $msg = ($is_lp_enable == 1) ? 'Lp Enabled' : 'Lp Disabled';
+            /** Save user Activity */
+            $this->order->logAdminActivity($msg);
+            /** End Save user activity */
             $successMsg = $msg . ' successfully';
             $this->session->set_userdata('success', $successMsg);
             redirect(base_url().'order/admin/settings');
@@ -4997,6 +5017,10 @@ class Home extends MX_Controller {
                     $lpDocData['sub_type_list'] = implode(',', $input['subtype']);
                 }
                 $insert = $this->home_model->insertLpDocType($lpDocData);
+                /** Save user Activity */
+                $activity = 'Add Lp document:  '. $input['doc_type'];
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
                 $successMsg = 'Document Data saved successfully';
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'order/admin/lp-document-types');
@@ -5020,9 +5044,15 @@ class Home extends MX_Controller {
         if($id)
         {
             $condition = array('id' => $id);
+            
+            $lpDoc = $this->home_model->getLpDocType($condition);
             $status = $this->home_model->deleteLpDocType($condition,'pct_lp_document_types');
             if($status)
             {
+                /** Save user Activity */
+                $activity = 'Deleted lp document:  '. $lpDoc['doc_type'];
+                $this->order->logAdminActivity($activity);
+                /** End save user activity */
                 $successMsg = 'Record deleted successfully.';
                 $response = array('status'=>'success', 'message'=>$successMsg);
             }
@@ -5075,6 +5105,10 @@ class Home extends MX_Controller {
                     $update = $this->home_model->updateLpDocType($lpDocData,$condition,'pct_lp_document_types');
                         
                     if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Updated lp document :  ' . trim($this->input->post('doc_type'));
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
                         $successMsg = 'LP Document Types updated successfully.';
                         $this->session->set_userdata('success', $successMsg);
                         redirect(base_url().'order/admin/lp-document-types');
@@ -5124,6 +5158,10 @@ class Home extends MX_Controller {
                 );
                 
                 $insert = $this->home_model->insertLpAlert($lpAlertData);
+                /** Save user Activity */
+                $activity = 'New Lp alert added for days '. $input['days'];
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
                 $successMsg = 'Alert Data saved successfully';
                 $this->session->set_userdata('success', $successMsg);
                 redirect(base_url().'order/admin/lp-alert');
@@ -5147,6 +5185,10 @@ class Home extends MX_Controller {
             $status = $this->home_model->deleteLpAlert($condition,'pct_lp_alert');
             if($status)
             {
+                /** Save user Activity */
+                $activity = 'Lp alert deleted id:  '. $id;
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
                 $successMsg = 'Record deleted successfully.';
                 $response = array('status'=>'success', 'message'=>$successMsg);
             }
@@ -5184,6 +5226,10 @@ class Home extends MX_Controller {
                     $update = $this->home_model->updateLpAlert($lpAlertData,$condition,'pct_lp_alert');
                     
                     if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Lp alert updated to days:  '. $input['days'];
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
                         $successMsg = 'LP Alert updated successfully.';
                         $this->session->set_userdata('success', $successMsg);
                         redirect(base_url().'order/admin/lp-alert');
@@ -5784,6 +5830,12 @@ class Home extends MX_Controller {
             }
         }
         $this->order->createLpReport($titlePointData->file_number, true, true);
+
+        /** Save user Activity */
+        $activity = 'Regenerated LP Order from regenerate button: '. $titlePointData->file_number;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+
         $data = array('status' => 'success', 'message' => 'Lp report regenerated successfully.');
         echo json_encode($data);
     }
@@ -5801,6 +5853,10 @@ class Home extends MX_Controller {
         $this->db->update('pct_order_title_point_data', array('vesting_information' => $vesting_info), array('id' => $titlePointData['id']));
         $this->load->library('order/order');
         $this->order->createLpReport($titlePointData['file_number'], true, false);
+        /** Save user Activity */
+        $activity = 'Vesting info updated and New LP report generated: '. $titlePointData['file_number'];
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         $successMsg = 'Vesting info saved successfully and LP report generated successfully for new data.';
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url().'order/admin/lp-orders');
@@ -5868,6 +5924,11 @@ class Home extends MX_Controller {
                 rename(FCPATH."/uploads/title-point/".$data['file_name'], FCPATH."/uploads/title-point/".$document_name);
                 $this->order->uploadDocumentOnAwsS3($document_name, 'title-point');
                 //$this->order->createLpReport($titlePointData['file_number'], true, false);
+                
+                /** Save user Activity */
+                $activity = 'New document uploaded for order : '. $titlePointData['file_number'];
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
                 $successMsg = 'Document info saved successfully.';
                 $this->session->set_userdata('success', $successMsg);
             } 

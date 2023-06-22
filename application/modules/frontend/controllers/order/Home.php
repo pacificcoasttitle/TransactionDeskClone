@@ -1615,6 +1615,7 @@ class Home extends MX_Controller {
 			
 			$this->order->createLpReport($fileNumber, false, true);
 			$this->order->sendOrderEmail($fileNumber);
+			
 			/** Start Execute all document creation in background */
 			try {
 				//code...

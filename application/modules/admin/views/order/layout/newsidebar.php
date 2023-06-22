@@ -1,4 +1,7 @@
-<?php $userdata = $this->session->userdata('hr_admin');?>
+<?php 
+$userdata = $this->session->userdata('admin');
+$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+?>
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -107,7 +110,7 @@
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/cpl-error-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/cpl-error-logs'; ?>">CPL Error</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/lp-xml-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-xml-logs'; ?>">LP Xml</a>
 				<?php if($role_id == 1) : ?>
-					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/admin-user-logs' ) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/admin-user-logs'; ?>">Admin User</a>
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/admin-user-logs' ) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/admin-user-logs'; ?>">Admin Activity</a>
 				<?php endif; ?>
 			</div>
         </div>
