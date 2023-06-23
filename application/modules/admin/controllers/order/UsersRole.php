@@ -9,6 +9,7 @@ class UsersRole extends MX_Controller {
         $this->load->helper(
             array('file', 'url','form')
         );
+		$this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/admin_user_model');
         $this->load->model('order/users_roles_model');
@@ -47,9 +48,10 @@ class UsersRole extends MX_Controller {
 		}
 		
 		$data['users_roles'] = $this->users_roles_model->order_by('id','DESC')->get_all();
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/role/index', $data);
-        $this->load->view('order/layout/footer', $data);
+		$this->admintemplate->show("order/role", "index", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/role/index', $data);
+        // $this->load->view('order/layout/footer', $data);
 	}
 
 
