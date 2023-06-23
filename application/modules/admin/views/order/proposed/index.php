@@ -81,7 +81,7 @@
 	aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
-			<form  method="post" id="add-edit-admin-form">
+			<form  method="post" id="add-edit-branch-form">
 				<div class="modal-header">
 					<h5 class="modal-title" id="branch_title">Add New Branch</h5>
 				</div>
