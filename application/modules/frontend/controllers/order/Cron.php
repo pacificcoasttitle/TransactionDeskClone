@@ -3684,9 +3684,6 @@ class Cron extends MX_Controller {
                                     'updated_at' => date('Y-m-d H:i:s')
                                 );  
 
-                                if (strtolower($fileStatus) == 'closed' || strtolower($fileStatus) == 'clear for policy') {
-                                    $duplicationUpdateArray[] = $file_number;
-                                }
                             } 
                         }
                         $row++;
@@ -3706,18 +3703,6 @@ class Cron extends MX_Controller {
                 $this->db->where('lp_file_number IS NOT NULL');      
                 $this->db->update('order_details'); 
 
-                if(!empty($duplicationUpdateArray)) {
-                    $chunk2 = array_chunk($duplicationUpdateArray, 1000);
-                    for($i=0; $i< count($chunk2); $i++) {
-                        $fileNumbers = implode("','", $chunk2[$i]);
-                        $updateDuplicationData = array('allow_duplication' => 1);
-                        $this->db->set($updateDuplicationData);
-                        $this->db->where(" id in (SELECT GROUP_CONCAT(property_id) FROM order_details where file_number in ('$fileNumbers'))");      
-                        $this->db->update('property_details'); 
-                        echo $this->db->last_query();exit;
-                    }
-                }
-
                 $documentName = pathinfo($filePath);
                 $fileName = date('YmdHis')."_".$documentName['basename'];
                 rename(FCPATH."/uploads/order-status/".$documentName['basename'], FCPATH."/uploads/order-status/".$fileName);
@@ -3734,6 +3719,7 @@ class Cron extends MX_Controller {
                     // }
                     //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
+                $this->updateAllowDuplicationFlag();
                 echo date('Y-m-d H:i:s');exit;
             }
         } else {
@@ -5555,5 +5541,34 @@ class Cron extends MX_Controller {
             $this->session->set_userdata('email_sent_flag', 1);
         }
         
+    }
+
+    public function updateAllowDuplicationFlag()
+    {
+        $this->db->select('order_details.property_id');
+        $this->db->from('order_details'); 
+        $this->db->where('order_details.resware_status = "closed" OR order_details.resware_status = "clear for policy"'); 
+        $this->db->where('property_details.allow_duplication = 0');
+        $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $this->db->order_by("id", "desc");
+        $query = $this->db->get();
+        $filesResult = $query->result_array();
+
+        $duplicationUpdateArray = array();
+        if (isset($filesResult) && !empty($filesResult)) {
+            foreach ($filesResult as $file) {
+                $duplicationUpdateArray[] = $file['property_id'];
+            }
+        }
+
+        if(!empty($duplicationUpdateArray)) {
+            $chunk = array_chunk($duplicationUpdateArray, 500);
+            for($i=0; $i< count($chunk); $i++) {
+                $updateDuplicationData = array('allow_duplication' => 1);
+                $this->db->set($updateDuplicationData);
+                $this->db->where_in("id", $chunk[$i]);      
+                $this->db->update('property_details'); 
+            }
+        }
     }
 }
