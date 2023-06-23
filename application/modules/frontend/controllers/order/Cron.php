@@ -5550,7 +5550,7 @@ class Cron extends MX_Controller {
         $this->db->where('order_details.resware_status = "closed" OR order_details.resware_status = "clear for policy"'); 
         $this->db->where('property_details.allow_duplication = 0');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
-        $this->db->order_by("id", "desc");
+        $this->db->order_by("order_details.id", "desc");
         $query = $this->db->get();
         $filesResult = $query->result_array();
 
