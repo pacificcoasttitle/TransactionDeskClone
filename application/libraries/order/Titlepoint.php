@@ -566,8 +566,8 @@ class Titlepoint
                         $resultId = $thumbnail['ID'];
                     } else {
                         $count = 0;
-                        echo "<pre>";
-                        print_r($requestSummary);
+                        //echo "<pre>";
+                        //print_r($requestSummary);
                         if (count($array) == count($array, COUNT_RECURSIVE)) {
                             $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
                             //print_r($thumbnail);
@@ -595,14 +595,9 @@ class Titlepoint
                                 }
                             }
                         }
-                        echo $resultId."-----".$serviceId;exit;
+                        //echo $resultId."-----".$serviceId;exit;
                     }
                     
-                   
-                    
-                    
-
-                   
                     // echo "Hello if";
                     $generateImgResponse = $this->generateGeoDocument($resultId, $orderId, $fileNumber, $postData);
 
