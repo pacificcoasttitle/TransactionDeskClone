@@ -480,6 +480,7 @@ class Titlepoint
             $parameters = 'Address.FullAddress='. $property .';General.AutoSearchTaxes=False;Tax.CurrentYearTaxesOnly=False;General.AutoSearchProperty=True;General.AutoSearchOwnerNames=False;General.AutoSearchStarters=False;Property.IntelligentPropertyGrouping=true;';
             $addressFlag = 1;
         } else {
+            $addressFlag = 0;
             $parameters = 'Tax.APN='. $apn .';IncludeReferenceDocs=True;General.AutoSearchProperty=True;General.AutoSearchTaxes=True;Property.IntelligentPropertyGrouping=True;Property.IncludeReferenceDocs=TrueGeneral.AutoSearchTaxes=True;Tax.CurrentYearTaxesOnly=True;';
         }
 
@@ -560,6 +561,10 @@ class Titlepoint
                                 $postData['property'] = $property;
                                 $postData['is_suffix_adjustment'] = 1;
                                 return $this->generateGeoDoc($postData);
+                            } else {
+                                $postData['unit_number'] = 1;
+                                $postData['address_search_done_flag'] = 1;
+                                return $this->generateGeoDoc($postData);
                             }
                         }
                         $serviceId = $requestSummary['ID'];
@@ -568,9 +573,24 @@ class Titlepoint
                         $count = 0;
                         //echo "<pre>";
                         //print_r($requestSummary);
-                        if (count($array) == count($array, COUNT_RECURSIVE)) {
+                        if (count($requestSummary) == 2) {
+                            foreach ($requestSummary as $service) {
+                                //echo "here";
+                                //print_r($service);
+                                $thumbnail = $service['ThumbNails']['ResultThumbNail'];
+                                //print_r($thumbnail);exit;
+                                $lineNum = $thumbnail['Highlights']['string'][2];
+                                $lineNumArr = explode("=", $lineNum);
+                                if ($lineNumArr[1] >= $count) {
+                                    $count = $lineNumArr[1];
+                                    $resultId = $thumbnail['ID'];
+                                    $serviceId = $service['ID'];
+                                }
+                            }
+                            
+                        } else {
                             $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
-                            //print_r($thumbnail);
+                            //print_r($thumbnail);exit;
                             $lineNum = $thumbnail['Highlights']['string'][2];
                             $lineNumArr = explode("=", $lineNum);
                             if ($lineNumArr[1] > $count) {
@@ -578,20 +598,9 @@ class Titlepoint
                                 $resultId = $thumbnail['ID'];
                                 $serviceId = $requestSummary['ID'];
                             } else {
-                                $postData['search_by_address'] = 1;
-                                return $this->generateGeoDoc($postData);
-                            }
-                        } else {
-                            foreach ($requestSummary as $service) {
-                                //print_r($service);
-                                $thumbnail = $service['ThumbNails']['ResultThumbNail'];
-                                //print_r($thumbnail);
-                                $lineNum = $thumbnail['Highlights']['string'][2];
-                                $lineNumArr = explode("=", $lineNum);
-                                if ($lineNumArr[1] >= $count) {
-                                    $count = $lineNumArr[1];
-                                    $resultId = $thumbnail['ID'];
-                                    $serviceId = $service['ID'];
+                                if (!isset($postData['address_search_done_flag'])) {
+                                    $postData['search_by_address'] = 1;
+                                    return $this->generateGeoDoc($postData);
                                 }
                             }
                         }
