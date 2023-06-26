@@ -35,6 +35,10 @@ class Cpl extends MX_Controller {
         $this->load->library('order/natic');
         $branchesData = $this->natic->getBranchesFromApi();
         if(!empty($branchesData)) {
+            /** Save user Activity */
+            $activity = 'North American Branches Refreshed.';
+            $this->common->logAdminActivity($activity);
+            /** End save user activity */
             $data = array('status' => 'success','msg' => '');
         } else {
             $data = array('status' => 'error','msg' => 'Somethine went wrong.Please try again.');
@@ -61,6 +65,10 @@ class Cpl extends MX_Controller {
         $this->load->library('order/westcor');
         $branchesData = $this->westcor->getBranchesFromApi();
         if(!empty($branchesData)) {
+            /** Save user Activity */
+            $activity = 'Westcor Branches Refreshed.';
+            $this->common->logAdminActivity($activity);
+            /** End save user activity */
             $data = array('status' => 'success','msg' => '');
         } else {
             $data = array('status' => 'error','msg' => 'Somethine went wrong.Please try again.');
@@ -87,6 +95,10 @@ class Cpl extends MX_Controller {
         $this->load->library('order/fnf');
         $branchesData = $this->fnf->getAgentsFromApi(array('order_id' => 0));
         if(!empty($branchesData)) {
+            /** Save user Activity */
+            $activity = 'Common wealth Branches Refreshed.';
+            $this->common->logAdminActivity($activity);
+            /** End save user activity */
             $data = array('status' => 'success','msg' => '');
         } else {
             $data = array('status' => 'error','msg' => 'Somethine went wrong.Please try again.');

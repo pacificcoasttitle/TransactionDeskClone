@@ -230,19 +230,20 @@ class Agent extends MX_Controller {
     public function delete_agent()
     {
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
-
         if($id)
         {
             $agentData = array('status' => 0);
-
             $condition = array('id' => $id);
-
+            $agent = $this->agent_model->get_rows($condition);
             $update = $this->agent_model->update($agentData, $condition);
-
             if($update)
             {
                 $successMsg = 'Agent deleted successfully.';
                 $response = array('status'=>'success', 'message'=>$successMsg);
+                /** Save user Activity */
+                $activity = 'Deleted agent : '. $agent['email_address'];
+                $this->common->logAdminActivity($activity);
+                /** End Save user activity */
             }
         }
         else
@@ -296,11 +297,13 @@ class Agent extends MX_Controller {
 
                     $update = $this->agent_model->update($agentData,$condition,'pctc_title_rates');
                         
-                    if($update){
+                    if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Agent details updated : '. $_POST['email_address'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Agent details updated successfully.';
-                    }
-                    else
-                    {
+                    } else {
                         $data['error_msg'] = 'Error occurred while updating agent details.';
                     }
                 }

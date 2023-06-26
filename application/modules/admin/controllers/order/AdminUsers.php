@@ -25,9 +25,11 @@ class AdminUsers extends MX_Controller {
 			$inserted_id = $updated_id = null;
 			if($this->input->post('admin_id') > 0) {
 				$admin_id=$this->input->post('admin_id');
+				$firstName = $this->input->post('first_name');
+				$lastName = $this->input->post('last_name');
 				$admin_data = [
-					'first_name'=>$this->input->post('first_name'),
-					'last_name'=>$this->input->post('last_name'),
+					'first_name' => $firstName,
+					'last_name' => $lastName,
 					'role_id'=> $this->input->post('role_id'),
 					'updated_at'=>date('Y-m-d H:i:s')
 				];
@@ -36,11 +38,15 @@ class AdminUsers extends MX_Controller {
 					$admin_data['password'] = password_hash($this->input->post('password'),PASSWORD_DEFAULT);
 				}
 				$updated_id = $this->admin_user_model->update($admin_id,$admin_data);
+				/** Save user Activity */
+				$activity = 'Admin user id :'. $admin_id . ' details updated (name) - ' . $firstName . '  ' . $lastName;
+				$this->common->logAdminActivity($activity);
+				/** End Save user activity */
 			}
 			else {
-
+				$email = $this->input->post('email_id');
 				$admin_data = [
-					'email_id'=>$this->input->post('email_id'),
+					'email_id'=> $email,
 					'first_name'=>$this->input->post('first_name'),
 					'last_name'=>$this->input->post('last_name'),
 					'password'=> password_hash($this->input->post('password'),PASSWORD_DEFAULT),
@@ -48,6 +54,10 @@ class AdminUsers extends MX_Controller {
 					'created_at'=>date('Y-m-d H:i:s')
 				];
 				$inserted_id = $this->admin_user_model->insert($admin_data);
+				/** Save user Activity */
+				$activity = 'New Admin user created details - ' . $email;
+				$this->common->logAdminActivity($activity);
+				/** End Save user activity */
 			}
 			if($inserted_id) {
 				$flash_data['success'] = 'User added successfully.';
@@ -97,10 +107,15 @@ class AdminUsers extends MX_Controller {
     {
 		$status = false;
 		if($this->input->post('action') == 'delete') {
+			$adminDetails = $this->admin_user_model->get($id);
 			$delete_status = $this->admin_user_model->delete($id);
 			if ($delete_status) {
 				$flash_data['success'] = 'Admin user deleted successfully.';
 				$status = true;
+				/** Save user Activity */
+				$activity = 'Admin user deleted - ' . $adminDetails->email_id;
+				$this->common->logAdminActivity($activity);
+				/** End Save user activity */
 			} else {
 				$flash_data['error'] = 'Admin user not deleted.';
 			}

@@ -45,6 +45,10 @@ class Holidays extends MX_Controller {
                 $insert = $this->holidays_model->insert($holidayData);
                 
                 if ($insert) {
+                    /** Save user Activity */
+                    $activity = 'Holiday Added successfully: .' . $_POST['holiday_name'];
+                    $this->common->logAdminActivity($activity);
+                    /** End save user activity */
                     $data['success_msg'] = 'Holiday added successfully.';
                 } else {
                     $data['error_msg'] = 'Holiday not added.';
@@ -107,8 +111,14 @@ class Holidays extends MX_Controller {
     	$id = $this->input->post('id');
         $data = array();
         if ($id) {
+            $con = array('id' => $id);
+            $holiday_info = $this->holidays_model->get_rows($con);
             $this->db->where('id', $id);
             $this->db->delete('pct_holidays');
+            /** Save user Activity */
+            $activity = 'Holiday deleted successfully: .' . $holiday_info['name'];
+            $this->common->logAdminActivity($activity);
+            /** End save user activity */
             $successMsg = 'Holiday deleted successfully.';
             $data = array('status'=>'success', 'message' => $successMsg);
         } else {
@@ -138,6 +148,10 @@ class Holidays extends MX_Controller {
                     $condition = array('id' => $id);
                     $update = $this->holidays_model->update($holidayData, $condition);   
                     if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Holiday updated successfully: .' . $_POST['holiday_name'];
+                        $this->common->logAdminActivity($activity);
+                        /** End save user activity */
                         $data['success_msg'] = 'Fees updated successfully.';
                     } else {
                         $data['error_msg'] = 'Error occurred while updating holiday.';

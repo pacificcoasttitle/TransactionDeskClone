@@ -42,9 +42,17 @@ class ProposedInsured extends MX_Controller {
 				$inserted_id = $this->branches_model->insert($branch_data);
 			}
 			if($inserted_id) {
+				/** Save user Activity */
+				$activity = 'Proposed Insured Branch added successfully: .' . $this->input->post('address') . ' ' . $this->input->post('city') . ' ' . $this->input->post('zip');
+				$this->common->logAdminActivity($activity);
+				/** End save user activity */
 				$flash_data['success'] = 'Branch added successfully.';
 			}
 			elseif($updated_id) {
+				/** Save user Activity */
+				$activity = 'Proposed Insured Branch updated successfully: .' . $this->input->post('address') . ' ' . $this->input->post('city') . ' ' . $this->input->post('zip');
+				$this->common->logAdminActivity($activity);
+				/** End save user activity */
 				$flash_data['success'] = 'Branch updated successfully.';
 			}
 			else {
@@ -76,8 +84,15 @@ class ProposedInsured extends MX_Controller {
     {
 		$status = false;
 		if($this->input->post('action') == 'delete') {
+			$branch = $this->branches_model->get($id);
 			$delete_status = $this->branches_model->delete($id);
 			if ($delete_status) {
+
+				/** Save user Activity */
+				$activity = 'Proposed Insured Branch deleted successfully: .' . $branch->address . ' ' . $branch->city . ' ' . $branch->zip;
+				$this->common->logAdminActivity($activity);
+				/** End save user activity */
+				
 				$flash_data['success'] = 'Branch deleted successfully.';
 				$status = true;
 			} else {

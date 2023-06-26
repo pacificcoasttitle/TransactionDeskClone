@@ -361,10 +361,14 @@ class Home extends MX_Controller {
     	if($id)
     	{
     		$customerData = array('status' => 0);
-
             $condition = array('id' => $id);
-
             $update = $this->home_model->update($customerData, $condition);
+
+            /** Save user Activity */
+            $user = $this->home_model->get_user($condition);
+            $activity = 'User deleted successfully : ' . $user['email_address'];
+            $this->order->logAdminActivity($activity);
+            /** End Save user activity */
 
             if($update)
             {
@@ -864,6 +868,10 @@ class Home extends MX_Controller {
                         } else {
                             $insert = $this->home_model->insert($customerData);
                         }
+                        /** Save user Activity */
+                        $activity = 'New user created :- ' . $this->input->post('email_address');
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
                     } else {
                         $data['error_msg'] = $response['msg'];
                     }
@@ -1356,6 +1364,10 @@ class Home extends MX_Controller {
                 );
                 $insert = $this->home_model->insert($customerData);
                 if ($insert) {
+                    /** Save user Activity */
+                    $activity = 'Master user created :- ' . $this->input->post('email_address');
+                    $this->order->logAdminActivity($activity);
+                    /** End Save user activity */
                     $data['success_msg'] = 'Master User added successfully.';
                     $this->form_validation->reset_validation();
                 } else {
@@ -1425,6 +1437,11 @@ class Home extends MX_Controller {
                     );
                     $update = $this->home_model->update($customerData, $updateCondition);
                     if ($update) {
+                        /** Save user Activity */
+                        // $user =  $this->home_model->get_user($condition);
+                        $activity = 'Master user :- ' . $this->input->post('email_address') . ' details updated';
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Master User updated successfully.';
                         $this->form_validation->reset_validation();
                     } else {
@@ -1716,6 +1733,11 @@ class Home extends MX_Controller {
         $update = $this->home_model->update($customerData, $condition);
 
 		if ($update) {
+            /** Save user Activity */
+            $user =  $this->home_model->get_user($condition);	
+            $activity = 'User type for user ' . $user['email_address'] . ' change to :- '. (($selectValue == 1) ? 'Special' : 'Normal');
+            $this->order->logAdminActivity($activity);
+            /** End Save user activity */
 			echo json_encode(array('success' => true)); 
 		} else {
 			echo json_encode(array('success' => false)); 
@@ -1864,10 +1886,17 @@ class Home extends MX_Controller {
                             unset($companyData['partner_id']);
                             $update = $this->home_model->update($companyData, $condition, 'pct_order_partner_company_info');
                             $data['success_msg'] = 'Company information updated successfully.';
-                           
+                            /** Save user Activity */
+                            $activity = 'Company information updated: partner id: '. $partner_id;
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
                         } else {
                             $insert = $this->home_model->insert($companyData, 'pct_order_partner_company_info');
                             $data['success_msg'] = 'Company information added successfully.';
+                            /** Save user Activity */
+                            $activity = 'Company information added: partner id: '. $partner_id;
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
                         }
                         
                     } else {
@@ -1876,8 +1905,6 @@ class Home extends MX_Controller {
                 } else {
                     $data['error_msg'] = 'Something went wrong. Please try again.';
                 }
-
-               
             } else {
                 $data['resware_company_id_error_msg'] = form_error('resware_company_id');
             }                                       
@@ -2149,6 +2176,10 @@ class Home extends MX_Controller {
                         } else {
                             $customerData['is_password_updated'] = 1;
                             $response = array('status' => 'success', 'message' =>  'Password updated successfully for email user: '. $userInfo['email_address']);
+                            /** Save user Activity */
+                            $activity = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
                         }
                         
                         $this->home_model->update($customerData, $condition, 'customer_basic_details');
@@ -2282,6 +2313,10 @@ class Home extends MX_Controller {
         } else {
             $customerData['is_password_updated'] = 1;
             $response = array('status' => 'success', 'message' =>  'Password updated successfully for email user: '. $userInfo['email_address']);
+            /** Save user Activity */
+            $activity = 'Incorrect user password reset successfully: '. $userInfo['email_address'];
+            $this->order->logAdminActivity($activity);
+            /** End Save user activity */
         }
 
         $this->home_model->update($customerData, $condition, 'customer_basic_details');
@@ -2429,26 +2464,20 @@ class Home extends MX_Controller {
 
     public function updateUnderwriter()
     {
-        // echo "<pre>"; print_r($this->input->post()); exit;
         $partner_id = $this->input->post('partner_id');
         $underwriter = $this->input->post('underwriter');
         $underwriter_type = $this->input->post('underwriter_type');
         
         $updateData = array($underwriter_type => $underwriter);
-// echo "<pre>"; print_r($updateData); exit;
-        /*if($underwriter_type == 'loan_underwriter')
-        {
-            $updateData = array(
-                '' =>
-            );
-        }
-        elseif ($underwriter_type == 'sales_underwriter') 
-        {
-            # code...
-        }*/
-
+        
         $condition = array('partner_id' => $partner_id);
         $this->home_model->update($updateData, $condition, 'pct_order_partner_company_info');
+        
+        /** Save user Activity */
+        $activity = 'Partner comapny id: '. $partner_id .' Company details like  :- ' . $underwriter_type . ' Updated value:- ' . $underwriter;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+        
         $data = array('status'=>'success', 'msg'=> 'Underwriter updated successfully.');
         echo json_encode($data);
     }
@@ -2572,12 +2601,16 @@ class Home extends MX_Controller {
                             $customerData['is_password_updated'] = 1;
                             $customerData['is_added_lender_by_cpl_proposed'] = 0;
                             $customerData['lender_cpl_proposed_status'] = 1;
-                            $data['success_msg'] = 'Password updated successfully for email user: '. $userInfo['email_address'];
+                            $data['success_msg'] = 'Password updated successfully for email user: '. $this->input->post('email_address');
                         }
                         $updateCondition = array(
                             'id' => $id,
                         );
                         $update = $this->home_model->update($customerData, $updateCondition);
+                        /** Save user Activity */
+                        $activity = 'CPL/Proposed user approved successfully: '. $this->input->post('email_address');
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
                     } else {
                         $data['error_msg'] = $response['msg'];
                     }
@@ -2615,6 +2648,11 @@ class Home extends MX_Controller {
         $customerData['lender_cpl_proposed_status'] = 2;
         $customerData['is_added_lender_by_cpl_proposed'] = 0;
         $update = $this->home_model->update($customerData, $updateCondition);
+        /** Save user Activity */
+        $user = $this->home_model->get_user($updateCondition);
+        $activity = 'CPL/Proposed user rejected successfully: '. $user['email_address'];
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         redirect(base_url().'order/admin/cpl-proposed-users');
     }
 
@@ -2725,6 +2763,10 @@ class Home extends MX_Controller {
             $this->load->helper('sendemail');
             $mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, $file, $cc, $bcc);
             if($mail_result) {
+                /** Save user Activity */
+                $activity = 'Email sent to user to reset password: '. $user['email_address'];
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
                 $response = array('status' => 'success', 'message' => 'Mail sent successfully.');
             } else {
                 $response = array('status' => 'success', 'message' => 'Mail not sent due to some error. Please try again.');
@@ -2747,7 +2789,11 @@ class Home extends MX_Controller {
             $this->form_validation->set_rules('resware_username', 'Username', 'required', array('required'=> 'Please Enter Username'));
             $this->form_validation->set_rules('resware_password', 'Password', 'required', array('required'=> 'Please Enter Password'));
             if ($this->form_validation->run() == true) {
-                $this->db->update('pct_resware_admin_credential', array('username' => $this->input->post('resware_username'), 'password' => $this->input->post('resware_password')));  
+                $this->db->update('pct_resware_admin_credential', array('username' => $this->input->post('resware_username'), 'password' => $this->input->post('resware_password')));
+                /** Save user Activity */
+                $activity = 'ResWare Credential updated: Username'. $this->input->post('resware_username');
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
                 $data['success_msg'] = 'Resware Admin credentials updated successfully';  
                 $data['credResult'] = $this->order->get_resware_admin_credential();      
             } else {
@@ -3044,6 +3090,10 @@ class Home extends MX_Controller {
                     
                 if ($insert) {
                     $data['success_msg'] = 'Escrow Officer added successfully.';
+                    /** Save user Activity */
+                    $activity = 'Escrow user added successfully :- ' . $_POST['email_address'];
+                    $this->order->logAdminActivity($activity);
+                    /** End save user activity */
                 } else {
                     $data['error_msg'] = 'Escrow Officer not added.';
                 }              
@@ -3078,10 +3128,15 @@ class Home extends MX_Controller {
 
             $condition = array('id' => $id);
 
+            $companyDetails =  $this->home_model->get_user($condition, 'pct_order_partner_company_info');	
             $update = $this->home_model->update($escrowData, $condition,'pct_order_partner_company_info');
 
             if($update)
             {
+                /** Save user Activity */
+                $activity = 'Escrow officer deleted successfully: Partner id :- ' . $companyDetails['partner_id'] . ' email :- ' . $companyDetails['email'];
+                $this->order->logAdminActivity($activity);
+                /** End save user activity */
                 $successMsg = 'Escrow Officer deleted successfully.';
                 $response = array('status'=>'success', 'message'=>$successMsg);
             }
@@ -3133,6 +3188,10 @@ class Home extends MX_Controller {
                     $update = $this->home_model->update($escrowData,$condition,'pct_order_partner_company_info');
                         
                     if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Escrow Officer updated successfully: Partner id :- ' . $_POST['partner_id'] . ' - Email :- ' . $_POST['email'] ;
+                        $this->order->logAdminActivity($activity);
+                        /** End save user activity */
                         $data['success_msg'] = 'Escrow Officer updated successfully.';
                     } else {
                         $data['error_msg'] = 'Error occurred while updating Escrow Officer.';
@@ -3201,6 +3260,11 @@ class Home extends MX_Controller {
         $condition = array(
             'id' => $user_id
         );
+        /** Save user Activity */
+        $user =  $this->home_model->get_user($condition);	
+        $activity = 'Mortgage user ' . $user['email_address'] . ' updated to :- '. $mortgageUserFlag;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
         echo json_encode($data);
@@ -3275,6 +3339,13 @@ class Home extends MX_Controller {
             'id' => $user_id
         );
         $this->db->update('customer_basic_details', $data, $condition);
+        
+        /** Save user Activity */
+        $orderUser =  $this->home_model->get_user($condition);	
+        $activity = 'Mortgage flag for user :- ' . $orderUser['email_address'] . 'updated';
+        $this->order->logAdminActivity($activity);
+        /** End save user activity */
+        
         $data = array('status'=>'success', 'msg'=> 'Mortgage user updated successfully.');
         echo json_encode($data);
     }
@@ -3286,8 +3357,7 @@ class Home extends MX_Controller {
 		$formId = $this->input->post('formId');
 		$formDetails = $this->fileDocument_model->get_rows(array('id' => $formId));
         $titleOfficers = $this->titleOfficerForms->getTitleOfficersForForm($formId);
-        //print_r($titleOfficers);exit;
-		$response = array('status'=>'success', 'formDetails' => $formDetails, 'titleOfficers' => $titleOfficers);
+        $response = array('status'=>'success', 'formDetails' => $formDetails, 'titleOfficers' => $titleOfficers);
 		echo json_encode($response); exit; 
     }
 
@@ -3295,10 +3365,17 @@ class Home extends MX_Controller {
     {
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
+            $formData =  $this->home_model->get_rows(array('id' => $id), 'pct_file_documents');
             $this->db->delete('pct_file_documents', array('id' => $id));
             $this->db->delete('pct_order_title_officers_forms', array('form_id' => $id));
             $successMsg = 'Form deleted successfully.';
             $response = array('status'=>'success', 'message'=>$successMsg);
+            
+            /** Save user Activity */
+            $activity = 'Document form record deleted - Document Name :- ' . $formData['name'];
+            $this->order->logAdminActivity($activity);
+            /** End save user activity */
+
         } else {
             $msg = 'Form ID is required.';
             $response = array('status' => 'error','message'=>$msg);
@@ -3361,6 +3438,11 @@ class Home extends MX_Controller {
             'id' => $user_id
         );
         $this->db->update('customer_basic_details', $data, $condition);
+        /** Save user Activity */
+        $orderUser =  $this->home_model->get_user($condition);
+        $activity = 'Is password require to send password for user :- ' . $orderUser['email_address'] . ' : ' . (($is_password_required == 1) ? 'Yes' : 'No');
+        $this->order->logAdminActivity($activity);
+        /** End save user activity */
         $data = array('status'=>'success', 'msg'=> 'Password required field updated successfully.');
         echo json_encode($data);
     }
@@ -3412,6 +3494,11 @@ class Home extends MX_Controller {
         );
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Dual Cpl value updated successfully for user.');
+        /** Save user Activity */
+        $orderUser =  $this->home_model->get_user($condition);	
+        $activity = 'Dual Cpl value: '.$dualCplUserFlag.' updated successfully for user : ' . $orderUser['email_address'];
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         echo json_encode($data);
     }
 
@@ -3705,6 +3792,10 @@ class Home extends MX_Controller {
                 $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status'=>$mail_result), $order_details['order_id'], $logid);
             }
         }
+        /** Save user Activity */
+        $activity = $order_details['lp_file_number'] . '- LP Order status updated to : '. $status;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
         $data = array('status'=>'success', 'msg'=> 'Lp report status updated successfully.');
         echo json_encode($data);exit;
     }
@@ -4990,27 +5081,17 @@ class Home extends MX_Controller {
         $data = array();
         $data['title'] = 'PCT Order: Add New LP Document Types';
         $data['subtypeList'] = $this->home_model->getSubtypeLPDocumentList();
-        // echo "<pre>";
-        // print_r($lp_document_lists);die;
         $salesRepData = array();
         if ($this->input->post()) {
             $this->form_validation->set_rules('doc_type_description', 'Doc Type Description', 'required', array('required'=> 'Please Enter Doc Type Description'));
             $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
-            // $this->form_validation->set_rules('doc_sub_type_description', 'Doc Sub Type Description', 'required', array('required'=> 'Please Enter Doc Sub Type Description'));
-            // $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
             
             if ($this->form_validation->run() == true) {
-                // $this->load->model('order/agent_model');
                 $input = $this->input->post();
-                // echo "<pre>";
-                // print_r($input);die;
                 $lpDocData = array(
                     'doc_type' => $input['doc_type'],
                     'doc_type_description' => $input['doc_type_description'],
-                    // 'doc_sub_type_description' =>  $input['doc_sub_type_description'],
-                    // 'doc_sub_type' => $input['doc_sub_type'],
                     'subtype_flag' => (isset($input['subtype_flag'])) ? $input['subtype_flag'] : 0,
-                    // 'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
                 );
                 
                 if (isset($input['subtype'])) {
@@ -5032,9 +5113,6 @@ class Home extends MX_Controller {
             }                                       
         }
         $this->admintemplate->show("order/home", "add_lp_document_types", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/add_lp_document_types', $data);
-        // $this->load->view('order/layout/footer', $data);
     }
 
     public function deleteLpDocumentType()
@@ -5050,7 +5128,7 @@ class Home extends MX_Controller {
             if($status)
             {
                 /** Save user Activity */
-                $activity = 'Deleted lp document:  '. $lpDoc['doc_type'];
+                $activity = 'Deleted lp document: ' . $lpDoc['doc_type'];
                 $this->order->logAdminActivity($activity);
                 /** End save user activity */
                 $successMsg = 'Record deleted successfully.';
@@ -5079,9 +5157,7 @@ class Home extends MX_Controller {
             {
                 $this->form_validation->set_rules('doc_type_description', 'Doc Type Description', 'required', array('required'=> 'Please Enter Doc Type Description'));
                 $this->form_validation->set_rules('doc_type', 'Doc Type', 'required', array('required'=> 'Please Enter Doc Type'));
-                // $this->form_validation->set_rules('doc_sub_type', 'Doc Sub Type', 'required', array('required'=> 'Please Enter Doc Sub Type'));
-                // $this->form_validation->set_rules('doc_sub_type_description', 'Doc Sub Type Description', 'required', array('required'=> 'Please Enter Doc Sub Type Description'));
-                
+
                 if ($this->form_validation->run() == true) 
                 {
                     $input = $this->input->post();
@@ -5089,9 +5165,6 @@ class Home extends MX_Controller {
                         'doc_type' => trim($this->input->post('doc_type')),
                         'doc_type_description' => trim($this->input->post('doc_type_description')),
                         'subtype_flag' => (isset($input['subtype_flag'])) ? $input['subtype_flag'] : 0,
-                        // 'is_notice' => (isset($input['is_notice'])) ? $input['is_notice'] : 0
-                        // 'doc_sub_type_description' =>  trim($this->input->post('doc_sub_type_description')),
-                        // 'doc_sub_type' => trim($this->input->post('doc_sub_type')),
                     );
 
                     if (isset($input['subtype'])) {
@@ -5100,7 +5173,6 @@ class Home extends MX_Controller {
                         $lpDocData['sub_type_list'] = null;
                     }
 
-                    // print_r($lpDocData);die;
                     $condition = array('id' => $id);
                     $update = $this->home_model->updateLpDocType($lpDocData,$condition,'pct_lp_document_types');
                         
@@ -5109,6 +5181,7 @@ class Home extends MX_Controller {
                         $activity = 'Updated lp document :  ' . trim($this->input->post('doc_type'));
                         $this->order->logAdminActivity($activity);
                         /** End Save user activity */
+
                         $successMsg = 'LP Document Types updated successfully.';
                         $this->session->set_userdata('success', $successMsg);
                         redirect(base_url().'order/admin/lp-document-types');
@@ -5118,23 +5191,16 @@ class Home extends MX_Controller {
                 } else {
                     $data['doc_type_description_error_msg'] = form_error('doc_type_description');
                     $data['doc_type_error_msg'] = form_error('doc_type');
-                    // $data['doc_sub_type_error_msg'] = form_error('doc_sub_type');
-                    // $data['doc_sub_type_description_error_msg'] = form_error('doc_sub_type_description');
                 }                                       
             }
             $con = array('id' => $id);
             $data['lp_document_info'] = $this->home_model->getLpDocType($con);
-            // echo "<pre>";
-            // print_r($data);die;
         }
         else
         {
             redirect(base_url().'order/admin/lp-document-types');
         }
         $this->admintemplate->show("order/home", "edit_lp_document_type", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/edit_lp_document_type', $data);
-        // $this->load->view('order/layout/footer', $data);
     }
 
     public function addLpAlert()
@@ -5170,9 +5236,6 @@ class Home extends MX_Controller {
             }                                       
         }
         $this->admintemplate->show("order/home", "add_lp_alert", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/add_lp_alert', $data);
-        // $this->load->view('order/layout/footer', $data);
     }
 
     public function deleteLpAlert()
@@ -5243,17 +5306,12 @@ class Home extends MX_Controller {
             }
             $con = array('id' => $id);
             $data['lp_alert'] = $this->home_model->getLpAlert($con);
-            // echo "<pre>";
-            // print_r($data);die;
         }
         else
         {
             redirect(base_url().'order/admin/lp-alert');
         }
         $this->admintemplate->show("order/home", "edit_lp_alert", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/edit_lp_alert', $data);
-        // $this->load->view('order/layout/footer', $data);
     }
     
     public function updateDocumentSection()
@@ -5334,8 +5392,6 @@ class Home extends MX_Controller {
         $displayDocList = $this->home_model->getDocumetTypes();
         $getAllSubCategory = $this->home_model->getAllSubCategory();
         $getAllSubCategory = array_column($getAllSubCategory, 'doc_type');
-        // echo "<pre>";
-        // print_r($getAllSubCategory);die;
         $filteredSubCategoryList = array_filter($displayDocList, function ($item) {
             return $item['subtype_flag'] == 1;
         });
@@ -5347,9 +5403,6 @@ class Home extends MX_Controller {
         $filteredMainCateList = array_column($filteredMainCategoryList, 'doc_type');
         
         $displayNoticeDocList = $this->home_model->getNoticeDocumetTypes();
-
-        //echo in_array('NOT', array_column($displayNoticeDocList, 'doc_type'));
-        //print_r($displayNoticeDocList);exit;
 
         $data = "<input type='hidden' id='title_point_id' name='title_point_id' value='$titlePointData->id'>
         <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
@@ -5620,6 +5673,12 @@ class Home extends MX_Controller {
         );
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status'=>'success', 'msg'=> 'Allow only Resware order value updated successfully for user.');
+        /** Save user Activity */
+        $orderUser =  $this->home_model->get_user($condition);	
+        $activity = 'Allow only Resware order value updated successfully for user :' . $orderUser['email_address'];
+        $this->order->logAdminActivity($activity);
+        
+        /** End Save user activity */
         echo json_encode($data);
     }
 

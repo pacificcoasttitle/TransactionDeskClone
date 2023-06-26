@@ -85,7 +85,7 @@
                     <div class="col-lg-12">
                         <div class="card shadow">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary" >Add New Admin</h6>
+                                <h6 class="m-0 font-weight-bold text-primary" >Add / Edit New Admin</h6>
                             </div>
                             <div class="card-body"> 
                                 <div class="smart-forms smart-container">
@@ -104,11 +104,11 @@
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     <label for="first_name" class="col-form-label">First Name</label>
-                                                    <input required="" name="first_name" type="text" id="first_name" class="form-control">
+                                                    <input required="" name="first_name" type="text" id="first-name" class="form-control">
                                                 </div>
 												<div class="col-sm-6">
                                                     <label for="last_name" class="col-form-label">Last Name</label>
-                                                    <input required="" name="last_name" type="text" id="last_name" class="form-control">
+                                                    <input required="" name="last_name" type="text" id="last-name" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -129,11 +129,11 @@
                                         <div id="password-check" style="display: none;">
 											<div class="form-group">
 												<div class="row">
-													<div class="col-sm-4">
+													<div class="col-sm-6">
 														<label for="password_update" class="col-form-label">Update Password</label>
 													</div>
-													<div class="col-sm-8 text-left">
-														<input name="password_update" value="1" type="checkbox" class="form-control" id="password_update" style="width: 35px;height: 35px;">
+													<div class="col-sm-6 text-left">
+														<input name="password_update" value="1" type="checkbox" class="form-control" id="password_update" style="width: 20px;height: 20px;">
 													</div>
 												</div>
 											</div>

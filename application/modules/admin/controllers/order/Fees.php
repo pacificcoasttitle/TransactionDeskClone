@@ -63,6 +63,10 @@ class Fees extends MX_Controller {
 
                     if($update)
                     {
+                        /** Save user Activity */
+                        $activity = 'Fees updated successfully : ' . $_POST['fee_name'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $successMsg = 'Fees updated successfully.';
                         $this->session->set_userdata('success_msg', $successMsg);
                     }
@@ -73,6 +77,10 @@ class Fees extends MX_Controller {
                     $insert = $this->fees_model->insert($feesData);
                     
                     if($insert){
+                        /** Save user Activity */
+                        $activity = 'Fees created successfully : ' . $_POST['fee_name'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Fees added successfully.';
                     }
                     else
@@ -171,13 +179,17 @@ class Fees extends MX_Controller {
             $feesData = array('status' => 0);
 
             $condition = array('id' => $id);
-
+            $fees_info = $this->fees_model->get_rows($condition);
             $update = $this->fees_model->update($feesData, $condition);
 
             if($update)
             {
+                /** Save user Activity */
+                $activity = 'Fees deleted successfully : ' . $fees_info['name'];
+                $this->common->logAdminActivity($activity);
+                /** End Save user activity */
                 $successMsg = 'Fees deleted successfully.';
-                $data = array('status'=>'success', 'message'=>$successMsg);
+                $data = array('status' => 'success', 'message' => $successMsg);
             }
         }
         else
@@ -222,6 +234,10 @@ class Fees extends MX_Controller {
                     $update = $this->fees_model->update($feesData,$condition);
                         
                     if($update){
+                        /** Save user Activity */
+                        $activity = 'Fees updated successfully : id : ' . $id . ' - Name: ' . $_POST['fee_name'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Fees updated successfully.';
                     }
                     else

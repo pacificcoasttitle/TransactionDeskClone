@@ -24,14 +24,14 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-sm-6">
-                <h1 class="h3 text-gray-800">New User</h1>
+                <h1 class="h3 text-gray-800">CLP/Proposed User</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Edit New User</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Edit CLP/Proposed User</h6>
                     </div>
                     <div class="card-body">        
                         <form id="add-new-master-user" method="POST">
