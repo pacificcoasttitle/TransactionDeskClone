@@ -5378,115 +5378,41 @@ class Home extends MX_Controller {
         if (!empty($instrumentRecords)) {
             foreach ($instrumentRecords as $instrumentRecord) {
                 if ((in_array($instrumentRecord['document_sub_type'], $getAllSubCategory) && in_array($instrumentRecord['document_sub_type'], $filteredSubCateList)) || (empty($instrumentRecord['document_sub_type']) && in_array($instrumentRecord['document_type'], $filteredMainCateList))) {
-                // if (in_array($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'))) {
                     $key = array_search($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'));
                     $displaySection = $displayDocList[$key]['display_in_section'];
 
                     if (isset($instrumentRecord['document_sub_type']) && !empty($instrumentRecord['document_sub_type'])) {
-                        $documentSubTypeList = $displayDocList[$key]['sub_type_list'];
-                        if (!empty($documentSubTypeList)) {
-                            $documentSubTypeListArr = explode(',', $documentSubTypeList);        
-                            if (in_array($instrumentRecord['document_sub_type'], $documentSubTypeListArr)) {
-                                if ($displaySection == 'G') {
-                                    if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                        //if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
-                                            $instrumentRecords[$i]['is_display'] = 1;
-                                        //} else {
-                                            //$instrumentRecords[$i]['is_display'] = 0;
-                                        //}
-                                    } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                                        if ($instrumentRecord['icon_text'] == 'Exx') {
-                                            $instrumentRecords[$i]['is_display'] = 1;
-                                        } else {
-                                            $instrumentRecords[$i]['is_display'] = 0; 
-                                        }
-                                    } else {
-                                        $instrumentRecords[$i]['is_display'] = 0;
-                                    }
-                                } else {
-                                    if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                                        if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                                            if ($instrumentRecord['icon_text'] == 'Exx') {
-                                                $instrumentRecords[$i]['is_display'] = 1;
-                                            } else {
-                                                $instrumentRecords[$i]['is_display'] = 0; 
-                                            }
-                                        } else {
-                                            $instrumentRecords[$i]['is_display'] = 1;
-                                        }
-                                    } else {
-                                        $instrumentRecords[$i]['is_display'] = 0; 
-                                    }
-                                }
+                        $keySubType = array_search($instrumentRecord['document_sub_type'], array_column($displayDocList, 'doc_type'));
+                        $displaySection = $displayDocList[$keySubType]['display_in_section'];
+                    } 
+
+                    if ($displaySection == 'G') {
+                        if ($instrumentRecord['color_coding'] == 'FFFF00') {
+                            $instrumentRecords[$i]['is_display'] = 1;
+                        } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                            if ($instrumentRecord['icon_text'] == 'Exx') {
+                                $instrumentRecords[$i]['is_display'] = 1;
                             } else {
-                                $instrumentRecords[$i]['is_display'] = 0;
+                                $instrumentRecords[$i]['is_display'] = 0; 
                             }
                         } else {
-                            if ($displaySection == 'G') {
-                                if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                    //if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
-                                        $instrumentRecords[$i]['is_display'] = 1;
-                                    //} else {
-                                        //$instrumentRecords[$i]['is_display'] = 0;
-                                    //}
-                                } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                                    if ($instrumentRecord['icon_text'] == 'Exx') {
-                                        $instrumentRecords[$i]['is_display'] = 1;
-                                    } else {
-                                        $instrumentRecords[$i]['is_display'] = 0; 
-                                    }
-                                } else {
-                                    $instrumentRecords[$i]['is_display'] = 0;
-                                }
-                            } else {
-                                if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                                    if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                                        if ($instrumentRecord['icon_text'] == 'Exx') {
-                                            $instrumentRecords[$i]['is_display'] = 1;
-                                        } else {
-                                            $instrumentRecords[$i]['is_display'] = 0; 
-                                        }
-                                    } else {
-                                        $instrumentRecords[$i]['is_display'] = 1;
-                                    }
-                                } else {
-                                    $instrumentRecords[$i]['is_display'] = 0; 
-                                }
-                            }
+                            $instrumentRecords[$i]['is_display'] = 0;
                         }
                     } else {
-                        if ($displaySection == 'G') {
-                            if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                                //if (($instrumentRecord['document_type'] != 'TDD') || ($instrumentRecord['document_type'] == 'TDD' && $instrumentRecord['document_sub_type'] === null)) {
-                                    $instrumentRecords[$i]['is_display'] = 1;
-                                //} else {
-                                    //$instrumentRecords[$i]['is_display'] = 0;
-                                //}
-                            } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+                        if ($instrumentRecord['color_coding'] != 'A0A0FF') {
+                            if ($instrumentRecord['color_coding'] == 'C0C0C0') {
                                 if ($instrumentRecord['icon_text'] == 'Exx') {
                                     $instrumentRecords[$i]['is_display'] = 1;
                                 } else {
                                     $instrumentRecords[$i]['is_display'] = 0; 
                                 }
                             } else {
-                                $instrumentRecords[$i]['is_display'] = 0;
+                                $instrumentRecords[$i]['is_display'] = 1;
                             }
                         } else {
-                            if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                                if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                                    if ($instrumentRecord['icon_text'] == 'Exx') {
-                                        $instrumentRecords[$i]['is_display'] = 1;
-                                    } else {
-                                        $instrumentRecords[$i]['is_display'] = 0; 
-                                    }
-                                } else {
-                                    $instrumentRecords[$i]['is_display'] = 1;
-                                }
-                            } else {
-                                $instrumentRecords[$i]['is_display'] = 0; 
-                            }
+                            $instrumentRecords[$i]['is_display'] = 0; 
                         }
-                    } 
+                    }
                 } else {
                     $instrumentRecords[$i]['is_display'] = 0;
                 }
