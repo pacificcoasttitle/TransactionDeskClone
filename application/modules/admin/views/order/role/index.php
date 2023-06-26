@@ -59,9 +59,9 @@
 							<td><?=$role->title;?></td>
 							
 							<td><?=date('d F y',strtotime($role->created_at));?></td>
-							<td><div style='display:flex;'> <a class='btn btn-action" href='javascript::void();' onclick='editRoleInfo("<?=$role->id?>","<?=$role->title?>");'><i class='fas fa-fw fa-edit'></i></a>
+							<td><div style='display:flex;'> <a href='javascript::void();' onclick='editRoleInfo("<?=$role->id?>","<?=$role->title?>");'><i class='fas fa-fw fa-edit'></i></a>
 								<?php if($role->id != 1 && $role->id != 2) : ?>
-								<button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-role-record/'.$role->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></button>
+								<a href='javascript::void();'  class='delete-record-custom' data-url="<?php echo base_url('order/admin/delete-role-record/'.$role->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></a>
 								<?php endif; ?>
 								</div>
 							</td>

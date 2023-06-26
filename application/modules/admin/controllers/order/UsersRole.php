@@ -14,6 +14,7 @@ class UsersRole extends MX_Controller {
         $this->load->model('order/admin_user_model');
         $this->load->model('order/users_roles_model');
         $this->load->library('order/common');
+		$this->load->library('order/order');
         $this->common->is_super_admin();
     }
 
@@ -35,9 +36,17 @@ class UsersRole extends MX_Controller {
 				$inserted_id = $this->users_roles_model->insert($roles_data);
 			}
 			if($inserted_id) {
+				/** Save user Activity */
+				$activity = 'Role Added successfully: .' . $this->input->post('title');
+				$this->order->logAdminActivity($activity);
+				/** End save user activity */
 				$flash_data['success'] = 'Role added successfully.';
 			}
 			elseif($updated_id) {
+				/** Save user Activity */
+				$activity = 'Role updated successfully: .' . $this->input->post('title');
+				$this->order->logAdminActivity($activity);
+				/** End save user activity */
 				$flash_data['success'] = 'Role updated successfully.';
 			}
 			else {
@@ -59,8 +68,15 @@ class UsersRole extends MX_Controller {
     {
 		$status = false;
 		if($this->input->post('action') == 'delete') {
+			$role = $this->users_roles_model->get($id);
 			$delete_status = $this->users_roles_model->delete($id);
 			if ($delete_status) {
+
+				/** Save user Activity */
+				$activity = 'Role deleted successfully: .' . $role->title;
+				$this->order->logAdminActivity($activity);
+				/** End save user activity */
+				
 				$flash_data['success'] = 'User Role deleted successfully.';
 				$status = true;
 			} else {

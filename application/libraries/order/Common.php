@@ -183,4 +183,14 @@ class Common
 			exec($command . " > /dev/null &");  
 		}
 	}
+
+	public function logAdminActivity($activity) {
+        $userdata = $this->CI->session->userdata('admin');
+        $data = array(
+            'user_id' => $userdata['id'],
+            'message' => $activity,
+            'created_at' => date("Y-m-d H:i:s")
+        );
+        $this->CI->db->insert('pct_admin_activity_logs', $data);
+    }
 }

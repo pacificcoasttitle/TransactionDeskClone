@@ -56,6 +56,10 @@ class FeesTypes extends MX_Controller {
 
                     if($update)
                     {
+                        /** Save user Activity */
+                        $activity = 'Fees type updated successfully : ' . $_POST['fee_type'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $successMsg = 'Fee Type updated successfully.';
                         $this->session->set_userdata('success_msg', $successMsg);
                     }
@@ -66,6 +70,10 @@ class FeesTypes extends MX_Controller {
                     $insert = $this->feesTypes_model->insert($feesData);
                     
                     if($insert){
+                        /** Save user Activity */
+                        $activity = 'New Fees type created successfully : ' . $_POST['fee_type'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Fees type added successfully.';
                     }
                     else
@@ -81,11 +89,6 @@ class FeesTypes extends MX_Controller {
             }                                       
         }
         $this->admintemplate->show("order/home", "add_fee_type", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/add_fee_type', $data);
-        // $this->load->view('order/layout/footer', $data);
-        
-       // redirect('index.php?admin/fees');
     }
 
     public function get_fees_types()
@@ -150,13 +153,17 @@ class FeesTypes extends MX_Controller {
         if($id)
         {
             $feesData = array('status' => 0);
-
             $condition = array('id' => $id);
-
+            $fees_info = $this->feesTypes_model->get_rows($condition);
             $update = $this->feesTypes_model->update($feesData, $condition);
 
             if($update)
             {
+                /** Save user Activity */
+                $activity = 'Fees type deleted successfully : ' . $fees_info['name'];
+                $this->common->logAdminActivity($activity);
+                /** End Save user activity */
+
                 $successMsg = 'Fee type deleted successfully.';
                 $data = array('status'=>'success', 'message'=>$successMsg);
             }
@@ -197,6 +204,10 @@ class FeesTypes extends MX_Controller {
                     $update = $this->feesTypes_model->update($feesData,$condition);
                         
                     if($update){
+                        /** Save user Activity */
+                        $activity = 'Fees type updated successfully : ' . $_POST['fee_type'];
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Fees type updated successfully.';
                     }
                     else

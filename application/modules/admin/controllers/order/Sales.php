@@ -318,6 +318,10 @@ class Sales extends MX_Controller {
 							//Sales rep Override commission
 
 						}
+                            /** Save user Activity */
+                            $activity = 'Sales rep user created :- ' . $_POST['email_address'];
+                            $this->order->logAdminActivity($activity);
+                            /** End save user activity */
 							$flash_data['success'] = 'Sales Rep added successfully.';
 							$this->session->set_flashdata($flash_data);
 							redirect(base_url('order/admin/add-sales-rep'));
@@ -767,7 +771,10 @@ class Sales extends MX_Controller {
 								
 								
 							}
-
+                            /** Save user Activity */
+                            $activity = 'Sales rep user details updated :- ' . $_POST['email_address'];
+                            $this->order->logAdminActivity($activity);
+                            /** End save user activity */
 							$flash_data['success'] = 'Sales Rep Updated successfully.';
 							$this->session->set_flashdata($flash_data);
 
@@ -848,6 +855,11 @@ class Sales extends MX_Controller {
             $condition = array('id' => $id);
             $update = $this->sales_model->update($salesRepData, $condition);
             if($update) {
+                /** Save user Activity */
+                $salesUser = $this->sales_model->getSalesRep($condition);
+                $activity = 'Sales rep user deleted :- ' . $salesUser['email_address'];
+                $this->order->logAdminActivity($activity);
+                /** End save user activity */
                 $successMsg = 'Sales Rep. deleted successfully.';
                 $response = array('status' =>'success', 'message' => $successMsg);
             }

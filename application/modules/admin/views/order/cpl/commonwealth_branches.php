@@ -2,7 +2,7 @@
     <!-- DataTables Example -->
     <div class="row mb-3">
 		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">North American Branches</h1>
+			<h1 class="h3 text-gray-800">Common wealth Branches</h1>
 		</div>
 		<div class="col-sm-6">
             <a href="javascript:void(0);" id="refresh_commonwealth_branches" class="btn btn-success btn-icon-split float-right mr-2"> 
@@ -15,7 +15,7 @@
                 <span>
                     <i class="fas fa-table"></i>
                 </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">North American Branches</h6> 
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Common wealth Branches</h6> 
             </div>
         </div>
         <div class="card-body">
