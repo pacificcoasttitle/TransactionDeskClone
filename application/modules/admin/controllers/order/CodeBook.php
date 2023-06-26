@@ -285,6 +285,11 @@ class CodeBook extends MX_Controller {
         $type = $this->input->post('type');
         $condition = array('id' => $id);
         $this->codeBook_model->update(array('type' => $type), $condition);
+        $codeBook = $this->codeBook_model->get_rows($condition);
+        /** Save user Activity */
+        $activity = 'Code book Code "' . $codeBook['code'] . '" type updated to : ' . $type;
+        $this->common->logAdminActivity($activity);
+        /** End Save user activity */
         $data = array('status'=>'success', 'msg'=> 'Type updated successfully.');
         echo json_encode($data);
     }
@@ -319,6 +324,10 @@ class CodeBook extends MX_Controller {
                     $update = $this->codeBook_model->update($codeBookData, $condition);
                         
                     if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Code book data updated successfully for CODE : ' . $this->input->post('code');
+                        $this->common->logAdminActivity($activity);
+                        /** End Save user activity */
                         $data['success_msg'] = 'Code Book Data updated successfully.';
                     } else {
                         $data['error_msg'] = 'Error occurred while updating code book data.';

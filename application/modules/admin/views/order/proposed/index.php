@@ -62,9 +62,9 @@
                                 <td><?=$branch->state;?></td>
                                 <td><?=$branch->zip;?></td>
                                 <td><?=date('d F y',strtotime($branch->created_at));?></td>
-                                <td><div style='display:flex;'> <a class='btn btn-action" href='javascript::void();' onclick='editBranchInfo("<?=$branch->id?>");'><i class='fas fa-fw fa-edit'></i></a>
+                                <td><div style='display:flex;'> <a href='javascript::void();' onclick='editBranchInfo("<?=$branch->id?>");'><i class='fas fa-fw fa-edit'></i></a>
                                     
-                                    <button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-admin-record/'.$branch->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></button>
+                                    <a href="javascript:void(0);"  class='delete-record-custom' data-url="<?php echo base_url('order/admin/delete-proposed-branch/'.$branch->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></a>
                                     </div>
                                 </td>
                             </tr>

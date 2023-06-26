@@ -97,7 +97,10 @@ class Title extends MX_Controller {
                     'status' => 1
                 );
                 $insert = $this->title_model->insert($titleOfficerData);
-                
+                /** Save user Activity */
+                $activity = 'Title officer created :- ' . $_POST['email_address'];
+                $this->common->logAdminActivity($activity);
+                /** End save user activity */
                 if ($insert) {
                     $data['success_msg'] = 'Title Officer added successfully.';
                 } else {
@@ -150,7 +153,10 @@ class Title extends MX_Controller {
                     );
                     $condition = array('id' => $id);
                     $update = $this->title_model->update($titleOfficerData, $condition);
-                        
+                    /** Save user Activity */
+                    $activity = 'Title officer updated :- ' . $_POST['email_address'];
+                    $this->common->logAdminActivity($activity);
+                    /** End save user activity */
                     if ($update) {
                         $data['success_msg'] = 'Title Officer updated successfully.';
                     } else {
@@ -184,8 +190,13 @@ class Title extends MX_Controller {
         if ($id) {
             $titleOfficerData = array('status' => 0);
             $condition = array('id' => $id);
+            $titleOfficer = $this->title_model->getTitleOfficers($condition);
             $update = $this->title_model->update($titleOfficerData, $condition);
             if($update) {
+                /** Save user Activity */
+                $activity = 'Title officer deleted :- ' . $titleOfficer['email_address'];
+                $this->common->logAdminActivity($activity);
+                /** End save user activity */
                 $successMsg = 'Title Officer deleted successfully.';
                 $response = array('status' =>'success', 'message' => $successMsg);
             }

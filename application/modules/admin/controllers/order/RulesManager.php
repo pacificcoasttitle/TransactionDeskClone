@@ -21,8 +21,7 @@ class RulesManager extends MX_Controller {
 	{
 		$data = array();
         $data['title'] = 'PCT Order: Rules Manager';
-        // $this->admintemplate->addJS( base_url('assets/libs/jquery-1.12.4.min.js'));
-        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        
         $this->admintemplate->show("order/home", "rules_manager", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/rules_manager', $data);
@@ -113,7 +112,6 @@ class RulesManager extends MX_Controller {
 
     public function updateCounties()
     {
-        // echo "<pre>"; print_r($_POST); exit;
         $counties = $this->input->post('counties');
         $ruleId = $this->input->post('rule_id');
 
@@ -129,6 +127,11 @@ class RulesManager extends MX_Controller {
             $update = $this->rulesManager_model->update($rulesData, $updateCondition);
 
             if ($update) {
+                /** Save user activity */
+                $rules = $this->db->select('title')->from('pct_order_rules_manager')->where('id', $ruleId)->get()->row_array(); 
+                $activity = 'Rules value for title:  "' . $rules['title'] . '"  updated';
+                $this->common->logAdminActivity($activity);
+                /** End save user activity */
                 $data = array('status' => 'success','message'=> 'Rule updated successfully.');
             }
             else
