@@ -3339,16 +3339,12 @@ class Order
             $instrumentRecordDetails['is_plat_map_exist'] = !empty($plat_map_url) ? 1 : 0;
             $instrumentRecordDetails['taxFileUrl'] = $taxFileUrl;
             $instrumentRecordDetails['vestingInstrumentDetails'] = $vestingInstrumentDetails;
-            if (env('AWS_ENABLE_FLAG') == 1) {
-                if($this->CI->order->fileExistOrNotOnS3('tax/'.$fileNumber.'.pdf')) {
-                    $tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
-                } 
-            } else {
-                $tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
-                if (file_exists($tax_file_path)) {
-                    $tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
-                }
-            }
+            
+            $tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
+            //if (file_exists($tax_file_path)) {
+                $tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
+            //}
+            
             $taxFileUrl = empty($tax_file_url) ? '#' : $tax_file_url;
             $instrumentRecordDetails['taxFileUrl'] = $taxFileUrl;          
             $html = $this->CI->load->view('report/instrument_report',$instrumentRecordDetails,true);
