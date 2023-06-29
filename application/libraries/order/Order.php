@@ -3244,16 +3244,8 @@ class Order
             /** Generate Pre listing report document */
             // $fileNumber = "LP-00000013";
             $tax_file_url = '';
-            if (env('AWS_ENABLE_FLAG') == 1) {
-                if($this->CI->order->fileExistOrNotOnS3('tax/'.$fileNumber.'.pdf')) {
-                    $tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
-                } 
-            } else {
-                $tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
-                if (file_exists($tax_file_path)) {
-                    $tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
-                }
-            }
+            
+            $tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
             $taxFileUrl = empty($tax_file_url) ? '#' : $tax_file_url;
             $condition = array(
                 'where' => array(
@@ -3342,7 +3334,7 @@ class Order
             
             $tax_file_path = FCPATH.'uploads/tax/'.$fileNumber.'.pdf';
             //if (file_exists($tax_file_path)) {
-                $tax_file_url = base_url().'uploads/tax/'.$fileNumber.'.pdf';
+                $tax_file_url = env('AWS_PATH')."tax/".$fileNumber.'.pdf';
             //}
             
             $taxFileUrl = empty($tax_file_url) ? '#' : $tax_file_url;
