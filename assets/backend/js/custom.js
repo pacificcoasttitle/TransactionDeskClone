@@ -14,6 +14,33 @@ var lp_document_list = '';
 
 $(document).ready(function () {
 
+    if ($('.sectionSelect').length) {
+        $('.sectionSelect').selectize({
+            sortField: 'text'
+        });
+    }
+
+    // $('#clone-subtype-option').cloneya({
+    //     maximum: 5
+    // }).on('after_append.cloneya', function (event, toclone, newclone) {
+    //     var name = $(newclone).find("select[name='subtype[]']").attr('id');
+    //     // if($('#'+name).length) {
+    //     //     $('#'+name).multiselect({
+    //     //         includeSelectAllOption: true,
+    //     //         buttonWidth: '100%',
+    //     //     });
+    //     // }
+    //     // }
+    //     // $('#'+name).multiselect({
+    //     //     includeSelectAllOption: true
+    //     //   });
+    //     console.log(name);
+    // }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+    //     $(clone).slideToggle('slow', function () {
+    //         $(clone).remove();
+    //     })
+    // });
+
     // Add active class to menu
     // if(jQuery('#users').children().hasClass('active')) {
     //     jQuery('#users').parent('li').addClass('active');
@@ -57,7 +84,7 @@ $(document).ready(function () {
     });
 
     if ($('select').length) {
-        $('select').selectpicker();
+        $('select').not(".sectionSelect").selectpicker();
     }
 
     if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length)
@@ -5592,7 +5619,7 @@ $('#subtype_flag').change(function() {
         $('.selectsubtype').hide();
     } else {
         // $('.selectsubtype').show();
-        $('.selectsubtype').removeClass('hide');
+        $('.selectsubtype').show();
     }
 });
 

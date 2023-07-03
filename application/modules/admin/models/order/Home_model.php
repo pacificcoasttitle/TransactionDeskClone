@@ -1,12 +1,13 @@
 <?php
-class Home_model extends CI_Model 
+class Home_model extends CI_Model
 {
 
-	function __construct() {
+    function __construct()
+    {
         // Set table name
         $this->table = 'customer_basic_details';
     }
-	public function get_admin_user($email, $password)
+    public function get_admin_user($email, $password)
     {
         $this->db->select('*');
         $this->db->where('email_id', $email);
@@ -14,39 +15,36 @@ class Home_model extends CI_Model
         $this->db->where('status', 1);
         $query = $this->db->get('admin');
 
-        if ($query->num_rows() > 0) 
-        {
-			$admin_record = $query->row_array();
-			//Check password
-			$hashed_pasasword = $admin_record['password'];
-			if (password_verify($password, $hashed_pasasword)) {
-				return $query->row_array();
-			} else {
-				return false;
-			}
-        } 
-        else 
-        {
-			return false;
+        if ($query->num_rows() > 0) {
+            $admin_record = $query->row_array();
+            //Check password
+            $hashed_pasasword = $admin_record['password'];
+            if (password_verify($password, $hashed_pasasword)) {
+                return $query->row_array();
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 
-    public function get_user($params = array()) 
+    public function get_user($params = array())
     {
         $table = $this->table;
         $this->db->select('*');
         $this->db->from($table);
-        foreach($params as $key => $val){
+        foreach ($params as $key => $val) {
             $this->db->where($key, $val);
         }
         $query = $this->db->get();
         $result = $query->row_array();
-        if(!empty($result)) { 
+        if (!empty($result)) {
             return $result;
         } else {
             return array();
         }
-        
+
     }
 
     public function get_customers($params)
@@ -54,82 +52,73 @@ class Home_model extends CI_Model
         $is_escrow = isset($params['is_escrow']) && !empty($params['is_escrow']) ? $params['is_escrow'] : 0;
 
         $this->db->where('is_escrow', $is_escrow);
-    	$this->db->where('status', 1);
-    	$this->db->from('customer_basic_details');
-		$total_records =  $this->db->count_all_results();
+        $this->db->where('status', 1);
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
 
 
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-    	
-        
-        $customer_lists =array();
-    	if(isset($params['searchvalue']) && !empty($params['searchvalue']))
-    	{
-    		$keyword = $params['searchvalue'];
 
-    		if(isset($keyword) && !empty($keyword))
-			{
+
+        $customer_lists = array();
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('first_name', $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
                     ->group_end();
-			}
+            }
 
             $this->db->where('status', 1);
-			$this->db->where('is_escrow', $is_escrow);
-	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
+            $this->db->where('is_escrow', $is_escrow);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
 
-			if(isset($keyword) && !empty($keyword))
-			{
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('first_name', $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
                     ->group_end();
-			}
+            }
 
-			$this->db->where('status', 1);
+            $this->db->where('status', 1);
             $this->db->where('is_escrow', $is_escrow);
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
-            {
-                $this->db->limit($limit, $offset);
-            }			
-			$query = $this->db->get('customer_basic_details');
-
-			if ($query->num_rows() > 0) 
-	        {
-	            $customer_lists = $query->result_array();
-	        }
-    	}
-    	else
-    	{    		
-
-    		$this->db->where('status', 1);
-            $this->db->where('is_escrow', $is_escrow);
-	    	$this->db->from('customer_basic_details');
-
-            $filter_total_records =  $this->db->count_all_results();
-
-            $this->db->where('is_escrow', $is_escrow);
-			$this->db->where('status', 1);
-			if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
-            {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
-			
-			if ($query->num_rows() > 0) 
-	        {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get('customer_basic_details');
 
-    	return array(
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+
+            $this->db->where('status', 1);
+            $this->db->where('is_escrow', $is_escrow);
+            $this->db->from('customer_basic_details');
+
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->where('is_escrow', $is_escrow);
+            $this->db->where('status', 1);
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('customer_basic_details');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
@@ -138,46 +127,46 @@ class Home_model extends CI_Model
 
     public function get_rows($params = array(), $table = '')
     {
-    	if (empty($table)) {
+        if (empty($table)) {
             $table = $this->table;
         }
 
         $this->db->select('*');
         $this->db->from($table);
-        
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }else{
+            } else {
                 $this->db->order_by('id', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
-                    $this->db->limit($params['limit'],$params['start']);
-                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                
+
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
             }
         }
-        
+
         // Return fetched data
         return $result;
     }
 
     public function get_customer_number()
     {
-    	$query = $this->db->query("SELECT random_num
+        $query = $this->db->query("SELECT random_num
                         FROM (
                           SELECT FLOOR(1000 + ( RAND( ) *8999 )) AS random_num 
                           UNION
@@ -186,51 +175,47 @@ class Home_model extends CI_Model
                         WHERE `random_num` NOT IN (SELECT customer_number FROM customer_basic_details)
                         LIMIT 1");
 
-    	if ($query->num_rows() > 0)
-    	{
-    		return $query->row_array();
-    	}
-    	else 
-        {
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        } else {
             return false;
         }
     }
 
 
-    public function update($data, $condition = array(), $table = '') 
+    public function update($data, $condition = array(), $table = '')
     {
         if (empty($table)) {
             $table = $this->table;
         }
-    	
-        if(!empty($data))
-        {          
-            
+
+        if (!empty($data)) {
+
             $data['updated_at'] = date("Y-m-d H:i:s");
 
             // Update data
             $update = $this->db->update($table, $data, $condition);
-            
+
             // Return the status
-            return $update?true:false;
+            return $update ? true : false;
         }
         return false;
     }
 
-    public function insert($data = array(), $table = '') 
+    public function insert($data = array(), $table = '')
     {
         if (empty($table)) {
             $table = $this->table;
         }
-        if(!empty($data)){
+        if (!empty($data)) {
 
-        	$data['created_at'] = date("Y-m-d H:i:s");
+            $data['created_at'] = date("Y-m-d H:i:s");
 
             // Insert data
             $insert = $this->db->insert($table, $data);
-            
+
             // Return the status
-            return $insert?$this->db->insert_id():false;
+            return $insert ? $this->db->insert_id() : false;
         }
         return false;
     }
@@ -239,20 +224,19 @@ class Home_model extends CI_Model
     {
         $where = ' AND email_address != "" AND partner_id is NOT NULL AND resware_user_id is NOT NULL ';
         $innerCause = ' WHERE email_address != ""';
-        if (isset($params['keyword']) && !empty($params['keyword'])) 
-        {
+        if (isset($params['keyword']) && !empty($params['keyword'])) {
             $keyword = $params['keyword'];
 
             /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
             $where .= ' OR last_name LIKE "%'.$keyword.'%"';*/
-            $innerCause .= ' AND email_address LIKE "%'.$keyword.'%"';
+            $innerCause .= ' AND email_address LIKE "%' . $keyword . '%"';
         }
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
         SELECT email_address FROM customer_basic_details' . $innerCause . '
         GROUP BY email_address HAVING COUNT(*) > 1 
-        ) '. $where .' ORDER BY email_address ASC, is_password_updated DESC');
+        ) ' . $where . ' ORDER BY email_address ASC, is_password_updated DESC');
 
-        $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+        $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
         // print_r($this->db->last_query());die;
         return $result;
     }
@@ -260,36 +244,36 @@ class Home_model extends CI_Model
     public function get_cpl_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_cpl_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $cpl_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-               
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_cpl_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -299,17 +283,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $cpl_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $cpl_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_cpl_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -317,17 +301,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_cpl_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $cpl_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $cpl_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $cpl_document_lists
@@ -338,75 +322,75 @@ class Home_model extends CI_Model
     {
         $this->db->where('is_new_user', 1);
         $this->db->where('is_password_updated', 0);
-    	$this->db->where('status', 1);
-    	$this->db->from('customer_basic_details');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->where('status', 1);
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists =array();
-        
+        $customer_lists = array();
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('company_name', $keyword)
                     ->or_like('password', $keyword)
                     ->or_like('random_password', $keyword)
                     ->group_end();
-			}
+            }
 
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 0);
-			$this->db->where('is_new_user', 1);
-	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
+            $this->db->where('is_new_user', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
-			if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('company_name', $keyword)
                     ->or_like('password', $keyword)
                     ->or_like('random_password', $keyword)
                     ->group_end();
-			}
+            }
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 0);
             $this->db->where('is_new_user', 1);
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }			
-			$query = $this->db->get('customer_basic_details');
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        }
-    	} else {    		
-            $this->db->where('status', 1);
-            $this->db->where('is_password_updated', 0);
-            $this->db->where('is_new_user', 1);
-	    	$this->db->from('customer_basic_details');
-            $filter_total_records =  $this->db->count_all_results();
-
-            $this->db->where('is_new_user', 1);
-            $this->db->where('is_password_updated', 0);
-            $this->db->where('status', 1);
-            
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
-			
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('customer_basic_details');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->where('status', 1);
+            $this->db->where('is_password_updated', 0);
+            $this->db->where('is_new_user', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->where('is_new_user', 1);
+            $this->db->where('is_password_updated', 0);
+            $this->db->where('status', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('customer_basic_details');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
@@ -420,7 +404,7 @@ class Home_model extends CI_Model
         $this->db->from($table);
         $this->db->order_by('id', 'asc');
         $this->db->select("CONCAT(partner_name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value");
-        $this->db->like('partner_name', $params['partner_name']); 
+        $this->db->like('partner_name', $params['partner_name']);
         $query = $this->db->get();
         $result = $query->result_array();
         return !empty($result) ? $result : FALSE;
@@ -433,8 +417,8 @@ class Home_model extends CI_Model
         $this->db->from($table);
         $this->db->order_by('id', 'asc');
         $this->db->select("CONCAT(partner_name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value");
-        $this->db->like('partner_name', $params['partner_name']); 
-        $this->db->like('partner_name', 'title'); 
+        $this->db->like('partner_name', $params['partner_name']);
+        $this->db->like('partner_name', 'title');
         $query = $this->db->get();
         $result = $query->result_array();
         return !empty($result) ? $result : FALSE;
@@ -443,35 +427,35 @@ class Home_model extends CI_Model
     public function get_grant_deed_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_grant_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $grant_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -481,17 +465,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $grant_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -499,17 +483,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_grant_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $grant_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $grant_document_lists
@@ -519,35 +503,35 @@ class Home_model extends CI_Model
     public function get_lv_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_lv_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $lv_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -557,17 +541,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $lv_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $lv_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -575,17 +559,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_lv_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $lv_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $lv_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $lv_document_lists
@@ -595,73 +579,73 @@ class Home_model extends CI_Model
     public function get_master_users_list($params)
     {
         $this->db->where('is_master', 1);
-    	$this->db->where('status', 1);
-    	$this->db->from('customer_basic_details');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->where('status', 1);
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists =array();
-        
+        $customer_lists = array();
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
                     ->group_end();
-			}
+            }
 
             $this->db->where('status', 1);
-			$this->db->where('is_master', 1);
-	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
+            $this->db->where('is_master', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
-			if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
                     ->group_end();
-			}
-			$this->db->where('status', 1);
-            $this->db->where('is_master', 1);
-
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }			
-			$query = $this->db->get('customer_basic_details');
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        }
-    	} else {    		
-    		$this->db->where('status', 1);
-            $this->db->where('is_master', 1);
-	    	$this->db->from('customer_basic_details');
-            $filter_total_records =  $this->db->count_all_results();
-
-            $this->db->where('is_master', 1);
+            }
             $this->db->where('status', 1);
-            
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            $this->db->where('is_master', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
-			
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('customer_basic_details');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->where('status', 1);
+            $this->db->where('is_master', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->where('is_master', 1);
+            $this->db->where('status', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('customer_basic_details');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
@@ -671,35 +655,35 @@ class Home_model extends CI_Model
     public function get_tax_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_tax_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $tax_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_tax_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -709,17 +693,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $tax_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $tax_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_tax_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -727,17 +711,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_tax_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $tax_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $tax_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $tax_document_lists
@@ -747,35 +731,35 @@ class Home_model extends CI_Model
     public function get_curative_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_curative_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $curative_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_curative_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -785,17 +769,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $curative_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $curative_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_curative_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -803,17 +787,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_curative_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $curative_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $curative_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $curative_document_lists
@@ -822,61 +806,61 @@ class Home_model extends CI_Model
 
     public function get_companies_list($params)
     {
-    	$this->db->from('pct_order_partner_company_info');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->from('pct_order_partner_company_info');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $company_lists =array();
-        
+        $company_lists = array();
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_id", $keyword)
-                    ->or_like('partner_name',$keyword)
-                    ->or_like('address1',$keyword)
+                    ->or_like('partner_name', $keyword)
+                    ->or_like('address1', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip', $keyword)
                     ->group_end();
-			}
+            }
 
-	    	$this->db->from('pct_order_partner_company_info');
-			$filter_total_records =  $this->db->count_all_results();
+            $this->db->from('pct_order_partner_company_info');
+            $filter_total_records = $this->db->count_all_results();
 
-			if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_id", $keyword)
-                    ->or_like('partner_name',$keyword)
-                    ->or_like('address1',$keyword)
+                    ->or_like('partner_name', $keyword)
+                    ->or_like('address1', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip', $keyword)
                     ->group_end();
-			}
-			
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }			
-			$query = $this->db->get('pct_order_partner_company_info');
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        }
-    	} else {    		
-	    	$this->db->from('pct_order_partner_company_info');
-            $filter_total_records =  $this->db->count_all_results();
- 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            }
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('pct_order_partner_company_info');
-			
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('pct_order_partner_company_info');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->from('pct_order_partner_company_info');
+            $filter_total_records = $this->db->count_all_results();
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('pct_order_partner_company_info');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
@@ -898,26 +882,24 @@ class Home_model extends CI_Model
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1');
 
-        $total_records =  $query->num_rows();
+        $total_records = $query->num_rows();
 
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        
-        
-        $customer_lists =array();
-        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
-        {
+
+
+        $customer_lists = array();
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if(isset($keyword) && !empty($keyword))
-            {
-                $where = ' AND first_name LIKE "%'.$keyword.'%"';
-                $where .= ' OR last_name LIKE "%'.$keyword.'%"';
-                $where .= ' OR email_address LIKE "%'.$keyword.'%"';
+            if (isset($keyword) && !empty($keyword)) {
+                $where = ' AND first_name LIKE "%' . $keyword . '%"';
+                $where .= ' OR last_name LIKE "%' . $keyword . '%"';
+                $where .= ' OR email_address LIKE "%' . $keyword . '%"';
             }
 
-            
+
             $query = $this->db->query('SELECT * 
                                 FROM
                                   customer_basic_details 
@@ -927,32 +909,28 @@ class Home_model extends CI_Model
                                   FROM
                                     customer_basic_details 
                                   WHERE random_password != ""
-                                    AND is_password_updated = 0 AND email_address != "")'.$where.' 
+                                    AND is_password_updated = 0 AND email_address != "")' . $where . ' 
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1');
 
-            $filter_total_records =  $query->num_rows();
+            $filter_total_records = $query->num_rows();
 
 
-            if(isset($keyword) && !empty($keyword))
-            {
-                if(isset($keyword) && !empty($keyword))
-                {
-                    $where = ' AND first_name LIKE "%'.$keyword.'%"';
-                    $where .= ' OR last_name LIKE "%'.$keyword.'%"';
-                    $where .= ' OR email_address LIKE "%'.$keyword.'%"';
+            if (isset($keyword) && !empty($keyword)) {
+                if (isset($keyword) && !empty($keyword)) {
+                    $where = ' AND first_name LIKE "%' . $keyword . '%"';
+                    $where .= ' OR last_name LIKE "%' . $keyword . '%"';
+                    $where .= ' OR email_address LIKE "%' . $keyword . '%"';
                 }
             }
 
-            if(isset($limit) && !empty($limit))
-            {
-                $limit = ' LIMIT ' .$limit;
+            if (isset($limit) && !empty($limit)) {
+                $limit = ' LIMIT ' . $limit;
             }
-            if((isset($offset) && !empty($offset)))
-            {
-                $offset = ' OFFSET '.$offset;
+            if ((isset($offset) && !empty($offset))) {
+                $offset = ' OFFSET ' . $offset;
             }
-            
+
             $query = $this->db->query('SELECT * 
                                 FROM
                                   customer_basic_details 
@@ -962,16 +940,13 @@ class Home_model extends CI_Model
                                   FROM
                                     customer_basic_details 
                                   WHERE random_password != ""
-                                    AND is_password_updated = 0 AND email_address != "")'.$where.' 
+                                    AND is_password_updated = 0 AND email_address != "")' . $where . ' 
                                 GROUP BY email_address 
-                                HAVING COUNT(email_address) = 1'.$limit.$offset);
-            if ($query->num_rows() > 0) 
-            {
+                                HAVING COUNT(email_address) = 1' . $limit . $offset);
+            if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
-        }
-        else
-        {   
+        } else {
 
             $query = $this->db->query('SELECT * 
                                 FROM
@@ -986,16 +961,14 @@ class Home_model extends CI_Model
                                 GROUP BY email_address 
                                 HAVING COUNT(email_address) = 1');
 
-            $filter_total_records =  $query->num_rows();
-            if(isset($limit) && !empty($limit))
-            {
-                $limit = ' LIMIT ' .$limit;
+            $filter_total_records = $query->num_rows();
+            if (isset($limit) && !empty($limit)) {
+                $limit = ' LIMIT ' . $limit;
             }
-            if((isset($offset) && !empty($offset)))
-            {
-                $offset = ' OFFSET '.$offset;
+            if ((isset($offset) && !empty($offset))) {
+                $offset = ' OFFSET ' . $offset;
             }
-            
+
             $query = $this->db->query('SELECT * 
                                 FROM
                                   customer_basic_details 
@@ -1007,10 +980,9 @@ class Home_model extends CI_Model
                                   WHERE random_password != "" 
                                     AND is_password_updated = 0 AND email_address != "") 
                                 GROUP BY email_address 
-                                HAVING COUNT(email_address) = 1'.$limit.$offset);
+                                HAVING COUNT(email_address) = 1' . $limit . $offset);
 
-            if ($query->num_rows() > 0) 
-            {
+            if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
         }
@@ -1021,8 +993,8 @@ class Home_model extends CI_Model
             'data' => $customer_lists
         );
     }
-    
-    public function getUsersForEmail($email, $id) 
+
+    public function getUsersForEmail($email, $id)
     {
         $this->db->select('*');
         $this->db->from('customer_basic_details');
@@ -1030,24 +1002,24 @@ class Home_model extends CI_Model
         $this->db->where('email_address', $email);
         $this->db->where("id !=", $id);
         $query = $this->db->get();
-        $usersLists = $query->result_array();  
-        return $usersLists;  
+        $usersLists = $query->result_array();
+        return $usersLists;
     }
 
     public function get_company_rows($params = array())
     {
-    	$table = 'pct_order_partner_company_info';
+        $table = 'pct_order_partner_company_info';
         $this->db->select('*');
         $this->db->from($table);
-        
+
         if (array_key_exists("where", $params)) {
 
-            foreach ($params['where'] as $key => $val){
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if (array_key_exists("returnType",$params) && $params['returnType'] == 'count') {
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
         } else {
 
@@ -1058,13 +1030,13 @@ class Home_model extends CI_Model
             } else {
                 $this->db->order_by('id', 'asc');
 
-                if (array_key_exists("start",$params) && array_key_exists("limit",$params)) {
-                    $this->db->limit($params['limit'],$params['start']);
-                } elseif (!array_key_exists("start",$params) && array_key_exists("limit",$params)) {
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
             }
         }
         return $result;
@@ -1073,70 +1045,70 @@ class Home_model extends CI_Model
     public function get_cpl_proposed_users_list($params)
     {
         $this->db->where('is_added_lender_by_cpl_proposed', 1);
-    	$this->db->from('customer_basic_details');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists =array();
-        
+        $customer_lists = array();
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
                     ->group_end();
-			}
+            }
 
-           
+
             $this->db->where('is_added_lender_by_cpl_proposed', 1);
-	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
-			if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
                     ->group_end();
-			}
-			
-            $this->db->where('is_added_lender_by_cpl_proposed', 1);
-
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }			
-			$query = $this->db->get('customer_basic_details');
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        }
-    	} else {    		
-            $this->db->where('is_added_lender_by_cpl_proposed', 1);
-	    	$this->db->from('customer_basic_details');
-            $filter_total_records =  $this->db->count_all_results();
+            }
 
             $this->db->where('is_added_lender_by_cpl_proposed', 1);
-            
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
-			
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('customer_basic_details');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->where('is_added_lender_by_cpl_proposed', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->where('is_added_lender_by_cpl_proposed', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('customer_basic_details');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
@@ -1157,28 +1129,28 @@ class Home_model extends CI_Model
                 $this->db->where('is_sales_rep_manager', 1);
             } else if ($user_type == 'escrow') {
                 $this->db->where('is_escrow', 1);
-            } else  if ($user_type == 'lender') {
+            } else if ($user_type == 'lender') {
                 $this->db->where('is_escrow', 0);
-            } else  if ($user_type == 'special_lender') {
+            } else if ($user_type == 'special_lender') {
                 $this->db->where('is_special_lender', 1);
             }
         }
         $this->db->where('is_password_updated', 1);
-    	$this->db->where('status', 1);
-    	$this->db->from('customer_basic_details');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->where('status', 1);
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists =array();
+        $customer_lists = array();
 
-    	if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
@@ -1196,29 +1168,29 @@ class Home_model extends CI_Model
                     $this->db->where('is_sales_rep_manager', 1);
                 } else if ($user_type == 'escrow') {
                     $this->db->where('is_escrow', 1);
-                } else  if ($user_type == 'lender') {
+                } else if ($user_type == 'lender') {
                     $this->db->where('is_escrow', 0);
-                } else  if ($user_type == 'special_lender') {
+                } else if ($user_type == 'special_lender') {
                     $this->db->where('is_special_lender', 1);
                 }
             }
             $this->db->where('status', 1);
-			$this->db->where('is_password_updated', 1);
-	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
+            $this->db->where('is_password_updated', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
-			if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
-                    ->or_like('last_name',$keyword)
-                    ->or_like('email_address',$keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
                     ->group_end();
             }
-            
+
             if (isset($user_type) && !empty($user_type)) {
                 if ($user_type == 'title_officer') {
                     $this->db->where('is_title_officer', 1);
@@ -1229,25 +1201,25 @@ class Home_model extends CI_Model
                     $this->db->where('is_sales_rep_manager', 1);
                 } else if ($user_type == 'escrow') {
                     $this->db->where('is_escrow', 1);
-                } else  if ($user_type == 'lender') {
+                } else if ($user_type == 'lender') {
                     $this->db->where('is_escrow', 0);
-                } else  if ($user_type == 'special_lender') {
+                } else if ($user_type == 'special_lender') {
                     $this->db->where('is_special_lender', 1);
                 }
             }
-			$this->db->where('status', 1);
+            $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
+            }
 
-			$query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('customer_basic_details');
 
-			if ($query->num_rows() > 0)  {
-	            $customer_lists = $query->result_array();
-	        }
-    	} else {  
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
             if (isset($user_type) && !empty($user_type)) {
                 if ($user_type == 'title_officer') {
                     $this->db->where('is_title_officer', 1);
@@ -1258,16 +1230,16 @@ class Home_model extends CI_Model
                     $this->db->where('is_sales_rep_manager', 1);
                 } else if ($user_type == 'escrow') {
                     $this->db->where('is_escrow', 1);
-                } else  if ($user_type == 'lender') {
+                } else if ($user_type == 'lender') {
                     $this->db->where('is_escrow', 0);
-                } else  if ($user_type == 'special_lender') {
+                } else if ($user_type == 'special_lender') {
                     $this->db->where('is_special_lender', 1);
                 }
-            }  		
-    		$this->db->where('status', 1);
+            }
+            $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
-	    	$this->db->from('customer_basic_details');
-            $filter_total_records =  $this->db->count_all_results();
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
             if (isset($user_type) && !empty($user_type)) {
                 if ($user_type == 'title_officer') {
@@ -1279,27 +1251,26 @@ class Home_model extends CI_Model
                     $this->db->where('is_sales_rep_manager', 1);
                 } else if ($user_type == 'escrow') {
                     $this->db->where('is_escrow', 1);
-                } else  if ($user_type == 'lender') {
+                } else if ($user_type == 'lender') {
                     $this->db->where('is_escrow', 0);
-                } else  if ($user_type == 'special_lender') {
+                } else if ($user_type == 'special_lender') {
                     $this->db->where('is_special_lender', 1);
                 }
             }
             $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
-            
-			if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
-			
-			if ($query->num_rows() > 0) 
-	        {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get('customer_basic_details');
 
-    	return array(
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
@@ -1312,72 +1283,63 @@ class Home_model extends CI_Model
         $this->db->where('is_password_updated', 1);
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
-        $total_records =  $this->db->count_all_results();
+        $total_records = $this->db->count_all_results();
 
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        
-        
-        $customer_lists =array();
-        if(isset($params['searchvalue']) && !empty($params['searchvalue']))
-        {
+
+
+        $customer_lists = array();
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if(isset($keyword) && !empty($keyword))
-            {
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address',$keyword);
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->or_like('email_address', $keyword);
                 // $this->db->like('first_name', $keyword);
             }
 
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
             $this->db->from('customer_basic_details');
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
 
-            if(isset($keyword) && !empty($keyword))
-            {
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address',$keyword);
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->or_like('email_address', $keyword);
             }
 
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
-            {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }           
+            }
             $query = $this->db->get('customer_basic_details');
 
-            if ($query->num_rows() > 0) 
-            {
+            if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
-        }
-        else
-        {           
+        } else {
 
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
             $this->db->from('customer_basic_details');
 
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
-            {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
-            
-            if ($query->num_rows() > 0) 
-            {
+
+            if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
-            } 
+            }
         }
 
         return array(
@@ -1390,55 +1352,55 @@ class Home_model extends CI_Model
     public function getCplErrorLogs($params)
     {
         $this->db->from('pct_order_cpl_api_logs');
-        $total_records =  $this->db->count_all_results();
+        $total_records = $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists =array();
+        $customer_lists = array();
 
-        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
             $this->db->from('pct_order_cpl_api_logs');
-            if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('file_number', $keyword)
                     ->or_like('cpl_page', $keyword)
                     ->or_like('error', $keyword)
                     ->group_end();
             }
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-            if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('file_number', $keyword)
                     ->or_like('cpl_page', $keyword)
                     ->or_like('error', $keyword)
                     ->group_end();
             }
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }
-            
-            $this->db->order_by('order_id', 'desc');
-            $query = $this->db->get('pct_order_cpl_api_logs');
-
-            if ($query->num_rows() > 0)  {
-                $customer_lists = $query->result_array();
-            }
-        } else {           
-
-            $this->db->from('pct_order_cpl_api_logs');
-            $filter_total_records =  $this->db->count_all_results();
-
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
             $this->db->order_by('order_id', 'desc');
             $query = $this->db->get('pct_order_cpl_api_logs');
-            
+
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
-            } 
+            }
+        } else {
+
+            $this->db->from('pct_order_cpl_api_logs');
+            $filter_total_records = $this->db->count_all_results();
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $this->db->order_by('order_id', 'desc');
+            $query = $this->db->get('pct_order_cpl_api_logs');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
         }
 
         return array(
@@ -1448,61 +1410,61 @@ class Home_model extends CI_Model
         );
     }
 
-    public function getNotifications() 
+    public function getNotifications()
     {
         $this->db->select('*');
         $this->db->from('pct_notifications');
         $this->db->order_by('name', 'asc');
         $query = $this->db->get();
-        $notifications = $query->result_array();  
-        return $notifications;  
+        $notifications = $query->result_array();
+        return $notifications;
     }
 
     public function get_notifications_list($params)
     {
         $this->db->from('pct_notifications');
-        $total_records =  $this->db->count_all_results();
+        $total_records = $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $notification_lists =array();
+        $notification_lists = array();
 
-        if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
             $this->db->from('pct_notifications');
 
-            if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('name', $keyword)
                     ->group_end();
             }
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-            if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('name', $keyword)
                     ->group_end();
             }
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }           
-            $query = $this->db->get('pct_notifications');
-
-            if ($query->num_rows() > 0)  {
-                $notification_lists = $query->result_array();
-            }
-        } else {           
-            $this->db->from('pct_notifications');
-            $filter_total_records =  $this->db->count_all_results();
-
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_notifications');
-            
+
             if ($query->num_rows() > 0) {
                 $notification_lists = $query->result_array();
-            } 
+            }
+        } else {
+            $this->db->from('pct_notifications');
+            $filter_total_records = $this->db->count_all_results();
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('pct_notifications');
+
+            if ($query->num_rows() > 0) {
+                $notification_lists = $query->result_array();
+            }
         }
 
         return array(
@@ -1517,61 +1479,61 @@ class Home_model extends CI_Model
         $this->db->where('status', 1);
         $this->db->from('pct_order_partner_company_info');
         $this->db->like('partner_type_id', '10010');
-        $total_records =  $this->db->count_all_results();
+        $total_records = $this->db->count_all_results();
 
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $escrow_officer_lists =array();
-        
+        $escrow_officer_lists = array();
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
-                    ->or_like('email',$keyword)
+                    ->or_like('email', $keyword)
                     ->group_end();
             }
             $this->db->like('partner_type_id', '10010');
             $this->db->where('status', 1);
 
             $this->db->from('pct_order_partner_company_info');
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
-                    ->or_like('email',$keyword)
+                    ->or_like('email', $keyword)
                     ->group_end();
             }
             $this->db->like('partner_type_id', '10010');
             $this->db->where('status', 1);
 
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }           
-            $query = $this->db->get('pct_order_partner_company_info');
-            if ($query->num_rows() > 0) {
-                $escrow_officer_lists = $query->result_array();
-            }
-        } else {            
-            $this->db->where('status', 1);
-            $this->db->like('partner_type_id', '10010');
-            $this->db->from('pct_order_partner_company_info');
-            $filter_total_records =  $this->db->count_all_results();
-
-            $this->db->like('partner_type_id', '10010');
-            $this->db->where('status', 1);
-            
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_order_partner_company_info');
-            
             if ($query->num_rows() > 0) {
                 $escrow_officer_lists = $query->result_array();
-            } 
+            }
+        } else {
+            $this->db->where('status', 1);
+            $this->db->like('partner_type_id', '10010');
+            $this->db->from('pct_order_partner_company_info');
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->like('partner_type_id', '10010');
+            $this->db->where('status', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('pct_order_partner_company_info');
+
+            if ($query->num_rows() > 0) {
+                $escrow_officer_lists = $query->result_array();
+            }
         }
         return array(
             'recordsTotal' => $total_records,
@@ -1584,33 +1546,33 @@ class Home_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('pct_order_partner_company_info');
-        
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }else{
+            } else {
                 $this->db->order_by('id', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
-                    $this->db->limit($params['limit'],$params['start']);
-                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                
+
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
             }
         }
-        
+
         // Return fetched data
         return $result;
     }
@@ -1618,159 +1580,161 @@ class Home_model extends CI_Model
     public function get_mortgage_users($params)
     {
         $this->db->where('is_mortgage_user', 1);
-    	$this->db->where('status', 1);
-    	$this->db->from('customer_basic_details');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->where('status', 1);
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-    
-        $customer_lists =array();
-    	if(isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
 
-    		if(isset($keyword) && !empty($keyword)) {
+        $customer_lists = array();
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start();
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
-                $this->db->or_like('email_address',$keyword);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->or_like('email_address', $keyword);
                 $this->db->group_end();
-			}
+            }
 
             $this->db->where('status', 1);
             $this->db->where('is_mortgage_user', 1);
-	    	$this->db->from('customer_basic_details');
-			$filter_total_records =  $this->db->count_all_results();
-			if(isset($keyword) && !empty($keyword)) {
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start();
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%".$keyword."%'", NULL, FALSE);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->group_end();
-			}
+            }
 
-			$this->db->where('status', 1);
+            $this->db->where('status', 1);
             $this->db->where('is_mortgage_user', 1);
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
+            }
 
-			$query = $this->db->get('customer_basic_details');
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        }
-    	} else {    		
-    		$this->db->where('status', 1);
+            $query = $this->db->get('customer_basic_details');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->where('status', 1);
             $this->db->where('is_mortgage_user', 1);
-	    	$this->db->from('customer_basic_details');
-            $filter_total_records =  $this->db->count_all_results();
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->where('is_mortgage_user', 1);
-			$this->db->where('status', 1);
-			if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            $this->db->where('status', 1);
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
-			
-			if ($query->num_rows() > 0) {
-	            $customer_lists = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('customer_basic_details');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $customer_lists
         );
     }
 
-	public function get_pending_json_files() {
-		
-		$this->db->select('file_number');
-		$this->db->from('pct_order_prelim_summary');
-		
-		$query = $this->db->get();
-        $result = ($query->num_rows() > 0)?$query->result_array():array();
-		$file_array = array();
-		if(count($result)) {
-			$file_array = array_column($result,'file_number');
-		}
-		
-		$this->db->distinct()->select('count(order_details.file_number) as total_files');
-		$this->db->from('pct_order_api_logs');
-		$this->db->join('order_details','order_details.id = pct_order_api_logs.order_id');
-		$this->db->where_not_in('order_details.file_number',$file_array);
-		$query = $this->db->get();
-		$result = ($query->num_rows() > 0)?$query->result_array():array();
-		if(count($result)) {
-			return $result[0]['total_files'];
-		}
-		else {
-			return 0;
-		}
+    public function get_pending_json_files()
+    {
 
-	}
+        $this->db->select('file_number');
+        $this->db->from('pct_order_prelim_summary');
 
-	public function get_failed_json_files() {
-		
-		$this->db->select('count(id) as total_files');
-		$this->db->from('order_details');
-		$this->db->where('prelim_flag','0');
-		$query = $this->db->get();
-		$result = $query->row_array();
-        if(!empty($result)) { 
+        $query = $this->db->get();
+        $result = ($query->num_rows() > 0) ? $query->result_array() : array();
+        $file_array = array();
+        if (count($result)) {
+            $file_array = array_column($result, 'file_number');
+        }
+
+        $this->db->distinct()->select('count(order_details.file_number) as total_files');
+        $this->db->from('pct_order_api_logs');
+        $this->db->join('order_details', 'order_details.id = pct_order_api_logs.order_id');
+        $this->db->where_not_in('order_details.file_number', $file_array);
+        $query = $this->db->get();
+        $result = ($query->num_rows() > 0) ? $query->result_array() : array();
+        if (count($result)) {
+            return $result[0]['total_files'];
+        } else {
+            return 0;
+        }
+
+    }
+
+    public function get_failed_json_files()
+    {
+
+        $this->db->select('count(id) as total_files');
+        $this->db->from('order_details');
+        $this->db->where('prelim_flag', '0');
+        $query = $this->db->get();
+        $result = $query->row_array();
+        if (!empty($result)) {
             return $result['total_files'];
         } else {
             return 0;
         }
-	}
+    }
 
-	public function get_records($table,$condition = null,$order = null) {
-		$this->db->from($table);
-		if($condition) {
-			$this->db->where($condition);
-		}
-		if($order) {
-			foreach($order as $order_key=>$order_val) {
-				$this->db->order_by($order_key, $order_val);
-			}
-		}
-		$query = $this->db->get();
-		if ($query->num_rows() > 0)  {
-			return $query->result_array();
-		} else {
-			return array();
-		}
-	}
+    public function get_records($table, $condition = null, $order = null)
+    {
+        $this->db->from($table);
+        if ($condition) {
+            $this->db->where($condition);
+        }
+        if ($order) {
+            foreach ($order as $order_key => $order_val) {
+                $this->db->order_by($order_key, $order_val);
+            }
+        }
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
 
     public function get_pre_listing_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $grant_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -1780,17 +1744,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $grant_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -1798,17 +1762,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $grant_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $grant_document_lists
@@ -1818,35 +1782,35 @@ class Home_model extends CI_Model
     public function get_lp_listing_document_list($params)
     {
         $this->db->from('order_details')
-                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $grant_document_lists = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
             }
 
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('order_details.file_number', $keyword)
-                        ->or_like('pct_order_documents.document_name', $keyword)
-                        ->group_end();
-			}
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('order_details.file_id, order_details.lp_report_status, order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -1856,17 +1820,17 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $grant_document_lists = $query->result_array();
-	        }
-    	} else {    		
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        } else {
 
-    		$this->db->from('order_details')
+            $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.file_id, order_details.lp_report_status, order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
@@ -1874,17 +1838,17 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $grant_document_lists = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $grant_document_lists
@@ -1895,38 +1859,38 @@ class Home_model extends CI_Model
     {
         // $this->db->from('admin')
         $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at')->from('pct_admin_activity_logs')
-                ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
+            ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
         //          ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
-        $total_records =  $this->db->count_all_results();
-    
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $admin_logs_list = array();
 
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('admin.first_name', $keyword)
-                        ->or_like('admin.last_name', $keyword)
-                        ->or_like('pct_admin_activity_logs.message', $keyword)
-                        ->group_end();
-               
+                    ->like('admin.first_name', $keyword)
+                    ->or_like('admin.last_name', $keyword)
+                    ->or_like('pct_admin_activity_logs.message', $keyword)
+                    ->group_end();
+
             }
 
             $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
                 ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
-			$filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
-			if(isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
-                        ->like('admin.first_name', $keyword)
-                        ->or_like('admin.last_name', $keyword)
-                        ->or_like('pct_admin_activity_logs.message', $keyword)
-                        ->group_end();
-			}
+                    ->like('admin.first_name', $keyword)
+                    ->or_like('admin.last_name', $keyword)
+                    ->or_like('pct_admin_activity_logs.message', $keyword)
+                    ->group_end();
+            }
 
             $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
@@ -1935,33 +1899,33 @@ class Home_model extends CI_Model
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
-            }	
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $admin_logs_list = $query->result_array();
-	        }
-    	} else {    		
-    		$this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $admin_logs_list = $query->result_array();
+            }
+        } else {
+            $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
                 ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('admin.first_name, admin.last_name, admin.id, pct_admin_activity_logs.message, pct_admin_activity_logs.created_at');
             $this->db->from('pct_admin_activity_logs')
                 ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $this->db->order_by('pct_admin_activity_logs.id', 'desc');
 
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-			$query = $this->db->get();
-			if ($query->num_rows() > 0) {
-	            $admin_logs_list = $query->result_array();
-	        } 
-    	}
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $admin_logs_list = $query->result_array();
+            }
+        }
 
-    	return array(
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $admin_logs_list
@@ -1977,73 +1941,73 @@ class Home_model extends CI_Model
             3 => 'doc_sub_type',
             4 => 'sub_type_list',
         ];
-    	$this->db->from('pct_lp_document_types');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->from('pct_lp_document_types');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $orderBy = $orderColumnList[$params['orderColumn']];
         $orderDir = $params['orderDir'];
-        $lp_document_lists =array();
-        
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+        $lp_document_lists = array();
 
-    		if (isset($keyword) && !empty($keyword)) {
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
                     // ->or_like('doc_sub_type_description',$keyword)
-                    ->or_like('doc_type',$keyword)
+                    ->or_like('doc_type', $keyword)
                     ->or_like('sub_type_list', $keyword)
                     ->group_end();
-			}
+            }
             $this->db->from('pct_lp_document_types');
             // $this->db->where('subtype_flag', 0);
-            if((isset($params['is_display']))) {
+            if ((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
-			$filter_total_records =  $this->db->count_all_results();
-			if (isset($keyword) && !empty($keyword)) {
+            $filter_total_records = $this->db->count_all_results();
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
                     // ->or_like('doc_sub_type_description',$keyword)
-                    ->or_like('doc_type',$keyword)
+                    ->or_like('doc_type', $keyword)
                     ->or_like('sub_type_list', $keyword)
                     ->group_end();
-			}
+            }
             // $this->db->where('subtype_flag', 0);
-            if((isset($params['is_display']))) {
+            if ((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by($orderBy, $orderDir);
-			$query = $this->db->get('pct_lp_document_types');
-			if ($query->num_rows() > 0) {
-	            $lp_document_lists = $query->result_array();
-	        }
-    	} else {    		
-	    	$this->db->from('pct_lp_document_types');
+            $query = $this->db->get('pct_lp_document_types');
+            if ($query->num_rows() > 0) {
+                $lp_document_lists = $query->result_array();
+            }
+        } else {
+            $this->db->from('pct_lp_document_types');
             // $this->db->where('subtype_flag', 0);
-            if((isset($params['is_display']))) {
+            if ((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
-            $filter_total_records =  $this->db->count_all_results();
+            $filter_total_records = $this->db->count_all_results();
             // $this->db->where('subtype_flag', 0);
-            if((isset($params['is_display']))) {
+            if ((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by($orderBy, $orderDir);
-			$query = $this->db->get('pct_lp_document_types');
-			if ($query->num_rows() > 0) {
-	            $lp_document_lists = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('pct_lp_document_types');
+            if ($query->num_rows() > 0) {
+                $lp_document_lists = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $lp_document_lists
@@ -2052,53 +2016,53 @@ class Home_model extends CI_Model
 
     public function get_lp_alert_list($params)
     {
-    	$this->db->from('pct_lp_alert');
-		$total_records =  $this->db->count_all_results();
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $this->db->from('pct_lp_alert');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         // $orderDir = $params['orderDir'];
-        $lp_alert =array();
-        
+        $lp_alert = array();
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
+            $keyword = $params['searchvalue'];
 
-    		if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("days", $keyword)
-                    ->or_like('color_code',$keyword)
+                    ->or_like('color_code', $keyword)
                     ->group_end();
-			}
+            }
             $this->db->from('pct_lp_alert');
-            
-			$filter_total_records =  $this->db->count_all_results();
-			if (isset($keyword) && !empty($keyword)) {
+
+            $filter_total_records = $this->db->count_all_results();
+            if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("days", $keyword)
-                    ->or_like('color_code',$keyword)
+                    ->or_like('color_code', $keyword)
                     ->group_end();
-			}
+            }
 
-            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('days', 'asc');
-			$query = $this->db->get('pct_lp_alert');
-			if ($query->num_rows() > 0) {
-	            $lp_alert = $query->result_array();
-	        }
-    	} else {    		
-	    	$this->db->from('pct_lp_alert');
-            $filter_total_records =  $this->db->count_all_results();
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            $query = $this->db->get('pct_lp_alert');
+            if ($query->num_rows() > 0) {
+                $lp_alert = $query->result_array();
+            }
+        } else {
+            $this->db->from('pct_lp_alert');
+            $filter_total_records = $this->db->count_all_results();
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('days', 'asc');
-			$query = $this->db->get('pct_lp_alert');
-			if ($query->num_rows() > 0) {
-	            $lp_alert = $query->result_array();
-	        } 
-    	}
-    	return array(
+            $query = $this->db->get('pct_lp_alert');
+            if ($query->num_rows() > 0) {
+                $lp_alert = $query->result_array();
+            }
+        }
+        return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
             'data' => $lp_alert
@@ -2113,59 +2077,59 @@ class Home_model extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function insertLpDocType($data = array(), $table = '') 
+    public function insertLpDocType($data = array(), $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
         }
-        if(!empty($data)){
+        if (!empty($data)) {
 
-        	$data['created_at'] = date("Y-m-d H:i:s");
+            $data['created_at'] = date("Y-m-d H:i:s");
 
             // Insert data
             $insert = $this->db->insert($table, $data);
-            
+
             // Return the status
-            return $insert?$this->db->insert_id():false;
+            return $insert ? $this->db->insert_id() : false;
         }
         return false;
     }
 
-    public function insertLpAlert($data = array(), $table = '') 
+    public function insertLpAlert($data = array(), $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_alert';
         }
-        if(!empty($data)){
-        	$data['created_at'] = date("Y-m-d H:i:s");
+        if (!empty($data)) {
+            $data['created_at'] = date("Y-m-d H:i:s");
 
             // Insert data
             $insert = $this->db->insert($table, $data);
-            
+
             // Return the status
-            return $insert?$this->db->insert_id():false;
+            return $insert ? $this->db->insert_id() : false;
         }
         return false;
     }
 
-    public function deleteLpDocType($condition = array(), $table = '') 
+    public function deleteLpDocType($condition = array(), $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
         }
-        if(!empty($condition)){
+        if (!empty($condition)) {
             // Delete data
             return $this->db->delete($table, $condition);
         }
         return false;
     }
 
-    public function deleteLpAlert($condition = array(), $table = '') 
+    public function deleteLpAlert($condition = array(), $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_alert';
         }
-        if(!empty($condition)){
+        if (!empty($condition)) {
             // Delete data
             return $this->db->delete($table, $condition);
         }
@@ -2176,18 +2140,37 @@ class Home_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('pct_lp_document_types');
-        
-        if (array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if (array_key_exists("id", $params)){
+
+        if (array_key_exists("id", $params)) {
             $this->db->where('id', $params['id']);
-            $query = $this->db->get();
-            $result = $query->row_array();
         }
+        $query = $this->db->get();
+        $result = $query->row_array();
+        // Return fetched data
+        return $result;
+    }
+
+    public function getMappedDocType($params = array())
+    {
+        $this->db->select('doc_type, map_in_section');
+        $this->db->from('pct_lp_document_types');
+        if (array_key_exists("whereIn", $params)) {
+            foreach ($params['whereIn'] as $key => $val) {
+                $this->db->where_in($key, $val);
+            }
+        }
+
+        if (array_key_exists("id", $params)) {
+            $this->db->where('id', $params['id']);
+        }
+        $query = $this->db->get();
+        $result = $query->result_array();
         // Return fetched data
         return $result;
     }
@@ -2196,14 +2179,14 @@ class Home_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('pct_lp_alert');
-        
-        if (array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if (array_key_exists("id", $params)){
+
+        if (array_key_exists("id", $params)) {
             $this->db->where('id', $params['id']);
             $query = $this->db->get();
             $result = $query->row_array();
@@ -2212,58 +2195,58 @@ class Home_model extends CI_Model
         return $result;
     }
 
-    public function updateLpDocType($data, $condition = array(), $table = '') 
+    public function updateLpDocType($data, $condition = array(), $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
         }
 
-        if(!empty($condition)){
+        if (!empty($condition)) {
             // Update data
             $data['updated_at'] = date("Y-m-d H:i:s");
 
             // Update data
             $update = $this->db->update($table, $data, $condition);
-            
+
             // Return the status
-            return $update?true:false;
+            return $update ? true : false;
         }
         return false;
     }
 
-    public function updateLpAlert($data, $condition = array(), $table = '') 
+    public function updateLpAlert($data, $condition = array(), $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_alert';
         }
 
-        if(!empty($condition)){
+        if (!empty($condition)) {
             // Update data
             $data['updated_at'] = date("Y-m-d H:i:s");
 
             // Update data
             $update = $this->db->update($table, $data, $condition);
-            
+
             // Return the status
-            return $update?true:false;
+            return $update ? true : false;
         }
         return false;
     }
-    
+
     public function getDocumetTypes()
     {
         $this->db->select('*')
             ->from('pct_lp_document_types');
-            
+
         $this->db->where('is_display', 1);
         //$this->db->where('is_notice', 0);
         //$this->db->group_by('doc_type');
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
             return array();
-        }         
+        }
     }
 
     public function getSearchDocList($seachValue)
@@ -2271,65 +2254,66 @@ class Home_model extends CI_Model
         $this->db->select('id, doc_type, doc_type_description');
         $this->db->select("CONCAT(doc_type, ' - ', CONCAT_WS(',', doc_type_description)) AS value")
             ->from('pct_lp_document_types');
-            
+
         $this->db->where('subtype_flag', 0);
         $this->db->group_start()
             ->like('doc_type', $seachValue)
             ->or_like('doc_type_description', $seachValue)
-        ->group_end();
+            ->group_end();
         $query = $this->db->get();
         // print_r($this->db->last_query());die;
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
             return array();
         }
     }
 
-    public function getSearchDocSubList($seachValue) {
+    public function getSearchDocSubList($seachValue)
+    {
         $this->db->select('id, doc_type')
             ->from('pct_lp_document_types');
-            
+
         $this->db->where('subtype_flag', 1);
         $this->db->like('doc_type', $seachValue);
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
             return array();
         }
     }
 
-    public function getAllSubCategory() 
+    public function getAllSubCategory()
     {
         $this->db->select('doc_type')
             ->from('pct_lp_document_types');
-            
+
         $this->db->where('subtype_flag', 1);
         //$this->db->where('is_notice', 0);
         //$this->db->group_by('doc_type');
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
             return array();
         }
     }
-    
+
     public function getNoticeDocumetTypes()
     {
         $this->db->select('*')
             ->from('pct_lp_document_types');
-            
+
         $this->db->where('is_display', 1);
         // $this->db->where('is_notice', 1);
         $this->db->group_by('doc_type');
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
             return array();
-        }         
+        }
     }
 
     public function getSectionWiseLPDocumentList($section)
@@ -2348,34 +2332,29 @@ class Home_model extends CI_Model
 
         $this->db->select('*');
         $this->db->from($table);
-        
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }
-            else
-            {
+            } else {
                 $this->db->order_by('first_name', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
-                    $this->db->limit($params['limit'],$params['start']);
-                }
-                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                $query = $this->db->get();              
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
             }
         }
         // Return fetched data
@@ -2389,34 +2368,29 @@ class Home_model extends CI_Model
         $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
         $this->db->from($table);
         $this->db->where('is_title_officer', 1);
-        
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }
-            else
-            {
+            } else {
                 $this->db->order_by('id', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
-                    $this->db->limit($params['limit'],$params['start']);
-                }
-                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                $query = $this->db->get();              
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
             }
         }
         // Return fetched data
