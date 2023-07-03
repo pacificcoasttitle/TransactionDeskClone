@@ -5488,18 +5488,18 @@ class Home extends MX_Controller
                     $displayInH = ($displaySection == 'H') ? 'selected' : '';
                     $displayInI = ($displaySection == 'I') ? 'selected' : '';
                     $data .= "<tr>
-                                <td>$i</td>
-                                <td>$document_name</td>
-                                <td>$instrument</td>
-                                <td>$recorded_date</td>
-                                <td>$parties</td>
-                                <td>$coupling</td>
-                                <td>$remarks</td>
-                                <td>$document_type</td>
-                                <td>$document_sub_type</td>
-                                <td><select class='custom-select custom-select-sm' name='select_section[" . $id . "]' class=" . $displaySection . " ><option value=''>Select Section</option><option value='G' " . $displayInG . " >Section G</option><option value='H' " . $displayInH . ">Section H</option><option value='I' " . $displayInI . " >Section I</option></select></td>
-                                <td><label class='option block'><input type='checkbox' id='$id' $vesChecked name='ves_instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
-                                <td><label class='option block'><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
+                                <td width='3%'>$i</td>
+                                <td width='12%'>$document_name</td>
+                                <td width='6%'>$instrument</td>
+                                <td width='8%'>$recorded_date</td>
+                                <td width='25%'>$parties</td>
+                                <td width='6%'>$coupling</td>
+                                <td width='6%'>$remarks</td>
+                                <td width='4%'>$document_type</td>
+                                <td width='5%'>$document_sub_type</td>
+                                <td width='15%'><select class='custom-select custom-select-sm' name='select_section[" . $id . "]' class=" . $displaySection . " ><option value=''>Select Section</option><option value='G' " . $displayInG . " >Section G</option><option value='H' " . $displayInH . ">Section H</option><option value='I' " . $displayInI . " >Section I</option></select></td>
+                                <td width='5%'><label class='option block'><input type='checkbox' id='$id' $vesChecked name='ves_instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
+                                <td width='5%'><label class='option block'><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
                             </tr>";
                     $i++;
                 }
