@@ -527,9 +527,11 @@ class Titlepoint
                                 $postData['is_suffix_adjustment'] = 1;
                                 return $this->generateGeoDoc($postData);
                             } else {
-                                $postData['unit_number'] = 1;
-                                $postData['address_search_done_flag'] = 1;
-                                return $this->generateGeoDoc($postData);
+                                if($postData['is_suffix_adjustment'] == 1) {
+                                    $postData['unit_number'] = 1;
+                                    $postData['address_search_done_flag'] = 1;
+                                    return $this->generateGeoDoc($postData);
+                                }
                             }
                         }
                         $serviceId = $requestSummary['ID'];
