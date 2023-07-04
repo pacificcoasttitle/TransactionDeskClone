@@ -444,7 +444,7 @@ class Titlepoint
         $apn = $postData['apn'];
         $unit_number = $postData['unit_number'];
 
-        if (empty($unit_number) || (isset($postData['search_by_address']) && $postData['search_by_address'] == 1)) {
+        if (empty($unit_number) || (isset($postData['tax_search_done_flag']) && $postData['tax_search_done_flag'] == 1)) {
             $parameters = 'Address.FullAddress=' . $property . ';General.AutoSearchTaxes=False;Tax.CurrentYearTaxesOnly=False;General.AutoSearchProperty=True;General.AutoSearchOwnerNames=False;General.AutoSearchStarters=False;Property.IntelligentPropertyGrouping=true;';
             $addressFlag = 1;
         } else {
@@ -525,9 +525,10 @@ class Titlepoint
                                 $property = implode(" ", $words);
                                 $postData['property'] = $property;
                                 $postData['is_suffix_adjustment'] = 1;
+                                $postData['address_search_done_flag'] = 1;
                                 return $this->generateGeoDoc($postData);
                             } else {
-                                if($postData['is_suffix_adjustment'] == 1) {
+                                if (!isset($postData['tax_search_done_flag']) && $lineNumArr[1] == 0) {
                                     $postData['unit_number'] = 1;
                                     $postData['address_search_done_flag'] = 1;
                                     return $this->generateGeoDoc($postData);
@@ -554,7 +555,6 @@ class Titlepoint
                                     $serviceId = $service['ID'];
                                 }
                             }
-
                         } else {
                             $thumbnail = $requestSummary['ThumbNails']['ResultThumbNail'];
                             //print_r($thumbnail);exit;
@@ -562,14 +562,14 @@ class Titlepoint
                             $lineNumArr = explode("=", $lineNum);
                             if ($lineNumArr[1] > $count) {
                                 $count = $lineNumArr[1];
-                                $resultId = $thumbnail['ID'];
-                                $serviceId = $requestSummary['ID'];
                             } else {
                                 if (!isset($postData['address_search_done_flag'])) {
-                                    $postData['search_by_address'] = 1;
+                                    $postData['tax_search_done_flag'] = 1;
                                     return $this->generateGeoDoc($postData);
                                 }
                             }
+                            $resultId = $thumbnail['ID'];
+                            $serviceId = $requestSummary['ID'];
                         }
                         //echo $resultId."-----".$serviceId;exit;
                     }
