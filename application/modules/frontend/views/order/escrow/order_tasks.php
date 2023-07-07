@@ -346,6 +346,18 @@
 																					</span>
 																					<span class="text">Add Note</span>
 																				</a>
+
+																				<?php if ($task['id'] == 62) { ?>
+																					<a data-target="#request_docs_information" data-toggle="modal"
+																						role="button" href="#"
+																						class="btn button btn-success btn-icon-split float-right mr-2"
+																						style="width:auto;margin-right:10px;">
+																						<span class="icon text-white-50">
+																							<i class="fa fa-plus"></i>
+																						</span>
+																						<span class="text">Send Docs Request</span>
+																					</a>
+																				<?php } ?>
 																			</h6>
 																		</div>
 																	</div>
@@ -1014,6 +1026,53 @@
 						<button type="submit" data-btntext-sending="Sending..."
 							class="button btn-primary">Submit</button>
 						<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" width="500px" id="request_docs_information" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url(); ?>send-request-docs"
+				enctype="multipart/form-data">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">Request Docs Information</h6>
+							</div>
+							<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+							<input type="hidden" name="file_id" id="file_id" value="<?php echo $orderDetails['file_id'];?>">
+
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<label>Email<span class="required"> *</span></label>
+											<input type="text" class="form-control" placeholder="Email"
+												name="email" id="email" value="" required="required">
+										</div>
+									</div>
+								</div>
+								<button type="submit" data-btntext-sending="Sending..."
+									class="btn btn-success btn-icon-split btn-sm">
+									<span class="icon text-white-50">
+										<i class="fas fa-check"></i>
+									</span>
+									<span class="text">Submit</span>
+								</button>
+								<button type="reset" data-dismiss="modal" aria-label="Close"
+									class="btn btn-danger btn-icon-split btn-sm">
+									<span class="icon text-white-50">
+										<i class="fas fa-ban"></i>
+									</span>
+									<span class="text">Cancel</span>
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</form>

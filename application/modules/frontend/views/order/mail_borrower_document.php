@@ -134,6 +134,52 @@
         border-radius: 25px;
         color: #555;
     }
+
+    .bttn-icon-split {
+        padding: 0;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: stretch;
+        justify-content: center;
+    }
+    .bttn-info {
+        color: #fff !important;
+        background-color: #36b9cc !important;
+        border-color: #36b9cc !important;
+    }
+    .bttn {
+        display: inline-block;
+        font-weight: 400;
+        color: #858796;
+        text-align: center;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.35rem;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    .bttn-icon-split .icon {
+        background: rgba(0,0,0,.15);
+        display: inline-block;
+        padding: 0.775rem 1.75rem;
+        font-size: 17px;
+    }
+    .text-white-50 {
+        color: rgba(255,255,255,.5)!important;
+    }
+    .bttn-icon-split .text {
+        display: inline-block;
+        padding: 0.775rem 0.75rem;
+        font-size: 17px;
+    }
     
 </style>
 
@@ -178,6 +224,7 @@
                                                         
                                                         <input type="hidden" id="file_id" name="file_id" value="<?php echo $orderDetails['file_id'];?>">
                                                         <input type="hidden" id="order_id" name="order_id" value="<?php echo $orderDetails['order_id'];?>">
+                                                        <input type="hidden" id="task_name" name="task_name" value="<?php echo $task_name;?>">
                                                         
                                                         <div class="row">
                                                             <div class="col-xs-8">
@@ -195,20 +242,24 @@
                                                         <?php if (!empty($tasks)) { ?>
                                                             <div class="row">
                                                                 <div class="col-xs-8">
-                                                                    <select class="form-control" id="task_id" name="task_id" required>
+                                                                    <select class="form-control" id="task_id" name="task_id" required <?php echo ($task_name == 'request_docs') ? 'disabled' : '';?>>
                                                                         <option value="">Select Task</option>
                                                                         <?php foreach($tasks as $task) {?>
-                                                                            <option value="<?php echo $task->id;?>"><?php echo $task->name;?></option>
+                                                                            <option <?php echo ($task_name == 'request_docs') ? 'selected' : '';?> value="<?php echo $task->id;?>"><?php echo $task->name;?></option>
                                                                         <?php } ?>
                                                                     </select>
                                                                 </div>
                                                             </div>
                                                         <?php } ?>
                                                         
-                                                        <div class="col-md-3 custom__task_actions" style="padding: 0px !important;">
-                                                            <button type="submit" class="btn button btn-primary" style="width:100% !important;background-color: #04415D;">
-                                                                <span class="text">Upload Documents</span>
-                                                            </button>
+                                                        <div class="col-md-3 custom__task_actions" style="padding: 0px !important;margin-bottom: 50px;">
+                                                            
+                                                            <button type="submit" class="bttn bttn-info bttn-icon-split">
+																<span class="icon text-white-50">
+																	<i class="fa fa-upload"></i>
+																</span>
+																<span class="text">Upload Documents</span>
+															</button>
                                                         </div>
                                                     </form>
                                                     <div id="result"></div>
