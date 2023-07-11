@@ -5418,6 +5418,8 @@ class Cron extends MX_Controller {
                     sleep(3);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->generateTaxDocument($requestId, $orderId, $fileNumber);
+                } else {
+                    $generateImgStatus = 'failed';
                 }
             } else if ($generateImgStatus == 'success')
             {
@@ -5457,7 +5459,7 @@ class Cron extends MX_Controller {
         $taxDocStatus = $titlePointDetails[0]['tax_file_status'];
         $emailSentFlag = $titlePointDetails[0]['email_sent_status'];
         $this->apiLogs->syncLogs(0, 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
-        if ($emailSentFlag != 1  && $taxDocStatus == 'success' && $lvDocStatus == 'success') 
+        if ($emailSentFlag != 1  && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception'))
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
@@ -5497,6 +5499,8 @@ class Cron extends MX_Controller {
                     sleep(3);
                     $this->lvcount += 1;
                     return $this->generateLVDocument($requestId, $orderId, $fileNumber);
+                } else {
+                    $generateImgStatus = 'failed';
                 }
             } else if ($generateImgStatus == 'success')
             {
