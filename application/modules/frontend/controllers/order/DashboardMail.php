@@ -1982,7 +1982,7 @@ class DashboardMail extends MX_Controller {
 		}	
 	}
 
-    public function uploadBorrowerDocument($random_number)
+    public function uploadBorrowerDocument($task, $random_number)
     {
         $this->load->model('admin/escrow/tasks_model');
         $data['errors'] = array();
@@ -2002,6 +2002,7 @@ class DashboardMail extends MX_Controller {
         $data['orderDetails'] = $this->order->get_order_details($fileId, 1);
         $prod_type = $data['orderDetails']['prod_type'];
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
+        $data['task_name'] = $task;
         $data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
         $this->load->view('layout/head_dashboard', $data);
         $this->load->view('order/mail_borrower_document', $data);
@@ -2018,6 +2019,8 @@ class DashboardMail extends MX_Controller {
 		$config['max_size'] = 18000;
 		$this->load->library('upload', $config);
         $fileId = $this->input->post('file_id');
+        $task_name = $this->input->post('task_name');
+        
 
         if (!is_dir('uploads/borrower')) {
 			mkdir('./uploads/borrower', 0777, TRUE);
@@ -2041,6 +2044,12 @@ class DashboardMail extends MX_Controller {
                     rename(FCPATH."/uploads/borrower/".$data['file_name'], FCPATH."/uploads/borrower/".$document_name);
                     $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
 
+                    if ($this->input->post('task_id')) {
+                        $task_id =  $this->input->post('task_id');
+                    } else {
+                        $task_id = 62;
+                    }
+                    
                     $documentData = array(
 						'document_name' => $document_name,
 						'original_document_name' => $data['file_name'],
@@ -2048,7 +2057,7 @@ class DashboardMail extends MX_Controller {
 						'document_size' => ($data['file_size'] * 1000),
 						'user_id' => 0,
 						'order_id' => $this->input->post('order_id'),
-						'task_id' => $this->input->post('task_id'),
+						'task_id' => $task_id,
 						'description' => 'Borrower Document',
 						'is_sync' => 1,
 						'is_uploaded_by_borrower' => 1
@@ -2116,7 +2125,7 @@ class DashboardMail extends MX_Controller {
                 $this->order->sendNotification($message, 'completed', $manager->id, 1);
             }
         }
-		redirect(base_url().'borrower-document/'.$fileId);
+        redirect(base_url().'borrower-document/'.$task_name."/".$orderInfo->random_number);
 	}
 
     public function borrowerSellerForm($random_number)

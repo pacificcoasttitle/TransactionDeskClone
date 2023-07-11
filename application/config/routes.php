@@ -225,7 +225,7 @@ $route['escrow-dashboard'] = 'frontend/order/escrow/index';
 $route['order/escrow/order-tasks/(:num)'] = 'frontend/order/escrow/orderTasks/$1';
 $route['get-escrow-orders'] = 'frontend/order/escrow/get_escrow_orders';
 $route['upload-documet-resware/(:any)'] = 'frontend/order/escrow/uploadBorrowerDocumentResware/$1';
-$route['borrower-document/(:any)'] = 'frontend/order/dashboardMail/uploadBorrowerDocument/$1';
+$route['borrower-document/(:any)/(:any)'] = 'frontend/order/dashboardMail/uploadBorrowerDocument/$1/$2';
 $route['borrower-document-upload'] = 'frontend/order/dashboardMail/borrower_document_upload';
 $route['escrow-create-note'] = 'frontend/order/escrow/create_note';
 $route['add-borrower-on-order'] = 'frontend/order/escrow/addBorrowerOnOrder';
@@ -244,6 +244,7 @@ $route['create-netsheet/(:any)'] = 'frontend/order/dashboardMail/create_netsheet
 $route['get-data-from-adobe'] = 'frontend/order/adobe/getDataFromAdobe';
 $route['sales-current-month-history'] = 'frontend/order/salesRep/salesCurrentMonthSummary';
 $route['add-escrow-ins-order'] = 'frontend/order/escrow/addEscrowInsOrder';
+$route['send-request-docs'] = 'frontend/order/escrow/sendRequestDocs';
 $route['generate-all-document-from-title-point'] = 'frontend/order/home/generateAllDocumentFromTitlePoint';
 
 /* Route for PCT-Order backend*/
@@ -571,6 +572,7 @@ $route['hr/admin/create-note'] = 'admin/hr/orders/create_note';
 $route['hr/admin/add-borrower-on-order'] = 'admin/hr/orders/addBorrowerOnOrder';
 $route['hr/admin/add-borrower-on-order-for-payoff'] = 'admin/hr/orders/addBorrowerOnOrderForPayoff';
 $route['hr/admin/add-lender-on-order'] = 'admin/hr/orders/addLenderOnOrder';
+$route['hr/admin/send-request-docs'] = 'admin/hr/orders/sendRequestDocs';
 $route['hr/admin/add-buyer-on-order'] = 'admin/hr/orders/addBuyerOnOrder';
 $route['hr/admin/add-seller-on-order'] = 'admin/hr/orders/addSellerOnOrder';
 $route['hr/admin/task-documents'] = 'admin/hr/orders/taskDocuments';
