@@ -1125,7 +1125,8 @@ class Home extends MX_Controller
 					'lender_details' => $lender_details,
 					'escrow_details' => $escrow_details,
 					'currYear' => CURRENT_YEAR,
-					'randomString' => $randomString
+					'randomString' => $randomString,
+					'titlePointDetails' => $titlePointDetails
 				);
 
 				$from_name = 'Pacific Coast Title Company';
