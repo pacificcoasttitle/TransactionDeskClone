@@ -575,6 +575,16 @@ class TitlePoint extends MX_Controller {
 					$tpData = 	array(
 						'first_installment' => json_encode($firstInstallment),
 						'second_installment' => json_encode($secondInstallment),
+						'tax_rate_area' => isset($result['Result']['TaxReport']['TaxRateArea']) && !empty($result['Result']['TaxReport']['TaxRateArea']) ? $result['Result']['TaxReport']['TaxRateArea'] : '',
+						'use_code' => isset($result['Result']['TaxReport']['UseCode']) && !empty($result['Result']['TaxReport']['UseCode']) ? $result['Result']['TaxReport']['UseCode'] : '',
+						'region_code' => isset($result['Result']['TaxReport']['RegionCode']) && !empty($result['Result']['TaxReport']['RegionCode']) ? $result['Result']['TaxReport']['RegionCode'] : '',
+						'flood_zone' => isset($result['Result']['TaxReport']['FloodZone']) && !empty($result['Result']['TaxReport']['FloodZone']) ? $result['Result']['TaxReport']['FloodZone'] : '',
+						'zoning_code' => isset($result['Result']['TaxReport']['ZoningCode']) && !empty($result['Result']['TaxReport']['ZoningCode']) ? $result['Result']['TaxReport']['ZoningCode'] : '',
+						'taxability_code' => isset($result['Result']['TaxReport']['TaxabilityCode']) && !empty($result['Result']['TaxReport']['TaxabilityCode']) ? $result['Result']['TaxReport']['TaxabilityCode'] : '',
+						'tax_rate' => isset($result['Result']['TaxReport']['TaxRate']) && !empty($result['Result']['TaxReport']['TaxRate']) ? $result['Result']['TaxReport']['TaxRate'] : '',
+						'issue_date' => isset($result['Result']['TaxReport']['IssueDate']) && !empty($result['Result']['TaxReport']['IssueDate']) ? $result['Result']['TaxReport']['IssueDate'] : '',
+						'land' => isset($result['Result']['TaxReport']['LandValuation']) && !empty($result['Result']['TaxReport']['LandValuation']) ? $result['Result']['TaxReport']['LandValuation'] : '',
+						'improvements' => isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : ''
 					);
 
 					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 

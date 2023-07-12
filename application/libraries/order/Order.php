@@ -3587,7 +3587,8 @@ class Order
             'LoanAmount' => $orderDetails['loan_amount'],
             'LoanNumber' => $orderDetails['loan_number'],
             'EscrowNumber' => $orderDetails['escrow_number'],
-            'randomString' => $this->CI->order->randomPassword()
+            'randomString' => $this->CI->order->randomPassword(),
+            'titlePointDetails' => $titlePointDetails[0]
         );
 
         $buyerDetails = $listingDetails = $parties_email = array();
@@ -3656,7 +3657,7 @@ class Order
         $taxfilename = $orderNumber . '.pdf';
         $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
         $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
-        $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+        //$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
 
 
         //$parties_email[] = env('ORDER_ADMIN_EMAIL');
