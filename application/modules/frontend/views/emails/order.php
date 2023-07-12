@@ -704,6 +704,175 @@
                         ?>
                         
                       </table>
+                      <p style="text-align:center;margin: 10px 0px;">
+                        <span style="font-size: 18px; color: #d35411;"><strong>Property Tax Details</strong></span>
+                      </p>
+                      <table style="height:32px;border-color:#cccccc;margin-left:auto;margin-right:auto;" border="1" width="581" cellpadding="5">
+                        
+                        <tr>
+                          <td style="width:282.465px;text-align:left;">
+                            <strong>Tax Rate Area:</strong> <?php echo $titlePointDetails['tax_rate_area']; ?>
+                          </td>
+                          <td style="width:283.576px;text-align:left;">
+                            <strong>Use Code:</strong> <?php echo $titlePointDetails['use_code']; ?>
+                          </td>
+                        </tr>
+                        
+                        <tr>
+                          <td style="width:282.465px;text-align:left;">
+                            <strong>Region Code:</strong> <?php echo $titlePointDetails['region_code']; ?>
+                          </td>
+                          <td style="width:283.576px;text-align:left;">
+                           <strong>Flood Zone:</strong> <?php echo $titlePointDetails['flood_zone']; ?>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td style="width:282.465px;text-align:left;">
+                            <strong>Zoning Code:</strong> <?php echo $titlePointDetails['zoning_code']; ?>
+                          </td>
+                          <td style="width:283.576px;text-align:left;">
+                           <strong>Taxability Code:</strong> <?php echo $titlePointDetails['taxability_code']; ?>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td style="width:282.465px;text-align:left;">
+                            <strong>Tax Rate:</strong> <?php echo $titlePointDetails['tax_rate']; ?>%
+                          </td>
+                          <td style="width:283.576px;text-align:left;">
+                           <strong>Issue Date:</strong> <?php echo $titlePointDetails['issue_date']; ?>
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td style="width:282.465px;text-align:left;">
+                            <strong>Land:</strong> <?php echo $titlePointDetails['land']; ?>%
+                          </td>
+                          <td style="width:283.576px;text-align:left;">
+                           <strong>Improvements:</strong> <?php echo $titlePointDetails['improvements']; ?>
+                          </td>
+                        </tr> 
+
+                        
+
+                        <?php
+                              if((isset($titlePointDetails['first_installment']) && !empty($titlePointDetails['first_installment'])) || (isset($titlePointDetails['second_installment']) && !empty($titlePointDetails['second_installment'])))
+                              {
+                                  $firstInstallment = json_decode($titlePointDetails['first_installment'],TRUE);
+                                  $secondInstallment = json_decode($titlePointDetails['second_installment'],TRUE);
+                          ?>
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>1st Installment</strong>
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>2nd Installment</strong> 
+                              </td>
+                            </tr>     
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>Balance:</strong> <?php echo isset($firstInstallment['Balance']) && !empty($firstInstallment['Balance']) ? $firstInstallment['Balance'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Amount:</strong> <?php echo isset($firstInstallment['Amount']) && !empty($firstInstallment['Amount']) ? $firstInstallment['Amount'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>Balance:</strong> <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Amount:</strong> <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>DueDate:</strong> <?php echo isset($firstInstallment['DueDate']) && !empty($firstInstallment['DueDate']) ? $firstInstallment['DueDate'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Number:</strong> <?php echo isset($firstInstallment['Number']) && !empty($firstInstallment['Number']) ? $firstInstallment['Number'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>DueDate:</strong> <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Number:</strong> <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>PaymentDate:</strong> <?php echo isset($firstInstallment['PaymentDate']) && !empty($firstInstallment['PaymentDate']) ? $firstInstallment['PaymentDate'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Number:</strong> <?php echo isset($firstInstallment['Number']) && !empty($firstInstallment['Number']) ? $firstInstallment['Number'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>PaymentDate:</strong> <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Number:</strong> <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>Penalty:</strong> <?php echo isset($firstInstallment['Penalty']) && !empty($firstInstallment['Penalty']) ? $firstInstallment['Penalty'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Status:</strong> <?php echo isset($firstInstallment['Status']) && !empty($firstInstallment['Status']) ? $firstInstallment['Status'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>Penalty:</strong> <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-'?> 
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>Status:</strong> <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>AmountPaid:</strong> <?php echo isset($firstInstallment['AmountPaid']) && !empty($firstInstallment['AmountPaid']) ? $firstInstallment['AmountPaid'] : '-'?>
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>TaxYear:</strong> <?php echo isset($firstInstallment['TaxYear']) && !empty($firstInstallment['TaxYear']) ? $firstInstallment['TaxYear'] : '-'?>
+                              </td>
+                            </tr> 
+
+                            <tr>
+                              <td style="width:282.465px;text-align:left;">
+                                <strong>AmountPaid:</strong> <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-'?>
+                              </td>
+                              <td style="width:283.576px;text-align:left;">
+                               <strong>TaxYear:</strong> <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?>
+                              </td>
+                            </tr> 
+                                 
+                          <?php
+                              }
+                          ?>
+                        <tr>
+                          <td style="width:282.465px;text-align:left;">
+                            <strong>1st Installment</strong>
+                          </td>
+                          <td style="width:283.576px;text-align:left;">
+                           <strong>2nd Installment</strong> 
+                          </td>
+                        </tr> 
+                      </table>
                       <!-- <p style="text-align:center;">
                          
                       </p> -->
