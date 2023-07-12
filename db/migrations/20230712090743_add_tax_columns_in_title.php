@@ -26,7 +26,7 @@ final class AddTaxColumnsInTitle extends AbstractMigration
             ->addColumn('zoning_code', 'string', ['after' => 'flood_zone', 'null' => true])
             ->addColumn('taxability_code', 'string', ['after' => 'zoning_code', 'null' => true])
             ->addColumn('tax_rate', 'string', ['after' => 'taxability_code', 'null' => true])
-            ->addColumn('issue_date', 'string', ['after' => 'bill_no', 'null' => true])
+            ->addColumn('issue_date', 'string', ['after' => 'tax_rate', 'null' => true])
             ->addColumn('land', 'string', ['after' => 'issue_date', 'null' => true])
             ->addColumn('improvements', 'string', ['after' => 'land', 'null' => true])
             ->update();
