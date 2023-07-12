@@ -315,7 +315,7 @@ class SalesRep extends MX_Controller
 
                 // $datediff = $now - $your_date;
                 // $datediff = round($datediff / (60 * 60 * 24));
-                if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0))) {
+                if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0 && strtolower($order['resware_status']) == 'open'))) {
                     foreach ($lpAlertRange as $key => $val) {
                         if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
                             $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
