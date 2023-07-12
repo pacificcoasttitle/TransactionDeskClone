@@ -254,7 +254,7 @@
                         {*/
                             $apn = str_replace('0000', '0-000', $apn);
                     ?>
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                                 <div id="taxDocumentInfo">
                                     <?php
                                         if(isset($tax_file_url) && !empty($tax_file_url))
@@ -273,7 +273,7 @@
                                     <?php } else {
                                             $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
                                     ?>
-                                            <!-- <a href="javascript:void(0);" onclick='imageCreateRequest("<?php // echo $tax_serviceId; ?>",3,"<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-tax-doc">Download Tax Document</a> -->
+                                            
                                             <div class="tax-no-data">
                                                 <span class="orderinfo1">No tax document available. Our customer service will look for it and contact you within X minutes.</span>
                                             </div>
@@ -283,7 +283,7 @@
                                     
                                 </div>
                                 <div class="loader" style="display: none;"></div>
-                            </div>
+                            </div> -->
                     <?php
                         /*}*/
                     ?>

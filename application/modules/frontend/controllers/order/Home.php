@@ -1164,7 +1164,7 @@ class Home extends MX_Controller
 				}
 
 				if ($this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
-					$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+					//$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
 					$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
 				}
 

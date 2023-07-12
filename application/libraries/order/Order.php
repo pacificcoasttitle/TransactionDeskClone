@@ -3657,7 +3657,7 @@ class Order
         $taxfilename = $orderNumber . '.pdf';
         $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
         $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
-        $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+        //$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
 
 
         //$parties_email[] = env('ORDER_ADMIN_EMAIL');
