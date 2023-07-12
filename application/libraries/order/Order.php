@@ -3587,7 +3587,8 @@ class Order
             'LoanAmount' => $orderDetails['loan_amount'],
             'LoanNumber' => $orderDetails['loan_number'],
             'EscrowNumber' => $orderDetails['escrow_number'],
-            'randomString' => $this->CI->order->randomPassword()
+            'randomString' => $this->CI->order->randomPassword(),
+            'titlePointDetails' => $titlePointDetails[0]
         );
 
         $buyerDetails = $listingDetails = $parties_email = array();
