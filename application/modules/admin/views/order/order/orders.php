@@ -69,7 +69,8 @@
                             <th>Property Address</th>
                             <th>Product Type</th>
                             <th>Sales Rep</th> 
-                            <th>Created By</th>           
+                            <th>Created By</th>   
+                            <th>Email Status</th>          
                             <th>Avoid Duplication</th>           
                             <th>Created At</th>           
                             <th>Action</th>
