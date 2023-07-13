@@ -3684,7 +3684,7 @@ class Order
         // if ($emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
         if ($emailSentFlag != 1 && ($taxDataStatus == 'success' || $taxDataStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
-                
+
                 $parties_email[] = 'rudy@pct.com';
                 $parties_email[] = 'evelasquez@pct.com';
                 $mailParams['cc'] = json_encode($cc);
@@ -3697,7 +3697,7 @@ class Order
                     
                     /** Notify CS */
                     // array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
-                    $to = ['openorders@pct.com', 'rudy@pct.com', 'evelasquez@pct.com'];
+                    $to = ['openorders@pct.com', 'cs@pct.com'];
                     if ($taxDataStatus != 'success') {
                         $subject = $subject . ' But Tax details not found';
                         send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
@@ -3713,7 +3713,7 @@ class Order
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     /** Notify CS */
-                    $to = ['openorders@pct.com', 'rudy@pct.com', 'evelasquez@pct.com'];
+                    $to = ['openorders@pct.com', 'cs@pct.com'];
                     if ($taxDataStatus != 'success') {
                         $subject = $subject . ' But Tax details not found';
                         send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
