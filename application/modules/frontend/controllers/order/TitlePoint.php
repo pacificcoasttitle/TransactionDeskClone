@@ -547,6 +547,7 @@ class TitlePoint extends MX_Controller {
 					$this->addLogs($methodId,$responseStatus,'',$error,$random_number);
 				}
 			}
+			$taxDataStatus = 'Failed';
 			if($methodId == 3)
 			{
 				if($responseStatus == 'Success')
@@ -554,7 +555,8 @@ class TitlePoint extends MX_Controller {
 					$firstInstallment = $secondInstallment = array();
 					if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
 					{
-						$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];					
+						$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];
+						$taxDataStatus = 'Success';
 					}
 
 					if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
@@ -585,7 +587,7 @@ class TitlePoint extends MX_Controller {
 						'issue_date' => isset($result['Result']['TaxReport']['IssueDate']) && !empty($result['Result']['TaxReport']['IssueDate']) ? $result['Result']['TaxReport']['IssueDate'] : '',
 						'land' => isset($result['Result']['TaxReport']['LandValuation']) && !empty($result['Result']['TaxReport']['LandValuation']) ? $result['Result']['TaxReport']['LandValuation'] : '',
 						'improvements' => isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : '',
-						'tax_data_status' => $responseStatus
+						'tax_data_status' => $taxDataStatus
 					);
 
 					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
