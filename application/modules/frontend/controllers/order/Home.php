@@ -1198,16 +1198,26 @@ class Home extends MX_Controller
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 				$lvDocStatus = strtolower($titlePointDetails[0]['lv_file_status']);
 				$taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
+				$taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
 				$emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
-				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+				// if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDataStatus == 'success' || $taxDataStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
 					$to = 'hitesh.p@crestinfosystems.com';
 					$cc = ['piyush.j@crestinfosystems.net'];
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
 					$mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
 					$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
 
+					$to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
+                    $taxDataStatus = 'falied';
+					if ($taxDataStatus != 'success') {
+						$subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
+						send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
+						$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_order_mail_CS_notification', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
+					}
+
 					$tpData = array(
-						'email_sent_status' => 1
+						'email_sent_status' => ($mail_result) ? 1 : 0
 					);
 
 					$condition = array(

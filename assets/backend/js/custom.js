@@ -2096,6 +2096,146 @@ $(document).ready(function () {
         });
     }
 
+    /* Tax data */
+    if ($('#tbl-tax-data-listing').length) 
+    {
+        log_list = $('#tbl-tax-data-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],
+            "columns": [
+                {
+                    "width": "5%"
+                },
+                {
+                    "width": "10%"
+                },
+                {
+                    "width": "30%"
+                },
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "15%"
+                },
+                {
+                    "width": "10%"
+                },
+            ],
+            "language": {
+                searchPlaceholder: "Order #",
+                paginate: {
+                  next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            "dom": '<"row"<"col-sm-12"<"text-left"f>>><"row"<"col-sm-12"rt>><"row"<"col-sm-12"l><"col-sm-5"i><"col-sm-7"p>><"clear">',
+            initComplete: function() {
+                    var input = $('.dataTables_filter input').unbind(),
+                    self = this.api(),
+                    $taxLogDropDown = $('<span style="margin-left:20px;">Message: </span><select style="width:auto;" id="taxLog" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="success">Success</option><option value="error">Error</option></select>'),
+                    $taxLogDateRange = $('<span style="margin-left:20px;" class="date-range-span">Created Date: </span><div id="taxDateRangeControl" class="date-range-control"><i class="fa fa-calendar"></i>&nbsp;<span></span> <i class="fa fa-caret-down float-right"></i><input type="hidden" id="taxDateRange" /></div>'),
+                    // $searchButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Search')
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-success btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-search"></i></span><span class="text">Search</span></button>')
+                    .click(function () {
+                        self.search(input.val(), $('#customerDateRange').val()).draw();
+                    }),
+                    // $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Clear')
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-eraser"></i></span><span class="text">Clear</span></button>')
+                    .click(function () {
+                        input.val('');
+                        $("#taxLog").val('');
+                        $('#taxDateRangeControl span').html('');
+                        $('#taxDateRange').val('');
+                        $searchButton.click();
+                    })
+                    
+                    $('.dataTables_filter').append($taxLogDropDown, $taxLogDateRange, $clearButton, $searchButton);
+                    
+            },
+            "drawCallback": function () {               
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,            
+            "serverSide": true,
+            "ajax": {                
+                url: base_url+"admin/order/titlePoint/get_tax_data", // json datasource
+                type: "post",
+                "data": function (d) {
+                    d.dateRange = $('#taxDateRange').val();
+                    d.taxLog = $('#taxLog').val();
+                }, 
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-tax-data-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-tax-data-listing_processing").css("display", "none");
+
+                }
+            },
+                        
+        });
+
+        setTimeout(function () {
+            var start = moment().startOf('month')
+            var end = moment();
+
+            function cb(start, end) {
+                $('#taxDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                $('#taxDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+            }
+
+            var dateRange = $('#taxDateRangeControl').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                },
+                opens: 'right',
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            dateRange.on('apply.daterangepicker', function (ev, picker) {
+                $('#taxDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                $('#taxDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+            });
+
+            dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                $('#taxDateRangeControl span').html('');
+                $('#taxDateRange').val('');
+            });
+
+            //cb(start, end);
+
+        }, 1000);
+    }
+    /* Tax data */
+
     /* Tax logs */
     if ($('#tbl-tax-log-listing').length) 
     {
