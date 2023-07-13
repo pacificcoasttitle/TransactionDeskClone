@@ -70,6 +70,7 @@ class Order extends MX_Controller
             $nestedData[] = $value['product_type'];
             $nestedData[] = $value['sales_rep_name'];
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
+            $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
             $property_id = $value['property_id'];
             if ($value['allow_duplication'] == 1) {
                 $checked = 'checked';
@@ -517,6 +518,7 @@ class Order extends MX_Controller
             $nestedData[] = $value['product_type'];
             $nestedData[] = $value['sales_rep_name'];
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
+            $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
             $nestedData[] = $value['document_name'];
             $lp_report_status = $value['lp_report_status'];
             $disabled = '';
