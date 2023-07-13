@@ -584,7 +584,8 @@ class TitlePoint extends MX_Controller {
 						'tax_rate' => isset($result['Result']['TaxReport']['TaxRate']) && !empty($result['Result']['TaxReport']['TaxRate']) ? $result['Result']['TaxReport']['TaxRate'] : '',
 						'issue_date' => isset($result['Result']['TaxReport']['IssueDate']) && !empty($result['Result']['TaxReport']['IssueDate']) ? $result['Result']['TaxReport']['IssueDate'] : '',
 						'land' => isset($result['Result']['TaxReport']['LandValuation']) && !empty($result['Result']['TaxReport']['LandValuation']) ? $result['Result']['TaxReport']['LandValuation'] : '',
-						'improvements' => isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : ''
+						'improvements' => isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : '',
+						'tax_data_status' => $responseStatus
 					);
 
 					if ($this->session->has_userdata('tp_api_id_'.$random_number)) 
@@ -606,6 +607,15 @@ class TitlePoint extends MX_Controller {
 
 					}
 					$this->addLogs($methodId,$responseStatus,$message,$error,$random_number);
+					/** Start: Save Tax data xml response in S3 */
+					if (!is_dir('uploads/tax-data-xml')) {
+						mkdir('./uploads/tax-data-xml', 0777, TRUE);
+					}
+					$pdfFilePath = './uploads/tax-data-xml/tp_api_id_' . $random_number . '.xml';
+					// print_r($pdfFilePath);die;
+					file_put_contents($pdfFilePath, $file);
+					$this->order->uploadDocumentOnAwsS3('tp_api_id_' . $random_number . '.xml', 'tax-data-xml');
+					/** End: Save Tax data xml response in S3 */
 				}
 				else
 				{

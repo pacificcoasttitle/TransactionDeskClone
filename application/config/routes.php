@@ -285,6 +285,7 @@ $route['order/admin/lv-documents'] = 'admin/order/home/lv_document';
 $route['order/admin/master-users'] = 'admin/order/home/masterUsers';
 $route['order/admin/add-new-master-user'] = 'admin/order/home/addNewMasterUser';
 $route['order/admin/tax-log'] = 'admin/order/TitlePoint/taxLog';
+$route['order/admin/tax-data'] = 'admin/order/TitlePoint/taxData';
 $route['order/admin/tax-documents'] = 'admin/order/home/tax_document';
 $route['order/admin/grant-deed-log'] = 'admin/order/TitlePoint/grantDeedLog';
 $route['order/admin/curative-documents'] = 'admin/order/home/curative_document';

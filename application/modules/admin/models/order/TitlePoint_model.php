@@ -330,7 +330,119 @@ class TitlePoint_model extends CI_Model
         
         return $query->row_array();
     }
+    
+    public function getTaxData($params)
+    {
+        $this->db->where('file_id IS NOT NULL');
+        
+        $this->db->from($this->table);
+        $total_records =  $this->db->count_all_results();
 
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        
+        
+        $logs_lists =array();
+        if((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['dateRange']) && !empty($params['dateRange'])) || (isset($params['taxLog']) && !empty($params['taxLog'])))
+        {
+           
+            $keyword = $params['searchvalue'];
+            $dateRange = trim($params['dateRange']);
+            $taxLog = $params['taxLog'];
+            $ymdStartDate = '';
+            $ymdEndDate = '';
+            if (!empty($dateRange)) {
+                $dateRangeArr = explode(' - ', $dateRange);
+                $startDate = $dateRangeArr[0];
+                $endDate = $dateRangeArr[1];
+                $ymdStartDate = date("Y-m-d 00:00:00", strtotime($startDate));
+                $ymdEndDate = date("Y-m-d 23:59:59", strtotime($endDate));
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('file_number', $keyword);
+            }
+            if (!empty($taxLog) && $taxLog == 'success') {
+                $this->db->where('tax_data_status', $taxLog);
+            } else if (!empty($taxLog) && $taxLog == 'error') {
+                $this->db->group_start()
+                    ->where('tax_data_status !=', 'success')
+                    ->or_where('tax_data_status is null')
+                    ->group_end();
+            }
+
+            $this->db->where('file_id IS NOT NULL');
+            $this->db->from($this->table);
+            $filter_total_records =  $this->db->count_all_results();
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+
+            if (!empty($dateRange)) {
+                $this->db->where('created_at >=', $ymdStartDate);
+                $this->db->where('created_at <=', $ymdEndDate);
+            }
+
+            if(isset($keyword) && !empty($keyword)) {
+                $this->db->like('file_number', $keyword);
+            }
+            
+            if (!empty($taxLog) && $taxLog == 'success') {
+                $this->db->where('tax_data_status', $taxLog);
+            } else if (!empty($taxLog) && $taxLog == 'error') {
+                $this->db->group_start()
+                    ->where('tax_data_status !=', 'success')
+                    ->or_where('tax_data_status is null')
+                    ->group_end();
+            }
+
+            $this->db->order_by('id', 'desc');
+            
+            $this->db->where('file_id IS NOT NULL');
+            
+
+            $query = $this->db->get($this->table);
+           
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            }
+            
+        }
+        else
+        {
+            $this->db->where('file_id IS NOT NULL');
+            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+
+            $this->db->from($this->table);
+
+            $filter_total_records =  $this->db->count_all_results();
+
+            
+            $this->db->where('file_id IS NOT NULL');
+            // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
+            if((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset)))
+            {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get($this->table);
+            
+            if ($query->num_rows() > 0) 
+            {
+                $logs_lists = $query->result_array();
+            } 
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists
+        );
+    }
     public function getTaxLogs($params)
     {
         //print_r($params);exit;
