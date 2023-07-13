@@ -1181,6 +1181,7 @@ class Home extends MX_Controller
 					$parties_email[] = $escrow_officer_email;
 				}
 
+				$parties_email[] = 'openorders@pct.com';
 				/*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
 				//$parties_email[] = env('ORDER_ADMIN_EMAIL');
 				$cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
