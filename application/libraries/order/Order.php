@@ -3006,8 +3006,8 @@ class Order
                     $subject = 'LP Report';
                     $to = $salesManger['email_address'];
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
-                    $cc = array('hitesh.p@crestinfosystems.com');
-                    $to = 'piyush.j@crestinfosystems.net';
+                    // $cc = array('hitesh.p@crestinfosystems.com');
+                    // $to = 'piyush.j@crestinfosystems.net';
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -3664,7 +3664,7 @@ class Order
         $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
         $this->CI->load->helper('sendemail');
 
-        $cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+        // $cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
 
         $mailParams = array(
             'from_mail' => $from_mail,
@@ -3685,30 +3685,34 @@ class Order
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
                 $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
                 try {
-                    $to = 'hitesh.p@crestinfosystems.com';
-                    $cc = ['piyush.j@crestinfosystems.net'];
+                    // $to = 'hitesh.p@crestinfosystems.com';
+                    // $cc = ['piyush.j@crestinfosystems.net'];
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
-                    $to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
-                    $taxDataStatus = 'falied';
+                    
+                    /** Notify CS */
+                    // array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+                    $to = ['openorders@pct.com', 'rudy@pct.com', 'evelasquez@pct.com'];
                     if ($taxDataStatus != 'success') {
                         $subject = $subject . ' But Tax details not found';
                         send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
                     }
+                    /** End Notify CS */
                 } catch (Exception $e) {
                 }
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
             } else {
                 $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
                 try {
-                    $to = 'hitesh.p@crestinfosystems.com';
-                    $cc = ['piyush.j@crestinfosystems.net'];
+                    // $to = 'hitesh.p@crestinfosystems.com';
+                    // $cc = ['piyush.j@crestinfosystems.net'];
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
-                    $to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
-                    $taxDataStatus = 'falied';
+                    /** Notify CS */
+                    $to = ['openorders@pct.com', 'rudy@pct.com', 'evelasquez@pct.com'];
                     if ($taxDataStatus != 'success') {
                         $subject = $subject . ' But Tax details not found';
                         send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
                     }
+                    /** End Notify CS */
                 } catch (Exception $e) {
                 }
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
