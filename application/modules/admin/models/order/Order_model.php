@@ -46,12 +46,13 @@ class Order_model extends CI_Model
                 $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
             
-            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
+            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $total_records =  $this->db->count_all_results();
             
@@ -87,12 +88,13 @@ class Order_model extends CI_Model
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $this->db->order_by("order_details.id", "desc");
 
@@ -106,12 +108,13 @@ class Order_model extends CI_Model
                 $orders_lists = $query->result_array();
             }
         } else {
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
        
             $total_records =  $this->db->count_all_results();
@@ -144,12 +147,13 @@ class Order_model extends CI_Model
                 
             }
             
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
             $this->db->order_by("order_details.id", "desc");
@@ -568,12 +572,13 @@ class Order_model extends CI_Model
                 $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
             }
             
-            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
+            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $total_records =  $this->db->count_all_results();
@@ -615,12 +620,13 @@ class Order_model extends CI_Model
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
            
-            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name')
+            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $this->db->order_by("order_details.id", "desc");
@@ -635,12 +641,13 @@ class Order_model extends CI_Model
                 $orders_lists = $query->result_array();
             }
         } else {
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
        
@@ -677,12 +684,13 @@ class Order_model extends CI_Model
                 $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s',strtotime($start_date)));
                 $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59',strtotime($end_date)));
             }
-            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name')
+            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 

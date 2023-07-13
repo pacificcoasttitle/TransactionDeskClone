@@ -95,6 +95,7 @@ $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 			$this->uri->uri_string() == 'order/admin/lv-log' || 
 			$this->uri->uri_string() == 'order/admin/pre-listing' || 
 			$this->uri->uri_string() == 'order/admin/grant-deed-log' ||
+			$this->uri->uri_string() == 'order/admin/tax-data' ||
 			$this->uri->uri_string() == 'order/admin/tax-log' ||
 			$this->uri->uri_string() == 'order/admin/partner-api-log' ||
 			$this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
@@ -105,7 +106,8 @@ $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/lv-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lv-log'; ?>">Legal Vesting</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/pre-listing') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/pre-listing'; ?>">Pre Listing</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/grant-deed-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/grant-deed-log'; ?>">Grant Deed</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">Tax</a>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/tax-data') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-data'; ?>">Tax Data</a>
+				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">Tax Document</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/partner-api-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/partner-api-log'; ?>">Partner Api</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/cpl-error-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/cpl-error-logs'; ?>">CPL Error</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/lp-xml-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-xml-logs'; ?>">LP Xml</a>

@@ -3649,8 +3649,9 @@ class Order
         }
 
         //$parties_email[] = 'hitesh.p@crestinfosystems.com';
-        $parties_email[] = 'rudy@pct.com';
-        $parties_email[] = 'evelasquez@pct.com';
+        // $parties_email[] = 'rudy@pct.com';
+        // $parties_email[] = 'evelasquez@pct.com';
+        $parties_email[] = 'openorders@pct.com';
         $file = array();
         $lvfilename = $orderNumber . '.pdf';
         $deedfilename = $orderNumber . '.pdf';
@@ -3676,16 +3677,32 @@ class Order
             'cc' => json_encode($cc)
         );
         $lvDocStatus = strtolower($titlePointDetails[0]['lv_file_status']);
+        $taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
         $taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
-        if ($emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+        // if ($emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+        if ($emailSentFlag != 1 && ($taxDataStatus == 'success' || $taxDataStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
+
+                $parties_email[] = 'rudy@pct.com';
+                $parties_email[] = 'evelasquez@pct.com';
+                $mailParams['cc'] = json_encode($cc);
                 $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
                 try {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
+                    $cc = $parties_email;
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
+                    
+                    /** Notify CS */
+                    // array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+                    $to = ['openorders@pct.com', 'cs@pct.com'];
+                    if ($taxDataStatus != 'success') {
+                        $subject = $subject . ' But Tax details not found';
+                        send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
+                    }
+                    /** End Notify CS */
                 } catch (Exception $e) {
                 }
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
@@ -3695,12 +3712,19 @@ class Order
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
+                    /** Notify CS */
+                    $to = ['openorders@pct.com', 'cs@pct.com'];
+                    if ($taxDataStatus != 'success') {
+                        $subject = $subject . ' But Tax details not found';
+                        send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
+                    }
+                    /** End Notify CS */
                 } catch (Exception $e) {
                 }
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
             }
             $tpData = array(
-                'email_sent_status' => 1
+                'email_sent_status' => ($mail_result) ? 1 : 0
             );
 
             $condition = array(

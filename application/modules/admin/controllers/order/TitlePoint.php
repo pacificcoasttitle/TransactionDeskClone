@@ -301,6 +301,88 @@ class TitlePoint extends MX_Controller {
         // $this->load->view('order/layout/footer', $data);
     }
 
+    public function taxData()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Tax Data';
+        $this->admintemplate->show("order/home", "tax_data", $data);
+    }
+
+    public function get_tax_data()
+    {
+        $params = array();
+
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['taxLog'] = isset($_POST['taxLog']) && !empty($_POST['taxLog']) ? $_POST['taxLog'] : '';
+
+            $pageno = ($params['start'] / $params['length'])+1;
+
+            $logs_list = $this->titlePoint_model->getTaxData($params);
+
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['dateRange'] = isset($_POST['dateRange']) && !empty($_POST['dateRange']) ? $_POST['dateRange'] : '';
+            $params['taxLog'] = isset($_POST['taxLog']) && !empty($_POST['taxLog']) ? $_POST['taxLog'] : '';
+            $logs_list = $this->titlePoint_model->getTaxData($params);          
+        }
+        $data = array(); 
+        
+        if(isset($logs_list['data']) && !empty($logs_list['data']))
+        {
+            $count = $params['start'] + 1;
+            foreach ($logs_list['data'] as $key => $value) 
+            {
+                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                if(isset($file_id) && !empty($file_id))
+                {
+                    $order_details = $this->titlePoint_model->get_order_details($file_id);
+
+                    $nestedData=array();
+                    $nestedData[] = $count;
+                    $nestedData[] = $value['file_number'];
+                    $nestedData[] = $order_details['full_address'];
+                    $nestedData[] = $order_details['apn'];
+                    
+
+                    if ((!empty($value['tax_data_status']))) {
+                        $nestedData[] = $value['tax_data_status'];
+                    } else {
+                        $nestedData[] = 'Failed';
+                    }
+					$nestedData[] = convertTimezone($value['created_at']);
+                    $orderId = $order_details['order_id'];
+                    $sessionId = $value['session_id'];
+                    $documentUrl = env('AWS_PATH').'tax-data-xml/'.$sessionId.'.xml';
+                    if (!empty($value['tax_data_status']) && $this->order->fileExistOrNotOnS3('tax-data-xml/'.$sessionId.'.xml')) {
+                        $nestedData[] = "<div style='display:flex;'><a href='javascript:void(0)' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"xml"'.");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    } else {
+                        $nestedData[] = 'XML not exist';
+                    }
+                    
+                    $data[] = $nestedData;
+                    $count++;
+                }
+            }
+        }
+        $json_data['recordsTotal'] = intval( $logs_list['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $logs_list['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
     public function get_tax_logs()
     {
         $params = array();
