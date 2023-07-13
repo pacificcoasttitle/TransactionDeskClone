@@ -3651,6 +3651,7 @@ class Order
         //$parties_email[] = 'hitesh.p@crestinfosystems.com';
         $parties_email[] = 'rudy@pct.com';
         $parties_email[] = 'evelasquez@pct.com';
+        $parties_email[] = 'openorders@pct.com';
         $file = array();
         $lvfilename = $orderNumber . '.pdf';
         $deedfilename = $orderNumber . '.pdf';
