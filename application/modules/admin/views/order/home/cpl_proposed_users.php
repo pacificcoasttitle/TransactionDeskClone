@@ -1,3 +1,9 @@
+<?php 
+    $userdata = $this->session->userdata('admin');
+	$roleList = $this->common->getRoleList();
+	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$roleName = $roleList[$role_id];
+?>
 <style>
 .dataTables_length {
     width: 250px !important;
@@ -9,14 +15,16 @@
 		<div class="col-sm-6">
 			<h1 class="h3 text-gray-800"> Master Users </h1>
 		</div>
-		<div class="col-sm-6">
-            <a href="javascript:void(0);" data-export-type="csv" id="export_cpl_proposed_users" class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-file-export"></i>
-                </span>
-                <span class="text"> Export </span> 
-            </a>
-		</div>
+        <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+            <div class="col-sm-6">
+                <a href="javascript:void(0);" data-export-type="csv" id="export_cpl_proposed_users" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-file-export"></i>
+                    </span>
+                    <span class="text"> Export </span> 
+                </a>
+            </div>
+        <?php endif; ?>
 	</div>
     <div class="card shadow mb-4">
         <div class="card-header datatable-header py-3">

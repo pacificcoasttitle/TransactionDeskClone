@@ -1,6 +1,8 @@
 <?php 
-$userdata = $this->session->userdata('admin');
-$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$userdata = $this->session->userdata('admin');
+	$roleList = $this->common->getRoleList();
+	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$roleName = $roleList[$role_id];
 ?>
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -64,8 +66,10 @@ $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lenders'; ?>">Lenders</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/mortgage-brokers') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/mortgage-brokers'; ?>">Mortgage Brokers</a>
 				
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/sales-rep'; ?>">Sales Rep.</a>
-				
+				<?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/sales-rep'; ?>">Sales Rep.</a>
+				<?php endif; ?>
+
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/title-officers'; ?>">Title Officer</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/new-users'; ?>">New Users</a>
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/master-users'; ?>">Master Users</a>
@@ -223,45 +227,65 @@ $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 					User Roles
 				</a>
 				<?php endif; ?>
+
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/credentials-check') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/credentials-check'; ?>">
 					Credentials Check
 				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/resware-admin-credential') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/resware-admin-credential'; ?>">
-					Resware Admin
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/send-password') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/send-password'; ?>">
-					Send Password
-				</a>
+
+				<?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/resware-admin-credential') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/resware-admin-credential'; ?>">
+						Resware Admin
+					</a>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/send-password') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/send-password'; ?>">
+						Send Password
+					</a>
+
+				<?php endif; ?>
+
 				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/primary-check') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/primary-check'; ?>">
 					Primary Accounts
 				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/fees-types' || $this->uri->segment(3) == 'add-fee-type' || $this->uri->segment(3) == 'edit-fee-type') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees-types'; ?>">
-					Fees Types
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/fees' || $this->uri->segment(3) == 'add-fee' || $this->uri->segment(3) == 'edit-fee') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees'; ?>">
-					Fees
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/code-book') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/code-book'; ?>">
-					Code Book
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/rules-manager') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/rules-manager'; ?>">
-					Rules Manager
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/notifications') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/notifications'; ?>">
-					Notifications
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
-					Holidays
-				</a>
-				<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-document-type*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-document-types'; ?>">
-					LP Document Types
-				</a>
-				<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-alert'; ?>">
-					LP Alert
-				</a>
-				<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/settings') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/settings'; ?>">
-					Settings
-				</a>
+
+				<?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/fees-types' || $this->uri->segment(3) == 'add-fee-type' || $this->uri->segment(3) == 'edit-fee-type') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees-types'; ?>">
+						Fees Types
+					</a>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/fees' || $this->uri->segment(3) == 'add-fee' || $this->uri->segment(3) == 'edit-fee') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/fees'; ?>">
+						Fees
+					</a>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/code-book') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/code-book'; ?>">
+						Code Book
+					</a>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/rules-manager') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/rules-manager'; ?>">
+						Rules Manager
+					</a>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/notifications') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/notifications'; ?>">
+						Notifications
+					</a>
+
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/holidays'; ?>">
+						Holidays
+					</a>
+
+					<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-document-type*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-document-types'; ?>">
+						LP Document Types
+					</a>
+
+					<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-alert'; ?>">
+						LP Alert
+					</a>
+					
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/settings') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/settings'; ?>">
+						Settings
+					</a>
+				<?php endif; ?>
 			</div>
         </div>
 	</li>

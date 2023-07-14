@@ -193,4 +193,17 @@ class Common
         );
         $this->CI->db->insert('pct_admin_activity_logs', $data);
     }
+
+    public function getRoleList()
+    {
+        $this->CI->db->select('id, title');
+        $this->CI->db->from('pct_users_role');
+        $query = $this->CI->db->get();
+        $getRoleList = $query->result_array();
+        $roleList = [];
+        foreach ($getRoleList as $role) {
+            $roleList[$role['id']] = $role['title'];
+        }
+        return $roleList;
+    }
 }

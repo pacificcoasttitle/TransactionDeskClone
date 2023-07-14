@@ -4917,6 +4917,7 @@ class Home extends MX_Controller
                 $id = $value['id'];
                 $nestedData[] = $i;
                 $nestedData[] = $value['days'];
+                $nestedData[] = $value['description'];
                 $nestedData[] = $value['color_code'] . "&nbsp; <input type='color' value= " . $value['color_code'] . " disabled>";
                 $nestedData[] = $value['text_color'] . "&nbsp; <input type='color' value= " . $value['text_color'] . " disabled>";
                 $nestedData[] = ($value['delete'] == 1) ? 'Yes' : 'No';
@@ -5197,6 +5198,7 @@ class Home extends MX_Controller
                     'days' => $input['days'],
                     'color_code' => $input['color_code'] ?? null,
                     'text_color' => $input['text_color'] ?? null,
+                    'description' => $input['description'] ?? null,
                     'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
                 );
 
@@ -5252,6 +5254,7 @@ class Home extends MX_Controller
                     $input = $this->input->post();
                     $lpAlertData = array(
                         'days' => $input['days'],
+                        'description' => $input['description'],
                         'color_code' => $input['color_code'] ?? null,
                         'text_color' => $input['text_color'] ?? null,
                         'delete' => (isset($input['delete'])) ? $input['delete'] : 0,

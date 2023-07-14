@@ -1,8 +1,13 @@
 <?php
-$salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
-$product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
-$sales_rep = json_encode($salesRep);
-$master_users = json_encode($master_users);
+    $salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
+    $product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
+    $sales_rep = json_encode($salesRep);
+    $master_users = json_encode($master_users);
+
+    $userdata = $this->session->userdata('admin');
+	$roleList = $this->common->getRoleList();
+	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$roleName = $roleList[$role_id];
 ?>
 <script type="text/javascript">
     var lp_sales_rep = '<?php echo $sales_rep; ?>';
@@ -43,12 +48,15 @@ $master_users = json_encode($master_users);
             <h1 class="h3 text-gray-800">Lp Orders</h1>
         </div>
         <div class="col-sm-6">
-            <a href="javascript:void(0);" data-export-type="csv" onclick="exportLPOrders();" id="export-orders-data"
-                class="btn btn-success btn-icon-split float-right mr-2">
-                <span class="icon text-white-50">
-                    <i class="fas fa-file-export"></i>
-                </span>
-                <span class="text"> Export </span> </a>
+            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+                <a href="javascript:void(0);" data-export-type="csv" onclick="exportLPOrders();" id="export-orders-data"
+                    class="btn btn-success btn-icon-split float-right mr-2">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-file-export"></i>
+                    </span>
+                    <span class="text"> Export </span> 
+                </a>
+            <?php endif; ?>
         </div>
     </div>
     <div class="card shadow mb-4">
@@ -57,7 +65,7 @@ $master_users = json_encode($master_users);
                 <span>
                     <i class="fas fa-table"></i>
                 </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Orders Listing</h6>
+                <h6 class="m-0 font-weight-bold text-primary pl-10">LP Orders Listing</h6>
             </div>
         </div>
 

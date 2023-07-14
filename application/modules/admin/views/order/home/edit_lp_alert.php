@@ -31,9 +31,18 @@
                             <div class="form-group">
                                 <label for="days" class="col-sm-4 col-form-label">Days<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="days" id="days" class="form-control" placeholder="Doc Type" value="<?php echo isset($lp_alert['days']) && !empty($lp_alert['days']) ? $lp_alert['days']: ''; ?>">
+                                    <input type="text" class="form-control" name="days" id="days" class="form-control" placeholder="Days" value="<?php echo isset($lp_alert['days']) && !empty($lp_alert['days']) ? $lp_alert['days']: ''; ?>">
                                     <?php if(!empty($days_error_msg)){ ?>                     
                                         <span class="error"><?php echo $days_error_msg; ?></span>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description" class="col-sm-4 col-form-label">Description</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="description" id="description" class="form-control" placeholder="Add Description" value="<?php echo isset($lp_alert['description']) && !empty($lp_alert['description']) ? $lp_alert['description']: ''; ?>">
+                                    <?php if(!empty($description_error_msg)){ ?>                     
+                                        <span class="error"><?php echo $description_error_msg; ?></span>
                                     <?php } ?>
                                 </div>
                             </div>
