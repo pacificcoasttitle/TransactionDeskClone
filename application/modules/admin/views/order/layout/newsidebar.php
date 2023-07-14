@@ -298,7 +298,7 @@
 		preg_match('/order\/admin\/([a-z\-])*commission-config*/',$this->uri->uri_string()) ||
 		preg_match('/order\/admin\/([a-z\-])*commission-bonus*/',$this->uri->uri_string())
 		) { echo 'active'; } ?>">
-		<a class="nav-link collapsed" href="#" id="li_commissions" role="button" data-toggle="dropdown" data-target="#li_commissons_list"  aria-haspopup="true" aria-expanded="false">
+		<a class="nav-link collapsed" href="#" id="li_commissions" role="button" data-toggle="collapse" data-target="#li_commissons_list"  aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-fw fa-gear"></i>
 			<span>Commissions</span>
         </a>
