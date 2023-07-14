@@ -213,15 +213,17 @@ class SalesRep extends MX_Controller
         $k = 0;
         foreach($lp_alerts as $key => $alert) {
             ++$k;
+            $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+            $lpAlertRange[$k]['text_color'] = $alert['text_color'];
+            $lpAlertRange[$k]['regular_order_color_code'] = isset($alert['regular_order_color_code']) && !empty($alert['regular_order_color_code']) ? $alert['regular_order_color_code'] : $alert['color_code'];
             if($k != $numItems) {
-                $lpAlertRange[$k]['color_code'] = $alert['color_code'];
-                $lpAlertRange[$k]['text_color'] = $alert['text_color'];
                 $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key + 1]['days'] - 1));
                 // $lpAlertRange[$k]['delete'] = $alert['delete'];
             } else {
-                $lpAlertRange[$k]['color_code'] = $alert['color_code'];
-                $lpAlertRange[$k]['text_color'] = $alert['text_color'];
                 $lpAlertRange[$k]['range'] = range((int)$lp_alerts[$key]['days'], ((int)$lp_alerts[$key]['days']));
+                // $lpAlertRange[$k]['color_code'] = $alert['color_code'];
+                // $lpAlertRange[$k]['text_color'] = $alert['text_color'];
+                // $lpAlertRange[$k]['regular_order_color_code'] = $alert['regular_order_color_code'];
                 // $lpAlertRange[$k]['delete'] = $alert['delete'];
             }
         }
@@ -318,7 +320,12 @@ class SalesRep extends MX_Controller
                 if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0 && strtolower($order['resware_status']) == 'open'))) {
                     foreach ($lpAlertRange as $key => $val) {
                         if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
-                            $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
+                            if ((!empty($order['lp_file_number']) && empty($order['file_number']))) {
+                                $nestedData[] = "color~".$val['color_code']."|text_color~".$val['text_color'];
+                            } else {
+                                $regularColorCode = $val['regular_order_color_code'];
+                                $nestedData[] = "color~" . $regularColorCode . "|text_color~" . $val['text_color'];
+                            }
                             break;
                         }
                     }

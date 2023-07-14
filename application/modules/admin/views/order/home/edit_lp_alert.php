@@ -47,21 +47,28 @@
                                 </div>
                             </div>
                             <div class="form-group row ml-1">
-                                <label for="color_code" class="col-sm-2 col-form-label">Color Code<span class="required">*</span></label>
+                                <label for="color_code" class="col-sm-4 col-form-label">Color Code<span class="required">*</span></label>
                                 <div class="col-sm-2">
                                     <input type="color" class="form-control" name="color_code" id="color_code"  class="form-control" value="<?php echo isset($lp_alert['color_code']) && !empty($lp_alert['color_code']) ? $lp_alert['color_code']: ''; ?>" style="width: 40%; border-radious:50;">
                                 </div>
                             </div>
                             
                             <div class="form-group row ml-1">
-                                <label for="text_color" class="col-sm-2 col-form-label">Text Color<span class="required">*</span></label>
+                                <label for="text_color" class="col-sm-4 col-form-label">Text Color<span class="required">*</span></label>
                                 <div class="col-sm-2">
                                     <input type="color" class="form-control" name="text_color" id="text_color"  class="form-control" value="<?php echo isset($lp_alert['text_color']) && !empty($lp_alert['text_color']) ? $lp_alert['text_color']: ''; ?>" style="width: 40%; border-radious:50;">
                                 </div>
                             </div>
 
                             <div class="form-group row ml-1">
-                                <label for="delete" class="col-sm-2 col-form-label">Is Notice</label>
+                                <label for="regular_order_color_code" class="col-sm-4 col-form-label"> Regular Order Color Code <span class="required">*</span></label>
+                                <div class="col-sm-2">
+                                    <input type="color" class="form-control" name="regular_order_color_code" id="regular_order_color_code"  class="form-control" value="<?php echo isset($lp_alert['regular_order_color_code']) && !empty($lp_alert['regular_order_color_code']) ? $lp_alert['regular_order_color_code']: ''; ?>" style="width: 40%; border-radious:50;">
+                                </div>
+                            </div>
+
+                            <div class="form-group row ml-1">
+                                <label for="delete" class="col-sm-4 col-form-label">Is Notice</label>
                                 <div class="col-sm-2">
                                     <input type="checkbox" value="1" class="form-control" style="width: 20px;"  name="delete" id="delete" class="form-control" <?php echo isset($lp_alert['delete']) && !empty($lp_alert['delete']) ? 'Checked' : ''; ?>>
                                 </div>
