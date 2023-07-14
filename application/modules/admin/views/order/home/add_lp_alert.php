@@ -67,6 +67,13 @@
                                     <input type="color" class="form-control" name="text_color" id="text_color" value="#FFFFFF" class="form-control" placeholder="Text Code" style="width: 40%;" >
                                 </div>
                             </div>
+
+                            <div class="form-group row ml-1">
+                                <label for="regular_order_color_code" class="col-sm-2 col-form-label"> Regular Order Code </label>
+                                <div class="col-sm-2">
+                                    <input type="color" class="form-control" name="regular_order_color_code" id="regular_order_color_code" value="#FFFFFF" class="form-control" style="width: 40%;" >
+                                </div>
+                            </div>
                             
                             <div class="form-group row ml-1">
                                 <label for="delete" class="col-sm-2 col-form-label">Delete</label>

@@ -4920,6 +4920,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['description'];
                 $nestedData[] = $value['color_code'] . "&nbsp; <input type='color' value= " . $value['color_code'] . " disabled>";
                 $nestedData[] = $value['text_color'] . "&nbsp; <input type='color' value= " . $value['text_color'] . " disabled>";
+                $nestedData[] = $value['regular_order_color_code'] . "&nbsp; <input disabled type='color' value= " . $value['regular_order_color_code'] . " >";
                 $nestedData[] = ($value['delete'] == 1) ? 'Yes' : 'No';
                 // $nestedData[] = "<input $checked onclick='isDisplayDocumentType();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -5198,6 +5199,7 @@ class Home extends MX_Controller
                     'days' => $input['days'],
                     'color_code' => $input['color_code'] ?? null,
                     'text_color' => $input['text_color'] ?? null,
+                    'regular_order_color_code' => $input['regular_order_color_code'] ?? null,
                     'description' => $input['description'] ?? null,
                     'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
                 );
@@ -5257,6 +5259,7 @@ class Home extends MX_Controller
                         'description' => $input['description'],
                         'color_code' => $input['color_code'] ?? null,
                         'text_color' => $input['text_color'] ?? null,
+                        'regular_order_color_code' => $input['regular_order_color_code'] ?? null,
                         'delete' => (isset($input['delete'])) ? $input['delete'] : 0,
                     );
                     $condition = array('id' => $id);
