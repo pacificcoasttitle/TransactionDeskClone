@@ -49,10 +49,11 @@
                     <thead>
                         <tr>
                             <th width="10%">Sr No</th>
-                            <th width="20%">Days</th>
+                            <th width="10%">Days</th>
+                            <th width="20%">Description</th>
                             <th width="20%">Color Code</th>
                             <th width="20%">Text Color</th>
-                            <th width="20%">Delete flag</th>
+                            <th width="10%">Delete flag</th>
                             <th width="10%">Action</th>
                         </tr>
                     </thead>                

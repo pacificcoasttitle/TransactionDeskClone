@@ -1,3 +1,9 @@
+<?php 
+    $userdata = $this->session->userdata('admin');
+	$roleList = $this->common->getRoleList();
+	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$roleName = $roleList[$role_id];
+?>
 <style>
 .dataTables_length {
     width: 250px !important;
@@ -11,8 +17,10 @@
 			<h1 class="h3 text-gray-800">Credentials Check</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="javascript:void(0);" data-export-type="csv" id="export_customer" class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
+            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+                <a href="javascript:void(0);" data-export-type="csv" id="export_customer" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
+            <?php endif; ?>
             <a href="javascript:void(0);" id="refresh-new-users-data" class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50"><i class="fas fa-user"></i></span><span class="text">New Users</span> </a>
             <a href="javascript:void(0);" id="refresh-data" class="btn btn-success btn-icon-split float-right mr-2"> 

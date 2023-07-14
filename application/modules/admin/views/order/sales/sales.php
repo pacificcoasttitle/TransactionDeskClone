@@ -1,3 +1,9 @@
+<?php 
+    $userdata = $this->session->userdata('admin');
+	$roleList = $this->common->getRoleList();
+	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$roleName = $roleList[$role_id];
+?>
 <style>
 .dataTables_length {
     width: 250px !important;
@@ -16,12 +22,14 @@
                 </span>
                 <span class="text"> Add Sales Rep </span> 
             </a>
-            <a href="javascript:void(0);" data-export-type="csv" id="export-sales-rep-data" class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-file-export"></i>
-                </span>
-                <span class="text"> Export </span> 
-            </a>
+            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+                <a href="javascript:void(0);" data-export-type="csv" id="export-sales-rep-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-file-export"></i>
+                    </span>
+                    <span class="text"> Export </span> 
+                </a>
+            <?php endif; ?>
 		</div>
 	</div>
     <div class="card shadow mb-4">

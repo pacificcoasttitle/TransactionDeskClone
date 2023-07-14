@@ -44,6 +44,15 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label for="description" class="col-sm-4 col-form-label">Description</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="description" id="description" value="<?php echo set_value('description')?>" class="form-control" placeholder="Add Description">
+                                    <?php if(!empty($description_error_msg)){ ?>                     
+                                        <span class="error"><?php echo $description_error_msg; ?></span>
+                                    <?php } ?>
+                                </div>
+                            </div>
                             
                             <div class="form-group row ml-1">
                                 <label for="color_code" class="col-sm-2 col-form-label">Color Code</label>
