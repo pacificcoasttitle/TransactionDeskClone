@@ -61,12 +61,12 @@ class Login extends MX_Controller {
                     $result = array('status'=>'success');
                     echo json_encode($result); exit;
                 } else {
-                    // redirect('home/dashboard');
-					if($session_data['role_id'] == 3) {
+                    if ($admin['email_id'] == 'upwork@pct.com') {
+                        redirect(base_url().'order/admin/credentials-check');
+                    } else if($session_data['role_id'] == 3) {
 						redirect(base_url().'order/admin/orders');
 					}
 					else {
-
 						redirect(base_url().'order/admin/dashboard');
 					}
                 }
