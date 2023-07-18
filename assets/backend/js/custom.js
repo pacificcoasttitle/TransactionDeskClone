@@ -1089,7 +1089,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Blfrtip',
+            dom: 'lf<"FilterCredentialListing">rtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
