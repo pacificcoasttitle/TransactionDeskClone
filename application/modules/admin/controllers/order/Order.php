@@ -17,6 +17,7 @@ class Order extends MX_Controller
         $this->load->model('order/home_model');
         $this->load->model('order/apiLogs');
         $this->load->library('order/common');
+        $this->load->library('order/order');
         $this->common->is_admin();
     }
 
@@ -459,7 +460,7 @@ class Order extends MX_Controller
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
-        $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=2'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=5'));
         $this->admintemplate->show("order/order", "lp_orders", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/order/lp_orders', $data);
@@ -550,7 +551,7 @@ class Order extends MX_Controller
             $action = "<div style='display:flex;'><a href='" . $editOrderUrl . "' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'><i class='fas fa-file' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='addVesting($file_id);' title ='Vesting'><i class='fas fa-institution' aria-hidden='true'></i></a>";
 
             if (empty($value['file_number'])) {
-                $action .= "<a style='margin-left:5px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                $action .= "<a style='margin-left:5px;' href='#' onclick='changeClient($file_id);' title ='Change Client'><i class='fas fa-edit' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
             }
 
             $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $value['document_name'];
@@ -774,4 +775,38 @@ class Order extends MX_Controller
         exit;
     }
 
+    function getDetailsByName()
+    {
+    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+    	$condition = array(
+            'company_name' => $searchTerm
+        );    	
+    	$condition['where']['is_sales_rep'] = 0;
+    	$userDetails = $this->home_model->get_customers_search($condition);
+    	$userInfo = array();
+
+    	if(isset($userDetails) && !empty($userDetails)) {
+    		foreach ($userDetails as $key => $value) {
+    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
+				$data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
+	            // array_push($userInfo, $data); 
+	            $userInfo[] =$data;
+    		}
+    	}
+    	echo json_encode($userInfo);
+    }
 }
