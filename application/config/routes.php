@@ -416,6 +416,7 @@ $route['order/admin/regenerate-report'] = 'admin/order/home/regenerateReport';
 $route['order/admin/store-vesting-info'] = 'admin/order/home/addVestingInfo';
 $route['order/admin/get-vesting-info'] = 'admin/order/home/getVestingInfo';
 $route['order/admin/add-instrument-info'] = 'admin/order/home/addInstrumentInfo';
+$route['order/admin/change-client'] = 'admin/order/home/changeClient';
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
