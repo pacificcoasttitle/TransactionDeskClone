@@ -148,7 +148,7 @@
 											<div class="form-group">
 												<label for="partner_id" class="col-sm-4 col-form-label">Partner Id<span class="required"> *</span></label>
 												<div class="col-sm-6">
-													<input type="number" class="form-control" name="partner_id" id="partner_id" class="form-control" placeholder="Partner Id" value="<?php echo isset($sales_rep_info['partner_id']) && !empty($sales_rep_info['partner_id']) ? $sales_rep_info['partner_id'] : ''?>">
+													<input type="text" class="form-control" name="partner_id" id="partner_id" class="form-control" placeholder="Partner Id" value="<?php echo isset($sales_rep_info['partner_id']) && !empty($sales_rep_info['partner_id']) ? $sales_rep_info['partner_id'] : ''?>">
 													<?php if(!empty($partner_id_error_msg)){ ?>                     
 														<span class="error"><?php echo $partner_id_error_msg; ?></span>
 													<?php } ?>
@@ -158,7 +158,7 @@
 											<div class="form-group">
 												<label for="partner_type_id" class="col-sm-4 col-form-label">Partner Type Id<span class="required"> *</span></label>
 												<div class="col-sm-6">
-													<input type="number" class="form-control" name="partner_type_id" id="partner_type_id" class="form-control" placeholder="Partner Type Id" value="<?php echo isset($sales_rep_info['partner_type_id']) && !empty($sales_rep_info['partner_type_id']) ? $sales_rep_info['partner_type_id'] : ''?>">
+													<input type="text" class="form-control" name="partner_type_id" id="partner_type_id" class="form-control" placeholder="Partner Type Id" value="<?php echo isset($sales_rep_info['partner_type_id']) && !empty($sales_rep_info['partner_type_id']) ? $sales_rep_info['partner_type_id'] : ''?>">
 													<?php if(!empty($partner_type_id_error_msg)){ ?>                     
 														<span class="error"><?php echo $partner_type_id_error_msg; ?></span>
 													<?php } ?>
