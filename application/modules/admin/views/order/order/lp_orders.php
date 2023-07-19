@@ -95,11 +95,11 @@
                             <th width="7%">Sales Rep</th>
                             <th width="7%">Created By</th>
                             <th width="7%">Email Status</th>
-                            <th width="10%">Lp Document Name</th>
+                            <!-- <th width="7%">Lp Doc Name</th> -->
                             <th width="10%">Report Status</th>
                             <th width="5%">Sync To Resware</th>
-                            <th width="10%">Created At</th>
-                            <th width="10%">Action</th>
+                            <th width="8%">Created At</th>
+                            <th width="16%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
