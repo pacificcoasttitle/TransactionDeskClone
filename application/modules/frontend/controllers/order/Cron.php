@@ -2415,7 +2415,7 @@ class Cron extends MX_Controller {
             order_details.file_number, 
             order_details.id as order_id,
             order_details.resware_status, 
-            order_details.resware_closed_status_date
+            order_details.resware_closed_status_date,
             property_details.full_address,
             customer_basic_details.first_name,
             customer_basic_details.last_name,
