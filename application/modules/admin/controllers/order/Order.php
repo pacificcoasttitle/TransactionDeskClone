@@ -520,7 +520,7 @@ class Order extends MX_Controller
             $nestedData[] = $value['sales_rep_name'];
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
-            $nestedData[] = $value['document_name'];
+            //$nestedData[] = $value['document_name'];
             $lp_report_status = $value['lp_report_status'];
             $disabled = '';
             if (empty($value['document_name'])) {
@@ -548,18 +548,82 @@ class Order extends MX_Controller
             $nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<div style='display:flex;'><a href='" . $editOrderUrl . "' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'><i class='fas fa-file' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='addVesting($file_id);' title ='Vesting'><i class='fas fa-institution' aria-hidden='true'></i></a>";
+            $action = "<div class='dropdown'>
+                <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type 
+                    <span class='caret'></span> 
+                </a>
+                <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
+                    <li>
+                        <a href='" . $editOrderUrl . "' title ='View Order Detail'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
+                                View
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
+                                Regenerate Report
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='#' onclick='addVesting($file_id);' title ='Vesting'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-institution' aria-hidden='true' style='margin-right:5px;'></i>
+                                Add Vesting
+                            </button>
+                        </a>
+                    </li>";
 
             if (empty($value['file_number'])) {
-                $action .= "<a style='margin-left:5px;' href='#' onclick='changeClient($file_id);' title ='Change Client'><i class='fas fa-edit' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                $action .= "<li>
+                        <a href='#' onclick='changeClient($file_id);' title ='Change Client'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-edit' aria-hidden='true' style='margin-right:5px;'1></i>
+                                Change Client
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
+                                Send Order Resware
+                            </button>
+                        </a>
+                    </li>";
             }
 
             $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $value['document_name'];
             if (!empty($value['document_name'])) {
-                $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"report"' . ");'><i class='fas fa-fw fa-download'></i></a>
-                     <a href='#' style='margin-left:5px;' title ='Select Document' onclick='getInstrumentData($file_id);'><i class='fa fa-external-link'></i></a>";
+                $action .= "<li>
+                    <a href='#' title ='Download LP Report' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"report"' . ");'>
+                        <button class='btn btn-grad-2a button-color' type='button'>
+                            <i class='fas fa-fw fa-download' style='margin-right:5px;'></i>
+                            Download Lp Report
+                        </button>
+                    </a>
+                </li>
+                <li> 
+                    <a href='#' title ='Select Document' onclick='getInstrumentData($file_id);'>
+                        <button class='btn btn-grad-2a button-color' type='button'>
+                            <i class='fa fa-external-link' style='margin-right:5px;'></i>
+                            Get Instrument Data
+                        </button>   
+                    </a>
+                </li>";
             }
-            $action .= "<a href='#' style='margin-left:5px;' title ='File Upload' onclick='fileUpload($file_id);'><i class='fa fa-upload'></i></a></div>";
+            $action .= "<li>
+                    <a href='#' title ='File Upload' onclick='fileUpload($file_id);'>
+                        <button class='btn btn-grad-2a button-color' type='button'>
+                            <i class='fa fa-upload' style='margin-right:5px;'></i>
+                            Upload Doc
+                        </button>   
+                    </a>
+                </li></ul></div>";
             // <i class="fa-solid fa-up-right-from-square"></i>
             $nestedData[] = $action;
             $data[] = $nestedData;
