@@ -278,6 +278,19 @@ class Orders extends MX_Controller {
         $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $documentDetails['order_id'], $logid);
         $res = json_decode($result);
+
+        /* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'upload_borrower_document_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $document_api_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+
         $taskInfo = $this->tasks_model->get($documentDetails['task_id']);
         if (!empty($res->Document->DocumentID)) {
             $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $document_id));
@@ -316,7 +329,19 @@ class Orders extends MX_Controller {
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
         $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
-        
+
+        /* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'create_note_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $notes_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, TRUE);
             if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {

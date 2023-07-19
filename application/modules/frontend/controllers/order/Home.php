@@ -393,6 +393,20 @@ class Home extends MX_Controller
 						$response = json_decode($result, true);
 
 						if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+							/* Start add resware api logs */
+							$reswareData = array(
+								'request_type' => 'create_order_in_resware',
+								'request_url' => env('RESWARE_ORDER_API') . 'orders',
+								'request' => $order_data,
+								'response' => $result,
+								'status' => $response['ResponseStatus'],
+								'created_at' => date("Y-m-d H:i:s")
+							);
+
+
+							$this->db->insert('pct_resware_log', $reswareData);
+							/* End add resware api logs */
+
 							$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
 							$response = array('status' => 'error', 'message' => $message);
 							echo json_encode($response);
@@ -403,7 +417,21 @@ class Home extends MX_Controller
 								$orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
 								$file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
 							}
+							/* Start add resware api logs */
+							$reswareData = array(
+								'request_type' => 'create_order_in_resware',
+								'request_url' => env('RESWARE_ORDER_API') . 'orders',
+								'request' => $order_data,
+								'response' => $result,
+								'status' => $response['ResponseStatus'],
+								'file_id' => $file_id,
+								'file_number' => $orderNumber,
+								'created_at' => date("Y-m-d H:i:s")
+							);
 
+
+							$this->db->insert('pct_resware_log', $reswareData);
+							/* End add resware api logs */
 							if ($orderNumber) {
 								$partners = array();
 								$partners[] = array(
@@ -767,6 +795,21 @@ class Home extends MX_Controller
 									$removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, array(), 0, 0);
 									$resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
 									$this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+
+									/* Start add resware api logs */
+									$reswareData = array(
+										'request_type' => 'delete_partner_in_resware',
+										'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+										'request' => $removePartnerData,
+										'response' => $resultRemovePartner,
+										'status' => 'success',
+										'created_at' => date("Y-m-d H:i:s")
+									);
+
+
+									$this->db->insert('pct_resware_log', $reswareData);
+									/* End add resware api logs */
+
 									$resultRemovePartnerRes = json_decode($resultRemovePartner, true);
 									$partnerKey = '';
 									if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
@@ -794,12 +837,36 @@ class Home extends MX_Controller
 								$resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
 								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API') . $endPoint, $partnerData, $resultPartner, 0, $logid);
 
+								/* Start add resware api logs */
+								$reswareData = array(
+									'request_type' => 'add_partner_in_resware',
+									'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+									'request' => $partnerData,
+									'response' => $resultPartner,
+									'status' => 'success',
+									'created_at' => date("Y-m-d H:i:s")
+								);
+								$this->db->insert('pct_resware_log', $reswareData);
+								/* End add resware api logs */
+
 								$remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
 								$remoteFileEndPoint = 'files/' . $file_id . '/partners/' . $orderUser['partner_id'];
 
 								$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API') . $remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
 								$resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
 								$this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API') . $remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+
+								/* Start add resware api logs */
+								$reswareData = array(
+									'request_type' => 'remote_file_number_in_resware',
+									'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+									'request' => $remoteFileNumberData,
+									'response' => $resultRemotePartner,
+									'status' => 'success',
+									'created_at' => date("Y-m-d H:i:s")
+								);
+								$this->db->insert('pct_resware_log', $reswareData);
+								/* End add resware api logs */
 
 								/* Add partner api logs */
 								$partnerApiData = array(
@@ -1798,6 +1865,17 @@ class Home extends MX_Controller
 			$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 			$res = json_decode($result);
+			/* Start add resware api logs */
+			$reswareLogData = array(
+				'request_type' => 'upload_lv_document_to_resware',
+				'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+				'request' => $document_api_data,
+				'response' => $result,
+				'status' => 'success',
+				'created_at' => date("Y-m-d H:i:s")
+			);
+			$this->db->insert('pct_resware_log', $reswareLogData);
+			/* End add resware api logs */
 			$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		}
 	}
@@ -1856,6 +1934,17 @@ class Home extends MX_Controller
 			$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 			$res = json_decode($result);
+			/* Start add resware api logs */
+			$reswareLogData = array(
+				'request_type' => 'upload_grantdeed_document_to_resware',
+				'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+				'request' => $document_api_data,
+				'response' => $result,
+				'status' => 'success',
+				'created_at' => date("Y-m-d H:i:s")
+			);
+			$this->db->insert('pct_resware_log', $reswareLogData);
+			/* End add resware api logs */
 			$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		}
 
@@ -1917,6 +2006,17 @@ class Home extends MX_Controller
 			$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 			$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 			$res = json_decode($result);
+			/* Start add resware api logs */
+			$reswareLogData = array(
+				'request_type' => 'upload_tax_document_to_resware',
+				'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+				'request' => $document_api_data,
+				'response' => $result,
+				'status' => 'success',
+				'created_at' => date("Y-m-d H:i:s")
+			);
+			$this->db->insert('pct_resware_log', $reswareLogData);
+			/* End add resware api logs */
 			$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		}
 
@@ -2044,6 +2144,19 @@ class Home extends MX_Controller
 		$result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
 		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
 		$res = json_decode($result);
+
+		/* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'upload_curative_document_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $document_api_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+
 		$this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 		$this->order->uploadDocumentOnAwsS3($document_name, 'curative');
 	}
