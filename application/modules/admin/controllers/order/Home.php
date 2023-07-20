@@ -4855,11 +4855,6 @@ class Home extends MX_Controller
             $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $instrument_number_id));
         }
 
-        $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0), array('title_point_id' => $title_point_id));
-        foreach ($ves_instrument_number_ids as $ves_instrument_number_id) {
-            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1), array('id' => $ves_instrument_number_id));
-        }
-
         $file_id = $titlePointData['file_id'];
         $this->order->createLpReport($titlePointData['file_number'], true, false);
         /** Save user Activity */
@@ -5524,53 +5519,53 @@ class Home extends MX_Controller
         // echo "<pre>";
         // print_r($instrumentRecords);
         // die;
-        if (!empty($instrumentRecords)) {
-            foreach ($instrumentRecords as $instrumentRecord) {
-                if ((in_array($instrumentRecord['document_sub_type'], $getAllSubCategory) && in_array($instrumentRecord['document_sub_type'], $filteredSubCateList)) || (empty($instrumentRecord['document_sub_type']) && in_array($instrumentRecord['document_type'], $filteredMainCateList))) {
-                    $key = array_search($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'));
-                    $displaySection = (!empty($instrumentRecord['display_in_section'])) ? $instrumentRecord['display_in_section'] : $displayDocList[$key]['display_in_section'];
+        // if (!empty($instrumentRecords)) {
+        //     foreach ($instrumentRecords as $instrumentRecord) {
+        //         if ((in_array($instrumentRecord['document_sub_type'], $getAllSubCategory) && in_array($instrumentRecord['document_sub_type'], $filteredSubCateList)) || (empty($instrumentRecord['document_sub_type']) && in_array($instrumentRecord['document_type'], $filteredMainCateList))) {
+        //             $key = array_search($instrumentRecord['document_type'], array_column($displayDocList, 'doc_type'));
+        //             $displaySection = (!empty($instrumentRecord['display_in_section'])) ? $instrumentRecord['display_in_section'] : $displayDocList[$key]['display_in_section'];
 
-                    if (isset($instrumentRecord['document_sub_type']) && !empty($instrumentRecord['document_sub_type'])) {
-                        $keySubType = array_search($instrumentRecord['document_sub_type'], array_column($displayDocList, 'doc_type'));
-                        $displaySection = ((!empty($instrumentRecord['display_in_section'])) ? ($instrumentRecord['display_in_section']) : (!empty($displayDocList[$keySubType]['map_in_section']) ? $displayDocList[$keySubType]['map_in_section'] : $displayDocList[$keySubType]['display_in_section']));
-                    }
+        //             if (isset($instrumentRecord['document_sub_type']) && !empty($instrumentRecord['document_sub_type'])) {
+        //                 $keySubType = array_search($instrumentRecord['document_sub_type'], array_column($displayDocList, 'doc_type'));
+        //                 $displaySection = ((!empty($instrumentRecord['display_in_section'])) ? ($instrumentRecord['display_in_section']) : (!empty($displayDocList[$keySubType]['map_in_section']) ? $displayDocList[$keySubType]['map_in_section'] : $displayDocList[$keySubType]['display_in_section']));
+        //             }
 
 
-                    $instrumentRecords[$i]['display_in_section'] = $displaySection;
-                    if ($displaySection == 'G') {
-                        if ($instrumentRecord['color_coding'] == 'FFFF00') {
-                            $instrumentRecords[$i]['is_display'] = 1;
-                        } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                            if ($instrumentRecord['icon_text'] == 'Exx') {
-                                $instrumentRecords[$i]['is_display'] = 1;
-                            } else {
-                                $instrumentRecords[$i]['is_display'] = 0;
-                            }
-                        } else {
-                            $instrumentRecords[$i]['is_display'] = 0;
-                        }
-                    } else {
-                        if ($instrumentRecord['color_coding'] != 'A0A0FF') {
-                            if ($instrumentRecord['color_coding'] == 'C0C0C0') {
-                                if ($instrumentRecord['icon_text'] == 'Exx') {
-                                    $instrumentRecords[$i]['is_display'] = 1;
-                                } else {
-                                    $instrumentRecords[$i]['is_display'] = 0;
-                                }
-                            } else {
-                                $instrumentRecords[$i]['is_display'] = 1;
-                            }
-                        } else {
-                            $instrumentRecords[$i]['is_display'] = 0;
-                        }
-                    }
-                } else {
-                    $instrumentRecords[$i]['is_display'] = 0;
-                }
+        //             $instrumentRecords[$i]['display_in_section'] = $displaySection;
+        //             if ($displaySection == 'G') {
+        //                 if ($instrumentRecord['color_coding'] == 'FFFF00') {
+        //                     $instrumentRecords[$i]['is_display'] = 1;
+        //                 } else if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+        //                     if ($instrumentRecord['icon_text'] == 'Exx') {
+        //                         $instrumentRecords[$i]['is_display'] = 1;
+        //                     } else {
+        //                         $instrumentRecords[$i]['is_display'] = 0;
+        //                     }
+        //                 } else {
+        //                     $instrumentRecords[$i]['is_display'] = 0;
+        //                 }
+        //             } else {
+        //                 if ($instrumentRecord['color_coding'] != 'A0A0FF') {
+        //                     if ($instrumentRecord['color_coding'] == 'C0C0C0') {
+        //                         if ($instrumentRecord['icon_text'] == 'Exx') {
+        //                             $instrumentRecords[$i]['is_display'] = 1;
+        //                         } else {
+        //                             $instrumentRecords[$i]['is_display'] = 0;
+        //                         }
+        //                     } else {
+        //                         $instrumentRecords[$i]['is_display'] = 1;
+        //                     }
+        //                 } else {
+        //                     $instrumentRecords[$i]['is_display'] = 0;
+        //                 }
+        //             }
+        //         } else {
+        //             $instrumentRecords[$i]['is_display'] = 0;
+        //         }
 
-                $i++;
-            }
-        }
+        //         $i++;
+        //     }
+        // }
 
         $i = 1;
         if (!empty($instrumentRecords)) {
