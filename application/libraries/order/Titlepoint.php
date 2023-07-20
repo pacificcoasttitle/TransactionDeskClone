@@ -1164,6 +1164,7 @@ class Titlepoint
         $response = $this->CI->order->curl_post($requestUrl, $requestParams);
         // $xmlData = simplexml_load_string($file);
         // $response = json_encode($xmlData);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $response, $orderId, $logid);
         $result = json_decode($response, TRUE);
         //print_r($result);exit;
         $condition = array(
@@ -1335,7 +1336,7 @@ class Titlepoint
                             $recordArray[$i]['order_number'] = isset($images[$key]['OrderNumber']) ? $images[$key]['OrderNumber'] : null;
                             $recordArray[$i]['document_name'] = $val['DocumentFullName'];
                             $recordArray[$i]['document_type'] = $val['DocumentType'];
-                            $recordArray[$i]['document_sub_type'] = isset($val['DocumentSubType']) ? $val['DocumentSubType'] : null;
+                            $recordArray[$i]['document_sub_type'] = (isset($val['DocumentSubType']) && !is_array($val['DocumentSubType'])) ? $val['DocumentSubType'] : null;
                             $recordArray[$i]['parties'] = isset($parties) ? $parties : null;
                             $recordArray[$i]['coupling'] = isset($val['CouplingIndicatorAll']) ? $val['CouplingIndicatorAll'] : null;
                             $recordArray[$i]['remarks'] = isset($val['PropertyRemark']) ? $val['PropertyRemark'] : null;
@@ -1391,6 +1392,8 @@ class Titlepoint
                         }
                     }
                 }
+                // echo "<pre>";
+                // print_r($recordArray);die;
                 $this->CI->db->delete('pct_title_point_document_records', array('title_point_id' => $titlePointId));
                 $this->CI->titlePointDocumentRecords->insertMultipleRecords($recordArray);
             } else {
@@ -1406,7 +1409,7 @@ class Titlepoint
             }
         }
         /** Save document records here end*/
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);
+        // $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);
 
         return $response;
     }
