@@ -2159,7 +2159,7 @@ class Order
 			'status' => 'success',
 			'created_at' => date("Y-m-d H:i:s")
 		);
-		$this->db->insert('pct_resware_log', $reswareLogData);
+		$this->CI->db->insert('pct_resware_log', $reswareLogData);
 		/* End add resware api logs */
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
