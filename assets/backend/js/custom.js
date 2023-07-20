@@ -4329,6 +4329,16 @@ $(document).ready(function () {
     if ($('#holiday_date').length) {
         $('#holiday_date').datepicker().datepicker("setDate", new Date());
     }
+
+    if ($('#instrument-file-upload-form #recorded_date').length > 0) {
+        console.log("Instrument");
+        $('#instrument-file-upload-form #recorded_date').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            maxDate: "0",
+            yearRange: "-120:+0",
+        });
+    }
 });
 
 if(('.threshold-remove-btn').length) {

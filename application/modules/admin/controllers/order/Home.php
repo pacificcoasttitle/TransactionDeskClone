@@ -5600,7 +5600,7 @@ class Home extends MX_Controller
                     $fileName = $instrumentRecord['id'] . '.pdf';
                     $docUrl = env('AWS_PATH') . "title-point/" . $fileName;
                     $instrument = "<a target='_blank' href='$docUrl'>" . $instrumentRecord['instrument'] . "</a>";
-                    $recorded_date = $instrumentRecord['recorded_date'];
+                    $recorded_date = date("m/d/Y", strtotime($instrumentRecord['recorded_date']));
                     $parties = ucwords(strtolower($instrumentRecord['parties']));
                     $coupling = $instrumentRecord['coupling'] != '0' ? $instrumentRecord['coupling'] : '';
                     $remarks = ucwords(strtolower($instrumentRecord['remarks']));
@@ -5939,7 +5939,7 @@ class Home extends MX_Controller
                 $instrumentData = array(
                     'title_point_id' => $titlePointData['id'],
                     'instrument' => $this->input->post('instrument_number'),
-                    'recorded_date' => $this->input->post('recorded_date'),
+                    'recorded_date' => date("Y-m-d", strtotime($this->input->post('recorded_date'))),
                     'type' => 'REC',
                     'sub_type' => 'ALL',
                     'order_number' => null,
