@@ -1482,6 +1482,19 @@ class Order
         $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $userData);
         $this->CI->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
+
+        /* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'send_safewire_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $document_api_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+
         $data = array();
         $data['updated'] = date("Y-m-d H:i:s");
         $data['api_document_id'] = $res->Document->DocumentID;
@@ -2049,6 +2062,19 @@ class Order
         $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
+
+        /* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'upload_cpl_document_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $document_api_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+        
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
         /*$from_name = 'Pacific Coast Title Company';
@@ -2123,6 +2149,19 @@ class Order
         $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
+
+        /* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'upload_proposed_document_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $document_api_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 
@@ -2175,6 +2214,19 @@ class Order
         $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $order_id, $logid);
         $res = json_decode($result);
+
+        /* Start add resware api logs */
+		$reswareLogData = array(
+			'request_type' => 'upload_prelimdocx_document_to_resware',
+			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+			'request' => $document_api_data,
+			'response' => $result,
+			'status' => 'success',
+			'created_at' => date("Y-m-d H:i:s")
+		);
+		$this->db->insert('pct_resware_log', $reswareLogData);
+		/* End add resware api logs */
+
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 

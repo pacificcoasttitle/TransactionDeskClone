@@ -95,11 +95,11 @@
                             <th width="7%">Sales Rep</th>
                             <th width="7%">Created By</th>
                             <th width="7%">Email Status</th>
-                            <th width="10%">Lp Document Name</th>
+                            <!-- <th width="7%">Lp Doc Name</th> -->
                             <th width="10%">Report Status</th>
                             <th width="5%">Sync To Resware</th>
-                            <th width="10%">Created At</th>
-                            <th width="10%">Action</th>
+                            <th width="8%">Created At</th>
+                            <th width="16%">Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -340,10 +340,87 @@
     </div>
 </div>
 
+<div class="modal fade" id="changeClientModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width: 50%;">
+        <div class="modal-content">
+            <form method="post" id="instrument-file-upload-form" name="instrument-file-upload-form"
+                enctype="multipart/form-data" action="<?php echo base_url(); ?>order/admin/change-client">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Change Client</h6>
+                            </div>
 
-<script>
-    function fileUpload(file_id) {
-        $('#upload_file_id').val(file_id);
-        $('#fileUploadModel').modal('show');
-    }
-</script>
+                            <div class="card-body">
+                                <div class="smart-forms smart-container">
+                                    <div class="modal-body search-result">
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label for="company_name" class="col-form-label">Company Name</label>
+                                                    <input name="company_name" required="" type="text"
+                                                        class="form-control" id="company_name">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label for="email_address" class="col-form-label">Email Addres</label>
+                                                    <input name="email_address" required="" type="text"
+                                                        class="form-control" id="email_address">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="first_name" class="col-form-label">First Name</label>
+                                                    <input name="first_name" required="" type="text"
+                                                        class="form-control" id="first_name">
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="last_name" class="col-form-label">Last Name</label>
+                                                    <input name="last_name" required="" type="text" class="form-control"
+                                                        id="last_name">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+                                        <input type="hidden" name="client_id" id="client_id" value="">
+                                        <input type="hidden" name="client_file_id" id="client_file_id" value="">
+
+                                    </div>
+                                    <div class="form-footer" style="padding: 0px 1rem !important;">
+                                        <button type="submit" data-btntext-sending="Sending..."
+                                            class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Submit</span>
+                                        </button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close"
+                                            class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Cancel</span>
+                                        </button>
+                                        <!-- <button type="submit" data-btntext-sending="Sending..." class="button btn-primary">Submit</button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,119 @@
+jQuery(document).ready(function ($) {
+    $("#company_name").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: base_url+"admin/order/order/getDetailsByName",
+                data: {
+                    term : request.term        
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.length > 0) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
+            });
+        },
+        delay: 0,
+        minLength: 3,
+        select: function( event, ui ) {
+            event.preventDefault();
+            $("#company_name").val(ui.item.company);
+            $("#email_address").val(ui.item.email_address);
+            $("#first_name").val(ui.item.fname);
+            $("#last_name").val(ui.item.lname);
+            $("#client_id").val(ui.item.id);
+        },
+        change: function( event, ui ) {
+            if (ui.item == null) {
+                $("#company_name").parent().removeClass('state-success').addClass('state-error');
+            }
+        }
+    });
+
+    $("#document_type").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: base_url + "order/admin/search-document-type",
+                data: {
+                    doc_type: request.term
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (result) {
+                    if (result.status == 'success') {
+                        if (result.data.length > 0) {
+                            response($.map(result.data, function (item) {
+                                return item;
+                            }));
+                        } else {
+                            response([{ label: 'No results found.', val: -1}]);
+                        }
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
+            });
+        },
+        delay: 0,
+        minLength: 1,
+        select: function( event, ui ) {
+            event.preventDefault();
+            $("#document_type").val(ui.item.doc_type);
+            $("#document_name").val(ui.item.doc_type_description);
+        },
+        change: function( event, ui ) {
+            if (ui.item == null) {
+                $("#document_type").parent().removeClass('state-success').addClass('state-error');
+            }
+        }
+    });
+
+    $("#document_sub_type").autocomplete({
+        source: function(request, response) {
+            $.ajax({
+                url: base_url + "order/admin/search-document-sub-type",
+                data: {
+                    doc_type: request.term
+                },
+                type: "POST",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    if (result.status == 'success') {
+                        if (result.data.length > 0) {
+                            response($.map(result.data, function (item) {
+                                return item.doc_type;
+                            }));
+                        } else {
+                            response([{ label: 'No results found.', val: -1}]);
+                        }
+                        console.log(result.data);
+                    } else {
+                        response([{ label: 'No results found.', val: -1}]);
+                    }
+                }
+            });
+        },
+        delay: 0,
+        minLength: 1,
+        select: function( event, ui ) {
+            event.preventDefault();
+            $("#document_sub_type").val(ui.item.value);
+        },
+        change: function( event, ui ) {
+            if (ui.item == null) {
+                $("#document_sub_type").parent().removeClass('state-success').addClass('state-error');
+            }
+        }
+    });
+});
+
 function getInstrumentData(file_id) {
     $('body').animate({
         opacity: 0.5
@@ -246,112 +362,12 @@ function addVesting(file_id)
     });
 }
 
-jQuery(document).ready(function ($) {
-    $("#document_type").autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: base_url + "order/admin/search-document-type",
-                data: {
-                    doc_type: request.term
-                },
-                type: "POST",
-                dataType: "json",
-                success: function (result) {
-                    if (result.status == 'success') {
-                        if (result.data.length > 0) {
-                            response($.map(result.data, function (item) {
-                                return item;
-                            }));
-                        } else {
-                            response([{ label: 'No results found.', val: -1}]);
-                        }
-                    } else {
-                        response([{ label: 'No results found.', val: -1}]);
-                    }
-                }
-            });
-        },
-        delay: 0,
-        minLength: 1,
-        select: function( event, ui ) {
-            event.preventDefault();
-            $("#document_type").val(ui.item.doc_type);
-            $("#document_name").val(ui.item.doc_type_description);
-        },
-        change: function( event, ui ) {
-            if (ui.item == null) {
-                $("#document_type").parent().removeClass('state-success').addClass('state-error');
-            }
-        }
-    });
+function fileUpload(file_id) {
+    $('#upload_file_id').val(file_id);
+    $('#fileUploadModel').modal('show');
+}
 
-    $("#document_sub_type").autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: base_url + "order/admin/search-document-sub-type",
-                data: {
-                    doc_type: request.term
-                },
-                type: "POST",
-                dataType: "json",
-                success: function (result) {
-                    console.log(result);
-                    if (result.status == 'success') {
-                        if (result.data.length > 0) {
-                            response($.map(result.data, function (item) {
-                                return item.doc_type;
-                            }));
-                        } else {
-                            response([{ label: 'No results found.', val: -1}]);
-                        }
-                        console.log(result.data);
-                    } else {
-                        response([{ label: 'No results found.', val: -1}]);
-                    }
-                }
-            });
-        },
-        delay: 0,
-        minLength: 1,
-        select: function( event, ui ) {
-            event.preventDefault();
-            $("#document_sub_type").val(ui.item.value);
-        },
-        change: function( event, ui ) {
-            if (ui.item == null) {
-                $("#document_sub_type").parent().removeClass('state-success').addClass('state-error');
-            }
-        }
-    });
-});
-//     var doc_type = event.target.value;
-//     if (!doc_type) {
-//         return;
-//     }
-//     $.ajax({
-//         url: base_url + "order/admin/search-document-type",
-//         method: "POST",
-//         data: {
-//             doc_type: doc_type
-//         },
-//         success: function (data) {
-//             var result = jQuery.parseJSON(data);
-//            console.log(result);
-//             if (result.status == 'success') {
-//                 console.log(result.data);
-//             } else {
-                
-//             }
-//         },
-//         error: function (XMLHttpRequest, textStatus, errorThrown) {
-//             $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
-//             $([document.documentElement, document.body]).animate({
-//                 scrollTop: $("#lp_order_success_msg").offset().top
-//             }, 1000);
-
-//             setTimeout(function () {
-//                 $('#lp_order_error_msg').html('').hide();
-//             }, 5000);
-//         }
-//     });
-// });
+function changeClient(file_id) {
+    $('#client_file_id').val(file_id);
+    $('#changeClientModel').modal('show');
+}

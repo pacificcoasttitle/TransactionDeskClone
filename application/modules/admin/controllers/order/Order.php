@@ -17,6 +17,7 @@ class Order extends MX_Controller
         $this->load->model('order/home_model');
         $this->load->model('order/apiLogs');
         $this->load->library('order/common');
+        $this->load->library('order/order');
         $this->common->is_admin();
     }
 
@@ -389,6 +390,52 @@ class Order extends MX_Controller
         echo json_encode($json_data);
     }
 
+    function reswareLogs()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Resware API Logs';
+        $this->admintemplate->show("order/home", "resware_api_log", $data);
+    }
+
+    function getReswareLogs()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $resware_logs_list = $this->home_model->getReswareLogs($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $resware_logs_list = $this->home_model->getReswareLogs($params);
+        }
+        $data = array();
+        $count = $params['start'] + 1;
+        if (isset($resware_logs_list['data']) && !empty($resware_logs_list['data'])) {
+            foreach ($resware_logs_list['data'] as $key => $value) {
+                $nestedData = array();
+                $nestedData[] = $count;
+                $nestedData[] = $value['request_type'];
+                $nestedData[] = $value['request_url'];
+                $nestedData[] = $value['request'];
+                $nestedData[] = $value['response'];
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $nestedData[] = convertTimezone($value['created_at']);
+                $data[] = $nestedData;
+                $count++;
+            }
+        }
+        $json_data['recordsTotal'] = intval($resware_logs_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($resware_logs_list['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
     public function safewireOrders()
     {
         $data = array();
@@ -459,7 +506,7 @@ class Order extends MX_Controller
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
-        $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=2'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=5'));
         $this->admintemplate->show("order/order", "lp_orders", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/order/lp_orders', $data);
@@ -519,7 +566,7 @@ class Order extends MX_Controller
             $nestedData[] = $value['sales_rep_name'];
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
-            $nestedData[] = $value['document_name'];
+            //$nestedData[] = $value['document_name'];
             $lp_report_status = $value['lp_report_status'];
             $disabled = '';
             if (empty($value['document_name'])) {
@@ -547,18 +594,82 @@ class Order extends MX_Controller
             $nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['file_id'];
             $file_id = $value['file_id'];
-            $action = "<div style='display:flex;'><a href='" . $editOrderUrl . "' title ='View Order Detail'><i class='fas fa-eye' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'><i class='fas fa-file' aria-hidden='true'></i></a><a style='margin-left:5px;' href='#' onclick='addVesting($file_id);' title ='Vesting'><i class='fas fa-institution' aria-hidden='true'></i></a>";
+            $action = "<div class='dropdown'>
+                <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type 
+                    <span class='caret'></span> 
+                </a>
+                <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
+                    <li>
+                        <a href='" . $editOrderUrl . "' title ='View Order Detail'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
+                                View
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
+                                Regenerate Report
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='#' onclick='addVesting($file_id);' title ='Vesting'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-institution' aria-hidden='true' style='margin-right:5px;'></i>
+                                Add Vesting
+                            </button>
+                        </a>
+                    </li>";
 
             if (empty($value['file_number'])) {
-                $action .= "<a style='margin-left:5px;' href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                $action .= "<li>
+                        <a href='#' onclick='changeClient($file_id);' title ='Change Client'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-edit' aria-hidden='true' style='margin-right:5px;'1></i>
+                                Change Client
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'>
+                            <button class='btn btn-grad-2a button-color' type='button'>
+                                <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
+                                Send Order Resware
+                            </button>
+                        </a>
+                    </li>";
             }
 
             $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $value['document_name'];
             if (!empty($value['document_name'])) {
-                $action .= "<a href='#' style='margin-left:5px;' title ='Download LP Report' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"report"' . ");'><i class='fas fa-fw fa-download'></i></a>
-                     <a href='#' style='margin-left:5px;' title ='Select Document' onclick='getInstrumentData($file_id);'><i class='fa fa-external-link'></i></a>";
+                $action .= "<li>
+                    <a href='#' title ='Download LP Report' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"report"' . ");'>
+                        <button class='btn btn-grad-2a button-color' type='button'>
+                            <i class='fas fa-fw fa-download' style='margin-right:5px;'></i>
+                            Download Lp Report
+                        </button>
+                    </a>
+                </li>
+                <li> 
+                    <a href='#' title ='Select Document' onclick='getInstrumentData($file_id);'>
+                        <button class='btn btn-grad-2a button-color' type='button'>
+                            <i class='fa fa-external-link' style='margin-right:5px;'></i>
+                            Get Instrument Data
+                        </button>   
+                    </a>
+                </li>";
             }
-            $action .= "<a href='#' style='margin-left:5px;' title ='File Upload' onclick='fileUpload($file_id);'><i class='fa fa-upload'></i></a></div>";
+            $action .= "<li>
+                    <a href='#' title ='File Upload' onclick='fileUpload($file_id);'>
+                        <button class='btn btn-grad-2a button-color' type='button'>
+                            <i class='fa fa-upload' style='margin-right:5px;'></i>
+                            Upload Doc
+                        </button>   
+                    </a>
+                </li></ul></div>";
             // <i class="fa-solid fa-up-right-from-square"></i>
             $nestedData[] = $action;
             $data[] = $nestedData;
@@ -774,4 +885,38 @@ class Order extends MX_Controller
         exit;
     }
 
+    function getDetailsByName()
+    {
+    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+    	$condition = array(
+            'company_name' => $searchTerm
+        );    	
+    	$condition['where']['is_sales_rep'] = 0;
+    	$userDetails = $this->home_model->get_customers_search($condition);
+    	$userInfo = array();
+
+    	if(isset($userDetails) && !empty($userDetails)) {
+    		foreach ($userDetails as $key => $value) {
+    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
+				$data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
+	            // array_push($userInfo, $data); 
+	            $userInfo[] =$data;
+    		}
+    	}
+    	echo json_encode($userInfo);
+    }
 }
