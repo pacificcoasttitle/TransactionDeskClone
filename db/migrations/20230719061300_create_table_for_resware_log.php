@@ -25,7 +25,7 @@ final class CreateTableForReswareLog extends AbstractMigration
             ->addColumn('file_number', 'string', ['null' => true])
             ->addColumn('request', 'string', ['null' => false])
             ->addColumn('response', 'text', ['null' => false])
-            ->addColumn('status', 'string', ['null' => false])
+            ->addColumn('status', 'string', ['null' => true])
 			->addTimestamps()
             ->create();
     }
