@@ -1113,9 +1113,9 @@
                     <tr>
                         <td><?php echo $sectionGRecordNumber + 1 . (($sectionGRecordNumber == 0) ? 'st' : (($sectionGRecordNumber == 1) ? 'nd' : (($sectionGRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  number_format($val['loan_amount']); ?></td>
+                        <td><?php echo  "$".number_format($val['loan_amount']); ?></td>
                         <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
-                        <td><?php echo  $val['recorded_date']; ?></td>
+                        <td><?php echo  date("m/d/Y", strtotime($val['recorded_date']));  ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionGRecordNumber++;} } else { $noRecordG = true;?>
@@ -1141,9 +1141,9 @@
                     <tr>
                         <td><?php echo $sectionHRecordNumber + 1 . (($sectionHRecordNumber == 0) ? 'st' : (($sectionHRecordNumber == 1) ? 'nd' : (($sectionHRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  number_format($val['loan_amount']); ?></td>
+                        <td><?php echo  '$'.number_format($val['loan_amount']); ?></td>
                         <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
-                        <td><?php echo  $val['recorded_date']; ?></td>                        
+                        <td><?php echo  date("m/d/Y", strtotime($val['recorded_date']));  ?></td>                        
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionHRecordNumber++; } } else {
@@ -1173,9 +1173,9 @@
                     <tr>
                         <td ><?php echo $sectionIRecordNumber + 1 . (($sectionIRecordNumber == 0) ? 'st' : (($sectionIRecordNumber == 1) ? 'nd' : (($sectionIRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
                         <td ><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  number_format($val['loan_amount']); ?></td>
+                        <td><?php echo  '$'.number_format($val['loan_amount']); ?></td>
                         <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
-                        <td ><?php echo  $val['recorded_date']; ?></td>
+                        <td ><?php echo  date("m/d/Y", strtotime($val['recorded_date']));  ?></td>
                         <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
                     </tr>
                     <?php $sectionIRecordNumber++; } } else {
