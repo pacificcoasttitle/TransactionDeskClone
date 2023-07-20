@@ -4855,6 +4855,11 @@ class Home extends MX_Controller
             $this->db->update('pct_title_point_document_records', array('is_display' => 1), array('id' => $instrument_number_id));
         }
 
+        $this->db->update('pct_title_point_document_records', array('is_ves_display' => 0), array('title_point_id' => $title_point_id));
+        foreach ($ves_instrument_number_ids as $ves_instrument_number_id) {
+            $this->db->update('pct_title_point_document_records', array('is_ves_display' => 1), array('id' => $ves_instrument_number_id));
+        }
+
         $file_id = $titlePointData['file_id'];
         $this->order->createLpReport($titlePointData['file_number'], true, false);
         /** Save user Activity */
