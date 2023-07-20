@@ -174,6 +174,7 @@
 				$this->uri->uri_string() == 'order/admin/tax-log' ||
 				$this->uri->uri_string() == 'order/admin/partner-api-log' ||
 				$this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
+				$this->uri->uri_string() == 'order/admin/resware-logs' ||
 				$this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
 				$this->uri->uri_string() == 'order/admin/admin-user-logs'
 			) { echo 'show'; } ?>" aria-labelledby="logsDropDown" id="logs">
@@ -185,6 +186,7 @@
 					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/tax-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/tax-log'; ?>">Tax Document</a>
 					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/partner-api-log') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/partner-api-log'; ?>">Partner Api</a>
 					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/cpl-error-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/cpl-error-logs'; ?>">CPL Error</a>
+					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/resware-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/resware-logs'; ?>">ResWare Log</a>
 					<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/lp-xml-logs') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-xml-logs'; ?>">LP Xml</a>
 					<?php if($role_id == 1) : ?>
 						<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/admin-user-logs' ) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/admin-user-logs'; ?>">Admin Activity</a>

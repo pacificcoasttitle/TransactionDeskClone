@@ -1410,6 +1410,67 @@ class Home_model extends CI_Model
         );
     }
 
+    public function getReswareLogs($params)
+    {
+        $this->db->from('pct_resware_log');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $lists = array();
+
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+            $this->db->from('pct_resware_log');
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('request', $keyword)
+                    ->or_like('response', $keyword)
+                    ->or_like('request_url', $keyword)
+                    ->group_end();
+            }
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('request', $keyword)
+                    ->or_like('response', $keyword)
+                    ->or_like('request_url', $keyword)
+                    ->group_end();
+            }
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('pct_resware_log');
+
+            if ($query->num_rows() > 0) {
+                $lists = $query->result_array();
+            }
+        } else {
+
+            $this->db->from('pct_resware_log');
+            $filter_total_records = $this->db->count_all_results();
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('pct_resware_log');
+
+            if ($query->num_rows() > 0) {
+                $lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $lists
+        );
+    }
+
     public function getNotifications()
     {
         $this->db->select('*');

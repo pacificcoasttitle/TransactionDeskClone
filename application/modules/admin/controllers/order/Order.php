@@ -390,6 +390,52 @@ class Order extends MX_Controller
         echo json_encode($json_data);
     }
 
+    function reswareLogs()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Resware API Logs';
+        $this->admintemplate->show("order/home", "resware_api_log", $data);
+    }
+
+    function getReswareLogs()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $resware_logs_list = $this->home_model->getReswareLogs($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $resware_logs_list = $this->home_model->getReswareLogs($params);
+        }
+        $data = array();
+        $count = $params['start'] + 1;
+        if (isset($resware_logs_list['data']) && !empty($resware_logs_list['data'])) {
+            foreach ($resware_logs_list['data'] as $key => $value) {
+                $nestedData = array();
+                $nestedData[] = $count;
+                $nestedData[] = $value['request_type'];
+                $nestedData[] = $value['request_url'];
+                $nestedData[] = $value['request'];
+                $nestedData[] = $value['response'];
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $nestedData[] = convertTimezone($value['created_at']);
+                $data[] = $nestedData;
+                $count++;
+            }
+        }
+        $json_data['recordsTotal'] = intval($resware_logs_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($resware_logs_list['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
     public function safewireOrders()
     {
         $data = array();
