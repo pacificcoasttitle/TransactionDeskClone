@@ -1492,7 +1492,7 @@ class Order
 			'status' => 'success',
 			'created_at' => date("Y-m-d H:i:s")
 		);
-		$this->db->insert('pct_resware_log', $reswareLogData);
+		$this->CI->db->insert('pct_resware_log', $reswareLogData);
 		/* End add resware api logs */
 
         $data = array();
@@ -2072,7 +2072,7 @@ class Order
 			'status' => 'success',
 			'created_at' => date("Y-m-d H:i:s")
 		);
-		$this->db->insert('pct_resware_log', $reswareLogData);
+		$this->CI->db->insert('pct_resware_log', $reswareLogData);
 		/* End add resware api logs */
         
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -2159,7 +2159,7 @@ class Order
 			'status' => 'success',
 			'created_at' => date("Y-m-d H:i:s")
 		);
-		$this->db->insert('pct_resware_log', $reswareLogData);
+		$this->CI->db->insert('pct_resware_log', $reswareLogData);
 		/* End add resware api logs */
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -2224,7 +2224,7 @@ class Order
 			'status' => 'success',
 			'created_at' => date("Y-m-d H:i:s")
 		);
-		$this->db->insert('pct_resware_log', $reswareLogData);
+		$this->CI->db->insert('pct_resware_log', $reswareLogData);
 		/* End add resware api logs */
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
@@ -3101,8 +3101,8 @@ class Order
             ->from('pct_lp_document_types');
 
         $this->CI->db->where('subtype_flag', 1);
-        //$this->db->where('is_notice', 0);
-        //$this->db->group_by('doc_type');
+        //$this->CI->db->where('is_notice', 0);
+        //$this->CI->db->group_by('doc_type');
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();
@@ -3154,7 +3154,8 @@ class Order
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $file_id = $titlePointDetails[0]['file_id'];
         $orderDetails = $this->get_order_details($file_id);
-
+        // echo "<pre>";
+        // print_r($orderDetails);die;
         $postData['file_number'] = $fileNumber;
         $postData['order_id'] = $orderDetails['order_id'];
         $postData['state'] = $orderDetails['property_state'];
