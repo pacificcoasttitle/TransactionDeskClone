@@ -4331,7 +4331,6 @@ $(document).ready(function () {
     }
 
     if ($('#instrument-file-upload-form #recorded_date').length > 0) {
-        console.log("Instrument");
         $('#instrument-file-upload-form #recorded_date').datepicker({
             changeMonth: true,
             changeYear: true,
