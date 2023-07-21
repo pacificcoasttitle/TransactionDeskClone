@@ -1,4 +1,7 @@
 <style>
+table {
+    table-layout: fixed;
+}
 .date-range-control {
     cursor: pointer;
     padding: 5px 10px;
@@ -16,7 +19,8 @@ div.dataTables_wrapper div.dataTables_filter {
 }
 th,td {
     overflow: hidden;
-    max-width: 30%;
+    max-width: 25%;
+    word-wrap: break-word;
 }
 </style>
 
@@ -41,12 +45,12 @@ th,td {
                 <table class="table table-bordered" id="tbl-resware-log-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th style="width:5%" >Sr No</th>
-                            <th style="width:5%">Request Type</th>
+                            <th style="width:3%" >Sr No</th>
+                            <th style="width:14%">Request Type</th>
                             <th style="width:15%">Request Url</th>
                             <th style="width:30%">Request</th>
                             <th style="width:30%">response</th>
-                            <th style="width:15%">Created at</th>
+                            <th style="width:8%">Created at</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
