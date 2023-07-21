@@ -3466,12 +3466,10 @@ class Order
             $fips = $titlePointInstrumentDetails['fips'];
 
             if (!empty($grantDeedInstuNum) && strtotime($grantDeedRecordedDate) > strtotime($recordedDate)) {
-                // echo "<pre>";
-                // print_r($titlePointInstrumentDetails);die;
                 $insertData = array(
                     'title_point_id' => $titlePointId,
                     'instrument' => $grantDeedInstuNum,
-                    'recorded_date' => $grantDeedRecordedDate,
+                    'recorded_date' => date("Y-m-d", strtotime($grantDeedRecordedDate)),
                     'type' => 'REC',
                     'sub_type' => 'ALL',
                     'order_number' => $titlePointInstrumentDetails['order_number'],
