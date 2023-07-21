@@ -3433,7 +3433,7 @@ class Order
             'document_type_id' => 1037,
             'document_size' => $fileSize,
             'user_id' => $userdata['id'],
-            'order_id' => $orderDetails['order_id'],
+            'order_id' => !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : 0,
             'description' => 'Pre Listing Report Document',
             'is_sync' => 1,
             'is_prelim_document' => 0,
