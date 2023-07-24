@@ -182,9 +182,11 @@ function curlPost($end_point, $requestParams)
 	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	  CURLOPT_CUSTOMREQUEST => 'GET',
 	));
-
 	$response = curl_exec($curl);
 
+    if (curl_errno($curl)) {
+        echo $error_msg = curl_error($curl);exit;
+    }
 	curl_close($curl);
 	$xmlData = simplexml_load_string($response);
     return json_encode($xmlData);
