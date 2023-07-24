@@ -181,6 +181,7 @@ function curlPost($end_point, $requestParams)
 	  CURLOPT_FOLLOWLOCATION => true,
 	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	  CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
 	));
 	$response = curl_exec($curl);
 
