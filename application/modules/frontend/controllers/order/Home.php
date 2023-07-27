@@ -1280,8 +1280,8 @@ class Home extends MX_Controller
                     // $taxDataStatus = 'falied';
 					if ($taxDataStatus != 'success') {
 						$subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
-						send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
-						$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_order_mail_CS_notification', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
+						//send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
+						//$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_order_mail_CS_notification', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
 					}
 
 					$tpData = array(
@@ -1326,7 +1326,7 @@ class Home extends MX_Controller
 						$to = $escrowEmail;
 						$mailParams['to'] = $to;
 						$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array(), $orderId, 0);
-						$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+						//$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
 						$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
 					}
 
@@ -1334,7 +1334,7 @@ class Home extends MX_Controller
 						$to = $escrow_officer_email;
 						$mailParams['to'] = $to;
 						$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
-						$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+						//$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
 						$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
 					}
 				}

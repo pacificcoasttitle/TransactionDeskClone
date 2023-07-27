@@ -3031,7 +3031,7 @@ class Cron extends MX_Controller {
                                         'message'=>json_encode($email_data)
                                     );
                                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
-                                    $escrow_mail_result = send_email($from_mail,$from_name, $escrow_email, $subject, $message_body);
+                                    //$escrow_mail_result = send_email($from_mail,$from_name, $escrow_email, $subject, $message_body);
                                     $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
                                 }
                             }
