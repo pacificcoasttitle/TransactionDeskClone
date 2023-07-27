@@ -393,13 +393,14 @@ class Home extends MX_Controller
 						$response = json_decode($result, true);
 
 						if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+							$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
 							/* Start add resware api logs */
 							$reswareData = array(
 								'request_type' => 'create_order_in_resware',
 								'request_url' => env('RESWARE_ORDER_API') . 'orders',
 								'request' => $order_data,
 								'response' => $result,
-								'status' => $response['ResponseStatus'],
+								'status' => $message,
 								'created_at' => date("Y-m-d H:i:s")
 							);
 
@@ -407,7 +408,6 @@ class Home extends MX_Controller
 							$this->db->insert('pct_resware_log', $reswareData);
 							/* End add resware api logs */
 
-							$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
 							$response = array('status' => 'error', 'message' => $message);
 							echo json_encode($response);
 							exit;
