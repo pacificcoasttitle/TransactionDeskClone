@@ -3933,7 +3933,7 @@ class Home extends MX_Controller
                     'request_url' => env('RESWARE_ORDER_API') . $endPoint,
                     'request' => $order_data,
                     'response' => $result,
-                    'status' => $response['ResponseStatus'],
+                    'status' => $message,
                     'created_at' => date("Y-m-d H:i:s")
                 );
                 $this->db->insert('pct_resware_log', $reswareLogData);
