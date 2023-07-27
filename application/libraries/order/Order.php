@@ -3751,7 +3751,7 @@ class Order
                     $to = ['openorders@pct.com', 'cs@pct.com'];
                     if ($taxDataStatus != 'success') {
                         $subject = $subject . ' But Tax details not found';
-                        send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
+                        //send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
                     }
                     /** End Notify CS */
                 } catch (Exception $e) {
@@ -3767,7 +3767,7 @@ class Order
                     $to = ['openorders@pct.com', 'cs@pct.com'];
                     if ($taxDataStatus != 'success') {
                         $subject = $subject . ' But Tax details not found';
-                        send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
+                        //send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
                     }
                     /** End Notify CS */
                 } catch (Exception $e) {
