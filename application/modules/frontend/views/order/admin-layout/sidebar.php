@@ -60,6 +60,37 @@
 				<span>Dashboard Home</span>
 			</a>
 		</li>
+	<?php } else { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>dashboard">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Dashboard Home</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->uri_string(1) == 'order') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>order">
+				<i class="fas fa fa-calendar  "></i>
+				<span>Open Order</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'cpl-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>cpl-dashboard">
+				<i class="fas fa-seedling"></i>
+				<span>CPL Dashboard</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'proposed-insured') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>proposed-insured">
+				<i class="fa fa-line-chart"></i>
+				<span>Proposed Insured</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'logout') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'logout'; ?>">
+				<i class="fa fa-sign-out"></i>
+				<span>Logout</span>
+			</a>
+		</li>
 	<?php } ?>
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
