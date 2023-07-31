@@ -65,7 +65,7 @@ $(document).on('click', '.sendInvite', function () {
 $(document).on('click', '#sendInviteBtn', function () {
     $(this).attr('disabled', true);
     var form_data = $('#inviteForm').serialize();
-    var url = "<?php echo base_url('send_invite')?>";
+    var url = base_url + "send_invite";
     $('.error-cotent').html('');
     $.ajax({
         type: "POST",

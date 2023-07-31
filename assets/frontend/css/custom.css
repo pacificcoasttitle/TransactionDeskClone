@@ -255,7 +255,14 @@ table.table-search-results .btn-default:hover {
     height: 30px; 
     animation: spin 1s linear infinite; 
 } 
-  
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
 @keyframes spin { 
     100% { 
         transform: rotate(360deg); 

@@ -16,6 +16,7 @@ class Dashboard extends MX_Controller {
         $this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->library('order/template');
+		$this->load->library('order/salesDashboardTemplate');
 		$this->load->model('order/orderRecording');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
@@ -40,8 +41,10 @@ class Dashboard extends MX_Controller {
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
-		$this->template->show("order", "dashboard", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
+		// $this->template->show("order", "dashboard", $data);
+		$this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/dashboard.js?v=prelim_order_'.$this->dashboard_js_version));
+		$this->salesdashboardtemplate->show("order", "dashboard", $data);
 	}
 
     function recordings()

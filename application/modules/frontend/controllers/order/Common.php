@@ -943,8 +943,9 @@ class Common extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/cpl.js?v=cpl_'.$this->cpl_js_version));
-		$this->template->show("order", "cpl", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/cpl.js?v=cpl_'.$this->cpl_js_version));
+		$this->salesdashboardtemplate->show("order", "cpl", $data);
+		// $this->template->show("order", "cpl", $data);
 	}
 
 	public function get_orders_cpl()
@@ -982,24 +983,22 @@ class Common extends MX_Controller {
 					$documentName = $order['cpl_document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."documents/".$documentName;
-						$nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+						$nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");' title='Download'><i class='fas fa-download' aria-hidden='true'></i></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
                     } else {
                         $documentUrl = FCPATH.'uploads/documents/'.$documentName;
-						$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+						$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download title='Download'><i class='fas fa-download' aria-hidden='true'></i></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
                     }
 					
 				} else if(!empty($order['westcor_file_id'])) {
 					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
-					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);' title='Download' title='Download'><i class='fas fa-download' aria-hidden='true'></i></a><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
 				} else {
 					$file_id = $order['file_id'];
-					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
-					<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					$nestedData[] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><a href='javascript:void(0); class='btn btn-grad-2a generate button-color' title='Generate' type='submit'><i class='fas fa-seedling' aria-hidden='true'></i></a></form><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
 				}
 				$data[] = $nestedData; 
 				$i++; 
@@ -2243,8 +2242,10 @@ class Common extends MX_Controller {
 		$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 		$data['proposedBranches'] = $this->order->getProposedBranches();
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
-		$this->template->show("order", "proposed_insured", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+		// $this->template->show("order", "proposed_insured", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->cpl_js_version));
+		$this->salesdashboardtemplate->show("order", "proposed_insured", $data);
     }
 
     function get_proposed_orders()
