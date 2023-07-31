@@ -216,153 +216,98 @@ class Dashboard extends MX_Controller {
     function get_fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $userdata = $this->session->userdata('user');
         $fileId = $this->uri->segment(2);
         $orderDetails = $this->order->get_order_details($fileId);
-        $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
-        /* start get fees details from resware */
-        $request = array();
+    
+		$post_data = $result_decoded = array();
+        $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
+		$userData = array(
+			'admin_api' => 1
+		);
 
-        $TransactionTypeID = isset($orderDetails['transaction_type']) && !empty($orderDetails['transaction_type']) ? $orderDetails['transaction_type'] : '';
-        $ProductTypeID = isset($orderDetails['purchase_type']) && !empty($orderDetails['purchase_type']) ? $orderDetails['purchase_type'] : '';
-        $request['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID'=>$ProductTypeID);
-
-        $propertyAddress = isset($orderDetails['address']) && !empty($orderDetails['address']) ? $orderDetails['address'] : '';
-
-        $addressParts = explode(' ', $propertyAddress);
-
-        $streetNumber = isset($addressParts[0]) && !empty($addressParts[0]) ? $addressParts[0] : '';
-
-        $primaryStreetName = array_slice($addressParts, 1);
-        $streetName = isset($primaryStreetName) && !empty($primaryStreetName) ? implode(" ", $primaryStreetName) : '';
-
-        $FullProperty = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-               
-        $PropertyZip = isset($orderDetails['property_zip']) && !empty($orderDetails['property_zip']) ? $orderDetails['property_zip'] : '';
-        
-        $propertyState = isset($orderDetails['property_state']) && !empty($orderDetails['property_state']) ? $orderDetails['property_state'] : '';
-
-        $propertyCity = isset($orderDetails['property_city']) && !empty($orderDetails['property_city']) ? $orderDetails['property_city'] : '';      
-        
-        $county = isset($orderDetails['county']) && !empty($orderDetails['county']) ? $orderDetails['county'] : '';
-
-        $request['Properties'][] = array('IsPrimary'=>'true', 'StreetNumber'=>$streetNumber, 'StreetName'=> $streetName, 'City'=> $propertyCity, 'State'=> $propertyState, 'County'=> $county, 'Zip'=>$propertyZip);
-
-        $loanAmount = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-
-        if(isset($loanAmount) && !empty($loanAmount))
-        {
-            $request['Loans'][]['LoanAmount'] = $loanAmount;
+		$result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
+		if (json_decode($result) && count(json_decode($result)->Files)) {
+			$result_decoded = json_decode($result);
+			$loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
+			$salesAmount = $result_decoded->Files[0]->SalesPrice;
         }
 
-        $salesAmount = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
+        $result_decoded = json_decode($result);
 
-        $product_type = isset($orderDetails['product_type']) && !empty($orderDetails['product_type']) ? $orderDetails['product_type'] : '';
-        $data['productType'] = $product_type;
-		
-		if ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36') {
-			$request['SettlementStatementVersion'] = 'HUD';
-		}
-		
-        if(isset($salesAmount) && !empty($salesAmount))
-        {
-            $request['SalesPrice'] = $salesAmount;
-            $condition = array(
-	            'where' => array(
-	                'transaction_type' => 'sale',
-	                'pct_order_fees.status' => 1
-	            ),
-	            'product_type' => $product_type,
-	        );
+        if (!empty($orderDetails)) {
+            $post_data['seller'] = $orderDetails['primary_owner'];
+        } else {
+            $post_data['seller'] = '';
         }
-        else
-        {
-        	$condition = array(
-	            'where' => array(
-	                'transaction_type' => 'loan',
-	                'pct_order_fees.status' => 1
-	            ),
-	            'product_type' => $product_type,
-	        );
-        }
-
-        $fees_data = json_encode($request);
-        $this->load->library('order/resware');
-
-
-        $endPoint = 'estimates/closingfees';
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, array(), $orderId, 0);
-        $result = $this->resware->make_request('POST', $endPoint, $fees_data);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_fees', env('RESWARE_ORDER_API').$endPoint, $fees_data, $result, $orderId, $logid);
-
+        $property_data = $result_decoded->Files[0]->Properties[0];
+        $buyer_data = $result_decoded->Files[0]->Buyers[0];
+        $buyer_name = $buyer_data->Primary;
         
+        $post_data['file_id'] = $result_decoded->Files[0]->FileID;
+        $post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
+        $post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
+        $post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
+        $post_data['city'] = $property_data->City;
+        $post_data['county'] = $property_data->County;
+        $post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First." ".$result_decoded->Files[0]->Buyers[0]->Primary->Last;
+        $post_data['full_address'] = $property_data->StreetNumber;
+        $post_data['full_address'] .= ! empty($property_data->StreetDirection) ?' '.substr($property_data->StreetDirection, 0, 1) : '';
+        $post_data['full_address'] .= ' '.$property_data->StreetName;
+        $post_data['full_address'] .= ' '.$property_data->StreetSuffix;	
+        $post_data['full_address'] .= ', '.$property_data->City;	
+        $post_data['full_address'] .= ', '.$property_data->State;	
+        $post_data['full_address'] .= ' '.$property_data->Zip;	
+        $post_data['borrower'] = ! empty($buyer_name->First) ? $buyer_name->First : '';
+        $post_data['borrower'] .= ! empty($buyer_name->Middle) ? ' '.$buyer_name->Middle : '';
+        $post_data['borrower'] .= ! empty($buyer_name->Last) ? ' '.$buyer_name->Last : '';
+        $post_data['borrower'] = trim($post_data['borrower']);
 
-        $fees = array();
-        if(isset($result) && !empty($result))
-        {
-            $response = json_decode($result,TRUE);
-            $closing_fee_estimate_id = isset($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) && !empty($response['ClosingFeeEstimate']['ClosingFeeEstimateID']) ? $response['ClosingFeeEstimate']['ClosingFeeEstimateID'] : '';
+        if(empty($post_data['borrower'])) {
+            $post_data['borrower'] = ! empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
+        }
 
-            if(isset($response['ClosingFeeEstimate']['Premiums']) && !empty(isset($response['ClosingFeeEstimate']['Premiums'])))
-            {
-                foreach ($response['ClosingFeeEstimate']['Premiums'] as $k => $v) 
-                {
-                	if($k == 'FullLendersPremium')
-                    {
-                        $k = 'Stand Alone Title Policy';
-                    }
-                    $fees['Title Fee'][] = array('amount' => $v, 'description' => $k);
-                }
-            }
+        $post_data['ECD']='';
+        if(!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
+            $ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "",$result_decoded->Files[0]->Dates->FileCompletedDate));
+            $ecd_date = date('m/d/Y', $ecd_timestamp/1000);
+            $post_data['ECD'] = $ecd_date;
+        }
 
-            $feesInfo = $this->fees_model->get_rows($condition);
+        if (strpos($result_decoded->Files[0]->TransactionProductType->ProductType, 'Sale') !== false) {
+            $post_data['lenderInsurance'] = 1; 
+            $post_data['transactionType'] = 'Resale'; 
+            $post_data['transferTaxesCheck'] = 1; 
+            
+        } else {
+            $post_data['netsheet_for'] = ''; 
+            $post_data['lenderInsurance'] = 0; 
+            $post_data['transactionType'] = 'Re-Finance'; 
+            $post_data['transferTaxesCheck'] = 0; 
+        }
+        $post_data['escrowPriceCheck'] = 1; 
+        $post_data['recordingPriceCheck'] = 1; 
+    
+        $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Authorization: Bearer '.env('PCT_CALC_TOKEN'),
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen(json_encode($post_data)))
+        );
+        $error_msg = curl_error($ch);
+        $calcResult = json_decode(curl_exec($ch), true);
 
-	        if(isset($feesInfo) && !empty(isset($feesInfo)))
-	        {
-	            foreach ($feesInfo as $k => $v) 
-	            {
-	                $fees[$v['fee_type']][] = array('amount' => $v['value'], 'description' => $v['name']);
-	            }
-	        }
-
-	        if(strpos($product_type, 'Loan:') !== false)
-	        {
-	            if(isset($fees['Title Fee']) && !empty($fees['Title Fee']))
-	            {
-	                foreach ($fees['Title Fee'] as $key => $value)
-	                {
-	                    if($value['description'] == 'Stand Alone Title Policy')
-	                    {
-	                        unset($fees['Title Fee'][$key]);
-	                    }
-	                }
-	            }
-	        }
-
-	        $data['fees'] = $fees;
-	        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
-	        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
-	        $data['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
-	        $data['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-	        
-	        $data['closing_fee_estimate_id'] = $closing_fee_estimate_id;
-
-	        $this->load->model('order/fee');
-
-	        if(isset($closing_fee_estimate_id) && !empty($closing_fee_estimate_id))
-	        {
-	        	$feesData = array(
-		            'closing_fee_estimate_id' => $closing_fee_estimate_id,
-		            'user_id' => $userdata['id'],
-		            'order_id' => $orderId
-		        );
-
-		        $feeId = $this->fee->insert($feesData);
-	        }
-	        
-
-	        /* end get fees details from resware */
-        }        
+        $calcResult['transactionType'] = $post_data['transactionType'];
+        //echo "<pre>";
+        //print_r($calcResult);exit;
+        $data['calcResult'] = $calcResult;
+        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $data['sales_amount'] = $salesAmount;
+        $data['loan_amount'] = $loanAmount;
+       
 		$this->template->addCSS(base_url('assets/front/css/style.css'));
 		$this->template->addJS('https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js');
 		$this->template->addJS( base_url('assets/frontend/js/order/order_fee.js?v=order_fee_'.$this->order_fee_js_version) );
