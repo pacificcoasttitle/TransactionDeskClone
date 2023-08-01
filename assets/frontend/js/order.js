@@ -14,16 +14,19 @@ $(document).ready(function() {
         notifyAdmin('Legal Vesting Document Not Found');
     }   
     
-    $('#clone-email-address').cloneya({
-        maximum: 5
-    }).on('after_append.cloneya', function (event, toclone, newclone) {
-        var name = $(newclone).find("input[type='email']").attr('id');
-    }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
-        $(clone).slideToggle('slow', function () {
-            $(clone).remove();
-            
-        })
-    });
+    if ($('#clone-email-address').length)
+    {
+        $('#clone-email-address').cloneya({
+            maximum: 5
+        }).on('after_append.cloneya', function (event, toclone, newclone) {
+            var name = $(newclone).find("input[type='email']").attr('id');
+        }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+            $(clone).slideToggle('slow', function () {
+                $(clone).remove();
+                
+            })
+        });
+    }
 
     getProductTypes();
 

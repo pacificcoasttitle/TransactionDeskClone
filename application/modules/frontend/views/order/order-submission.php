@@ -1,7 +1,129 @@
+<style>
+    .ui-subtitle-block {
+        font-family: Merriweather;
+        font-style: italic;
+        line-height: 1;
+    }
+    .ui-title-block + .ui-decor-1 {
+        margin-top: 22px;
+        margin-bottom: 34px;
+    }
+
+    .ui-decor-1 {
+        display: inline-block;
+        width: 100px;
+        height: 2px;
+    }
+
+    span.orderinfo1 {
+        color: #04415D;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 1.25px;
+        margin-top: 15px;
+    }
+
+    h3, .h3 {
+        font-size: 20px;
+    }
+    .b-advantages-group {
+        margin-right: -80px;
+        margin-bottom: -26px;
+        margin-left: -40px;
+    }
+    
+.b-advantages {
+    position: relative;
+}
+.b-advantages_3-col {
+    display: inline-block;
+    margin-right: 0;
+    vertical-align: top;
+    width: 32.33%;
+}
+.b-advantages-2_mod-a {
+    margin-bottom: 110px;
+}
+.stroke {
+    font-family: 'Stroke-Gap-Icons';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.b-advantages-2 .b-advantages__icon {
+    position: absolute;
+    z-index: 10;
+    top: 30px;
+    right: 80px;
+    display: block;
+    padding: 0 30px;
+    font-size: 44px;
+    color: #777;
+    background-color: #f8f8f8;
+}
+.b-advantages-2_mod-a .b-advantages__icon {
+    top: -5px;
+    right: 66px;
+    background-color: #fff;
+}
+.b-advantages-2 .b-advantages__inner {
+    margin-top: 54px;
+    margin-right: 38px;
+    margin-bottom: 26px;
+    padding: 42px 40px 45px 50px;
+}
+.b-advantages-2_mod-a .b-advantages__inner {
+    margin-top: 12px;
+    padding: 48px 40px 45px 51px;
+    box-shadow: inset 0 0 0 5px whitesmoke;
+}
+.b-advantages__title {
+    display: block;
+    margin-bottom: 19px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: #333;
+    padding: 5px 0;
+}
+.b-advantages-2 .b-advantages__title {
+    position: relative;
+    z-index: 200;
+}
+.b-advantages__title a {
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    color: #333;
+}
+.b-advantages-2 .b-advantages__title a {
+    color: #333;
+}
+.btn_mrg-top_30 {
+    margin-top: 30px;
+}
+.b-advantages:before, .b-advantages:after {
+    display: table;
+    content: "";
+}
+.b-advantages:after {
+    clear: both;
+}
+.b-advantages-2_mod-a .b-advantages__icon:before {
+    background-image: -webkit-linear-gradient(135deg, #6533d7 0%, #339bd7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+</style>
 <body>
     <?php
        // $this->load->view('layout/header');
-        $this->load->view('layout/header_dashboard');
+        // $this->load->view('layout/header_dashboard');
     ?>
 
         <!-- end .b-title-page-->
@@ -9,7 +131,7 @@
           <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="ui-subtitle-block">Important Details Below</div>
+                    <div class="ui-subtitle-block mb-4">Important Details Below</div>
                     <h2 class="ui-title-block ui-title-block_light">Your Order Info...</h2>
                     <div class="ui-decor-1 bg-primary"></div>
                     <p>We will be sending you an email confirmation shortly. Below you can find your order number, the full legal description, and the vesting information for your recently submitted order.</p>
@@ -23,7 +145,7 @@
                     ?>
                             <li>
                                 <h3>Order Number:</h3><br>
-                                <span class="orderinfo1" id="orderNumber"><?php echo $tp_data['file_number']; ?></span>
+                                <span class="orderinfo1" id="orderNumber"><strong><?php echo $tp_data['file_number']; ?></strong></span>
                             </li><br>
                             <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_id;?>">
                             <input type="hidden" name="property-full-address" id="property-full-address" value="<?php echo $property;?>">
@@ -134,7 +256,7 @@
                 </div>
               </div>
             </div>
-            <div class="row" id="grantDeedInfo">
+            <div class="row mt-5 mb-5" id="grantDeedInfo">
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
                 </div>
@@ -183,7 +305,13 @@
                                     if(isset($lv_file_url) && !empty($lv_file_url))
                                     {
                                         if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                                            <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $lv_file_url;?>', 'legal_vesting');">Download L&V</a>
+                                            <a href="javascript:void(0);" class="btn btn-success btn-icon-split btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $lv_file_url;?>', 'legal_vesting');">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-download"></i>
+                                                </span>
+                                                <span class="text">Download L&V</span>
+                                                
+                                            </a>
                                         <?php } else { ?>
                                             <a href="<?php echo $lv_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">Download L&V</a>
                                         <?php } ?>
@@ -193,7 +321,9 @@
                                         <div class="legal-vesting-no-data processing-wrapper">
                                             <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
                                             <br />
-                                            <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number;?>', 'lv')" > Click to fetch</button>
+                                            <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number;?>', 'lv')" > 
+                                                Click to fetch
+                                            </button>
                                         </div>
                                     <?php }
                                     else
@@ -220,7 +350,12 @@
                                         if(isset($deed_file_url) && !empty($deed_file_url))
                                         { 
                                             if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                                                <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $deed_file_url;?>', 'grant_deed');">Download Grant Deed</a>
+                                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $deed_file_url;?>', 'grant_deed');">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-download"></i>
+                                                    </span>
+                                                    <span class="text">Download Grant Deed</span>
+                                                </a>
                                             <?php } else { ?>
                                                 <a href="<?php echo $deed_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="GrantDeed.pdf">Download Grant Deed</a>
                                             <?php } ?>
@@ -262,7 +397,12 @@
                                             if (env('AWS_ENABLE_FLAG') == 1) { ?>
                                                 <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $tax_file_url;?>', 'tax');">Download Tax Document</a>
                                             <?php } else { ?>
-                                                <a href="<?php echo $tax_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="Tax.pdf">Download Tax Document</a>
+                                                <a href="<?php echo $tax_file_url; ?>" class="btn btn-success btn-icon-split btn_mrg-top_30" download="Tax.pdf">
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-download"></i>
+                                                    </span>
+                                                    <span class="text">Download Tax Document</span>
+                                                </a>
                                             <?php } ?>
                                         <?php } else if ($taxFileStatus == 'processing') { ?>
                                             <div class="tax-no-data  processing-wrapper">
@@ -296,29 +436,44 @@
           <div class="row">
             <div class="col-xs-12">
               <div class="b-advantages-group">
-                  <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-screen"></i>
-                    <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></h3>
-                      <div class="b-advantages__info">Our customer service team is ready to help create a farm package to help you alert the neighbors about your new listing.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a>
-                    </div>
-                  </section>
+                    <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-screen"></i>
+                            <div class="b-advantages__inner">
+                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></h3>
+                            <div class="b-advantages__info">Our customer service team is ready to help create a farm package to help you alert the neighbors about your new listing.</div>
+                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url().'cpl-dashboard'; ?>">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-seedling"></i>
+                                </span>
+                                <span class="text">Generate CPL</span>
+                            </a>
+                        </div>
+                    </section>
                   <!-- end .b-advantages-->
-                  <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-worldwide"></i>
-                    <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed</a></h3>
-                      <div class="b-advantages__info">Login in to our PCT Title Toolbox program and create your own farm package consisting of the various types of owners.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'proposed-insured'; ?>">Generate Proposed</a>
-                    </div>
-                  </section>
+                    <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-worldwide"></i>
+                        <div class="b-advantages__inner">
+                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed</a></h3>
+                            <div class="b-advantages__info">Login in to our PCT Title Toolbox program and create your own farm package consisting of the various types of owners.</div>
+                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url().'proposed-insured'; ?>">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-seedling"></i>
+                                </span>
+                                <span class="text">Generate Proposed</span>
+                            </a>
+                        </div>
+                    </section>
                   <!-- end .b-advantages-->
-                  <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-analytics"></i>
-                    <div class="b-advantages__inner">
-                      <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'order'; ?>">Open New Order</a></h3>
-                      <div class="b-advantages__info">Need to open another order? That's fantastic. The link below will redirect you back to our Open Order form.</div>
-					  <a class="btn btn-default btn-sm btn_mrg-top_30" href="<?php echo base_url().'order'; ?>">Create</a>
-                    </div>
-                  </section>
+                    <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-analytics"></i>
+                        <div class="b-advantages__inner">
+                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'order'; ?>">Open New Order</a></h3>
+                            <div class="b-advantages__info">Need to open another order? That's fantastic. The link below will redirect you back to our Open Order form.</div>
+                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url().'order'; ?>">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-seedling"></i>
+                                </span>
+                                <span class="text">Create</span>
+                            </a>
+                        </div>
+                    </section>
                   <!-- end .b-advantages-->
               </div>
             </div>
@@ -353,13 +508,14 @@
 </script>
 
 <?php
-    $this->load->view('layout/footer');
+    // $this->load->view('layout/footer');
 ?>
+<script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
 <!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script> -->
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js?random=<?php echo uniqid(); ?>"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script>
+<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-cloneya.min.js?random=<?php echo uniqid(); ?>"></script> -->
+<!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/order.js?random=<?php echo uniqid(); ?>"></script> -->
 <script>
-    jQuery(document).ready(function($){
+    $(document).ready(function($){
         // $('#page-preloader').css('display', 'none');
         let data = {};
         data.state = "<?php echo $state ?>";
