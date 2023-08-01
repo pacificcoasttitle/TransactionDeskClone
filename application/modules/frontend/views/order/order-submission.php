@@ -1,36 +1,36 @@
 <style>
-    .ui-subtitle-block {
-        font-family: Merriweather;
-        font-style: italic;
-        line-height: 1;
-    }
-    .ui-title-block + .ui-decor-1 {
-        margin-top: 22px;
-        margin-bottom: 34px;
-    }
+.ui-subtitle-block {
+    font-family: Merriweather;
+    font-style: italic;
+    line-height: 1;
+}
+.ui-title-block + .ui-decor-1 {
+    margin-top: 22px;
+    margin-bottom: 34px;
+}
 
-    .ui-decor-1 {
-        display: inline-block;
-        width: 100px;
-        height: 2px;
-    }
+.ui-decor-1 {
+    display: inline-block;
+    width: 100px;
+    height: 2px;
+}
 
-    span.orderinfo1 {
-        color: #04415D;
-        font-weight: bold;
-        font-size: 15px;
-        line-height: 1.25px;
-        margin-top: 15px;
-    }
+span.orderinfo1 {
+    color: #04415D;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 1.25px;
+    margin-top: 15px;
+}
 
-    h3, .h3 {
-        font-size: 20px;
-    }
-    .b-advantages-group {
-        margin-right: -80px;
-        margin-bottom: -26px;
-        margin-left: -40px;
-    }
+h3, .h3 {
+    font-size: 20px;
+}
+.b-advantages-group {
+    margin-right: -80px;
+    margin-bottom: -26px;
+    margin-left: -40px;
+}
     
 .b-advantages {
     position: relative;
@@ -118,6 +118,89 @@
     background-image: -webkit-linear-gradient(135deg, #6533d7 0%, #339bd7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+.parallax {
+    -webkit-transform: none;
+    transform: none;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.section-type-1 {
+    color: #fff;
+    background-image: url(../media/content/bg/bg-1.jpg);
+}
+.area-bg {
+    position: relative;
+}
+.section-sm {
+    padding-top: 55px;
+    padding-bottom: 65px;
+}
+.area-bg__inner {
+    position: relative;
+    z-index: 110;
+}
+.container:before {
+    content: " ";
+    display: table;
+}
+.parallax {
+    -webkit-transform: none;
+    transform: none;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.section-type-1 {
+    color: #fff;
+    background-image: url('../assets/media/content/bg/bg-1.jpg');
+}
+.area-bg {
+    position: relative;
+}
+.section-type-1 .ui-title-block-3 {
+    color: #fff;
+}
+.ui-title-block-3 {
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+.ui-subtitle-block-2 {
+    letter-spacing: .37em;
+    text-transform: uppercase;
+}
+.section-type-1 .btn {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding-right: 35px;
+    padding-left: 35px;
+    color: #fff;
+    border-color: #fff;
+    background-color: transparent;
+}
+
+.container:after {
+    clear: both;
+    content: " ";
+    display: table;
+}
+
+.area-bg:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: '';
+    opacity: .85;
+}
+.area-bg_op_70:after {
+    opacity: .7;
+}
+.area-bg_grad-2:after {
+    background-color: #d35410;
 }
 </style>
 <body>
@@ -496,7 +579,7 @@
                             <h2 class="ui-title-block-3">we provide higher quality services</h2>
                             <div class="ui-subtitle-block-2">and you’ll get solutions for everything</div>
                         </div>
-                        <div class="col-md-5"><a class="btn btn-default btn-round pull-right" href="https://clients.pacificcoasttitle.com/login.aspx?ReturnUrl=/&amp;officeid=1">open orders</a><a class="btn btn-default btn-round pull-right" href="rate-book.html">get rates</a></div>
+                        <div class="col-md-5"><a class="btn btn-default btn-round pull-right" href="https://clients.pacificcoasttitle.com/login.aspx?ReturnUrl=/&amp;officeid=1">OPEN ORDERS</a><a class="btn btn-default btn-round pull-right" href="rate-book.html">GET RATES</a></div>
                     </div>
                 </div>
             </div>
