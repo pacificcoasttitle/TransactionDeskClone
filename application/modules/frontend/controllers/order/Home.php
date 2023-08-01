@@ -1643,9 +1643,13 @@ class Home extends MX_Controller
 		$data['lpFileNumber'] = $lpFileNumber;
 		$data['lpFileStatus'] = $titlePointDetails[0]['lv_file_status'];
 		$data['taxFileStatus'] = $titlePointDetails[0]['tax_file_status'];
-
-		$this->load->view('layout/head', $data);
-		$this->load->view('order/order-submission', $data);
+		
+		// $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-1.9.1.min.js?v=order_' . $this->order_js_version) );
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js?v=order_' . $this->order_js_version) );
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order.js?v=order_' . $this->order_js_version) );
+		$this->salesdashboardtemplate->show("order", "order-submission", $data);
+		// $this->load->view('layout/head', $data);
+		// $this->load->view('order/order-submission', $data);
 
 	}
 
