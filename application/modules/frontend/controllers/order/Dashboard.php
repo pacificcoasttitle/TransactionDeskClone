@@ -6,7 +6,7 @@ class Dashboard extends MX_Controller {
 
 	private $dashboard_js_version = '01';
 	private $fees_js_version = '01';
-	private $order_fee_js_version = '01';
+	private $order_fee_js_version = '02';
 
 	function __construct() {
         parent::__construct();
@@ -310,6 +310,9 @@ class Dashboard extends MX_Controller {
        
 		$this->template->addCSS(base_url('assets/front/css/style.css'));
 		$this->template->addJS('https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js');
+		$this->template->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
+		$this->template->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
+	
 		$this->template->addJS( base_url('assets/frontend/js/order/order_fee.js?v=order_fee_'.$this->order_fee_js_version) );
 		$this->template->show("order", "get_fees", $data);
     }

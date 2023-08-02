@@ -1,23 +1,26 @@
 $(document).ready(function () {
-    var doc = new jsPDF();
-    $('#download_estimate').click(function () {
-        var specialElementHandlers = {
-            '#editor': function (element, renderer) {
-                return true;
-            }
-        };
 
-        doc.fromHTML($('#artcle_main').html(), 15, 15, {
-            'width': 170,
-            'elementHandlers': specialElementHandlers
+    $('#download_estimate').click(function () {
+        console.log('hi');
+        var pdf = new jsPDF('', 'pt', 'a4');
+
+        var element = document.getElementById('artcle_main');
+        html2pdf(element, {
+            margin: 1,
+            filename: 'feeEstimation.pdf',
+            // image: {type: 'jpeg', quality: 1},
+            html2canvas: {
+                scale: 1,
+                logging: false
+            },
+            // jsPDF: {unit: 'mm', format: 'a4', orientation: 'p'}
+
         });
-        doc.save('sample-file.pdf');
         
     });
 });
 
-function base64toBlob(base64Data, contentType) 
-{
+function base64toBlob(base64Data, contentType) {
     contentType = contentType || '';
     var sliceSize = 1024;
     var byteCharacters = atob(base64Data);
