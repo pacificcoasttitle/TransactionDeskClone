@@ -23,7 +23,8 @@ class Report extends MX_Controller {
             'total_units' => '# of Units',
             'turnover_rate' => 'T.O.%'
         ];
-        $this->load->library('order/template');             
+        $this->load->library('order/template');
+        $this->load->library('order/salesDashboardTemplate');
         $this->load->model('order/home_model');
         $this->load->model('report_model');
         $this->load->library('order/order');
@@ -44,8 +45,10 @@ class Report extends MX_Controller {
         );
 		$data['reports_data'] = $this->report_model->getData($report_condition);
         $data['sorting_fields']=$this->sorting_fields;
-        $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
-		$this->template->show("report", "list", $data);
+        // $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
+		// $this->template->show("report", "list", $data);
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/report.js?v=pma_' . $this->report_js_version) );
+		$this->salesdashboardtemplate->show("report", "list", $data);
     }
 
     function importData()
