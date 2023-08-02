@@ -565,25 +565,20 @@ h3, .h3 {
       </div>
       <!-- end .section-area-->
       
-      <!-- end .section-type-12-->
-     
-     
-       
-
       <!-- end .section-default-->
-     <section class="section-type-1 section-sm parallax area-bg area-bg_grad-2 area-bg_op_70">
-            <div class="area-bg__inner">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-7">
-                            <h2 class="ui-title-block-3">we provide higher quality services</h2>
-                            <div class="ui-subtitle-block-2">and you’ll get solutions for everything</div>
-                        </div>
-                        <div class="col-md-5"><a class="btn btn-default btn-round pull-right" href="https://clients.pacificcoasttitle.com/login.aspx?ReturnUrl=/&amp;officeid=1">OPEN ORDERS</a><a class="btn btn-default btn-round pull-right" href="rate-book.html">GET RATES</a></div>
+    <section class="section-type-1 section-sm parallax area-bg area-bg_grad-2 area-bg_op_70">
+        <div class="area-bg__inner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <h2 class="ui-title-block-3">we provide higher quality services</h2>
+                        <div class="ui-subtitle-block-2">and you’ll get solutions for everything</div>
                     </div>
+                    <div class="col-md-5"><a class="btn btn-default btn-round pull-right" href="https://clients.pacificcoasttitle.com/login.aspx?ReturnUrl=/&amp;officeid=1">OPEN ORDERS</a><a class="btn btn-default btn-round pull-right" href="rate-book.html">GET RATES</a></div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 </body>
 </html>
 <script type="text/javascript">

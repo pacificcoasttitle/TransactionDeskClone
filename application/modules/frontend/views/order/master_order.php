@@ -45,7 +45,9 @@
 	.center-wrapper {
 		margin: 0 auto;
 	}
-
+	.form-control {
+		padding: 1.5rem 0.75rem;
+	}
 </style>
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
@@ -56,7 +58,7 @@
             </div>
         </div>
         <div class="row ">
-            <div class="col-md-10 center-wrapper">
+            <div class="col-md-11 center-wrapper">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Helping Get Your Transaction Started.</h6>
@@ -130,19 +132,17 @@
 									<input type="hidden" name="property-zip" id="property-zip" value="">
 									<input type="hidden" name="random_number" id="random_number" value="">
 
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<input type="text" name="Property" id="property-search" class="form-control gui-input pac-target-input" placeholder="Property Address">
 									</div>
 								</div>
 
-								<div class="row form-group">
-									<div class="col-sm-2">
+								<div class="row form-group text-center">
+									<div class="col-sm-12">
 										<a class="button btn btn-primary search-property search-property-button" href="javascript:void(0);" id="search-btn">Property Search</a>
-									</div>
-
-									<div class="col-sm-3">
 										<a class="button btn btn-secondary switch-apn-button search-property-button" href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
 									</div>
+
 								</div>
 							</div>
 
@@ -300,7 +300,7 @@
 									$i = 0;
 									foreach ($deliverables as $deliverable) {?>
 										<div class="row form-group toclone clone-widget cloneya">
-											<div class="col-sm-6">
+											<div class="col-sm-10">
 													<?php if ($i == 0) {?>
 														<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address" value="<?php echo $deliverable; ?>">
 													<?php } else {?>
@@ -315,7 +315,7 @@
 										<?php $i++;}
 									} else {?>
 									<div class="row form-group toclone clone-widget cloneya">
-										<div class="col-sm-6">
+										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
 										</div>
 										<a href="javascript:void(0)" class="clone button  btn btn-primary mr-2"><i class="fa fa-plus"></i></a>
