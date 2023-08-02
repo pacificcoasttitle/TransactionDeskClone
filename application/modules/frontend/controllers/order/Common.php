@@ -40,8 +40,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_'.$this->prelim_orders_js_version));
-		$this->template->show("order", "review_files", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_'.$this->prelim_orders_js_version));
+		$this->salesdashboardtemplate->show("order", "review_files", $data);
     }
 
     public function review_file()
@@ -2342,10 +2342,23 @@ class Common extends MX_Controller {
 				
 				if ($order['prelim_summary_id'] != 0) {
 					
-					$class = isset($order['is_updated']) && !empty($order['is_updated']) ? 'button-color-green' : 'button-color';
-					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a ".$class."' type='button'>REVIEW FILE</button></a>";
+					$class = isset($order['is_updated']) && !empty($order['is_updated']) ? 'success' : 'secondary';
+					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'>
+							<button type='submit' class='btn btn-$class btn-icon-split'>
+								<span class='icon text-white-50'>
+									<i class='fas fa-file'></i>
+								</span>
+								<span class='text'>Review File</span>
+							</button>
+						</a>";
 				} else {
-					$nestedData[] = "<a href='javascript:void(0)'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
+					$nestedData[] = "<a href='javascript:void(0)'>
+						<button type='submit' class='btn btn-info btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-tasks'></i>
+							</span>
+							<span class='text'>Not Ready</span>
+						</button></a>";
 				}
 				
 				
