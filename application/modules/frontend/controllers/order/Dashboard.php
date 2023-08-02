@@ -309,7 +309,7 @@ class Dashboard extends MX_Controller {
         $data['loan_amount'] = $loanAmount;
        
 		$this->template->addCSS(base_url('assets/front/css/style.css'));
-		$this->template->addJS('https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js');
+		$this->template->addJS(base_url('assets/frontend/js/jspdf.debug.js'));
 		$this->template->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
 		$this->template->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
 	
