@@ -205,11 +205,12 @@
                     </table>
                 <?php } ?>
             </div>
-            <div class="clearfix" id="act_btns">
+            
+        </div>
+        <div class="clearfix" id="act_btns">
                 <br />
                 <a class="button small orange" id="download_estimate" data-closing-fee-id="<?php echo $closing_fee_estimate_id; ?>" href="javascript:void(0);">Download Fee Estimate</a>
             </div>
-        </div>
     </div>	
 </section>
 
