@@ -290,7 +290,9 @@ class Report extends MX_Controller {
                     'id' => $id,
             );
             $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
-            $this->template->show("report", "sales_rep_edit", $data);
+            
+            $this->salesdashboardtemplate->show("report", "sales_rep_edit", $data);
+            // $this->template->show("report", "sales_rep_edit", $data);
         }
         else {
 
@@ -299,7 +301,8 @@ class Report extends MX_Controller {
                     'status' => 1,
             );
             $data['salesReps'] = $this->report_model->getSalesRepData($condition);
-            $this->template->show("report", "sales_rep", $data);
+            $this->salesdashboardtemplate->show("report", "sales_rep", $data);
+            // $this->template->show("report", "sales_rep", $data);
         }
     }
 
