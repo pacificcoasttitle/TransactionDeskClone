@@ -20,11 +20,11 @@
 	vertical-align: top;
 }
 .u-list .u-pic {
-	width: 80px;
+	width: 25%;
 	height: 80px;
 	overflow: hidden;
 	border-radius: 100%;
-	margin-right: 15px;
+	margin-right: 10px;
 	float: left;
 }
 .u-list .u-pic img {
@@ -33,8 +33,9 @@
 	max-width: 100%;
 }
 .u-list .u-info {
+	width: 60%;
 	padding-top: 5px;
-	margin-left: 35px;
+	margin-left: 10px;
 	float: left;
 }
 .u-list .u-name {
@@ -44,7 +45,6 @@
 .u-list .u-count {
 	float: right;
 	font-size: 20px;
-	margin-right: 10px;
 }
 .no-report-image {
 	text-align: center;
