@@ -6,7 +6,7 @@ class Dashboard extends MX_Controller {
 
 	private $dashboard_js_version = '01';
 	private $fees_js_version = '01';
-	private $order_fee_js_version = '02';
+	private $order_fee_js_version = '03';
 
 	function __construct() {
         parent::__construct();
