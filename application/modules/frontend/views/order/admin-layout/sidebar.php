@@ -85,6 +85,14 @@
 				<span>Proposed Insured</span>
 			</a>
 		</li>
+		<?php if ($userdata['is_master'] == 1) { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'reports') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>reports">
+				<i class="fa fa-file"></i>
+				<span>Reports</span>
+			</a>
+		</li>
+		<?php } ?>
 		<li class="nav-item <?php if($this->uri->segment(1) == 'logout') { echo 'active'; } ?>">
 			<a class="nav-link" href="<?php echo base_url().'logout'; ?>">
 				<i class="fa fa-sign-out"></i>

@@ -700,7 +700,7 @@ function updateRecents(tallyData) {
             date,
             rep,
             address,
-            '<a href="'+link+'" target="_blank">Download</a>'
+            '<a href="'+link+'" class="btn btn-success btn-icon-split" target="_blank"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>'
             ]).draw(false);
     });
     // report_table.draw();
