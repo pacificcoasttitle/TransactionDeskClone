@@ -634,8 +634,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_'.$this->upload_doc_orders_js_version));
-		$this->template->show("order/common", "upload_doc_orders", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_'.$this->upload_doc_orders_js_version));
+		$this->salesdashboardtemplate->show("order/common", "upload_doc_orders", $data);
 	}
 
 	function getOrdersUploadDoc()
@@ -666,7 +666,14 @@ class Common extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				$nestedData[] = '<a href="'.base_url().'upload-documents/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">Attach Files</button></a>';
+				$nestedData[] = "<a href='".base_url()."upload-documents/".$order['file_id']."'>
+									<button type='submit' class='btn btn-info btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>Attach Files</span>
+									</button>
+								</a>";
 				$data[] = $nestedData; 
 				$i++; 
 			}

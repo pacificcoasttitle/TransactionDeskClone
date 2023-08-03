@@ -1,5 +1,17 @@
-<section class="content-wrapper">
-    <div class="row"></div>
+<div class="row mb-3">
+    <div class="col-sm-12">
+        <a style="float:right" class="btn-success btn-icon-split btn-sm " href="<?php echo base_url();?>fees">
+            <span class="icon text-white-50">
+                <i class="fa fa-arrow-left"></i>
+            </span>
+            <span class="text">Back</span>
+        </a>
+    </div>
+</div>
+<section class="content-wrapper" style="margin-bottom:50px;">
+    <div class="row">
+
+    </div>
     <div class="row">
         <div class="recipt-body" id="artcle_main">
             <div id="editor"></div>
