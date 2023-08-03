@@ -6,7 +6,7 @@ class Dashboard extends MX_Controller {
 
 	private $dashboard_js_version = '01';
 	private $fees_js_version = '01';
-	private $order_fee_js_version = '02';
+	private $order_fee_js_version = '03';
 
 	function __construct() {
         parent::__construct();
@@ -175,8 +175,8 @@ class Dashboard extends MX_Controller {
     function fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/fees.js?v=fees_'.$this->fees_js_version) );
-		$this->template->show("order", "fees", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/fees.js?v=fees_'.$this->fees_js_version) );
+		$this->salesdashboardtemplate->show("order", "fees", $data);
     }
 
     function get_transaction_orders()
@@ -204,7 +204,15 @@ class Dashboard extends MX_Controller {
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-fees/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">Get Fees</button></a>';
+                $nestedData[] = "<a href='".base_url()."get-fees/".$order['file_id']."'>
+									<button type='submit' class='btn btn-info btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>Get Fees</span>
+									</button>
+								</a>";
+						
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -311,13 +319,13 @@ class Dashboard extends MX_Controller {
         $data['sales_amount'] = $salesAmount;
         $data['loan_amount'] = $loanAmount;
        
-		$this->template->addCSS(base_url('assets/front/css/style.css'));
-		$this->template->addJS(base_url('assets/frontend/js/jspdf.debug.js'));
-		$this->template->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
-		$this->template->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
+		$this->salesdashboardtemplate->addCSS(base_url('assets/front/css/style.css'));
+		$this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jspdf.debug.js'));
+		$this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
+		$this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
 	
-		$this->template->addJS( base_url('assets/frontend/js/order/order_fee.js?v=order_fee_'.$this->order_fee_js_version) );
-		$this->template->show("order", "get_fees", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/order_fee.js?v=order_fee_'.$this->order_fee_js_version) );
+		$this->salesdashboardtemplate->show("order", "get_fees", $data);
     }
 
     function get_fee_estimate_pdf()
