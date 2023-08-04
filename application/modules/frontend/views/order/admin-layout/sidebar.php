@@ -3,7 +3,17 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <?php
         $userdata = $this->session->userdata('user');
-		$dashboardUrl = ($userdata['is_sales_rep'] == 1) ? base_url() . 'sales-dashboard/' . $userdata['id'] : 'dashboard';
+		// echo "<pre>";
+		// print_r($userdata);die;
+		if ($userdata['is_sales_rep'] == 1) {
+			$dashboardUrl = base_url() . 'sales-dashboard/' . $userdata['id'];
+		} else if ($userdata['is_title_officer'] == 1) {
+			$dashboardUrl = base_url() . 'title-officer-dashboard';
+		} else if ($userdata['is_escrow_officer'] == 1) {
+			$dashboardUrl = base_url() . 'escrow-dashboard';
+		} else {
+			$dashboardUrl = base_url() . 'dashboard';
+		}
 	?>
 	
 	<!-- Sidebar - Brand -->
@@ -55,14 +65,14 @@
 	
 	<?php } else if ($userdata['is_escrow_officer']) { ?>
 		<li class="nav-item <?php if($this->uri->segment(1) == 'escrow-dashboard') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url(); ?>escrow-dashboard">
+			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Dashboard Home</span>
 			</a>
 		</li>
 	<?php } else { ?>
-		<li class="nav-item <?php if($this->uri->segment(1) == 'dashboard') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url(); ?>dashboard">
+		<li class="nav-item <?php if($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == 'title-officer-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Dashboard Home</span>
 			</a>

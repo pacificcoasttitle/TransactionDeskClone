@@ -61,7 +61,8 @@
 
 .img-holder .bg {
     opacity: 1;
-    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/d118cae2-70f9-4767-b63d-ddfdf6870c85.jpg");
+    background-image: url("../images/loginimg.jpg");
+    /* background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/d118cae2-70f9-4767-b63d-ddfdf6870c85.jpg"); */
 }
 
 .form-holder {
@@ -468,7 +469,8 @@
 
 .img-holder .bg.borrower-login {
     opacity: 1;
-    background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/d118cae2-70f9-4767-b63d-ddfdf6870c85.jpg");
+    background-image: url("../images/loginimg.jpg");
+    /* background-image: url("https://mcusercontent.com/3f123598483b787fa180fff0f/images/d118cae2-70f9-4767-b63d-ddfdf6870c85.jpg"); */
 	background-size: cover;
     background-position: center;
 }
