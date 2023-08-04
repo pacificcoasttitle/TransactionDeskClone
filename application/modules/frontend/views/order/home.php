@@ -320,10 +320,6 @@
 										</div>
 										<a href="javascript:void(0)" class="clone button  btn btn-primary mr-2"><i class="fa fa-plus pt-2"></i></a>
 										<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus pt-2"></i></a>
-										<!-- <div class="col-sm-1">
-										</div>
-										<div class="col-sm-1">
-										</div> -->
 									</div>
 								<?php }?>
 							</div>
