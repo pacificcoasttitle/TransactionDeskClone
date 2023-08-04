@@ -320,13 +320,13 @@ form {
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Farm Analysis
-						<a href="<?php echo base_url('pmas'); ?>" class="btn btn-success btn-icon-split pull-right">
+						<a href="<?php echo base_url('pmas'); ?>" class="btn btn-primary btn-icon-split pull-right">
 							<span class="icon text-white-50">
 								<i class="fas fa-concierge-bell"></i>
 							</span>
 							<span class="text">Create Concierge</span>
 						</a>
-						<a href="<?php echo base_url('labels'); ?>" class="btn btn-success btn-icon-split pull-right mr-1">
+						<a href="<?php echo base_url('labels'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fa fa-tag"></i>
 							</span>
@@ -460,7 +460,7 @@ foreach ($sorting_fields as $key => $field_name):
 										</div>
 									</div>
 									<div class="row">
-										<div class="section colm colm4 col-md-12 text-center">
+										<div class="section colm colm4 col-md-6">
 											<button type="reset" class="btn btn-danger btn-icon-split">
 												<span class="icon text-white-50">
                                                     <i class="fas fa-refresh"></i>

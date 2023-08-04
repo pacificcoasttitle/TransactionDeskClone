@@ -39,7 +39,14 @@
 	.center-wrapper {
 		margin: 0 auto;
 	}
-
+	
+	.form-control {
+		padding: 1.5rem 0.75rem;
+	}
+	select.form-control {
+		height: 50px;
+		padding: 0.375rem 0.75rem;
+	}
 </style>
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
@@ -122,17 +129,14 @@
 									<input type="hidden" name="property-zip" id="property-zip" value="">
 									<input type="hidden" name="random_number" id="random_number" value="">
 
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<input type="text" name="Property" id="property-search" class="form-control gui-input pac-target-input" placeholder="Property Address">
 									</div>
 								</div>
 
-								<div class="row form-group">
-									<div class="col-sm-2">
+								<div class="row form-group text-center">
+									<div class="col-sm-12">
 										<a class="button btn btn-primary search-property search-property-button" href="javascript:void(0);" id="search-btn">Property Search</a>
-									</div>
-
-									<div class="col-sm-3">
 										<a class="button btn btn-secondary switch-apn-button search-property-button" href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
 									</div>
 								</div>
@@ -149,11 +153,8 @@
 								</div>
 
 								<div class="row form-group">
-									<div class="col-sm-2">
+									<div class="col-sm-12">
 										<a class="button btn btn-primary search-apn search-apn-button" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
-									</div>
-
-									<div class="col-sm-3">
 										<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
 									</div>
 								</div>
@@ -209,43 +210,43 @@
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
-if (isset($salesRep) && !empty($salesRep)) {
-    foreach ($salesRep as $k => $v) {
-        $name      = array($v['first_name'], $v['last_name']);
-        $full_name = implode(' ', $name);
-        ?>
-													<option value="<?php
-echo $v['id']; ?>"><?php
-echo $full_name; ?></option>
+											if (isset($salesRep) && !empty($salesRep)) {
+												foreach ($salesRep as $k => $v) {
+													$name      = array($v['first_name'], $v['last_name']);
+													$full_name = implode(' ', $name);
+        									?>
+													<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
 										<?php
-}
-}
-?>
+												}
+											}
+										?>
 									</select>
 								</div>
-								<div class="col-sm-6">
+							</div>
+							<div class="row form-group">
+								<div class="col-sm-12">
 									<select id="TitleOfficer" name="TitleOfficer" class="form-control">
 										<option value="">Title Officer</option>
 										<?php
 
-if (isset($titleOfficer) && !empty($titleOfficer)) {
-    foreach ($titleOfficer as $key => $value) {
-        ?>
+										if (isset($titleOfficer) && !empty($titleOfficer)) {
+											foreach ($titleOfficer as $key => $value) {
+												?>
 													<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
 										<?php
-}
-}
-?>
+											}
+										}
+										?>
 									</select>
 								</div>
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<select id="ProductTypeID" name="ProductTypeID" class="form-control">
 										<option value="">Select Product</option>
 									</select>
@@ -255,30 +256,35 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 
 							<div id="sales-loan-amount-fields" style="display:none;">
 								<div class="row form-group">
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
 									</div>
-									<div class="col-sm-6">
+								</div>
+								<div class="row form-group">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
 									</div>
 								</div>
 
 								<div class="row form-group">
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="primaryBorrower" id="primaryBorrower" placeholder="Primary Borrower">
 									</div>
-
-									<div class="col-sm-6">
+								</div>
+								<div class="row form-group">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="secondaryBorrower" id="secondaryBorrower" placeholder="Secondary Borrower">
 									</div>
 								</div>
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<input type="text" class="form-control" name="escrowNumber" id="escrowNumber" placeholder="Escrow Number">
 								</div>
-								<div class="col-sm-6">
+							</div>
+							<div class="row form-group">
+								<div class="col-sm-12">
 									<input type="text" class="form-control" name="loanNumber" id="loanNumber" placeholder="Loan Number">
 								</div>
 							</div>
@@ -291,33 +297,29 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 
 							<div id="clone-email-address" class="cloneya-wrap" >
 								<?php if (!empty($deliverables)) {
-    $i = 0;
-    foreach ($deliverables as $deliverable) {?>
+									$i = 0;
+									foreach ($deliverables as $deliverable) {?>
 											<div class="row form-group toclone clone-widget cloneya">
-												<div class="col-sm-6">
+												<div class="col-sm-10">
 														<?php if ($i == 0) {?>
 															<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address" value="<?php echo $deliverable; ?>">
 														<?php } else {?>
 															<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail<?php echo $i; ?>" placeholder="Email Address" value="<?php echo $deliverable; ?>">
 														<?php }?>
 												</div>
-												<a href="javascript:void(0)" class="clone button btn btn-primary mr-2"><i class="fa fa-plus"></i></a>
-												<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus"></i></a>
+												<a href="javascript:void(0)" class="clone button btn btn-primary mr-2"><i class="fa fa-plus pt-2"></i></a>
+												<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus pt-2"></i></a>
 
 											</div>
 
 										<?php $i++;}
-} else {?>
+									} else {?>
 									<div class="row form-group toclone clone-widget cloneya">
-										<div class="col-sm-6">
+										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
 										</div>
-										<a href="javascript:void(0)" class="clone button  btn btn-primary mr-2"><i class="fa fa-plus"></i></a>
-										<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus"></i></a>
-										<!-- <div class="col-sm-1">
-										</div>
-										<div class="col-sm-1">
-										</div> -->
+										<a href="javascript:void(0)" class="clone button  btn btn-primary mr-2"><i class="fa fa-plus pt-2"></i></a>
+										<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus pt-2"></i></a>
 									</div>
 								<?php }?>
 							</div>
@@ -337,10 +339,10 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 
 								<?php
 
-$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
+									$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+									$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
+									if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<div class="col-sm-3 align-display">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>

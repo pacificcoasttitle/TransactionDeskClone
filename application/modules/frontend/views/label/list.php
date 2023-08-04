@@ -319,13 +319,13 @@ form {
 				<div class="col-sm-12">
 					<div class="">
 						<h2 class="ui-title-block ui-title-block_light">Labels
-							<a href="<?php echo base_url('pmas'); ?>" class="btn btn-success btn-icon-split pull-right">
+							<a href="<?php echo base_url('pmas'); ?>" class="btn btn-primary btn-icon-split pull-right">
 								<span class="icon text-white-50">
 									<i class="fas fa-concierge-bell"></i>
 								</span>
 								<span class="text">Create Concierge</span>
 							</a>
-							<a style="margin-right:10px;" href="<?php echo base_url('reports'); ?>" class="btn btn-success btn-icon-split pull-right mr-1">
+							<a style="margin-right:10px;" href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 								<span class="icon text-white-50">
 									<i class="fa fa-tag"></i>
 								</span>
@@ -426,7 +426,7 @@ form {
 										
 									</div>
 									<div class="row">
-										<div class="section colm col-md-12 text-center">
+										<div class="section colm col-md-6">
 											<button type="reset" class="btn btn-danger btn-icon-split">
 												<span class="icon text-white-50">
                                                     <i class="fas fa-refresh"></i>
