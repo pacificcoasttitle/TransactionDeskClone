@@ -20,6 +20,10 @@
 .padding-0 {
 	padding: 0;
 }
+.dashboard-menu-icon {
+	height: 4rem;
+	width: 4rem;
+}
 </style>
 
 <div class="container-fluid p-5">
@@ -39,11 +43,10 @@
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<i class="fa fa-first-order fa-3x text-gray-300" aria-hidden="true"></i>
-							<!-- <i class="fas fa-table fa-2x text-gray-300"></i> -->
+							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/New.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">New Title Order</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">New Title Order</div>
 						</div>
 					</div>
 				</div>
@@ -52,14 +55,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-success shadow h-100 py-2">
+			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<i class="fa fa-file-photo-o fa-3x text-gray-300"></i>
+							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/CPL.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Generate CPL</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Generate CPL</div>
 						</div>
 					</div>
 				</div>
@@ -68,15 +71,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-dark shadow h-100 py-2">
+			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<i class="fa fa-file-powerpoint-o fa-3x text-gray-300"></i>
-							<!-- <i class="fas fa-table fa-2x text-gray-300"></i> -->
+							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Proposed.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xs font-weight-bold text-dark text-uppercase mb-1">Proposed</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Proposed</div>
 						</div>
 					</div>
 				</div>
@@ -87,15 +89,14 @@
 
 	<div class="row mt-3 mb-4">
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-warning shadow h-100 py-2">
+			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<i class="fas fa-money-check fa-3x text-gray-300"></i>
-							<!-- <i class="fas fa-table fa-2x text-gray-300"></i> -->
+							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Fees.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Fee Estimate</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Fee Estimate</div>
 						</div>
 					</div>
 				</div>
@@ -104,14 +105,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-info shadow h-100 py-2">
+			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<i class="fa-3x fa fa-regular fa-file-pdf"></i>
+							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Prelim.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Review Prelime</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Review Prelime</div>
 						</div>
 					</div>
 				</div>
@@ -120,14 +121,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-default shadow h-100 py-2">
+			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<i class="fa fa-upload fa-3x"></i>
+							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Upload.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xs font-weight-bold text-default text-uppercase mb-1">Upload Docs</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Upload Docs</div>
 						</div>
 					</div>
 				</div>
