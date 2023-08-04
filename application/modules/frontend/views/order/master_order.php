@@ -48,6 +48,10 @@
 	.form-control {
 		padding: 1.5rem 0.75rem;
 	}
+	select.form-control {
+		height: 50px;
+		padding: 0.375rem 0.75rem;
+	}
 </style>
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
@@ -217,7 +221,7 @@
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
@@ -233,7 +237,10 @@
 										?>
 									</select>
 								</div>
-								<div class="col-sm-6">
+							</div>
+
+							<div class="row form-group">
+								<div class="col-sm-12">
 									<select id="TitleOfficer" name="TitleOfficer" class="form-control">
 										<option value="">Title Officer</option>
 										<?php
@@ -251,7 +258,7 @@
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<select id="ProductTypeID" name="ProductTypeID" class="form-control">
 										<option value="">Select Product</option>
 									</select>
@@ -261,30 +268,35 @@
 
 							<div id="sales-loan-amount-fields" style="display:none;">
 								<div class="row form-group">
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
 									</div>
-									<div class="col-sm-6">
+								</div>
+								<div class="row form-group">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
 									</div>
 								</div>
 
 								<div class="row form-group">
-									<div class="col-sm-6">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="primaryBorrower" id="primaryBorrower" placeholder="Primary Borrower">
 									</div>
-
-									<div class="col-sm-6">
+								</div>
+								<div class="row form-group">
+									<div class="col-sm-12">
 										<input type="text" class="form-control" name="secondaryBorrower" id="secondaryBorrower" placeholder="Secondary Borrower">
 									</div>
 								</div>
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-12">
 									<input type="text" class="form-control" name="escrowNumber" id="escrowNumber" placeholder="Escrow Number">
 								</div>
-								<div class="col-sm-6">
+							</div>
+							<div class="row form-group">
+								<div class="col-sm-12">
 									<input type="text" class="form-control" name="loanNumber" id="loanNumber" placeholder="Loan Number">
 								</div>
 							</div>
@@ -307,8 +319,8 @@
 														<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail<?php echo $i; ?>" placeholder="Email Address" value="<?php echo $deliverable; ?>">
 													<?php }?>
 											</div>
-											<a href="javascript:void(0)" class="clone button btn btn-primary mr-2"><i class="fa fa-plus"></i></a>
-											<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus"></i></a>
+											<a href="javascript:void(0)" class="clone button btn btn-primary mr-2"><i class="fa fa-plus pt-2"></i></a>
+											<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus pt-2"></i></a>
 
 										</div>
 
@@ -318,8 +330,8 @@
 										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
 										</div>
-										<a href="javascript:void(0)" class="clone button  btn btn-primary mr-2"><i class="fa fa-plus"></i></a>
-										<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus"></i></a>
+										<a href="javascript:void(0)" class="clone button  btn btn-primary mr-2"><i class="fa fa-plus pt-2"></i></a>
+										<a href="javascript:void(0)" class="delete button btn btn-danger mr-2"><i class="fa fa-minus pt-2"></i></a>
 									</div>
 								<?php }?>
 							</div>

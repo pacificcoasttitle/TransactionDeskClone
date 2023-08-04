@@ -51,7 +51,7 @@
 	    text-align: center;
 	    background: #f0f0f0;
 	    height: 80px;
-	    padding-top: 8px;
+	    padding-top: 16px;
 	    font-size: 30px;
 	    font-weight: 600;
 	}
