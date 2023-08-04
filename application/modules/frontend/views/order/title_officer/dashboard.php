@@ -13,28 +13,12 @@
 			float: right;
 		}
 
-		select#month_filter {
+		select#month_filter, select#orders_filter, select#order_type_filter {
 			margin-bottom: 0px;
 			margin-left: 0.5em;
 			border: 1px solid #cbd2d6;
 			border-radius: 3px;
-			padding: 9px 22px 12px;
-		}
-
-		select#order_type_filter {
-			margin-bottom: 0px;
-			margin-left: 0.5em;
-			border: 1px solid #cbd2d6;
-			border-radius: 3px;
-			padding: 9px 22px 12px;
-		}
-
-		select#orders_filter {
-			margin-bottom: 0px;
-			margin-left: 0.5em;
-			border: 1px solid #cbd2d6;
-			border-radius: 3px;
-			padding: 9px 22px 12px;
+			padding: 0px 22px 0px;
 		}
 
 		.button-color {
@@ -156,16 +140,191 @@
 			position: absolute;
 			z-index: 1;
 		}
+
 		.fa-info-circle {
 			font-size: 16px;
 		}
+
+		.fs-2 {
+			font-size: 20px;
+		}
+
+		.fs-1-half {
+			font-size: 15px;
+		}
+
+		.text-center {
+			text-align: center;
+		}
+
+		.anchor-hover {
+			position: absolute;
+			z-index: 1;
+			height: 100%;
+			top: 0;
+			width: 100%;
+		}
+
+		.padding-0 {
+			padding: 0;
+		}
+
+		.dashboard-menu-icon {
+			height: 4rem;
+			width: 4rem;
+		}
+		.main-wrapper {
+			scale: 95%;
+		}
 	</style>
-	<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-		<div class="container">
-			<div class="row">
+	<!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;"> -->
+	<div class="container-fluid p-5 main-wrapper">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="typography-section__innera">
+					<h2 class="ui-title-block ui-title-block_light mb-5">Welcome Back <?php echo $name; ?></h2>
+					<div class="ui-decor-1a bg-accent"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mb-4">
+			<div class="col-md-4 col-sm-12">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
+							<div class="col-auto">
+								<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/New.png">
+							</div>
+							<div class="col mr-2 mt-3">
+								<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Blank Forms</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?php echo base_url('uplod-file-document') ?>" class="anchor-hover"></a>
+				</div>
+			</div>
+
+			<div class="col-md-4 col-sm-12">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
+							<div class="col-auto">
+								<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/CPL.png">
+							</div>
+							<div class="col mr-2 mt-3">
+								<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Generate CPL</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?php echo base_url().'cpl-dashboard'; ?>" class="anchor-hover"></a>
+				</div>
+			</div>
+
+			<div class="col-md-4 col-sm-12">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
+							<div class="col-auto">
+								<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Proposed.png">
+							</div>
+							<div class="col mr-2 mt-3">
+								<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Proposed</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?php echo base_url().'proposed-insured'; ?>" class="anchor-hover"></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-3 mb-4">
+			<div class="col-md-4 col-sm-12">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
+							<div class="col-auto">
+								<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Fees.png">
+							</div>
+							<div class="col mr-2 mt-3">
+								<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Add Notes</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?php echo base_url().'notes'; ?>" class="anchor-hover"></a>
+				</div>
+			</div>
+
+			<div class="col-md-4 col-sm-12">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
+							<div class="col-auto">
+								<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Prelim.png">
+							</div>
+							<div class="col mr-2 mt-3">
+								<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Review Prelime</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?php echo base_url().'prelim-files'; ?>" class="anchor-hover"></a>
+				</div>
+			</div>
+
+			<div class="col-md-4 col-sm-12">
+				<div class="card border-left-primary shadow h-100 py-2">
+					<div class="card-body">
+						<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
+							<div class="col-auto">
+								<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Upload.png">
+							</div>
+							<div class="col mr-2 mt-3">
+								<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Upload Docs</div>
+							</div>
+						</div>
+					</div>
+					<a href="<?php echo base_url().'upload-doc-orders'; ?>" class="anchor-hover"></a>
+				</div>
+			</div>
+		</div>
+	
+		<section class="section-type-4a section-defaulta mt-5" style="padding-bottom:0px;">
+			<div class="container-fluid padding-0">
+				<div class="row mb-3">
+					<div class="col-sm-12">
+						<h1 class="h3 text-gray-800 text-center">Recent Orders </h1>
+					</div>
+				</div>
+				<div class="card shadow mb-4">
+					<div class="card-header datatable-header py-3">
+						<div class="datatable-header-titles" > 
+							
+							<h6 class="m-0 font-weight-bold text-primary pl-10">Below are all your orders</h6> 
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-bordered" id="title_officer_orders_listing" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Opened</th>
+										<th>Property Address</th>
+										<th>Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>                
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</section>
 				<div class="row">
 					<div class="col-xs-12">
-						<div class="typography-section__inner">
+						<!-- <div class="typography-section__inner">
 							<h2 class="ui-title-block ui-title-block_light">Welcome Back <?php echo $name; ?>,</h2>
 							<div class="ui-decor-1a bg-accent"></div>
 							<div class="typography-sectiona">
@@ -196,88 +355,9 @@
 									</a>
 								</div>
 							</div>
-							<!-- <h4 class="ui-title-block_light">Below is your production figures for the current month of
-								<b><?php echo date('F');?></b></h3> -->
-						</div>
-						<!-- <div class="order-count-cotainer">
-							<div class="col-md-3 title">Title Openings MTD</div>
-							<div class="col-md-3 title">Title Closings MTD</div>
-							<div class="col-md-3 title">Title Revenue MTD</div>
-							<div class="col-md-3 title">Closings Ratio Avg</div>
-
-							<div class="col-md-3 square-box">
-								<div class="sales_loan_count" id="open_order_count">
-									<?Php echo $total_open_count; ?>
-								</div>
-								<div class="salesdivider">
-									<div class="sales_loan_section">Sales = <span id="sale_open_count">
-											<?Php echo $sale_open_count;?></span></div>
-									<div class="sales_loan_section">Refi's = <span id="refi_open_count">
-											<?Php echo $refi_open_count;?></span></div>
-								</div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span
-										id="projected_open_section">
-										<?Php echo $projected_open_count;?></span></div>
-								<div class="projected_goal_section">Goal = <span id="goal_open_section">
-										<?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span>
-								</div>
-							</div>
-
-							<div class="col-md-3 square-box">
-								<div class="sales_loan_count" id="close_order_count">
-									<?Php echo $total_close_count; ?>
-								</div>
-								<div class="salesdivider">
-									<div class="sales_loan_section">Sales = <span id="sale_close_count">
-											<?Php echo $sale_close_count;?></span></div>
-									<div class="sales_loan_section">Refi's = <span id="refi_close_count">
-											<?Php echo $refi_close_count;?></span></div>
-								</div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span
-										id="projected_close_section">
-										<?Php echo $projected_close_count;?></span></div>
-								<div class="projected_goal_section">Goal = <span id="goal_close_section">
-										<?Php echo round($sales_rep_info['sales_rep_no_of_close_orders']/12);?></span>
-								</div>
-							</div>
-
-							<div class="col-md-3 square-box">
-								<div class="sales_loan_count">$<span
-										id="total_premium"><?php echo number_format($total_premium); ?></span></div>
-								<div class="salesdivider">
-									<div class="sales_loan_section">Sales = $<span
-											id="sale_total_premium"><?php echo number_format($sale_total_premium); ?></span>
-									</div>
-									<div class="sales_loan_section">Refi's = $<span
-											id="refi_total_premium"><?php echo number_format($refi_total_premium); ?></span>
-									</div>
-								</div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = $<span
-										id="projected_revenue_section">
-										<?Php echo $projected_revenue;?></span></div>
-								<div class="projected_goal_section">Goal = $<span id="goal_revenue_section">
-										<?Php echo round($sales_rep_info['sales_rep_premium']/12);?></span></div>
-							</div>
-
-							<div class="col-md-3 square-box">
-								<div class="sales_loan_count"><span id="close_order_percetage">
-										<?Php echo $close_order_percetage;?></span>%</div>
-								<div class="salesdivider">
-									<div class="sales_loan_section">Sales = <span id="sale_close_order_percetage">
-											<?Php echo $sale_close_order_percetage;?></span>%</div>
-									<div class="sales_loan_section">Refi's = <span id="refi_close_order_percetage">
-											<?Php echo $refi_close_order_percetage;?></span>%</div>
-								</div>
-								<div style="margin-top: 20px;" class="projected_goal_section">Projected = <span
-										id="refi_open_count">0%</span></div>
-								<div class="projected_goal_section">Goal = <span id="refi_open_count">0%</span></div>
-							</div>
-
-							<h4 class="ui-title-block_light">Below is list of all your files. You can search for files
-								by month that have a status open, closed, or cancelled.</h3>
 						</div> -->
 
-						<div class="typography-sectiona">
+						<!-- <div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
 									<table class="table table-type-3 typography-last-elem" id="title_officer_orders_listing">
@@ -295,12 +375,12 @@
 									<div class="typography-sectionab"></div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
-			</div>
+			<!-- </div> -->
 		</div>
-	</section>
+	<!-- </section> -->
 	<div class="modal" id="partnersModal">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">

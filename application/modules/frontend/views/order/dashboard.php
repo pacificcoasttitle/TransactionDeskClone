@@ -1,4 +1,4 @@
-<style> 
+<style>
 
 
 .fs-2 {
@@ -24,9 +24,13 @@
 	height: 4rem;
 	width: 4rem;
 }
+.main-wrapper {
+	scale: 95%;
+}
+
 </style>
 
-<div class="container-fluid p-5">
+<div class="container-fluid p-5 main-wrapper">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="typography-section__innera">
@@ -36,21 +40,21 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="row mb-4">
 		<div class="col-md-4 col-sm-12">
 			<div class="card border-left-primary shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/New.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/New.png">
 						</div>
 						<div class="col mr-2 mt-3">
 							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">New Title Order</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url().'order'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'order'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 
@@ -59,14 +63,14 @@
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/CPL.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/CPL.png">
 						</div>
 						<div class="col mr-2 mt-3">
 							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Generate CPL</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url().'cpl-dashboard'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'cpl-dashboard'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 
@@ -75,14 +79,14 @@
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Proposed.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Proposed.png">
 						</div>
 						<div class="col mr-2 mt-3">
 							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Proposed</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url().'proposed-insured'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'proposed-insured'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 	</div>
@@ -93,14 +97,14 @@
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Fees.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Fees.png">
 						</div>
 						<div class="col mr-2 mt-3">
 							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Fee Estimate</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url().'fees'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'fees'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 
@@ -109,14 +113,14 @@
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Prelim.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Prelim.png">
 						</div>
 						<div class="col mr-2 mt-3">
 							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Review Prelime</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url().'prelim-files'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'prelim-files'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 
@@ -125,14 +129,14 @@
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url()?>assets/frontend/images/Upload.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Upload.png">
 						</div>
 						<div class="col mr-2 mt-3">
 							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Upload Docs</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url().'upload-doc-orders'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'upload-doc-orders'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 	</div>
@@ -149,13 +153,13 @@
 					</div>
 					<div class="typography-sectiona">
 						<div class="col-md-12">
-							<a href="<?php echo base_url().'order'; ?>">
+							<a href="<?php echo base_url() . 'order'; ?>">
 								<button class="btn1 btn-type-1a btn-lg" type="button">New Title Order</button>
 							</a>
-							<a href="<?php echo base_url().'cpl-dashboard'; ?>">
+							<a href="<?php echo base_url() . 'cpl-dashboard'; ?>">
 								<button class="btn1 btn-type-1b btn-lg" type="button">Generate CPL</button>
 							</a>
-							<a href="<?php echo base_url().'proposed-insured'; ?>">
+							<a href="<?php echo base_url() . 'proposed-insured'; ?>">
 								<button class="btn1 btn-type-1e btn-lg" type="button">Proposed</button>
 							</a>
 						</div>
@@ -163,15 +167,15 @@
 
 					<div class="typography-sectionc">
 						<div class="col-md-12">
-							<?php if(isset($is_master) && empty($is_master)) { ?>
-								<a href="<?php echo base_url().'fees'; ?>">
+							<?php if (isset($is_master) && empty($is_master)) {?>
+								<a href="<?php echo base_url() . 'fees'; ?>">
 									<button class="btn1 btn-type-1g btn-lg" type="button">Fee Estimate</button>
 								</a>
-							<?php } ?>
-							<a href="<?php echo base_url().'prelim-files'; ?>">
+							<?php }?>
+							<a href="<?php echo base_url() . 'prelim-files'; ?>">
 								<button class="btn1 btn-type-1c btn-lg" type="button">Review Prelim</button>
 							</a>
-							<a href="<?php echo base_url().'upload-doc-orders'; ?>">
+							<a href="<?php echo base_url() . 'upload-doc-orders'; ?>">
 								<button class="btn1 btn-type-1d btn-lg" type="button">Upload Doc</button>
 							</a>
 						</div>
@@ -182,7 +186,7 @@
 	</div>
 </section> -->
 
-<section class="section-type-4a section-defaulta " style="padding-bottom:0px;">
+<section class="section-type-4a section-defaulta mt-5" style="padding-bottom:0px;">
 	<div class="container-fluid padding-0">
 		<div class="row mb-3">
 			<div class="col-sm-12">
@@ -191,9 +195,9 @@
 		</div>
 		<div class="card shadow mb-4">
 			<div class="card-header datatable-header py-3">
-				<div class="datatable-header-titles" > 
-					
-					<h6 class="m-0 font-weight-bold text-primary pl-10">Below are all your orders</h6> 
+				<div class="datatable-header-titles" >
+
+					<h6 class="m-0 font-weight-bold text-primary pl-10">Below are all your orders</h6>
 				</div>
 			</div>
 			<div class="card-body">
@@ -209,13 +213,13 @@
 								<th>Buyer/Seller</th>
 								<th>Action</th>
 							</tr>
-						</thead>                
+						</thead>
 						<tbody></tbody>
 					</table>
 				</div>
 			</div>
 		</div>
-		
+
 	</div>
 </section>
 
@@ -266,7 +270,7 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary" >Send Invite to Borrower</h6>
 							</div>
-							<div class="card-body"> 
+							<div class="card-body">
 								<div class="smart-forms smart-container">
 									<div class="modal-body search-result">
 										<div class="form-group">
@@ -344,7 +348,7 @@
 					<button type="button" class="btn btn-danger" id="sendInviteBtn">Send</button>
 				</div> -->
 			</form>
-		</div> 
+		</div>
 	</div>
 </div>
 

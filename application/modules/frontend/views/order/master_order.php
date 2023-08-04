@@ -5,7 +5,7 @@
 
 	.ui-autocomplete {
 		max-height: 300px !important;
-	} 
+	}
 
 	.progress {
 		height: auto;
@@ -52,10 +52,13 @@
 		height: 50px;
 		padding: 0.375rem 0.75rem;
 	}
+	.main-wrapper {
+		scale: 95%;
+	}
 </style>
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container-fluid">
+	<div class="container-fluid main-wrapper">
         <div class="row mb-3">
             <div class="col-sm-12">
                 <h1 class="h3 text-gray-800 text-center">Open Order Form</h1>
@@ -225,16 +228,16 @@
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
-										if (isset($salesRep) && !empty($salesRep)) {
-											foreach ($salesRep as $k => $v) {
-												$name      = array($v['first_name'], $v['last_name']);
-												$full_name = implode(' ', $name);
-												?>
+if (isset($salesRep) && !empty($salesRep)) {
+    foreach ($salesRep as $k => $v) {
+        $name      = array($v['first_name'], $v['last_name']);
+        $full_name = implode(' ', $name);
+        ?>
 												<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
 										<?php
-											}
-										}
-										?>
+}
+}
+?>
 									</select>
 								</div>
 							</div>
@@ -245,14 +248,14 @@
 										<option value="">Title Officer</option>
 										<?php
 
-									if (isset($titleOfficer) && !empty($titleOfficer)) {
-										foreach ($titleOfficer as $key => $value) {
-											?>
+if (isset($titleOfficer) && !empty($titleOfficer)) {
+    foreach ($titleOfficer as $key => $value) {
+        ?>
 										<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
 									<?php
-										}
-									}
-									?>
+}
+}
+?>
 									</select>
 								</div>
 							</div>
@@ -309,8 +312,8 @@
 
 							<div id="clone-email-address" class="cloneya-wrap" >
 								<?php if (!empty($deliverables)) {
-									$i = 0;
-									foreach ($deliverables as $deliverable) {?>
+    $i = 0;
+    foreach ($deliverables as $deliverable) {?>
 										<div class="row form-group toclone clone-widget cloneya">
 											<div class="col-sm-10">
 													<?php if ($i == 0) {?>
@@ -325,7 +328,7 @@
 										</div>
 
 										<?php $i++;}
-									} else {?>
+} else {?>
 									<div class="row form-group toclone clone-widget cloneya">
 										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
@@ -351,10 +354,10 @@
 
 								<?php
 
-									$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-									$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
+$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-									if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
+if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<div class="col-sm-3 align-display">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>
@@ -505,13 +508,13 @@
 										<select id="escrow_officer" name="escrow_officer" class="form-control">
 											<option value="">----Select Escrow Officer----</option>
 											<?php
-												if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-													foreach ($escrowOfficers as $escrowOfficer) {
-														?>
+if (isset($escrowOfficers) && !empty($escrowOfficers)) {
+    foreach ($escrowOfficers as $escrowOfficer) {
+        ?>
 														<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
 												<?php }
-												}
-												?>
+}
+?>
 										</select>
 									</div>
 								</div>
@@ -605,7 +608,7 @@
 			<div class="col-md-12">
 				<div class="smart-wrap">
 					<div class="smart-forms smart-container wrap-0">
-						
+
 						<form method="POST" id="smart-form" enctype="multipart/form-data">
 							<div class="form-body">
 								<div class="spacer-b30 spacer-t30">
@@ -702,7 +705,7 @@
 										</div>
 									</div>
 
-									
+
 								</div>
 
 								<div class="spacer-b30 spacer-t30">
@@ -750,7 +753,7 @@
 												<input type="text" name="apn_num" id="apn_num"
 													class="gui-input" placeholder="APN">
 												<span class="field-icon"><i class="fa fa-user"></i></span>
-												
+
 											</label>
 										</div>
 
@@ -823,7 +826,7 @@
 
 								<div class="spacer-b30 spacer-t30">
 									<div class="tagline"><span>Seller Details (Will Be AutoFilled)</span></div>
-									
+
 								</div>
 
 								<div class="frm-row">
@@ -854,20 +857,18 @@
 											<select id="SalesRep" name="SalesRep">
 												<option value="">Sales Rep...</option>
 												<?php
-													if(isset($salesRep) && !empty($salesRep))
-													{
-														foreach ($salesRep as $k => $v) 
-														{
-															$name = array($v['first_name'],$v['last_name']);
-															$full_name = implode(' ', $name);
-												?>
+if (isset($salesRep) && !empty($salesRep)) {
+    foreach ($salesRep as $k => $v) {
+        $name      = array($v['first_name'], $v['last_name']);
+        $full_name = implode(' ', $name);
+        ?>
 															<option value="<?php
-																echo $v['id']; ?>"><?php
-																echo $full_name; ?></option>
+echo $v['id']; ?>"><?php
+echo $full_name; ?></option>
 												<?php
-														}
-													} 
-												?>
+}
+}
+?>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -877,17 +878,16 @@
 										<label class="field select">
 											<select id="TitleOfficer" name="TitleOfficer">
 												<option value="">Title Officer</option>
-												<?php 
-												if(isset($titleOfficer) && !empty($titleOfficer))
-												{
-													foreach ($titleOfficer as $key => $value) 
-													{
-											?>
+												<?php
+
+if (isset($titleOfficer) && !empty($titleOfficer)) {
+    foreach ($titleOfficer as $key => $value) {
+        ?>
 														<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
 											<?php
-													}
-												}
-											?>
+}
+}
+?>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -901,16 +901,14 @@
 											<select id="ProductTypeID" name="ProductTypeID">
 												<option value="">Select Product</option>
 											<?php
-												if(isset($productType) && !empty($productType))
-												{
-													foreach ($productType as $key => $value) 
-													{
-											?>
-														<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name'];  ?></option>
+if (isset($productType) && !empty($productType)) {
+    foreach ($productType as $key => $value) {
+        ?>
+														<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name']; ?></option>
 											<?php
-													}
-												} 
-											?>
+}
+}
+?>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -928,7 +926,7 @@
 											<input type="text" class="gui-input" name="loanAmount" id="loanAmount"
 												placeholder="Loan Amount">
 										</label>
-										
+
 										<div class="spacer-b10"></div>
 										<label class="field">
 											<input type="text" class="gui-input" name="primaryBorrower" id="primaryBorrower"
@@ -952,12 +950,12 @@
 								</label>
 								<div class="spacer-b30 spacer-t30">
 									<div class="tagline"><span>Add Deliverables</span></div>
-									
+
 								</div>
 
 								<div class="frm-row">
 									<div class="section colm colm12" id="clone-email-address">
-										
+
 									<div class="toclone clone-widget">
 										<div class="spacer-b10">
 											<label class="field">
@@ -968,11 +966,11 @@
 										<a id="clonea" href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
 										<a id="cloner" href="#" class="delete button"><i class="fa fa-minus"></i></a>
 									</div>
-								
+
 									</div>
 
 								</div>
-								
+
 								<div class="spacer-t30">
 									<div class="tagline"><span> Add Parties</span></div>
 								</div>
@@ -986,8 +984,8 @@
 											</label>
 										</div>
 									</div>
-									
-									
+
+
 									<div class="section colm colm4" id="add-lender-section" style="display: none;">
 										<div class="option-group field">
 											<label class="option block spacer-t10">
@@ -997,8 +995,8 @@
 											</label>
 										</div>
 									</div>
-									
-									
+
+
 									<div class="section colm colm4" id="add-escrow-section" style="display: none;">
 										<div class="option-group field">
 											<label class="option block spacer-t10">
@@ -1114,7 +1112,7 @@
 									</div>
 									<div style="display: none;" class="alert notification alert-error" id="required-agent-details">Enter Buyers Agent or Listing Agent details</div>
 								</div>
-								
+
 								<div id="lender-details-fields" style="display: none;">
 
 									<div class="spacer-b30">
@@ -1204,7 +1202,7 @@
 											</label>
 										</div>
 									</div>
-									
+
 								</div>
 
 								<div class="spacer-b30" id="escrow-officer-field" style="display: none;">
@@ -1218,13 +1216,13 @@
 												<select id="escrow_officer" name="escrow_officer">
 													<option value="">----Select Escrow Officer----</option>
 													<?php
-														if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-															foreach ($escrowOfficers as $escrowOfficer) {	
-													?>
+if (isset($escrowOfficers) && !empty($escrowOfficers)) {
+    foreach ($escrowOfficers as $escrowOfficer) {
+        ?>
 																<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-													<?php 	}
-														} 
-													?>
+													<?php }
+}
+?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -1249,7 +1247,7 @@
 										</div>
 									</div>
 								</div>
-								
+
 								<div id="upload_escrow" style="display: none;">
 									<div class="spacer-b20 spacer-t30">
 										<div class="tagline"><span> Upload Curative Document</span></div>
@@ -1267,7 +1265,7 @@
 										</div>
 									</div>
 								</div>
-								
+
 
 								<div class="result spacer-b10"></div>
 
@@ -1287,7 +1285,7 @@
 									href="http://www.pct.com">Homepage</a>
 							</div>
 						</form>
-						
+
 					</div>
 				</div>
 			</div>
