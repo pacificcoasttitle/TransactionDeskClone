@@ -358,14 +358,14 @@ form {
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Concierge Profile
-						<a href="<?php echo base_url('reports'); ?>" class="btn btn-success btn-icon-split pull-right">
+						<a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right">
 							<span class="icon text-white-50">
 								<i class="fas fa-concierge-bell"></i>
 							</span>
 							<span class="text">Create F.A.R</span>
 						</a>
 
-						<a href="<?php echo base_url('labels'); ?>" class="btn btn-success btn-icon-split pull-right mr-1">
+						<a href="<?php echo base_url('labels'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fa fa-tag"></i>
 							</span>
@@ -436,7 +436,7 @@ form {
 										</div>
 									</div>
 									<div class="row">
-										<div class="section colm col-md-12 text-center">
+										<div class="section colm col-md-6">
 											<button type="button" class="btn btn-danger btn-icon-split js-find-property js-search-button">
 												<span class="icon text-white-50">
                                                     <i class="fas fa-search"></i>
