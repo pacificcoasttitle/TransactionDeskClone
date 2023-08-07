@@ -990,11 +990,11 @@ class Common extends MX_Controller {
 					$documentName = $order['cpl_document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."documents/".$documentName;
-						$nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");' title='Download'><i class='fas fa-download' aria-hidden='true'></i></a>
+						$nestedData[] = "<div style='display:flex;justify-content: space-around;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");' title='Download'><i class='fas fa-download' aria-hidden='true'></i></a>
 						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
                     } else {
                         $documentUrl = FCPATH.'uploads/documents/'.$documentName;
-						$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download title='Download'><i class='fas fa-download' aria-hidden='true'></i></a>
+						$nestedData[] = "<div style='display:flex;justify-content: space-around;'><a href='$documentUrl' download title='Download'><i class='fas fa-download' aria-hidden='true'></i></a>
 						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
                     }
 					
@@ -1002,7 +1002,7 @@ class Common extends MX_Controller {
 					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
-					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);' title='Download' title='Download'><i class='fas fa-download' aria-hidden='true'></i></a><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
+					$nestedData[] = "<div style='display:flex;justify-content: space-around;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);' title='Download' title='Download'><i class='fas fa-download' aria-hidden='true'></i></a><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
 				} else {
 					$file_id = $order['file_id'];
 					$nestedData[] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><a href='javascript:void(0);' class='' title='Generate' type='submit'><i class='fas fa-seedling' aria-hidden='true'></i></a></form><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><i class='fas fa-edit' aria-hidden='true' title='Edit'></i></a></div>";
