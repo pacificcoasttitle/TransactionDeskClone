@@ -14,6 +14,7 @@ class PayOff extends MX_Controller
         $this->load->library('session');
 		$this->load->library('form_validation');
         $this->load->library('order/template');
+        $this->load->library('order/salesDashboardTemplate');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
 		$this->load->model('order/home_model');
@@ -40,8 +41,10 @@ class PayOff extends MX_Controller
 		$data['name'] = $name;
 		$data['user_email'] = $userdata['email'];
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
-		$this->template->show("order/pay_off", "pay_off_dashboard", $data);
+        // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
+		// $this->template->show("order/pay_off", "pay_off_dashboard", $data);
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
+		$this->salesdashboardtemplate->show("order/pay_off", "pay_off_dashboard", $data);
 	}
 
 	function get_pay_off_orders()
@@ -78,14 +81,23 @@ class PayOff extends MX_Controller
 				$nestedData[] = ucfirst($order['resware_status']);
                 $class = $order['is_payoff_generated'] == 1 ? 'button-color-green' : 'button-color';
                 $text = $order['is_payoff_generated'] == 1 ? 'Recreate Payoff' : 'Create Payoff';
-				$nestedData[] = "<a href='javascript:void(0);' onclick='downloadPayOffDocument($file_id);'>
-                                    <button class='btn btn-grad-2a button-color' type='button'>View Package</button>
+				$nestedData[] = "<div style='display: flex; justify-content: space-around;' ><a href='javascript:void(0);' onclick='downloadPayOffDocument($file_id);' class='btn btn-secondary btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-eye'></i>
+                                    </span>
+                                    <span class='text'>View Package</span>
                                 </a>
-                                <a href='javascript:void(0);' onclick='updatePayOffAction($file_id);'>
-                                    <button class='btn btn-grad-2a button-color' type='button'>Disburse funds</button>
+                                <a href='javascript:void(0);' onclick='updatePayOffAction($file_id);' class='btn btn-success btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-dollar-sign'></i>
+                                    </span>
+                                    <span class='text'>Disburse funds</span>
                                 </a>
-                                <a href='".base_url()."create-payoff/$file_id'>
-                                    <button style='margin-top: 5px;' class='btn btn-grad-2a $class' type='button'>$text</button>
+                                <a href='".base_url()."create-payoff/$file_id' class='btn btn-primary btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-money-check'></i>
+                                    </span>
+                                    <span class='text'>$text</span>
                                 </a>";
                 $data[] = $nestedData; 
                 $i++; 
