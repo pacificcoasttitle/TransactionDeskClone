@@ -1,16 +1,35 @@
 <style>
-	
+	.alert-1, .alert-6, .alert-4, .alert-7 {
+		padding: 15px !important;
+	}
+	.entry-content p {
+		font-size: 18px;
+	}
+	.dropdown-btn {
+		border-bottom: none !important;
+	}
 </style>
 
 <!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;"> -->
 	<div class="container-fluid">
+		<div class="row mb-3">
+            <div class="col-sm-12">
+				<a style="float:right" class="btn-success btn-icon-split btn-sm " href="<?php echo base_url();?>prelim-files">
+					<span class="icon text-white-50">
+						<i class="fa fa-arrow-left"></i>
+					</span>
+					<span class="text">Back</span>
+				</a>
+            </div>
+        </div>
 		<div class="card shadow mb-4">
 			<div class="card-body">
 				<div class="col-xs-12">
 					<div class="typography-section__inner mt-0">
 						<h2 class="ui-title-block ui-title-block_light fn-36">Preliminary Report Review</h2>
+						<div style="border-bottom: 4px solid #D35411;"></div>
 						<div class="ui-decor-1a bg-accent mt-0 mb-0"></div>
-						<h3 class="ui-title-block_light">File Number <?php echo $orderDetails['file_number']; ?></h3>
+						<h3 class="ui-title-block_light"><b>File Number <?php echo $orderDetails['file_number']; ?></b></h3>
 						<h3 class="ui-title-block_light"></h3>
 						<div class="wrapper-alignment">
 							<h3 class="ui-title-block_light" style="display: inline-block;"><?php echo $orderDetails['full_address'];?></h3>
@@ -51,7 +70,7 @@
 
 					<div class="typography-sectionabcd">
 						<div class="row col-md-12">
-							<div class="col-md-3">
+							<div class="col-md-2">
 								<div class="typography-section__inner">
 									<h3 class="ui-title-block_light">Doc Links</h3>
 									<div class="ui-decor-1a bg-accent"></div>
@@ -62,16 +81,16 @@
 										<div class="widget-contenta">
 											<div class="header-navibox-2">
 												<ul class="yamm2 nav navbar-nav2">
-													<li class="review_li"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
+													<li class="review_li nav-bottom-border"><a href="javascript:void(0);" onclick="summary();">Summary</a></li><br>
 													<?php  if(!empty($prelimDocument)) { ?>
-														<li class="review_li">
+														<li class="review_li nav-bottom-border">
 															<a onclick="load_doc(<?php echo $prelimDocument['is_sync'];?>, <?php echo $prelimDocument['api_document_id'];?>, <?php echo $prelimDocument['order_id'];?>, <?php echo $prelimDocument['id'];?>);" href="javascript:void(0);">
 																Prelim
 															</a>
 														</li>
 														<br>
 													<?php } else { ?>
-														<li class="review_li">
+														<li class="review_li nav-bottom-border">
 															<a href="javascript:void(0);" >Prelim</a></li><br>
 													<?php } ?>
 													<li class="review_li nav-bottom-border">
@@ -99,8 +118,8 @@
 														</div>
 													</li>
 													<br>
-													<li class="review_li"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
-													<li class="review_li"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
+													<li class="review_li nav-bottom-border"><a href="javascript:void(0);" onclick="legal_vesting();">Legal Vesting</a></li><br>
+													<li class="review_li nav-bottom-border"><a href="javascript:void(0);" onclick="plat_map();">Plat Map</a></li>
 													<li class="review_li nav-bottom-border">
 														<button class="dropdown-btn">Uploaded Docs
 															<i style="font-size:16px;" class="fa fa-caret-down"></i>
@@ -173,7 +192,7 @@
 									<!-- end .widget-->
 								</aside>
 							</div>
-
+							<div class="col-md-1"></div>
 							<!-- <div class="col-md-1"></div> -->
 							<div class="col-md-9" id="links_details">
 								

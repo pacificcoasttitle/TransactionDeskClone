@@ -39,7 +39,15 @@
 
 <!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;"> -->
 <div class="content">
-	<h2 class="card-header">Upload a Document</h2>
+	<h2 class="card-header">Upload a Document
+		<a style="float:right" class="btn-success btn-icon-split btn-sm " href="<?php echo base_url();?>fees">
+			<span class="icon text-white-50">
+				<i class="fa fa-arrow-left"></i>
+			</span>
+			<span class="text">Back</span>
+		</a>
+	</h2>
+	
 	<div class="card-body">
 		<!-- <div class="ui-decor-1a bg-primary"></div> -->
 		<h3 class="ui-title-block_light fs-16 col-md-8">File Number <?php echo $orderDetails['file_number'];?></h3>

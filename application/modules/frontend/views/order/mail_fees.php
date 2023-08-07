@@ -275,7 +275,7 @@
         filename: 'feeEstimation.pdf',
         // image: {type: 'jpeg', quality: 1},
         html2canvas: {
-          scale: 1,
+          scale: 4,
           logging: false
         },
         // jsPDF: {unit: 'mm', format: 'a4', orientation: 'p'}
