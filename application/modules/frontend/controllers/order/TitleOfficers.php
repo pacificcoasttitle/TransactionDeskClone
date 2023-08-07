@@ -159,7 +159,7 @@ class TitleOfficers extends MX_Controller
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">View / Add Notes</button></a>';
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-eye"></i></span><span class="text"> View / Add Notes </span></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -194,12 +194,12 @@ class TitleOfficers extends MX_Controller
 			$tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
 			$documentName = $file_data->file_path;
 			if (env('AWS_ENABLE_FLAG') == 1) {
-                        $documentUrl = env('AWS_PATH')."file_document/".$documentName;
-						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
-                    } else {
-                        $documentUrl = FCPATH.'uploads/file_document/'.$documentName;
-						$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
-                    }
+                $documentUrl = env('AWS_PATH')."file_document/".$documentName;
+                $action = "<a href='javascript:void(0);' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'> Download </span></a>";
+            } else {
+                $documentUrl = FCPATH.'uploads/file_document/'.$documentName;
+                $action = '<a href="'.$documentUrl.'" download class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text"> Download </span></a>';
+            }
             $tmp_array[] = $action;
             $tableData[] = $tmp_array;
 		}
