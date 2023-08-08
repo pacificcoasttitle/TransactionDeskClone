@@ -7,7 +7,7 @@ class Common extends MX_Controller {
 	private $cpl_js_version = '01';
 	private $proposed_js_version = '01';
 	private $prelim_orders_js_version = '01';
-	private $prelim_order_js_version = '01';
+	private $prelim_order_js_version = '02';
 	private $upload_doc_orders_js_version = '01';
 	private $upload_document_for_order = '01';
 	private $notes_order_js = '01';
@@ -76,7 +76,7 @@ class Common extends MX_Controller {
 		$data['success'] = array();
 
 		if ($this->session->userdata('errors')) {
-			$data['error'] = $this->session->userdata('error');
+			$data['error'] = $this->session->userdata('errors');
 			$this->session->unset_userdata('error');
 		}
 
@@ -530,6 +530,8 @@ class Common extends MX_Controller {
 		if (empty($this->session->userdata('user'))) {
             redirect(base_url().'order');
         }
+		$userdata = $this->session->userdata('user');
+		$this->load->model('order/note');
 		$fileId = $this->uri->segment(2);
 		$endPoint = 'files/'. $fileId.'/actions';
         $user_data['admin_api'] = 1; 
@@ -585,14 +587,55 @@ class Common extends MX_Controller {
                 $result = json_decode($res,TRUE);
 
 				if(!empty($result['FileActionID'])) {
-					$success = 'Prelim action updated successfully.';
+					$success = 'Prelim action updated successfully. <br/>';
 				} else {
-					$error = 'Something went wrong during update action prelim';
+					$errors = 'Something went wrong during update action prelim';
 				}
             }
         }
+		$subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
+		$body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
+		$orderDetails = $this->order->get_order_details($fileId);
+		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+	
+		$request = array();
+		$endPoint = 'files/'.$fileId.'/notes';
+		$request['Subject'] = $subject;
+		$request['Body'] = $body;
+		$request['FileID'] = $fileId;
+		$request['Expedite'] = true;
+		$notes_data = json_encode($request);
+
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+		$result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+		
+		if (isset($result) && !empty($result)) {
+			$response = json_decode($result, TRUE);
+
+			if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+				$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+				$errors[] = $message;
+			} else {
+				$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+				$notesData = array(
+					'resware_note_id' => $noteId,
+					'subject' => $subject,
+					'note' => $body,
+					'user_id' => $userdata['id'],
+					'order_id' => $orderId,
+					'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0
+				);
+				$id = $this->note->insert($notesData);
+				if ($noteId && $id) {
+					$success .= 'Note created successfully.';
+				} else {
+					$errors .= 'Something went wrong. Please try again.';
+				}
+			}
+		}
 		$data = array(
-			"error" =>  $error,
+			"error" =>  $errors,
 			"success" => $success
 		);
 		$this->session->set_userdata($data);
