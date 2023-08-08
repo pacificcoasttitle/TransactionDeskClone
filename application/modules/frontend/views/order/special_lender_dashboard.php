@@ -4,7 +4,7 @@
     }
 </style>
 
-<section class="section-type-4a section-default typography-section-border" style="margin-bottom:50px;">
+<!-- <section class="section-type-4a section-default typography-section-border" style="margin-bottom:50px;">
 	<div class="container">
 		<div class="row">
 			<div class="row">
@@ -18,10 +18,44 @@
 			</div>
 		</div>
 	</div>
-</section>
+</section> -->
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
+	<div class="container-fluid">
+		<div class="row mb-3">
+			<div class="col-sm-6">
+				<h1 class="h3 text-gray-800">Welcome Back <?php echo $name; ?> </h1>
+			</div>
+		</div>
+		<div class="card shadow mb-4">
+			<div class="card-header datatable-header py-3">
+				<div class="datatable-header-titles" > 
+					<span>
+						<i class="fas fa-users"></i>
+					</span>
+					<h6 class="m-0 font-weight-bold text-primary pl-10">Below are all your orders</h6> 
+				</div>
+			</div>
+			
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-bordered" id="orders_listing" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>File Number</th>
+								<th>Opened</th>
+								<th>Property Address</th>
+								<th>Buyer/Seller</th>
+								<th>Sales Rep.</th>
+								<th>Escrow Partner Company Name</th>
+							</tr>
+						</thead>                
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="row">
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="typography-section__inner">
@@ -52,7 +86,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </section>
 

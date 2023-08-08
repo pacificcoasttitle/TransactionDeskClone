@@ -13,9 +13,9 @@
 		margin-top: 0px !important;
 	}
 
-	table#orders_listing tr td:last-child {
+	/* table#orders_listing tr td:last-child {
 		display: inline-flex;
-	}
+	} */
 
 	.ui-autocomplete {
 		max-height: 300px !important;
@@ -30,6 +30,29 @@
 	}
 	td.dataTables_empty {
 		display: table-cell !important;
+	}
+	.form-grp-title {
+		margin-top: 30px;
+    	margin-bottom: 20px;
+	}
+	.form-grp-title .tagline {
+		height: 0;
+		border-top: 1px solid #D9DDE5;
+	}
+	.form-grp-title .tagline span {
+		text-transform: uppercase;
+		display: inline-block;
+		position: relative;
+		padding: 0 0px;
+		background: #ffffff;
+		color: #d35411;
+		top: -10px;
+		font-size: 16px;
+		font-weight: 700;
+		letter-spacing: 0.25px;
+	}
+	.mt-0 {
+		margin-top: 0px;
 	}
 </style>
 <section class="section-type-4a section-defaulta pd-3">
@@ -128,6 +151,11 @@
 										<input type="hidden" name="state" id="state" value="">
 										
 										<div class="form-group">
+											<div class="row form-grp-title mt-0">
+												<div class="col-sm-12">
+													<div class="tagline"><span> LENDER DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-8 d-flex align-space">
 													<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender		
@@ -138,11 +166,13 @@
 
 										<div class="form-group">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="LenderCompany" class="col-form-label">Lender Company</label>
 													<input type="text" name="LenderCompany" id="LenderCompany" class="form-control gui-input ui-autocomplete-input" placeholder="Lender Company Name" required="required">
 												</div>
-												<div class="col-sm-6">
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
 													<label for="assignment_clause" class="col-form-label">Assignment Clause</label>
 													<input type="text" name="assignment_clause" id="assignment_clause" class="form-control gui-input ui-autocomplete-input" placeholder="Assignment Clause">
 													<!-- <input required="" name="last_name" type="text" id="last-name" class="form-control"> -->
@@ -184,6 +214,11 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> PROPERTY DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="property_address" class="col-form-label">Property Address</label>
@@ -210,8 +245,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> TITLE OFFICER DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="TitleOfficer" class="col-form-label">Title Officer Details</label>
 													<select id="TitleOfficer" name="TitleOfficer" class="gui-input form-control" >
 														<option value="">Title Officer</option>
@@ -232,6 +272,11 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> LOAN DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="loan_amount" class="col-form-label">Loan Amount</label>
@@ -245,8 +290,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> BORROWERS & VESTING </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="borrowers_vesting" class="col-form-label">Primary Borrower Name</label>
 													<input type="text" name="borrowers_vesting" id="borrowers_vesting" class="gui-input form-control" placeholder="Primary Borrower Name"  required="required">
 												</div>
@@ -254,11 +304,18 @@
 										</div>
 										
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> REPORT DATE SECTION </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="Supplemental_report_date" class="col-form-label">Supplemental Report Date</label>
 													<input required="required" type="text" class="gui-input form-control" name="supplemental_report_date" id="Supplemental_report_date" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
 												</div>
+											</div>
+											<div class="row">
 												<div class="col-sm-6" style="display:none;">
 													<label for="preliminary_report_date" class="col-form-label">Preliminary Report Date</label>
 													<input required="required" type="text" class="gui-input form-control" name="preliminary_report_date" id="preliminary_report_date" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
@@ -267,8 +324,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> SELECT BRANCH </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="branch" class="col-form-label">Select Branch</label>
 													<select id="branch" name="branch" class="form-control">
 														<option value="">Select Branch</option>
@@ -544,9 +606,9 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="card shadow">
-							<div class="card-header py-3">
+							<!-- <div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary" >Lender Details</h6>
-							</div>
+							</div> -->
 							<div class="card-body"> 
 								<div class="smart-forms smart-container">
 									<div class="modal-body search-result">
@@ -560,6 +622,11 @@
 										<input type="hidden" name="state" id="edit_state" value="">
 										
 										<div class="form-group">
+											<div class="row form-grp-title mt-0">
+												<div class="col-sm-12">
+													<div class="tagline"><span> LENDER DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-8 d-flex align-space">
 													<input class="radio" type="radio" name="edit_new_existing_lender" id="edit_add_lender" value="add_lender">New Lender		
@@ -570,11 +637,13 @@
 
 										<div class="form-group">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="edit_LenderCompany" class="col-form-label">Lender Company</label>
 													<input type="text" name="LenderCompany" id="edit_LenderCompany" class="form-control gui-input ui-autocomplete-input" placeholder="Lender Company Name" required="required">
 												</div>
-												<div class="col-sm-6">
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
 													<label for="edit_assignment_clause" class="col-form-label">Assignment Clause</label>
 													<input type="text" name="assignment_clause" id="edit_assignment_clause" class="form-control gui-input ui-autocomplete-input" placeholder="Assignment Clause">
 												</div>
@@ -615,6 +684,11 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> PROPERTY DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="edit_property_address" class="col-form-label">Property Address</label>
@@ -641,8 +715,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> TITLE OFFICER DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="edit_TitleOfficer" class="col-form-label">Title Officer Details</label>
 													<select id="edit_TitleOfficer" name="TitleOfficer" class="gui-input form-control" >
 														<option value="">Title Officer</option>
@@ -663,6 +742,11 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> LOAN DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="edit_loan_amount" class="col-form-label">Loan Amount</label>
@@ -676,8 +760,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> BORROWERS & VESTING </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="edit_borrowers_vesting" class="col-form-label">Primary Borrower Name</label>
 													<input type="text" name="borrowers_vesting" id="edit_borrowers_vesting" class="gui-input form-control" placeholder="Primary Borrower Name"  required="required">
 												</div>
@@ -685,12 +774,19 @@
 										</div>
 										
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> REPORT DATE SECTION </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="edit_supplemental_report_date" class="col-form-label">Supplemental Report Date</label>
 													<input required="required" type="text" class="gui-input form-control" name="supplemental_report_date" id="edit_supplemental_report_date" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
 												</div>
-												<div class="col-sm-6" style="display:none;">
+											</div>
+											<div class="row">
+												<div class="col-sm-12" style="display:none;">
 													<label for="edit_preliminary_report_date" class="col-form-label">Preliminary Report Date</label>
 													<input required="required" type="text" class="gui-input form-control" name="preliminary_report_date" id="edit_preliminary_report_date" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
 												</div>
@@ -698,8 +794,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> SELECT BRANCH </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="edit_branch" class="col-form-label">Select Branch</label>
 													<select id="edit_branch" name="edit_branch" class="form-control">
 														<option value="">Select Branch</option>

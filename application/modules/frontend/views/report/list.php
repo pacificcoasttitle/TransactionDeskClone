@@ -8,7 +8,7 @@
 	    list-style: none;
 	}
 	.u-list li:nth-child(2n+1) {
-	    background: #bff0c685;
+	    background: #cccccc45;
 	}
 	.u-list li {
 	    padding: 10px;
@@ -340,7 +340,7 @@ form {
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="row">
 						<div class="col-sm-9">
 							<h5>Total Ran</h5>
@@ -355,15 +355,15 @@ form {
 					</h2> -->
 					<ul class="u-list">
 						<?php
-foreach ($salesReps as $key => $salesRep):
-?>
+							foreach ($salesReps as $key => $salesRep):
+						?>
 						<li>
 							<div class="u-pic">
 							<?php
 
-$image_url = trim(env('AWS_PATH') . $salesRep['sales_rep_report_image']);
-if (!empty($salesRep['sales_rep_report_image'])): ?>
-								<img src="<?php echo $image_url; ?>" alt="main-logo" class="retina">
+								$image_url = trim(env('AWS_PATH') . $salesRep['sales_rep_report_image']);
+								if (!empty($salesRep['sales_rep_report_image'])): ?>
+																<img src="<?php echo $image_url; ?>" alt="main-logo" class="retina">
 								<?php else: ?>
 								<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']), 0, 1) . substr(trim($salesRep['last_name']), 0, 1)); ?></span></div>
 								<?php endif;?>
@@ -380,11 +380,11 @@ if (!empty($salesRep['sales_rep_report_image'])): ?>
 							</div>
 						</li>
 						<?php
-if ($key == 9) {
-    break;
-}
-endforeach;
-?>
+							if ($key == 9) {
+								break;
+							}
+							endforeach;
+						?>
 					</ul>
 						<?php if (count($salesReps) > 10): ?>
 							<div class="pull-right">
@@ -392,7 +392,7 @@ endforeach;
 							</div>
 						<?php endif;?>
 				</div>
-
+				<div class="col-md-1"></div>
 				<div class="col-md-8">
 					<h5 class="text-center" ><span>Create New Report</span>
 						<!-- <a href="<?=base_url('pmas');?>" class="pull-right">Create PMA</a> -->
@@ -402,17 +402,17 @@ endforeach;
 						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('reports/importData'); ?>">
 							<div class="form-body">
 								<?php
-$prev_data = $this->session->flashdata('_previous_data');
-if ($this->session->flashdata('error')):
-?>
+									$prev_data = $this->session->flashdata('_previous_data');
+									if ($this->session->flashdata('error')):
+								?>
 								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
 								<?php
-elseif ($this->session->flashdata('success')):
-?>
+									elseif ($this->session->flashdata('success')):
+								?>
 								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
 								<?php
-endif;
-?>
+									endif;
+								?>
 								<div class="frm-row">
 									<div class="row">
 										<div class="section colm colm6 col-md-6">
@@ -439,8 +439,8 @@ endif;
 											<select id="sales_rep" name="sales_rep" class="form-control" placeholder="Select Sales Representative">
 												<option value="" >Select Sales Representative</option>
 												<?php
-foreach ($salesReps as $salesRep):
-?>
+													foreach ($salesReps as $salesRep):
+												?>
 												<option value="<?php echo $salesRep['id']; ?>" <?php if (!empty($prev_data['sales_rep']) && $prev_data['sales_rep'] == $salesRep['id']) {echo 'selected';}?>><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></option>
 												<?php endforeach;?>
 											</select>
@@ -451,8 +451,8 @@ foreach ($salesReps as $salesRep):
 											<select id="sort_by" name="sort_by" class="form-control">
 												<option value="">Select Sorting Order</option>
 												<?php
-foreach ($sorting_fields as $key => $field_name):
-?>
+													foreach ($sorting_fields as $key => $field_name):
+												?>
 												<option value="<?php echo $key; ?>" <?php if (!empty($prev_data['sort_by']) && $prev_data['sort_by'] == $key) {echo 'selected';}?>><?php echo $field_name; ?></option>
 												<?php endforeach;?>
 											</select>
@@ -493,17 +493,17 @@ foreach ($sorting_fields as $key => $field_name):
 								</thead>
 								<tbody>
 									<?php
-foreach ($reports_data as $report) {
+										foreach ($reports_data as $report) {
 
-    $pdf_url = trim(env('AWS_PATH') . 'sales-rep/pdf/' . $report['report_url']);
-    ?>
+										$pdf_url = trim(env('AWS_PATH') . 'sales-rep/pdf/' . $report['report_url']);
+									?>
 									<tr>
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
 										<td><?php echo $report['zip_code']; ?></td>
 										<td>
 										<?php
-if (!empty($report['report_url'])): ?>
+											if (!empty($report['report_url'])): ?>
 										<a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
 											<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
 											<span class="icon text-white-50">
@@ -515,8 +515,8 @@ if (!empty($report['report_url'])): ?>
 										</td>
 									</tr>
 									<?php
-}
-?>
+										}
+									?>
 
 								</tbody>
 							</table>

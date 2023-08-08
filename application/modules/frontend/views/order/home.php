@@ -134,7 +134,7 @@
 									</div>
 								</div>
 
-								<div class="row form-group text-center">
+								<div class="row form-group">
 									<div class="col-sm-12">
 										<a class="button btn btn-primary search-property search-property-button" href="javascript:void(0);" id="search-btn">Property Search</a>
 										<a class="button btn btn-secondary switch-apn-button search-property-button" href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
