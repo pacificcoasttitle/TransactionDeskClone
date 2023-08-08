@@ -10,9 +10,31 @@
 	.radio:before {
 		background: none !important;
 	}
-	.align-space {
-		align-items: center;
-		justify-content: space-between;
+	.fs-2 {
+		font-size: 18px;
+	}
+	.form-grp-title {
+		margin-top: 30px;
+    	margin-bottom: 20px;
+	}
+	.form-grp-title .tagline {
+		height: 0;
+		border-top: 1px solid #D9DDE5;
+	}
+	.form-grp-title .tagline span {
+		text-transform: uppercase;
+		display: inline-block;
+		position: relative;
+		padding: 0 0px;
+		background: #ffffff;
+		color: #d35411;
+		top: -10px;
+		font-size: 16px;
+		font-weight: 700;
+		letter-spacing: 0.25px;
+	}
+	.mt-0 {
+		margin-top: 0px;
 	}
 </style>
 
@@ -136,16 +158,20 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="card shadow">
-							<div class="card-header py-3">
+							<!-- <div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary" >Lender Details</h6>
-							</div>
+							</div> -->
 							<div class="card-body"> 
 								<div class="smart-forms smart-container">
 									<div class="modal-body search-result">
-									
+										<div class="row form-grp-title mt-0">
+											<div class="col-sm-12">
+												<div class="tagline"><span> LENDER DETAILS </span></div>
+											</div>
+										</div>
 										<div class="form-group">
 											<div class="row">
-												<div class="col-sm-6 d-flex align-space">
+												<div class="col-sm-8 d-flex fs-2">
 													<!-- <label for="email_id" class="col-form-label">Email</label> -->
 													<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender	
 													<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
@@ -156,7 +182,7 @@
 
 										<div class="form-group">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="LenderCompany" class="col-form-label">Lender Company</label>
 													<input type="text" name="LenderCompany" id="LenderCompany" class="form-control gui-input ui-autocomplete-input" placeholder="Lender Company Name" required="required">
 													<input type="hidden" name="LenderId" id="LenderId" value="">
@@ -164,7 +190,9 @@
 													<input type="hidden" name="partner_id" id="partner_id" value="">
 													<!-- <input required="" name="first_name" type="text" id="first-name" class="form-control"> -->
 												</div>
-												<div class="col-sm-6">
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
 													<label for="assignment_clause" class="col-form-label">Assignment Clause</label>
 													<input type="text" name="assignment_clause" id="assignment_clause" class="form-control gui-input ui-autocomplete-input" placeholder="Assignment Clause">
 													<!-- <input required="" name="last_name" type="text" id="last-name" class="form-control"> -->
@@ -174,19 +202,20 @@
 
 										<div class="form-group">
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="LenderName" class="col-form-label">Lender Name</label>
 													<input type="text" name="LenderName" id="LenderName" class="gui-input form-control" placeholder="Attention" autocomplete="off">
 												</div>
-												<div class="col-sm-6">
-													<label for="LenderAddress" class="col-form-label">Lender Address</label>
-													<input type="text" name="LenderAddress" id="LenderAddress" class="gui-input form-control" placeholder="Lender Address" required="required">
-												</div>
+												
 											</div>
 										</div>
 										
 										<div class="form-group">
 											<div class="row">
+												<div class="col-sm-6">
+													<label for="LenderAddress" class="col-form-label">Lender Address</label>
+													<input type="text" name="LenderAddress" id="LenderAddress" class="gui-input form-control" placeholder="Lender Address" required="required">
+												</div>
 												<div class="col-sm-6">
 													<label for="LenderCity" class="col-form-label">Lender City</label>
 													<input type="text" name="LenderCity" id="LenderCity" class="gui-input form-control" placeholder="Lender City" required="required">
@@ -208,6 +237,11 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> PROPERTY ADDRESS </span></div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="property_address" class="col-form-label">Property Address</label>
@@ -234,8 +268,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> LOAN DETAILS </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="loan_number" class="col-form-label">Loan Number</label>
 													<input required="required" type="text" class="gui-input form-control" name="loan_number" id="loan_number" placeholder="Loan Number">
 												</div>
@@ -243,8 +282,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> BORROWERS & VESTING </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="borrowers_vesting" class="col-form-label">Primary Borrower Name</label>
 													<input type="text" name="borrowers_vesting" id="borrowers_vesting" class="gui-input form-control" placeholder="Primary Borrower Name"  required="required">
 												</div>
@@ -252,8 +296,13 @@
 										</div>
 
 										<div class="form-group">
+											<div class="row form-grp-title">
+												<div class="col-sm-12">
+													<div class="tagline"><span> SELECT BRANCH </span></div>
+												</div>
+											</div>
 											<div class="row">
-												<div class="col-sm-6">
+												<div class="col-sm-12">
 													<label for="branch" class="col-form-label">Select Branch</label>
 													<select id="branch" name="branch" class="form-control">
 														<option value="">Select Branch</option>

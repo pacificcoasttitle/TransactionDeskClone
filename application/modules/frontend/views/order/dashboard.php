@@ -22,7 +22,7 @@
 }
 .dashboard-menu-icon {
 	height: 4rem;
-	width: 4rem;
+	width: 3.45rem;
 }
 .main-wrapper {
 	scale: 95%;
@@ -116,7 +116,7 @@
 							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Prelim.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Review Prelime</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Review Prelim</div>
 						</div>
 					</div>
 				</div>

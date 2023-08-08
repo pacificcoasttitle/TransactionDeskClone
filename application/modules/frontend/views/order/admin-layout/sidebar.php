@@ -13,6 +13,8 @@
 			$dashboardUrl = base_url() . 'escrow-dashboard';
 		} else if ($userdata['is_payoff_user'] == 1) {
 			$dashboardUrl = base_url() . 'pay-off-dashboard';
+		} else if ($userdata['is_special_lender'] == 1) {
+			$dashboardUrl = base_url() . 'special-lender-dashboard';
 		} else {
 			$dashboardUrl = base_url() . 'dashboard';
 		}
@@ -65,8 +67,8 @@
 			</a>
 		</li>
 	
-	<?php } else if ($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1) { ?>
-		<li class="nav-item <?php if($this->uri->segment(1) == 'escrow-dashboard' || $this->uri->segment(1) == 'pay-off-dashboard') { echo 'active'; } ?>">
+	<?php } else if ($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'escrow-dashboard' || $this->uri->segment(1) == 'pay-off-dashboard'  || $this->uri->segment(1) == 'special-lender-dashboard') { echo 'active'; } ?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Dashboard Home</span>

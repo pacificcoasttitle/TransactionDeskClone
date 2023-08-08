@@ -8,7 +8,7 @@
 	list-style: none;
 }
 .u-list li:nth-child(2n+1) {
-	background: #bff0c685;
+	background: #cccccc45;
 }
 .u-list li {
 	padding: 10px;
@@ -337,7 +337,7 @@ form {
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="row">
 						<div class="col-sm-9">
 							<h5>Total Ran</h5>
@@ -381,6 +381,7 @@ form {
 							</div>
 						<?php endif; ?>
 				</div>
+				<div class="col-md-1"></div>
 				<div class="col-md-8">
 					<h5 class="text-center" ><span>Create New Label Report</span></h5>
 					<div class="smart-forms smart-container">
