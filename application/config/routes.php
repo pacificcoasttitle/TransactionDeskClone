@@ -410,6 +410,12 @@ $route['order/admin/lp-alert'] = 'admin/order/home/lpAlert';
 $route['order/admin/add-lp-alert'] = 'admin/order/home/addLpAlert';
 $route['order/admin/delete-lp-alert'] = 'admin/order/home/deleteLpAlert';
 $route['order/admin/edit-lp-alert/:num'] = 'admin/order/home/editLpAlert';
+
+$route['order/admin/daily-email-control'] = 'admin/order/home/dailyEmailControl';
+$route['order/admin/get-daily-emailer'] = 'admin/order/home/getDailyEmailer';
+$route['order/admin/add-daily-emailer'] = 'admin/order/home/addDailyEmailer';
+$route['order/admin/edit-daily-emailer/:num'] = 'admin/order/home/editDailyEmailer';
+$route['order/admin/delete-daily-emailer'] = 'admin/order/home/deleteDailyEmailerReceiver';
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
 $route['order/admin/settings'] = 'admin/order/home/settings';
 

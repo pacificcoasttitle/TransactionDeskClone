@@ -354,6 +354,10 @@
 						<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/lp-alert'; ?>">
 							LP Alert
 						</a>
+
+						<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/daily-email-control' || $this->uri->segment(3) == 'add-daily-emailer' || $this->uri->segment(3) == 'edit-daily-emailer') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/daily-email-control'; ?>">
+							Daily Email Control 
+						</a>
 						
 						<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/settings') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/settings'; ?>">
 							Settings
