@@ -11,6 +11,7 @@ var pre_listing_documents = '';
 var lp_order_list = '';
 var admin_user_logs = '';
 var lp_document_list = '';
+var daily_email_receiver_list = '';
 
 $(document).ready(function () {
 
@@ -3382,6 +3383,54 @@ $(document).ready(function () {
      }
      /* Holidays listing */
 
+     /* Holidays listing */
+     if ($('#tbl-daily-email-control').length) 
+     {
+         daily_email_receiver_list = $('#tbl-daily-email-control').DataTable({
+             "paging": true,
+             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+             "columnDefs": [
+                 { "searchable": false, "targets": [0,1] }
+             ],
+             "language": {
+                 // searchPlaceholder: "Name",
+                 paginate: {
+                   next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                   previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                 },
+                 "emptyTable": "Record(s) not found.",
+             },
+             initComplete: function() {
+             },
+             "drawCallback": function () {               
+                 $('.dataTables_paginate > .pagination li').addClass('page-item');
+                 $('.dataTables_paginate > .pagination a').addClass('page-link');
+                 $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+             },
+             "ordering": false,            
+             "serverSide": true,
+             "ajax": {                
+                 url: base_url+"order/admin/get-daily-emailer", // json datasource
+                 type: "post", // method  , by default get
+                 error: function (XMLHttpRequest, textStatus, errorThrown) {
+                     if (parseInt(XMLHttpRequest.status) == 419) {
+                         alert("You are logged out. Please login.");
+                     }
+                     if (parseInt(XMLHttpRequest.status) == 419) {
+                         setTimeout(function () {
+                             location.reload();
+                         }, 1000);
+                     }
+                     $("#tbl-daily-email-control tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                     $("#tbl-daily-email-control_processing").css("display", "none");
+ 
+                 }
+             },
+                         
+         });
+     }
+     /* Holidays listing */
+
     /* Add Holiday validation */
     if(jQuery('#frm-add-holiday').length || jQuery('#frm-edit-holiday').length)
     {
@@ -4789,6 +4838,59 @@ function deleteMasterUser(id)
 
                 setTimeout(function () {
                     $('#master_users_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
+function deleteDailyReceiver(id)
+{
+    if (id=='') {
+        alert('Invalid attempt.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+
+    if (ready) {
+        $.ajax({
+            url: base_url+"admin/order/home/deleteDailyEmailerReceiver",
+            method: "POST",
+            data : {id:id},
+            success: function(data){
+                var result = jQuery.parseJSON(data);
+                console.log(result);
+                if (result.status == 'success') {
+                    $('#tbl-daily-email-control_success_msg').html('Dailt email receiver deleted successfully').show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#tbl-daily-email-control_success_msg").offset().top
+                    }, 1000);
+                    daily_email_receiver_list.ajax.reload( null, false );
+                    setTimeout(function () {
+                        $('#tbl-daily-email-control_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#tbl-daily-email-control_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#tbl-daily-email-control_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#tbl-daily-email-control_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#tbl-daily-email-control_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#tbl-daily-email-control_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#tbl-daily-email-control_error_msg').html('').hide();
                 }, 4000);
             }
         })

@@ -2911,6 +2911,12 @@ class Order
                     $to = $salesManger['email_address'];
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
 
+                    /** Get CC for daily email receiver */
+                    $this->CI->db->select('email')->from('pct_daily_email_receiver_list')->where('status', 1);
+                    $query = $this->CI->db->get();
+                    $cc = array_column($query->result_array(), 'email');
+
+                    // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
