@@ -6204,13 +6204,6 @@ class Home extends MX_Controller
 
     public function dailyEmailControl()
     {
-        $this->db->select('email')
-            ->from('pct_daily_email_receiver_list')->where('status', 1);
-
-        $query = $this->db->get();
-        $result = array_column($query->result_array(), 'email');
-        echo "<pre>";
-        print_r($result);die;
         $data = array();
         $data['title'] = 'PCT Order: Daily email control';
         $this->admintemplate->show("order/dailyEmailReceiver", "daily-email-control", $data);
