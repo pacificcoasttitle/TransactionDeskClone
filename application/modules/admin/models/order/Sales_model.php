@@ -25,7 +25,7 @@ class Sales_model extends CI_Model
                         ->or_like('email_address', $keyword)
                         ->or_like('telephone_no', $keyword)
                         ->group_end();
-            }            
+            }
 	    	$this->db->from('customer_basic_details');
 
 			$filter_total_records =  $this->db->count_all_results();
