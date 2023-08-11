@@ -224,16 +224,16 @@
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
-if (isset($salesRep) && !empty($salesRep)) {
-    foreach ($salesRep as $k => $v) {
-        $name      = array($v['first_name'], $v['last_name']);
-        $full_name = implode(' ', $name);
-        ?>
-												<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
-										<?php
-}
-}
-?>
+											if (isset($salesRep) && !empty($salesRep)) {
+												foreach ($salesRep as $k => $v) {
+													$name      = array($v['first_name'], $v['last_name']);
+													$full_name = implode(' ', $name);
+													?>
+																							<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+																					<?php
+											}
+											}
+										?>
 									</select>
 								</div>
 							</div>
@@ -244,20 +244,21 @@ if (isset($salesRep) && !empty($salesRep)) {
 										<option value="">Title Officer</option>
 										<?php
 
-if (isset($titleOfficer) && !empty($titleOfficer)) {
-    foreach ($titleOfficer as $key => $value) {
-        ?>
-										<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-									<?php
-}
-}
-?>
+											if (isset($titleOfficer) && !empty($titleOfficer)) {
+												foreach ($titleOfficer as $key => $value) {
+													?>
+																					<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+																				<?php
+											}
+											}
+										?>
 									</select>
 								</div>
 							</div>
 
 							<div class="row form-group">
 								<div class="col-sm-12">
+									<input type="hidden" name="ProductType" id="ProductType">
 									<select id="ProductTypeID" name="ProductTypeID" class="form-control">
 										<option value="">Select Product</option>
 									</select>
@@ -268,12 +269,12 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 							<div id="sales-loan-amount-fields" style="display:none;">
 								<div class="row form-group">
 									<div class="col-sm-12">
-										<input type="text" class="form-control" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
+										<input type="text" class="form-control" data-type="number"  name="salesAmount" id="salesAmount" placeholder="Sales Amount">
 									</div>
 								</div>
 								<div class="row form-group">
 									<div class="col-sm-12">
-										<input type="text" class="form-control" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
+										<input type="text" class="form-control" data-type="number"  name="loanAmount" id="loanAmount" placeholder="Loan Amount">
 									</div>
 								</div>
 
