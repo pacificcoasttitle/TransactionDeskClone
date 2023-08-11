@@ -5583,7 +5583,7 @@ class Home extends MX_Controller
                 //     $checked = "";
                 // }
                 if ($instrumentRecord['is_display'] == 1) {
-                    $checked = "checked";
+                    $checked = "";
                     // }  else {
                     //     $checked = "";
                     // }
@@ -5591,7 +5591,7 @@ class Home extends MX_Controller
                     //if ($vesCountData['ves_count'] == 0) {
                         //$vesChecked = $instrumentRecord['instrument'] == $titlePointInstrumentDetails[0]['instrument'] ? 'checked' : '';
                     //} else {
-                        $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? '' : '';
+                        $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? 'checked' : '';
                     //}
 
                     $document_name = $instrumentRecord['document_name'];
