@@ -909,13 +909,13 @@ function multipleResults(response)
         apnInfo[apn]['fips'] = $(this).find('FIPS').text();
         var unit_number = $(this).find('UnitNumber').text();  
         
-        $('.search-result table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><span class="result-unit-number"></span></td><td><button type="button" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm" onclick="apnData(this)"><span class="icon text-white-50"><i class="fas fa-check"></i></span><span class="text">Choose</span></button></td></tr>');
+        $('.search-result table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-unit-number"></span></td><td><button type="button" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm" onclick="apnData(this)"><span class="icon text-white-50"><i class="fas fa-check"></i></span><span class="text">Choose</span></button></td></tr>');
 
         
 
         $('.search-result table > tbody').find('tr').eq(i).find('.result-apn').text(apn);       
-        $('.search-result table > tbody').find('tr').eq(i).find('.result-address').text(address);
-        $('.search-result table > tbody').find('tr').eq(i).find('.result-city').text(city);
+        $('.search-result table > tbody').find('tr').eq(i).find('.result-address').text(address + ', ' + city);
+        // $('.search-result table > tbody').find('tr').eq(i).find('.result-city').text(city);
         $('.search-result table > tbody').find('tr').eq(i).find('.result-unit-number').text(unit_number);
     });
 }

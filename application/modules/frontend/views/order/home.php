@@ -247,6 +247,7 @@
 
 							<div class="row form-group">
 								<div class="col-sm-12">
+									<input type="hidden" name="ProductType" id="ProductType">
 									<select id="ProductTypeID" name="ProductTypeID" class="form-control">
 										<option value="">Select Product</option>
 									</select>
@@ -257,12 +258,12 @@
 							<div id="sales-loan-amount-fields" style="display:none;">
 								<div class="row form-group">
 									<div class="col-sm-12">
-										<input type="text" class="form-control" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
+										<input type="text" data-type="number" class="form-control" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
 									</div>
 								</div>
 								<div class="row form-group">
 									<div class="col-sm-12">
-										<input type="text" class="form-control" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
+										<input type="text" data-type="number" class="form-control" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
 									</div>
 								</div>
 
@@ -1307,8 +1308,8 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 										<thead>
 											<tr>
 												<th width="21%">APN</th>
-												<th width="22%">Address</th>
-												<th width="21%">City</th>
+												<th width="40%">Address</th>
+												<!-- <th width="21%">City</th> -->
 												<th width="21%">Unit Number</th>
 												<th width="15%">Run Listing</th>
 											</tr>
@@ -1411,7 +1412,4 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 	</div>
 </div>
 <!-- End Show Customer Number Modal -->
-
-
-
 

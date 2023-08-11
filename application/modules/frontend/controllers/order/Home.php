@@ -5,8 +5,8 @@
 class Home extends MX_Controller
 {
 
-	private $order_js_version = '03';
-	private $custom_js_version = '03';
+	private $order_js_version = '04';
+	private $custom_js_version = '04';
 
 	function __construct()
 	{
@@ -137,6 +137,9 @@ class Home extends MX_Controller
 				$EscrowNumber = $this->input->post('escrowNumber');
 				$Notes = $this->input->post('notes');
 				$SalesAmount = $this->input->post('salesAmount');
+				$SalesAmount = str_replace(',', '', $SalesAmount);
+				$LoanAmount = str_replace(',', '', $LoanAmount);
+				// print_r($LoanAmount);die;
 				$ProductTypeTxt = $this->input->post('ProductType');
 				$primaryBorrower = $this->input->post('primaryBorrower');
 				$secondaryBorrower = $this->input->post('secondaryBorrower');
