@@ -6201,4 +6201,156 @@ class Home extends MX_Controller
         $this->session->set_userdata('success', $successMsg);
         redirect(base_url() . 'order/admin/lp-orders');
     }
+
+    public function dailyEmailControl()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Daily email control';
+        $this->admintemplate->show("order/dailyEmailReceiver", "daily-email-control", $data);
+    }
+
+    public function getDailyEmailer()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $receiverLists = $this->home_model->get_daily_email_receiver($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $receiverLists = $this->home_model->get_daily_email_receiver($params);
+        }
+
+        $data = array();
+        if (isset($receiverLists['data']) && !empty($receiverLists['data'])) {
+            foreach ($receiverLists['data'] as $key => $value) {
+                $nestedData = array();
+                $nestedData[] = $key + 1;
+                $nestedData[] = $value['email'];
+                $nestedData[] = ($value['status']) ? 'Active' : 'Disabled';
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editUrl = base_url() . 'order/admin/edit-daily-emailer/' . $value['id'];
+                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;' ><a href='" . $editUrl . "'   title='Edit Receiver'><span class='fas fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteDailyReceiver(" . $value['id'] . ")'  title='Delete Receiver'><span class='fas fa-trash' aria-hidden='true'></span></a></div>";
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data['recordsTotal'] = intval($receiverLists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($receiverLists['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addDailyEmailer()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Add New Master User';
+        $salesRepData = array();
+        $this->db->select('*')
+            ->from('pct_order_partner_company_info');
+
+        $query = $this->db->get();
+        $data['companys'] = $query->result_array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_daily_email_receiver_list.email]', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique' => 'The %s is already taken'));
+            
+            if ($this->form_validation->run() == true) {
+                $customerData = array(
+                    'email' => $this->input->post('email'),
+                    'status' => 1
+                );
+                $insert = $this->home_model->insert($customerData, 'pct_daily_email_receiver_list');
+                if ($insert) {
+                    /** Save user Activity */
+                    $activity = 'Daily email receiver created :- ' . $this->input->post('email');
+                    $this->order->logAdminActivity($activity);
+                    /** End Save user activity */
+                    $data['success_msg'] = 'Daily email receiver added successfully.';
+                    $this->form_validation->reset_validation();
+                    redirect(base_url() . 'order/admin/daily-email-control');
+                } else {
+                    $data['error_msg'] = 'User not added.';
+                }
+            } else {
+                $data['email_error_msg'] = form_error('email');
+            }
+        }
+        $this->admintemplate->show("order/dailyEmailReceiver", "add-daily-email-receiver", $data);
+    }
+
+    public function editDailyEmailer()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Master User';
+        $id = $this->uri->segment(4);
+
+        if (isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+
+                if ($this->form_validation->run() == true) {
+                    // print_r($this->input->post());die;
+                    $customerData = array(
+                        'email' => $this->input->post('email'),
+                        'status' => $this->input->post('status') ? 1 : 0 ,
+                    );
+
+                    $updateCondition = array(
+                        'id' => $id,
+                    );
+                    $update = $this->home_model->update($customerData, $updateCondition, 'pct_daily_email_receiver_list');
+                    if ($update) {
+                        /** Save user Activity */
+                        // $user =  $this->home_model->get_user($condition);
+                        $activity = 'Daily email receiver :- ' . $this->input->post('email') . ' details updated';
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
+                        $data['success_msg'] = 'Daily email receiver updated successfully.';
+                        $this->form_validation->reset_validation();
+                        redirect(base_url() . 'order/admin/daily-email-control');
+                    } else {
+                        $data['error_msg'] = 'Daily email receiver not updated.';
+                    }
+                } else {
+                    $data['email_error_msg'] = form_error('email');
+                }
+            }
+            $con = array('id' => $id);
+            $data['receiver_info'] = $this->home_model->get_rows($con, 'pct_daily_email_receiver_list');
+        }
+        $this->admintemplate->show("order/dailyEmailReceiver", "edit-daily-email-receiver", $data);
+    }
+
+    public function deleteDailyEmailerReceiver()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+        if ($id) {
+            $condition = array('id' => $id);
+
+            $lpDoc = $this->home_model->getLpDocType($condition);
+            $status = $this->home_model->deleteLpDocType($condition, 'pct_daily_email_receiver_list');
+            if ($status) {
+                /** Save user Activity */
+                $activity = 'Deleted daily email receiver: ' . $id;
+                $this->order->logAdminActivity($activity);
+                /** End save user activity */
+                $successMsg = 'Record deleted successfully.';
+                $response = array('status' => 'success', 'message' => $successMsg);
+            }
+        } else {
+            $msg = 'ID is required.';
+            $response = array('status' => 'error', 'message' => $msg);
+        }
+
+        echo json_encode($response);
+    }
 }
