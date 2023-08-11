@@ -144,7 +144,7 @@
 									</div>
 								</div>
 
-								<div class="row form-group text-center">
+								<div class="row form-group">
 									<div class="col-sm-12">
 										<a class="button btn btn-primary search-property search-property-button" href="javascript:void(0);" id="search-btn">Property Search</a>
 										<a class="button btn btn-secondary switch-apn-button search-property-button" href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
@@ -164,13 +164,9 @@
 								</div>
 
 								<div class="row form-group">
-									<div class="col-sm-2">
-										<a class="button btn btn-primary search-apn search-apn-button" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
-									</div>
-
-									<div class="col-sm-3">
-										<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
-									</div>
+									<a class="button btn btn-primary search-apn search-apn-button mr-3 ml-3" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
+									<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
+									
 								</div>
 							</div>
 							<div class="row form-group">
@@ -312,8 +308,8 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 
 							<div id="clone-email-address" class="cloneya-wrap" >
 								<?php if (!empty($deliverables)) {
-    $i = 0;
-    foreach ($deliverables as $deliverable) {?>
+									$i = 0;
+									foreach ($deliverables as $deliverable) {?>
 										<div class="row form-group toclone clone-widget cloneya">
 											<div class="col-sm-10">
 													<?php if ($i == 0) {?>
@@ -328,7 +324,7 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 										</div>
 
 										<?php $i++;}
-} else {?>
+									} else {?>
 									<div class="row form-group toclone clone-widget cloneya">
 										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
@@ -354,10 +350,10 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 
 								<?php
 
-$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
+									$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+									$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
+									if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<div class="col-sm-3 align-display">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>
@@ -508,13 +504,13 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<select id="escrow_officer" name="escrow_officer" class="form-control">
 											<option value="">----Select Escrow Officer----</option>
 											<?php
-if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-    foreach ($escrowOfficers as $escrowOfficer) {
-        ?>
-														<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-												<?php }
-}
-?>
+												if (isset($escrowOfficers) && !empty($escrowOfficers)) {
+													foreach ($escrowOfficers as $escrowOfficer) {
+														?>
+																										<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
+																								<?php }
+												}
+											?>
 										</select>
 									</div>
 								</div>
@@ -857,18 +853,18 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 											<select id="SalesRep" name="SalesRep">
 												<option value="">Sales Rep...</option>
 												<?php
-if (isset($salesRep) && !empty($salesRep)) {
-    foreach ($salesRep as $k => $v) {
-        $name      = array($v['first_name'], $v['last_name']);
-        $full_name = implode(' ', $name);
-        ?>
-															<option value="<?php
-echo $v['id']; ?>"><?php
-echo $full_name; ?></option>
-												<?php
-}
-}
-?>
+													if (isset($salesRep) && !empty($salesRep)) {
+														foreach ($salesRep as $k => $v) {
+															$name      = array($v['first_name'], $v['last_name']);
+															$full_name = implode(' ', $name);
+															?>
+																												<option value="<?php
+													echo $v['id']; ?>"><?php
+													echo $full_name; ?></option>
+																									<?php
+													}
+													}
+												?>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -880,14 +876,14 @@ echo $full_name; ?></option>
 												<option value="">Title Officer</option>
 												<?php
 
-if (isset($titleOfficer) && !empty($titleOfficer)) {
-    foreach ($titleOfficer as $key => $value) {
-        ?>
-														<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-											<?php
-}
-}
-?>
+													if (isset($titleOfficer) && !empty($titleOfficer)) {
+														foreach ($titleOfficer as $key => $value) {
+															?>
+																											<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+																								<?php
+													}
+													}
+												?>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -901,14 +897,14 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 											<select id="ProductTypeID" name="ProductTypeID">
 												<option value="">Select Product</option>
 											<?php
-if (isset($productType) && !empty($productType)) {
-    foreach ($productType as $key => $value) {
-        ?>
-														<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name']; ?></option>
-											<?php
-}
-}
-?>
+												if (isset($productType) && !empty($productType)) {
+													foreach ($productType as $key => $value) {
+														?>
+													<option value="<?php echo $value['product_type_id']; ?>"><?php echo $value['display_name']; ?></option>
+													<?php
+													}
+												}
+											?>
 											</select>
 											<i class="arrow double"></i>
 										</label>
@@ -1216,13 +1212,13 @@ if (isset($productType) && !empty($productType)) {
 												<select id="escrow_officer" name="escrow_officer">
 													<option value="">----Select Escrow Officer----</option>
 													<?php
-if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-    foreach ($escrowOfficers as $escrowOfficer) {
-        ?>
+														if (isset($escrowOfficers) && !empty($escrowOfficers)) {
+															foreach ($escrowOfficers as $escrowOfficer) {
+																?>
 																<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-													<?php }
-}
-?>
+														<?php }
+														}
+													?>
 												</select>
 												<i class="arrow double"></i>
 											</label>
@@ -1315,8 +1311,8 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 										<thead>
 											<tr>
 												<th width="21%">APN</th>
-												<th width="22%">Address</th>
-												<th width="21%">City</th>
+												<th width="40%">Address</th>
+												<!-- <th width="21%">City</th> -->
 												<th width="21%">Unit Number</th>
 												<th width="15%">Run Listing</th>
 											</tr>

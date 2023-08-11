@@ -291,7 +291,8 @@
 			$this->uri->uri_string() == 'order/admin/holidays' ||
 			$this->uri->uri_string() == 'order/admin/settings' || 
 			preg_match('/order\/admin\/([a-z\-])*lp-document-type*/',$this->uri->uri_string()) ||
-			preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string())
+			preg_match('/order\/admin\/([a-z\-])*lp-alert*/',$this->uri->uri_string()) ||
+			preg_match('/order\/admin\/([a-z\-])*daily-email*/',$this->uri->uri_string())
 
 			) { echo 'show'; } ?>" aria-labelledby="li_settings" id="li_settings_list">
 				<div class="bg-white py-2 collapse-inner rounded">

@@ -1307,8 +1307,8 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 										<thead>
 											<tr>
 												<th width="21%">APN</th>
-												<th width="22%">Address</th>
-												<th width="21%">City</th>
+												<th width="40%">Address</th>
+												<!-- <th width="21%">City</th> -->
 												<th width="21%">Unit Number</th>
 												<th width="15%">Run Listing</th>
 											</tr>
