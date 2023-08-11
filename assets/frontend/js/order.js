@@ -129,6 +129,17 @@ $(document).ready(function() {
             $(this).val(0);
         }
     });
+    
+    $("input[data-type='number']").keyup(function(event){
+        if(event.which >= 37 && event.which <= 40){
+            event.preventDefault();
+        }
+        var $this = $(this);
+        var num = $this.val().replace(/[^0-9 \,]/, '');
+        num = num.replace(/,/gi, "");
+        var num2 = num.split(/(?=(?:\d{3})+$)/).join(",");
+        $this.val(num2);
+    });
 });
 
 
@@ -1022,3 +1033,5 @@ function getDeliverables(partner_id)
         },
     });
 }
+
+
