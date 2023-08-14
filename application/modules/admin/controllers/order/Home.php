@@ -5514,7 +5514,7 @@ class Home extends MX_Controller
                     <th>Sub Type</th>
                     <th>Display in Section</th>
                     <th>VES</th>
-                    <th>Action</th>        
+                    <th><label class='option block'><input type='checkbox' id='check_all' name='check_all'><span class='checkbox'></span></label></th>        
                 </tr>
             </thead>
         <tbody>";
@@ -5621,7 +5621,7 @@ class Home extends MX_Controller
                                 <td width='5%'>$document_sub_type</td>
                                 <td width='15%'><select class='custom-select custom-select-sm' name='select_section[" . $id . "]' class=" . $displaySection . " ><option value=''>Select Section</option><option value='G' " . $displayInG . " >Section G</option><option value='H' " . $displayInH . ">Section H</option><option value='I' " . $displayInI . " >Section I</option></select></td>
                                 <td width='5%'><label class='option block'><input type='checkbox' id='$id' $vesChecked name='ves_instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
-                                <td width='5%'><label class='option block'><input type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
+                                <td width='5%'><label class='option block'><input class='action_all' type='checkbox' id='$id' $checked name='instrument_number_ids[]' value='$id'><span class='checkbox'></span></label></td>
                             </tr>";
                     $i++;
                 }

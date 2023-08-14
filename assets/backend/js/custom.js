@@ -20,6 +20,10 @@ $(document).ready(function () {
         });
     }
 
+    $(document).on(' change','input[name="check_all"]',function() {
+        $('.action_all').prop("checked" , this.checked);
+    });
+
     // $('#clone-subtype-option').cloneya({
     //     maximum: 5
     // }).on('after_append.cloneya', function (event, toclone, newclone) {
