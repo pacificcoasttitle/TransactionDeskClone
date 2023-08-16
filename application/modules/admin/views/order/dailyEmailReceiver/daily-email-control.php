@@ -27,7 +27,8 @@
                         <tr>
                             <th width="10%">Sr No</th>
                             <th width="40%">Email</th>
-                            <th width="40%">Status</th>
+                            <th width="20%">Status</th>
+                            <th width="20%">Branch</th>
                             <th width="10%">Action</th>
                         </tr>
                     </thead>

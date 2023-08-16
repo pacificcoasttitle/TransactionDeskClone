@@ -6234,6 +6234,7 @@ class Home extends MX_Controller
                 $nestedData[] = $key + 1;
                 $nestedData[] = $value['email'];
                 $nestedData[] = ($value['status']) ? 'Active' : 'Disabled';
+                $nestedData[] = ucwords($value['branch']);
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl = base_url() . 'order/admin/edit-daily-emailer/' . $value['id'];
                     $nestedData[] = "<div style='display: flex;justify-content: space-evenly;' ><a href='" . $editUrl . "'   title='Edit Receiver'><span class='fas fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteDailyReceiver(" . $value['id'] . ")'  title='Delete Receiver'><span class='fas fa-trash' aria-hidden='true'></span></a></div>";
@@ -6261,16 +6262,18 @@ class Home extends MX_Controller
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_daily_email_receiver_list.email]', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique' => 'The %s is already taken'));
+            $this->form_validation->set_rules('branch', 'Branch', 'required', array('required' => 'Please Select Branch'));
             
             if ($this->form_validation->run() == true) {
                 $customerData = array(
                     'email' => $this->input->post('email'),
+                    'branch' => $this->input->post('branch'),
                     'status' => 1
                 );
                 $insert = $this->home_model->insert($customerData, 'pct_daily_email_receiver_list');
                 if ($insert) {
                     /** Save user Activity */
-                    $activity = 'Daily email receiver created :- ' . $this->input->post('email');
+                    $activity = 'Daily email receiver created :- ' . $this->input->post('email') . ' - Branch: ' . $this->input->post('branch');
                     $this->order->logAdminActivity($activity);
                     /** End Save user activity */
                     $data['success_msg'] = 'Daily email receiver added successfully.';
@@ -6281,6 +6284,7 @@ class Home extends MX_Controller
                 }
             } else {
                 $data['email_error_msg'] = form_error('email');
+                $data['branch_error_msg'] = form_error('branch');
             }
         }
         $this->admintemplate->show("order/dailyEmailReceiver", "add-daily-email-receiver", $data);
@@ -6295,11 +6299,13 @@ class Home extends MX_Controller
         if (isset($id) && !empty($id)) {
             if ($this->input->post()) {
                 $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('branch', 'Branch', 'required', array('required' => 'Please Select Branch'));
 
                 if ($this->form_validation->run() == true) {
                     // print_r($this->input->post());die;
                     $customerData = array(
                         'email' => $this->input->post('email'),
+                        'branch' => $this->input->post('branch'),
                         'status' => $this->input->post('status') ? 1 : 0 ,
                     );
 
@@ -6310,7 +6316,7 @@ class Home extends MX_Controller
                     if ($update) {
                         /** Save user Activity */
                         // $user =  $this->home_model->get_user($condition);
-                        $activity = 'Daily email receiver :- ' . $this->input->post('email') . ' details updated';
+                        $activity = 'Daily email receiver :- ' . $this->input->post('email') . ' -  '. $this->input->post('branch')  . ' details updated';
                         $this->order->logAdminActivity($activity);
                         /** End Save user activity */
                         $data['success_msg'] = 'Daily email receiver updated successfully.';
