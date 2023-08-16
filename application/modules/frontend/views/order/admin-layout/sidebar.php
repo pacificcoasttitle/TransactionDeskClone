@@ -3,7 +3,21 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <?php
         $userdata = $this->session->userdata('user');
-		$dashboardUrl = ($userdata['is_sales_rep'] == 1) ? base_url() . 'sales-dashboard/' . $userdata['id'] : 'dashboard';
+		// echo "<pre>";
+		// print_r($userdata);die;
+		if ($userdata['is_sales_rep'] == 1) {
+			$dashboardUrl = base_url() . 'sales-dashboard/' . $userdata['id'];
+		} else if ($userdata['is_title_officer'] == 1) {
+			$dashboardUrl = base_url() . 'title-officer-dashboard';
+		} else if ($userdata['is_escrow_officer'] == 1) {
+			$dashboardUrl = base_url() . 'escrow-dashboard';
+		} else if ($userdata['is_payoff_user'] == 1) {
+			$dashboardUrl = base_url() . 'pay-off-dashboard';
+		} else if ($userdata['is_special_lender'] == 1) {
+			$dashboardUrl = base_url() . 'special-lender-dashboard';
+		} else {
+			$dashboardUrl = base_url() . 'dashboard';
+		}
 	?>
 	
 	<!-- Sidebar - Brand -->
@@ -53,11 +67,50 @@
 			</a>
 		</li>
 	
-	<?php } else if ($userdata['is_escrow_officer']) { ?>
-		<li class="nav-item <?php if($this->uri->segment(1) == 'escrow-dashboard') { echo 'active'; } ?>">
-			<a class="nav-link" href="<?php echo base_url(); ?>escrow-dashboard">
+	<?php } else if ($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'escrow-dashboard' || $this->uri->segment(1) == 'pay-off-dashboard'  || $this->uri->segment(1) == 'special-lender-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Dashboard Home</span>
+			</a>
+		</li>
+	<?php } else { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == 'title-officer-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Dashboard Home</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->uri_string(1) == 'order') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>order">
+				<i class="fas fa fa-calendar  "></i>
+				<span>Open Order</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'cpl-dashboard') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>cpl-dashboard">
+				<i class="fas fa-seedling"></i>
+				<span>CPL Dashboard</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'proposed-insured') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>proposed-insured">
+				<i class="fa fa-line-chart"></i>
+				<span>Proposed Insured</span>
+			</a>
+		</li>
+		<?php if ($userdata['is_master'] == 1) { ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'reports') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>reports">
+				<i class="fa fa-file"></i>
+				<span>Reports</span>
+			</a>
+		</li>
+		<?php } ?>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'logout') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url().'logout'; ?>">
+				<i class="fa fa-sign-out"></i>
+				<span>Logout</span>
 			</a>
 		</li>
 	<?php } ?>

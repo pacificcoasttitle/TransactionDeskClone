@@ -13,6 +13,7 @@ class Pma extends MX_Controller {
         $this->user = $userdata;
         // var_dump($this->user);die;
         $this->load->library('order/template');
+        $this->load->library('order/salesDashboardTemplate');
         $this->load->model('order/home_model');
         $this->load->library('order/order');
     }
@@ -20,13 +21,19 @@ class Pma extends MX_Controller {
     function index()
     {   
         $data['title'] = 'PMA | Pacific Coast Title Company';
-        $this->template->addCSS( base_url('assets/frontend/css/tablesorter-blue.css') );
         // $this->template->addCSS( base_url('assets/frontend/css/tablesorter-blue.css') );
-        $this->template->addJS('https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
-        // $this->template->addJS('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
-        $this->template->addJS('assets/frontend/js/jquery.tablesorter.min.js');
-        $this->template->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->pma_js_version));
-		$this->template->show("pma", "list", $data);
+        // // $this->template->addCSS( base_url('assets/frontend/css/tablesorter-blue.css') );
+        // $this->template->addJS('https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
+        // // $this->template->addJS('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
+        // $this->template->addJS('assets/frontend/js/jquery.tablesorter.min.js');
+        // $this->template->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->pma_js_version));
+		// $this->template->show("pma", "list", $data);
+
+        $this->salesdashboardtemplate->addCSS( base_url('assets/frontend/css/tablesorter-blue.css'));
+        $this->salesdashboardtemplate->addJS( 'https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
+        $this->salesdashboardtemplate->addJS('assets/frontend/js/jquery.tablesorter.min.js');
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->pma_js_version));
+		$this->salesdashboardtemplate->show("pma", "list", $data);
     }
 
     function task($action='fetchItems')

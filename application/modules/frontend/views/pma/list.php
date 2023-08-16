@@ -8,7 +8,7 @@
 	    list-style: none;
 	}
 	.u-list li:nth-child(2n+1) {
-	    background: #f0f0f0;
+	    background: #cccccc45;
 	}
 	.u-list li {
 	    padding: 10px;
@@ -20,11 +20,11 @@
 	    vertical-align: top;
 	}
 	.u-list .u-pic {
-	    width: 80px;
+	    width: 25%;
 	    height: 80px;
 	    overflow: hidden;
 	    border-radius: 100%;
-	    margin-right: 15px;
+	    margin-right: 10px;
 	    float: left;
 	}
 	.u-list .u-pic img {
@@ -33,8 +33,9 @@
 	    max-width: 100%;
 	}
 	.u-list .u-info {
+		width: 60%;
 	    padding-top: 5px;
-	    margin-left: 35px;
+	    margin-left: 0px;
 	    float: left;
 	}
 	.u-list .u-name {
@@ -44,14 +45,13 @@
 	.u-list .u-count {
 		float: right;
 		font-size: 20px;
-    	margin-right: 10px;
     	text-align: right;
 	}
 	.no-report-image {
 	    text-align: center;
 	    background: #f0f0f0;
 	    height: 80px;
-	    padding-top: 8px;
+	    padding-top: 16px;
 	    font-size: 30px;
 	    font-weight: 600;
 	}
@@ -110,145 +110,395 @@
     	font-weight: bold;
     	text-align: center;
 	}
+	.padding-l-r {
+		padding-left: 3rem;
+		padding-right: 3rem;
+	}
+	.ui-title-block + .ui-decor-1a {
+		margin-top: 22px;
+		margin-bottom: 34px;
+	}
+
+	.ui-decor-1a {
+		display: inline-block;
+		width: 100px;
+		height: 2px;
+	}
+
+	.bg-accent {
+		background-color: #d35411;
+	}
+
+	tbody tr, thead tr {
+		text-align: center;
+	}
+
+.smart-container {
+    background: #ffffff;
+    margin: 0px auto;
+    -webkit-border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -o-border-radius: 5px 5px 0 0;
+    border-radius: 5px 5px 0 0;
+}
+.smart-forms {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    line-height: 1.231;
+    font-weight: 400;
+    font-size: 14px;
+    color: #34495E;
+}
+.smart-forms, .smart-forms * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+element.style {
+}
+.smart-forms, .smart-forms * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+form {
+    display: block;
+    margin-top: 0em;
+}
+.smart-forms {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    line-height: 1.231;
+    font-weight: 400;
+    font-size: 14px;
+    color: #34495E;
+}
+.smart-forms .form-body {
+    padding: 40px 0px;
+    padding-bottom: 20px;
+}
+.smart-forms .frm-row {
+    margin: 0 -10px;
+}
+.smart-forms .frm-row:before, .smart-forms .frm-row:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+
+
+.smart-forms .frm-row .colm {
+    min-height: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    position: relative;
+    float: left;
+}
+
+.smart-forms .field {
+    display: block;
+    position: relative;
+}
+
+.smart-forms .section {
+    margin-bottom: 22px;
+}
+
+.smart-forms .file {
+    display: block;
+    width: 100%;
+}
+
+.smart-forms .prepend-icon {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    width: 100%;
+}
+
+.smart-forms label, .smart-forms input, .smart-forms button, .smart-forms select, .smart-forms textarea {
+    margin: 0;
+    font-size: 14px;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #34495E;
+    outline: none;
+}
+
+.smart-forms .button {
+    border: 0;
+    height: 42px;
+    color: #243140;
+    line-height: 1;
+    font-size: 15px;
+    cursor: pointer;
+    padding: 0 18px;
+    text-align: center;
+    vertical-align: top;
+    background: #bdc3c7;
+    display: inline-block;
+    -webkit-user-drag: none;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.smart-forms a.button, .smart-forms span.button, .smart-forms label.button {
+    line-height: 42px;
+    text-decoration: none;
+}
+
+.smart-forms .file .button {
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    float: none;
+    height: 32px;
+    line-height: 34px;
+    padding: 0px 16px;
+    z-index: 10;
+    border-radius: 5px;
+}
+
+.smart-forms .file .gui-file {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    padding: 8px 10px;
+    position: absolute;
+    -moz-opacity: 0;
+    opacity: 0;
+    z-index: 11;
+    bottom: 0;
+    right: 0;
+}
+
+.smart-forms .select, .smart-forms .gui-input, .smart-forms .gui-textarea, .smart-forms .select > select, .smart-forms .select-multiple select {
+    background: #fff;
+    position: relative;
+    vertical-align: top;
+    border: 1px solid #cbd2d6;
+    display: -moz-inline-stack;
+    display: inline-block;
+    *display: inline;
+    color: #34495E;
+    outline: none;
+    height: 42px;
+    width: 100%;
+    *zoom: 1;
+}
+
+.smart-forms .prepend-icon > input, .smart-forms .prepend-icon > textarea, .smart-forms .prepend-icon > select {
+    padding-left: 36px;
+}
+
+.smart-forms label, .smart-forms input, .smart-forms button, .smart-forms select, .smart-forms textarea {
+    margin: 0;
+    font-size: 14px;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    color: #34495E;
+    outline: none;
+}
+
+.smart-forms button {
+	color: #fff;
+}
+
+.smart-forms .prepend-icon > input, .smart-forms .prepend-icon > textarea, .smart-forms .prepend-icon > select {
+    padding-left: 36px;
+}
+
+.smart-forms .gui-input, .smart-forms .gui-textarea {
+    padding: 10px;
+}
+
+.smart-forms .prepend-icon .field-icon {
+    left: 0;
+}
+
+.smart-forms .append-icon .field-icon, .smart-forms .prepend-icon .field-icon {
+    top: 0;
+    width: 42px;
+    height: 42px;
+    color: inherit;
+    line-height: 35px;
+    position: absolute;
+    text-align: center;
+    -webkit-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -ms-transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    transition: all 0.5s ease-out;
+    pointer-events: none;
+    z-index: 99;
+}
+
+.smart-forms .append-icon .field-icon i, .smart-forms .prepend-icon .field-icon i {
+    position: relative;
+    font-size: 14px;
+}
+
+.smart-forms .field-icon i {
+    color: #A2A6A8;
+    position: relative;
+    top: 0;
+}
+.text-center {
+	text-align: center;
+}
 </style>
 
 <section class="section-sm section-defaulta" >
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="">
+	<div class="container-fluid padding-l-r">
+		<div class="card shadow p-5">
+			<div class="row">
+				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Concierge Profile
-						<a href="<?php echo base_url('reports'); ?>" class="pull-right report_switch_btn">Create F.A.R</a>
-						<a style="margin-right:10px;" href="<?php echo base_url('labels'); ?>" class="pull-right report_switch_btn">Create Labels</a>
-					</h2>
+						<a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right">
+							<span class="icon text-white-50">
+								<i class="fas fa-concierge-bell"></i>
+							</span>
+							<span class="text">Create F.A.R</span>
+						</a>
+
+						<a href="<?php echo base_url('labels'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
+							<span class="icon text-white-50">
+								<i class="fa fa-tag"></i>
+							</span>
+							<span class="text">Create Labels</span>
+						</a>
+					</h2>					
 					<div class="ui-decor-1a bg-accent"></div>
-					
 				</div>
 			</div>
-		</div>
-		<div class="">
 			<div class="row">
-				<div class="row">
-					<div class="col-md-4">
-						<div class="row">
-							<div class="col-sm-9">
-								<h5>Total Ran</h5>
-							</div>
-							<div class="col-sm-3">
-								<h4 class="pma-total pma_val"> 0 </h4>
-							</div>
+				<div class="col-md-3">
+					<div class="row">
+						<div class="col-sm-9">
+							<h5>Total Ran</h5>
 						</div>
-						<div class="row">
-							<div class="col-sm-9">
-								<h5>Accumilated Cost</h5>
-							</div>
-							<div class="col-sm-3">
-								<h4 class="accrued-cost pma_val"> 0 </h4>
-							</div>
+						<div class="col-sm-3">
+							<h4 class="pma-total pma_val"> 0 </h4>
 						</div>
-						<ul class="u-list" id="rep-list-data"></ul>
-							
-								<div class="pull-right hide" id="show_all_rep">
-									<a href="<?=base_url('reports/sales_rep')?>" class="btn btn-success">View All</a>
-								</div>
 					</div>
-
-					<div class="col-md-8">
-						<h2>Create New Report</h2>
-						<div class="smart-forms smart-container">
-							<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('pma/importData') ?>">
-								<div class="form-body">
-									<?php
-									$prev_data = $this->session->flashdata('_previous_data');
-									if($this->session->flashdata('error')) :
-									?>
-									<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error');?></div>
-									<?php
-									elseif($this->session->flashdata('success')):
-									?>
-									<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
-									<?php
-									endif;
-									?>
-									<div class="frm-row">
-										<div class="section colm colm8">
-
+					<div class="row">
+						<div class="col-sm-9">
+							<h5>Accumilated Cost</h5>
+						</div>
+						<div class="col-sm-3">
+							<h4 class="accrued-cost pma_val"> 0 </h4>
+						</div>
+					</div>
+					<ul class="u-list" id="rep-list-data"></ul>
+						
+							<div class="pull-right hide" id="show_all_rep">
+								<a href="<?=base_url('reports/sales_rep')?>" class="btn btn-success">View All</a>
+							</div>
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-md-8">
+					<h5 class="text-center" >Create New Report</h5>
+					<div class="smart-forms smart-container">
+						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('pma/importData') ?>">
+							<div class="form-body">
+								<?php
+								$prev_data = $this->session->flashdata('_previous_data');
+								if($this->session->flashdata('error')) :
+								?>
+								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error');?></div>
+								<?php
+								elseif($this->session->flashdata('success')):
+								?>
+								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
+								<?php
+								endif;
+								?>
+								<div class="frm-row">
+									<div class="row">
+										<div class="section colm col-md-6">
 											<label class="field prepend-icon">
-												
-												<input type="text" class="js-pma-address gui-input" name="address_input" id="js-property-search" 
+												<input type="text" class="js-pma-address form-control" name="address_input" id="js-property-search" 
 												value="<?php echo (!empty($prev_data['address_input'])) ? $prev_data['address_input'] : '';?>" placeholder="Property Address">
-												<input id="js-apn-search" placeholder="APN" class="formpma js-pma-apn gui-input" type="text" value="" name="subject">
+												<input id="js-apn-search" placeholder="APN" class="formpma js-pma-apn form-control" type="text" value="" name="subject">
 												<span class="field-icon"><i class="fa fa-map-marker"></i></span>
 											</label>
 										</div>
 
-										<div class="section colm colm4">
+										<div class="section colm col-md-6">
 											<label class="field prepend-icon">
-												<input type="text" class="gui-input js-pma-city js-pma-fips" name="city_input" value="<?php echo (!empty($prev_data['city_input'])) ? $prev_data['city_input'] : '';?>" placeholder="City">
+												<input type="text" class="js-pma-city js-pma-fips form-control" name="city_input" value="<?php echo (!empty($prev_data['city_input'])) ? $prev_data['city_input'] : '';?>" placeholder="City">
 												<span class="field-icon"><i class="fa fa-map-marker "></i></span>
 											</label>
 										</div>
-										
-												
-										
-
-										<div class="section colm colm12">
-											
-												
-											
-											<button type="button" class="button btn-primary js-find-property js-search-button">Find Property</button>
-											<button type="button" class="button btn-default switch-search js-switch-search">Switch to APN Search</button>
-							
-										</div>
-												
-											
 									</div>
+									<div class="row">
+										<div class="section colm col-md-6">
+											<button type="button" class="btn btn-danger btn-icon-split js-find-property js-search-button">
+												<span class="icon text-white-50">
+                                                    <i class="fas fa-search"></i>
+                                                </span>
+                                                <span class="text">Find Property</span>
+											</button>
+											<button type="button" class="btn btn-success btn-icon-split switch-search js-switch-search">
+												<span class="icon text-white-50">
+                                                    <i class="fas fa-switch"></i>
+                                                </span>
+                                                <span class="text">Switch to APN Search</span>
+											</button>
+										</div>
+									</div>
+											
+										
 								</div>
-							</form>
-						</div>
-
-						
-						<div style="margin-bottom: 50px" class="hide search-result-div">
-							<h2>Search Results</h2>
-							<div class="address-result">
-								<div class="pma-error alert alert-danger"></div>
-								<table class="table table-type-3 typography-last-elem no-footer result-table" id="cpl_listing_1">
-									<thead>
-										<tr>
-											<th>APN</th>
-											<th>Address</th>
-											<th>City</th>
-											<th>Create</th>
-										</tr>
-									</thead>
-									<tbody>
-										<td><span class="result-apn"></span></td>
-										<td><span class="result-address"></span></td>
-										<td><span class="result-city"></span></td>
-										<td><button type="button" class="btn btn-info js-run-pma-button">Create</button></td>
-										
-									</tbody>
-								</table>
 							</div>
-						</div>
+						</form>
+					</div>
 
-						<div>
-							<h2>Recent Concierge Property Profiles</h2>
-							<div class="table-container1">
-								<table class="table table-type-3 typography-last-elem no-footer recent-reports" id="cpl_listing">
-									<thead>
-										<tr>
-											<th>Date</th>
-											<th>PCT Rep</th>
-											<th>Address</th>
-											<th>Download</th>
-										</tr>
-									</thead>
-									<tbody>
-										
-									</tbody>
-								</table>
-							</div>
+					
+					<div style="margin-bottom: 50px" class="hide search-result-div mt-5 text-center">
+						<h5>Search Results</h5>
+						<div class="address-result">
+							<div class="pma-error alert alert-danger"></div>
+							<table class="table table-type-3 typography-last-elem no-footer result-table table-bordered" id="cpl_listing_1">
+								<thead>
+									<tr>
+										<th>APN</th>
+										<th>Address</th>
+										<th>City</th>
+										<th>Create</th>
+									</tr>
+								</thead>
+								<tbody>
+									<td><span class="result-apn"></span></td>
+									<td><span class="result-address"></span></td>
+									<td><span class="result-city"></span></td>
+									<td><button type="button" class="btn btn-info js-run-pma-button">Create</button></td>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="mt-5 text-center">
+						<h5>Recent Concierge Property Profiles</h5>
+						<div class="table-container1">
+							<table class="table table-type-3 typography-last-elem no-footer recent-reports table-bordered" id="cpl_listing">
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>PCT Rep</th>
+										<th>Address</th>
+										<th>Download</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>

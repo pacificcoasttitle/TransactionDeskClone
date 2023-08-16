@@ -2427,6 +2427,7 @@ class Cron extends MX_Controller {
         $this->db->from('order_details');
         $this->db->where('MONTH(order_details.resware_closed_status_date)', $month);
         $this->db->where('YEAR(order_details.resware_closed_status_date)', date('Y')); 
+        $this->db->where('order_details.prod_type', 'loan'); 
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id','inner');
@@ -3636,6 +3637,7 @@ class Cron extends MX_Controller {
                         $closedDate = '';
                         $loan_amount = '';
                         $sales_amount = '';
+                        $prodType = '';
 
                         if(in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number",$headerColumns);
@@ -3662,6 +3664,11 @@ class Cron extends MX_Controller {
                             $sales_amount = $data[$salePriceKey];
                         }
 
+                        if(in_array('Prod Type', $headerColumns)) {
+                            $prodkey = array_search("Prod Type",$headerColumns);
+                            $prodType = $data[$prodkey];
+                        }
+
                         if($row != 1) {
                             if(1 === preg_match('~[0-9]~', $file_number)){
                                 $completed_date = null;
@@ -3671,7 +3678,9 @@ class Cron extends MX_Controller {
                                 }
                                 if (strtolower($fileStatus) == 'closed') {
                                     if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
-                                        $closedFileNumbers[] = (int)$file_number;
+                                        if (strtolower($prodType) == 'sale') {
+                                            $closedFileNumbers[] = (int)$file_number;
+                                        }
                                     }
                                 }
                                 
@@ -3717,7 +3726,7 @@ class Cron extends MX_Controller {
                     // else {
                     //     exec($command . " > /dev/null &");  
                     // }
-                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
                 $this->updateAllowDuplicationFlag();
                 echo date('Y-m-d H:i:s');exit;
@@ -5189,19 +5198,19 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $cc
                 );
-                //$to = 'hitesh.p@crestinfosystems.com';
-                //$cc = array();
+                $to = 'hitesh.p@crestinfosystems.com';
+                $cc = array();
                 $this->load->helper('sendemail');
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['order_id'], $logid);
-                $order_details = [
-                    'is_thank_you_email_sent' => 1
-                ];
-                $condition = [
-                    'id' => $res['order_id']
-                ];
-                $this->db->update('order_details', $order_details, $condition);
+                // $order_details = [
+                //     'is_thank_you_email_sent' => 1
+                // ];
+                // $condition = [
+                //     'id' => $res['order_id']
+                // ];
+                // $this->db->update('order_details', $order_details, $condition);
             }
             echo "Mails sent successfully to Escow user ";exit;
         }

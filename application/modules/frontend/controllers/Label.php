@@ -14,6 +14,7 @@ class Label extends MX_Controller
         }
         $this->user = $userdata; 
         $this->load->library('order/template');
+        $this->load->library('order/salesDashboardTemplate');
         $this->load->model('order/home_model');
         $this->load->model('label_model');
         $this->load->library('order/order');
@@ -32,8 +33,10 @@ class Label extends MX_Controller
             'added_by' => $this->user['id'],
         );
 		$data['labels_data'] = $this->label_model->getData($lableCondition);
-        $this->template->addJS( base_url('assets/frontend/js/label.js?v=lable_'.$this->label_js_version));
-		$this->template->show("label", "list", $data);
+        // $this->template->addJS( base_url('assets/frontend/js/label.js?v=lable_'.$this->label_js_version));
+		// $this->template->show("label", "list", $data);
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/label.js?v=lable_'.$this->label_js_version));
+		$this->salesdashboardtemplate->show("label", "list", $data);
     }
 
     function importData()

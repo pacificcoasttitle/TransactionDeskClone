@@ -9,7 +9,7 @@
 		max-height: 300px !important;
 	}
 
-	th {
+	th, td {
 		text-align: center;
 	}
 
@@ -91,8 +91,54 @@
 
 </style>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container">
-		<div class="row">
+	<div class="container-fluid">
+		<div class="row mb-3">
+			<div class="col-sm-6">
+				<h1 class="h3 text-gray-800">Welcome Back <?php echo $name; ?> </h1>
+			</div>
+		</div>
+		<div class="card shadow mb-4">
+			<div class="card-header datatable-header py-3">
+				<div class="datatable-header-titles" > 
+					<span>
+						<i class="fas fa-users"></i>
+					</span>
+					<h6 class="m-0 font-weight-bold text-primary pl-10">Below is order list of pay off</h6> 
+				</div>
+			</div>
+			<?php if(!empty($success)) {?>
+			<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
+				<?php foreach($success as $sucess) {
+						echo $sucess."<br \>";	
+					}?>
+			</div>
+			<?php } 
+				if(!empty($errors)) {?>
+			<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
+				<?php foreach($errors as $error) {
+						echo $error."<br \>";	
+					}?>
+			</div>
+			<?php } ?>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-bordered" id="pay_off_orders_listing" width="100%" cellspacing="0">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Opened Date</th>
+								<th>File Number</th>
+								<th>Title Officer</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>                
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- <div class="row">
 			<div class="row">
 				<div class="col-xs-12">
 					<div class="typography-section__inner">
@@ -136,7 +182,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </section>
 	

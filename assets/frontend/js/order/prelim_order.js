@@ -16,6 +16,11 @@ for (i = 0; i < dropdown.length; i++) {
     });
 }
 
+function updateAction()
+{
+    $('#note_information').modal('show');
+}
+
 function summary()
 {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');

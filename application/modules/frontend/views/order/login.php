@@ -37,7 +37,32 @@
             text-transform: capitalize;
             font-size: 1em;
         }
-
+        .img-holder {
+            width: 680px;
+        }
+        .website-logo-inside img {
+            width: 331px;
+        }
+        .form-content .form-button .ibtn:hover {opacity: .6;}
+        .form-content .form-button .ibtn {
+            border-radius: 6px;
+            border: 0;
+            padding: 10px 45px;
+            background-color: #F26A41;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+            text-decoration: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-right: 10px;
+            outline: none;
+            -webkit-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+            -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
+        }
     </style>
 </head>
 <body>
