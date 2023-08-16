@@ -5583,7 +5583,7 @@ class Home extends MX_Controller
                 //     $checked = "";
                 // }
                 if ($instrumentRecord['is_display'] == 1) {
-                    $checked = "";
+                    $checked = "checked";
                     // }  else {
                     //     $checked = "";
                     // }
