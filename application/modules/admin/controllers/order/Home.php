@@ -5514,7 +5514,7 @@ class Home extends MX_Controller
                     <th>Sub Type</th>
                     <th>Display in Section</th>
                     <th>VES</th>
-                    <th><label class='option block'><input type='checkbox' id='check_all' name='check_all'><span class='checkbox'></span></label></th>        
+                    <th><label class='option block'><input type='checkbox' checked id='check_all' name='check_all'><span class='checkbox'></span></label></th>        
                 </tr>
             </thead>
         <tbody>";
