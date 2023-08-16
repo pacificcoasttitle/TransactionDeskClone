@@ -33,7 +33,23 @@
                     </div>
                 </div>
 
-                <div class="row form-group">
+                <div class="form-group">
+                    <label for="branch" class="col-sm-2 col-form-label">Branch<span class="required"> *</span></label>
+                    <div class="col-sm-6">
+                        <select name="branch" id="branch" class="form-control" placeholder="Please select branch" >
+                            <option value="">Please Select Branch</option>
+                            <option value="glendale" <?php echo  ($receiver_info['branch'] == 'glendale') ? 'selected' : '' ?>>Glendale</option>
+                            <option value="orange" <?php echo  ($receiver_info['branch'] == 'orange') ? 'selected' : '' ?>>Orange</option>
+                            <option value="both" <?php echo  ($receiver_info['branch'] == 'both') ? 'selected' : '' ?>>Both</option>
+                        </select>
+                        
+                        <?php if(!empty($branch_error_msg)){ ?>                     
+                            <span class="error"><?php echo $branch_error_msg; ?></span>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <div class="col-sm-6">
                         <div class="row">
                             <label for="status" class="col-sm-5 col-form-label">Email receiving Status<span class="required"> *</span></label>
