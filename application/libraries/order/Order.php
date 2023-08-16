@@ -2913,10 +2913,15 @@ class Order
 
                     /** Get CC for daily email receiver */
                     $this->CI->db->select('email')->from('pct_daily_email_receiver_list')->where('status', 1);
+                    if (strtolower($to) == 'ntorquato@pct.com') {
+                        $this->CI->db->where_in('branch', ['both', 'orange']);
+                    }
+
+                    if (strtolower($to) == 'teammeza@pct.com') {
+                        $this->CI->db->where_in('branch', ['both', 'glendale']);
+                    }
                     $query = $this->CI->db->get();
                     $cc = array_column($query->result_array(), 'email');
-
-                    // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
