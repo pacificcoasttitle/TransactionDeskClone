@@ -9,7 +9,7 @@
         href="https://fonts.googleapis.com/css?family=Crimson+Text:wght@400;600;700&family=Open+Sans:wght@400;600;700&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="<?php echo base_url('assets/pma/report/style.css'); ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/pma/report/style_spanish.css'); ?>">
 
 
 </head>
