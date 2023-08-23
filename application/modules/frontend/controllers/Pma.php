@@ -305,7 +305,12 @@ class Pma extends MX_Controller {
         
        
         // echo json_encode($returnData);
-        $html = $this->load->view('pma/report/index',$report_data,true);
+        if ($this->input->post('realtor-address') == 'english') {
+            $html = $this->load->view('pma/report/index',$report_data,true);
+        } else {
+            $html = $this->load->view('pma/report/index_spanish',$report_data,true);
+        }
+            
 
         // echo $html;die;
 
