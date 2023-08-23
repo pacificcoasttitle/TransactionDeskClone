@@ -1,3 +1,4 @@
+<body> 
 <page class="pdf7">
     <div class="container">
         <img src="<?php echo base_url('assets/pma/report/img/15_spanish.jpg');?>" alt="sales_comparable">
