@@ -1,6 +1,6 @@
 <page class="pdf4">
     <div class="container">
-        <img src="<?php echo base_url('assets/pma/report/img/12.jpg');?>" alt="transfer_history">
+        <img src="<?php echo base_url('assets/pma/report/img/12_spanish.jpg');?>" alt="transfer_history">
         <div class="main_content">
             <?php
             $transfer_i = 0;
