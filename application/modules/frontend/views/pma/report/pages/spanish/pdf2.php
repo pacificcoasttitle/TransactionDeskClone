@@ -11,6 +11,6 @@ Esta información de título ha sido proporcionada por Pacific Coast Title Compa
         <p>
             En nombre de Pacific Coast Title Company,
         </p>
-        <p class="repname">Sales Rep</p>
+        <p class="repname"><?php echo $rep_name; ?></p>
     </div>
 </page>
