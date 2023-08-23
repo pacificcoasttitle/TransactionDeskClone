@@ -572,6 +572,16 @@ form {
 							</select>
 						</div>
 					</div>
+
+					<div class="custom-pma-field form-group">
+						<label class="control-label col-sm-2" for="comps">Report Language:</label>
+						<div class="col-sm-10">
+							<select id="report_lang" name="report_lang" class="form-control">
+								<option value="english" selected="selected">English</option>
+								<option value="spanish">Spanish</option>
+							</select>
+						</div>
+					</div>
 					</fieldset>
 				</div>
 				<div class="modal-footer">
