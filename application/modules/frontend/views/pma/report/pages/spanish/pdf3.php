@@ -1,6 +1,6 @@
 <page class="pdf3">
     <div class="container">
-        <img src="<?php echo base_url('assets/pma/report/img/1.jpg');?>" alt="property_profile">
+        <img src="<?php echo base_url('assets/pma/report/img/1_spanish.jpg');?>" alt="property_profile">
         <div class="main_content">
             <div class="table_title orange_text">PROPIETARIO, DIRECCIÓN Y DESCRIPCIÓN LEGAL</div>
             <table class="border_table orange_border">
