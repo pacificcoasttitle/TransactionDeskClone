@@ -38,7 +38,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <span>Núm.bre del Prestamista</span> <?php echo properCase(formatName($transferHistory->LenderName)); ?>
+                        <span>Nombre del Prestamista</span> <?php echo properCase(formatName($transferHistory->LenderName)); ?>
                     </td>
                     <td>
                         <span>Número de Documento</span> <?php echo $transferHistory->MortDoc; ?>
@@ -46,13 +46,13 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <span>Núm.bre del Comprador </span> <?php echo properCase(formatName($transferHistory->BuyerName)); ?>
+                        <span>Nombre del Comprador </span> <?php echo properCase(formatName($transferHistory->BuyerName)); ?>
                     </td>
                 </tr>
                 
                 <tr>
                     <td colspan="2">
-                        <span>Núm.bre del Vendedor</span> <?php echo properCase(formatName($transferHistory->SellerName)); ?>
+                        <span>Nombre del Vendedor</span> <?php echo properCase(formatName($transferHistory->SellerName)); ?>
                     </td>
                 </tr>
                 <tr>
