@@ -23,7 +23,7 @@
                         <span>APN :</span> <?php echo $main_report->PropertyProfile->APN; ?>
                     </td>
                     <td>
-                        <span>Núm.bre del Condado:</span> <?php echo $main_report->SubjectValueInfo->CountyName; ?>
+                        <span>Nombre del Condado:</span> <?php echo $main_report->SubjectValueInfo->CountyName; ?>
                     </td>
                 </tr>
                 <tr>
