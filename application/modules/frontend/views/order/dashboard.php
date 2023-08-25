@@ -132,11 +132,11 @@
 							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Upload.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Upload Docs</div>
+							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Get Policy</div>
 						</div>
 					</div>
 				</div>
-				<a href="<?php echo base_url() . 'upload-doc-orders'; ?>" class="anchor-hover"></a>
+				<a href="<?php echo base_url() . 'policy-orders'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 	</div>
@@ -210,7 +210,7 @@
 								<th>Status</th>
 								<th>Opened</th>
 								<th>Property Address</th>
-								<th>Buyer/Seller</th>
+								<!-- <th>Buyer/Seller</th> -->
 								<th>Action</th>
 							</tr>
 						</thead>

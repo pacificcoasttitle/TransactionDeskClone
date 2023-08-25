@@ -791,15 +791,36 @@ class Dashboard extends MX_Controller {
 				// $nestedData[] = !empty($order['opened_date']) ? date("m/d/Y", strtotime($order['opened_date'])) : '';
 				$nestedData[] = !empty($order['opened_date']) ? convertTimezone($order['opened_date'],'m/d/Y') : '';
 				$nestedData[] = $order['full_address'];
-				$nestedData[] = $order['primary_owner'];
+				//$nestedData[] = $order['primary_owner'];
 
-				$actions = "<div style='display:flex;'><a href='".base_url()."cpl-dashboard' style='margin-right:10px;'><i class='fa fa-upload' aria-hidden='true'></i></a><a href='".base_url()."proposed-insured'><i class='fa fa-sticky-note-o'></i></a>";
-											
-				if($order['resware_status'] == 'closed' && $order['borrower_invited'] == 0) {
-					$actions .= "<a title='Send Invite' href='javscript:void(0)' data-owner='".$order['primary_owner']."' data-order='".$order['id']."'  data-toggle='modal' class='sendInvite' data-address='".$order['full_address']."' style='margin-left: 10px;'><i class='fa fa-envelope'></i></a></div>";
+				if ($order['prelim_summary_id'] != 0) {
+					$class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+					$actions = "<a href='".base_url()."review-file/".$order['file_id']."'>
+							<button type='submit' class='btn btn-$class btn-icon-split'>
+								<span class='icon text-white-50'>
+									<i class='fas fa-file'></i>
+								</span>
+								<span class='text'>Review File</span>
+							</button>
+						</a>";
 				} else {
-					$actions .= "</div>";
+					$actions = "<a href='javascript:void(0)'>
+						<button type='submit' class='btn btn-info btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-tasks'></i>
+							</span>
+							<span class='text'>Not Ready</span>
+						</button></a>";
 				}
+
+				// $actions = "<div style='display:flex;'>
+				// 	<a href='".base_url()."cpl-dashboard' style='margin-right:10px;'><i class='fa fa-upload' aria-hidden='true'></i></a><a href='".base_url()."proposed-insured'><i class='fa fa-sticky-note-o'></i></a>";
+											
+				// if($order['resware_status'] == 'closed' && $order['borrower_invited'] == 0) {
+				// 	$actions .= "<a title='Send Invite' href='javscript:void(0)' data-owner='".$order['primary_owner']."' data-order='".$order['id']."'  data-toggle='modal' class='sendInvite' data-address='".$order['full_address']."' style='margin-left: 10px;'><i class='fa fa-envelope'></i></a></div>";
+				// } else {
+				// 	$actions .= "</div>";
+				// }
 				$nestedData[] = $actions;																
 				$data[] = $nestedData; 
 				$i++; 
