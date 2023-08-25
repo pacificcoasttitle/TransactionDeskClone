@@ -11,6 +11,7 @@ class Common extends MX_Controller {
 	private $upload_doc_orders_js_version = '01';
 	private $upload_document_for_order = '01';
 	private $notes_order_js = '01';
+	private $policy_orders_js_version = '01';
 
 	function __construct() 
     {
@@ -68,7 +69,8 @@ class Common extends MX_Controller {
 		if(isset($orderDetails['file_number']) && !empty($orderDetails['file_number']))
 		{
 			$condition = array('file_number' => $orderDetails['file_number']);
-			$summaryData['is_updated'] = 0;
+			$summaryData['is_visited'] = 1;
+
 			$update = $this->reviewPrelimData->update($summaryData, $condition);
 		}
 
@@ -136,6 +138,7 @@ class Common extends MX_Controller {
 				'file_number'=> $file_number,
 				'vesting'=> $vesting,
 				'generated_date'=> $generated_date,
+				'is_updated'=> $prelim_details['is_updated'],
 				'lien'=> isset($prelim_details['lien']) && !empty($prelim_details['lien']) ? $prelim_details['lien'] : '',
 				'tax'=> isset($prelim_details['tax']) && !empty($prelim_details['tax']) ? $prelim_details['tax'] : '',
 				'easement'=> isset($prelim_details['easement']) && !empty($prelim_details['easement']) ? $prelim_details['easement'] : '',
@@ -726,6 +729,110 @@ class Common extends MX_Controller {
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
 	}
+
+	function policyOrders()
+    {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/policy.js?v=policy_orders_'.$this->policy_orders_js_version));
+		$this->salesdashboardtemplate->show("order/common", "policy_orders", $data);
+	}
+
+	function getOrdersPolicy()
+    {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
+		$params = array();  $data = array();
+		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+			$pageno = ($params['start'] / $params['length'])+1;
+			$order_lists = $this->order->get_orders($params);
+			$json_data['draw'] = intval( $params['draw'] );
+		} else {
+			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+			$order_lists = $this->order->get_orders($params);
+		}
+
+		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+			$i = $params['start'] + 1;
+			foreach ($order_lists['data'] as $order)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+				$nestedData[] = $order['file_number'];
+				$nestedData[] = $order['full_address'];
+				$nestedData[] = "<a href='".base_url()."policy-order/".$order['file_id']."'>
+									<button type='submit' class='btn btn-info btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>Get Policy</span>
+									</button>
+								</a>";
+				$data[] = $nestedData; 
+				$i++; 
+			}
+		}
+		$json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+		$json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+		$json_data['data'] = $data;
+		echo json_encode($json_data);
+	}
+
+	public function policy()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $fileId = $this->uri->segment(2); 
+        $data['title'] = 'Get Policy | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['file_number'] = $orderDetails['file_number'];
+        $data['full_address'] = $orderDetails['full_address'];
+        $data['file_id'] = $orderDetails['file_id'];
+        $data['order_id'] = $orderDetails['order_id'];
+        $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
+        $user_data['admin_api'] = 1;
+        $endPoint = 'files/'.$fileId.'/documents';
+					
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $orderDetails['order_id'], $logid);
+        $res = json_decode($result, true);
+        
+        $policyDocuments = array();
+        $i = 0;
+        foreach($res['Documents'] as $document) {
+            if ($document['DocumentType']['DocumentTypeID'] == 103) {
+                $policyDocuments[$i]['no'] = $i + 1;
+                $policyDocuments[$i]['api_document_id'] = $document['DocumentID'];
+                $policyDocuments[$i]['document_name'] = $document['DocumentName'];
+                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate'])))/1000);
+                $created_date = date('m/d/Y', $time);
+                $policyDocuments[$i]['created_at'] = $created_date;
+                $i++;
+            }
+        }
+
+        $data['policyDocuments'] = $policyDocuments;
+		$this->salesdashboardtemplate->show("order/common", "policy_package", $data);
+    }
+
 
 	public function upload_documents()
 	{
@@ -2391,8 +2498,7 @@ class Common extends MX_Controller {
 				$nestedData[] = $order['full_address'];
 				
 				if ($order['prelim_summary_id'] != 0) {
-					
-					$class = isset($order['is_updated']) && !empty($order['is_updated']) ? 'success' : 'secondary';
+					$class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
 					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'>
 							<button type='submit' class='btn btn-$class btn-icon-split'>
 								<span class='icon text-white-50'>

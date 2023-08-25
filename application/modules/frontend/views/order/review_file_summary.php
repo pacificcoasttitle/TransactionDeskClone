@@ -62,7 +62,11 @@
 					<span class="bg-border">Commitment Date</span>
 					<br>
 					<div class="prelim_title <?php echo !isset($prelim_details['generated_date']) || empty($prelim_details['generated_date']) ? 'ml-50' : ''; ?>">
-						<?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
+						<?php if($prelim_details['is_updated'] == 1) { 
+							echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? "<b style='color:red'>".date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date']))."</b>" : '-'; 
+						 } else { 
+							echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; 
+						 } ?>
 					</div>
 				</div>
 				
