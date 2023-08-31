@@ -815,7 +815,7 @@ function addReportCost(reportNum, amount, responseStatus) {
 // queries API 
 function fetchReports(repNum) {
     reportNum = repNum;
-    request = decodeURIComponent(request);
+    //request = decodeURIComponent(request);
     request = request.replace(/</g, '^');
     $('body').addClass('loading-screen');
     //console.log(request);
