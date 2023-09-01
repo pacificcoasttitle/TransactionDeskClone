@@ -60,7 +60,11 @@ class Home extends MX_Controller
 			$this->form_validation->set_rules('OpenName', 'First Name', 'required', array('required' => 'Enter your first name'));
 			$this->form_validation->set_rules('OpenLastName', 'Last Name', 'required', array('required' => 'Enter your last name'));
 			$this->form_validation->set_rules('OpenEmail', 'Email Address', 'required', array('required' => 'Enter your email address'));
-
+			
+			if (!is_dir('uploads/curative')) {
+				mkdir('./uploads/curative', 0777, TRUE);
+			}
+			
 			$config['upload_path'] = './uploads/curative/';
 			$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';
 			$config['max_size'] = 20000;
