@@ -409,7 +409,6 @@ h3, .h3 {
                                                     <i class="fas fa-download"></i>
                                                 </span>
                                                 <span class="text">Click to fetch</span>
-                                                
                                             </a>
                                         </div>
                                     <?php }
