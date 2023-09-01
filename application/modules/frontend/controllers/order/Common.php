@@ -2442,9 +2442,11 @@ class Common extends MX_Controller {
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
 						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><i class='fas fa-download' aria-hidden='true'></i></a>";
+						$action = '<div style="display:flex;justify-content: space-around;" ><a href="'.$documentUrl.'" onclick="downloadDocumentFromAws('.$documentUrl.','.'proposed_insured'.');" type="button" title="Download" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>';
                     } else {
                         $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
-						$action = '<a href="'.$documentUrl.'" download><i class="fas fa-download" aria-hidden="true"></i></a>';
+						// $action = '<a href="'.$documentUrl.'" download><i class="fas fa-download" aria-hidden="true"></i></a>';
+						$action = '<div style="display:flex;justify-content: space-around;" ><a href="'.$documentUrl.'" download type="button" title="Download" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>';
                     }	
                 }
                 else
