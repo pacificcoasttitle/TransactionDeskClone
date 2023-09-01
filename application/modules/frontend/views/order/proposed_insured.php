@@ -19,6 +19,7 @@
 
 	.ui-autocomplete {
 		max-height: 300px !important;
+		overflow: hidden !important;
 	}
 
 	.radio {
