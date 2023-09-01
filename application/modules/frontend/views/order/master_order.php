@@ -496,7 +496,7 @@
 							</div>
 
 							<div class="spacer-b30" id="escrow-officer-field" style="display: none;">
-								<div class="row spacer-b30 spacer-t30">
+								<div class="row spacer-b30 spacer-t30 form-grp-title">
 									<div class="col-sm-12">
 										<div class="tagline"><span> Select Escrow Officer </span></div>
 									</div>
