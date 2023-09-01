@@ -2,6 +2,7 @@
 	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}  
 	.ui-autocomplete {
 		max-height: 300px !important;
+		overflow: hidden !important;
 	} 
 	.radio {
 		top: 5px !important;
