@@ -55,8 +55,8 @@ class Order
         $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
         $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         $result = $this->getUserFromPartners();
-        $select = 'order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, pct_order_prelim_summary.is_updated, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
+        $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
@@ -282,7 +282,7 @@ class Order
             }
 
             if (!empty($dashboard_order_by)) {
-                $this->CI->db->order_by('FIELD(order_details.resware_status, "closed") desc');
+                $this->CI->db->order_by('order_details.prelim_summary_id desc');
                 $this->CI->db->order_by("order_details.id", "desc");
             } else {
                 $this->CI->db->order_by("order_details.id", "desc");
@@ -503,7 +503,7 @@ class Order
             }
 
             if (!empty($dashboard_order_by)) {
-                $this->CI->db->order_by('FIELD(order_details.resware_status, "closed") desc');
+                $this->CI->db->order_by('order_details.prelim_summary_id desc');
                 $this->CI->db->order_by("order_details.id", "desc");
             } else {
                 $this->CI->db->order_by("order_details.id", "desc");

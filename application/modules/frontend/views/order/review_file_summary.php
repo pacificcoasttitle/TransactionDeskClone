@@ -1,3 +1,13 @@
+<style>
+.l-main-contenta {
+	padding-top: 0px !important;
+}
+.prelim_title {
+	padding-left: 7px;
+    padding-top: 5px;
+	font-size: 18px;
+}
+</style>
 <div class="typography-section__inner">
 	<h3 class="ui-title-block_light">Prelim Info</h3>
 	<div class="ui-decor-1a bg-accent"></div>
@@ -8,59 +18,63 @@
 			<div class="col-md-8">
 				<div class="typography__highlights">
 					&nbsp;
-					<div>
+					
 						<span class="bg-border">Borrower Vesting</span>
 						<br> 
-						<div class="<?php echo !isset($prelim_details['vesting']) || empty($prelim_details['vesting']) ? 'ml-50' : ''; ?>" >
+						<div class="prelim_title <?php echo !isset($prelim_details['vesting']) || empty($prelim_details['vesting']) ? 'ml-50' : ''; ?>" >
 							<?php echo isset($prelim_details['vesting']) && !empty($prelim_details['vesting']) ? $prelim_details['vesting'] : '-'; ?>
 						</div>
-					</div>
+					
 				</div>
 				<div class="typography__highlights">
 					&nbsp;
-					<div>
+					
 						<span class="bg-border">Property Address</span>
 						<br>
-						<div class="<?php echo !isset($prelim_details['address']) || empty($prelim_details['address']) ? 'ml-50' : ''; ?>">
+						<div class="prelim_title <?php echo !isset($prelim_details['address']) || empty($prelim_details['address']) ? 'ml-50' : ''; ?>">
 							<?php echo isset($prelim_details['address']) && !empty($prelim_details['address']) ? $prelim_details['address'] : '-'; ?>
 						</div>
-					</div>
+					
 				</div>
 				<div class="typography__highlights">
 					&nbsp;
-					<div>
+					
 						<span class="bg-border">Type of Policy</span>
 						<br> 
-						<div class="<?php echo !isset($prelim_details['policy_type']) || empty($prelim_details['policy_type']) ? 'ml-50' : ''; ?>" >
+						<div class="prelim_title <?php echo !isset($prelim_details['policy_type']) || empty($prelim_details['policy_type']) ? 'ml-50' : ''; ?>" >
 							<?php echo isset($prelim_details['policy_type']) && !empty($prelim_details['policy_type']) ? $prelim_details['policy_type'] : '-'; ?>
 						</div>
-					</div>
+					
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="typography__highlights">
 					&nbsp;
-					<span class="bg-border br-5">Order Number</span>
+					<span class="bg-border">Order Number</span>
 					<br>
-					<div class="<?php echo !isset($prelim_details['file_number']) || empty($prelim_details['file_number']) ? 'ml-50' : ''; ?>">
+					<div class="prelim_title <?php echo !isset($prelim_details['file_number']) || empty($prelim_details['file_number']) ? 'ml-50' : ''; ?>">
 						<?php echo isset($prelim_details['file_number']) && !empty($prelim_details['file_number']) ? $prelim_details['file_number'] : '-'; ?>
 					</div>
-				</p>
+				</div>
 				
 				<div class="typography__highlights">
 					&nbsp;
 					<span class="bg-border">Commitment Date</span>
 					<br>
-					<div class="<?php echo !isset($prelim_details['generated_date']) || empty($prelim_details['generated_date']) ? 'ml-50' : ''; ?>">
-						<?php echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; ?>
+					<div class="prelim_title <?php echo !isset($prelim_details['generated_date']) || empty($prelim_details['generated_date']) ? 'ml-50' : ''; ?>">
+						<?php if($prelim_details['is_updated'] == 1) { 
+							echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? "<b style='color:red'>".date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date']))."</b>" : '-'; 
+						 } else { 
+							echo isset($prelim_details['generated_date']) && !empty($prelim_details['generated_date']) ? date('M d,Y',strtotime($prelim_details['generated_date'])).' at '.date('h:i a',strtotime($prelim_details['generated_date'])) : '-'; 
+						 } ?>
 					</div>
 				</div>
-				<br>
+				
 				<div class="typography__highlights">
 					&nbsp;
 					<span class="bg-border">Property Type</span>
 					<br>
-					<div class="<?php echo !isset($prelim_details['property_type']) || empty($prelim_details['property_type']) ? 'ml-50' : ''; ?>">
+					<div class="prelim_title <?php echo !isset($prelim_details['property_type']) || empty($prelim_details['property_type']) ? 'ml-50' : ''; ?>">
 						<?php echo isset($prelim_details['property_type']) && !empty($prelim_details['property_type']) ? $prelim_details['property_type'] : '-'; ?>
 					</div>
 				</div>
@@ -69,7 +83,7 @@
 
 		<div class="typography-section__inner">
 			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
-			<div class="ui-decor-1a bg-accent"></div>
+			<div style="border-bottom: 4px solid #D35411;"></div>
 		</div>
 		<?php
 			$count = 1;

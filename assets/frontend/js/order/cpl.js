@@ -243,21 +243,23 @@ function lender_pop_up(lenderFlag, fileId)
             },
             success: function (response) {
                 var res = jQuery.parseJSON(response);
+                console.log('res ==', res);
                 if(res.status == 'success') {
                     var optionsAsString = "";
-                    for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
-                        var selected = '';
-                        if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
-                            selected = 'selected';
+                    if ((res.orderDetails.hasOwnProperty("agents_data")) && (res.orderDetails['agents_data'].length > 0)) {
+                        for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
+                            var selected = '';
+                            if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
+                                selected = 'selected';
+                            }
+                            if (res.orderDetails['cpl_api'] == 'westcor' || res.orderDetails['cpl_api'] == 'natic') {
+                                optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
+                            } else if (res.orderDetails['cpl_api'] == 'natic') {
+                                optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
+                            } else {
+                                optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
+                            }
                         }
-                        if (res.orderDetails['cpl_api'] == 'westcor' || res.orderDetails['cpl_api'] == 'natic') {
-                            optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
-                        } else if (res.orderDetails['cpl_api'] == 'natic') {
-                            optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
-                        } else {
-                            optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
-                        }
-                            
                     }
                     $('select[name="branch"]').children('option:not(:first)').remove();
                     $( 'select[name="branch"]' ).append( optionsAsString );

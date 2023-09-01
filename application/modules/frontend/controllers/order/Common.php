@@ -7,10 +7,11 @@ class Common extends MX_Controller {
 	private $cpl_js_version = '01';
 	private $proposed_js_version = '01';
 	private $prelim_orders_js_version = '01';
-	private $prelim_order_js_version = '01';
+	private $prelim_order_js_version = '02';
 	private $upload_doc_orders_js_version = '01';
 	private $upload_document_for_order = '01';
 	private $notes_order_js = '01';
+	private $policy_orders_js_version = '01';
 
 	function __construct() 
     {
@@ -40,8 +41,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_'.$this->prelim_orders_js_version));
-		$this->template->show("order", "review_files", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_'.$this->prelim_orders_js_version));
+		$this->salesdashboardtemplate->show("order", "review_files", $data);
     }
 
     public function review_file()
@@ -68,7 +69,8 @@ class Common extends MX_Controller {
 		if(isset($orderDetails['file_number']) && !empty($orderDetails['file_number']))
 		{
 			$condition = array('file_number' => $orderDetails['file_number']);
-			$summaryData['is_updated'] = 0;
+			$summaryData['is_visited'] = 1;
+
 			$update = $this->reviewPrelimData->update($summaryData, $condition);
 		}
 
@@ -76,7 +78,7 @@ class Common extends MX_Controller {
 		$data['success'] = array();
 
 		if ($this->session->userdata('errors')) {
-			$data['error'] = $this->session->userdata('error');
+			$data['error'] = $this->session->userdata('errors');
 			$this->session->unset_userdata('error');
 		}
 
@@ -136,6 +138,7 @@ class Common extends MX_Controller {
 				'file_number'=> $file_number,
 				'vesting'=> $vesting,
 				'generated_date'=> $generated_date,
+				'is_updated'=> $prelim_details['is_updated'],
 				'lien'=> isset($prelim_details['lien']) && !empty($prelim_details['lien']) ? $prelim_details['lien'] : '',
 				'tax'=> isset($prelim_details['tax']) && !empty($prelim_details['tax']) ? $prelim_details['tax'] : '',
 				'easement'=> isset($prelim_details['easement']) && !empty($prelim_details['easement']) ? $prelim_details['easement'] : '',
@@ -530,6 +533,8 @@ class Common extends MX_Controller {
 		if (empty($this->session->userdata('user'))) {
             redirect(base_url().'order');
         }
+		$userdata = $this->session->userdata('user');
+		$this->load->model('order/note');
 		$fileId = $this->uri->segment(2);
 		$endPoint = 'files/'. $fileId.'/actions';
         $user_data['admin_api'] = 1; 
@@ -585,14 +590,55 @@ class Common extends MX_Controller {
                 $result = json_decode($res,TRUE);
 
 				if(!empty($result['FileActionID'])) {
-					$success = 'Prelim action updated successfully.';
+					$success = 'Prelim action updated successfully. <br/>';
 				} else {
-					$error = 'Something went wrong during update action prelim';
+					$errors = 'Something went wrong during update action prelim';
 				}
             }
         }
+		$subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
+		$body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
+		$orderDetails = $this->order->get_order_details($fileId);
+		$orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+	
+		$request = array();
+		$endPoint = 'files/'.$fileId.'/notes';
+		$request['Subject'] = $subject;
+		$request['Body'] = $body;
+		$request['FileID'] = $fileId;
+		$request['Expedite'] = true;
+		$notes_data = json_encode($request);
+
+		$logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $orderId, 0);        
+		$result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+		$this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $orderId, $logid);
+		
+		if (isset($result) && !empty($result)) {
+			$response = json_decode($result, TRUE);
+
+			if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+				$message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+				$errors[] = $message;
+			} else {
+				$noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+				$notesData = array(
+					'resware_note_id' => $noteId,
+					'subject' => $subject,
+					'note' => $body,
+					'user_id' => $userdata['id'],
+					'order_id' => $orderId,
+					'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0
+				);
+				$id = $this->note->insert($notesData);
+				if ($noteId && $id) {
+					$success .= 'Note created successfully.';
+				} else {
+					$errors .= 'Something went wrong. Please try again.';
+				}
+			}
+		}
 		$data = array(
-			"error" =>  $error,
+			"error" =>  $errors,
 			"success" => $success
 		);
 		$this->session->set_userdata($data);
@@ -634,8 +680,8 @@ class Common extends MX_Controller {
             redirect(base_url().'order');
         }
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_'.$this->upload_doc_orders_js_version));
-		$this->template->show("order/common", "upload_doc_orders", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_'.$this->upload_doc_orders_js_version));
+		$this->salesdashboardtemplate->show("order/common", "upload_doc_orders", $data);
 	}
 
 	function getOrdersUploadDoc()
@@ -666,7 +712,14 @@ class Common extends MX_Controller {
 				$nestedData[] = $i;
 				$nestedData[] = $order['file_number'];
 				$nestedData[] = $order['full_address'];
-				$nestedData[] = '<a href="'.base_url().'upload-documents/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">Attach Files</button></a>';
+				$nestedData[] = "<a href='".base_url()."upload-documents/".$order['file_id']."'>
+									<button type='submit' class='btn btn-info btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>Attach Files</span>
+									</button>
+								</a>";
 				$data[] = $nestedData; 
 				$i++; 
 			}
@@ -676,6 +729,110 @@ class Common extends MX_Controller {
 		$json_data['data'] = $data;
 		echo json_encode($json_data);
 	}
+
+	function policyOrders()
+    {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
+		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/policy.js?v=policy_orders_'.$this->policy_orders_js_version));
+		$this->salesdashboardtemplate->show("order/common", "policy_orders", $data);
+	}
+
+	function getOrdersPolicy()
+    {
+		if (empty($this->session->userdata('user'))) {
+            redirect(base_url().'order');
+        }
+		$params = array();  $data = array();
+		if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+			$params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+			$params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+			$params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+			$params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+			$params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+			$params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+			$pageno = ($params['start'] / $params['length'])+1;
+			$order_lists = $this->order->get_orders($params);
+			$json_data['draw'] = intval( $params['draw'] );
+		} else {
+			$params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+			$order_lists = $this->order->get_orders($params);
+		}
+
+		if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+			$i = $params['start'] + 1;
+			foreach ($order_lists['data'] as $order)  {
+				$nestedData = array();
+				$nestedData[] = $i;
+				$nestedData[] = $order['file_number'];
+				$nestedData[] = $order['full_address'];
+				$nestedData[] = "<a href='".base_url()."policy-order/".$order['file_id']."'>
+									<button type='submit' class='btn btn-info btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>Get Policy</span>
+									</button>
+								</a>";
+				$data[] = $nestedData; 
+				$i++; 
+			}
+		}
+		$json_data['recordsTotal'] = intval( $order_lists['recordsTotal'] );
+		$json_data['recordsFiltered'] = intval( $order_lists['recordsFiltered'] );
+		$json_data['data'] = $data;
+		echo json_encode($json_data);
+	}
+
+	public function policy()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $fileId = $this->uri->segment(2); 
+        $data['title'] = 'Get Policy | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['file_number'] = $orderDetails['file_number'];
+        $data['full_address'] = $orderDetails['full_address'];
+        $data['file_id'] = $orderDetails['file_id'];
+        $data['order_id'] = $orderDetails['order_id'];
+        $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
+        $user_data['admin_api'] = 1;
+        $endPoint = 'files/'.$fileId.'/documents';
+					
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $orderDetails['order_id'], $logid);
+        $res = json_decode($result, true);
+        
+        $policyDocuments = array();
+        $i = 0;
+        foreach($res['Documents'] as $document) {
+            if ($document['DocumentType']['DocumentTypeID'] == 103) {
+                $policyDocuments[$i]['no'] = $i + 1;
+                $policyDocuments[$i]['api_document_id'] = $document['DocumentID'];
+                $policyDocuments[$i]['document_name'] = $document['DocumentName'];
+                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate'])))/1000);
+                $created_date = date('m/d/Y', $time);
+                $policyDocuments[$i]['created_at'] = $created_date;
+                $i++;
+            }
+        }
+
+        $data['policyDocuments'] = $policyDocuments;
+		$this->salesdashboardtemplate->show("order/common", "policy_package", $data);
+    }
+
 
 	public function upload_documents()
 	{
@@ -943,8 +1100,9 @@ class Common extends MX_Controller {
 			$this->session->unset_userdata('success');
 		}
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/cpl.js?v=cpl_'.$this->cpl_js_version));
-		$this->template->show("order", "cpl", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/cpl.js?v=cpl_'.$this->cpl_js_version));
+		$this->salesdashboardtemplate->show("order", "cpl", $data);
+		// $this->template->show("order", "cpl", $data);
 	}
 
 	public function get_orders_cpl()
@@ -982,24 +1140,22 @@ class Common extends MX_Controller {
 					$documentName = $order['cpl_document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."documents/".$documentName;
-						$nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+						$nestedData[] = "<div style='display:flex;justify-content: space-around;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");' title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
                     } else {
                         $documentUrl = FCPATH.'uploads/documents/'.$documentName;
-						$nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+						$nestedData[] = "<div style='display:flex;justify-content: space-around;'><a href='$documentUrl' download title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a>
+						<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
                     }
 					
 				} else if(!empty($order['westcor_file_id'])) {
 					$file_id = $order['file_id'];
 					$westcorFileId = $order['westcor_file_id'];
 					$westcorOrderId = $order['westcor_order_id'];
-					$nestedData[] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-							<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					$nestedData[] = "<div style='display:flex;justify-content: space-around;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);' title='Download' title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
 				} else {
 					$file_id = $order['file_id'];
-					$nestedData[] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
-					<a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+					$nestedData[] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$order['file_id']."' method='POST'><a href='javascript:void(0);'  title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span><span class='text'>Generate</span></a></form><a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
 				}
 				$data[] = $nestedData; 
 				$i++; 
@@ -2243,8 +2399,10 @@ class Common extends MX_Controller {
 		$data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
 		$data['proposedBranches'] = $this->order->getProposedBranches();
     	$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
-		$this->template->show("order", "proposed_insured", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+		// $this->template->show("order", "proposed_insured", $data);
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->cpl_js_version));
+		$this->salesdashboardtemplate->show("order", "proposed_insured", $data);
     }
 
     function get_proposed_orders()
@@ -2283,17 +2441,17 @@ class Common extends MX_Controller {
 					$documentName = $order['proposed_insured_document_name'];
 					if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
-						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
+						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><i class='fas fa-download' aria-hidden='true'></i></a>";
                     } else {
                         $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
-						$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+						$action = '<a href="'.$documentUrl.'" download><i class="fas fa-download" aria-hidden="true"></i></a>';
                     }	
                 }
                 else
                 {
-                	$action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+                	$action = '<div style="display:flex;justify-content: space-around;" ><a href="javascript:void(0);" onclick="generateProposedInsured('.$order['file_id'].');" type="button" title="Generate" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-seedling"></i></span><span class="text">Generate</span></a>';
                 }
-                $action .= '<a href="javascript:void(0);" onclick="editInformation('.$order['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+                $action .= '<a href="javascript:void(0);" onclick="editInformation('.$order['file_id'].');" class="btn btn-primary btn-icon-split" ><span class="icon text-white-50"><i class="fas fa-edit"></i></span><span class="text">Edit</span></a></div>';
 
                 $nestedData[] = $action;
 
@@ -2340,11 +2498,23 @@ class Common extends MX_Controller {
 				$nestedData[] = $order['full_address'];
 				
 				if ($order['prelim_summary_id'] != 0) {
-					
-					$class = isset($order['is_updated']) && !empty($order['is_updated']) ? 'button-color-green' : 'button-color';
-					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a ".$class."' type='button'>REVIEW FILE</button></a>";
+					$class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+					$nestedData[] = "<a href='".base_url()."review-file/".$order['file_id']."'>
+							<button type='submit' class='btn btn-$class btn-icon-split'>
+								<span class='icon text-white-50'>
+									<i class='fas fa-file'></i>
+								</span>
+								<span class='text'>Review File</span>
+							</button>
+						</a>";
 				} else {
-					$nestedData[] = "<a href='javascript:void(0)'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a>";
+					$nestedData[] = "<a href='javascript:void(0)'>
+						<button type='submit' class='btn btn-info btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-tasks'></i>
+							</span>
+							<span class='text'>Not Ready</span>
+						</button></a>";
 				}
 				
 				

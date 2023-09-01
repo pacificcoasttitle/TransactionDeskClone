@@ -613,6 +613,7 @@ class ReviewPrelim extends MX_Controller {
 					{
 						$condition = array('file_number' => $file_number);
 						$summaryData['is_updated'] = 1;
+						$summaryData['is_visited'] = 0;
 						$update = $this->reviewPrelimData->update($summaryData, $condition);
 					}
 					else

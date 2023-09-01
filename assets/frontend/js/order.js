@@ -14,16 +14,19 @@ $(document).ready(function() {
         notifyAdmin('Legal Vesting Document Not Found');
     }   
     
-    $('#clone-email-address').cloneya({
-        maximum: 5
-    }).on('after_append.cloneya', function (event, toclone, newclone) {
-        var name = $(newclone).find("input[type='email']").attr('id');
-    }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
-        $(clone).slideToggle('slow', function () {
-            $(clone).remove();
-            
-        })
-    });
+    if ($('#clone-email-address').length)
+    {
+        $('#clone-email-address').cloneya({
+            maximum: 5
+        }).on('after_append.cloneya', function (event, toclone, newclone) {
+            var name = $(newclone).find("input[type='email']").attr('id');
+        }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+            $(clone).slideToggle('slow', function () {
+                $(clone).remove();
+                
+            })
+        });
+    }
 
     getProductTypes();
 
@@ -125,6 +128,17 @@ $(document).ready(function() {
         } else {
             $(this).val(0);
         }
+    });
+    
+    $("input[data-type='number']").keyup(function(event){
+        if(event.which >= 37 && event.which <= 40){
+            event.preventDefault();
+        }
+        var $this = $(this);
+        var num = $this.val().replace(/[^0-9 \,]/, '');
+        num = num.replace(/,/gi, "");
+        var num2 = num.split(/(?=(?:\d{3})+$)/).join(",");
+        $this.val(num2);
     });
 });
 
@@ -1019,3 +1033,5 @@ function getDeliverables(partner_id)
         },
     });
 }
+
+

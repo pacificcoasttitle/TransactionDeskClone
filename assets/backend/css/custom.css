@@ -52,6 +52,13 @@
     top: 0;
 }
 
+.pd-3 {
+    padding: 30px;;
+}
+
+.hide {
+    display: none !important;
+}
 /* .smart-forms input:checked + .checkbox {
     border: 3px solid #1fe61a !important;
 }

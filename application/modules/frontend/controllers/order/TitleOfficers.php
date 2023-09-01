@@ -14,6 +14,7 @@ class TitleOfficers extends MX_Controller
         $this->load->library('session');
 		$this->load->library('form_validation');
 		$this->load->library('order/template');
+        $this->load->library('order/salesDashboardTemplate');
 		$this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
@@ -34,8 +35,10 @@ class TitleOfficers extends MX_Controller
 		$con = array('id' => $userdata['id']);
 		$user_info = $this->order->getSalesRep($con);
 		$data['user_info'] = $user_info;
-		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
-		$this->template->show("order/title_officer", "dashboard", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		// $this->template->show("order/title_officer", "dashboard", $data);
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version));
+		$this->salesdashboardtemplate->show("order/title_officer", "dashboard", $data);
 	}
 
 	function get_title_officer_orders()
@@ -125,8 +128,10 @@ class TitleOfficers extends MX_Controller
 	function notes()
     {
         $data['title'] = 'Notes | Pacific Coast Title Company';
-		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
-		$this->template->show("order/title_officer", "notes", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		// $this->template->show("order/title_officer", "notes", $data);
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		$this->salesdashboardtemplate->show("order/title_officer", "notes", $data);
     }
 
     function get_notes_orders()
@@ -154,7 +159,7 @@ class TitleOfficers extends MX_Controller
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'"><button class="btn btn-grad-2a button-color button-color" type="button">View / Add Notes</button></a>';
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-eye"></i></span><span class="text"> View / Add Notes </span></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }
@@ -168,8 +173,10 @@ class TitleOfficers extends MX_Controller
     function uploadFileDocument() 
 	{
 		$data['title'] = 'Smart Dashboard | Upload FIle';
-		$this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
-		$this->template->show("order/title_officer", "attach_files", $data);
+		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		// $this->template->show("order/title_officer", "attach_files", $data);
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v=title_officer_dashboard_'.$this->title_officer_dashboard_js_version) );
+		$this->salesdashboardtemplate->show("order/title_officer", "attach_files", $data);
 	}
 
 	function getFileDocument() 
@@ -187,12 +194,12 @@ class TitleOfficers extends MX_Controller
 			$tmp_array[] = date('m/d/Y',strtotime($file_data->created_at));
 			$documentName = $file_data->file_path;
 			if (env('AWS_ENABLE_FLAG') == 1) {
-                        $documentUrl = env('AWS_PATH')."file_document/".$documentName;
-						$action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
-                    } else {
-                        $documentUrl = FCPATH.'uploads/file_document/'.$documentName;
-						$action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
-                    }
+                $documentUrl = env('AWS_PATH')."file_document/".$documentName;
+                $action = "<a href='javascript:void(0);' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"'.$documentName.'"'.");' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'> Download </span></a>";
+            } else {
+                $documentUrl = FCPATH.'uploads/file_document/'.$documentName;
+                $action = '<a href="'.$documentUrl.'" download class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text"> Download </span></a>';
+            }
             $tmp_array[] = $action;
             $tableData[] = $tmp_array;
 		}

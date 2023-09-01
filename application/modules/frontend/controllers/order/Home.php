@@ -5,8 +5,8 @@
 class Home extends MX_Controller
 {
 
-	private $order_js_version = '03';
-	private $custom_js_version = '03';
+	private $order_js_version = '04';
+	private $custom_js_version = '04';
 
 	function __construct()
 	{
@@ -14,6 +14,7 @@ class Home extends MX_Controller
 		$this->load->helper(array('file', 'url'));
 		$this->load->library('session');
 		$this->load->library('order/template');
+		$this->load->library('order/salesDashboardTemplate');
 		$this->load->model('order/home_model');
 		$this->load->model('order/agent_model');
 		$this->load->library('form_validation');
@@ -136,6 +137,9 @@ class Home extends MX_Controller
 				$EscrowNumber = $this->input->post('escrowNumber');
 				$Notes = $this->input->post('notes');
 				$SalesAmount = $this->input->post('salesAmount');
+				$SalesAmount = str_replace(',', '', $SalesAmount);
+				$LoanAmount = str_replace(',', '', $LoanAmount);
+				// print_r($LoanAmount);die;
 				$ProductTypeTxt = $this->input->post('ProductType');
 				$primaryBorrower = $this->input->post('primaryBorrower');
 				$secondaryBorrower = $this->input->post('secondaryBorrower');
@@ -1450,25 +1454,34 @@ class Home extends MX_Controller
 			$data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
 			$data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
 
-			$this->template->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
-			$this->template->addJS(base_url('assets/frontend/js/additional-methods.min.js'));
-			$this->template->addJS(base_url('assets/frontend/js/smart-form.js'));
-			$this->template->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
-			$this->template->addJS(base_url('assets/frontend/js/custom.js?v=custom_' . $this->custom_js_version));
-			$this->template->addJS(base_url('assets/frontend/js/order.js?v=order_' . $this->order_js_version));
-
+			// $this->template->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
+			// $this->template->addJS(base_url('assets/frontend/js/additional-methods.min.js'));
+			// $this->template->addJS(base_url('assets/frontend/js/smart-form.js'));
+			// $this->template->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
+			// $this->template->addJS(base_url('assets/frontend/js/custom.js?v=custom_' . $this->custom_js_version));
+			// $this->template->addJS(base_url('assets/frontend/js/order.js?v=order_' . $this->order_js_version));
+			$this->salesdashboardtemplate->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
+			$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/additional-methods.min.js') );
+			$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/smart-form.js') );
+			$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
+			$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/custom.js?v=custom_' . $this->custom_js_version) );
+			$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order.js?v=order_' . $this->order_js_version) );
+			$this->salesdashboardtemplate->addCss( base_url('assets/frontend/css/custom.css?v=custom_' . $this->custom_js_version) );
+			// $this->salesdashboardtemplate->addCss( base_url('assets/libs/bootstrap/bootstrap.css'));
 			if ($is_master) {
-				$this->template->show("order", "master_order", $data);
+				$this->salesdashboardtemplate->show("order", "master_order", $data);
+				// $this->template->show("order", "master_order", $data);
 			} else {
 				$data['customer_data'] = $customer_data;
 				$con = array(
-					'where' => array(
-						'partner_id' => $customer_data['partner_id'],
+				'where' => array(
+					'partner_id' => $customer_data['partner_id'],
 					)
 				);
 				$companyData = $this->home_model->get_company_rows($con);
 				$data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
-				$this->template->show("order", "home", $data);
+				$this->salesdashboardtemplate->show("order", "home", $data);
+				// $this->template->show("order", "home", $data);
 			}
 		}
 	}
@@ -1633,9 +1646,13 @@ class Home extends MX_Controller
 		$data['lpFileNumber'] = $lpFileNumber;
 		$data['lpFileStatus'] = $titlePointDetails[0]['lv_file_status'];
 		$data['taxFileStatus'] = $titlePointDetails[0]['tax_file_status'];
-
-		$this->load->view('layout/head', $data);
-		$this->load->view('order/order-submission', $data);
+		
+		// $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-1.9.1.min.js?v=order_' . $this->order_js_version) );
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js?v=order_' . $this->order_js_version) );
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order.js?v=order_' . $this->order_js_version) );
+		$this->salesdashboardtemplate->show("order", "order-submission", $data);
+		// $this->load->view('layout/head', $data);
+		// $this->load->view('order/order-submission', $data);
 
 	}
 
