@@ -404,9 +404,13 @@ h3, .h3 {
                                         <div class="legal-vesting-no-data processing-wrapper">
                                             <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
                                             <br />
-                                            <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number;?>', 'lv')" > 
-                                                Click to fetch
-                                            </button>
+                                            <a href="javascript:void(0);" class="btn btn-info btn-icon-split btn_mrg-top_30" onclick="fetchLvDoc(this, '<?php echo $file_number;?>', 'lv');">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-download"></i>
+                                                </span>
+                                                <span class="text">Click to fetch</span>
+                                                
+                                            </a>
                                         </div>
                                     <?php }
                                     else
