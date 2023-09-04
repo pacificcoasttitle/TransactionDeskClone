@@ -5198,8 +5198,8 @@ class Cron extends MX_Controller {
                     'message'=>json_encode($data),
                     'cc' => $cc
                 );
-                $to = 'hitesh.p@crestinfosystems.com';
-                $cc = array();
+                //$to = 'hitesh.p@crestinfosystems.com';
+                //$cc = array();
                 $this->load->helper('sendemail');
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
