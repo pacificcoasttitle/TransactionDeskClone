@@ -3726,7 +3726,7 @@ class Cron extends MX_Controller {
                     // else {
                     //     exec($command . " > /dev/null &");  
                     // }
-                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
                 $this->updateAllowDuplicationFlag();
                 echo date('Y-m-d H:i:s');exit;
