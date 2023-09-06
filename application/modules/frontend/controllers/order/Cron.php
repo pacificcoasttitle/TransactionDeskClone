@@ -5126,17 +5126,19 @@ class Cron extends MX_Controller {
 
     public function sendThankYouEmailForClosedOrder($fileNumbers)
     {
-        $this->db->select('order_details.file_number, 
-            order_details.resware_status, 
+        $this->db->select('order_details.file_id, 
+            order_details.file_number, 
             order_details.id as order_id,
+            order_details.resware_status, 
             order_details.resware_closed_status_date,
             property_details.full_address,
-            client.email_address as client_email,
-            sales_details.email_address as sales_email,
-            sales_details.sales_rep_profile_thank_you_img,
+            customer_basic_details.first_name,
+            customer_basic_details.last_name,
+            customer_basic_details.email_address as sales_email,
+            customer_basic_details.sales_rep_profile_thank_you_img,
+            property_details.escrow_lender_id,
             escrow_details.email_address, 
-            listing_agent.email_address as listing_agent_email, 
-            buyer_agent.email_address as buyer_agent_email');
+            transaction_details.sales_representative');
         $this->db->from('order_details'); 
         $this->db->where_in('order_details.file_number', $fileNumbers); 
         //$this->db->where('order_details.is_thank_you_email_sent', 0); 
