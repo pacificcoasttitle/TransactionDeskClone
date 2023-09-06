@@ -3726,7 +3726,7 @@ class Cron extends MX_Controller {
                     // else {
                     //     exec($command . " > /dev/null &");  
                     // }
-                    //$this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
                 $this->updateAllowDuplicationFlag();
                 echo date('Y-m-d H:i:s');exit;
@@ -5204,13 +5204,13 @@ class Cron extends MX_Controller {
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), $res['order_id'], 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status'=> $escrow_mail_result), $res['order_id'], $logid);
-                // $order_details = [
-                //     'is_thank_you_email_sent' => 1
-                // ];
-                // $condition = [
-                //     'id' => $res['order_id']
-                // ];
-                // $this->db->update('order_details', $order_details, $condition);
+                $order_details = [
+                    'is_thank_you_email_sent' => 1
+                ];
+                $condition = [
+                    'id' => $res['order_id']
+                ];
+                $this->db->update('order_details', $order_details, $condition);
             }
             echo "Mails sent successfully to Escow user ";exit;
         }
