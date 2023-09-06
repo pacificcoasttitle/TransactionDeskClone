@@ -5139,7 +5139,7 @@ class Cron extends MX_Controller {
             buyer_agent.email_address as buyer_agent_email');
         $this->db->from('order_details'); 
         $this->db->where_in('order_details.file_number', $fileNumbers); 
-        $this->db->where('order_details.is_thank_you_email_sent', 0); 
+        //$this->db->where('order_details.is_thank_you_email_sent', 0); 
         $this->db->where('order_details.customer_id > 0');
         $this->db->where('property_details.escrow_lender_id != ""');
         $this->db->where('transaction_details.sales_representative != ""');
