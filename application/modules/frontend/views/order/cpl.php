@@ -312,6 +312,7 @@
 										</div>
 
 									</div>
+									<input type="hidden" id="cpl_api" name="cpl_api" value="">
 									<div class="form-footer" style="padding: 0px 1rem !important;">
 
 										<button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
@@ -486,7 +487,7 @@
 								</div>
 							</div>
 
-							<input type="hidden" id="cpl_api" name="cpl_api" value="">
+							
 							<div id="fnf">
 								<div class="spacer-b20">
 									<div class="tagline"><span>Select Branch</span></div>
