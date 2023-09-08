@@ -638,7 +638,7 @@ h3, .h3 {
 
     function fetchLvDoc(obj,fileNumber, docType) {
         // $(obj).text('Fetching ...');
-        $(obj).text('<span class="text">Fetching</span>');
+        $(obj).text('Fetching...');
         
         $.ajax({
 			url: base_url + "check-document",
@@ -669,14 +669,14 @@ h3, .h3 {
                     <?php } ?>
 					$(obj).closest('.processing-wrapper').replaceWith(downloadButton)
 				} else {
-                    $(obj).text('Click to Fetch');
+                    $(obj).text('<span class="text">Click to Fetch</span>');
                     alert('Document generation still in process, Please try afte sometime');
                     return;
                 }
 			},
             complete: function (data) {
                 if (data.status != 200) {
-                    $(obj).text('Click to Fetch');
+                    $(obj).text('<span class="text">Click to Fetch</span>');
                     alert('Document generation still in process, Please try afte sometime');
                     return;
                 }
