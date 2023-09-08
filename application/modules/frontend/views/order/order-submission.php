@@ -669,14 +669,14 @@ h3, .h3 {
                     <?php } ?>
 					$(obj).closest('.processing-wrapper').replaceWith(downloadButton)
 				} else {
-                    $(obj).text('<span class="text">Click to Fetch</span>');
+                    $(obj).text('Click to Fetch');
                     alert('Document generation still in process, Please try afte sometime');
                     return;
                 }
 			},
             complete: function (data) {
                 if (data.status != 200) {
-                    $(obj).text('<span class="text">Click to Fetch</span>');
+                    $(obj).text('Click to Fetch');
                     alert('Document generation still in process, Please try afte sometime');
                     return;
                 }
