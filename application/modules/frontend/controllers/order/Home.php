@@ -1050,8 +1050,8 @@ class Home extends MX_Controller
 					$postData['state'] = $PropertyState;
 					$postData['county'] = $County;
 					$postData['property'] = $PropertyAddress;
-					$postData['apn'] = ;
-					$postData['unit_number'] = ;
+					$postData['apn'] = $apn;
+					$postData['unit_number'] = $this->input->post('unit_number');
 
 					$this->titlepoint->generateGeoDoc($postData, 1);
 					$this->order->checkGrantDoc($orderNumber, false);
