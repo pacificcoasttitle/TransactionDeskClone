@@ -434,7 +434,7 @@ class Titlepoint
         }
     }
 
-    public function generateGeoDoc($postData)
+    public function generateGeoDoc($postData, $normalOrderFlag = 0)
     {
         $fileNumber = $postData['file_number'];
         $orderId = $postData['order_id'];
@@ -588,7 +588,11 @@ class Titlepoint
                     // $generateImgStatus = strtolower($generateImgStatus);
                     if ($generateImgReturnStatus == 'success') {
                         /** Generate image and uploadin AWS */
-                        return $this->generateGeoImg($serviceId, $fileNumber, $orderId, $requestOrderId);
+                        if ($normalOrderFlag == 1 ) {
+                            return true;
+                        } else {
+                            return $this->generateGeoImg($serviceId, $fileNumber, $orderId, $requestOrderId);
+                        }
                     } else {
                         $error = isset($imgResult['Message']) && !empty($imgResult['Message']) ? $imgResult['Message'] : '';
                         $tpData = array(
