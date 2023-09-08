@@ -1044,6 +1044,17 @@ class Home extends MX_Controller
 
 				if ($lpOrderFlag == 1) {
 					$orderNumber = $lp_file_number;
+				} else {
+					$postData['file_number'] = $orderNumber;
+					$postData['order_id'] = $orderId;
+					$postData['state'] = $PropertyState;
+					$postData['county'] = $County;
+					$postData['property'] = $PropertyAddress;
+					$postData['apn'] = $apn;
+					$postData['unit_number'] = $this->input->post('unit_number');
+
+					$this->titlepoint->generateGeoDoc($postData, 1);
+					$this->order->checkGrantDoc($orderNumber, false);
 				}
 
 				/* Escrow Details */
@@ -1565,6 +1576,7 @@ class Home extends MX_Controller
 	{
 		$fileId = $this->uri->segment(2);
 		$this->load->library('order/order');
+		$data = array();
 		if ($fileId) {
 			$condition = array(
 				'where' => array(
