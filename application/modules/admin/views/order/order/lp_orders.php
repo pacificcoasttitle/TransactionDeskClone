@@ -259,8 +259,7 @@
                                                         class="form-control" id="document_type">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="document_sub_type" class="col-form-label">Document Sub
-                                                        Type</label>
+                                                    <label for="document_sub_type" class="col-form-label">Document Sub Type</label>
                                                     <input name="document_sub_type" type="text" class="form-control"
                                                         id="document_sub_type">
                                                 </div>
