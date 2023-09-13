@@ -1041,7 +1041,7 @@ class Order
             } else {
                 $propertyData = $query->result_array();
                 $key = array_search(1, array_column($propertyData, 'allow_duplication'));
-                if (isset($key)) {
+                if ($key !== false) {
                     return false;
                 } else {
                     return true;
@@ -3742,9 +3742,9 @@ class Order
         $taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
         $taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$taxDataStatus' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
         // if ($emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
-        if ($emailSentFlag != 1 && ($taxDataStatus == 'success' || $taxDataStatus == 'failed') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
 
                 $parties_email[] = 'rudy@pct.com';
