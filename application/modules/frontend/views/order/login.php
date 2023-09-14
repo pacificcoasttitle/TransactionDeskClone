@@ -37,9 +37,7 @@
             text-transform: capitalize;
             font-size: 1em;
         }
-        .img-holder {
-            width: 680px;
-        }
+       
         .website-logo-inside img {
             width: 250px;
         }
@@ -70,6 +68,9 @@
             color: #fff;
             font-weight: 900;
             letter-spacing: -1px;
+        }
+        .form-content .form-items {
+            max-width: 565px;
         }
     </style>
 </head>
