@@ -64,6 +64,18 @@
         .radio:checked:before {
             background: #d35411 !important;
         }
+        .form-content {
+            background: linear-gradient(20deg, #03374f 0%, #02283a 60%, #03374f 100%) !important;
+        }
+        .website-logo-inside img {
+            width: 250px;
+        }
+
+        .title-head {
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
     </style>
 </head>
 <body>
@@ -84,7 +96,7 @@
                                 </div>
                             </a>
                         </div>
-						<h2>PCT Transaction Desk<!--  for CPL --></h2>
+						<h2 class="title-head">PCT Transaction Desk<!--  for CPL --></h2>
 						<p></p>
                         <p>Enter order number below and choose your option. <!-- to generate CPL -->.</p>
                         <div class="page-links">
