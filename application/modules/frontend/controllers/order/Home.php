@@ -1053,8 +1053,8 @@ class Home extends MX_Controller
 					$postData['apn'] = $apn;
 					$postData['unit_number'] = $this->input->post('unit_number');
 
-					$this->titlepoint->generateGeoDoc($postData, 1);
-					$this->order->checkGrantDoc($orderNumber, false);
+					//$this->titlepoint->generateGeoDoc($postData, 1);
+					//$this->order->checkGrantDoc($orderNumber, false);
 				}
 
 				/* Escrow Details */
@@ -1152,6 +1152,18 @@ class Home extends MX_Controller
 					$this->titlePointData->update($tpData, $condition);
 
 					$this->load->library('order/titlepoint');
+
+					if ($lpOrderFlag == 0) {
+						$postData['file_number'] = $orderNumber;
+						$postData['order_id'] = $orderId;
+						$postData['state'] = $PropertyState;
+						$postData['county'] = $County;
+						$postData['property'] = $PropertyAddress;
+						$postData['apn'] = $apn;
+						$postData['unit_number'] = $this->input->post('unit_number');
+						$this->titlepoint->generateGeoDoc($postData, 1);
+						$this->order->checkGrantDoc($orderNumber, false);
+					}
 
 					$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 
