@@ -102,8 +102,9 @@
                             </a>
                         </div>
 					
-                        <h1 class="title-head">Let us know who you are...</h1>
-                        <p>Enter your email below to log in. <br> No password is needed.</p>
+                        <p style="margin-bottom: 0px !important;">Welcome To</p>
+                        <h1 class="title-head">Transaction Desk</h1>
+                        <p>Enter your email below to log in.</p>
                         <div class="page-links">
                             <a href="login2.html" class="active">Log in</a>
                             <!-- <a href="register2.html">Register</a> -->
