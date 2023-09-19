@@ -2254,4 +2254,25 @@ class Home extends MX_Controller
 		echo json_encode($response_data);
 	}
 
+	public function generateTaxPdf() 
+	{
+		
+		
+		$html = $this->load->view('order/tax/taxes', array(), true);
+		// echo $html;
+		// exit;
+        $this->load->library('snappy_pdf');
+        $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
+        $this->snappy_pdf->pdf->setOption('zoom', '1.4');
+
+        if (!is_dir('uploads/tax')) {
+			mkdir('./uploads/tax', 0777, TRUE);
+		}
+		$fileNumber = '1';
+		$pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+        $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+        $this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
+		exit;
+	}
+
 }

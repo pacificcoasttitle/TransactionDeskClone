@@ -1,0 +1,608 @@
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" cros56rigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Tai+Heritage+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body{
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+        }
+        *{
+            box-sizing: border-box;
+        }
+        .float-right{
+            float: right;
+        }
+        .mt-10{
+            margin-top: 10px;
+        }
+        .mt-15{
+            margin-top: 15px;
+        }
+        .mt-20{
+            margin-top: 20px;
+        }
+        .mt-50{
+            margin-top: 50px;
+        }
+        .mt-49{
+            margin-top: 49px;
+        }
+        .text-center{
+            text-align: center !important;
+        }
+        .text-left{
+            text-align: left !important;
+        }
+        .size_a4 { width: 8.3in; height: 11.7in; }
+        .size_letter { width: 8.5in; height: 11in; }
+        .size_executive { width: 7.25in; height: 10.5in; }
+        .pdf_page {
+            margin: 0 auto;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+            position: relative;
+        }
+        .pdf_header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+        }
+        .pdf_footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-size: 12px;
+        }
+        .tax-text{
+            position: absolute;
+            left: 0;
+            top: 50%;
+            font-size: 24px;
+            font-weight: 700;
+            transform: translateY(-50%);
+        }
+        .title-logo{
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        .address-bar {
+            position: absolute;
+            top: 51px;
+            padding: 20px 0 12px;
+            width: 100%;
+            border-bottom: 3px solid #000;
+        }
+        .address {
+            line-height: 18px;
+        }
+        .tax-detail {
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            width: 240px;
+            display: block;
+        }
+        .tax-detail span {
+            float: right;
+            width: 115px;
+        }
+        .company-name{
+            margin-top: 15px;
+        }
+        .pdf-body{
+            position: absolute;
+            top: 171px;
+            width: 100%;
+            font-family: 'Tai Heritage Pro', serif;
+        }
+        .billing-address {
+            border: 1px solid #000;
+            margin-top: 40px;
+            line-height: 18px;
+            margin-bottom: 15px;
+        }
+        .billing-address span {
+            width: 130px;
+            display: inline-block;
+        }
+        .billing-address div{
+            padding: 0 5px;
+        }
+        .billing-address div:last-child,.border-top{
+            border-top: 1px solid;
+        }
+        .tax-table {
+            border: 1px solid #000;
+            line-height: 18px;
+            margin-bottom: 15px;
+        }
+        .tax-table::after{
+            content: '';
+            display: table;
+            width: 100%;
+        }
+        .column{
+            width: 33.33%;
+            float: left;
+        }
+        .column:not(:last-child){
+            border-right: 1px solid #000;
+        } 
+        .column div{
+            padding: 0 5px;
+        }
+        table {
+            width: 100%;
+            border: 1px solid #000;
+            font-size: 14px;
+            border-collapse: collapse;
+            font-family: 'Tai Heritage Pro', serif;
+        }
+        table.table th:first-child,
+        table.table td:first-child{
+            text-align: left;
+            padding-left: 5px;
+        }
+        table.table th:last-child,
+        table.table td:last-child{
+            text-align: right;
+        }
+        table.table th{
+            font-weight: 400;
+            border-bottom: 1px solid #000;
+        }
+        table.table th,
+        table.table td{
+            text-align: center;
+            line-height: 18px;
+        }
+        table.table td{
+            font-weight: 700;
+        }
+        table.table.last-table th:first-child,
+        table.table.last-table td:first-child{
+            text-align: center;
+            width: 200px;
+        }
+        table.table.last-table th:nth-child(2),
+        table.table.last-table td:nth-child(2){
+            text-align: left;
+        }
+        .footer-left{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .footer-right{    
+            position: absolute;
+            right: 0;
+            text-align: right;
+            bottom: 0;
+        }
+        .page-number {
+            margin-top: -25px;
+        }
+        table.table .no-border th{
+            border: 0;
+        }
+        table.table.text-center th,
+        table.table.text-center td{
+            text-align: center !important;
+        }
+        table.table.text-center th.text-left{
+            text-align: left !important;
+        }
+        .contact-box {
+            font-family: 'Tai Heritage Pro', serif;
+            border: 1px solid #000;
+            font-weight: 700;
+            line-height: 18px;
+            text-align: center;
+            padding: 2px 5px;
+            margin-top: 15px;
+        }
+        .report-end{
+            font-family: 'Tai Heritage Pro', serif;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 700;
+        }
+        .border-t-0{
+            border-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="page_container">
+        <div class="pdf_page size_letter">
+            <div class="pdf_header">
+                <div class="tax-text">Tax Search</div>
+                <img src="<?php echo base_url('assets/front/images/title_point_logo.png') ?>" class="title-logo" alt="">
+            </div> 
+            <div class="address-bar">
+                <div class="address">
+                    Los Angeles, California<br>
+                    <b>Searched: 6150-021-014</b><br>
+                    Order: 567467456743213
+                </div>
+                <div class="tax-detail">
+                    Tax Year: <span>2022-2023</span><br>
+                    Tax Cover: <span>06/23/2023</span><br>
+                    Searched By: <span>PCTXML01</span><br>
+                    Searched On: <span>7/5/2023 7:04 PM</span>
+                </div>
+                <div class="company-name">Company: PACIFIC COAST TITLE | GLENDALE - (FNFSTR) | 01 | CRN: 00012-00021</div>
+            </div>     
+            <div class="pdf-body">
+                <div class="billing-address">
+                    <div><span>APN:</span><b>6150-021-014</b></div>
+                    <div><span>Described As:</span><b>SPRINGDALE TRACT W 45 FT OF LOT 108</b></div>
+                    <div><span>Address:</span><b>2305 E 119TH ST</b></div>
+                    <div><span>City:</span><b>UNINCORPORATED - COUNTY OF LOS ANGELES</b></div>
+                    <div><span>Biliing Address:</span><b>2305 E 119TH ST LOS ANGELES CA 90059</b></div>
+                    <div><span>Assessed Owner(s):</span><b>ARGUETA,JANIO E; ARGUETA,BLANCA</b></div>
+                    <div><span>Search As:</span><b>Tax ID 6150-21 of Parcel 14</b></div>
+                </div>
+                <div class="tax-table">
+                    <div class="column">
+                        <div>Tax Rate Area: <b class="float-right">09748</b></div>
+                        <div class="mt-10">Use Code: <b class="float-right">0100</b></div>
+                        <div class="text-center"><b>SINGLE RESIDENTIAL</b></div>
+                        <div>Region Code: <b class="float-right">LOMITA</b></div>
+                        <div>Flood Zone: </div>
+                        <div>Zoning Code: <b class="float-right">LCRlYY</b></div>
+                        <div>Taxability Code:</div>
+                        <div class="mt-10">Tax Rate: <b class="float-right">S.166114 %</b></div>
+                        <div class="mt-50">Bill#:</div>
+                        <div>Issue Date: <b class="float-right">10/15/2022</b></div>
+                    </div>
+                    <div class="column">
+                        <div class="text-center"><b>Value</b></div>
+                        <div>Land: <b class="float-right">90,094.00</b></div>
+                        <div>Improvements: <b class="float-right">64,534.00</b></div>
+                        <div>Per56nal Property:</div>
+                        <div>Fixture:</div>
+                        <div>Inventory:</div>
+                        <div class="text-center mt-10"><b>Exemptions</b></div>
+                        <div>Homeowner:</div>
+                        <div>Inventory:</div>
+                        <div>Per56nal Property:</div>
+                        <div>Religious:</div>
+                        <div>All Other:</div>
+                        <div class="border-top">Net Taxabie Value:<b class="float-right">154,628.00</b></div>
+                    </div>
+                    <div class="column">
+                        <div>Conveyance Date:</div>
+                        <div>Conveying Instrument:</div>
+                        <div>Date Transfer Acquired:</div>
+                        <div>Vesting:</div>
+                        <div>Year Buiit: <b class="float-right">1938</b></div>
+                        <div>Year Last Modified: <b class="float-right">1944</b></div>
+                        <div class="text-center mt-49"><b>Square Footage</b></div>
+                        <div>Land:</div>
+                        <div>Improvements: <b class="float-right">1471</b></div>
+                        <div class="border-top">Tax Defaulted: <b class="float-right">2019</b></div>
+                        <div class="border-top">Total Tax: <b class="float-right">7,988.26</b></div>                        
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Installment</th>
+                            <th>Amount</th>
+                            <th>Penalty</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Payment Date</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1st</td>
+                            <td>3,994.14</td>
+                            <td>399.41</td>
+                            <td>12/10/2022</td>
+                            <td>UNPAID</td>
+                            <td></td>
+                            <td>4,393.55</td>
+                        </tr>
+                        <tr>
+                            <td>2nd</td>
+                            <td>3,994.12</td>
+                            <td>409.41</td>
+                            <td>04/10/2022</td>
+                            <td>UNPAID</td>
+                            <td></td>
+                            <td>4,403.53</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="border-top">Total Balance:</td>
+                            <td class="border-top">8,797.08</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-15"></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Bonds: <b>0</b></th>
+                            <th>Parcel Changed: <b></b></th>
+                            <th>56ld to State: <b>1</b></th>
+                            <th>Mello-Roos: </th>
+                            <th>NSF: <b>N</b></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="mt-15"></div>
+                <table class="table last-table">
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Special Lien Description</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>00177</td>
+                            <td>SAFE CLEAN WATER</td>
+                            <td>161.90</td>
+                        </tr>
+                        <tr>
+                            <td>00197</td>
+                            <td>LOS ANGELES COUNTY 56LID WASTE SERVICE CHARGE</td>
+                            <td>3.51</td>
+                        </tr>
+                        <tr>
+                            <td>00311</td>
+                            <td>COUNTY LIBRARY SERVICES</td>
+                            <td>33.20</td>
+                        </tr>
+                        <tr>
+                            <td>02800</td>
+                            <td>LOS ANGELES COUNTY LIGHTING DISTRICT</td>
+                            <td>5.00</td>
+                        </tr>
+                        <tr>
+                            <td>03071</td>
+                            <td>LOS ANGELES COUNTY FLOOD CONTROL</td>
+                            <td>43.37</td>
+                        </tr>
+                        <tr>
+                            <td>03361</td>
+                            <td>FIRESTONE GARBAGE DISPOSAL DISTRICT</td>
+                            <td>180.00</td>
+                        </tr>
+
+                        
+                        <tr>
+                            <td>04000</td>
+                            <td>LOS ANGELES COUNTY SEWER MAINTENANCE</td>
+                            <td>50.50</td>
+                        </tr>
+                        <tr>
+                            <td>06181</td>
+                            <td>GREATER L.A. COUNTY VECTOR CONTROL DISTRICT</td>
+                            <td>14.67</td>
+                        </tr>
+                        <tr>
+                            <td>06201</td>
+                            <td>COUNTY SANITATION DISTRICT #1</td>
+                            <td>235.20</td>
+                        </tr>
+                        <tr>
+                            <td>99999</td>
+                            <td>ALL OTHER SPECIAL LIENS NOT PROVIDED SEPARATELY BY THE COUNTY</td>
+                            <td>5,542.52</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>  
+            <div class="pdf_footer">
+                <div class="footer-left">
+                    <b>6150-021-014</b><br>
+                    Los Angeles, California
+                </div>
+                <div class="text-center page-number">
+                    Page 1 of 2
+                </div>
+                <div class="footer-right">
+                    Order: 567467456743213<br>Printed by PCTXML01 on 7/5/2023 7:06:26 PM
+                </div>
+            </div>
+        </div>
+            <div class="page-break" style="page-break-after: always;"></div>
+            <div class="pdf_page size_letter" style="margin-top: 50px !important;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="10" class="text-center">*** DELINQUENCY INFORMATION FOR PRIOR YEARS ***</th>
+                        </tr>
+                        <tr class="no-border">
+                            <th>Year</th>
+                            <th>Parcel/Bill #</th>
+                            <th>Bill Type</th>
+                            <th>Bill#</th>
+                            <th>Delinq Inst</th>
+                            <th>Amount</th>
+                            <th>Penalty</th>
+                            <th>Cost/Fee</th>
+                            <th>Accum lnt</th>
+                            <th>Pmt Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2018</td>
+                            <td>6150-021-014-001</td>
+                            <td>REG</td>
+                            <td></td>
+                            <td></td>
+                            <td>7723.91</td>
+                            <td>56.74</td>
+                            <td></td>
+                            <td>4634.35</td>
+                            <td>UNPAID</td>
+                        </tr>
+                        <tr>
+                            <td>2019</td>
+                            <td>6150-021-014-001</td>
+                            <td>REG</td>
+                            <td></td>
+                            <td></td>
+                            <td>6762.74</td>
+                            <td></td>
+                            <td></td>
+                            <td>3651.88</td>
+                            <td>UNPAID</td>
+                        </tr>
+                        <tr>
+                            <td>2020</td>
+                            <td>6150-021-014-001</td>
+                            <td>REG</td>
+                            <td></td>
+                            <td></td>
+                            <td>5990.91</td>
+                            <td></td>
+                            <td></td>
+                            <td>2156.73</td>
+                            <td>UNPAID</td>
+                        </tr>
+                        <tr>
+                            <td>2021</td>
+                            <td>6150-021-014-001</td>
+                            <td>REG</td>
+                            <td></td>
+                            <td></td>
+                            <td>8016.96</td>
+                            <td></td>
+                            <td></td>
+                            <td>1443.05</td>
+                            <td>UNPAID</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table text-center border-t-0">
+                    <thead>
+                        <tr>
+                            <th colspan="10" class="text-left">Payment History</th>
+                        </tr>
+                        <tr class="no-border">
+                            <th>Payment Date</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>02/04/2020</td>
+                            <td>3574.06</td>
+                            <td>APPLIED PAYMENT</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-15"></div>
+                <table class="table text-center">
+                    <thead>
+                        <tr>
+                            <th colspan="10" class="text-center">*** 2023/2024 EXTENDED MONTHLY REDEMPTION SCHEDULE ***</th>
+                        </tr>
+                        <tr class="no-border">
+                            <th>Month</th>
+                            <th>Interest</th>
+                            <th>Amount</th>
+                            <th>Month</th>
+                            <th>Interest</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jul 2023</td>
+                            <td>547.24</td>
+                            <td>49,781.59</td>
+                            <td>Jan 2024</td>
+                            <td>3,830.69</td>
+                            <td>53,065.04</td>
+                        </tr>
+                        <tr>
+                            <td>Aug 2023</td>
+                            <td>1,094.48</td>
+                            <td>50,328.83</td>
+                            <td>Feb 2024</td>
+                            <td>4,377.93</td>
+                            <td>53,612.28</td>
+                        </tr>
+                        <tr>
+                            <td>Sep 2023</td>
+                            <td>1,641.73</td>
+                            <td>50,876.08</td>
+                            <td>Mar 2024</td>
+                            <td>4,925.18</td>
+                            <td>54,159.53</td>
+                        </tr>
+                        <tr>
+                            <td>Oct 2023</td>
+                            <td>2,188.97</td>
+                            <td>51,423.32</td>
+                            <td>Apr 2024</td>
+                            <td>5,472.42</td>
+                            <td>54,706.77</td>
+                        </tr>
+                        <tr>
+                            <td>Nov 2023</td>
+                            <td>2,736.21</td>
+                            <td>51,970.56</td>
+                            <td>May 2024</td>
+                            <td>6,019.66</td>
+                            <td>55,254.01</td>
+                        </tr>
+                        <tr>
+                            <td>Dec 2023</td>
+                            <td>3,283.45</td>
+                            <td>52,517.80</td>
+                            <td>Jun 2024</td>
+                            <td>6,566.90</td>
+                            <td>55,801.25</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="contact-box">
+                    CONTACT TITLE TAX FOR ADDITIONAL POWER TO SELL FEES<br>
+                    OPEN TAX ORDER NUMBER REQUIRED FOR ADDITIONAL INFORMATION INTERIM PROCESSING ON<br>
+                    PARTIAL PAYMENITS APPLIED TO DELINQUENT TAXES. CONTACT TITLE TAX FOR UPDATED REDEMPTION AMOUNTS.<br>
+                    DELINQUENT CURRENT YEAR TAXES ARE INCLUDED IN THE REDEMPTION SCHEDULE
+                </div>
+                <div class="report-end">*** END OF REPORT ***</div>
+                <div class="pdf_footer">
+                    <div class="footer-left">
+                        <b>6150-021-014</b><br>
+                        Los Angeles, California
+                    </div>
+                    <div class="text-center page-number">
+                        Page 2 of 2
+                    </div>
+                    <div class="footer-right">
+                        Order: 567467456743213<br>Printed by PCTXML01 on 7/5/2023 7:06:26 PM
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+</body>
+</html>
