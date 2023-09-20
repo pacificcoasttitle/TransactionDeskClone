@@ -5622,4 +5622,52 @@ class Cron extends MX_Controller {
             }
         }
     }
+
+    public function updateLpReportStatus()
+    {
+        $this->db->select('*');
+        $this->db->from('order_details');   
+        $this->db->where('lp_file_number IS NOT NULL');
+        $this->db->where('file_number IS NOT NULL and file_number != 0'); 
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        if (!empty($result)) {
+            foreach($result as $res) {
+                $orderData = array(         
+                    'lp_report_status'=> 'converted'
+                );
+                $condition = array(
+                    'file_id' => $res['file_id'],
+                );
+    
+                $this->home_model->update($orderData,$condition,'order_details');
+            }
+        }
+        
+    }
+
+    public function updateLpReportStatusForOldOrders()
+    {
+        $this->db->select('*');
+        $this->db->from('order_details');   
+        $this->db->where('lp_file_number IS NOT NULL');
+        $this->db->where('created_at <= (NOW() - INTERVAL 90 DAY)'); 
+        $this->db->where('lp_report_status', 'pending');
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        if (!empty($result)) {
+            foreach($result as $res) {
+                $orderData = array(         
+                    'lp_report_status'=> 'denied'
+                );
+                $condition = array(
+                    'file_id' => $res['file_id'],
+                );
+    
+                $this->home_model->update($orderData,$condition,'order_details');
+            }
+        }
+    }
 }
