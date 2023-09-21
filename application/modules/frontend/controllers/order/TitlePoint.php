@@ -553,6 +553,7 @@ class TitlePoint extends MX_Controller {
 				if($responseStatus == 'Success')
 				{
 					$firstInstallment = $secondInstallment = array();
+					
 					if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
 					{
 						$firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];
@@ -614,8 +615,68 @@ class TitlePoint extends MX_Controller {
 						mkdir('./uploads/tax-data-xml', 0777, TRUE);
 					}
 					$pdfFilePath = './uploads/tax-data-xml/tp_api_id_' . $random_number . '.xml';
+					
 					// print_r($pdfFilePath);die;
 					file_put_contents($pdfFilePath, $file);
+
+					$data = array();
+					$data['apn'] = isset($result['Result']['TaxReport']['APN']) && !empty($result['Result']['TaxReport']['APN']) ? $result['Result']['TaxReport']['APN'] : '';
+					$data['description'] = isset($result['Result']['TaxReport']['Description']) && !empty($result['Result']['TaxReport']['Description']) ? $result['Result']['TaxReport']['Description'] : '';
+					$data['property_address'] = isset($result['Result']['TaxReport']['PropertyAddress']) && !empty($result['Result']['TaxReport']['PropertyAddress']) ? $result['Result']['TaxReport']['PropertyAddress'] : '';
+					$data['billing_address'] = isset($result['Result']['TaxReport']['BillingAddress']) && !empty($result['Result']['TaxReport']['BillingAddress']) ? $result['Result']['TaxReport']['BillingAddress'] : '';
+					$data['city_county'] = '';
+					if (!empty($result['Result']['TaxReport']['AssessedOwners'])) {
+						$data['assessed_owners'] = '';
+						foreach($result['Result']['TaxReport']['AssessedOwners'] as $assessedOwner) {
+							$data['assessed_owners'] .= $assessedOwner['Item'].";";
+						}
+					} else {
+						$data['assessed_owners'] = '';
+					}
+					$data['SearchAsPointers'] = isset($result['Result']['TaxReport']['SearchAsPointers']) && !empty($result['Result']['TaxReport']['SearchAsPointers']) ? $result['Result']['TaxReport']['SearchAsPointers'] : '';	
+					if (!empty($result['Result']['TaxReport']['SearchAsPointers'][0]['Item'])) {
+						$data['assessed_owners'] = '';
+					} else {
+						$data['assessed_owners'] = '';
+					}					
+					$data['city'] = isset($result['Result']['TaxReport']['City']) && !empty($result['Result']['TaxReport']['City']) ? $result['Result']['TaxReport']['City'] : '';
+					$data['tax_year'] = isset($result['Result']['TaxReport']['TaxYear']) && !empty($result['Result']['TaxReport']['TaxYear']) ? $result['Result']['TaxReport']['TaxYear'] : '';
+					$data['TaxRateArea'] = isset($result['Result']['TaxReport']['TaxRateArea']) && !empty($result['Result']['TaxReport']['TaxRateArea']) ? $result['Result']['TaxReport']['TaxRateArea'] : '';
+					$data['UseCode'] = isset($result['Result']['TaxReport']['UseCode']) && !empty($result['Result']['TaxReport']['UseCode']) ? $result['Result']['TaxReport']['UseCode'] : '';
+					$data['UseDescription'] = isset($result['Result']['TaxReport']['UseDescription']) && !empty($result['Result']['TaxReport']['UseDescription']) ? $result['Result']['TaxReport']['UseDescription'] : '';
+					$data['RegionCode'] = isset($result['Result']['TaxReport']['RegionCode']) && !empty($result['Result']['TaxReport']['RegionCode']) ? $result['Result']['TaxReport']['RegionCode'] : '';
+					$data['ZoningCode'] = isset($result['Result']['TaxReport']['ZoningCode']) && !empty($result['Result']['TaxReport']['ZoningCode']) ? $result['Result']['TaxReport']['ZoningCode'] : '';
+					$data['TaxRate'] = isset($result['Result']['TaxReport']['TaxRate']) && !empty($result['Result']['TaxReport']['TaxRate']) ? $result['Result']['TaxReport']['TaxRate'] : '';
+					$data['IssueDate'] = isset($result['Result']['TaxReport']['IssueDate']) && !empty($result['Result']['TaxReport']['IssueDate']) ? $result['Result']['TaxReport']['IssueDate'] : '';
+					$data['LandValuation'] = isset($result['Result']['TaxReport']['LandValuation']) && !empty($result['Result']['TaxReport']['LandValuation']) ? $result['Result']['TaxReport']['LandValuation'] : '';
+					$data['ImprovementsValuation'] = isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : '';
+					$data['NetTaxableValue'] = isset($result['Result']['TaxReport']['NetTaxableValue']) && !empty($result['Result']['TaxReport']['NetTaxableValue']) ? $result['Result']['TaxReport']['NetTaxableValue'] : '';
+					$data['YearBuilt'] = isset($result['Result']['TaxReport']['YearBuilt']) && !empty($result['Result']['TaxReport']['YearBuilt']) ? $result['Result']['TaxReport']['YearBuilt'] : '';
+					$data['YearLastModified'] = isset($result['Result']['TaxReport']['YearLastModified']) && !empty($result['Result']['TaxReport']['YearLastModified']) ? $result['Result']['TaxReport']['YearLastModified'] : '';
+					$data['ImprovementsSqFootage'] = isset($result['Result']['TaxReport']['ImprovementsSqFootage']) && !empty($result['Result']['TaxReport']['ImprovementsSqFootage']) ? $result['Result']['TaxReport']['ImprovementsSqFootage'] : '';
+					$data['TotalTax'] = isset($result['Result']['TaxReport']['TotalTax']) && !empty($result['Result']['TaxReport']['TotalTax']) ? $result['Result']['TaxReport']['TotalTax'] : '';
+					$data['TotalTax'] = isset($result['Result']['TaxReport']['TotalTax']) && !empty($result['Result']['TaxReport']['TotalTax']) ? $result['Result']['TaxReport']['TotalTax'] : '';
+					$data['TotalBalanceTaxInstallment'] = isset($result['Result']['TaxReport']['TotalBalanceTaxInstallment']) && !empty($result['Result']['TaxReport']['TotalBalanceTaxInstallment']) ? $result['Result']['TaxReport']['TotalBalanceTaxInstallment'] : '';
+
+					$data['first_balance'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Balance']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Balance']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Balance'] : '';
+					$data['first_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Amount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Amount']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Amount'] : '';
+					$data['first_due_date'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['DueDate']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['DueDate']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['DueDate'] : '';
+					$data['first_number'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Number']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Number']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Number'] : '';
+					$data['first_penalty'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Penalty']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Penalty']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Penalty'] : '';
+					$data['first_status'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Status']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Status']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Status'] : '';
+					$data['first_amount_paid'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['AmountPaid']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['AmountPaid']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['AmountPaid'] : '';
+					$data['first_tax_year'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['TaxYear']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['TaxYear']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['TaxYear'] : '';
+					$data['first_interest_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['InterestAmount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['InterestAmount']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['InterestAmount'] : '';
+
+					$data['second_balance'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Balance']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Balance']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Balance'] : '';
+					$data['second_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Amount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Amount']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Amount'] : '';
+					$data['second_due_date'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['DueDate']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['DueDate']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['DueDate'] : '';
+					$data['second_number'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Number']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Number']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Number'] : '';
+					$data['second_penalty'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Penalty']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Penalty']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Penalty'] : '';
+					$data['second_status'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Status']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Status']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Status'] : '';
+					$data['second_amount_paid'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['AmountPaid']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['AmountPaid']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['AmountPaid'] : '';
+					$data['second_tax_year'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['TaxYear']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['TaxYear']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['TaxYear'] : '';
+					$data['second_interest_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount'] : '';
 					$this->order->uploadDocumentOnAwsS3('tp_api_id_' . $random_number . '.xml', 'tax-data-xml');
 					/** End: Save Tax data xml response in S3 */
 				}

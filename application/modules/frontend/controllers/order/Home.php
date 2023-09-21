@@ -2257,7 +2257,6 @@ class Home extends MX_Controller
 	public function generateTaxPdf() 
 	{
 		
-		
 		$html = $this->load->view('order/tax/taxes', array(), true);
 		// echo $html;
 		// exit;

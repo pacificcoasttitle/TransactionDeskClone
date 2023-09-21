@@ -231,11 +231,11 @@
             <div class="address-bar">
                 <div class="address">
                     Los Angeles, California<br>
-                    <b>Searched: 6150-021-014</b><br>
-                    Order: 567467456743213
+                    <b>Searched: <?php echo $apn;?></b><br>
+                    Order: 
                 </div>
                 <div class="tax-detail">
-                    Tax Year: <span>2022-2023</span><br>
+                    Tax Year: <span><?php echo $tax_year;?></span><br>
                     Tax Cover: <span>06/23/2023</span><br>
                     Searched By: <span>PCTXML01</span><br>
                     Searched On: <span>7/5/2023 7:04 PM</span>
@@ -244,32 +244,32 @@
             </div>     
             <div class="pdf-body">
                 <div class="billing-address">
-                    <div><span>APN:</span><b>6150-021-014</b></div>
-                    <div><span>Described As:</span><b>SPRINGDALE TRACT W 45 FT OF LOT 108</b></div>
-                    <div><span>Address:</span><b>2305 E 119TH ST</b></div>
-                    <div><span>City:</span><b>UNINCORPORATED - COUNTY OF LOS ANGELES</b></div>
-                    <div><span>Biliing Address:</span><b>2305 E 119TH ST LOS ANGELES CA 90059</b></div>
-                    <div><span>Assessed Owner(s):</span><b>ARGUETA,JANIO E; ARGUETA,BLANCA</b></div>
-                    <div><span>Search As:</span><b>Tax ID 6150-21 of Parcel 14</b></div>
+                    <div><span>APN:</span><b><?php echo $apn;?></b></div>
+                    <div><span>Described As:</span><b><?php echo $description;?></b></div>
+                    <div><span>Address:</span><b><?php echo $property_address;?></b></div>
+                    <div><span>City:</span><b><?php echo $city;?></b></div>
+                    <div><span>Biliing Address:</span><b><?php echo $billing_address;?></b></div>
+                    <div><span>Assessed Owner(s):</span><b><?php echo $assessed_owners;?></b></div>
+                    <div><span>Search As:</span><b><?php echo $SearchAsPointers;?></b></div>
                 </div>
                 <div class="tax-table">
                     <div class="column">
-                        <div>Tax Rate Area: <b class="float-right">09748</b></div>
-                        <div class="mt-10">Use Code: <b class="float-right">0100</b></div>
-                        <div class="text-center"><b>SINGLE RESIDENTIAL</b></div>
-                        <div>Region Code: <b class="float-right">LOMITA</b></div>
+                        <div>Tax Rate Area: <b class="float-right"><?php echo $TaxRateArea;?></b></div>
+                        <div class="mt-10">Use Code: <b class="float-right"><?php echo $UseCode;?></b></div>
+                        <div class="text-center"><b><?php echo $UseDescription;?></b></div>
+                        <div>Region Code: <b class="float-right"><?php echo $UseDescription;?></b></div>
                         <div>Flood Zone: </div>
-                        <div>Zoning Code: <b class="float-right">LCRlYY</b></div>
+                        <div>Zoning Code: <b class="float-right"><?php echo $ZoningCode;?></b></div>
                         <div>Taxability Code:</div>
-                        <div class="mt-10">Tax Rate: <b class="float-right">S.166114 %</b></div>
+                        <div class="mt-10">Tax Rate: <b class="float-right"><?php echo $TaxRate;?></b></div>
                         <div class="mt-50">Bill#:</div>
-                        <div>Issue Date: <b class="float-right">10/15/2022</b></div>
+                        <div>Issue Date: <b class="float-right"><?php echo $IssueDate;?></b></div>
                     </div>
                     <div class="column">
                         <div class="text-center"><b>Value</b></div>
-                        <div>Land: <b class="float-right">90,094.00</b></div>
-                        <div>Improvements: <b class="float-right">64,534.00</b></div>
-                        <div>Per56nal Property:</div>
+                        <div>Land: <b class="float-right"><?php echo $LandValuation;?></b></div>
+                        <div>Improvements: <b class="float-right"><?php echo $ImprovementsValuation;?></b></div>
+                        <div>Personal Property:</div>
                         <div>Fixture:</div>
                         <div>Inventory:</div>
                         <div class="text-center mt-10"><b>Exemptions</b></div>
@@ -278,20 +278,20 @@
                         <div>Per56nal Property:</div>
                         <div>Religious:</div>
                         <div>All Other:</div>
-                        <div class="border-top">Net Taxabie Value:<b class="float-right">154,628.00</b></div>
+                        <div class="border-top">Net Taxabie Value:<b class="float-right"><?php echo $NetTaxableValue;?></b></div>
                     </div>
                     <div class="column">
                         <div>Conveyance Date:</div>
                         <div>Conveying Instrument:</div>
                         <div>Date Transfer Acquired:</div>
                         <div>Vesting:</div>
-                        <div>Year Buiit: <b class="float-right">1938</b></div>
-                        <div>Year Last Modified: <b class="float-right">1944</b></div>
+                        <div>Year Buiit: <b class="float-right"><?php echo $YearBuilt;?></b></div>
+                        <div>Year Last Modified: <b class="float-right"><?php echo $YearLastModified;?></b></div>
                         <div class="text-center mt-49"><b>Square Footage</b></div>
                         <div>Land:</div>
-                        <div>Improvements: <b class="float-right">1471</b></div>
+                        <div>Improvements: <b class="float-right"><?php echo $ImprovementsSqFootage;?></b></div>
                         <div class="border-top">Tax Defaulted: <b class="float-right">2019</b></div>
-                        <div class="border-top">Total Tax: <b class="float-right">7,988.26</b></div>                        
+                        <div class="border-top">Total Tax: <b class="float-right"><?php echo $TotalTax;?></b></div>                        
                     </div>
                 </div>
                 <table class="table">
@@ -308,22 +308,22 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1st</td>
-                            <td>3,994.14</td>
-                            <td>399.41</td>
-                            <td>12/10/2022</td>
-                            <td>UNPAID</td>
+                            <td><?php echo $first_number;?></td>
+                            <td><?php echo $first_amount;?></td>
+                            <td><?php echo $first_penalty;?></td>
+                            <td><?php echo $first_due_date;?></td>
+                            <td><?php echo $first_status;?></td>
                             <td></td>
-                            <td>4,393.55</td>
+                            <td><?php echo $first_balance;?></td>
                         </tr>
                         <tr>
-                            <td>2nd</td>
-                            <td>3,994.12</td>
-                            <td>409.41</td>
-                            <td>04/10/2022</td>
-                            <td>UNPAID</td>
+                            <td><?php echo $second_number;?></td>
+                            <td><?php echo $second_amount;?></td>
+                            <td><?php echo $second_penalty;?></td>
+                            <td><?php echo $second_due_date;?></td>
+                            <td><?php echo $second_status;?></td>
                             <td></td>
-                            <td>4,403.53</td>
+                            <td><?php echo $second_balance;?></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -332,7 +332,7 @@
                             <td></td>
                             <td></td>
                             <td class="border-top">Total Balance:</td>
-                            <td class="border-top">8,797.08</td>
+                            <td class="border-top"><?php echo $TotalBalanceTaxInstallment;?></td>
                         </tr>
                     </tbody>
                 </table>
