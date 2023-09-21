@@ -577,6 +577,7 @@ class Order extends MX_Controller
                                 <option value="pending">Pending</option>
                                 <option value="approved">Approved</option>
                                 <option value="denied">Denied</option>
+                                <option value="converted">Converted</option>
                             </select>';
             $lpReportStatusSelection = str_replace('value="' . $lp_report_status . '"', 'value="' . $lp_report_status . '" selected', $lpReportStatusSelection);
             $nestedData[] = $lpReportStatusSelection;

@@ -37,11 +37,9 @@
             text-transform: capitalize;
             font-size: 1em;
         }
-        .img-holder {
-            width: 680px;
-        }
+       
         .website-logo-inside img {
-            width: 331px;
+            width: 250px;
         }
         .form-content .form-button .ibtn:hover {opacity: .6;}
         .form-content .form-button .ibtn {
@@ -62,6 +60,17 @@
             transition: all 0.3s ease;
             -webkit-box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
             box-shadow: 0 0 0 rgba(0, 0, 0, 0.16);
+        }
+        .form-content {
+            background: linear-gradient(20deg, #03374f 0%, #02283a 60%, #03374f 100%) !important;
+        }
+        .title-head {
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+        .form-content .form-items {
+            max-width: 565px;
         }
     </style>
 </head>
@@ -93,8 +102,9 @@
                             </a>
                         </div>
 					
-                        <h3>Let us know who you are...</h3>
-                        <p>Enter your email below to log in. <br> No password is needed.</p>
+                        <p style="margin-bottom: 0px !important;">Welcome To</p>
+                        <h1 class="title-head">Transaction Desk</h1>
+                        <p>Enter your email below to log in.</p>
                         <div class="page-links">
                             <a href="login2.html" class="active">Log in</a>
                             <!-- <a href="register2.html">Register</a> -->

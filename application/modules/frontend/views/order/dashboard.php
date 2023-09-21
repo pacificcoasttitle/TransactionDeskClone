@@ -3,6 +3,9 @@
 
 .fs-2 {
     font-size: 20px;
+	margin-bottom: 3rem;
+    color: #3c6997;
+    font-weight: 600;
 }
 .fs-1-half {
 	font-size: 15px;
@@ -21,36 +24,50 @@
 	padding: 0;
 }
 .dashboard-menu-icon {
-	height: 4rem;
-	width: 3.45rem;
+	height: 5rem;
 }
 .main-wrapper {
 	scale: 95%;
 }
-
+.card_title {
+	font-size: 25px;
+	padding-top: 20px;
+}
+.main-title {
+	margin-bottom: 3rem;
+    color: #3c6997;
+    font-weight: 600;
+}
+.dashboard-wrap {
+	background-image: url(/../../assets/frontend/images/NewBG.jpg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    height: auto;
+}
 </style>
 
 <div class="container-fluid p-5 main-wrapper">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="typography-section__innera">
-				<h2 class="ui-title-block ui-title-block_light mb-3">Welcome Back <?php echo $name; ?>,</h2>
+				<h2 class="ui-title-block ui-title-block_light mb-3 main-title">Welcome Back <?php echo $name; ?>,</h2>
 				<div class="ui-decor-1a bg-accent"></div>
-				<h3 class="ui-title-block_light fs-2">How can we help you today?</h3>
+				<p class="ui-title-block_light fs-2">How can we help you today?</p>
 			</div>
 		</div>
 	</div>
 
 	<div class="row mb-4">
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card shadow h-100 py-2" style="border-left: 0.25rem solid #3c6997!important;border-radius: 5px;">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/New.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/New@2x.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">New Title Order</div>
+							<div class="text-xl font-weight-bold text-uppercase mb-1 card_title" style="color: #3c6997;">New Title Order</div>
 						</div>
 					</div>
 				</div>
@@ -59,14 +76,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/CPL.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/CPL@2x.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Generate CPL</div>
+							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Generate CPL</div>
 						</div>
 					</div>
 				</div>
@@ -75,14 +92,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Proposed.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Proposed@2x.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Proposed</div>
+							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Proposed</div>
 						</div>
 					</div>
 				</div>
@@ -93,14 +110,14 @@
 
 	<div class="row mt-3 mb-4">
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Fees.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Fees@2x.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Fee Estimate</div>
+							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Fee Estimate</div>
 						</div>
 					</div>
 				</div>
@@ -109,14 +126,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Prelim.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Prelim@2x.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Review Prelim</div>
+							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Review Prelim</div>
 						</div>
 					</div>
 				</div>
@@ -125,14 +142,14 @@
 		</div>
 
 		<div class="col-md-4 col-sm-12">
-			<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card shadow h-100 py-2"  style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
 						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Upload.png">
+							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Upload@2x.png">
 						</div>
 						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-primary text-uppercase mb-1">Get Policy</div>
+							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Get Policy</div>
 						</div>
 					</div>
 				</div>
