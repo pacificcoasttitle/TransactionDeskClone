@@ -2902,7 +2902,6 @@ class Home extends MX_Controller
 		$pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
         $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
         $this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
-		echo
 		exit;
 	}
 
