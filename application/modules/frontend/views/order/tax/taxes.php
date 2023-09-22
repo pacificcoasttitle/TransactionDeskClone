@@ -230,7 +230,7 @@
             </div> 
             <div class="address-bar">
                 <div class="address">
-                    Los Angeles, California<br>
+                    <?php echo $city;?>, California<br>
                     <b>Searched: <?php echo $apn;?></b><br>
                     Order: 
                 </div>
@@ -257,10 +257,10 @@
                         <div>Tax Rate Area: <b class="float-right"><?php echo $TaxRateArea;?></b></div>
                         <div class="mt-10">Use Code: <b class="float-right"><?php echo $UseCode;?></b></div>
                         <div class="text-center"><b><?php echo $UseDescription;?></b></div>
-                        <div>Region Code: <b class="float-right"><?php echo $UseDescription;?></b></div>
+                        <div>Region Code: <b class="float-right"><?php echo $RegionCode;?></b></div>
                         <div>Flood Zone: </div>
                         <div>Zoning Code: <b class="float-right"><?php echo $ZoningCode;?></b></div>
-                        <div>Taxability Code:</div>
+                        <div>Taxability Code: <b class="float-right"><?php echo $TaxabilityCode;?></b></div>
                         <div class="mt-10">Tax Rate: <b class="float-right"><?php echo $TaxRate;?></b></div>
                         <div class="mt-50">Bill#:</div>
                         <div>Issue Date: <b class="float-right"><?php echo $IssueDate;?></b></div>
@@ -273,16 +273,16 @@
                         <div>Fixture:</div>
                         <div>Inventory:</div>
                         <div class="text-center mt-10"><b>Exemptions</b></div>
-                        <div>Homeowner:</div>
+                        <div>Homeowner: <b class="float-right"><?php echo $HomeOwnerExemption;?></b></div>
                         <div>Inventory:</div>
-                        <div>Per56nal Property:</div>
+                        <div>Personal Property:</div>
                         <div>Religious:</div>
                         <div>All Other:</div>
                         <div class="border-top">Net Taxabie Value:<b class="float-right"><?php echo $NetTaxableValue;?></b></div>
                     </div>
                     <div class="column">
-                        <div>Conveyance Date:</div>
-                        <div>Conveying Instrument:</div>
+                        <div>Conveyance Date: <b class="float-right"><?php echo $ConveyanceDate;?></b></div>
+                        <div>Conveying Instrument: <b class="float-right"><?php echo $ConveyingInstrument;?></b></div>
                         <div>Date Transfer Acquired:</div>
                         <div>Vesting:</div>
                         <div>Year Buiit: <b class="float-right"><?php echo $YearBuilt;?></b></div>
@@ -358,58 +358,16 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>00177</td>
-                            <td>SAFE CLEAN WATER</td>
-                            <td>161.90</td>
-                        </tr>
-                        <tr>
-                            <td>00197</td>
-                            <td>LOS ANGELES COUNTY 56LID WASTE SERVICE CHARGE</td>
-                            <td>3.51</td>
-                        </tr>
-                        <tr>
-                            <td>00311</td>
-                            <td>COUNTY LIBRARY SERVICES</td>
-                            <td>33.20</td>
-                        </tr>
-                        <tr>
-                            <td>02800</td>
-                            <td>LOS ANGELES COUNTY LIGHTING DISTRICT</td>
-                            <td>5.00</td>
-                        </tr>
-                        <tr>
-                            <td>03071</td>
-                            <td>LOS ANGELES COUNTY FLOOD CONTROL</td>
-                            <td>43.37</td>
-                        </tr>
-                        <tr>
-                            <td>03361</td>
-                            <td>FIRESTONE GARBAGE DISPOSAL DISTRICT</td>
-                            <td>180.00</td>
-                        </tr>
-
+                        <?php if (!empty($Liens)) { 
+                                foreach($Liens as $liens) { ?>
+                                    <tr>
+                                        <td><?php echo $liens['Account'];?></td>
+                                        <td><?php echo $liens['Description'];?></td>
+                                        <td><?php echo $liens['Amount'];?></td>
+                                    </tr>
+                                <?php } ?>
+                        <?php } ?>
                         
-                        <tr>
-                            <td>04000</td>
-                            <td>LOS ANGELES COUNTY SEWER MAINTENANCE</td>
-                            <td>50.50</td>
-                        </tr>
-                        <tr>
-                            <td>06181</td>
-                            <td>GREATER L.A. COUNTY VECTOR CONTROL DISTRICT</td>
-                            <td>14.67</td>
-                        </tr>
-                        <tr>
-                            <td>06201</td>
-                            <td>COUNTY SANITATION DISTRICT #1</td>
-                            <td>235.20</td>
-                        </tr>
-                        <tr>
-                            <td>99999</td>
-                            <td>ALL OTHER SPECIAL LIENS NOT PROVIDED SEPARATELY BY THE COUNTY</td>
-                            <td>5,542.52</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>  
