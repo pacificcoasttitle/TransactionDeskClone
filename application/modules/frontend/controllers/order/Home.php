@@ -1165,6 +1165,13 @@ class Home extends MX_Controller
 						$this->order->checkGrantDoc($orderNumber, false);
 					}
 
+					$tax_file_path = FCPATH . 'uploads/tax/' . $session_id . '.pdf';
+					if (file_exists($tax_file_path)) {
+						rename(FCPATH . "/uploads/tax/" . $tax_file_path, FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
+						$this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
+					}
+										
+
 					$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 
 					$tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
@@ -1262,7 +1269,7 @@ class Home extends MX_Controller
 				}
 
 				if ($this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
-					//$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+					$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
 					$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
 				}
 
@@ -2252,6 +2259,651 @@ class Home extends MX_Controller
 		}
 
 		echo json_encode($response_data);
+	}
+
+	public function generateTaxPdf() 
+	{
+		
+
+		$result =  
+			array (
+			  'ReturnStatus' => 'Success',
+			  'ReturnErrors' => '',
+			  'ReturnMessages' => '',
+			  'Result' => 
+			  array (
+				'ResultType' => 'TitlePoint.TaxReportResult',
+				'ID' => '0',
+				'TaxReport' => 
+				array (
+				  'Image' => 
+				  array (
+					'DocInfo' => 'Book=6150;Page=21;Parcel=14',
+					'Type' => 'MAP',
+					'SubType' => 'ASSESSOR',
+				  ),
+				  'Messages' => '',
+				  'Installments' => 
+				  array (
+					'Item' => 
+					array (
+					  0 => 
+					  array (
+						'Balance' => '4393.55',
+						'Amount' => '3994.14',
+						'DueDate' => '12/10/2022',
+						'Number' => '1st',
+						'Penalty' => '399.41',
+						'Status' => 'UNPAID',
+						'AmountPaid' => '0.00',
+						'TaxYear' => '2022',
+						'InterestAmount' => '0.00',
+					  ),
+					  1 => 
+					  array (
+						'Balance' => '4403.53',
+						'Amount' => '3994.12',
+						'DueDate' => '4/10/2023',
+						'Number' => '2nd',
+						'Penalty' => '409.41',
+						'Status' => 'UNPAID',
+						'AmountPaid' => '0.00',
+						'TaxYear' => '2022',
+						'InterestAmount' => '0.00',
+					  ),
+					),
+				  ),
+				  'RedemptionSchedules' => '',
+				  'RedemptionSchedules2' => '',
+				  'DelinquencyInstallments' => '',
+				  'DelinquencyInformation' => 
+				  array (
+					'Available' => 'false',
+				  ),
+				  'DelinquencyPayments' => '',
+				  'Liens' => 
+				  array (
+					'Item' => 
+					array (
+					  0 => 
+					  array (
+						'Account' => '00177',
+						'Amount' => '161.90',
+						'Description' => 'SAFE CLEAN WATER',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  1 => 
+					  array (
+						'Account' => '00197',
+						'Amount' => '3.51',
+						'Description' => 'LOS ANGELES COUNTY SOLID WASTE SERVICE CHARGE',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  2 => 
+					  array (
+						'Account' => '00311',
+						'Amount' => '33.20',
+						'Description' => 'COUNTY LIBRARY SERVICES',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  3 => 
+					  array (
+						'Account' => '02800',
+						'Amount' => '5.00',
+						'Description' => 'LOS ANGELES COUNTY LIGHTING  DISTRICT',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  4 => 
+					  array (
+						'Account' => '03071',
+						'Amount' => '43.37',
+						'Description' => 'LOS ANGELES COUNTY  FLOOD CONTROL',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  5 => 
+					  array (
+						'Account' => '03361',
+						'Amount' => '180.00',
+						'Description' => 'FIRESTONE GARBAGE DISPOSAL DISTRICT',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  6 => 
+					  array (
+						'Account' => '04000',
+						'Amount' => '50.50',
+						'Description' => 'LOS ANGELES COUNTY SEWER MAINTENANCE',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  7 => 
+					  array (
+						'Account' => '06181',
+						'Amount' => '14.67',
+						'Description' => 'GREATER L.A. COUNTY VECTOR CONTRL DISTRICT',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  8 => 
+					  array (
+						'Account' => '06201',
+						'Amount' => '235.20',
+						'Description' => 'COUNTY SANITATION DISTRICT #1',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					  9 => 
+					  array (
+						'Account' => '99999',
+						'Amount' => '5,542.52',
+						'Description' => 'ALL OTHER SPECIAL LIENS NOT PROVIDED SEPARATELY BY THE COUNTY',
+						'IsMelloRoos' => 'false',
+						'Rate' => '0.000000',
+					  ),
+					),
+				  ),
+				  'RollCorrections' => '',
+				  'Bonds' => '',
+				  'Parcels' => 
+				  array (
+					'Item' => 
+					array (
+					  'PropertyUseCode' => '0100',
+					),
+				  ),
+				  'Supplementals' => '',
+				  'RecordingInformation' => 
+				  array (
+					'RecordingDate' => '1/1/0001',
+				  ),
+				  'RelatedOpenOrders' => '',
+				  'Status' => 'Success',
+				  'DocumentInformation' => '',
+				  'LegalInfos' => 
+				  array (
+					'Item' => 
+					array (
+					  'MapCode' => 'ARB',
+					  'MajorLegalValue' => '6150-21',
+					  'MajorLegalName' => 'APN ARBS',
+					  'Book' => '6150',
+					  'Page' => '21',
+					  'ArbTract' => '6150-21',
+					  'Parcel' => '14',
+					  'Narrative' => 'Tax ID 6150-21 Pcl 14',
+					  'FullNarrative' => 'Tax ID 6150-21 of Parcel 14',
+					  'County' => 'CA037',
+					  'GoodLegal' => 'true',
+					  'HasError' => 'false',
+					  'IsAllTract' => 'false',
+					  'MapBookPage' => '6150-21',
+					  'PathSpec' => '14',
+					  'PI2Property' => 'PRPR3304994\\TR156140\\\\\\\\\\14\\\\\\\\\\\\\\\\\\\\\\\\14\\\\\\\\\\\\\\\\',
+					  'PI2Tract' => 'TRTR156140\\CA037\\ARB\\6150-21\\\\APN ARBS\\\\\\6150\\21\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\6150-21\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\',
+					  'PropertyId' => 'PR3304994',
+					  'SearchByAPN' => 'true',
+					  'TractId' => 'TR156140',
+					  'LegalNVC' => 
+					  array (
+						'NameValue' => 
+						array (
+						  0 => 
+						  array (
+							'Key' => 'General.FIPSCode',
+							'Value' => 'CA037',
+						  ),
+						  1 => 
+						  array (
+							'Key' => 'Property.MapCode',
+							'Value' => 'ARB',
+						  ),
+						  2 => 
+						  array (
+							'Key' => 'Property.MajorLegalValue',
+							'Value' => '6150-21',
+						  ),
+						  3 => 
+						  array (
+							'Key' => 'Property.Parcel',
+							'Value' => '14',
+						  ),
+						  4 => 
+						  array (
+							'Key' => 'Property.MajorLegalName',
+							'Value' => 'APN ARBS',
+						  ),
+						  5 => 
+						  array (
+							'Key' => 'Property.Book',
+							'Value' => '6150',
+						  ),
+						  6 => 
+						  array (
+							'Key' => 'Property.Page',
+							'Value' => '21',
+						  ),
+						  7 => 
+						  array (
+							'Key' => 'Property.ArbTract',
+							'Value' => '6150-21',
+						  ),
+						  8 => 
+						  array (
+							'Key' => 'Property.LegalPath',
+							'Value' => '14',
+						  ),
+						  9 => 
+						  array (
+							'Key' => 'Property.Narrative',
+							'Value' => 'Tax ID 6150-21 Pcl 14',
+						  ),
+						  10 => 
+						  array (
+							'Key' => 'Property.IsCondo',
+							'Value' => 'false',
+						  ),
+						  11 => 
+						  array (
+							'Key' => 'ArgumentCount',
+							'Value' => '0',
+						  ),
+						),
+					  ),
+					  'ExtraPropertyInfo' => '',
+					),
+				  ),
+				  'TotalBalanceTaxInstallment' => '8797.0800',
+				  'IsCorrectedBill' => 'false',
+				  'IsExempt' => 'false',
+				  'TransferOwners' => '',
+				  'AssessedOwners' => 
+				  array (
+					'Item' => 
+					array (
+					  0 => 'ARGUETA,JANIO E',
+					  1 => 'ARGUETA,BLANCA',
+					),
+				  ),
+				  'SearchAsPointers' => 
+				  array (
+					'Item' => 'Tax ID 6150-21 of Parcel 14',
+				  ),
+				  'MailingNames' => '',
+				  'UnderlyingParcels' => '',
+				  'FutureParcels' => '',
+				  'RelatedParcels' => '',
+				  'OutputMessage' => 'Search completed successfully.',
+				  'StateCodeAndCountyFips' => 'CA037',
+				  'City' => 'UNINCORPORATED - COUNTY OF LOS ANGELES',
+				  'Description' => 'SPRINGDALE TRACT W 45 FT OF LOT 108',
+				  'PropertyAddress' => '2305 E 119TH ST',
+				  'BillingAddress' => '2305 E 119TH ST LOS ANGELES CA 90059',
+				  'TaxRateArea' => '09748',
+				  'UseCode' => '0100',
+				  'UseDescription' => 'SINGLE RESIDENTIAL',
+				  'RegionCode' => 'LOMITA',
+				  'ZoningCode' => 'LCR1YY',
+				  'TaxRate' => '5.166114 %',
+				  'IssueDate' => '10/15/2022',
+				  'TaxYear' => '2022-2023',
+				  'APN' => '6150-021-014',
+				  'YearBuilt' => '1938',
+				  'YearLastModified' => '1944',
+				  'Acreage' => '0.000000',
+				  'ImprovementsSqFootage' => '1471',
+				  'NetTaxableValue' => '154,628.00',
+				  'TotalTax' => '7,988.26',
+				  'PaymentDate' => '9/15/2023',
+				  'LandValuation' => '90,094.00',
+				  'ImprovementsValuation' => '64,534.00',
+				  'DocumentSearchType' => 'Unknown',
+				  'ValidForCurrentYear' => 'false',
+				  'SearchAsCollection' => '',
+				  'Resolutions' => '',
+				  'TaxSales' => '',
+				  'FutureDues' => '',
+				  'FutureBackTaxDues' => '',
+				  'RunDate' => '9/20/2023',
+				  'PaymentAsOf' => '',
+				  'Volume' => '',
+				  'CurrentYearTotalAmount' => '',
+				  'LastYearTotalAmount' => '$0.00',
+				  'ParcelStatus' => 'CURRENT',
+				  'PropertyStatus' => 'TAXABLE',
+				  'Comments' => '',
+				  'CountOpenPriorYears' => '0',
+				  'CountSpecialAssessments' => '0',
+				  'CountBackTaxes' => '0',
+				  'CountAdditional' => '0',
+				  'OpenPriorYears' => '',
+				  'SpecialAssessments' => '',
+				  'BackTaxes' => '',
+				  'Additionals' => '',
+				  'Delinquent' => '',
+				  'FeesLiens' => '',
+				  'TaxAdjustment' => '',
+				  'SplitCombine' => '',
+				  'DeedSold' => '',
+				  'Exemption' => '',
+				  'DoNotIssueCTD' => '',
+				  'PublicLand' => '',
+				  'MarketValuation' => '',
+				  'SpecialFeaturesValuation' => '',
+				  'AssessedValuation' => '',
+				  'TaxableValuation' => '',
+				  'AdditionalHomesteadExemption' => '',
+				  'SeniorExemption' => '',
+				  'WidowExemption' => '',
+				  'GovernmentExemption' => '',
+				  'DisabledExemption' => '',
+				  'InstallmentPlan' => '',
+				  'VabPending' => '',
+				  'DelinquencyInstallmentBalance' => '0.0',
+				  'HomesteadPenalty' => '',
+				  'HomeSteadExemption' => '',
+				  'SeniorFreezeExemption' => '',
+				  'LTOccupantExemption' => '',
+				  'VetReturnExemption' => '',
+				  'DisabledVetExemption' => '',
+				  'BuildingDescription' => '',
+				  'ExteriorWall' => '',
+				  'RoofComp' => '',
+				  'ApartmentUnitCount' => '0.00',
+				  'FullBathCount' => '0.00',
+				  'HalfBathCount' => '0.00',
+				  'StoriesCount' => '0.00',
+				  'FeaturesDescription' => '',
+				  'Cooling' => '',
+				  'GarageStallCount' => '0.00',
+				  'Parking' => '',
+				  'FirePlace' => 'NO',
+				  'IsInterim' => 'false',
+				  'Exemptions' => '',
+				  'TaxingAuthorities' => '',
+				  'TaxingAuthorityDetails' => '',
+				  'TaxingAuthoritiesNonBilled' => '',
+				  'TaxingAuthoritiesBilled' => '',
+				  'NonBilledAmounts' => '',
+				  'Deferral' => '',
+				  'PriorYears' => '',
+				  'PartialPayment' => '',
+				  'Litigation' => '',
+				  'AppraisalCorrection' => '',
+				  'TotalDueNoExemption' => '',
+				  'CalculatedTaxRate' => '',
+				  'UnderlyingLegalInfos' => 
+				  array (
+					'Item' => 
+					array (
+					  'MapCode' => 'B/P',
+					  'MajorLegalValue' => '6!194B',
+					  'MajorLegalName' => 'MAPS',
+					  'Book' => '6',
+					  'Page' => '194B',
+					  'ThruPage' => '194B',
+					  'MapDate' => '4/4/1905',
+					  'PlantName' => 'SPR',
+					  'Lot' => '108',
+					  'Narrative' => 'Lt 108 Map 6/194B',
+					  'FullNarrative' => 'Lot 108 Map 6/194B',
+					  'County' => 'CA037',
+					  'GoodLegal' => 'true',
+					  'HasError' => 'false',
+					  'IsAllTract' => 'false',
+					  'MapBookPage' => '6-194B',
+					  'PathSpec' => '108',
+					  'PI2Property' => 'PRPR261390\\TR15827\\\\\\\\108\\\\\\\\\\\\\\\\\\\\\\\\\\108\\\\\\\\\\\\\\\\',
+					  'PI2Tract' => 'TRTR15827\\CA037\\B/P\\6!194B\\\\MAPS\\\\\\6\\194B\\194B\\\\SPR\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\4/4/1905\\\\\\\\\\\\\\\\',
+					  'PropertyId' => 'PR261390',
+					  'SearchByAPN' => 'false',
+					  'TractId' => 'TR15827',
+					  'LegalNVC' => 
+					  array (
+						'NameValue' => 
+						array (
+						  0 => 
+						  array (
+							'Key' => 'General.FIPSCode',
+							'Value' => 'CA037',
+						  ),
+						  1 => 
+						  array (
+							'Key' => 'Property.MapCode',
+							'Value' => 'B/P',
+						  ),
+						  2 => 
+						  array (
+							'Key' => 'Property.MajorLegalValue',
+							'Value' => '6!194B',
+						  ),
+						  3 => 
+						  array (
+							'Key' => 'Property.MajorLegalName',
+							'Value' => 'MAPS',
+						  ),
+						  4 => 
+						  array (
+							'Key' => 'Property.Book',
+							'Value' => '6',
+						  ),
+						  5 => 
+						  array (
+							'Key' => 'Property.Page',
+							'Value' => '194B',
+						  ),
+						  6 => 
+						  array (
+							'Key' => 'Property.ThruPage',
+							'Value' => '194B',
+						  ),
+						  7 => 
+						  array (
+							'Key' => 'Property.MapDate',
+							'Value' => '4/4/1905',
+						  ),
+						  8 => 
+						  array (
+							'Key' => 'Property.PlantName',
+							'Value' => 'SPR',
+						  ),
+						  9 => 
+						  array (
+							'Key' => 'Property.Lot',
+							'Value' => '108',
+						  ),
+						  10 => 
+						  array (
+							'Key' => 'Property.LegalPath',
+							'Value' => '108',
+						  ),
+						  11 => 
+						  array (
+							'Key' => 'Property.Narrative',
+							'Value' => 'Lt 108 Map 6/194B',
+						  ),
+						  12 => 
+						  array (
+							'Key' => 'Property.IsCondo',
+							'Value' => 'false',
+						  ),
+						  13 => 
+						  array (
+							'Key' => 'ArgumentCount',
+							'Value' => '0',
+						  ),
+						),
+					  ),
+					  'ExtraPropertyInfo' => '',
+					),
+				  ),
+				  'UnderlyingPropertyXrefs' => 
+				  array (
+					'Item' => 
+					array (
+					  'CountyId' => '6037',
+					  'Id' => '5643174',
+					  'MainPropertyId' => '3304994',
+					  'ReferenceType' => 'CAME FROM',
+					  'OtherPropertyId' => '261390',
+					  'Remarks' => '',
+					  'SourceId' => '1003',
+					),
+				  ),
+				  'PropertyImages' => 
+				  array (
+					'Item' => 
+					array (
+					  0 => 
+					  array (
+						'PropertyImageId' => '8887',
+						'Fips' => '06037',
+						'PropertyID' => '261390',
+						'ImageKey' => 'CALOSA:MRCB 6-00194',
+						'PropertyImageTypeId' => '14',
+						'AllTractImage' => 'true',
+						'RetrievalImageType' => '',
+						'RetrievalImageSubType' => '',
+					  ),
+					  1 => 
+					  array (
+						'PropertyImageId' => '244138',
+						'Fips' => '06037',
+						'PropertyID' => '3304994',
+						'ImageKey' => 'CALOSA:MASS 6150-00021',
+						'PropertyImageTypeId' => '2',
+						'AllTractImage' => 'false',
+						'RetrievalImageType' => '',
+						'RetrievalImageSubType' => '',
+					  ),
+					),
+				  ),
+				  'PropertyImageTypes' => 
+				  array (
+					'Item' => 
+					array (
+					  0 => 
+					  array (
+						'PropertyImageTypeId' => '2',
+						'Subcode' => 'MASS',
+						'Type' => 'Map',
+						'Subtype' => 'Assessor',
+						'Subsubtype' => '',
+						'Description' => 'Assessor Map',
+						'Abbreviation' => 'Assessor Map',
+						'SortOrder' => '7',
+						'IsBackplantImageType' => 'false',
+					  ),
+					  1 => 
+					  array (
+						'PropertyImageTypeId' => '14',
+						'Subcode' => 'MRCB',
+						'Type' => 'Map',
+						'Subtype' => 'SUBDIVISION TRACT',
+						'Subsubtype' => 'HISTORICAL',
+						'Description' => 'Map Recorded Historical (Shared Bk/Pg)',
+						'Abbreviation' => 'Map Share Bkpg',
+						'SortOrder' => '18',
+						'IsBackplantImageType' => 'false',
+					  ),
+					),
+				  ),
+				  '@attributes' => 
+				  array (
+					'SchemaVersion' => '1',
+				  ),
+				),
+				'@attributes' => 
+				array (
+				  'type' => 'TaxReportResult',
+				),
+			  ),
+			);
+		
+		$data = array();
+		$data['apn'] = isset($result['Result']['TaxReport']['APN']) && !empty($result['Result']['TaxReport']['APN']) ? $result['Result']['TaxReport']['APN'] : '';
+		$data['description'] = isset($result['Result']['TaxReport']['Description']) && !empty($result['Result']['TaxReport']['Description']) ? $result['Result']['TaxReport']['Description'] : '';
+		$data['property_address'] = isset($result['Result']['TaxReport']['PropertyAddress']) && !empty($result['Result']['TaxReport']['PropertyAddress']) ? $result['Result']['TaxReport']['PropertyAddress'] : '';
+		$data['billing_address'] = isset($result['Result']['TaxReport']['BillingAddress']) && !empty($result['Result']['TaxReport']['BillingAddress']) ? $result['Result']['TaxReport']['BillingAddress'] : '';
+		$data['city_county'] = '';
+		if (!empty($result['Result']['TaxReport']['AssessedOwners']['Item'])) {
+			$data['assessed_owners'] = '';
+			foreach($result['Result']['TaxReport']['AssessedOwners']['Item'] as $assessedOwner) {
+				$data['assessed_owners'] .= $assessedOwner.";";
+			}
+		} else {
+			$data['assessed_owners'] = '';
+		}
+		
+		if (!empty($result['Result']['TaxReport']['SearchAsPointers']['Item'])) {
+			$data['SearchAsPointers'] = $result['Result']['TaxReport']['SearchAsPointers']['Item'];
+		} else {
+			$data['SearchAsPointers'] = '';
+		}					
+		$data['city'] = isset($result['Result']['TaxReport']['City']) && !empty($result['Result']['TaxReport']['City']) ? $result['Result']['TaxReport']['City'] : '';
+		$data['tax_year'] = isset($result['Result']['TaxReport']['TaxYear']) && !empty($result['Result']['TaxReport']['TaxYear']) ? $result['Result']['TaxReport']['TaxYear'] : '';
+		$data['TaxRateArea'] = isset($result['Result']['TaxReport']['TaxRateArea']) && !empty($result['Result']['TaxReport']['TaxRateArea']) ? $result['Result']['TaxReport']['TaxRateArea'] : '';
+		$data['UseCode'] = isset($result['Result']['TaxReport']['UseCode']) && !empty($result['Result']['TaxReport']['UseCode']) ? $result['Result']['TaxReport']['UseCode'] : '';
+		$data['UseDescription'] = isset($result['Result']['TaxReport']['UseDescription']) && !empty($result['Result']['TaxReport']['UseDescription']) ? $result['Result']['TaxReport']['UseDescription'] : '';
+		$data['RegionCode'] = isset($result['Result']['TaxReport']['RegionCode']) && !empty($result['Result']['TaxReport']['RegionCode']) ? $result['Result']['TaxReport']['RegionCode'] : '';
+		$data['ZoningCode'] = isset($result['Result']['TaxReport']['ZoningCode']) && !empty($result['Result']['TaxReport']['ZoningCode']) ? $result['Result']['TaxReport']['ZoningCode'] : '';
+		$data['FloodZone'] = isset($result['Result']['TaxReport']['FloodZone']) && !empty($result['Result']['TaxReport']['FloodZone']) ? $result['Result']['TaxReport']['FloodZone'] : '';
+		$data['TaxabilityCode'] = isset($result['Result']['TaxReport']['TaxabilityCode']) && !empty($result['Result']['TaxReport']['TaxabilityCode']) ? $result['Result']['TaxReport']['TaxabilityCode'] : '';
+		$data['TaxRate'] = isset($result['Result']['TaxReport']['TaxRate']) && !empty($result['Result']['TaxReport']['TaxRate']) ? $result['Result']['TaxReport']['TaxRate'] : '';
+		$data['IssueDate'] = isset($result['Result']['TaxReport']['IssueDate']) && !empty($result['Result']['TaxReport']['IssueDate']) ? $result['Result']['TaxReport']['IssueDate'] : '';
+		$data['LandValuation'] = isset($result['Result']['TaxReport']['LandValuation']) && !empty($result['Result']['TaxReport']['LandValuation']) ? $result['Result']['TaxReport']['LandValuation'] : '';
+		$data['ImprovementsValuation'] = isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : '';
+		$data['NetTaxableValue'] = isset($result['Result']['TaxReport']['NetTaxableValue']) && !empty($result['Result']['TaxReport']['NetTaxableValue']) ? $result['Result']['TaxReport']['NetTaxableValue'] : '';
+		$data['YearBuilt'] = isset($result['Result']['TaxReport']['YearBuilt']) && !empty($result['Result']['TaxReport']['YearBuilt']) ? $result['Result']['TaxReport']['YearBuilt'] : '';
+		$data['YearLastModified'] = isset($result['Result']['TaxReport']['YearLastModified']) && !empty($result['Result']['TaxReport']['YearLastModified']) ? $result['Result']['TaxReport']['YearLastModified'] : '';
+		$data['ImprovementsSqFootage'] = isset($result['Result']['TaxReport']['ImprovementsSqFootage']) && !empty($result['Result']['TaxReport']['ImprovementsSqFootage']) ? $result['Result']['TaxReport']['ImprovementsSqFootage'] : '';
+		$data['TotalTax'] = isset($result['Result']['TaxReport']['TotalTax']) && !empty($result['Result']['TaxReport']['TotalTax']) ? $result['Result']['TaxReport']['TotalTax'] : '';
+		$data['TotalBalanceTaxInstallment'] = isset($result['Result']['TaxReport']['TotalBalanceTaxInstallment']) && !empty($result['Result']['TaxReport']['TotalBalanceTaxInstallment']) ? number_format($result['Result']['TaxReport']['TotalBalanceTaxInstallment'],2) : '';
+		$data['HomeOwnerExemption'] = isset($result['Result']['TaxReport']['HomeOwnerExemption']) && !empty($result['Result']['TaxReport']['HomeOwnerExemption']) ? number_format($result['Result']['TaxReport']['HomeOwnerExemption'],2) : '';
+		$data['ConveyanceDate'] = isset($result['Result']['TaxReport']['ConveyanceDate']) && !empty($result['Result']['TaxReport']['ConveyanceDate']) ? $result['Result']['TaxReport']['ConveyanceDate'] : '';
+		$data['ConveyingInstrument'] = isset($result['Result']['TaxReport']['ConveyingInstrument']) && !empty($result['Result']['TaxReport']['ConveyingInstrument']) ? $result['Result']['TaxReport']['ConveyingInstrument'] : '';
+
+		$data['first_balance'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Balance']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Balance']) ? number_format($result['Result']['TaxReport']['Installments']['Item'][0]['Balance'],2) : '';
+		$data['first_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Amount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Amount']) ? number_format($result['Result']['TaxReport']['Installments']['Item'][0]['Amount'],2) : '';
+		$data['first_due_date'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['DueDate']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['DueDate']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['DueDate'] : '';
+		$data['first_number'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Number']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Number']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Number'] : '';
+		$data['first_penalty'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Penalty']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Penalty']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Penalty'] : '';
+		$data['first_status'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['Status']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['Status']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['Status'] : '';
+		$data['first_amount_paid'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['AmountPaid']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['AmountPaid']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['AmountPaid'] : '';
+		$data['first_tax_year'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['TaxYear']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['TaxYear']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['TaxYear'] : '';
+		$data['first_interest_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][0]['InterestAmount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]['InterestAmount']) ? $result['Result']['TaxReport']['Installments']['Item'][0]['InterestAmount'] : '';
+
+		$data['second_balance'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Balance']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Balance']) ? number_format($result['Result']['TaxReport']['Installments']['Item'][1]['Balance'],2) : '';
+		$data['second_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Amount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Amount']) ? number_format($result['Result']['TaxReport']['Installments']['Item'][1]['Amount'],2) : '';
+		$data['second_due_date'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['DueDate']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['DueDate']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['DueDate'] : '';
+		$data['second_number'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Number']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Number']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Number'] : '';
+		$data['second_penalty'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Penalty']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Penalty']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Penalty'] : '';
+		$data['second_status'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['Status']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['Status']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['Status'] : '';
+		$data['second_amount_paid'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['AmountPaid']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['AmountPaid']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['AmountPaid'] : '';
+		$data['second_tax_year'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['TaxYear']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['TaxYear']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['TaxYear'] : '';
+		$data['second_interest_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount'] : '';
+
+
+		$data['Liens'] = isset($result['Result']['TaxReport']['Liens']['Item']) && !empty($result['Result']['TaxReport']['Liens']['Item']) ? $result['Result']['TaxReport']['Liens']['Item'] : '';
+		
+		$html = $this->load->view('order/tax/taxes', $data, true);
+        $this->load->library('snappy_pdf');
+        $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
+        $this->snappy_pdf->pdf->setOption('zoom', '1.4');
+
+        if (!is_dir('uploads/tax')) {
+			mkdir('./uploads/tax', 0777, TRUE);
+		}
+		$fileNumber = '1';
+		$pdfFilePath = './uploads/tax/'.$fileNumber.'.pdf';
+        $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+        $this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
+		echo
+		exit;
 	}
 
 }
