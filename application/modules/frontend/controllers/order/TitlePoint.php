@@ -694,11 +694,14 @@ class TitlePoint extends MX_Controller {
 					if (!is_dir('uploads/tax')) {
 						mkdir('./uploads/tax', 0777, TRUE);
 					}
-					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document', '', $result, array(), 0, 0);
+					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document1', '', $data, array(), 0, 0);
 					$pdfFilePath = './uploads/tax/tp_api_id_' . $random_number.'.pdf';
+					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document2', '', $data, array(), 0, 0);
 					$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document3', '', $data, array(), 0, 0);
 					$this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
-					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document', '', $result, array(), 0, 0);
+					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document4', '', $data, array(), 0, 0);
+					$this->apiLogs->syncLogs(0, 'debug-tax-document', 'debug-tax-document5', '', $data, array(), 0, 0);
 				}
 				else
 				{
