@@ -1167,7 +1167,7 @@ class Home extends MX_Controller
 
 					$tax_file_path = FCPATH . 'uploads/tax/' . $session_id . '.pdf';
 					if (file_exists($tax_file_path)) {
-						rename(FCPATH . "/uploads/tax/" . $tax_file_path, FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
+						rename(FCPATH . "/uploads/tax/" . $session_id . '.pdf', FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
 						$this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
 					}
 										
