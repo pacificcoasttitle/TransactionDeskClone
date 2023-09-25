@@ -688,7 +688,7 @@ class TitlePoint extends MX_Controller {
 					$html = $this->load->view('order/tax/taxes', $data, true);
 					$this->load->library('snappy_pdf');
 					$this->snappy_pdf->pdf->setOption('page-size', 'Letter');
-					$this->snappy_pdf->pdf->setOption('zoom', '1.1');
+					$this->snappy_pdf->pdf->setOption('zoom', '1.15');
 
 					if (!is_dir('uploads/tax')) {
 						mkdir('./uploads/tax', 0777, TRUE);
