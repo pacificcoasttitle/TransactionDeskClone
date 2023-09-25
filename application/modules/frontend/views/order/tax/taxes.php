@@ -238,7 +238,7 @@
                     Tax Year: <span><?php echo $tax_year;?></span><br>
                     Tax Cover: <span>06/23/2023</span><br>
                     Searched By: <span>PCTXML01</span><br>
-                    Searched On: <span>7/5/2023 7:04 PM</span>
+                    Searched On: <span><?php echo date('m/d/Y h:i:s A');?></span>
                 </div>
                 <div class="company-name">Company: PACIFIC COAST TITLE | GLENDALE - (FNFSTR) | 01 | CRN: 00012-00021</div>
             </div>     
@@ -372,19 +372,19 @@
             </div>  
             <div class="pdf_footer">
                 <div class="footer-left">
-                    <b>6150-021-014</b><br>
-                    Los Angeles, California
+                    <b><?php echo $apn;?></b><br>
+                    <?php echo $city;?>, California
                 </div>
                 <div class="text-center page-number">
-                    Page 1 of 2
+                    Page 1 of 1
                 </div>
                 <div class="footer-right">
-                    Order: 567467456743213<br>Printed by PCTXML01 on 7/5/2023 7:06:26 PM
+                    Order: 567467456743213<br>Printed by PCTXML01 on <?php echo date('m/d/Y h:i:s A');?>
                 </div>
             </div>
         </div>
             <div class="page-break" style="page-break-after: always;"></div>
-            <div class="pdf_page size_letter" style="margin-top: 50px !important;">
+            <!-- <div class="pdf_page size_letter" style="margin-top: 50px !important;">
                 <table class="table">
                     <thead>
                         <tr>
@@ -453,8 +453,8 @@
                             <td>UNPAID</td>
                         </tr>
                     </tbody>
-                </table>
-                <table class="table text-center border-t-0">
+                </table> -->
+                <!-- <table class="table text-center border-t-0">
                     <thead>
                         <tr>
                             <th colspan="10" class="text-left">Payment History</th>
@@ -472,8 +472,8 @@
                             <td>APPLIED PAYMENT</td>
                         </tr>
                     </tbody>
-                </table>
-                <div class="mt-15"></div>
+                </table> -->
+                <!-- <div class="mt-15"></div>
                 <table class="table text-center">
                     <thead>
                         <tr>
@@ -557,7 +557,7 @@
                     <div class="footer-right">
                         Order: 567467456743213<br>Printed by PCTXML01 on 7/5/2023 7:06:26 PM
                     </div>
-                </div>
+                </div> -->
             </div>
         
     </div>
