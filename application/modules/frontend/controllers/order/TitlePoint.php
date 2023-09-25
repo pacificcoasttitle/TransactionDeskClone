@@ -695,7 +695,7 @@ class TitlePoint extends MX_Controller {
 					}
 					$pdfFilePath = './uploads/tax/tp_api_id_' . $random_number.'.pdf';
 					$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
-					//$this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
+					$this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
 				}
 				else
 				{
