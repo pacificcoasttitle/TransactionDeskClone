@@ -238,7 +238,7 @@
                     Tax Year: <span><?php echo $tax_year;?></span><br>
                     Tax Cover: <span>06/23/2023</span><br>
                     Searched By: <span>PCTXML01</span><br>
-                    Searched On: <span><?php echo date('m/d/Y h:i:s A');?></span>
+                    Searched On: <span><?php echo date('m/d/Y h:i A');?></span>
                 </div>
                 <div class="company-name">Company: PACIFIC COAST TITLE | GLENDALE - (FNFSTR) | 01 | CRN: 00012-00021</div>
             </div>     
@@ -379,11 +379,11 @@
                     Page 1 of 1
                 </div>
                 <div class="footer-right">
-                    Order: 567467456743213<br>Printed by PCTXML01 on <?php echo date('m/d/Y h:i:s A');?>
+                    Order: <br>Printed by PCTXML01 on <?php echo date('m/d/Y h:i:s A');?>
                 </div>
             </div>
         </div>
-            <div class="page-break" style="page-break-after: always;"></div>
+            <!-- <div class="page-break" style="page-break-after: always;"></div> -->
             <!-- <div class="pdf_page size_letter" style="margin-top: 50px !important;">
                 <table class="table">
                     <thead>
@@ -558,7 +558,6 @@
                         Order: 567467456743213<br>Printed by PCTXML01 on 7/5/2023 7:06:26 PM
                     </div>
                 </div> -->
-            </div>
         
     </div>
 </body>

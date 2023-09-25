@@ -650,7 +650,7 @@ class TitlePoint extends MX_Controller {
 					$data['ZoningCode'] = isset($result['Result']['TaxReport']['ZoningCode']) && !empty($result['Result']['TaxReport']['ZoningCode']) ? $result['Result']['TaxReport']['ZoningCode'] : '';
 					$data['FloodZone'] = isset($result['Result']['TaxReport']['FloodZone']) && !empty($result['Result']['TaxReport']['FloodZone']) ? $result['Result']['TaxReport']['FloodZone'] : '';
 					$data['TaxabilityCode'] = isset($result['Result']['TaxReport']['TaxabilityCode']) && !empty($result['Result']['TaxReport']['TaxabilityCode']) ? $result['Result']['TaxReport']['TaxabilityCode'] : '';
-					$data['TaxRate'] = isset($result['Result']['TaxReport']['TaxRate']) && !empty($result['Result']['TaxReport']['TaxRate']) ? numfmt_format($result['Result']['TaxReport']['TaxRate'],2) : '';
+					$data['TaxRate'] = isset($result['Result']['TaxReport']['TaxRate']) && !empty($result['Result']['TaxReport']['TaxRate']) ? $result['Result']['TaxReport']['TaxRate'] : '';
 					$data['IssueDate'] = isset($result['Result']['TaxReport']['IssueDate']) && !empty($result['Result']['TaxReport']['IssueDate']) ? $result['Result']['TaxReport']['IssueDate'] : '';
 					$data['LandValuation'] = isset($result['Result']['TaxReport']['LandValuation']) && !empty($result['Result']['TaxReport']['LandValuation']) ? $result['Result']['TaxReport']['LandValuation'] : '';
 					$data['ImprovementsValuation'] = isset($result['Result']['TaxReport']['ImprovementsValuation']) && !empty($result['Result']['TaxReport']['ImprovementsValuation']) ? $result['Result']['TaxReport']['ImprovementsValuation'] : '';
