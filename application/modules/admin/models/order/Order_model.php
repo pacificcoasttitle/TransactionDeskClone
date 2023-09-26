@@ -43,7 +43,10 @@ class Order_model extends CI_Model
             $keyword = $params['searchValue'];
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
+                $this->db->group_start()
+                    ->like('property_details.full_address', $keyword)
+                    ->or_like('order_details.file_number', $keyword)
+                    ->group_end();
             }
             
             $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, tpd.email_sent_status')
@@ -81,7 +84,10 @@ class Order_model extends CI_Model
             }
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->db->where("(property_details.full_address LIKE '%".$keyword."%' OR order_details.file_number LIKE '%".$keyword."%')");
+                $this->db->group_start()
+                    ->like('property_details.full_address', $keyword)
+                    ->or_like('order_details.file_number', $keyword)
+                    ->group_end();
             }
             
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -103,7 +109,6 @@ class Order_model extends CI_Model
             }
 
             $query = $this->db->get();
-
             if ($query->num_rows() > 0)  {
                 $orders_lists = $query->result_array();
             }
