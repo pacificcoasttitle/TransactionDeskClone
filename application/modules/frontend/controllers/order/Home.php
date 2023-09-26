@@ -1165,6 +1165,13 @@ class Home extends MX_Controller
 						$this->order->checkGrantDoc($orderNumber, false);
 					}
 
+					$tax_file_path = FCPATH . 'uploads/tax/' . $session_id . '.pdf';
+					if (file_exists($tax_file_path)) {
+						rename(FCPATH . "/uploads/tax/" . $session_id . '.pdf', FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
+						$this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
+					}
+										
+
 					$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 
 					$tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
@@ -1262,7 +1269,7 @@ class Home extends MX_Controller
 				}
 
 				if ($this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
-					//$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+					$file[] = env('AWS_PATH') . "tax/" . $taxfilename;
 					$this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
 				}
 
@@ -2253,5 +2260,4 @@ class Home extends MX_Controller
 
 		echo json_encode($response_data);
 	}
-
 }
