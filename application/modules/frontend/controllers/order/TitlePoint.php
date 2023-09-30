@@ -44,7 +44,7 @@ class TitlePoint extends MX_Controller {
             'userID' => env('TP_USERNAME'),
             'password' => env('TP_PASSWORD'),
             'orderNo' =>  '',
-            'customerRef'=>  567467456743213,
+            'customerRef'=>  rand(),
             'company'=>  '',
             'department'=>  '',
             'titleOfficer'=>  '',
@@ -685,17 +685,17 @@ class TitlePoint extends MX_Controller {
 					$data['second_interest_amount'] = isset($result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount']) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount']) ? $result['Result']['TaxReport']['Installments']['Item'][1]['InterestAmount'] : '';
 					$data['Liens'] = isset($result['Result']['TaxReport']['Liens']['Item']) && !empty($result['Result']['TaxReport']['Liens']['Item']) ? $result['Result']['TaxReport']['Liens']['Item'] : '';
 
-					$html = $this->load->view('order/tax/taxes', $data, true);
-					$this->load->library('snappy_pdf');
-					$this->snappy_pdf->pdf->setOption('page-size', 'Letter');
-					$this->snappy_pdf->pdf->setOption('zoom', '1.1');
+					// $html = $this->load->view('order/tax/taxes', $data, true);
+					// $this->load->library('snappy_pdf');
+					// $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
+					// $this->snappy_pdf->pdf->setOption('zoom', '1.1');
 
-					if (!is_dir('uploads/tax')) {
-						mkdir('./uploads/tax', 0777, TRUE);
-					}
-					$pdfFilePath = './uploads/tax/tp_api_id_' . $random_number.'.pdf';
-					$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
-					$this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
+					// if (!is_dir('uploads/tax')) {
+					// 	mkdir('./uploads/tax', 0777, TRUE);
+					// }
+					//$pdfFilePath = './uploads/tax/tp_api_id_' . $random_number.'.pdf';
+					//$pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+					//$this->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
 				}
 				else
 				{
