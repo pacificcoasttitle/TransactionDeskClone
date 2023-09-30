@@ -964,7 +964,7 @@ class Titlepoint
                 return $response;
             } else if ($status == 'processing') {
                 if ($this->count <= 3) {
-                    sleep(5);
+                    sleep(1);
                     $this->count = $this->count + 1;
                     return $this->getImageRequestStatus($requestId, $orderId, $requestFrom);
                 } else {
@@ -1011,8 +1011,8 @@ class Titlepoint
             if ($imgReturnStatus == 'success') {
                 if ($generateImgStatus == 'processing') {
                     $this->CI->session->set_userdata('lv_doc_status', 'processing');
-                    if ($this->lvcount <= 1) {
-                        sleep(5);
+                    if ($this->lvcount <= 3) {
+                        sleep(1);
                         $this->lvcount += 1;
                         return $this->generateImage($requestId, $orderId, $fileNumber, 'LV');
                     } else {
@@ -1028,6 +1028,14 @@ class Titlepoint
 
                 } else {
                     $this->CI->session->set_userdata('lv_doc_status', 'success');
+                    $tpData = array(
+                        'lv_file_status' => strtolower($generateImgStatus)
+                    );  
+                
+                    $condition =array(
+                        'file_number' => $fileNumber
+                    );
+                    $this->CI->titlePointData->update($tpData,$condition);
                     return $response;
                 }
             }
@@ -1065,7 +1073,7 @@ class Titlepoint
                 return $response;
             } else if ($status == 'processing') {
                 if ($this->taxcount < 6) {
-                    sleep(5);
+                    sleep(1);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->getTaxImageRequestStatus($requestId, $orderId);
                 } else {
@@ -1112,8 +1120,8 @@ class Titlepoint
         if ($imgReturnStatus == 'success') {
             if ($generateImgStatus == 'processing') {
                 $this->CI->session->set_userdata('tax_doc_status', 'processing');
-                if ($this->taxcount <= 1) {
-                    sleep(5);
+                if ($this->taxcount <= 3) {
+                    sleep(1);
                     $this->taxcount = $this->taxcount + 1;
                     return $this->generateTaxImage($requestId, $orderId, $fileNumber);
                 } else {
@@ -1129,6 +1137,14 @@ class Titlepoint
 
             } else {
                 $this->CI->session->set_userdata('tax_doc_status', 'success');
+                $tpData = array(
+                    'tax_file_status' => strtolower($generateImgStatus)
+                );  
+            
+                $condition =array(
+                    'file_number' => $fileNumber
+                );
+                $this->CI->titlePointData->update($tpData,$condition);
                 return $response;
             }
         }
@@ -1453,8 +1469,8 @@ class Titlepoint
             if ($status == 'success') {
                 return $response;
             } else if ($status == 'processing') {
-                if ($this->geocount < 3) {
-                    sleep(5);
+                if ($this->geocount <= 3) {
+                    sleep(1);
                     $this->geocount = $this->geocount + 1;
                     return $this->getGeoImageRequestStatus($requestId, $orderId);
                 } else {

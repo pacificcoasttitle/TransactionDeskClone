@@ -506,7 +506,7 @@ class Order extends MX_Controller
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
-        $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=5'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=6'));
         $this->admintemplate->show("order/order", "lp_orders", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/order/lp_orders', $data);
@@ -583,12 +583,12 @@ class Order extends MX_Controller
             $nestedData[] = $lpReportStatusSelection;
 
             $property_id = $value['property_id'];
-            // if ($value['allow_duplication'] == 1) {
-            //     $checked = 'checked';
-            // } else {
-            //     $checked = '';
-            // }
-            // $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
+            if ($value['allow_duplication'] == 1) {
+                $checked = 'checked';
+            } else {
+                $checked = '';
+            }
+            $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
 
 
             $nestedData[] = !empty($value['file_number']) ? 'Yes' : 'No';
