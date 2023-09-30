@@ -481,7 +481,12 @@ h3, .h3 {
                                         if(isset($tax_file_url) && !empty($tax_file_url))
                                         {
                                             if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                                                <a href="#" class="btn btn-default btn-sm btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $tax_file_url;?>', 'tax');">Download Tax Document</a>
+                                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split btn_mrg-top_30"  onclick="downloadDocumentFromAws('<?php echo $tax_file_url;?>', 'tax');"> 
+                                                    <span class="icon text-white-50">
+                                                        <i class="fas fa-download"></i>
+                                                    </span>
+                                                    <span class="text">Download Tax Document</span>
+                                                </a>
                                             <?php } else { ?>
                                                 <a href="<?php echo $tax_file_url; ?>" class="btn btn-success btn-icon-split btn_mrg-top_30" download="Tax.pdf">
                                                     <span class="icon text-white-50">
