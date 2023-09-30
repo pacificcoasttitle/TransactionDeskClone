@@ -1301,6 +1301,12 @@ class Home extends MX_Controller
 					'file' => json_encode($file),
 					'cc' => json_encode($cc)
 				);
+
+				$condition = array(
+					'where' => array(
+						'file_number' => $orderNumber,
+					)
+				);
 				$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 				$lvDocStatus = strtolower($titlePointDetails[0]['lv_file_status']);
 				$taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
