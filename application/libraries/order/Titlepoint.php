@@ -1029,7 +1029,7 @@ class Titlepoint
                 } else {
                     $this->CI->session->set_userdata('lv_doc_status', 'success');
                     $tpData = array(
-                        'lv_file_status' => $generateImgStatus
+                        'lv_file_status' => strtolower($generateImgStatus)
                     );  
                 
                     $condition =array(
@@ -1138,7 +1138,7 @@ class Titlepoint
             } else {
                 $this->CI->session->set_userdata('tax_doc_status', 'success');
                 $tpData = array(
-                    'tax_file_status' => $generateImgStatus
+                    'tax_file_status' => strtolower($generateImgStatus)
                 );  
             
                 $condition =array(
