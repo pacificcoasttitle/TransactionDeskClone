@@ -1165,11 +1165,11 @@ class Home extends MX_Controller
 						$this->order->checkGrantDoc($orderNumber, false);
 					}
 
-					$tax_file_path = FCPATH . 'uploads/tax/' . $session_id . '.pdf';
-					if (file_exists($tax_file_path)) {
-						rename(FCPATH . "/uploads/tax/" . $session_id . '.pdf', FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
-						$this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
-					}
+					// $tax_file_path = FCPATH . 'uploads/tax/' . $session_id . '.pdf';
+					// if (file_exists($tax_file_path)) {
+					// 	rename(FCPATH . "/uploads/tax/" . $session_id . '.pdf', FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
+					// 	$this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
+					// }
 										
 
 					$titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
@@ -1307,7 +1307,7 @@ class Home extends MX_Controller
 				$taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
 				$emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
 				// if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
-				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) {
 					// $to = 'hitesh.p@crestinfosystems.com';
 					// $cc = ['piyush.j@crestinfosystems.net'];
 					$logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);

@@ -475,7 +475,7 @@ h3, .h3 {
                         {*/
                             $apn = str_replace('0000', '0-000', $apn);
                     ?>
-                            <!-- <div class="col-md-3">
+                             <div class="col-md-3">
                                 <div id="taxDocumentInfo">
                                     <?php
                                         if(isset($tax_file_url) && !empty($tax_file_url))
@@ -509,7 +509,7 @@ h3, .h3 {
                                     
                                 </div>
                                 <div class="loader" style="display: none;"></div>
-                            </div> -->
+                            </div>
                     <?php
                         /*}*/
                     ?>
