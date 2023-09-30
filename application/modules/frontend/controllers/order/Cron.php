@@ -5504,7 +5504,7 @@ class Cron extends MX_Controller {
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
         $this->apiLogs->syncLogs(0, 'email-check-Tax', 'email-check-Tax', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
         // if ($emailSentFlag != 1  && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception'))
-        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception'))
+        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception'))
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
@@ -5586,7 +5586,7 @@ class Cron extends MX_Controller {
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
         $this->apiLogs->syncLogs(0, 'email-check-LV', 'email-check-LV', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$taxDataStatus' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), 0, 0);
         // if ($emailSentFlag != 1  && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) 
-        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) 
+        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) 
         {
             $this->order->sendOrderEmail($fileNumber);
             $this->session->set_userdata('email_sent_flag', 1);
