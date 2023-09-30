@@ -1306,7 +1306,8 @@ class Home extends MX_Controller
 				$taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
 				$taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
 				$emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
-				// if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception') && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception')) {
+				$this->apiLogs->syncLogs(0, 'email-check-order', 'email-check-order', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus, 'lp_file_number' => $orderDetails['lp_file_number']], array(), 0, 0);
+
 				if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) {
 					// $to = 'hitesh.p@crestinfosystems.com';
 					// $cc = ['piyush.j@crestinfosystems.net'];
@@ -1327,7 +1328,7 @@ class Home extends MX_Controller
 					);
 
 					$condition = array(
-						'file_number' => $fileNumber
+						'file_number' => $orderNumber
 					);
 					$this->titlePointData->update($tpData, $condition);
 				}
