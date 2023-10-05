@@ -319,12 +319,12 @@ form {
 		<div class="card shadow p-5">
 			<div class="row">
 				<div class="col-sm-12">
-					<h2 class="ui-title-block ui-title-block_light">Farm Analysis
-						<a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right">
+					<h2 class="ui-title-block ui-title-block_light">Sales Snap Shot
+                        <a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
-								<i class="fa fa-camera"></i>
+								<i class="fas fa-concierge-bell"></i>
 							</span>
-							<span class="text">Sales Snap Shot</span>
+							<span class="text">Create F.A.R</span>
 						</a>
 						
 						<a href="<?php echo base_url('pmas'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
@@ -406,7 +406,7 @@ form {
 
 					</h5>
 					<div class="smart-forms smart-container">
-						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('reports/importData'); ?>">
+						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('sales-snap-shot/importData'); ?>">
 							<div class="form-body">
 								<?php
 									$prev_data = $this->session->flashdata('_previous_data');
@@ -455,13 +455,11 @@ form {
 										</div>
 
 										<div class="section colm colm4 col-md-6">
-											<select id="sort_by" name="sort_by" class="form-control">
-												<option value="">Select Sorting Order</option>
-												<?php
-													foreach ($sorting_fields as $key => $field_name):
-												?>
-												<option value="<?php echo $key; ?>" <?php if (!empty($prev_data['sort_by']) && $prev_data['sort_by'] == $key) {echo 'selected';}?>><?php echo $field_name; ?></option>
-												<?php endforeach;?>
+											<select id="month_option" name="month_option" class="form-control">
+												<option value="">Select Month Option</option>
+												<option value="3" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == $key) {echo 'selected';}?>>3</option>
+                                                <option value="6" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == $key) {echo 'selected';}?>>6</option>
+                                                <option value="12" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == $key) {echo 'selected';}?>>12</option>
 											</select>
 											<i class="arrow"></i>
 										</div>
@@ -502,7 +500,7 @@ form {
 									<?php
 										foreach ($reports_data as $report) {
 
-										$pdf_url = trim(env('AWS_PATH') . 'sales-rep/pdf/' . $report['report_url']);
+										$pdf_url = trim(env('AWS_PATH') . 'sales-snap-shot/' . $report['report_url']);
 									?>
 									<tr>
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>

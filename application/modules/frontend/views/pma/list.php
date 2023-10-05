@@ -358,7 +358,14 @@ form {
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Concierge Profile
-						<a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right">
+						<a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right">
+							<span class="icon text-white-50">
+								<i class="fa fa-camera"></i>
+							</span>
+							<span class="text">Sales Snap Shot</span>
+						</a>
+
+						<a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fas fa-concierge-bell"></i>
 							</span>
@@ -371,6 +378,7 @@ form {
 							</span>
 							<span class="text">Create Labels</span>
 						</a>
+
 					</h2>					
 					<div class="ui-decor-1a bg-accent"></div>
 				</div>
