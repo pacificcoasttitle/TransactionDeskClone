@@ -628,6 +628,8 @@ $route['labels/(.+)'] = "frontend/label/$1";
 $route['download-label-pdf'] = "frontend/label/downloadPdf";
 $route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite'; 
+$route['sales-snap-shot'] = "frontend/salesSnapShot";
+$route['sales-snap-shot/(.+)'] = "frontend/salesSnapShot/$1";
 
 $route['api/get_file_details(/:num)?'] = 'frontend/api/pctCalculator/get_file_details$1';
 $route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';
