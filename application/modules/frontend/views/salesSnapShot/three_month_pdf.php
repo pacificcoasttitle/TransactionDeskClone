@@ -27,7 +27,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: url('../../../../../assets/sales_snap_shot/GenericBG.jpg') no-repeat;
+            background-image: url('../../../../../assets/sales_snap_shot/GenericBG.jpg') no-repeat;
             background-size: cover;
             padding: 40px;
             height: 240px;
