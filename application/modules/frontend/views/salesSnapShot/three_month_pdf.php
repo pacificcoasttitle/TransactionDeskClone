@@ -59,41 +59,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>SEPTEMBER - 2023</td>
-                            <td>$425,000</td>
-                            <td>$325</td>
-                            <td>0.125%</td>
-                        </tr>
-                        <tr>
-                            <td>AUGUST - 2023</td>
-                            <td>$425,000</td>
-                            <td>$325</td>
-                            <td>3.025%</td>
-                        </tr>
-                        <tr>
-                            <td>JULY - 2023</td>
-                            <td>$425,000</td>
-                            <td>$325</td>
-                            <td>0.001%</td>
-                        </tr>
+                        <?php if (!empty($monthly_data)) { 
+                            foreach ($monthly_data as $month) { ?>
+                                <tr>
+                                    <td><?php echo $month['month'];?></td>
+                                    <td><?php echo number_format($month['avg_sales_price']);?></td>
+                                    <td><?php echo number_format($month['avg_price_per_sq_ft']);?></td>
+                                    <td>0.125%</td>
+                                </tr>
+                        <?php } 
+                        } else { ?>
+                                <tr>No Record Found</tr>
+                        <?php }?>
                     </tbody>
                 </table>
             </div>           
             <div class="pdf_footer">
                 <div class="media-object">
-                    <img src="img/ZoeNoelleSmall.png" alt="">
+                    <?php
+                        $image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
+                        if (!empty($salesRep['sales_rep_report_image']) && checkRemoteFile($image_url)):
+                    ?>
+                        <img src="<?php echo $image_url;?>" alt="Profile-Pic" class="profile_img"/>
+                    <?php endif; ?>                    
                     <div>
-                        <div class="zoe-name">Zoe Noelle</div>
-                        <div class="occupation">Account Executive</div>
+                        <div class="zoe-name"><?php echo $salesRep['first_name'].' '.$salesRep['last_name']; ?></div>
+                        <div class="occupation"><?php echo $salesRep['title'];?></div>
                         <div class="contact-detail">
-                            <a href="tel:213-909-6541">213-909-6541</a>
-                            <a href="mailto:ecastro@pct.com">ecastro@pct.com</a>
+                            <a href="tel:<?php echo $salesRep['telephone_no'];?>"><?php echo $salesRep['telephone_no'];?></a>
+                            <a href="mailto:<?php echo $salesRep['email_address'];?>"><?php echo $salesRep['email_address'];?></a>
                         </div>
                     </div>
                 </div>
                 <div class="sales-price">
-                    Report as of 10/03/2023 <br>
+                    Report as of <?php echo date('m/d/Y');?> <br>
                     995K Max Sales Price <br>
                     SFR’s Only
                 </div>

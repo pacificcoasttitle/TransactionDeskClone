@@ -145,10 +145,10 @@ class Report extends MX_Controller {
                 $report_data['records'] = $records;
 
                 $condition = array(
-                            'is_sales_rep' => 1,
-                            'status' => 1,
-                            'id' => $this->input->post('sales_rep'),
-                    );
+                    'is_sales_rep' => 1,
+                    'status' => 1,
+                    'id' => $this->input->post('sales_rep'),
+                );
                 $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
                 $report_data['area_name'] = $this->input->post('area_name');
                 $report_data['sort_by'] = $this->input->post('sort_by');

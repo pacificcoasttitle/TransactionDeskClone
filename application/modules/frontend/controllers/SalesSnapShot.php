@@ -113,18 +113,39 @@ class SalesSnapShot extends MX_Controller {
                 }
                 
                 $report_data['area_name'] = $this->input->post('area_name');
+                $condition = array(
+                    'is_sales_rep' => 1,
+                    'status' => 1,
+                    'id' => $this->input->post('sales_rep'),
+                );
+                $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
                 $report_data['total_records'] = count($records);
                 $report_data['avg_sales_price'] = (array_sum(array_column($records,'purchase_price')))/count($records);
                 $report_data['avg_price_per_sq_ft'] = (array_sum(array_column($records,'purchase_price')))/(array_sum(array_column($records,'building_size')));
                 $report_data['avg_beds'] = (array_sum(array_column($records,'bedrooms')))/count($records);
                 $report_data['avg_baths'] = (array_sum(array_column($records,'baths')))/count($records);
 
-                $rentalArr = array_filter($report_data, function ($var) {
+                $rentalArr = array_filter($records, function ($var) {
                     return ($var['owner_occupied'] == 'n');
                 });
 
                 $report_data['absentee'] = (100 * count($rentalArr))/count($records);
+
+                $monthly_data = array();
+                $k = 0;
+                for ($i = -(int)$main_record['month_option'] ; $i < 0; $i++){
+                    $month = date('m', strtotime("$i month"));
+                    $month_records = array_filter($records, function($var) use ($month) {
+                        $date = new DateTime($var['purchase_date']);
+                        return $date->format("m") == $month;
+                    });
+                    $monthly_data[$k]['month'] = date('M', strtotime("$i month"))." - ".date('Y', strtotime("$i month"));
+                    $monthly_data[$k]['avg_sales_price'] = (array_sum(array_column($month_records,'purchase_price')))/count($month_records);
+                    $monthly_data[$k]['avg_price_per_sq_ft'] = (array_sum(array_column($month_records,'purchase_price')))/(array_sum(array_column($month_records,'building_size')));
+                    $k++;
+                }
                 
+                $report_data['monthly_data'] = $monthly_data;
                 $html = $this->load->view('salesSnapShot/three_month_pdf',$report_data,true);
                 $this->load->library('snappy_pdf');
                 
@@ -139,7 +160,7 @@ class SalesSnapShot extends MX_Controller {
                 $dir_name = str_replace('\\', '/', $dir_name);
 
                 $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
-			    $this->snappy_pdf->pdf->setOption('zoom', '1.2');
+			    $this->snappy_pdf->pdf->setOption('zoom', '1.1');
                 $this->snappy_pdf->pdf->generateFromHtml($html,$dir_name.$document_name);
                 $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-snap-shot');
                 if($response) {
