@@ -49,32 +49,34 @@
                         <div class="count"><?php echo number_format($absentee,2);?>%</div>
                     </div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>MONTH BY MONTH</th>
-                            <th>AVG. SALES PRICE</th>
-                            <th>AVG. $ SQFT</th>
-                            <th>PRICE % CHANGE</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($monthly_data)) { 
-                            foreach ($monthly_data as $month) { ?>
-                                <tr>
-                                    <td><?php echo $month['month'];?></td>
-                                    <td>$<?php echo number_format($month['avg_sales_price']);?></td>
-                                    <td>$<?php echo number_format($month['avg_price_per_sq_ft']);?></td>
-                                    <td>0.125%</td>
-                                </tr>
-                        <?php } 
-                        } else { ?>
-                                <tr>No Record Found</tr>
-                        <?php }?>
-                    </tbody>
-                </table>
+                <div class="monthly_conatiner">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>MONTH BY MONTH</th>
+                                <th>AVG. SALES PRICE</th>
+                                <th>AVG. $ SQFT</th>
+                                <th>PRICE % CHANGE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($monthly_data)) { 
+                                foreach ($monthly_data as $month) { ?>
+                                    <tr>
+                                        <td><?php echo $month['month'];?></td>
+                                        <td>$<?php echo number_format($month['avg_sales_price']);?></td>
+                                        <td>$<?php echo number_format($month['avg_price_per_sq_ft']);?></td>
+                                        <td>0.125%</td>
+                                    </tr>
+                            <?php } 
+                            } else { ?>
+                                    <tr>No Record Found</tr>
+                            <?php }?>
+                        </tbody>
+                    </table>
+                </div>
             </div>           
-            <div class="pdf_footer">
+            <div class="pdf_footer monthly_conatiner">
                 <div class="media-object">
                     <?php
                         $image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
