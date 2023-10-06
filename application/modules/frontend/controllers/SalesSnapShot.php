@@ -139,14 +139,22 @@ class SalesSnapShot extends MX_Controller {
                         $date = new DateTime($var['purchase_date']);
                         return $date->format("m") == $month;
                     });
-                    $monthly_data[$k]['month'] = date('M', strtotime("$i month"))." - ".date('Y', strtotime("$i month"));
+                    $monthly_data[$k]['month'] = date('F', strtotime("$i month"))." - ".date('Y', strtotime("$i month"));
                     $monthly_data[$k]['avg_sales_price'] = (array_sum(array_column($month_records,'purchase_price')))/count($month_records);
                     $monthly_data[$k]['avg_price_per_sq_ft'] = (array_sum(array_column($month_records,'purchase_price')))/(array_sum(array_column($month_records,'building_size')));
                     $k++;
                 }
                 
                 $report_data['monthly_data'] = $monthly_data;
-                $html = $this->load->view('salesSnapShot/three_month_pdf',$report_data,true);
+
+                if ($this->input->post('month_option') == '03') {
+                    $html = $this->load->view('salesSnapShot/three_month_pdf',$report_data,true);
+                } else if ($this->input->post('month_option') == '06') {
+                    $html = $this->load->view('salesSnapShot/six_month_pdf',$report_data,true);
+                } else if ($this->input->post('month_option') == '12') {
+                    $html = $this->load->view('salesSnapShot/twelve_month_pdf',$report_data,true);
+                }
+                
                 $this->load->library('snappy_pdf');
                 
                 $document_name = time().'_'.$last_id.'.pdf';
@@ -160,7 +168,7 @@ class SalesSnapShot extends MX_Controller {
                 $dir_name = str_replace('\\', '/', $dir_name);
 
                 $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
-			    $this->snappy_pdf->pdf->setOption('zoom', '1.1');
+			    $this->snappy_pdf->pdf->setOption('zoom', '1');
                 $this->snappy_pdf->pdf->generateFromHtml($html,$dir_name.$document_name);
                 $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-snap-shot');
                 if($response) {

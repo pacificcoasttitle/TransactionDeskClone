@@ -63,8 +63,8 @@
                             foreach ($monthly_data as $month) { ?>
                                 <tr>
                                     <td><?php echo $month['month'];?></td>
-                                    <td><?php echo number_format($month['avg_sales_price']);?></td>
-                                    <td><?php echo number_format($month['avg_price_per_sq_ft']);?></td>
+                                    <td>$<?php echo number_format($month['avg_sales_price']);?></td>
+                                    <td>$<?php echo number_format($month['avg_price_per_sq_ft']);?></td>
                                     <td>0.125%</td>
                                 </tr>
                         <?php } 
@@ -94,7 +94,7 @@
                 <div class="sales-price">
                     Report as of <?php echo date('m/d/Y');?> <br>
                     995K Max Sales Price <br>
-                    SFR’s Only
+                    SFR's Only
                 </div>
             </div>
         </div>
