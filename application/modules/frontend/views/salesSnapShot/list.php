@@ -492,7 +492,7 @@ form {
 									<tr>
 										<th>Date</th>
 										<th>Sales Rep</th>
-										<th>Zipcode</th>
+										<th>Area Name</th>
 										<th>Download</th>
 									</tr>
 								</thead>
@@ -505,7 +505,7 @@ form {
 									<tr>
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
-										<td><?php echo $report['zip_code']; ?></td>
+										<td><?php echo $report['area_name']; ?></td>
 										<td>
 										<?php
 											if (!empty($report['report_url'])): ?>
