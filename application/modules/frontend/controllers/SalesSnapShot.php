@@ -140,12 +140,18 @@ class SalesSnapShot extends MX_Controller {
                         return $date->format("m") == $month;
                     });
                     $monthly_data[$k]['month'] = date('F', strtotime("$i month"))." - ".date('Y', strtotime("$i month"));
-                    $monthly_data[$k]['avg_sales_price'] = (array_sum(array_column($month_records,'purchase_price')))/count($month_records);
-                    $monthly_data[$k]['avg_price_per_sq_ft'] = (array_sum(array_column($month_records,'purchase_price')))/(array_sum(array_column($month_records,'building_size')));
-                    $k++;
+                    if (!empty($monthly_data)) {
+                        $monthly_data[$k]['avg_sales_price'] = (array_sum(array_column($month_records,'purchase_price')))/count($month_records);
+                        $monthly_data[$k]['avg_price_per_sq_ft'] = (array_sum(array_column($month_records,'purchase_price')))/(array_sum(array_column($month_records,'building_size')));
+                        $k++;
+                    } else {
+                        $monthly_data[$k]['avg_sales_price'] = 0.00;
+                        $monthly_data[$k]['avg_price_per_sq_ft'] = 0.00;
+                        $k++;
+                    }  
                 }
                 
-                $report_data['monthly_data'] = $monthly_data;
+                $report_data['monthly_data'] = array_reverse($monthly_data);
 
                 if ($this->input->post('month_option') == '03') {
                     $html = $this->load->view('salesSnapShot/three_month_pdf',$report_data,true);
