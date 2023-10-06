@@ -66,7 +66,7 @@
                                         <td><?php echo $month['month'];?></td>
                                         <td>$<?php echo number_format($month['avg_sales_price']);?></td>
                                         <td>$<?php echo number_format($month['avg_price_per_sq_ft']);?></td>
-                                        <td>0.125%</td>
+                                        <td><?php echo number_format($month['price_change'],3);?>%</td>
                                     </tr>
                             <?php } 
                             } else { ?>

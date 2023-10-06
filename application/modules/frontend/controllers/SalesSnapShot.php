@@ -143,12 +143,17 @@ class SalesSnapShot extends MX_Controller {
                     if (!empty($month_records)) {
                         $monthly_data[$k]['avg_sales_price'] = (array_sum(array_column($month_records,'purchase_price')))/count($month_records);
                         $monthly_data[$k]['avg_price_per_sq_ft'] = (array_sum(array_column($month_records,'purchase_price')))/(array_sum(array_column($month_records,'building_size')));
-                        $k++;
+                        if ($k == 0) {
+                            $monthly_data[$k]['price_change'] = 0.00;
+                        } else {
+                            $monthly_data[$k]['price_change'] = (100 * ($monthly_data[$k]['avg_price_per_sq_ft'] - $monthly_data[$k-1]['avg_price_per_sq_ft']))/$monthly_data[$k-1]['avg_price_per_sq_ft'];
+                        }
                     } else {
                         $monthly_data[$k]['avg_sales_price'] = 0.00;
                         $monthly_data[$k]['avg_price_per_sq_ft'] = 0.00;
-                        $k++;
+                        $monthly_data[$k]['price_change'] = 0.00;
                     }  
+                    $k++;
                 }
                 
                 $report_data['monthly_data'] = array_reverse($monthly_data);
