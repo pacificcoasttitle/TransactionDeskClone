@@ -12,7 +12,7 @@
                 <h1>SALES SNAP SHOT</h1>
                 <div class="overview_text">6 MONTH OVERVIEW</div>
                 <div class="santa_monica"><?php echo $area_name;?></div>
-                <img src="<?php echo base_url('assets/sales_snap_shot/logo.png') ?>" class="pacific_logo" alt="">
+                <!-- <img src="<?php echo base_url('assets/sales_snap_shot/logo.png') ?>" class="pacific_logo" alt=""> -->
             </div>
             <div class="pdf_body">
                 <div class="grid">
