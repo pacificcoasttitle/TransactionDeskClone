@@ -79,7 +79,7 @@
             <div class="pdf_footer monthly_conatiner">
                 <div class="media-object">
                     <?php
-                        $image_url = trim(env('AWS_PATH').$salesRep['sales_rep_report_image']);
+                        $image_url = trim(env('AWS_PATH').str_replace('uploads/', '', $salesRep['sales_rep_report_image']));
                         if (!empty($salesRep['sales_rep_report_image']) && checkRemoteFile($image_url)):
                     ?>
                         <img src="<?php echo $image_url;?>" alt="Profile-Pic" class="profile_img"/>
