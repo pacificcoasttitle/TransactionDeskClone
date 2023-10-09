@@ -49,7 +49,7 @@
                         <div class="count"><?php echo number_format($absentee,2);?>%</div>
                     </div>
                 </div>
-                <div class="monthly_conatiner">
+                <div class="monthly_conatiner" style="margin-top: 25px;">
                     <table>
                         <thead>
                             <tr>
