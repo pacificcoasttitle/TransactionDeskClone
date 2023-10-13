@@ -6359,4 +6359,29 @@ class Home extends MX_Controller
 
         echo json_encode($response);
     }
+
+    public function manualReport()
+    {
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $this->load->library('order/order');
+        $data = array();
+        $data['title'] = 'PCT Order: Manual Report';
+        $data['salesUsers'] = $this->order->get_sales_users();
+        $this->admintemplate->show("order/home", "manual_report", $data);
+    }
+
+    public function sendSummaryMailSalesRep()
+    {
+        $sales_rep = $this->input->post('sales_rep');
+        $result = $this->order->sendSummaryMail($sales_rep);
+        $this->session->set_userdata('success', 'Mail sent to successfully to sales rep.');
+        redirect(base_url() . 'order/admin/manual-report');
+    }
 }

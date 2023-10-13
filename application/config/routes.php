@@ -429,6 +429,9 @@ $route['order/admin/store-vesting-info'] = 'admin/order/home/addVestingInfo';
 $route['order/admin/get-vesting-info'] = 'admin/order/home/getVestingInfo';
 $route['order/admin/add-instrument-info'] = 'admin/order/home/addInstrumentInfo';
 $route['order/admin/change-client'] = 'admin/order/home/changeClient';
+$route['order/admin/manual-report'] = 'admin/order/home/manualReport';
+$route['send-summary-mail-sales-rep'] = 'admin/order/home/sendSummaryMailSalesRep';
+
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */

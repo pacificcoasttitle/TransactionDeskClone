@@ -3814,4 +3814,185 @@ class Order
         );
         $this->CI->db->insert('pct_admin_activity_logs', $data);
     }
+
+    public function sendSummaryMail($sales_rep_id = 0)
+    {
+        $this->CI->load->model('order/apiLogs');
+        $month = sprintf('%02d',date('m') - 1);
+        $this->CI->db->select('order_details.file_id, 
+            order_details.file_number, 
+            order_details.customer_id, 
+            order_details.id as order_id,
+            order_details.resware_status, 
+            property_details.full_address,
+            customer_basic_details.email_address as sales_email,
+            CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_name,
+            CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name,
+            user_details.email_address, 
+            user_details.company_name, 
+            transaction_details.sales_representative');
+        $this->CI->db->from('order_details');
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
+        if ($sales_rep_id == 0) {
+            $this->CI->db->where('transaction_details.sales_representative != ""');
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
+        }
+        $this->CI->db->where('customer_basic_details.email_address != ""');
+        $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+        $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+        $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
+        $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner');
+        $this->CI->db->order_by('transaction_details.sales_representative asc, order_details.customer_id asc'); 
+        $query = $this->CI->db->get();
+        $result   = $query->result_array();  
+
+        if(!empty($result)) {
+            $checkFlag = 0;
+            $data = array();
+            $i = 0;
+            $userName = '';
+            $companyName = '';
+            foreach($result as $res) {
+                if ($checkFlag == 0) {
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $sales_rep_email = $res['sales_email'];
+                    $order_user_id = $res['customer_id'];
+                    $userName = $res['name'];
+                    $companyName = $res['company_name'];
+                    $checkFlag = 1;
+                    $j = 0;
+                }
+
+                $month = sprintf('%02d',date('m') - 2);
+                $this->CI->db->select('COUNT(user_details.id) as order_count,user_details.`id`, user_details.company_name, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, user_details.is_escrow');
+                $this->CI->db->from('order_details');
+                $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
+                $this->CI->db->where('transaction_details.sales_representative', $sales_rep_user_id);
+                $this->CI->db->where('customer_basic_details.email_address != ""');
+                $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
+                $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner');
+                $this->CI->db->group_by('user_details.id'); 
+                $query = $this->CI->db->get();
+                $resultMax   = $query->result_array(); 
+
+                $lenderName = '';
+                $escrowName = '';
+                $lenderCount = 0;
+                $escrowCount = 0;
+
+                foreach($resultMax as $resMax) {
+                    if ($resMax['is_escrow'] == '0') {
+                        if ($resMax['order_count'] > $lenderCount) {
+                            $lenderName = $resMax['name']." - ".$resMax['company_name'];
+                            $lenderCount = $resMax['order_count'];
+                        }
+                    } else {
+                        if ($resMax['order_count'] > $escrowCount) {
+                            $escrowName = $resMax['name']." - ".$resMax['company_name'];
+                            $escrowCount = $resMax['order_count'];
+                        }
+                    }
+                }
+                
+                if ($res['sales_representative'] == $sales_rep_user_id) {
+                    if($res['customer_id'] == $order_user_id) {
+                        $j++;
+                        $userName = $res['name'];
+                        $companyName = $res['company_name'];
+                        $sales_name = $res['sales_name'];
+                    } else {    
+                        $j = 1;
+                        $i++;
+                        $userName = $res['name'];
+                        $companyName = $res['company_name'];
+                        $order_user_id = $res['customer_id'];
+                        $sales_name = $res['sales_name'];
+                    }
+                    $data['summary_info'][$i]['name'] = $userName;
+                    $data['summary_info'][$i]['company_name'] = $companyName;
+                    $data['summary_info'][$i]['count'] = $j;
+                    $data['sales_name'] = $sales_name;
+                    $data['escrowName'] = $escrowName;
+                    $data['lenderName'] = $lenderName;
+                    $currentMonth = date('F');
+                    $data['currentMonth'] = Date('F', strtotime($currentMonth . " last month"));
+                } else {
+                    if ($sales_rep_id != 0) {
+                        $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, TRUE);
+                    } else {
+                        $message = $this->CI->load->view('emails/summary_new.php', $data, TRUE);
+                    }
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Client Summary';
+                    $to = $sales_rep_email;
+                    $cc = array('ghernandez@pct.com');
+                    $mailParams = array(
+                        'from_mail'=>$from_mail, 
+                        'from_name'=>$from_name, 
+                        'to'=> $to,
+                        'subject'=>$subject,
+                        'message'=>json_encode($data),
+                        'cc' => $cc
+                    );
+                    $to = 'ghernandez@pct.com';
+                    //$to = array('hitesh.p@crestinfosystems.com');   
+                    $cc = array('hitesh.p@crestinfosystems.com');  
+                    $this->CI->load->helper('sendemail');
+                    $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
+                    $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+                    $data = array();
+                    $i = 0;
+                    $j = 1;
+                    $sales_rep_email = $res['sales_email'];
+                    $sales_rep_user_id = $res['sales_representative'];
+                    $order_user_id = $res['customer_id'];
+                    $userName = $res['name'];
+                    $companyName = $res['company_name'];
+                    $sales_name = $res['sales_name'];
+                    $data['summary_info'][$i]['name'] = $userName;
+                    $data['summary_info'][$i]['count'] = $j;
+                    $data['summary_info'][$i]['company_name'] = $companyName;
+                    $data['sales_name'] = $sales_name;
+                    $data['escrowName'] = $escrowName;
+                    $data['lenderName'] = $lenderName;
+                }
+            }
+            
+            if(!empty($data)){
+                if ($sales_rep_id != 0) {
+                    $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, TRUE);
+                } else {
+                    $message = $this->CI->load->view('emails/summary_new.php', $data, TRUE);
+                }
+                $from_name = 'Pacific Coast Title Company';
+                $from_mail = env('FROM_EMAIL');
+                $subject = 'Client Summary';
+                $to = $sales_rep_email;  
+                $cc = array('ghernandez@pct.com');          
+                $this->CI->load->helper('sendemail');
+                $mailParams = array(
+                    'from_mail'=>$from_mail, 
+                    'from_name'=>$from_name, 
+                    'to'=> $to,
+                    'subject'=>$subject,
+                    'message'=>json_encode($data),
+                    'cc' => $cc
+                );
+                $to = 'ghernandez@pct.com';
+                //$to = array('hitesh.p@crestinfosystems.com');   
+                $cc = array('hitesh.p@crestinfosystems.com');  
+
+                $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
+                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+                $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+            }
+        }
+    }
 }
