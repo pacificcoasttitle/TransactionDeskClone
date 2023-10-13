@@ -3817,6 +3817,7 @@ class Order
 
     public function sendSummaryMail($sales_rep_id = 0)
     {
+        echo $sales_rep_id;exit;
         $this->CI->load->model('order/apiLogs');
         $month = sprintf('%02d',date('m') - 1);
         $this->CI->db->select('order_details.file_id, 
