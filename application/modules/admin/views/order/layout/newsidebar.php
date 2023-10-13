@@ -363,8 +363,8 @@
 						<a class="collapse-item <?php if($this->uri->uri_string() == 'order/admin/settings') { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/settings'; ?>">
 							Settings
 						</a>
-						
-						<a class="dropdown-item <?php if(preg_match('/order\/admin\/([a-z\-])*manual-report*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/manual-report'; ?>">
+
+						<a class="collapse-item <?php if(preg_match('/order\/admin\/([a-z\-])*manual-report*/',$this->uri->uri_string())) { echo 'active'; } ?>" href="<?php echo base_url().'order/admin/manual-report'; ?>">
 							Manual Report
 						</a>
 					<?php endif; ?>
