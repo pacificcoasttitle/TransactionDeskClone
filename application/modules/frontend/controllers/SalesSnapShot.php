@@ -1,10 +1,9 @@
 <?php
 (defined('BASEPATH')) OR exit('No direct script access allowed');
-class Report extends MX_Controller {
+class SalesSnapShot extends MX_Controller {
 
     private $user;
-    private $sorting_fields;
-    private $report_js_version = '01';
+    private $sales_snap_shot_js_version = '01';
 
 	function __construct() 
     {
@@ -14,19 +13,10 @@ class Report extends MX_Controller {
             redirect('dashboard');
         }
         $this->user = $userdata;
-        $this->sorting_fields = [
-            'carrier_route'=>'Route',
-            'avg_price' => 'Avg. $',
-            'total_sales' => '#of Sales',
-            'NOO_ratio' => 'NOO %',
-            'avg_yr_owned' => 'Avg. Y.O.',
-            'total_units' => '# of Units',
-            'turnover_rate' => 'T.O.%'
-        ];
         $this->load->library('order/template');
         $this->load->library('order/salesDashboardTemplate');
         $this->load->model('order/home_model');
-        $this->load->model('report_model');
+        $this->load->model('salesSnapShot_model');
         $this->load->library('order/order');
         $this->load->helper('common');
     }
@@ -35,163 +25,164 @@ class Report extends MX_Controller {
     {
 		$data['title'] = 'Reports | Pacific Coast Title Company';
     	$condition = array(
-                'is_sales_rep' => 1,
-                'status' => 1,
+            'is_sales_rep' => 1,
+            'status' => 1,
         );
-        $data['salesReps'] = $this->report_model->getSalesRepData($condition,$this->user['id']);
+        $data['salesReps'] = $this->salesSnapShot_model->getSalesRepData($condition, $this->user['id']);
         $data['report_total'] = array_sum(array_column($data['salesReps'], 'report_count'));
         $report_condition = array(
             'added_by' => $this->user['id'],
         );
-		$data['reports_data'] = $this->report_model->getData($report_condition);
-        $data['sorting_fields']=$this->sorting_fields;
+		$data['reports_data'] = $this->salesSnapShot_model->getData($report_condition);
         // $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
 		// $this->template->show("report", "list", $data);
         $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/report.js?v=pma_' . $this->report_js_version) );
-		$this->salesdashboardtemplate->show("report", "list", $data);
+		$this->salesdashboardtemplate->show("salesSnapShot", "list", $data);
     }
 
     function importData()
     {
-        
         $this->load->library('CSVReader');
-
-        //check Errors
         $valid = true;
-        if(empty($this->input->post('sales_rep'))) {
+        if (empty($this->input->post('sales_rep'))) {
             $valid = false;
             $this->session->set_flashdata('error','Please select Sales Representative');
-        }
-        elseif(empty($this->input->post('area_name'))) {
+        } else if(empty($this->input->post('area_name'))) {
             $valid = false;
             $this->session->set_flashdata('error','Please Enter Area Name');
-        }
-        elseif(empty($this->input->post('sort_by'))) {
+        } else if(empty($this->input->post('month_option'))) {
             $valid = false;
-            $this->session->set_flashdata('error','Please select Sorting Order');
-        }
-        elseif(empty($_FILES['csvFile']['tmp_name'])) {
+            $this->session->set_flashdata('error','Please select month option');
+        } else if(empty($_FILES['csvFile']['tmp_name'])) {
             $valid = false;
             $this->session->set_flashdata('error','Please select csv file');
         }
-        if(!$valid) {
+
+        if (!$valid) {
             $this->session->set_flashdata('_previous_data',$this->input->post());
             redirect('reports');
-
         }
-        // var_dump($_FILES);
+        
 
         $csv_records =   $this->csvreader->parse_csv($_FILES['csvFile']['tmp_name']);//path to csv file
-        $valid_keys = ['carrier_route','avg_price','turnover_rate','total_sales','NOO_ratio','avg_yr_owned','total_units','sa_site_zip','sa_site_city'];
+        $valid_keys = ['APN / Parcel Number','Bedrooms','Baths','Building Size','Owner Occupied','Purchase Price', 'Purchase Date'];
 
-        if(is_array($csv_records) && isset($csv_records[1])) {
+        if (is_array($csv_records) && isset($csv_records[1])) {
             $first_reocrd = $csv_records[1];
-            
             $keys_not_found = array();
 
             foreach ($valid_keys as $valid_key) {
-               if(!isset($first_reocrd[$valid_key])) {
-                $keys_not_found[] = $valid_key;
-               }
+                if(!isset($first_reocrd[$valid_key])) {
+                    $keys_not_found[] = $valid_key;
+                }
             }
 
-            if(count($keys_not_found)) {
+            if (count($keys_not_found)) {
                 $this->session->set_flashdata('error','Column not found : '.implode(', ', $keys_not_found));
                 $this->session->set_flashdata('_previous_data',$this->input->post());
-                redirect('reports');
-                
+                redirect('sales-snap-shot');
             }
 
-            $zip_code = $csv_records[1]['sa_site_zip'];
-
             $main_record = array();
-            $main_record['sales_rep']=$this->input->post('sales_rep');
-            $main_record['sort_by']=$this->input->post('sort_by');
-            $main_record['area_name']=$this->input->post('area_name');
-            $main_record['added_by']=$this->user['id'];
-            $main_record['zip_code']=$zip_code;
+            $main_record['sales_rep'] = $this->input->post('sales_rep');
+            $main_record['month_option'] = $this->input->post('month_option');
+            $main_record['area_name'] = $this->input->post('area_name');
+            $main_record['added_by'] = $this->user['id'];
+            $last_id = $this->salesSnapShot_model->insert($main_record);
 
-            $last_id = $this->report_model->insert($main_record);
-
-            if($last_id) {
-
+            $monthArr = array();
+            for ($i = -(int)$main_record['month_option'] ; $i < 0; $i++){
+                $monthArr[] = date('m', strtotime("$i month"));
+            }
+            $records = array();
+            $i = 0;
+            $report_data = array();
+            if ($last_id) {
                 foreach ($csv_records as $csv_record) {
-                   // var_dump($csv_record);
-                    $child_record = array();
-                    $child_record['report_id']=$last_id;
-                    $child_record['carrier_route']=$csv_record['carrier_route'];
-                    $child_record['avg_price']=$csv_record['avg_price'];
-                    $child_record['turnover_rate']=$csv_record['turnover_rate'];
-                    $child_record['total_sales']=$csv_record['total_sales'];
-                    $child_record['NOO_ratio']=$csv_record['NOO_ratio'];
-                    $child_record['avg_yr_owned']=$csv_record['avg_yr_owned'];
-                    $child_record['total_units']=$csv_record['total_units'];
-                    $child_record['sa_site_zip']=$csv_record['sa_site_zip'];
-                    $child_record['sa_site_city']=$csv_record['sa_site_city'];
-                    $this->report_model->insert($child_record,'pct_sales_rep_report_records');
+                    $time = strtotime($csv_record['Purchase Date']);
+                    $month = date('m',$time);
+                    if (in_array($month, $monthArr)) {
+                        $records[$i]['building_size'] = $csv_record['Building Size'];
+                        $records[$i]['bedrooms'] = $csv_record['Bedrooms'];
+                        $records[$i]['baths'] = $csv_record['Baths'];
+                        $records[$i]['purchase_price'] = $csv_record['Purchase Price'];
+                        $records[$i]['owner_occupied'] = strtolower($csv_record['Owner Occupied']);
+                        $records[$i]['purchase_date'] = $csv_record['Purchase Date'];
+                        $i++;
+                    }
                 }
-                //Create pdf
-                $report_data = array();
-                $condition = array(
-                            'report_id' => $last_id,
-                    );
-                $order_by = $this->input->post('sort_by');
-                $limit = 10;
-                $records = $this->report_model->getReportData($condition,$order_by,$limit);
-
-                $this->report_model->delete_records($condition,'pct_sales_rep_report_records');
-
-
-                $report_data['records'] = $records;
-
+                
+                $report_data['area_name'] = $this->input->post('area_name');
                 $condition = array(
                     'is_sales_rep' => 1,
                     'status' => 1,
                     'id' => $this->input->post('sales_rep'),
                 );
                 $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
-                $report_data['area_name'] = $this->input->post('area_name');
-                $report_data['sort_by'] = $this->input->post('sort_by');
-                $report_data['sorting_fields']=$this->sorting_fields;
+                $report_data['total_records'] = count($records);
+                $report_data['avg_sales_price'] = (array_sum(array_column($records,'purchase_price')))/count($records);
+                $report_data['avg_price_per_sq_ft'] = (array_sum(array_column($records,'purchase_price')))/(array_sum(array_column($records,'building_size')));
+                $report_data['avg_beds'] = (array_sum(array_column($records,'bedrooms')))/count($records);
+                $report_data['avg_baths'] = (array_sum(array_column($records,'baths')))/count($records);
 
-                $box_columns = ['turnover_rate','NOO_ratio','avg_yr_owned','total_units','total_sales','avg_price'];
-                foreach ($records as $key => $record) {
-                    foreach ($box_columns as $box_column){
-                        if(!isset($box_data[$box_column])) {
-                            $box_data[$box_column]['value'] = $record["$box_column"];
-                            $box_data[$box_column]['route'] = separateZipRoute($record["carrier_route"],$record["sa_site_zip"]);
-                        }
+                $rentalArr = array_filter($records, function ($var) {
+                    return ($var['owner_occupied'] == 'n');
+                });
 
-                        if($record["$box_column"] > $box_data[$box_column]['value']) {
-                            $box_data[$box_column]['value'] = $record["$box_column"];
-                            $box_data[$box_column]['route'] = separateZipRoute($record["carrier_route"],$record["sa_site_zip"]);
+                $report_data['absentee'] = (100 * count($rentalArr))/count($records);
+
+                $monthly_data = array();
+                $k = 0;
+                for ($i = -(int)$main_record['month_option'] ; $i < 0; $i++){
+                    $month = date('m', strtotime("$i month"));
+                    $month_records = array_filter($records, function($var) use ($month) {
+                        $date = new DateTime($var['purchase_date']);
+                        return $date->format("m") == $month;
+                    });
+                    $monthly_data[$k]['month'] = date('F', strtotime("$i month"))." - ".date('Y', strtotime("$i month"));
+                    if (!empty($month_records)) {
+                        $monthly_data[$k]['avg_sales_price'] = (array_sum(array_column($month_records,'purchase_price')))/count($month_records);
+                        $monthly_data[$k]['avg_price_per_sq_ft'] = (array_sum(array_column($month_records,'purchase_price')))/(array_sum(array_column($month_records,'building_size')));
+                        if ($k == 0) {
+                            $monthly_data[$k]['price_change'] = 0.00;
+                        } else {
+                            $monthly_data[$k]['price_change'] = (100 * ($monthly_data[$k]['avg_price_per_sq_ft'] - $monthly_data[$k-1]['avg_price_per_sq_ft']))/$monthly_data[$k-1]['avg_price_per_sq_ft'];
                         }
-                    }
+                    } else {
+                        $monthly_data[$k]['avg_sales_price'] = 0.00;
+                        $monthly_data[$k]['avg_price_per_sq_ft'] = 0.00;
+                        $monthly_data[$k]['price_change'] = 0.00;
+                    }  
+                    $k++;
                 }
-                $report_data['box_data'] = $box_data;
                 
-                $html = $this->load->view('report/report_pdf',$report_data,true);
+                $report_data['monthly_data'] = array_reverse($monthly_data);
 
-                // echo $html;die;
+                if ($this->input->post('month_option') == '03') {
+                    $html = $this->load->view('salesSnapShot/three_month_pdf',$report_data,true);
+                } else if ($this->input->post('month_option') == '06') {
+                    $html = $this->load->view('salesSnapShot/six_month_pdf',$report_data,true);
+                } else if ($this->input->post('month_option') == '12') {
+                    $html = $this->load->view('salesSnapShot/twelve_month_pdf',$report_data,true);
+                }
                 
                 $this->load->library('snappy_pdf');
                 
-                // header('Content-Type: application/pdf');
                 $document_name = time().'_'.$last_id.'.pdf';
-                if (!is_dir(FCPATH.'uploads/sales-rep/pdf')) {
-                    mkdir(FCPATH.'uploads/sales-rep/pdf', 0777, TRUE);
+                if (!is_dir(FCPATH.'uploads/sales-snap-shot')) {
+                    mkdir(FCPATH.'uploads/sales-snap-shot', 0777, TRUE);
                 }
-                // if (!(is_writable(FCPATH.'uploads/sales-rep/pdf'))) {
-                    chmod(FCPATH.'uploads/sales-rep/pdf', 0777);
-                // }
-                $dir_name = FCPATH.'uploads/sales-rep/pdf/';
+               
+                chmod(FCPATH.'uploads/sales-snap-shot', 0777);
+                
+                $dir_name = FCPATH.'uploads/sales-snap-shot/';
                 $dir_name = str_replace('\\', '/', $dir_name);
-                // echo $dir_name.$document_name;die;
+
+                $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
+			  //  $this->snappy_pdf->pdf->setOption('zoom', '1.05');
                 $this->snappy_pdf->pdf->generateFromHtml($html,$dir_name.$document_name);
-                // die;
-                $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep/pdf');
+                $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-snap-shot');
                 if($response) {
-                    //report_url
                     if(is_file($dir_name.$document_name)) {
                         unlink($dir_name.$document_name);
                     }
@@ -201,20 +192,16 @@ class Report extends MX_Controller {
                     $condition = array(
                         'id' => $last_id,
                     );
-                    $this->report_model->update($update_data, $condition);
+                    $this->salesSnapShot_model->update($update_data, $condition);
                 }
-                // die;
-
-                $this->session->set_flashdata('success','Report Created.');
+                $this->session->set_flashdata('success','Sales Snap shot Created.');
             }
             else {
                 $this->session->set_flashdata('error','Please try again!');
                 $this->session->set_flashdata('_previous_data',$this->input->post());
             }
         }
-        redirect('reports');
-
-
+        redirect('sales-snap-shot');
     }
 
     function sales_rep($id=0)
@@ -260,7 +247,8 @@ class Report extends MX_Controller {
                             $data = $this->upload->data();
                             // var_dump($data);die;
                             $status = "success";
-                            $msg = "Borrower File successfully uploaded";
+                            $msg = "Borr
+                            ower File successfully uploaded";
                             $document_name = 'sales_rep_report_'.time().rand(10,1000).'.'.$data['image_type'];
                             rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
                             // die;
@@ -333,9 +321,6 @@ class Report extends MX_Controller {
         
         // header('Content-Type: application/pdf');
         
-        // echo $this->snappy_pdf->pdf->getOutputFromHtml($html);
-        
-
-        
+        // echo $this->snappy_pdf->pdf->getOutputFromHtml($html); 
     }
 }

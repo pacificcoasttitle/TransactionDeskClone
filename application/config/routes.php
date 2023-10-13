@@ -429,6 +429,9 @@ $route['order/admin/store-vesting-info'] = 'admin/order/home/addVestingInfo';
 $route['order/admin/get-vesting-info'] = 'admin/order/home/getVestingInfo';
 $route['order/admin/add-instrument-info'] = 'admin/order/home/addInstrumentInfo';
 $route['order/admin/change-client'] = 'admin/order/home/changeClient';
+$route['order/admin/manual-report'] = 'admin/order/home/manualReport';
+$route['send-summary-mail-sales-rep'] = 'admin/order/home/sendSummaryMailSalesRep';
+
 /* Route for PCT-Order backend*/
 
 /* Start Route for HR-Center frontend */
@@ -628,6 +631,8 @@ $route['labels/(.+)'] = "frontend/label/$1";
 $route['download-label-pdf'] = "frontend/label/downloadPdf";
 $route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite'; 
+$route['sales-snap-shot'] = "frontend/salesSnapShot";
+$route['sales-snap-shot/(.+)'] = "frontend/salesSnapShot/$1";
 
 $route['api/get_file_details(/:num)?'] = 'frontend/api/pctCalculator/get_file_details$1';
 $route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';
