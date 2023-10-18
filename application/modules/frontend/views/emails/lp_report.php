@@ -349,7 +349,7 @@
                   <tbody>
                      <tr>
                         <td align="center" class="img-responsive container-padding">
-                           <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="<?php echo base_url() . 'assets/media/order/email/lp_stats_header.png'; ?>" border="0" alt="picture">
+                           <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="<?php echo base_url() . 'assets/media/order/email/lp_stats_header.jpg'; ?>" border="0" alt="picture">
                         </td>
                      </tr>
                      <!-- blue-header -->
