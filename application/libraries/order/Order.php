@@ -2953,20 +2953,9 @@ class Order
         $this->CI->db->order_by('first_name', 'asc');
         $query = $this->CI->db->get();
         $salesMangers = $query->result_array();
-        $startDate = date("Y-m-01 00:00:00");
-        // echo date("Y-m-t");die;
-        if (date('d') == 1) {
-            $endData = date("Y-m-15 23:59:59");
-        } else if (date('d') == 16) {
-            $startDate = date("Y-m-16 00:00:00");
-            $endDate = date("Y-m-t 23:59:59");
-        } else {
-            if (date('d') > 15) {
-                $startDate = date("Y-m-16 00:00:00");
-            }
-            $endDate = date("Y-m-t 23:59:59");
-            // return;
-        }
+        $startDate = date('Y-m-d 00:00:00', strtotime('-15 days', strtotime(date('Y-m-d'))));
+        $endDate = date('Y-m-d 23:59:59', strtotime('-1 days', strtotime(date('Y-m-d'))));
+
         if (!empty($salesMangers)) {
             $data['max_resales_open_orders'] = 0;
             $data['max_resales_open_orders_sales_name'] = '';
@@ -2990,6 +2979,33 @@ class Order
                 } else {
                     $salesUsers = $this->CI->order->get_sales_users();
                 }
+
+                $this->CI->db->select('');
+                $this->CI->db->from('order_details');
+                $this->CI->db->where('order_details.lp_file_number is not null');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+                $this->CI->db->where_in('transaction_details.sales_representative', $salesRepUsers);
+                $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
+                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+                $query = $this->CI->db->get();
+                $result   = $query->result_array(); 
+
+                $data['totalReswareCount'] = 0;
+                $data['totalApprovedCount'] = 0;
+                $data['totalReswareCountPer'] = 0.00;
+                $data['totalApprovedCountPer'] = 0.00;
+                $data['totalCount'] = $totalCount;
+                if (!empty($result)) {
+                    $totalCount = count($result);
+                    $reswareOrders = array_filter($result, function($res) { return ( $res['file_number'] != 0 );});
+                    $approvedOrders = array_filter($result, function($res) { return ( $res['lp_report_status'] == 'approved' );});
+                    $data['totalReswareCount'] = count($reswareOrders);
+                    $data['totalApprovedCount'] = count($approvedOrders);
+                    $data['totalReswareCountPer'] = number_format((count($reswareOrders)*100) / $totalCount, 2).'%';
+                    $data['totalApprovedCountPer'] = number_format((count($approvedOrders)*100) / $totalCount, 2).'%';
+                    $data['totalCount'] = $totalCount;
+                }
+                
                 $i = 0;
                 if (!empty($salesUsers)) {
                     foreach ($salesUsers as $salesrep) {
@@ -3054,23 +3070,24 @@ class Order
                         $i++;
                     }
                     $data['start_date'] = date('Y-m-d', strtotime($startDate));
+                    $data['end_date'] = date('Y-m-d', strtotime($endDate));
 
                     $data['total_sum_premium'] = number_format($data['total_sum_premium']);
                     $data['sales_name'] = $salesManger['first_name'] . " " . $salesManger['last_name'];
 
-                    // if ($adminFlag == 1) {
-                    $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
-                    // } else {
-                    // $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
-                    // }
-                    // echo $message;die;
+                    if ($adminFlag == 1) {
+                        $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
+                    } else {
+                        $message = $this->CI->load->view('emails/lp_report.php', $data, TRUE);
+                    }
+                    
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'LP Report';
                     $to = $salesManger['email_address'];
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
-                    // $cc = array('hitesh.p@crestinfosystems.com');
-                    // $to = 'piyush.j@crestinfosystems.net';
+                     //$cc = array('hitesh.p@crestinfosystems.com');
+                     $to = 'hitesh.p@crestinfosystems.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -3079,7 +3096,7 @@ class Order
                         'message' => json_encode($data),
                         'cc' => $cc
                     );
-                    //$cc = array();
+                    $cc = array();
                     $this->CI->load->helper('sendemail');
                     $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
