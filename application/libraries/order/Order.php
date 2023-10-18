@@ -3086,8 +3086,9 @@ class Order
                     $subject = 'LP Report';
                     $to = $salesManger['email_address'];
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
-                     //$cc = array('hitesh.p@crestinfosystems.com');
-                     $to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'ghernandez@pct.com';
+                    $cc = array('hitesh.p@crestinfosystems.com');
+                    //$to = 'hitesh.p@crestinfosystems.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
