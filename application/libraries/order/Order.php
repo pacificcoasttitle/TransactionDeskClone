@@ -3108,7 +3108,7 @@ class Order
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $to = 'ghernandez@pct.com';
                     $cc = array('hitesh.p@crestinfosystems.com');
-                    $to = 'hitesh.p@crestinfosystems.com';
+                    //$to = 'hitesh.p@crestinfosystems.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -3117,7 +3117,7 @@ class Order
                         'message' => json_encode($data),
                         'cc' => $cc
                     );
-                    $cc = array();
+                    //$cc = array();
                     $this->CI->load->helper('sendemail');
                     $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
