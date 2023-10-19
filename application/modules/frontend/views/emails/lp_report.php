@@ -397,7 +397,8 @@
                                                    <table style="border-collapse: collapse; width: 100%; height: 54px;font-family:arial;" border="1">
                                                       <tbody>
                                                          <tr style="height: 45px;background-color:#f2f2f2;border-color:#c2c2c2;">
-                                                            <td style="width: 100%; font-weight:bold; text-align: center; font-size:20px;">Title Listing Prelims Created {Insert Month}</td>
+                                                            <td style="width: 100%; font-weight:bold; text-align: center; font-size:20px;">Title Listing Prelims Created 
+                                                         <?php echo date('F');?></td>
                                                          </tr>
                                                          <tr style="height: 18px;">
                                                             <td style="width: 40%; height: 25px; text-align: center; font-weight:bold; font-size:25px;border-color:#c2c2c2; color:#f26a2a;"><?php echo $totalCount; ?></td>
@@ -467,23 +468,21 @@
                                                       <tbody>
 
                                                          <tr>
-                                                            <td style="width: 31.333%;background-color:#032e42;color:#ffffff;font-weight:bold;font-family:arial;padding:5px; font-size:14px;">Rep Name</td>
-                                                            <td style="width: 13%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Refi Open</td>
-                                                            <td style="width: 13%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Refi Close</td>
-                                                            <td style="width: 13%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Sale Open</td>
-                                                            <td style="width: 13%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Sale Close</td>
-                                                            <td style="width: 16.6667%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Revenue</td>
+                                                            <td style="width: 31%;background-color:#032e42;color:#ffffff;font-weight:bold;font-family:arial;padding:5px; font-size:14px;">Rep Name</td>
+                                                            <td style="width: 23%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">LP Open</td>
+                                                            <td style="width: 23%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">LP Approved</td>
+                                                            <td style="width: 23%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">LP Conversion Rate</td>
+                                                            
                                                          </tr>
 
                                                          <?php if (!empty($salesHistory)) {
                                                             foreach ($salesHistory as $sales) { ?>
                                                                <tr>
-                                                                  <td style="width: 31.333%;color:#a1a1a1;"><?php echo $sales['sales_rep']; ?></td>
-                                                                  <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['refi_open_count']; ?></td>
-                                                                  <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['refi_close_count']; ?></td>
-                                                                  <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['sale_open_count']; ?></td>
-                                                                  <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['sale_close_count']; ?></td>
-                                                                  <td style="width: 16.6667%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;">$<?php echo $sales['total_premium']; ?></td>
+                                                                  <td style="width: 32%;color:#a1a1a1;"><?php echo $sales['sales_rep']; ?></td>
+                                                                  <td style="width: 23%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['lp_open_count']; ?></td>
+                                                                  <td style="width: 23%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['lp_approved_count']; ?></td>
+                                                                  <td style="width: 23%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['lp_converted_rate']; ?></td>
+                                                                  
                                                                </tr>
                                                          <?php }
                                                          } ?>

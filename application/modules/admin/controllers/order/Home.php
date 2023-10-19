@@ -6384,4 +6384,12 @@ class Home extends MX_Controller
         $this->session->set_userdata('success', 'Mail sent to successfully to sales rep.');
         redirect(base_url() . 'order/admin/manual-report');
     }
+
+    public function sendNonOpenersEmail()
+    {
+        $sales_rep = $this->input->post('sales_rep');
+        $result = $this->order->sendNonOpenersEmail($sales_rep);
+        $this->session->set_userdata('success', 'Mail sent to successfully to sales rep.');
+        redirect(base_url() . 'order/admin/manual-report');
+    }
 }
