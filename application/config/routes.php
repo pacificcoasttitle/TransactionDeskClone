@@ -431,6 +431,7 @@ $route['order/admin/add-instrument-info'] = 'admin/order/home/addInstrumentInfo'
 $route['order/admin/change-client'] = 'admin/order/home/changeClient';
 $route['order/admin/manual-report'] = 'admin/order/home/manualReport';
 $route['send-summary-mail-sales-rep'] = 'admin/order/home/sendSummaryMailSalesRep';
+$route['send-non-openers-email'] = 'admin/order/home/sendNonOpenersEmail';
 
 /* Route for PCT-Order backend*/
 

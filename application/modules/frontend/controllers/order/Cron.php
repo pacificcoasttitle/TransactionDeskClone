@@ -5554,4 +5554,22 @@ class Cron extends MX_Controller {
             }
         }
     }
+
+    public function getIdealUsers()
+    {
+        $startDate = date('Y-m-d 00:00:00', strtotime('-97 days', strtotime(date('Y-m-d'))));
+        $endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
+        $this->db->select('*')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->db->where('order_details.lp_file_number is not null');
+        $this->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+        $this->db->where_in('transaction_details.sales_representative', 11942);
+        $this->db->where('order_details.`is_imported` = 0');
+        $this->db->where('order_details.`file_number` != 0');
+        $query = $this->db->get();
+        echo $this->db->last_query();exit;
+        $result = $query->result_array();
+        return $result;
+    }
 }
