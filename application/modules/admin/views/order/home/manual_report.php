@@ -111,14 +111,14 @@
             </div>
         </div>
 
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"> Non-Openers - New</h6>
                     </div>
                     <div class="card-body">        
-                        <form id="resware-admin-credential" method="POST" action="<?php echo base_url();?>send-summary-mail-sales-rep">
+                        <form id="resware-admin-credential" method="POST" action="<?php echo base_url();?>send-non-openers-email">
                             <div class="form-group">
                                 <label for="user_type" class="col-sm-2 col-form-label">Sales Rep<span class="required"> *</span></label>
                                 <div class="col-sm-6">
@@ -137,7 +137,7 @@
                                         <span class="icon text-white-50">
                                             <i class="fas fa-save"></i>
                                         </span>
-                                        <span class="text">Send Summary Email</span>
+                                        <span class="text">Send Non Openers Email</span>
                                     </button>
                                     <a href="<?php echo site_url('order/admin'); ?>" class="btn btn-secondary btn-icon-split">
                                         <span class="icon text-white-50">
@@ -151,7 +151,7 @@
                     </div>
                 </div>
             </div>
-        </div> -->
+        </div> 
     </div>
 </div>
 

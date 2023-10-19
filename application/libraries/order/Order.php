@@ -2980,7 +2980,7 @@ class Order
                     $salesUsers = $this->CI->order->get_sales_users();
                 }
 
-                $this->CI->db->select('');
+                $this->CI->db->select('*');
                 $this->CI->db->from('order_details');
                 $this->CI->db->where('order_details.lp_file_number is not null');
                 $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
@@ -3010,63 +3010,83 @@ class Order
                 if (!empty($salesUsers)) {
                     foreach ($salesUsers as $salesrep) {
                         $data['salesHistory'][$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                        $openRefiResult = $this->CI->order->getOpenLPOrdersCountForRefiProducts($startDate, $endDate, $salesrep['id']);
-                        $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                        $openSaleResult = $this->CI->order->getOpenLPOrdersCountForSaleProducts($startDate, $endDate, $salesrep['id']);
-                        // print_r($openSaleResult);die;
-                        $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                        $resultForSalesRep = $this->CI->order->getLPOrdersForSalesRep($startDate, $endDate, $salesrep['id']);
                         $data['salesHistory'][$i]['salesrep_id'] = $salesrep['id'];
-                        $data['salesHistory'][$i]['refi_open_count'] = $refi_open_count;
-                        $data['salesHistory'][$i]['sale_open_count'] = $sale_open_count;
-                        $data['salesHistory'][$i]['total_open_count'] = $sale_open_count + $refi_open_count;
 
-                        $closeRefiResult = $this->CI->order->getClosedLPOrdersCountForRefiProducts($startDate, $endDate, $salesrep['id']);
-                        $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                        $closeSaleResult = $this->CI->order->getClosedLPOrdersCountForSaleProducts($startDate, $endDate, $salesrep['id']);
-                        $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-                        $data['salesHistory'][$i]['refi_close_count'] = $refi_close_count;
-                        $data['salesHistory'][$i]['sale_close_count'] = $sale_close_count;
-                        $data['salesHistory'][$i]['total_close_count'] = $refi_close_count + $sale_close_count;
 
-                        $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-                        $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-                        //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-                        $refi_total_premium = $closeOrderRefiTotalPremium;
-                        $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-                        $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-                        //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-                        $sale_total_premium = $closeOrderSaleTotalPremium;
-                        $total_premium = $sale_total_premium + $refi_total_premium;
-                        $data['salesHistory'][$i]['total_premium'] = number_format($total_premium);
-
-                        if ($i == 0) {
-                            $data['max_resales_open_orders'] = $sale_open_count;
-                            $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            $data['max_resales_close_orders'] = $sale_close_count;
-                            $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            $data['max_refi_open_orders'] = $refi_open_count;
-                            $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            $data['max_refi_close_orders'] = $refi_close_count;
-                            $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        if (!empty($resultForSalesRep)) {
+                            $totalCount = count($resultForSalesRep);
+                            $reswareOrders = array_filter($resultForSalesRep, function($res) { return ( $res['file_number'] != 0 );});
+                            $approvedOrders = array_filter($resultForSalesRep, function($res) { return ( $res['lp_report_status'] == 'approved' );});
+                            $data['salesHistory'][$i]['lp_open_count'] = $totalCount;
+                            $data['salesHistory'][$i]['lp_approved_count'] = count($approvedOrders);
+                            $data['salesHistory'][$i]['lp_converted_rate'] = number_format((count($approvedOrders)*100) / $totalCount , 2).'%';
                         } else {
-                            if ($data['max_resales_open_orders'] < $sale_open_count) {
-                                $data['max_resales_open_orders'] = $sale_open_count;
-                                $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            }
-                            if ($data['max_resales_close_orders'] < $sale_close_count) {
-                                $data['max_resales_close_orders'] = $sale_close_count;
-                                $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            }
-                            if ($data['max_refi_open_orders'] < $refi_open_count) {
-                                $data['max_refi_open_orders'] = $refi_open_count;
-                                $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            }
-                            if ($data['max_refi_close_orders'] < $refi_close_count) {
-                                $data['max_refi_close_orders'] = $refi_close_count;
-                                $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                            }
+                            $data['salesHistory'][$i]['lp_open_count'] = 0;
+                            $data['salesHistory'][$i]['lp_approved_count'] = 0;
+                            $data['salesHistory'][$i]['lp_converted_rate'] = '0.00%';
                         }
-                        $data['total_sum_premium'] += $total_premium;
+                        
+
+                        // $openRefiResult = $this->CI->order->getOpenLPOrdersCountForRefiProducts($startDate, $endDate, $salesrep['id']);
+
+                        // $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                        // $openSaleResult = $this->CI->order->getOpenLPOrdersCountForSaleProducts($startDate, $endDate, $salesrep['id']);
+                        // // print_r($openSaleResult);die;
+                        // $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                        // $data['salesHistory'][$i]['salesrep_id'] = $salesrep['id'];
+                        // $data['salesHistory'][$i]['refi_open_count'] = $refi_open_count;
+                        // $data['salesHistory'][$i]['sale_open_count'] = $sale_open_count;
+                        // $data['salesHistory'][$i]['total_open_count'] = $sale_open_count + $refi_open_count;
+
+                        // $closeRefiResult = $this->CI->order->getClosedLPOrdersCountForRefiProducts($startDate, $endDate, $salesrep['id']);
+                        // $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                        // $closeSaleResult = $this->CI->order->getClosedLPOrdersCountForSaleProducts($startDate, $endDate, $salesrep['id']);
+                        // $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                        // $data['salesHistory'][$i]['refi_close_count'] = $refi_close_count;
+                        // $data['salesHistory'][$i]['sale_close_count'] = $sale_close_count;
+                        // $data['salesHistory'][$i]['total_close_count'] = $refi_close_count + $sale_close_count;
+
+                        // $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+                        // $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                        // //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+                        // $refi_total_premium = $closeOrderRefiTotalPremium;
+                        // $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+                        // $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                        // //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+                        // $sale_total_premium = $closeOrderSaleTotalPremium;
+                        // $total_premium = $sale_total_premium + $refi_total_premium;
+                        // $data['salesHistory'][$i]['total_premium'] = number_format($total_premium);
+
+                        // if ($i == 0) {
+                        //     $data['max_resales_open_orders'] = $sale_open_count;
+                        //     $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     $data['max_resales_close_orders'] = $sale_close_count;
+                        //     $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     $data['max_refi_open_orders'] = $refi_open_count;
+                        //     $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     $data['max_refi_close_orders'] = $refi_close_count;
+                        //     $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        // } else {
+                        //     if ($data['max_resales_open_orders'] < $sale_open_count) {
+                        //         $data['max_resales_open_orders'] = $sale_open_count;
+                        //         $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     }
+                        //     if ($data['max_resales_close_orders'] < $sale_close_count) {
+                        //         $data['max_resales_close_orders'] = $sale_close_count;
+                        //         $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     }
+                        //     if ($data['max_refi_open_orders'] < $refi_open_count) {
+                        //         $data['max_refi_open_orders'] = $refi_open_count;
+                        //         $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     }
+                        //     if ($data['max_refi_close_orders'] < $refi_close_count) {
+                        //         $data['max_refi_close_orders'] = $refi_close_count;
+                        //         $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        //     }
+                        // }
+                        // $data['total_sum_premium'] += $total_premium;
+
                         $i++;
                     }
                     $data['start_date'] = date('Y-m-d', strtotime($startDate));
@@ -3088,7 +3108,7 @@ class Order
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $to = 'ghernandez@pct.com';
                     $cc = array('hitesh.p@crestinfosystems.com');
-                    //$to = 'hitesh.p@crestinfosystems.com';
+                    $to = 'hitesh.p@crestinfosystems.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -4012,5 +4032,93 @@ class Order
                 $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
             }
         }
+    }
+
+    public function getLPOrdersForSalesRep($startDate, $endDate, $userId)
+    {
+        $this->CI->db->select('*')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.lp_file_number is not null');
+        $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+        $this->CI->db->where_in('transaction_details.sales_representative', $userId);
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
+
+    public function sendNonOpenersEmail($sales_rep_id)
+    {
+        $this->CI->load->model('order/apiLogs');
+        $startDate = date('Y-m-d 00:00:00', strtotime('-97 days', strtotime(date('Y-m-d'))));
+        $endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
+        $this->CI->db->select('customer_basic_details.email_address, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_rep_name')
+            ->from('order_details')
+            ->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner')
+           
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
+        $this->CI->db->where('order_details.lp_file_number is not null');
+        $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+        $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
+        $this->CI->db->where('order_details.`is_imported` = 0');
+        $this->CI->db->where('order_details.`file_number` != 0');
+        $this->CI->db->order_by('order_details.id desc'); 
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+
+        $users = array();
+        $i = 0;
+        if (!empty($result)) {
+            foreach($result as $res) {
+                if ($res['resware_status'] == 'open') {
+                    $users[$i]['id'] = $res['user_id'];
+                    $users[$i]['name'] = $res['name'];
+                    $users[$i]['last_deal_opened'] = date("m/d/Y", strtotime($res['created_at']));
+                    $sales_rep_email = $res['email_address'];
+                    $sales_rep_name = $res['sales_rep_name'];
+                     
+                    $i++;
+                } else {
+                    if ($res['resware_status'] != 'cancelled') {
+                        $key = array_search($res['user_id'], array_column($users, 'id'));
+                        if (strlen($key) > 0) {
+                            unset($users[$key]);
+                        }				
+                    }
+                }
+            }
+        }
+        if(!empty($users)){
+            $data['users'] = $users;
+            $data['sales_rep_name'] = $sales_rep_name;
+            if ($sales_rep_id != 0) {
+                $message = $this->CI->load->view('frontend/emails/non_openers.php', $data, TRUE);
+            } else {
+                $message = $this->CI->load->view('emails/non_openers.php', $data, TRUE);
+            }
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $subject = 'Non Openers';
+            $to = $sales_rep_email;  
+            $cc = array('ghernandez@pct.com');          
+            $this->CI->load->helper('sendemail');
+            $mailParams = array(
+                'from_mail'=>$from_mail, 
+                'from_name'=>$from_name, 
+                'to'=> $to,
+                'subject'=>$subject,
+                'message'=>json_encode($data),
+                'cc' => $cc
+            );
+            $to = 'ghernandez@pct.com';
+            //$to = array('hitesh.p@crestinfosystems.com');   
+            $cc = array('hitesh.p@crestinfosystems.com');  
+
+            $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'non_openers_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
+            $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
+            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'non_openers_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+        }
+        return true;
     }
 }
