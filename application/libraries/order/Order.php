@@ -4049,22 +4049,37 @@ class Order
 
     public function sendNonOpenersEmail($sales_rep_id)
     {
+        $this->CI->load->model('order/home_model');
         $this->CI->load->model('order/apiLogs');
-        $startDate = date('Y-m-d 00:00:00', strtotime('-97 days', strtotime(date('Y-m-d'))));
-        $endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
+        $salesUser =  $this->CI->home_model->get_user(array('id' => $sales_rep_id));
+        $salesRepUsers = array();
+        if (!empty($salesUser['sales_rep_users'])) {
+            $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+            if (!in_array($sales_rep_id, $salesRepUsers)) {
+                $salesRepUsers[] = $userdata['id'];
+            }
+        } 
+        $startDate = date('Y-m-d 00:00:00', strtotime('-90 days', strtotime(date('Y-m-d'))));
+        //$endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
         $this->CI->db->select('customer_basic_details.email_address, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_rep_name')
             ->from('order_details')
             ->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner')
            
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
-        $this->CI->db->where('order_details.lp_file_number is not null');
-        $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-        $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
+        //$this->CI->db->where('order_details.lp_file_number is not null');
+        $this->CI->db->where("order_details.created_at <= '$startDate'");
+        if (!empty($salesRepUsers)) {
+           // $this->CI->db->where_in('transaction_details.sales_representative', $salesRepUsers);
+            $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
+        }
         $this->CI->db->where('order_details.`is_imported` = 0');
         $this->CI->db->where('order_details.`file_number` != 0');
-        $this->CI->db->order_by('order_details.id desc'); 
+        $this->CI->db->order_by('order_details.id asc'); 
         $query = $this->CI->db->get();
+        //echo $this->CI->db->last_query();exit;
         $result = $query->result_array();
 
         $users = array();
@@ -4072,19 +4087,27 @@ class Order
         if (!empty($result)) {
             foreach($result as $res) {
                 if ($res['resware_status'] == 'open') {
-                    $users[$i]['id'] = $res['user_id'];
-                    $users[$i]['name'] = $res['name'];
-                    $users[$i]['last_deal_opened'] = date("m/d/Y", strtotime($res['created_at']));
-                    $sales_rep_email = $res['email_address'];
-                    $sales_rep_name = $res['sales_rep_name'];
-                     
-                    $i++;
+                    if (!empty($res['name'])) {
+                        $key = array_search($res['user_id'], array_column($users, 'id'));
+                        if ($key === false) {
+                            $users[$i]['id'] = $res['user_id'];
+                            $users[$i]['name'] = $res['name'];
+                            $users[$i]['last_deal_opened'] = date("m/d/Y", strtotime($res['created_at']));
+                            $sales_rep_email = $res['email_address'];
+                            $sales_rep_name = $res['sales_rep_name'];
+                            $i++;
+                        } else {
+                            $users[$key]['last_deal_opened'] = date("m/d/Y", strtotime($res['created_at']));
+                        }	
+                    }
                 } else {
                     if ($res['resware_status'] != 'cancelled') {
-                        $key = array_search($res['user_id'], array_column($users, 'id'));
-                        if (strlen($key) > 0) {
-                            unset($users[$key]);
-                        }				
+                        if (!empty($res)) {
+                            $key = array_search($res['user_id'], array_column($users, 'id'));
+                            if (strlen($key) > 0) {
+                                unset($users[$key]);
+                            }	
+                        } 			
                     }
                 }
             }
