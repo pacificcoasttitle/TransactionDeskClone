@@ -317,6 +317,7 @@
 					    	                    $("#percent").text(percentText + "%");
 					                        if(percentText == "100") {
 					                        	   $("#outputImage").show();
+												   $('#page-preloader').show();
 					                        }
 					    	                }
 					    	            });
