@@ -1728,7 +1728,7 @@ class Home extends MX_Controller
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
         // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
         // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
-        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
         $this->admintemplate->addJS(base_url('assets/backend/js/companies.js'));
         $this->admintemplate->show("order/home", "companies", $data);
         // $this->load->view('order/layout/header', $data);
