@@ -529,7 +529,7 @@ $(document).ready(function() {
         var selectedText = $(this).find('option:selected').text();
         $('#sales-loan-amount-fields').show();
         
-        if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '36') {
+        if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '36' ||  $(this).val() == '22' || $(this).val() == '26') {
             $('#add-escrow-officer-section').show();
         } else {
             $('#add-escrow-officer-section').hide();
