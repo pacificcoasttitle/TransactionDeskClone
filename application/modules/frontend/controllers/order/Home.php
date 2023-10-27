@@ -6,7 +6,7 @@ class Home extends MX_Controller
 {
 
 	private $order_js_version = '04';
-	private $custom_js_version = '04';
+	private $custom_js_version = '05';
 
 	function __construct()
 	{

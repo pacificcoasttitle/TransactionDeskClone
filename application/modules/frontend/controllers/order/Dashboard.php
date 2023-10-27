@@ -311,6 +311,17 @@ class Dashboard extends MX_Controller {
         $calcResult = json_decode(curl_exec($ch), true);
 
         $calcResult['transactionType'] = $post_data['transactionType'];
+
+		if ($orderDetails['purchase_type'] == '40') {
+			if ($orderDetails['loan_amount'] <= 250000) {
+				$calcResult['purchase_rate'] = '$125';
+				$calcResult['title_total'] = '$125';
+			} else {
+				$calcResult['purchase_rate'] = '$225' ;
+				$calcResult['title_total'] = '$225';
+			}
+			
+		}
         //echo "<pre>";
         //print_r($calcResult);exit;
         $data['calcResult'] = $calcResult;
