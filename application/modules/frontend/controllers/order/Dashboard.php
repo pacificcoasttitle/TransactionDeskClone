@@ -312,7 +312,7 @@ class Dashboard extends MX_Controller {
 
         $calcResult['transactionType'] = $post_data['transactionType'];
 
-		if ($orderDetails['purchase_type'] == '40') {
+		if ($orderDetails['purchase_type'] == '40' || $orderDetails['purchase_type'] == '27' || $orderDetails['purchase_type'] == '24') {
 			if ($orderDetails['loan_amount'] <= 250000) {
 				$calcResult['purchase_rate'] = '$125';
 				$calcResult['title_total'] = '$125';
