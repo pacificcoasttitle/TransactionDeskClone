@@ -190,6 +190,7 @@
 								</div>
 							</div>
 
+							<input type="hidden" id="unit_number" name="unit_number" value="">
 							<div class="row form-group">
 								<div class="col-sm-6">
 									<input type="text" name="County" id="County" class="form-control" placeholder="County">
@@ -456,6 +457,7 @@
 									<div class="col-sm-6">
 										<input type="text" name="LenderName" id="LenderName" class="form-control" placeholder="Lender Name">
 									</div>
+									<input type="hidden" name="LenderId" id="LenderId" value="">
 								</div>
 
 								<div class="row form-group">
@@ -482,6 +484,7 @@
 									<div class="col-sm-6">
 										<input type="text" name="EscrowName" id="EscrowName" class="form-control" placeholder="Escrow Name">
 									</div>
+									<input type="hidden" name="EscrowId" id="EscrowId" value="">
 								</div>
 
 								<div class="row form-group">
