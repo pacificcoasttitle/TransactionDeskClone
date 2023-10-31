@@ -294,10 +294,31 @@ class Dashboard extends MX_Controller {
             $post_data['lenderInsurance'] = 0; 
             $post_data['transactionType'] = 'Re-Finance'; 
             $post_data['transferTaxesCheck'] = 0; 
+			$this->load->library('order/resware');
+			$endPoint = 'files/' . $fileId . '/partners';
+			$user_data['admin_api'] = 1;
+			$logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $fileId, 0);
+			$resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+			$this->apiLogs->syncLogs(0, 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $fileId, $logid);
+			$resPartners = json_decode($resultPartners, true);
+			
+			if (!empty($resPartners)) {
+				$key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+				if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+					$post_data['underwriter'] = 3; 
+				} elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+					$post_data['underwriter'] = 4; 
+				}  else {
+					$post_data['underwriter'] = 4; 
+				}
+			} else {
+				$post_data['underwriter'] = 4; 
+			}
         }
         $post_data['escrowPriceCheck'] = 1; 
         $post_data['recordingPriceCheck'] = 1; 
-    
+
+	
         $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
