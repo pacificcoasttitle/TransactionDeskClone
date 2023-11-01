@@ -317,8 +317,10 @@ class Dashboard extends MX_Controller {
         }
         $post_data['escrowPriceCheck'] = 1; 
         $post_data['recordingPriceCheck'] = 1; 
+		if ($orderDetails['purchase_type'] == '40' || $orderDetails['purchase_type'] == '27' || $orderDetails['purchase_type'] == '24') {
+			$post_data['underwriter'] = 5; 
+		}
 
-	
         $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
@@ -330,21 +332,9 @@ class Dashboard extends MX_Controller {
         );
         $error_msg = curl_error($ch);
         $calcResult = json_decode(curl_exec($ch), true);
-
         $calcResult['transactionType'] = $post_data['transactionType'];
 
-		if ($orderDetails['purchase_type'] == '40' || $orderDetails['purchase_type'] == '27' || $orderDetails['purchase_type'] == '24') {
-			if ($orderDetails['loan_amount'] <= 250000) {
-				$calcResult['purchase_rate'] = '$125';
-				$calcResult['title_total'] = '$125';
-			} else {
-				$calcResult['purchase_rate'] = '$225' ;
-				$calcResult['title_total'] = '$225';
-			}
-			
-		}
-        //echo "<pre>";
-        //print_r($calcResult);exit;
+		
         $data['calcResult'] = $calcResult;
         $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
