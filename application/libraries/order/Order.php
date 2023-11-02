@@ -642,6 +642,7 @@ class Order
             cbd.city as cust_city,
             cbd.state as cust_state,
             cbd.zip_code as cust_zipcode,
+            cbd.is_escrow as is_client_escrow,
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,

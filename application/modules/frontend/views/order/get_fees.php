@@ -105,38 +105,40 @@
                                                 </tr>
                                             <?php } ?>
 
-                                            <tr class="bg-gray">
-                                                <td class="bg-gray" colspan="2" style="width:60%"><b>Escrow Fees</b></td>
-                                            </tr>
-
-                                            <?php if (!empty($calcResult['escrowInitalFee'])) { ?>
-                                                <tr>
-                                                    <td>Escrow Initial Fees</td>
-                                                    <td class="aright">
-                                                        <?php echo $calcResult['escrowInitalFee']; ?>
-                                                    </td>
+                                            <?php  if ($is_escrow_flag == '1') { ?>
+                                                <tr class="bg-gray">
+                                                    <td class="bg-gray" colspan="2" style="width:60%"><b>Escrow Fees</b></td>
                                                 </tr>
-                                            <?php } ?>   
 
-                                            <?php if (isset($calcResult['escrowAdditionalFees']) && !empty($calcResult['escrowAdditionalFees'])) { 
-                                                foreach($calcResult['escrowAdditionalFees'] as $fee)  { ?>
+                                                <?php if (!empty($calcResult['escrowInitalFee'])) { ?>
                                                     <tr>
-                                                        <td><?php echo $fee['name'];?></td>
+                                                        <td>Escrow Initial Fees</td>
                                                         <td class="aright">
-                                                            $<?php echo number_format($fee['value'], 2); ?>
+                                                            <?php echo $calcResult['escrowInitalFee']; ?>
                                                         </td>
                                                     </tr>
-                                                <?php } 
-                                            } ?>
+                                                <?php } ?>   
 
-                                            <?php if (!empty($calcResult['escrowTotal'])) { ?>
-                                                <tr>
-                                                    <td><b>Total</b></td>
-                                                    <td class="aright">
-                                                        <b><?php echo $calcResult['escrowTotal']; ?></b>
-                                                    </td>
-                                                </tr>
-                                            <?php } ?>   
+                                                <?php if (isset($calcResult['escrowAdditionalFees']) && !empty($calcResult['escrowAdditionalFees'])) { 
+                                                    foreach($calcResult['escrowAdditionalFees'] as $fee)  { ?>
+                                                        <tr>
+                                                            <td><?php echo $fee['name'];?></td>
+                                                            <td class="aright">
+                                                                $<?php echo number_format($fee['value'], 2); ?>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } 
+                                                } ?>
+
+                                                <?php if (!empty($calcResult['escrowTotal'])) { ?>
+                                                    <tr>
+                                                        <td><b>Total</b></td>
+                                                        <td class="aright">
+                                                            <b><?php echo $calcResult['escrowTotal']; ?></b>
+                                                        </td>
+                                                    </tr>
+                                                <?php } ?>  
+                                            <?php } ?> 
 
                                             <tr class="bg-gray">
                                                 <td class="bg-gray" colspan="2" style="width:60%"><b>Recording Fees</b></td>
