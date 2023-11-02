@@ -106,6 +106,24 @@
 				<span>Reports</span>
 			</a>
 		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'prelim-files' || $this->uri->segment(1) =='review-file') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url() . 'prelim-files'; ?>">
+				<i class="fa fa-comments"></i>
+				<span>Review Prelim</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'fees' || $this->uri->segment(1) == 'get-fees') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url() . 'fees'; ?>">
+				<i class="fa fa-money"></i>
+				<span>Fee Estimate</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if($this->uri->segment(1) == 'policy-orders' || $this->uri->segment(1) == 'policy-order') { echo 'active'; } ?>">
+			<a class="nav-link" href="<?php echo base_url() . 'policy-orders'; ?>">
+				<i class="fa fa-shield "></i>
+				<span>Get Policy</span>
+			</a>
+		</li>
 		<?php } ?>
 		<li class="nav-item <?php if($this->uri->segment(1) == 'logout') { echo 'active'; } ?>">
 			<a class="nav-link" href="<?php echo base_url().'logout'; ?>">

@@ -334,7 +334,12 @@ class Dashboard extends MX_Controller {
         $calcResult = json_decode(curl_exec($ch), true);
         $calcResult['transactionType'] = $post_data['transactionType'];
 
-		
+		if ($orderDetails['is_client_escrow'] == 1 || $orderDetails['is_escrow'] == 1) {
+			$data['is_escrow_flag'] = 1;
+		} else {
+			$data['is_escrow_flag'] = 0;
+		}
+
         $data['calcResult'] = $calcResult;
         $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
