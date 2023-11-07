@@ -89,7 +89,7 @@
 											<div class="card-body">
 												<div class="row no-gutters align-items-center">
 													<div class="col mr-2">
-														<div class="text-xs font-weight-bold text-info text-uppercase mb-1 sales_loan_count" id="total_premium">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></div>
+														<div class="text-xs font-weight-bold text-info text-uppercase mb-1 sales_loan_count" id="total_premium"><a class="text-info" href="javascript:void(0)" onclick="getRevenueData();">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></a></div>
 														<div class="salesdivider">
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Sales = $<span id="sale_total_premium"><?Php echo $sale_total_premium;?></span></div>
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Refi's = $<span id="refi_total_premium"><?Php echo $refi_total_premium;?></span></div>
@@ -219,5 +219,44 @@
 			</div> -->
 		</div>
 	</div>
+</div>
+
+<div class="modal fade" width="1200px" id="revenue_model" tabindex="-1" role="dialog"
+    aria-labelledby="Revenue Information" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width:100%;height:auto;">
+        <div class="modal-content">
+            <form method="POST" action="">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Revenue Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="smart-forms smart-container">
+                                    <div class="search-result">
+                                        <div id="deliverables-details-fields">
+                                            <div class="frm-row" id="clone_container">
+                                                <div class="section colm colm12" id="clone-email-address"
+                                                    style="margin-bottom: 0px !important;">
+                                                    <div class="toclone">
+                                                        <div class="spacer-b10">
+                                                            <label class="field" id="revenue_container">
+
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 

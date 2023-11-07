@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller 
 {
-    private $sales_dashboard_js_version = '06';
+    private $sales_dashboard_js_version = '07';
 
 	function __construct() 
     {
@@ -690,6 +690,52 @@ class SalesRep extends MX_Controller
 		} else {
             redirect(base_url().'sales-dashboard/'.$userdata['id']);
 		}
+    }
+
+    public function getRevenueData()
+    {
+        $sales_rep_id = $this->input->post('sales_rep_id');
+        $revenueData = $this->order->getRevenueData(date('m'), $sales_rep_id);
+        $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>File Number</th>
+                    <th>Address</th>
+                    <th>Prod Type</th>
+                    <th>Revenue</th>      
+                </tr>
+            </thead>
+        <tbody>";
+        $i = 0;
+
+        $i = 1;
+        if (!empty($revenueData)) {
+            foreach ($revenueData as $revenue) {
+                    $file_number = $revenue['file_number'];
+                    $full_address = $revenue['full_address'];
+                    $prod_type = $revenue['prod_type'];
+                    $revenue = '$'.number_format($revenue['premium']);
+                    $data .= "<tr>
+                                <td width='12%'>$i</td>
+                                <td width='12%'>$file_number</td>
+                                <td width='52%'>$full_address</td>
+                                <td width='12%'>$prod_type</td>
+                                <td width='12%'>$revenue</td>
+                            </tr>";
+                    $i++;
+                }
+        } else {
+            $data .= "<tr><td colspan='5'>No records found.</td></tr>";
+        }
+        $data .= '</tbody></table>';
+        if (!empty($data)) {
+            $result = array('status' => 'success', 'data' => $data);
+        } else {
+            $result = array('status' => 'error', 'data' => $data);
+        }
+        echo json_encode($result);
+        exit;
     }
 }
 
