@@ -4145,4 +4145,18 @@ class Order
         }
         return true;
     }
+
+    public function getRevenueData($month, $userId)
+    {
+        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.prod_type, order_details.premium')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));        
+        $this->CI->db->where('transaction_details.sales_representative', $userId);
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        return $result;
+    }
 }

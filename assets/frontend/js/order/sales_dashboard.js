@@ -518,3 +518,38 @@ function getPartners(fileId)
         }
     });
 }
+
+function getRevenueData() 
+{
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    var sales_rep_id = $('#sales_user_filter').val();
+    $.ajax({
+        url: base_url + "get-revenue-data",
+        method: "POST",
+        data: {
+            sales_rep_id: sales_rep_id
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            $('#page-preloader').css('display', 'none');
+            if (result.status == 'success') {
+                $('#revenue_container').html(result.data);
+                $('#revenue_model').modal('show');
+            } else {
+                $('#revenue_container').html(result.data);
+                $('#revenue_model').modal('show');
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
+            // $([document.documentElement, document.body]).animate({
+            //     scrollTop: $("#lp_order_success_msg").offset().top
+            // }, 1000);
+
+            // setTimeout(function () {
+            //     $('#lp_order_error_msg').html('').hide();
+            // }, 5000);
+        }
+    });
+}
