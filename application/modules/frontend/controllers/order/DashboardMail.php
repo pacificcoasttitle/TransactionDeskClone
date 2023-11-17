@@ -4553,4 +4553,46 @@ class DashboardMail extends MX_Controller {
         $this->load->view('layout/head_dashboard', $data);
         $this->load->view('order/get_netsheet', $data);
     }
+
+    public function sendPackage()
+    {
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $random_number = $this->uri->segment(2); 
+        $order = $this->getOrderInfo($random_number);
+        $fileId = $order[0]['file_id'];  
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $data['file_number'] = $orderDetails['file_number'];
+        $data['full_address'] = $orderDetails['full_address'];
+        $data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
+
+        
+        $data['action'] = '<a data-target="#borrower_information" data-toggle="modal"
+                                role="button"  href="#" class="btn button btn-primary btn-icon-split float-right" style="width:auto;float:right;">
+                                <span class="text">Send Package</span>
+                            </a>
+                            
+                            <a data-target="#seller_welcome" data-toggle="modal"
+                                role="button"  href="#" class="btn button btn-success btn-icon-split float-right mr-2" style="width:auto;float:right;">
+                                <span class="text">Send Seller welcome</span>
+                            </a>
+                            <a data-target="#buyer_welcome" data-toggle="modal"
+                                role="button"  href="#" class="btn button btn-success btn-icon-split float-right mr-2" style="width:auto;float:right;">
+                                <span class="text">Send Buyer Welcome</span>
+                            </a>';
+              
+        $this->load->view('layout/head_dashboard', $data);
+        $this->load->view('order/send_package', $data);
+    }
+
 }
