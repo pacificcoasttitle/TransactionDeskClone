@@ -251,6 +251,8 @@ $route['send-request-docs'] = 'frontend/order/escrow/sendRequestDocs';
 $route['generate-all-document-from-title-point'] = 'frontend/order/home/generateAllDocumentFromTitlePoint';
 $route['get-revenue-data'] = 'frontend/order/salesRep/getRevenueData';
 $route['send-package/:any'] = 'frontend/order/dashboardMail/sendPackage';
+$route['add-buyer-on-order-mail'] = 'frontend/order/dashboardMail/addBuyerOnOrder';
+$route['add-seller-on-order-mail'] = 'frontend/order/dashboardMail/addSellerOnOrder';
 
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
