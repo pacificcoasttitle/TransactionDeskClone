@@ -649,6 +649,7 @@ class Order
             salerep.email_address as salerep_email_address,
             titleofficer.first_name as titleofficer_first_name,
             titleofficer.last_name as titleofficer_last_name,
+            titleofficer.email_address as title_officer_email,
             agents.name as agent_name,
             agents.address as agent_address,
             agents.email_address as agent_email_address,
@@ -3763,6 +3764,9 @@ class Order
 
 
         //$parties_email[] = env('ORDER_ADMIN_EMAIL');
+        if (isset($orderDetails["title_officer_email"]) && !empty($orderDetails["title_officer_email"])) {
+            $parties_email[] = $orderDetails["title_officer_email"];
+        }
         $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
         $this->CI->load->helper('sendemail');
 
@@ -3812,6 +3816,7 @@ class Order
                 try {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
+
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     /** Notify CS */
                     $to = ['openorders@pct.com', 'cs@pct.com'];
