@@ -23,62 +23,8 @@
 		display: none;
 	}
 
-	#page-preloader {
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: #2e2e2e;
-		z-index: 100500;
-	}
+	.preloaderjs .spinner {display: none !important;}.preloaderjs#page-preloader {background: rgba(46, 46, 46, 0.99) !important;}#page-preloader {position: fixed;top: 0;right: 0;bottom: 0;left: 0;width: 100%;height: 100%;background: #2e2e2e;z-index: 100500;}#page-preloader .spinner {position: absolute;top: 50%;left: 50%;display: block;width: 100px;height: 100px;margin-top: -50px;margin-left: -50px;border: 3px solid transparent;border-top-color: #e7e4d7;border-radius: 50%;z-index: 1001;-webkit-animation: spin 2.5s infinite linear;animation: spin 2.5s infinite linear;}#page-preloader .spinner:before, #page-preloader .spinner:after {position: absolute;border-radius: 50%;content: '';}#page-preloader .spinner:before {top: 5px;right: 5px;bottom: 5px;left: 5px;border: 3px solid transparent;border-top-color: #71383e;-webkit-animation: spin 2s infinite linear;animation: spin 2s infinite linear;}#page-preloader .spinner:after {top: 15px;right: 15px;bottom: 15px;left: 15px;border: 3px solid transparent;border-top-color: #efa96b;-webkit-animation: spin 1s infinite linear;animation: spin 1s infinite linear;}@keyframes spin {0% {-webkit-transform: rotate(0);transform: rotate(0);}100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}}
 
-	#page-preloader .spinner {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		display: block;
-		width: 100px;
-		height: 100px;
-		margin-top: -50px;
-		margin-left: -50px;
-		border: 3px solid transparent;
-		border-top-color: #e7e4d7;
-		border-radius: 50%;
-		z-index: 1001;
-		-webkit-animation: spin 2.5s infinite linear;
-		animation: spin 2.5s infinite linear;
-	}
-
-	#page-preloader .spinner:before, #page-preloader .spinner:after {
-		position: absolute;
-		border-radius: 50%;
-		content: '';
-	}
-
-	#page-preloader .spinner:before {
-		top: 5px;
-		right: 5px;
-		bottom: 5px;
-		left: 5px;
-		border: 3px solid transparent;
-		border-top-color: #71383e;
-		-webkit-animation: spin 2s infinite linear;
-		animation: spin 2s infinite linear;
-	}
-
-	#page-preloader .spinner:after {
-		top: 15px;
-		right: 15px;
-		bottom: 15px;
-		left: 15px;
-		border: 3px solid transparent;
-		border-top-color: #efa96b;
-		-webkit-animation: spin 1s infinite linear;
-		animation: spin 1s infinite linear;
-	}
 
 </style>
 

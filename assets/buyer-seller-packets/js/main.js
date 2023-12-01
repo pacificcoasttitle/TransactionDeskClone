@@ -52,6 +52,8 @@
             return form.valid();
         },
         onFinished: function(event, currentIndex) {
+            $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		    $('#page-preloader').css('display', 'block');
             $("#signup-form").submit();
         },
         onStepChanged: function(event, currentIndex, priorIndex) {
