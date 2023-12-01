@@ -3557,6 +3557,10 @@ class DashboardMail extends MX_Controller {
                 'hoa_company_address' => $this->input->post('hoa_company_address') ? $this->input->post('hoa_company_address') : null,
                 'hoa_contact_person' => $this->input->post('hoa_contact_person') ? $this->input->post('hoa_contact_person') : null,
                 'hoa_contact_number' => $this->input->post('hoa_contact_number') ? $this->input->post('hoa_contact_number') : null,
+                'second_hoa_company' => $this->input->post('second_hoa_company') ? $this->input->post('second_hoa_company') : null,
+                'second_hoa_company_address' => $this->input->post('second_hoa_company_address') ? $this->input->post('second_hoa_company_address') : null,
+                'second_hoa_contact_person' => $this->input->post('second_hoa_contact_person') ? $this->input->post('second_hoa_contact_person') : null,
+                'second_hoa_contact_number' => $this->input->post('second_phone_mask') ? $this->input->post('second_phone_mask') : null,
             );
             $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_packet_info');
 
@@ -4640,7 +4644,7 @@ class DashboardMail extends MX_Controller {
             
             $borrower_message_body = $this->load->view('emails/welcome_buyer.php', $email_data, TRUE);
             $message_body = $borrower_message_body; 
-            $subject = $orderDetails['file_number']. ' - Welcome to Escrow';
+            $subject = $orderDetails['file_number'].' - '.$orderDetails['full_address'].' - Welcome to Escrow';
             
             $mailParams = array(
                 'from_mail' => $from_mail, 
@@ -4748,7 +4752,7 @@ class DashboardMail extends MX_Controller {
             
             $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
             $message_body = $borrower_message_body; 
-            $subject = $orderDetails['file_number']. ' - Welcome to Escrow';
+            $subject = $orderDetails['file_number'].' - '.$orderDetails['full_address'].' - Welcome to Escrow';
             
             $mailParams = array(
                 'from_mail' => $from_mail, 

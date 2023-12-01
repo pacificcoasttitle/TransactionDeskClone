@@ -685,7 +685,7 @@ class Escrow extends MX_Controller
             
             $borrower_message_body = $this->load->view('emails/welcome_buyer.php', $email_data, TRUE);
             $message_body = $borrower_message_body; 
-            $subject = $orderDetails['file_number']. ' - Welcome to Escrow';
+            $subject = $orderDetails['file_number'].' - '.$orderDetails['full_address'].' - Welcome to Escrow';
             
             $mailParams = array(
                 'from_mail' => $from_mail, 
@@ -793,7 +793,7 @@ class Escrow extends MX_Controller
             
             $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
             $message_body = $borrower_message_body; 
-            $subject = $orderDetails['file_number']. ' - Welcome to Escrow';
+            $subject = $orderDetails['file_number'].' - '.$orderDetails['full_address'].' - Welcome to Escrow';
             
             $mailParams = array(
                 'from_mail' => $from_mail, 

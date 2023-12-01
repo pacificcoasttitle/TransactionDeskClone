@@ -25,16 +25,75 @@
 		display: none;
 	}
 
+	#page-preloader {
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: #2e2e2e;
+		z-index: 100500;
+	}
+
+	#page-preloader .spinner {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		display: block;
+		width: 100px;
+		height: 100px;
+		margin-top: -50px;
+		margin-left: -50px;
+		border: 3px solid transparent;
+		border-top-color: #e7e4d7;
+		border-radius: 50%;
+		z-index: 1001;
+		-webkit-animation: spin 2.5s infinite linear;
+		animation: spin 2.5s infinite linear;
+	}
+
+	#page-preloader .spinner:before, #page-preloader .spinner:after {
+		position: absolute;
+		border-radius: 50%;
+		content: '';
+	}
+
+	#page-preloader .spinner:before {
+		top: 5px;
+		right: 5px;
+		bottom: 5px;
+		left: 5px;
+		border: 3px solid transparent;
+		border-top-color: #71383e;
+		-webkit-animation: spin 2s infinite linear;
+		animation: spin 2s infinite linear;
+	}
+
+	#page-preloader .spinner:after {
+		top: 15px;
+		right: 15px;
+		bottom: 15px;
+		left: 15px;
+		border: 3px solid transparent;
+		border-top-color: #efa96b;
+		-webkit-animation: spin 1s infinite linear;
+		animation: spin 1s infinite linear;
+	}
+
+
 </style>
 
 <body>
 	<div class="main">
+		<div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5);display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
 		<div class"File">
 			<div class="container2">
-
+				<img src="<?php echo base_url();?>assets/buyer-seller-packets/images/logo.png" style="width:300px;">
 				<h1>Seller Welcome Interview </h1>
 				<h3><?php echo $orderDetails['full_address'];?></h3>
-				<h4>APN:<?php echo $orderDetails['apn'];?> | File# <?php echo $orderDetails['file_number'];?> </h4>
+				<h4 style="margin-bottom:40px;">APN:<?php echo $orderDetails['apn'];?> | File# <?php echo $orderDetails['file_number'];?> </h4>
 
 			</div>
 		</div>
@@ -602,10 +661,10 @@
 								</div>
 							</div>
 							
-							<div class="form-row">
+							<div class="form-row d-none" id="married_employed_container">
 								<div class="form-group">
 									<label class="form-label">Is Your Spouse/Domestic Partner employed?</label>
-									<select id="is_spouse_domestic_partner_employed" name="is_spouse_domestic_partner_employed" required="required">
+									<select id="is_spouse_domestic_partner_employed" name="is_spouse_domestic_partner_employed">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -642,10 +701,10 @@
 									</div>
 								</div>
 							</div>
-							<div class="form-row">
+							<div class="form-row d-none" id="married_occupation_container">
 								<div class="form-group">
 									<label class="form-label">Would you like to add another occupation for your spouse/domestic partner?</label>
-									<select id="is_another_occupation_spouse_domestic" name="is_another_occupation_spouse_domestic" required="required">
+									<select id="is_another_occupation_spouse_domestic" name="is_another_occupation_spouse_domestic">
 										<option value="">Select</option>
 										<option value="Yes">Yes</option>
 										<option value="No">No</option>
@@ -1007,6 +1066,48 @@
 									</div>
 								</div>
 							</div>
+
+							<div class="form-row">
+								<div class="form-group">
+									<label class="form-label">Would you like to add another HOA?</label>
+									<select id="is_another_hoa" name="is_another_hoa" required="required">
+										<option value="">Select</option>
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="d-none" id="another_hoa_container">
+								<div class="form-group">
+									<label for="ssn" class="form-label">HOA Management Company Name</label>
+									<input type="text" name="second_hoa_company" id="second_hoa_company" />
+									<span class="text-input">example: Ranch Hills Home Owners Association </span>
+
+								</div>
+								<div class="form-group">
+									<label for="ssn" class="form-label">HOA Management Company Address</label>
+									<input type="text" name="second_hoa_company_address" id="second_hoa_company_address" />
+									<span class="text-input">456 Main St. Los Angeles, CA </span>
+
+								</div>
+
+								<div class="form-row">
+									<div class="form-flex">
+										<div class="form-group">
+											<label class="form-label">HOA Contact Person</label>
+											<input type="text" name="second_hoa_contact_person" id="second_hoa_contact_person" />
+											<span class="text-input">example: HOA customer service </span>
+										</div>
+										<div class="form-group">
+											<label class="form-label">HOA Contact Phone</label>
+											<input type="text" class="phone_mask" name="second_hoa_contact_number"
+												id="second_hoa_contact_number" />
+											<span class="text-input">example: (000) 000-0000</span>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</fieldset>
 					<h3>Confirmation</h3>
@@ -1210,6 +1311,7 @@
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/input-mask/jquery.mask.min.js"></script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/vendor/wnumb/wNumb.js"></script>
 	<script src="<?php echo base_url();?>assets/buyer-seller-packets/js/main.js?seller_v=<?=time()?>"></script>
+	<script src="<?php echo base_url();?>assets/js/custom.js?seller_v=<?=time()?>"></script>
 
 </body>
 
