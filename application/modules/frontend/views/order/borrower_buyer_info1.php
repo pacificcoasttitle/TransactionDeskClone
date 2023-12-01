@@ -1105,6 +1105,7 @@
 	<script src="<?=base_url('assets/buyer-seller-packets/vendor/wnumb/wNumb.js');?>"></script>
 	<script src="<?=base_url('assets/buyer-seller-packets/vendor/input-mask/jquery.mask.min.js');?>"></script>
 	<script src="<?=base_url('assets/buyer-seller-packets/js/buyer-main.js?buyer_v='.time());?>"></script>
+	<script src="<?php echo base_url();?>assets/js/custom.js?seller_v=<?=time()?>"></script>
 </body>
 
 </html>
