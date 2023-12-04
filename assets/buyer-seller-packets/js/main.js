@@ -52,6 +52,8 @@
             return form.valid();
         },
         onFinished: function(event, currentIndex) {
+            $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		    $('#page-preloader').css('display', 'block');
             $("#signup-form").submit();
         },
         onStepChanged: function(event, currentIndex, priorIndex) {
@@ -303,6 +305,38 @@
         }
     });
 
+    $('#is_married').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'married'){
+            $("#married_employed_container").removeClass("d-none");
+            $("#married_occupation_container").removeClass("d-none");
+            $('#is_spouse_domestic_partner_employed').prop('required',true);
+            $('#is_another_occupation_spouse_domestic').prop('required',true);
+        } else {
+            $("#married_employed_container").addClass("d-none");
+            $("#married_occupation_container").addClass("d-none");
+            $('#is_spouse_domestic_partner_employed').prop('required',false);
+            $('#is_another_occupation_spouse_domestic').prop('required',false);
+        }
+    });
+
+    $('#is_married_or_domestic_partner').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if(selectedvalue == 'married'){
+            $("#married_employed_container").removeClass("d-none");
+            $("#married_occupation_container").removeClass("d-none");
+            $('#is_spouse_domestic_partner_employed').prop('required',true);
+            $('#is_another_occupation_spouse_domestic').prop('required',true);
+        } else {
+            $("#married_employed_container").addClass("d-none");
+            $("#married_occupation_container").addClass("d-none");
+            $('#is_spouse_domestic_partner_employed').prop('required',false);
+            $('#is_another_occupation_spouse_domestic').prop('required',false);
+        }
+    });
+
     $('#is_add_another_occupation').change(function(){
         var $this = $(this);
         var selectedvalue = $this.val();
@@ -314,6 +348,22 @@
         } else {
             $("#another_occupation_container").addClass("d-none");
             $('#employee_another_company_name').prop('required',false);
+            $('#another_from_employee_date').prop('required',false);
+            $('#another_to_employee_date').prop('required',false);
+        }
+    });
+
+    $('#is_another_hoa').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if (selectedvalue == 'Yes') {
+            $("#another_hoa_container").removeClass("d-none");
+            $('#second_hoa_company').prop('required',true);
+            $('#another_from_employee_date').prop('required',true);
+            $('#another_to_employee_date').prop('required',true);
+        } else {
+            $("#another_hoa_container").addClass("d-none");
+            $('#second_hoa_company').prop('required',false);
             $('#another_from_employee_date').prop('required',false);
             $('#another_to_employee_date').prop('required',false);
         }
@@ -422,3 +472,9 @@
    
 })(jQuery);
 
+$(document).ready(function(){
+    var $preloader = $('#page-preloader'),
+    $spinner   = $preloader.find('.spinner-loader');
+    $spinner.fadeOut();
+    $preloader.delay(50).fadeOut('slow');
+});
