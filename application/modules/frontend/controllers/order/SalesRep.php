@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller 
 {
-    private $sales_dashboard_js_version = '07';
+    private $sales_dashboard_js_version = '08';
 
 	function __construct() 
     {
@@ -376,6 +376,7 @@ class SalesRep extends MX_Controller
 			$dateObj   = DateTime::createFromFormat('!m', $iM);
 			$monthName = $dateObj->format('F'); 
 			$salesHistory[$iM-1]['month'] = $monthName;
+            $salesHistory[$iM-1]['month_val'] = $month;
 
 			$openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId);
 			$refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
@@ -695,7 +696,7 @@ class SalesRep extends MX_Controller
     public function getRevenueData()
     {
         $sales_rep_id = $this->input->post('sales_rep_id');
-        $revenueData = $this->order->getRevenueData(date('m'), $sales_rep_id);
+        $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $sales_rep_id);
         $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
             <thead>
                 <tr>
