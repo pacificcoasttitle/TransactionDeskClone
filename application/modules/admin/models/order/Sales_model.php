@@ -14,10 +14,15 @@ class Sales_model extends CI_Model
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
         $sales_rep_lists = array();
+
+        if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
+            $this->db->where('status', 1);
+        }
         
     	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
     		$keyword = $params['searchvalue'];
             $this->db->where('is_sales_rep', 1);
+
     		if (isset($keyword) && !empty($keyword)) {
 
                 $this->db->group_start()
@@ -31,6 +36,10 @@ class Sales_model extends CI_Model
 			$filter_total_records =  $this->db->count_all_results();
 
             $this->db->where('is_sales_rep', 1);
+
+            if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
+                $this->db->where('status', 1);
+            }
 			if (isset($keyword) && !empty($keyword)) {
 
                 $this->db->group_start()
@@ -54,6 +63,9 @@ class Sales_model extends CI_Model
 	    	$this->db->from('customer_basic_details');
 			$filter_total_records =  $this->db->count_all_results();
 
+            if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
+                $this->db->where('status', 1);
+            }
             $this->db->where('is_sales_rep', 1);
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
