@@ -35,6 +35,7 @@ class Sales extends MX_Controller {
     public function get_sales_rep_list()
     {
         $params = array();  $data = array();
+        $params['sales_rep_enable'] = $this->input->post('sales_rep_enable');
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
