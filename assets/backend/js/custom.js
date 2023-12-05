@@ -949,7 +949,7 @@ $(document).ready(function () {
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: 'Blfrtip',
+            dom: 'Bl<"FilterOrderListing">frtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
@@ -977,6 +977,9 @@ $(document).ready(function () {
             "ajax": {                
                 url: base_url+"order/admin/get-sales-rep-list", 
                 type: "post", 
+                data   : function( d ) {
+                    d.sales_rep_enable = $('#enable_sales_rep').is(":checked") ? 1 : 0; 
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -992,7 +995,13 @@ $(document).ready(function () {
                 }
             }            
         });
+
+        $("div.FilterOrderListing").html('<label> Sales Rep: <input style="width:20px;height:20px;" type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>'); 
     }
+
+    $("#enable_sales_rep").on("change", function(){
+        sales_rep_list.ajax.reload();
+    });
 
     if ($('#tbl-title-officer-listing').length) 
     {
