@@ -996,7 +996,7 @@ $(document).ready(function () {
             }            
         });
 
-        $("div.FilterOrderListing").html('<label> Sales Rep: <input type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>'); 
+        $("div.FilterOrderListing").html('<label> Sales Rep: <input style="width:20px;height:20px;" type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>'); 
     }
 
     $("#enable_sales_rep").on("change", function(){
