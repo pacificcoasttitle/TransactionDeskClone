@@ -42,6 +42,7 @@
             </div>
         </div>
      
+        <input type="hidden" name="sales_rep_status_flag" id="sales_rep_status_flag" value="<?php echo $sales_rep_status_flag;?>">
         <div class="card-body">
             <div id="sales_rep_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="sales_rep_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
@@ -65,3 +66,4 @@
         </div>
     </div>
 </div>
+

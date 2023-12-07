@@ -3848,6 +3848,15 @@ class Order
         return $query->row();
     }
 
+    public function getSalesConfigData()
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_configs');
+        $this->CI->db->where('slug', 'sales_rep_status_flag');
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
     public function logAdminActivity($activity)
     {
         $userdata = $this->CI->session->userdata('admin');
