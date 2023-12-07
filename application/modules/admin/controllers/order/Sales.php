@@ -26,6 +26,9 @@ class Sales extends MX_Controller {
         $data = array();
         
         $data['title'] = 'PCT Order: Sales Rep.';
+        
+        $salesStatusData = $this->order->getSalesConfigData();
+        $data['sales_rep_status_flag'] = $salesStatusData['value'];
         $this->admintemplate->show("order/sales", "sales", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/sales/sales', $data);
@@ -36,6 +39,13 @@ class Sales extends MX_Controller {
     {
         $params = array();  $data = array();
         $params['sales_rep_enable'] = $this->input->post('sales_rep_enable');
+        if ($this->input->post('sales_rep_enable') == '1' || $this->input->post('sales_rep_enable') == '0') {
+            $salesData = array(
+                'value' => $this->input->post('sales_rep_enable'),
+            );
+            $this->db->update('pct_configs', $salesData, array('slug' => 'sales_rep_status_flag'));
+        }   
+        
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
             $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;

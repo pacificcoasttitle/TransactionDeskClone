@@ -978,7 +978,7 @@ $(document).ready(function () {
                 url: base_url+"order/admin/get-sales-rep-list", 
                 type: "post", 
                 data   : function( d ) {
-                    d.sales_rep_enable = $('#enable_sales_rep').is(":checked") ? 1 : 0; 
+                    d.sales_rep_enable = $('#enable_sales_rep').is(":checked") || $('#sales_rep_status_flag').val() == '1' ? 1 : 0; 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -995,11 +995,22 @@ $(document).ready(function () {
                 }
             }            
         });
-
-        $("div.FilterOrderListing").html('<label> Sales Rep: <input style="width:20px;height:20px;" type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>'); 
+        var sales_rep_status_flag = $('#sales_rep_status_flag').val();
+        var sales_rep_status_checked = '';
+        if (sales_rep_status_flag == '1') {
+            sales_rep_status_checked = 'checked';
+        } else {
+            sales_rep_status_checked = '';
+        }
+        $("div.FilterOrderListing").html('<label> Show Hidden: <input style="width:20px;height:20px;" '+ sales_rep_status_checked + ' type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>'); 
     }
 
     $("#enable_sales_rep").on("change", function(){
+        if ($('#enable_sales_rep').is(":checked")) {
+            $('#sales_rep_status_flag').val('1');
+        } else {
+            $('#sales_rep_status_flag').val('0');
+        }
         sales_rep_list.ajax.reload();
     });
 

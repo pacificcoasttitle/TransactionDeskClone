@@ -4888,10 +4888,7 @@ class Home extends MX_Controller
             $lpDocData = array(
                 'is_lp_enable' => $is_lp_enable,
             );
-            // $condition = array(
-            //     'id' => $lp_document_type_id
-            // );
-            $this->db->update('pct_configs', $lpDocData);
+            $this->db->update('pct_configs', $lpDocData, array('slug' => 'escrow_commission'));
             $msg = ($is_lp_enable == 1) ? 'Lp Enabled' : 'Lp Disabled';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
