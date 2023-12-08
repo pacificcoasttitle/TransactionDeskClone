@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?buyer_v='.time());?>">
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/css/jquery-ui.css">
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>	
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 </head>
 
 <style>
@@ -23,7 +24,22 @@
 
 	.preloaderjs .spinner {display: none !important;}.preloaderjs#page-preloader {background: rgba(46, 46, 46, 0.99) !important;}#page-preloader {position: fixed;top: 0;right: 0;bottom: 0;left: 0;width: 100%;height: 100%;background: #2e2e2e;z-index: 100500;}#page-preloader .spinner {position: absolute;top: 50%;left: 50%;display: block;width: 100px;height: 100px;margin-top: -50px;margin-left: -50px;border: 3px solid transparent;border-top-color: #e7e4d7;border-radius: 50%;z-index: 1001;-webkit-animation: spin 2.5s infinite linear;animation: spin 2.5s infinite linear;}#page-preloader .spinner:before, #page-preloader .spinner:after {position: absolute;border-radius: 50%;content: '';}#page-preloader .spinner:before {top: 5px;right: 5px;bottom: 5px;left: 5px;border: 3px solid transparent;border-top-color: #71383e;-webkit-animation: spin 2s infinite linear;animation: spin 2s infinite linear;}#page-preloader .spinner:after {top: 15px;right: 15px;bottom: 15px;left: 15px;border: 3px solid transparent;border-top-color: #efa96b;-webkit-animation: spin 1s infinite linear;animation: spin 1s infinite linear;}@keyframes spin {0% {-webkit-transform: rotate(0);transform: rotate(0);}100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}}
 
+	.radio {
+    top: 5px !important;
+    margin: 0px 10px !important;
+}
 
+.btn-success {
+    color: #fff !important;
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+.btn-success:hover {
+    color: #fff !important;
+    background-color: #218838 !important;
+    border-color: #169b6b !important;
+}
 </style>
 
 <body>
@@ -164,7 +180,7 @@
 														</label>	
 													</div>
 												</div>
-												<a href="#" class="mr-5 clone button btn-primary"><i class="fa fa-plus"></i></a>
+												<a href="#" class="mr-5 clone button btn btn-success"><i class="fa fa-plus"></i></a>
 												<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
 											</div>
 										</div>							
@@ -177,7 +193,7 @@
 
 							<div class="form-footer" style="padding-top:0px;">
 								<button type="submit" data-btntext-sending="Sending..."
-									class="button btn-primary">Submit</button>
+									class="button btn btn-success">Submit</button>
 								<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
 							</div>
 						</div>
