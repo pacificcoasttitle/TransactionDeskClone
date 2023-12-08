@@ -465,6 +465,43 @@
         }
     });
 
+    $('#is_married').change(function(){
+        var $this = $(this);
+        var selectedvalue = $this.val();
+        if (selectedvalue == 'married') {
+            $("select[name='is_married_or_domestic_partner']").val("Yes");
+            $(".is_married_or_domestic_partner_wrapper").removeClass("d-none");
+            $("#married_or_domestic_partner").removeClass("d-none");
+            $('#marriage_or_domestic_day').prop('required',true);
+            $('#marriage_or_domestic_month').prop('required',true);
+            $('#marriage_or_domestic_year').prop('required',true);
+            $('#spouse_first_name').prop('required',true);
+            $('#spouse_last_name').prop('required',true);
+            $('#spouse_email').prop('required',true);
+            $('#spouse_phone').prop('required',true);
+            $('#spouse_birth_day').prop('required',true);
+            $('#spouse_birth_month').prop('required',true);
+            $('#spouse_birth_year').prop('required',true);
+            $('#spouse_ssn').prop('required',true);
+        } else {
+            $("select[name='is_married_or_domestic_partner']").val("No");
+            $(".is_married_or_domestic_partner_wrapper").addClass("d-none");
+            $("#married_or_domestic_partner").addClass("d-none");
+            $('#marriage_or_domestic_day').prop('required',false);
+            $('#marriage_or_domestic_month').prop('required',false);
+            $('#marriage_or_domestic_year').prop('required',false);
+            $('#spouse_first_name').prop('required',false);
+            $('#spouse_last_name').prop('required',false);
+            $('#spouse_email').prop('required',false);
+            $('#spouse_phone').prop('required',false);
+            $('#spouse_birth_day').prop('required',false);
+            $('#spouse_birth_month').prop('required',false);
+            $('#spouse_birth_year').prop('required',false);
+            $('#spouse_ssn').prop('required',false);
+            $('#marriage_or_domestic_day, #marriage_or_domestic_month, #marriage_or_domestic_year, #spouse_first_name, #spouse_last_name, #spouse_email, #spouse_phone, #spouse_birth_day, #spouse_birth_month, #spouse_birth_year, #spouse_ssn').val('');
+        }
+    });
+
     $(".phone_mask").mask('(000) 000-0000');
     $(".ssn").mask('000-00-0000');
     $(".amount_mask").mask("#,##0", {reverse: true});

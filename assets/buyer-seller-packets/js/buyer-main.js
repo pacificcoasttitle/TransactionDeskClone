@@ -372,11 +372,15 @@
             $('#lender_name_2').prop('required',true);
             $('#lender_loan_amount').prop('required',true);
             $('#lender_acct_no').prop('required',true);
+            $("select[name='is_loan_processor']").val("1");
+            $('.loan_processor_div').show();
         } else {
             $("#is_loan_container").addClass("d-none");
             $('#lender_name_2').prop('required',false);
             $('#lender_loan_amount').prop('required',false);
             $('#lender_acct_no').prop('required',false);
+            $("select[name='is_loan_processor']").val("0");
+            $('.loan_processor_div').hide();
         }
     });
 
