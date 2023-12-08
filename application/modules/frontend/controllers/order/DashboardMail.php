@@ -4583,15 +4583,13 @@ class DashboardMail extends MX_Controller {
 
         
         $data['action'] = '<div style="display:flex;">
-                            <!-- <a data-target="#borrower_information" data-toggle="modal">
-                                <button class="btn btn-grad-2a generate button-color" type="submit">Send Package</button>
-                            </a> -->
+                            <a data-target="#buyer_welcome" data-toggle="modal" style="margin-right:10px;">
+                                <button class="btn btn-grad-2a generate" style="background:#f96414;color:white" type="submit">Send Buyer welcome</button>
+                            </a>
                             <a data-target="#seller_welcome" data-toggle="modal">
-                                <button class="btn btn-grad-2a generate button-color" type="submit">Send Seller welcome</button>
+                                <button class="btn btn-grad-2a generate" style="background:#f96414;color:white" type="submit">Send Seller welcome</button>
                             </a>
-                            <a data-target="#buyer_welcome" data-toggle="modal">
-                                <button class="btn btn-grad-2a generate button-color" type="submit">Send Buyer welcome</button>
-                            </a>
+                            
                         </div>';
               
         $this->load->view('layout/head_dashboard', $data);
