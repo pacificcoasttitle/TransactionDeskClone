@@ -232,7 +232,7 @@
 														</label>	
 													</div>
 												</div>
-												<a href="#" class="mr-5 clone button btn-primary"><i class="fa fa-plus"></i></a>
+												<a href="#" class="mr-5 clone button btn btn-success"><i class="fa fa-plus"></i></a>
 												<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
 											</div>
 										</div>							
@@ -245,7 +245,7 @@
 
 							<div class="form-footer" style="padding-top:0px;">
 								<button type="submit" data-btntext-sending="Sending..."
-									class="button btn-primary">Submit</button>
+									class="button btn btn-success">Submit</button>
 								<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
 							</div>
 						</div>
