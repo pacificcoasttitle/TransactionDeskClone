@@ -4572,7 +4572,7 @@ class DashboardMail extends MX_Controller {
         }
         $random_number = $this->uri->segment(2); 
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];  
+        $fileId = $order[0]['file_id'];   
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $orderDetails = $this->order->get_order_details($fileId, 1);
@@ -4581,13 +4581,14 @@ class DashboardMail extends MX_Controller {
         $data['full_address'] = $orderDetails['full_address'];
         $data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
 
-        
+        $buyer_color = $order[0]['is_buyer_packet_mail_sent'] == '1'  ? 'green' : '#f96414';
+        $seller_color = $order[0]['is_seller_packet_mail_sent'] == '1'  ? 'green' : '#f96414';
         $data['action'] = '<div style="display:flex;">
                             <a data-target="#buyer_welcome" data-toggle="modal" style="margin-right:10px;">
-                                <button class="btn btn-grad-2a generate" style="background:#f96414;color:white" type="submit">Send Buyer welcome</button>
+                                <button class="btn btn-grad-2a generate" style="background:'.$buyer_color.';color:white" type="submit">Send Buyer welcome</button>
                             </a>
                             <a data-target="#seller_welcome" data-toggle="modal">
-                                <button class="btn btn-grad-2a generate" style="background:#f96414;color:white" type="submit">Send Seller welcome</button>
+                                <button class="btn btn-grad-2a generate" style="background:'.$seller_color.';color:white" type="submit">Send Seller welcome</button>
                             </a>
                             
                         </div>';
@@ -4611,6 +4612,8 @@ class DashboardMail extends MX_Controller {
         $errors = array();
         $success = array();
         $i = 0;
+
+        $this->home_model->update(array('is_buyer_packet_mail_sent' => 1), array('file_id' => $file_id), 'order_details');
 
         $this->db->delete('pct_order_borrower_buyer_info', array('order_id' => $order_id));
 
@@ -4655,9 +4658,9 @@ class DashboardMail extends MX_Controller {
                 $to = $buyer_email;
                 $mailParams['to'] = $to;
                 $this->load->helper('sendemail');
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array(), $order_id, 0);
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array(), $order_id, 0);
                 $buyer_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-                $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array('status'=>$buyer_mail_result), $order_id, $logid);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array('status'=>$buyer_mail_result), $order_id, $logid);
             }
             $i++;
         }
@@ -4670,9 +4673,9 @@ class DashboardMail extends MX_Controller {
         $notes_data = json_encode($request);
         $user_data['admin_api'] = 1; 
         
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
         $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
         
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, TRUE);
@@ -4685,7 +4688,7 @@ class DashboardMail extends MX_Controller {
                     'resware_note_id' => $noteId,
                     'subject' => $request['Subject'],
                     'note' => $request['Body'],
-                    'user_id' => $userdata['id'],
+                    'user_id' => 0,
                     'order_id' => $order_id,
                     'task_id' => 4
                 );
@@ -4720,6 +4723,7 @@ class DashboardMail extends MX_Controller {
         $success = array();
         $i = 0;
 
+        $this->home_model->update(array('is_seller_packet_mail_sent' => 1), array('file_id' => $file_id), 'order_details');
         $this->db->delete('pct_order_borrower_seller_info', array('order_id' => $order_id));
 
         foreach($seller_emails as $sellerEmail) {
@@ -4763,9 +4767,9 @@ class DashboardMail extends MX_Controller {
                 $to = $seller_email;
                 $mailParams['to'] = $to;
                 $this->load->helper('sendemail');
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array(), $order_id, 0);
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_seller', '', $mailParams, array(), $order_id, 0);
                 $seller_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-                $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status'=>$seller_mail_result), $order_id, $logid);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status'=>$seller_mail_result), $order_id, $logid);
             }
             $i++;
         }
@@ -4778,9 +4782,9 @@ class DashboardMail extends MX_Controller {
         $notes_data = json_encode($request);
         $user_data['admin_api'] = 1; 
         
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
         $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
         
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, TRUE);
@@ -4793,7 +4797,7 @@ class DashboardMail extends MX_Controller {
                     'resware_note_id' => $noteId,
                     'subject' => $request['Subject'],
                     'note' => $request['Body'],
-                    'user_id' => $userdata['id'],
+                    'user_id' => 0,
                     'order_id' => $order_id,
                     'task_id' => 4
                 );

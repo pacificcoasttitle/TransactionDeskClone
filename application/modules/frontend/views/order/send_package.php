@@ -7,10 +7,7 @@
 	<meta name="author" content="colorlib.com">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Sign Up Form - Buyer</title>
-
-	<!-- Font Icon -->
 	<link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/fonts/material-icon/css/material-design-iconic-font.min.css');?>">
-
 	<link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?buyer_v='.time());?>">
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/css/jquery-ui.css">
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>	
@@ -23,6 +20,9 @@
 	}
 
 	.preloaderjs .spinner {display: none !important;}.preloaderjs#page-preloader {background: rgba(46, 46, 46, 0.99) !important;}#page-preloader {position: fixed;top: 0;right: 0;bottom: 0;left: 0;width: 100%;height: 100%;background: #2e2e2e;z-index: 100500;}#page-preloader .spinner {position: absolute;top: 50%;left: 50%;display: block;width: 100px;height: 100px;margin-top: -50px;margin-left: -50px;border: 3px solid transparent;border-top-color: #e7e4d7;border-radius: 50%;z-index: 1001;-webkit-animation: spin 2.5s infinite linear;animation: spin 2.5s infinite linear;}#page-preloader .spinner:before, #page-preloader .spinner:after {position: absolute;border-radius: 50%;content: '';}#page-preloader .spinner:before {top: 5px;right: 5px;bottom: 5px;left: 5px;border: 3px solid transparent;border-top-color: #71383e;-webkit-animation: spin 2s infinite linear;animation: spin 2s infinite linear;}#page-preloader .spinner:after {top: 15px;right: 15px;bottom: 15px;left: 15px;border: 3px solid transparent;border-top-color: #efa96b;-webkit-animation: spin 1s infinite linear;animation: spin 1s infinite linear;}@keyframes spin {0% {-webkit-transform: rotate(0);transform: rotate(0);}100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);}}
+	body {
+		background-position: revert !important;
+	}
 
 	.radio {
     top: 5px !important;
@@ -40,98 +40,83 @@
     background-color: #218838 !important;
     border-color: #169b6b !important;
 }
+	.table-type-3 > thead > tr > th {
+		color: #000000;
+	}
+	.table-type-3 {
+		color: #000000;
+	}
 </style>
 
 <body>
-
 	<div class="main">
 		<div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5);display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
 		<div>
 			<div class="container2">
 				<img src="<?php echo base_url();?>assets/buyer-seller-packets/images/logo.png" style="width:300px;">
 				<h1 style="font-weight:bold;">Buyer & Seller Package </h1>
-				<h3 style="margin-top:10px;font-weight:bold;"><?php echo $orderDetails['full_address'];?></h3>
-				<h4 style="margin-bottom:40px;margin-top:10px;font-weight:bold;">APN:<?php echo $orderDetails['apn'];?> | File# <?php echo $orderDetails['file_number'];?> </h4>
+				<h3 style="margin-top:10px;"><?php echo $orderDetails['full_address'];?></h3>
+				<h4 style="margin-bottom:40px;margin-top:10px;">APN:<?php echo $orderDetails['apn'];?> | File# <?php echo $orderDetails['file_number'];?> </h4>
 
 			</div>
 		</div>
 
-
 		<div class="container">
-			<?php if(!empty($success)) {?>
-			<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-				<?php foreach($success as $sucess) {
-							echo $sucess."<br \>";	
-						}?>
-
-			</div>
-			<?php  } 
-			if(!empty($errors)) {?>
-			<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-				<?php foreach($errors as $error) {
-						echo $error."<br \>";	
-					}?>
-			</div>
-			<?php } ?>
-
-			 <form method="POST" id="signup-form" class="signup-form"> 
-				<div>
-					<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
-					<div class="row">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                
-                                <?php if(!empty($success)) {?>
-                                <div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-                                    <?php foreach($success as $sucess) {
-                                            echo $sucess."<br \>";	
-                                        }?>
-                                </div>
-                                <?php } 
-                                 if(!empty($errors)) {?>
-                                <div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-                                    <?php foreach($errors as $error) {
-                                            echo $error."<br \>";	
-                                        }?>
-                                </div>
-                                <?php } ?>
-                                <div class="typography-sectiona">
-                                    <div class="col-md-12">
-                                        <div class="table-container">
-                                            <table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>File Number</th>
-                                                        <th>Property Address</th>
-                                                        <th>Created</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php if(!empty($file_number)) {?>
-                                                        <tr role="row" class="odd">
-                                                            <td>1</td>
-                                                            <td><?php echo $file_number;?></td>
-                                                            <td><?php echo $full_address;?></td>
-                                                            <td><?php echo $created;?></td>
-                                                            <td><?php echo $action;?></td> 
-                                                        </tr>
-                                                    <?php } else { ?>
-                                                        <tr role="row" class="odd"><td colspan="4" class="text-center">No record found</td></tr>
-                                                    <?php }  ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+			
+			<div>
+				<input type="hidden" name="order_id" id="order_id" value="<?php echo $orderDetails['order_id'];?>">
+				<div class="row">
+					<div class="row" style="background: #f8f8f8;border:1px solid #e0e0e0">
+						<div class="col-xs-12" style="height:250px;">
+							
+							<?php if(!empty($success)) {?>
+							<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
+								<?php foreach($success as $sucess) {
+										echo $sucess."<br \>";	
+									}?>
+							</div>
+							<?php } 
+								if(!empty($errors)) {?>
+							<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
+								<?php foreach($errors as $error) {
+										echo $error."<br \>";	
+									}?>
+							</div>
+							<?php } ?>
+							<div class="typography-sectiona" style="color:#000000;">
+								<div class="col-md-12">
+									<div class="table-container">
+										<table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>File Number</th>
+													<th>Property Address</th>
+													<th>Created</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php if(!empty($file_number)) {?>
+													<tr role="row" class="odd">
+														<td>1</td>
+														<td><?php echo $file_number;?></td>
+														<td><?php echo $full_address;?></td>
+														<td><?php echo $created;?></td>
+														<td><?php echo $action;?></td> 
+													</tr>
+												<?php } else { ?>
+													<tr role="row" class="odd"><td colspan="4" class="text-center">No record found</td></tr>
+												<?php }  ?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-
-				
-			 
+			</div>
 		</div>
 	</div>
 
