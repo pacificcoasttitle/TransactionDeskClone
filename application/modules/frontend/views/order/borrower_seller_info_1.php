@@ -353,7 +353,7 @@
 								</div>
 							</div>
 
-							<div class="form-row">
+							<div class="form-row is_married_or_domestic_partner_wrapper">
 								<div class="form-group">
 									<label class="form-label">Have you ever been married or have a domestic partner?</label>
 									<select id="is_married_or_domestic_partner" name="is_married_or_domestic_partner" required="required">
