@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="<?=base_url('assets/buyer-seller-packets/css/style.css?buyer_v='.time());?>">
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/css/jquery-ui.css">
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script>	
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/smart-forms.css">
 </head>
 
 <style>
@@ -23,6 +24,22 @@
 		background-position: revert !important;
 	}
 
+	.radio {
+    top: 5px !important;
+    margin: 0px 10px !important;
+}
+
+.btn-success {
+    color: #fff !important;
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+
+.btn-success:hover {
+    color: #fff !important;
+    background-color: #218838 !important;
+    border-color: #169b6b !important;
+}
 	.table-type-3 > thead > tr > th {
 		color: #000000;
 	}
@@ -148,7 +165,7 @@
 														</label>	
 													</div>
 												</div>
-												<a href="#" class="mr-5 clone button btn-primary"><i class="fa fa-plus"></i></a>
+												<a href="#" class="mr-5 clone button btn btn-success"><i class="fa fa-plus"></i></a>
 												<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
 											</div>
 										</div>							
@@ -161,7 +178,7 @@
 
 							<div class="form-footer" style="padding-top:0px;">
 								<button type="submit" data-btntext-sending="Sending..."
-									class="button btn-primary">Submit</button>
+									class="button btn btn-success">Submit</button>
 								<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
 							</div>
 						</div>
@@ -215,7 +232,7 @@
 														</label>	
 													</div>
 												</div>
-												<a href="#" class="mr-5 clone button btn-primary"><i class="fa fa-plus"></i></a>
+												<a href="#" class="mr-5 clone button btn btn-success"><i class="fa fa-plus"></i></a>
 												<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
 											</div>
 										</div>							
@@ -228,7 +245,7 @@
 
 							<div class="form-footer" style="padding-top:0px;">
 								<button type="submit" data-btntext-sending="Sending..."
-									class="button btn-primary">Submit</button>
+									class="button btn btn-success">Submit</button>
 								<button type="button" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
 							</div>
 						</div>
