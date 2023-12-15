@@ -40,12 +40,15 @@
     background-color: #218838 !important;
     border-color: #169b6b !important;
 }
-	.table-type-3 > thead > tr > th {
-		color: #000000;
-	}
-	.table-type-3 {
-		color: #000000;
-	}
+
+.table-type-3 > thead > tr > th {
+	color: #000000;
+}
+
+.table-type-3 {
+	color: #000000;
+}
+
 </style>
 
 <body>
@@ -54,9 +57,9 @@
 		<div>
 			<div class="container2">
 				<img src="<?php echo base_url();?>assets/buyer-seller-packets/images/logo.png" style="width:300px;">
-				<h1 style="font-weight:bold;">Buyer & Seller Package </h1>
-				<h3 style="margin-top:10px;"><?php echo $orderDetails['full_address'];?></h3>
-				<h4 style="margin-bottom:40px;margin-top:10px;">APN:<?php echo $orderDetails['apn'];?> | File# <?php echo $orderDetails['file_number'];?> </h4>
+				<h1 style="font-weight:bold;color: #fff;">Buyer & Seller Package </h1>
+				<h3 style="margin-top:10px;color: #fff;"><?php echo $orderDetails['full_address'];?></h3>
+				<h4 style="margin-bottom:40px;margin-top:10px;color: #fff;">APN:<?php echo $orderDetails['apn'];?> | File# <?php echo $orderDetails['file_number'];?> </h4>
 
 			</div>
 		</div>
