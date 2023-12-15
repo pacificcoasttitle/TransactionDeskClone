@@ -11,7 +11,7 @@
             <div class="pdf_header">
                 <h1>SALES SNAP SHOT</h1>
                 <div class="overview_text">12 MONTH OVERVIEW</div>
-                <div class="santa_monica">SANTA MONICA</div>
+                <div class="santa_monica"><?php echo $area_name;?></div>
                 <!-- <img src="<?php echo base_url('assets/sales_snap_shot/logo.png') ?>" class="pacific_logo" alt=""> -->
             </div>
             <div class="pdf_body">
@@ -79,8 +79,8 @@
             <div class="pdf_footer monthly_conatiner">
                 <div class="media-object">
                     <?php
-                        $image_url = env('AWS_PATH').str_replace('uploads/', '', $salesRep['sales_rep_profile_img']);
-                        if (!empty($salesRep['sales_rep_profile_img'])):
+                        $image_url = trim(env('AWS_PATH') . $salesRep['sales_rep_report_image']);
+                        if (!empty($salesRep['sales_rep_report_image'])):
                     ?>
                         <img src="<?php echo $image_url;?>" alt="Profile-Pic" class="profile_img"/>
                     <?php endif; ?>                    
