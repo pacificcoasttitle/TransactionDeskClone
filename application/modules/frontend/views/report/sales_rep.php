@@ -72,14 +72,26 @@
 		width: 100px;
 		height: 2px;
 	}
+	
+	.align-justify {
+		justify-content: space-between;
+	}
 </style>
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-sm-12">                                                                                                                                                                                                                                                                                                                                                                         
 				<div class="">
-					<h2 class="ui-title-block ui-title-block_light">Sales Representatives</h2>
+					<div class="d-flex align-justify">
+						<h2 class="ui-title-block ui-title-block_light mb-0">Sales Representatives</h2>
+						<a href="<?php echo base_url('reports') ?>" class="btn btn-info btn-icon-split pull-right">
+							<span class="icon text-white-50">
+								<i class="fas fa-arrow-left"></i>
+							</span>
+							<span class="text">Back</span>
+						</a>
+					</div>
 					<div class="ui-decor-1a bg-accent"></div>
 					
 				</div>

@@ -1605,18 +1605,27 @@ class Order
         return $result;
 
     }
-    public function getOpenOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0)
+    public function getOpenOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders, sum(escrow_amount) as total_escrow_amount_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.created_at)', $month);
 
-        if ($year == 0) {
-            $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
         } else {
-            $this->CI->db->where('YEAR(order_details.created_at)', $year);
+            $this->CI->db->where('MONTH(order_details.created_at)', $month);
+    
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.created_at)', $year);
+            }
+
         }
 
         if (is_array($userId)) {
@@ -1642,18 +1651,26 @@ class Order
         return $result;
     }
 
-    public function getOpenOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0)
+    public function getOpenOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders, sum(escrow_amount) as total_escrow_amount_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.created_at)', $month);
 
-        if ($year == 0) {
-            $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
         } else {
-            $this->CI->db->where('YEAR(order_details.created_at)', $year);
+
+            $this->CI->db->where('MONTH(order_details.created_at)', $month);
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.created_at)', $year);
+            }
         }
 
         if (is_array($userId)) {
@@ -1679,20 +1696,26 @@ class Order
         return $result;
     }
 
-    public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0)
+    public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
-
         // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
-            ->from('order_details')
-            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        ->from('order_details')
+        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
-        if ($year == 0) {
-            $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
         } else {
-            $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            }
+
         }
 
         if (is_array($userId)) {
@@ -1718,19 +1741,28 @@ class Order
         return $result;
     }
 
-    public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0)
+    public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
         // $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders , '.$fieds_sum_str)
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
 
-        if ($year == 0) {
-            $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
         } else {
-            $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            
+            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+    
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            }
         }
 
         if (is_array($userId)) {
@@ -1994,6 +2026,38 @@ class Order
                 $count--;
             }
         }
+        return $count;
+    }
+
+    
+    public function countWorkedDaysOfFourMonth()
+    {
+        $startDate = date('Y-m-01', strtotime('-3 months', strtotime(date('Y-m-d'))));
+        $month = date('m', strtotime($startDate));
+        $year = date('Y', strtotime($startDate));
+        $endDate = date('Y-m-d');
+        $count = 0;
+        $endCounter = mktime(0, 0, 0, $month, 1, $year);
+        $counter = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+        while ($counter >= $endCounter) {
+            if (in_array(date("w", $counter), array(0, 6)) == false) {
+                $count++;
+            }
+            $counter = strtotime("-1 day", $counter);
+        }
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');
+        $this->CI->db->where('holiday_date >=', $startDate);
+        $this->CI->db->where('holiday_date <', $endDate);
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        foreach ($result as $res) {
+            $weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+            if ($weekendFlag != 1) {
+                $count--;
+            }
+        }
+        // print_r($count);die;
         return $count;
     }
 
@@ -4160,7 +4224,7 @@ class Order
         return true;
     }
 
-    public function getRevenueData($month, $userId)
+    public function getRevenueData($month, $userId, $dashboard_flag = 1)
     {
         $userdata = $this->CI->session->userdata('user');
         if (empty($userId)) {
@@ -4170,8 +4234,15 @@ class Order
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));        
+
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+        } else {
+            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));        
+        }
         $this->CI->db->where('transaction_details.sales_representative', $userId);
         $query = $this->CI->db->get();
         $result = $query->result_array();
