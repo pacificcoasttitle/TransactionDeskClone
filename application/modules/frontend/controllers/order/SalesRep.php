@@ -83,8 +83,6 @@ class SalesRep extends MX_Controller
         $data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
         $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
 		
-		//Commission Logic
-		
 		// get commission value from monthly commission
 		$sales_commission = 0;
 		$this->load->model('admin/order/user_monthly_commission_model');
@@ -185,9 +183,32 @@ class SalesRep extends MX_Controller
         }
         $totalCount = $data['sale_close_count'] + $data['refi_close_count'] + $data['sale_open_count'] + $data['refi_open_count'];
         if($totalCount > 0) { 
-            $data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$totalCount);
-            $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$totalCount);
-            $data['close_order_percetage'] = $data['refi_close_order_percetage'] + $data['sale_close_order_percetage'];
+            // $data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$totalCount);
+            // $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$totalCount);
+            // $data['close_order_percetage'] = $data['refi_close_order_percetage'] + $data['sale_close_order_percetage'];
+
+            /** Current month calculation only */
+            // $data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$data['refi_open_count']);
+            // $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$data['sale_open_count']);
+            // $data['close_order_percetage'] = round((($data['sale_close_count'] + $data['refi_close_count'])*100)/($data['refi_open_count'] + $data['sale_open_count']));
+
+
+            /** For last 4 months calculations */
+            $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $userId, 0, 0, 1);
+            $refiClsCount = !empty($clseRefiResult['refi_count']) ? $clseRefiResult['refi_count'] : 0;
+            $clsSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId, 0, 0, 1);
+            $saleClsCount =  !empty($clsSaleResult['sale_count']) ? $clsSaleResult['sale_count'] : 0;
+
+            $opnRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $userId, 0, 0, 1);
+            $refiOpnCount = !empty($opnRefiResult['refi_count']) ? $opnRefiResult['refi_count'] : 0;
+            $opnSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $userId, 0, 0, 1);
+            $saleOpnCount = !empty($opnSaleResult['sale_count']) ? $opnSaleResult['sale_count'] : 0;
+
+            $data['refi_close_order_percetage'] = round(($refiClsCount*100)/$refiOpnCount);
+            $data['sale_close_order_percetage'] = round(($saleClsCount*100)/$saleOpnCount);
+            $data['close_order_percetage'] = round((($saleClsCount + $refiClsCount) * 100)/ ($saleOpnCount + $refiOpnCount));
+            /** End last 4 month calculations */
+
         } else {
             $data['refi_close_order_percetage'] = 0;
             $data['sale_close_order_percetage'] = 0;
