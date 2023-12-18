@@ -717,7 +717,7 @@ class SalesRep extends MX_Controller
     public function getRevenueData()
     {
         $sales_rep_id = $this->input->post('sales_rep_id');
-        $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'));
+        $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $sales_rep_id);
         $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
             <thead>
                 <tr>
