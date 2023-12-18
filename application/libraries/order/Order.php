@@ -4224,7 +4224,7 @@ class Order
         return true;
     }
 
-    public function getRevenueData($month, $userId, $dashboard_flag = 1)
+    public function getRevenueData($month, $userId)
     {
         $userdata = $this->CI->session->userdata('user');
         if (empty($userId)) {
@@ -4235,14 +4235,9 @@ class Order
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
 
-        if ($dashboard_flag == 1) {
-            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
-            $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-        } else {
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-            $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));        
-        }
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));        
+        
         $this->CI->db->where('transaction_details.sales_representative', $userId);
         $query = $this->CI->db->get();
         $result = $query->result_array();
