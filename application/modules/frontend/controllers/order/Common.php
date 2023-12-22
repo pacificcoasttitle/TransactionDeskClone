@@ -389,11 +389,15 @@ class Common extends MX_Controller {
 				$format = "docx";
 				$file = $source_pdf;
 				$doc_file_name =  str_replace('pdf', 'docx', $document_name);
-				$dest_doc = FCPATH.'/uploads/documents/'.$document_name;
+				$dest_doc = FCPATH.'/uploads/documents/'.$doc_file_name;
 				$request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
-				$result = $wordsApi->ConvertDocument($request); 
+				$result = $wordsApi->ConvertDocument($request);
 				copy($result->getPathName(), $dest_doc);
-				$contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
+				/** To download docx file */
+				// $contents = file_get_contents(FCPATH.'/uploads/documents/'.$doc_file_name);
+				/** End */
+				$contents = file_get_contents(FCPATH.'/uploads/documents/'.$document_name);
+				// $contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
 				$this->order->uploadPrelimDocxDocToResware($doc_file_name, $order_id, base64_encode($pdfContents), $this->input->post('fileId'));
 				$this->order->uploadDocumentOnAwsS3($doc_file_name, 'documents');
 				if ($prelimSyncFlag == 1) {
