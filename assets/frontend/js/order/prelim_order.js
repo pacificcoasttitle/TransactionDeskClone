@@ -124,6 +124,7 @@ function download_document(resware_document_id, order_id, document_name)
 {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
+    var fileId = $('#fileId').val();
     $.ajax({
         url: base_url + "download-document",
         type: "post",
@@ -131,7 +132,7 @@ function download_document(resware_document_id, order_id, document_name)
             resware_document_id: resware_document_id,
             order_id: order_id,
             document_name: document_name,
-            fileId: $('#fileId').val()
+            fileId: fileId
         },
         dataType: "html",
         success: function (response) {
@@ -152,6 +153,9 @@ function download_document(resware_document_id, order_id, document_name)
                     var element = document.createElement('a');
                     element.setAttribute('href', csvURL);
                     element.setAttribute('download', document_name);
+                    /** To download docx file */
+                    // element.setAttribute('download', fileId+".docx");
+                    /** End */
                     element.style.display = 'none';
                     document.body.appendChild(element);
                     element.click();
