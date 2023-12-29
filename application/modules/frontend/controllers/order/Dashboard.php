@@ -779,7 +779,7 @@ class Dashboard extends MX_Controller {
 		$order_message_body = 'Please check attachment for CPL document.';
 		$message = $order_message_body; 
 		$subject = 'CPL Document';
-		$to = 'hitesh.p@crestinfosystems.com';
+		$to = 'piyush.j@crestinfosystems.net';
 		$cc = array();
 		$cc = array('hit9391@gmail.com');
 		$bcc = array('hitesh_9391@yahoo.com');
