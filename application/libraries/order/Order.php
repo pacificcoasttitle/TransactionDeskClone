@@ -3173,7 +3173,7 @@ class Order
                     $to = $salesManger['email_address'];
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $to = 'ghernandez@pct.com';
-                    $cc = array('hitesh.p@crestinfosystems.com');
+                    $cc = array('piyush.j@crestinfosystems.net');
                     //$to = 'hitesh.p@crestinfosystems.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,
@@ -4059,7 +4059,7 @@ class Order
                     );
                     $to = 'ghernandez@pct.com';
                     //$to = array('hitesh.p@crestinfosystems.com');   
-                    $cc = array('hitesh.p@crestinfosystems.com');  
+                    $cc = array('piyush.j@crestinfosystems.net');  
                     $this->CI->load->helper('sendemail');
                     $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
@@ -4104,7 +4104,7 @@ class Order
                 );
                 $to = 'ghernandez@pct.com';
                 //$to = array('hitesh.p@crestinfosystems.com');   
-                $cc = array('hitesh.p@crestinfosystems.com');  
+                $cc = array('piyush.j@crestinfosystems.net');  
 
                 $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
                 $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
@@ -4215,7 +4215,7 @@ class Order
             );
             $to = 'ghernandez@pct.com';
             //$to = array('hitesh.p@crestinfosystems.com');   
-            $cc = array('hitesh.p@crestinfosystems.com');  
+            $cc = array('piyush.j@crestinfosystems.net');  
 
             $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'non_openers_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
             $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
