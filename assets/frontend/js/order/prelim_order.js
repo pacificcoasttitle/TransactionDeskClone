@@ -148,7 +148,6 @@ function download_document(resware_document_id, order_id, document_name)
                     document.body.appendChild(element);
                     document.body.removeChild(element);
                 } else {
-                    console.log(response);
                     var csvURL = 'data:application/octet-stream;base64,' + response;
                     var element = document.createElement('a');
                     element.setAttribute('href', csvURL);
