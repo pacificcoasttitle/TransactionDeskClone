@@ -3947,6 +3947,7 @@ class Order
             CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name,
             user_details.email_address, 
             user_details.company_name, 
+            user_details.is_escrow, 
             transaction_details.sales_representative');
         $this->CI->db->from('order_details');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
@@ -4030,9 +4031,11 @@ class Order
                         $order_user_id = $res['customer_id'];
                         $sales_name = $res['sales_name'];
                     }
-                    $data['summary_info'][$i]['name'] = $userName;
-                    $data['summary_info'][$i]['company_name'] = $companyName;
-                    $data['summary_info'][$i]['count'] = $j;
+                    if ($res['is_escrow'] == "0") {
+                        $data['summary_info'][$i]['name'] = $userName;
+                        $data['summary_info'][$i]['company_name'] = $companyName;
+                        $data['summary_info'][$i]['count'] = $j;
+                    }
                     $data['sales_name'] = $sales_name;
                     $data['escrowName'] = $escrowName;
                     $data['lenderName'] = $lenderName;
@@ -4073,9 +4076,11 @@ class Order
                     $userName = $res['name'];
                     $companyName = $res['company_name'];
                     $sales_name = $res['sales_name'];
-                    $data['summary_info'][$i]['name'] = $userName;
-                    $data['summary_info'][$i]['count'] = $j;
-                    $data['summary_info'][$i]['company_name'] = $companyName;
+                    if ($res['is_escrow'] == "0") {
+                        $data['summary_info'][$i]['name'] = $userName;
+                        $data['summary_info'][$i]['count'] = $j;
+                        $data['summary_info'][$i]['company_name'] = $companyName;
+                    }
                     $data['sales_name'] = $sales_name;
                     $data['escrowName'] = $escrowName;
                     $data['lenderName'] = $lenderName;
