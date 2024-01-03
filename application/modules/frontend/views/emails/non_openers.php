@@ -403,14 +403,16 @@
                                                                     <table style="border-collapse: collapse; width: 100%;" border="1">
                                                                         <tbody>
                                                                             <tr>
-                                                                                <td style="width: 31.333%;background-color:#032e42;color:#ffffff;font-weight:bold;font-family:arial;padding:5px; font-size:14px;">Client Name</td>
-                                                                                <td style="width: 16.6667%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Last Deal Opened</td>
+                                                                                <td style="width: 16%;background-color:#032e42;color:#ffffff;font-weight:bold;font-family:arial;padding:5px; font-size:14px;">Client Name</td>
+                                                                                <td style="width: 16%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Client Name</td>
+                                                                                <td style="width: 16%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">Last Deal Opened</td>
                                                                             </tr>
                                                                             <?php if (!empty($users)) { 
                                                                                     foreach($users as $user) { ?>
                                                                                         <tr>
-                                                                                            <td style="width: 31.333%;color:#a1a1a1;"><?php echo $user['name'];?></td>
-                                                                                            <td style="width: 16.6667%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $user['last_deal_opened'];?></td>
+                                                                                            <td style="width: 16%;color:#a1a1a1;"><?php echo $user['name'];?></td>
+                                                                                            <td style="width: 16%;color:#a1a1a1;text-align:center;"><?php echo $user['company_name'];?></td>
+                                                                                            <td style="width: 16%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $user['last_deal_opened'];?></td>
                                                                                         </tr>
                                                                             <?php }} ?>
                                                                         </tbody>
