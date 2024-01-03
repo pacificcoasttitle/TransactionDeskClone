@@ -3935,7 +3935,9 @@ class Order
     public function sendSummaryMail($sales_rep_id = 0)
     {
         $this->CI->load->model('order/apiLogs');
-        $month = sprintf('%02d',date('m') - 1);
+        $month = sprintf('%02d',date('m', strtotime(date('Y-m')." -1 month")));
+        $year = date('Y', strtotime(date('Y-m')." -1 month"));
+        
         $this->CI->db->select('order_details.file_id, 
             order_details.file_number, 
             order_details.customer_id, 
@@ -3951,7 +3953,7 @@ class Order
             transaction_details.sales_representative');
         $this->CI->db->from('order_details');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
         if ($sales_rep_id == 0) {
             $this->CI->db->where('transaction_details.sales_representative != ""');
         } else {
@@ -3983,11 +3985,14 @@ class Order
                     $j = 0;
                 }
 
-                $month = sprintf('%02d',date('m') - 2);
+                // $month = sprintf('%02d',date('m') - 2);
+                $month = sprintf('%02d',date('m', strtotime(date('Y-m')." -2 month")));
+                $year = date('Y', strtotime(date('Y-m')." -2 month"));
+                
                 $this->CI->db->select('COUNT(user_details.id) as order_count,user_details.`id`, user_details.company_name, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, user_details.is_escrow');
                 $this->CI->db->from('order_details');
                 $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
                 $this->CI->db->where('transaction_details.sales_representative', $sales_rep_user_id);
                 $this->CI->db->where('customer_basic_details.email_address != ""');
                 $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
@@ -4031,11 +4036,11 @@ class Order
                         $order_user_id = $res['customer_id'];
                         $sales_name = $res['sales_name'];
                     }
-                    if ($res['is_escrow'] == "0") {
-                        $data['summary_info'][$i]['name'] = $userName;
-                        $data['summary_info'][$i]['company_name'] = $companyName;
-                        $data['summary_info'][$i]['count'] = $j;
-                    }
+                    // if ($res['is_escrow'] == "0") {
+                    $data['summary_info'][$i]['name'] = $userName;
+                    $data['summary_info'][$i]['company_name'] = $companyName;
+                    $data['summary_info'][$i]['count'] = $j;
+                    // }
                     $data['sales_name'] = $sales_name;
                     $data['escrowName'] = $escrowName;
                     $data['lenderName'] = $lenderName;
@@ -4076,11 +4081,11 @@ class Order
                     $userName = $res['name'];
                     $companyName = $res['company_name'];
                     $sales_name = $res['sales_name'];
-                    if ($res['is_escrow'] == "0") {
-                        $data['summary_info'][$i]['name'] = $userName;
-                        $data['summary_info'][$i]['count'] = $j;
-                        $data['summary_info'][$i]['company_name'] = $companyName;
-                    }
+                    // if ($res['is_escrow'] == "0") {
+                    $data['summary_info'][$i]['name'] = $userName;
+                    $data['summary_info'][$i]['count'] = $j;
+                    $data['summary_info'][$i]['company_name'] = $companyName;
+                    // }
                     $data['sales_name'] = $sales_name;
                     $data['escrowName'] = $escrowName;
                     $data['lenderName'] = $lenderName;
@@ -4108,6 +4113,7 @@ class Order
                     'cc' => $cc
                 );
                 $to = 'ghernandez@pct.com';
+                // $to = 'piyush.j@crestinfosystems.net';
                 //$to = array('hitesh.p@crestinfosystems.com');   
                 $cc = array('piyush.j@crestinfosystems.net');  
 
@@ -4145,7 +4151,7 @@ class Order
         } 
         $startDate = date('Y-m-d 00:00:00', strtotime('-90 days', strtotime(date('Y-m-d'))));
         //$endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
-        $this->CI->db->select('customer_basic_details.email_address, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_rep_name')
+        $this->CI->db->select('customer_basic_details.email_address, user_details.company_name, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_rep_name')
             ->from('order_details')
             ->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner')
            
@@ -4176,6 +4182,7 @@ class Order
                         if ($key === false) {
                             $users[$i]['id'] = $res['user_id'];
                             $users[$i]['name'] = $res['name'];
+                            $users[$i]['company_name'] = $res['company_name'];
                             $users[$i]['last_deal_opened'] = date("m/d/Y", strtotime($res['created_at']));
                             $sales_rep_email = $res['email_address'];
                             $sales_rep_name = $res['sales_rep_name'];
@@ -4219,6 +4226,7 @@ class Order
                 'cc' => $cc
             );
             $to = 'ghernandez@pct.com';
+            // $to = 'piyush.j@crestinfosystems.net';
             //$to = array('hitesh.p@crestinfosystems.com');   
             $cc = array('piyush.j@crestinfosystems.net');  
 
