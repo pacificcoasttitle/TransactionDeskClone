@@ -3934,9 +3934,17 @@ class Order
 
     public function sendSummaryMail($sales_rep_id = 0)
     {
+        $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
         $month = sprintf('%02d',date('m', strtotime(date('Y-m')." -1 month")));
         $year = date('Y', strtotime(date('Y-m')." -1 month"));
+        
+        $userdata = $this->CI->session->userdata('user');
+        if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
+            $user_data['admin_api'] = 1; 
+        } else {
+            $user_data = array();
+        }
         
         $this->CI->db->select('order_details.file_id, 
             order_details.file_number, 
@@ -3950,6 +3958,9 @@ class Order
             user_details.email_address, 
             user_details.company_name, 
             user_details.is_escrow, 
+            user_details.partner_id,
+            pci.partner_type_id,
+            pci.partner_name,
             transaction_details.sales_representative');
         $this->CI->db->from('order_details');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
@@ -3964,10 +3975,13 @@ class Order
         $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
         $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
         $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner');
+        $this->CI->db->join('pct_order_partner_company_info as pci', 'pci.partner_id = user_details.partner_id','left');
         $this->CI->db->order_by('transaction_details.sales_representative asc, order_details.customer_id asc'); 
         $query = $this->CI->db->get();
         $result   = $query->result_array();  
-
+        // echo "<pre>";
+        // print_r($result);
+        // die;
         if(!empty($result)) {
             $checkFlag = 0;
             $data = array();
@@ -4046,6 +4060,24 @@ class Order
                     $data['lenderName'] = $lenderName;
                     $currentMonth = date('F');
                     $data['currentMonth'] = Date('F', strtotime($currentMonth . " last month"));
+
+                    if ($res['partner_type_id']) {
+                        $partner_type_id = explode(',', $res['partner_type_id']);
+                        if (in_array(14, $partner_type_id) || in_array(15, $partner_type_id)) {
+                            $endPoint = 'files/'. $res['file_id'] .'/partners';
+                            $result = $this->CI->resware->make_request('GET', $endPoint, '', $user_data);
+                            $partners = json_decode($result, true);
+                            // print_r($partners);die;
+                            if (isset($partners['Partners']) && !empty($partners['Partners'])) {
+                                $partnersArr = $partners['Partners'];
+                                $key = array_search($res['partner_id'], array_column($partnersArr, 'PartnerID'));
+                                if ($partnersArr[$key]['PartnerTypeID'] == 14 || $partnersArr[$key]['PartnerTypeID'] == 15) {
+                                    $data['summary_info'][$i]['company_name'] = $companyName . ' - ' . $partnersArr[$key]['PartnerType'] ['PartnerTypeName'];
+                                }
+                            }
+                        }
+                    }
+
                 } else {
                     if ($sales_rep_id != 0) {
                         $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, TRUE);
