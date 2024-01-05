@@ -3939,12 +3939,12 @@ class Order
         $month = sprintf('%02d',date('m', strtotime(date('Y-m')." -1 month")));
         $year = date('Y', strtotime(date('Y-m')." -1 month"));
         
-        $userdata = $this->CI->session->userdata('user');
-        if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
-            $user_data['admin_api'] = 1; 
-        } else {
-            $user_data = array();
-        }
+        // $userdata = $this->CI->session->userdata('user');
+        // if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
+        $user_data['admin_api'] = 1; 
+        // } else {
+        //     $user_data = array();
+        // }
         
         $this->CI->db->select('order_details.file_id, 
             order_details.file_number, 
