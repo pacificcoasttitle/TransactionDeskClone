@@ -4050,22 +4050,20 @@ class Order
                         $order_user_id = $res['customer_id'];
                         $sales_name = $res['sales_name'];
                     }
-                    // if ($res['is_escrow'] == "0") {
-                    $data['summary_info'][$i]['name'] = $userName;
-                    $data['summary_info'][$i]['company_name'] = $companyName;
-                    $data['summary_info'][$i]['count'] = $j;
-                    // }
+
                     $data['sales_name'] = $sales_name;
                     $data['escrowName'] = $escrowName;
                     $data['lenderName'] = $lenderName;
                     $currentMonth = date('F');
                     $data['currentMonth'] = Date('F', strtotime($currentMonth . " last month"));
-
+                    
                     if ($res['partner_type_id']) {
                         $partner_type_id = explode(',', $res['partner_type_id']);
                         if (in_array(14, $partner_type_id) || in_array(15, $partner_type_id)) {
                             $endPoint = 'files/'. $res['file_id'] .'/partners';
+                            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $res['file_id'], 0);
                             $result = $this->CI->resware->make_request('GET', $endPoint, '', $user_data);
+                            $this->CI->apiLogs->syncLogs(0, 'resware', 'get_partners_from_client_summary', env('RESWARE_ORDER_API').$endPoint, array(), $result, $res['file_id'], $logid);
                             $partners = json_decode($result, true);
                             // print_r($partners);die;
                             if (isset($partners['Partners']) && !empty($partners['Partners'])) {
@@ -4073,10 +4071,25 @@ class Order
                                 $key = array_search($res['partner_id'], array_column($partnersArr, 'PartnerID'));
                                 if ($partnersArr[$key]['PartnerTypeID'] == 14 || $partnersArr[$key]['PartnerTypeID'] == 15) {
                                     $data['summary_info'][$i]['company_name'] = $companyName . ' - ' . $partnersArr[$key]['PartnerType'] ['PartnerTypeName'];
+                                } else {
+                                    continue;
                                 }
+                            } else {
+                                continue;
                             }
+                        } else {
+                            continue;
                         }
+                    } else {
+                        continue;
                     }
+
+                    // if ($res['is_escrow'] == "0") {
+                    $data['summary_info'][$i]['name'] = $userName;
+                    // $data['summary_info'][$i]['company_name'] = $companyName;
+                    $data['summary_info'][$i]['count'] = $j;
+                    // }
+                    
 
                 } else {
                     if ($sales_rep_id != 0) {
@@ -4123,7 +4136,8 @@ class Order
                     $data['lenderName'] = $lenderName;
                 }
             }
-            
+            // echo "<pre>";
+            // print_r($data);die;
             if(!empty($data)){
                 if ($sales_rep_id != 0) {
                     $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, TRUE);
