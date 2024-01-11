@@ -1795,11 +1795,12 @@ class Home extends MX_Controller
                     foreach ($deliverables as $deliverable) {
                         $deliverablesInfo .= $deliverable . "<br>";
                     }
-                    $deliverablesInfo .= "<a href='javascript:void(0)' style='margin-top:10px;' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ");'><i class='fas fa-edit'></i></a>";
+                    $deliverablesInfo .= "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ");'><i class='fas fa-edit'></i></a><a href='javascript:void(0);' onclick='deleteCompany(".$value['partner_id'].")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
                     $nestedData[] = $deliverablesInfo;
                 } else {
-                    $nestedData[] = "<a href='javascript:void(0)' style='margin-top:10px;' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ")'><i class='fas fa-plus-circle'></i></a>";
+                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ")'><i class='fas fa-plus-circle'></i></a><a href='javascript:void(0);' onclick='deleteCompany(".$value['partner_id'].")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
                 }
+
                 $data[] = $nestedData;
                 $i++;
             }
@@ -1880,6 +1881,36 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_company', $data);
         // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function deleteCompany() {
+        $partner_id = $this->input->post('partner_id');
+        if ($partner_id) {
+            $this->db->select('*');
+            $this->db->from('pct_order_partner_company_info');
+            $this->db->where('partner_id', $partner_id);
+            $query = $this->db->get();
+            $result = $query->row_array();
+            
+            if (!empty($result)) {
+                $customerData = array(
+                    'status' => 0
+                );
+                $condition = array('partner_id' => trim($partner_id));
+                $update = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
+                if ($update) {
+                    $activity = 'Company: '. $result['partner_name'] .' deleted successfully';
+                    $this->order->logAdminActivity($activity);
+                    echo json_encode(['status' => 'success', 'message' => 'Company: '. $result['partner_name'] .' deleted successfully']);exit;
+                } else {
+                    echo json_encode(['status' => 'failed', 'message' => 'Something went wrong, Please contact administrative']);exit;
+                }
+            } else {
+                echo json_encode(['status' => 'failed', 'message' => 'Recored not found']);exit;
+            }
+        } else {
+            echo json_encode(['status' => 'failed', 'message' => 'Invalide details provided']);exit;
+        }
     }
 
     public function primaryCheck()
