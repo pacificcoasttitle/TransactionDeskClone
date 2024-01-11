@@ -59,9 +59,8 @@
                             <td><?=$admin->email_id;?></td>
                             <td><?=$admin->role_obj ? $admin->role_obj->title : '-';?></td>
                             <td><?=date('d F y',strtotime($admin->created_at));?></td>
-                            <td><div style='display:flex;'> <a class='btn btn-action" href='javascript::void();' onclick='editAdminInfo("<?=$admin->id?>");'><i class='fas fa-fw fa-edit'></i></a>
-                                
-                                <button type="button"  class='btn btn-action delete-record-custom' data-url="<?php echo base_url('order/admin/delete-admin-record/'.$admin->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></button>
+                            <td><div style='display:flex;'> <a href='javascript::void();' onclick='editAdminInfo("<?=$admin->id?>");'><i class='fas fa-fw fa-edit'></i></a>
+                                <a href='javascript::void();' class='delete-record-custom' data-url="<?php echo base_url('order/admin/delete-admin-record/'.$admin->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></a>
                                 </div>
                             </td>
                         </tr>
