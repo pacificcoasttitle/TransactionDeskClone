@@ -1795,12 +1795,12 @@ class Home extends MX_Controller
                     foreach ($deliverables as $deliverable) {
                         $deliverablesInfo .= $deliverable . "<br>";
                     }
-                    $deliverablesInfo .= "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ");'><i class='fas fa-edit'></i></a><a href='javascript:void(0);' onclick='deleteCompany(".$value['partner_id'].")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+                    $deliverablesInfo .= "<a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ");'><i class='fas fa-edit'></i></a>";
                     $nestedData[] = $deliverablesInfo;
                 } else {
-                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ")'><i class='fas fa-plus-circle'></i></a><a href='javascript:void(0);' onclick='deleteCompany(".$value['partner_id'].")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+                    $nestedData[] = "<a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ")'><i class='fas fa-plus-circle'></i></a>";
                 }
-
+                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteCompany(".$value['partner_id'].")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
                 $data[] = $nestedData;
                 $i++;
             }
