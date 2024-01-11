@@ -1729,7 +1729,7 @@ class Home extends MX_Controller
         // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
         // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
         $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
-        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js?v=1'));
         $this->admintemplate->show("order/home", "companies", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/companies', $data);
