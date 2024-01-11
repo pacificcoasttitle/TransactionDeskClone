@@ -301,6 +301,7 @@ $route['get-form-details'] = 'admin/order/home/getFormDetails';
 $route['delete-form'] = 'admin/order/home/deleteForm';
 $route['order/admin/companies'] = 'admin/order/home/companies';
 $route['order/admin/add-company'] = 'admin/order/home/addCompany';
+$route['order/admin/delete-company'] = 'admin/order/home/deleteCompany';
 $route['order/admin/incorrect-users'] = 'admin/order/home/incorrect_users';
 $route['order/admin/partner-api-log'] = 'admin/order/order/partnerApiLogs';
 $route['order/admin/update-order-details'] = 'admin/order/order/update_order_details';

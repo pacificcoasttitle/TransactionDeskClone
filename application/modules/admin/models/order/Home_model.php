@@ -807,6 +807,7 @@ class Home_model extends CI_Model
     public function get_companies_list($params)
     {
         $this->db->from('pct_order_partner_company_info');
+        $this->db->where('status', 1);
         $total_records = $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -825,7 +826,7 @@ class Home_model extends CI_Model
                     ->or_like('zip', $keyword)
                     ->group_end();
             }
-
+            $this->db->where('status', 1);
             $this->db->from('pct_order_partner_company_info');
             $filter_total_records = $this->db->count_all_results();
 
@@ -843,17 +844,20 @@ class Home_model extends CI_Model
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->where('status', 1);
             $query = $this->db->get('pct_order_partner_company_info');
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
         } else {
             $this->db->from('pct_order_partner_company_info');
+            $this->db->where('status', 1);
             $filter_total_records = $this->db->count_all_results();
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->where('status', 1);
             $query = $this->db->get('pct_order_partner_company_info');
 
             if ($query->num_rows() > 0) {
