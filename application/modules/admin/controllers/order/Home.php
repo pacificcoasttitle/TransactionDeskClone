@@ -6382,7 +6382,7 @@ class Home extends MX_Controller
                 if ($file_id) {
 
                     $export_data[] = array(
-                        'transaction_status' => ($value['file_number'] == 0 && !empty($value['lp_file_number'])) ? ucfirst($order['lp_report_status']) : ucfirst($order['resware_status']), //$value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
+                        'transaction_status' => ($value['file_number'] == 0 && !empty($value['lp_file_number'])) ? ucfirst($value['lp_report_status']) : ucfirst($value['resware_status']), //$value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
                         'client_name' => $value['client_name'],
                         'client_email' => $value['client_email'],
                         'client_phone' => $value['client_phone'],
