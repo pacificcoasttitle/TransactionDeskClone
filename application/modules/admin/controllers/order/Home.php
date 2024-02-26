@@ -6381,14 +6381,8 @@ class Home extends MX_Controller
                 $file_id = isset($value['file_id']) && !empty(!empty($value['file_id'])) ? $value['file_id'] : '';
                 if ($file_id) {
 
-                    if ($order['file_number'] == 0 && !empty($order['lp_file_number'])) {
-                        $nestedData[] = ucfirst($order['lp_report_status']);
-                    } else {
-                        $nestedData[] = ucfirst($order['resware_status']);
-                    }
-
                     $export_data[] = array(
-                        'transaction_status' => $value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
+                        'transaction_status' => ($value['file_number'] == 0 && !empty($value['lp_file_number'])) ? ucfirst($order['lp_report_status']) : ucfirst($order['resware_status']), //$value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
                         'client_name' => $value['client_name'],
                         'client_email' => $value['client_email'],
                         'client_phone' => $value['client_phone'],
