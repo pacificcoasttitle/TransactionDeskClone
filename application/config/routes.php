@@ -330,6 +330,7 @@ $route['order/admin/get-cpl-error-logs'] = 'admin/order/order/getCplErrorLogs';
 $route['order/admin/resware-logs'] = 'admin/order/order/reswareLogs';
 $route['order/admin/get-resware-logs'] = 'admin/order/order/getReswareLogs';
 
+$route['order/admin/export_sales_rep_reports'] = 'admin/order/home/exportSalesRepReports';
 $route['order/admin/update-transaction'] = 'admin/order/home/updateTransaction';
 $route['order/admin/rules-manager'] = 'admin/order/rulesManager/index';
 $route['order/admin/notifications'] = 'admin/order/home/notifications';
