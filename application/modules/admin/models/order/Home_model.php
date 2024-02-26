@@ -2,7 +2,7 @@
 class Home_model extends CI_Model
 {
 
-    function __construct()
+    public function __construct()
     {
         // Set table name
         $this->table = 'customer_basic_details';
@@ -56,10 +56,8 @@ class Home_model extends CI_Model
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
 
-
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-
 
         $customer_lists = array();
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
@@ -77,7 +75,6 @@ class Home_model extends CI_Model
             $this->db->where('is_escrow', $is_escrow);
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
-
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
@@ -121,7 +118,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -156,7 +153,7 @@ class Home_model extends CI_Model
                 }
 
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
 
@@ -168,7 +165,7 @@ class Home_model extends CI_Model
     {
         $query = $this->db->query("SELECT random_num
                         FROM (
-                          SELECT FLOOR(1000 + ( RAND( ) *8999 )) AS random_num 
+                          SELECT FLOOR(1000 + ( RAND( ) *8999 )) AS random_num
                           UNION
                           SELECT FLOOR(1000 + ( RAND( ) *8999 )) AS random_num
                         ) AS customer_basic_details_plus_1
@@ -181,7 +178,6 @@ class Home_model extends CI_Model
             return false;
         }
     }
-
 
     public function update($data, $condition = array(), $table = '')
     {
@@ -233,10 +229,10 @@ class Home_model extends CI_Model
         }
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
         SELECT email_address FROM customer_basic_details' . $innerCause . '
-        GROUP BY email_address HAVING COUNT(*) > 1 
+        GROUP BY email_address HAVING COUNT(*) > 1
         ) ' . $where . ' ORDER BY email_address ASC, is_password_updated DESC');
 
-        $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+        $result = ($query->num_rows() > 0) ? $query->result_array() : false;
         // print_r($this->db->last_query());die;
         return $result;
     }
@@ -314,7 +310,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $cpl_document_lists
+            'data' => $cpl_document_lists,
         );
     }
 
@@ -393,7 +389,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -407,7 +403,7 @@ class Home_model extends CI_Model
         $this->db->like('partner_name', $params['partner_name']);
         $query = $this->db->get();
         $result = $query->result_array();
-        return !empty($result) ? $result : FALSE;
+        return !empty($result) ? $result : false;
     }
 
     public function get_title_company_list($params)
@@ -421,7 +417,7 @@ class Home_model extends CI_Model
         $this->db->like('partner_name', 'title');
         $query = $this->db->get();
         $result = $query->result_array();
-        return !empty($result) ? $result : FALSE;
+        return !empty($result) ? $result : false;
     }
 
     public function get_grant_deed_document_list($params)
@@ -496,7 +492,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $grant_document_lists
+            'data' => $grant_document_lists,
         );
     }
 
@@ -572,7 +568,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lv_document_lists
+            'data' => $lv_document_lists,
         );
     }
 
@@ -648,7 +644,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -724,7 +720,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $tax_document_lists
+            'data' => $tax_document_lists,
         );
     }
 
@@ -800,7 +796,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $curative_document_lists
+            'data' => $curative_document_lists,
         );
     }
 
@@ -867,31 +863,29 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
     public function get_incorrect_customers($params)
     {
-        $query = $this->db->query('SELECT * 
+        $query = $this->db->query('SELECT *
                                 FROM
-                                  customer_basic_details 
-                                WHERE email_address IN 
-                                  (SELECT 
-                                    email_address 
+                                  customer_basic_details
+                                WHERE email_address IN
+                                  (SELECT
+                                    email_address
                                   FROM
-                                    customer_basic_details 
-                                  WHERE random_password != "" 
-                                    AND is_password_updated = 0 AND email_address != "") 
-                                GROUP BY email_address 
+                                    customer_basic_details
+                                  WHERE random_password != ""
+                                    AND is_password_updated = 0 AND email_address != "")
+                                GROUP BY email_address
                                 HAVING COUNT(email_address) = 1');
 
         $total_records = $query->num_rows();
 
-
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-
 
         $customer_lists = array();
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
@@ -903,22 +897,20 @@ class Home_model extends CI_Model
                 $where .= ' OR email_address LIKE "%' . $keyword . '%"';
             }
 
-
-            $query = $this->db->query('SELECT * 
+            $query = $this->db->query('SELECT *
                                 FROM
-                                  customer_basic_details 
-                                WHERE email_address IN 
-                                  (SELECT 
-                                    email_address 
+                                  customer_basic_details
+                                WHERE email_address IN
+                                  (SELECT
+                                    email_address
                                   FROM
-                                    customer_basic_details 
+                                    customer_basic_details
                                   WHERE random_password != ""
-                                    AND is_password_updated = 0 AND email_address != "")' . $where . ' 
-                                GROUP BY email_address 
+                                    AND is_password_updated = 0 AND email_address != "")' . $where . '
+                                GROUP BY email_address
                                 HAVING COUNT(email_address) = 1');
 
             $filter_total_records = $query->num_rows();
-
 
             if (isset($keyword) && !empty($keyword)) {
                 if (isset($keyword) && !empty($keyword)) {
@@ -935,34 +927,34 @@ class Home_model extends CI_Model
                 $offset = ' OFFSET ' . $offset;
             }
 
-            $query = $this->db->query('SELECT * 
+            $query = $this->db->query('SELECT *
                                 FROM
-                                  customer_basic_details 
-                                WHERE email_address IN 
-                                  (SELECT 
-                                    email_address 
+                                  customer_basic_details
+                                WHERE email_address IN
+                                  (SELECT
+                                    email_address
                                   FROM
-                                    customer_basic_details 
+                                    customer_basic_details
                                   WHERE random_password != ""
-                                    AND is_password_updated = 0 AND email_address != "")' . $where . ' 
-                                GROUP BY email_address 
+                                    AND is_password_updated = 0 AND email_address != "")' . $where . '
+                                GROUP BY email_address
                                 HAVING COUNT(email_address) = 1' . $limit . $offset);
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
         } else {
 
-            $query = $this->db->query('SELECT * 
+            $query = $this->db->query('SELECT *
                                 FROM
-                                  customer_basic_details 
-                                WHERE email_address IN 
-                                  (SELECT 
-                                    email_address 
+                                  customer_basic_details
+                                WHERE email_address IN
+                                  (SELECT
+                                    email_address
                                   FROM
-                                    customer_basic_details 
+                                    customer_basic_details
                                   WHERE random_password != ""
-                                    AND is_password_updated = 0 AND email_address != "") 
-                                GROUP BY email_address 
+                                    AND is_password_updated = 0 AND email_address != "")
+                                GROUP BY email_address
                                 HAVING COUNT(email_address) = 1');
 
             $filter_total_records = $query->num_rows();
@@ -973,17 +965,17 @@ class Home_model extends CI_Model
                 $offset = ' OFFSET ' . $offset;
             }
 
-            $query = $this->db->query('SELECT * 
+            $query = $this->db->query('SELECT *
                                 FROM
-                                  customer_basic_details 
-                                WHERE email_address IN 
-                                  (SELECT 
-                                    email_address 
+                                  customer_basic_details
+                                WHERE email_address IN
+                                  (SELECT
+                                    email_address
                                   FROM
-                                    customer_basic_details 
-                                  WHERE random_password != "" 
-                                    AND is_password_updated = 0 AND email_address != "") 
-                                GROUP BY email_address 
+                                    customer_basic_details
+                                  WHERE random_password != ""
+                                    AND is_password_updated = 0 AND email_address != "")
+                                GROUP BY email_address
                                 HAVING COUNT(email_address) = 1' . $limit . $offset);
 
             if ($query->num_rows() > 0) {
@@ -994,7 +986,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -1040,7 +1032,7 @@ class Home_model extends CI_Model
                     $this->db->limit($params['limit']);
                 }
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
         return $result;
@@ -1069,7 +1061,6 @@ class Home_model extends CI_Model
                     ->or_like('zip_code', $keyword)
                     ->group_end();
             }
-
 
             $this->db->where('is_added_lender_by_cpl_proposed', 1);
             $this->db->from('customer_basic_details');
@@ -1115,7 +1106,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -1277,7 +1268,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -1289,17 +1280,15 @@ class Home_model extends CI_Model
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
 
-
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-
 
         $customer_lists = array();
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
                 // $this->db->like('first_name', $keyword);
             }
@@ -1309,9 +1298,8 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-
             if (isset($keyword) && !empty($keyword)) {
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
             }
 
@@ -1349,7 +1337,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -1410,7 +1398,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -1471,7 +1459,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lists
+            'data' => $lists,
         );
     }
 
@@ -1535,7 +1523,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $notification_lists
+            'data' => $notification_lists,
         );
     }
 
@@ -1574,7 +1562,6 @@ class Home_model extends CI_Model
             $this->db->like('partner_type_id', '10010');
             $this->db->where('status', 1);
 
-
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
@@ -1603,7 +1590,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $escrow_officer_lists
+            'data' => $escrow_officer_lists,
         );
     }
 
@@ -1634,7 +1621,7 @@ class Home_model extends CI_Model
                 }
 
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
 
@@ -1657,7 +1644,7 @@ class Home_model extends CI_Model
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start();
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->group_end();
             }
@@ -1668,7 +1655,7 @@ class Home_model extends CI_Model
             $filter_total_records = $this->db->count_all_results();
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start();
-                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", NULL, FALSE);
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->group_end();
             }
@@ -1703,7 +1690,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
     }
 
@@ -1840,7 +1827,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $grant_document_lists
+            'data' => $grant_document_lists,
         );
     }
 
@@ -1916,7 +1903,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $grant_document_lists
+            'data' => $grant_document_lists,
         );
     }
 
@@ -1993,7 +1980,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $admin_logs_list
+            'data' => $admin_logs_list,
         );
     }
 
@@ -2020,7 +2007,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
-                    // ->or_like('doc_sub_type_description',$keyword)
+                // ->or_like('doc_sub_type_description',$keyword)
                     ->or_like('doc_type', $keyword)
                     ->or_like('sub_type_list', $keyword)
                     ->group_end();
@@ -2034,7 +2021,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
-                    // ->or_like('doc_sub_type_description',$keyword)
+                // ->or_like('doc_sub_type_description',$keyword)
                     ->or_like('doc_type', $keyword)
                     ->or_like('sub_type_list', $keyword)
                     ->group_end();
@@ -2075,7 +2062,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lp_document_lists
+            'data' => $lp_document_lists,
         );
     }
 
@@ -2130,7 +2117,7 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lp_alert
+            'data' => $lp_alert,
         );
     }
 
@@ -2419,7 +2406,7 @@ class Home_model extends CI_Model
                     $this->db->limit($params['limit']);
                 }
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
         // Return fetched data
@@ -2455,7 +2442,7 @@ class Home_model extends CI_Model
                     $this->db->limit($params['limit']);
                 }
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
         // Return fetched data
@@ -2464,63 +2451,51 @@ class Home_model extends CI_Model
 
     public function get_customers_search($params = array(), $is_master_search = 0)
     {
-    	$table = $this->table;
+        $table = $this->table;
 
         $this->db->select('*');
         $this->db->from($table);
-        
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }
-            else
-            {
+            } else {
                 $this->db->order_by('id', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
-                    $this->db->limit($params['limit'],$params['start']);
-                }
-                elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params))
-                {
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
-                }
-                elseif(array_key_exists("name", $params) && array_key_exists("is_escrow", $params))
-                {
+                } elseif (array_key_exists("name", $params) && array_key_exists("is_escrow", $params)) {
                     $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     $this->db->where('is_escrow', $params['is_escrow']);
                     $this->db->like('first_name', $params['name']);
                     $this->db->where('is_password_updated', 1);
-                }elseif(array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params))
-                {
-                    if(isset($params['is_from_order_form']) && !empty($params['is_from_order_form']))
-                    {
+                } elseif (array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params)) {
+                    if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
-                    }
-                    else
-                    {
+                    } else {
                         $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     }
-                    
+
                     $this->db->where('is_escrow', $params['is_escrow']);
                     $this->db->group_start()
                         ->like('company_name', $params['company_name'])
                         ->or_like("email_address", $params['company_name'])
                         ->group_end();
-                        $this->db->where('is_password_updated', 1);
-                }elseif(array_key_exists("company_name", $params))
-                {
-                	$this->db->select("CONCAT(company_name, ' - ',email_address) AS value");
-                    if ($is_master_search == 1 ) {
+                    $this->db->where('is_password_updated', 1);
+                } elseif (array_key_exists("company_name", $params)) {
+                    $this->db->select("CONCAT(company_name, ' - ',email_address) AS value");
+                    if ($is_master_search == 1) {
                         $this->db->group_start()
                             ->like('company_name', $params['company_name'])
                             ->or_like("email_address", $params['company_name'])
@@ -2529,17 +2504,16 @@ class Home_model extends CI_Model
                         $this->db->like('company_name', $params['company_name']);
                     }
                     $this->db->where('is_password_updated', 1);
-                    
+
                 }
-                
+
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
         // Return fetched data
         return $result;
     }
-
 
     public function get_daily_email_receiver($params)
     {
@@ -2562,7 +2536,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->like("email", $keyword);
             }
-            
+
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
@@ -2574,7 +2548,7 @@ class Home_model extends CI_Model
 
             $this->db->from('pct_daily_email_receiver_list');
             $filter_total_records = $this->db->count_all_results();
-            
+
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
@@ -2587,7 +2561,60 @@ class Home_model extends CI_Model
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists
+            'data' => $customer_lists,
         );
+    }
+
+    public function get_sales_rep_report()
+    {
+        $this->db->select('
+            order_details.file_number,
+            order_details.lp_file_number,
+            order_details.customer_id,
+            order_details.file_id,
+            order_details.created_at as opened_date,
+            order_details.sent_to_accounting_date,
+            order_details.loan_amount as order_loan_amount,
+            order_details.sales_amount as order_sales_amount,
+            order_details.prod_type,
+            order_details.escrow_amount,
+            order_details.resware_status,
+            order_details.premium,
+            order_details.lp_report_status,
+            property_details.primary_owner,
+            property_details.secondary_owner,
+            property_details.full_address,
+            property_details.unit_number,
+            property_details.property_type,
+            property_details.city as property_city,
+            property_details.state as property_state,
+            property_details.zip as property_zip,
+            transaction_details.sales_representative,
+            CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name,
+            transaction_details.notes,
+            transaction_details.sales_amount as transaction_sales_amount,
+            transaction_details.loan_amount as transaction_loan_amount,
+            transaction_details.loan_number,
+            transaction_details.purchase_type,
+            pct_order_product_types.transaction_type,
+            pct_order_product_types.product_type,
+            CONCAT(cbd.first_name, " ", cbd.last_name) as client_name,
+            cbd.email_address as client_email,
+            cbd.telephone_no as client_phone,
+            salerep.email_address as sales_rep_email
+            ')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+        $this->db->where('MONTH(order_details.created_at)', date('m'));
+        $this->db->where('YEAR(order_details.created_at)', date('Y'));
+        // $this->db->where('DATE(order_details.created_at)', date('2023-06-10'));
+
+        $query = $this->db->get();
+
+        return $query->result_array();
     }
 }
