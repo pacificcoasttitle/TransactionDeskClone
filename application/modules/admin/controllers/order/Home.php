@@ -8,10 +8,10 @@ class Home extends MX_Controller
      * Index Page for this controller.
      *
      * Maps to the following URL
-     * 		http://example.com/index.php/welcome
-     *	- or -
-     * 		http://example.com/index.php/welcome/index
-     *	- or -
+     *         http://example.com/index.php/welcome
+     *    - or -
+     *         http://example.com/index.php/welcome/index
+     *    - or -
      * Since this controller is set as the default controller in
      * config/routes.php, it's displayed at http://example.com/
      *
@@ -74,7 +74,7 @@ class Home extends MX_Controller
         // $lvCount = isset($titlePointData['lv_total_records']) && !empty($titlePointData['lv_total_records']) ? $titlePointData['lv_total_records'] : 0;
         // $totalFailCount += $lvCount;
 
-        // $grantDeedCount = isset($titlePointData['grant_deed_total_records']) && !empty($titlePointData['grant_deed_total_records']) ? $titlePointData['grant_deed_total_records'] : 0;    
+        // $grantDeedCount = isset($titlePointData['grant_deed_total_records']) && !empty($titlePointData['grant_deed_total_records']) ? $titlePointData['grant_deed_total_records'] : 0;
         // $totalFailCount += $grantDeedCount;
 
         // $taxCount = isset($titlePointData['tax_total_records']) && !empty($titlePointData['tax_total_records']) ? $titlePointData['tax_total_records'] : 0;
@@ -169,7 +169,6 @@ class Home extends MX_Controller
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
 
-
                 // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
                 $nestedData[] = $value['street_address'];
@@ -187,8 +186,6 @@ class Home extends MX_Controller
                     $checked = '';
                 }
                 $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
-
-
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
@@ -262,9 +259,9 @@ class Home extends MX_Controller
                                     'where' => array(
                                         'email_address' => $email_address,
                                         'resware_user_id' => $row['Partner Employee ID'],
-                                        'is_escrow' => 1
+                                        'is_escrow' => 1,
                                     ),
-                                    'returnType' => 'count'
+                                    'returnType' => 'count',
                                 );
                                 $prevCount = $this->home_model->get_rows($con);
 
@@ -379,7 +376,6 @@ class Home extends MX_Controller
             if ($this->form_validation->run($this) == true) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
 
-
                 // If file uploaded
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
 
@@ -424,9 +420,9 @@ class Home extends MX_Controller
                                     'where' => array(
                                         'email_address' => $email_address,
                                         'resware_user_id' => $row['Partner Employee ID'],
-                                        'is_escrow' => 0
+                                        'is_escrow' => 0,
                                     ),
-                                    'returnType' => 'count'
+                                    'returnType' => 'count',
                                 );
                                 $prevCount = $this->home_model->get_rows($con);
 
@@ -727,7 +723,7 @@ class Home extends MX_Controller
                         'city' => $this->input->post('city'),
                         'zipcode' => $this->input->post('zipcode'),
                         'is_listing_agent' => 0,
-                        'status' => 1
+                        'status' => 1,
                     );
 
                     $condition = array(
@@ -735,14 +731,14 @@ class Home extends MX_Controller
                             'partner_id' => $this->input->post('partner_id'),
                             'partner_employee_id' => $this->input->post('resware_client_id'),
                         ),
-                        'returnType' => 'count'
+                        'returnType' => 'count',
                     );
                     $prevCount = $this->agent_model->get_rows($condition);
 
                     if ($prevCount > 0) {
                         $updateCondition = array(
                             'partner_id' => $this->input->post('partner_id'),
-                            'partner_employee_id' => $this->input->post('resware_client_id')
+                            'partner_employee_id' => $this->input->post('resware_client_id'),
                         );
                         $update = $this->agent_model->update($agentData, $updateCondition);
                     } else {
@@ -808,13 +804,13 @@ class Home extends MX_Controller
                                     'partner_id' => $this->input->post('partner_id'),
                                     'resware_user_id' => $this->input->post('resware_client_id'),
                                 ),
-                                'returnType' => 'count'
+                                'returnType' => 'count',
                             );
                             $prevCount = $this->home_model->get_rows($condition);
                             if ($prevCount > 0) {
                                 $updateCondition = array(
                                     'partner_id' => $this->input->post('partner_id'),
-                                    'resware_user_id' => $this->input->post('resware_client_id')
+                                    'resware_user_id' => $this->input->post('resware_client_id'),
                                 );
                                 $update = $this->home_model->update($customerData, $updateCondition);
                             } else {
@@ -857,7 +853,7 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
-    function get_company_list()
+    public function get_company_list()
     {
         $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
         $condition = array(
@@ -882,7 +878,7 @@ class Home extends MX_Controller
         echo json_encode($companyInfo);
     }
 
-    function get_title_company_list()
+    public function get_title_company_list()
     {
         $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
         $condition = array(
@@ -932,108 +928,87 @@ class Home extends MX_Controller
                     'RoleID' => 5033,
                     'Name' => 'Web Services: Access All Files for ResWare-to-ResWare Services',
                 ),
-                1 =>
-                array(
+                1 => array(
                     'RoleID' => 6013,
                     'Name' => 'Web Services: Add Actions',
                 ),
-                2 =>
-                array(
+                2 => array(
                     'RoleID' => 6005,
                     'Name' => 'Web Services: Add Documents',
                 ),
-                3 =>
-                array(
+                3 => array(
                     'RoleID' => 6002,
                     'Name' => 'Web Services: Add Notes',
                 ),
-                4 =>
-                array(
+                4 => array(
                     'RoleID' => 6009,
                     'Name' => 'Web Services: Add Partners',
                 ),
-                5 =>
-                array(
+                5 => array(
                     'RoleID' => 6015,
                     'Name' => 'Web Services: Add WebURL Documents',
                 ),
-                6 =>
-                array(
+                6 => array(
                     'RoleID' => 5027,
                     'Name' => 'Web Services: Bypass Address Validation',
                 ),
-                7 =>
-                array(
+                7 => array(
                     'RoleID' => 6003,
                     'Name' => 'Web Services: Cancel Files',
                 ),
-                8 =>
-                array(
+                8 => array(
                     'RoleID' => 5023,
                     'Name' => 'Web Services: Estimate Costs as 2010 HUD',
                 ),
-                9 =>
-                array(
+                9 => array(
                     'RoleID' => 6016,
                     'Name' => 'Web Services: Expense Reports',
                 ),
-                10 =>
-                array(
+                10 => array(
                     'RoleID' => 6012,
                     'Name' => 'Web Services: Get Actions',
                 ),
-                11 =>
-                array(
+                11 => array(
                     'RoleID' => 6007,
                     'Name' => 'Web Services: Get Custom Fields',
                 ),
-                12 =>
-                array(
+                12 => array(
                     'RoleID' => 6006,
                     'Name' => 'Web Services: Get Documents',
                 ),
-                13 =>
-                array(
+                13 => array(
                     'RoleID' => 6001,
                     'Name' => 'Web Services: Get Notes',
                 ),
-                14 =>
-                array(
+                14 => array(
                     'RoleID' => 6010,
                     'Name' => 'Web Services: Get Partners',
                 ),
-                15 =>
-                array(
+                15 => array(
                     'RoleID' => 69,
                     'Name' => 'Web Services: Order Placement',
                 ),
-                16 =>
-                array(
+                16 => array(
                     'RoleID' => 6004,
                     'Name' => 'Web Services: Override Property Address Validation and Reformatting',
                 ),
-                17 =>
-                array(
+                17 => array(
                     'RoleID' => 6011,
                     'Name' => 'Web Services: Remove Partners',
                 ),
-                18 =>
-                array(
+                18 => array(
                     'RoleID' => 6014,
                     'Name' => 'Web Services: Search Files',
                 ),
-                19 =>
-                array(
+                19 => array(
                     'RoleID' => 6019,
                     'Name' => 'Web Services: Update Partner',
                 ),
-                20 =>
-                array(
+                20 => array(
                     'RoleID' => 6008,
                     'Name' => 'Web Services: Write Custom Fields',
                 ),
-                21 =>
-                array(
+                21 => array(
                     'RoleID' => 51,
                     'Name' => 'Website',
                 ),
@@ -1056,16 +1031,16 @@ class Home extends MX_Controller
         $this->apiLogs->syncLogs($v['id'], 'resware', $apiType, env('RESWARE_ORDER_API') . $endPoint, $newUserData, $result, 0, $logid);
 
         /* Start add resware api logs */
-		$reswareLogData = array(
-			'request_type' => 'add_new_user_to_resware',
-			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-			'request' => $newUserData,
-			'response' => $result,
-			'status' => '',
-			'created_at' => date("Y-m-d H:i:s")
-		);
-		$this->db->insert('pct_resware_log', $reswareLogData);
-		/* End add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'add_new_user_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $newUserData,
+            'response' => $result,
+            'status' => '',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
 
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, true);
@@ -1073,20 +1048,20 @@ class Home extends MX_Controller
                 $res = array(
                     'resware_user_id' => $response['Employee']['UserID'],
                     'msg' => !empty($customerData['resware_user_id']) ? 'User created successfully on Resware Side' : 'User updated successfully on Resware Side',
-                    'success' => true
+                    'success' => true,
                 );
             } else {
                 $res = array(
                     'resware_user_id' => 0,
                     'msg' => $response['ResponseStatus']['Message'],
-                    'success' => false
+                    'success' => false,
                 );
             }
         } else {
             $res = array(
                 'resware_user_id' => 0,
                 'msg' => 'Something wrong! Please try again',
-                'success' => false
+                'success' => false,
             );
         }
         return $res;
@@ -1584,7 +1559,7 @@ class Home extends MX_Controller
     {
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
             if (!is_dir('uploads/file_document')) {
-                mkdir('./uploads/file_document', 0777, TRUE);
+                mkdir('./uploads/file_document', 0777, true);
             }
             $error = '';
             if (!empty($_FILES['file']['name'])) {
@@ -1607,7 +1582,7 @@ class Home extends MX_Controller
                         'name' => $this->input->post('name'),
                         'file_path' => $document_name,
                         'description' => $this->input->post('description'),
-                        'created_at' => date('Y-m-d H:i:s')
+                        'created_at' => date('Y-m-d H:i:s'),
                     );
 
                     $this->load->library('order/order');
@@ -1624,7 +1599,7 @@ class Home extends MX_Controller
                                     $data = array(
                                         'form_id' => $inserted,
                                         'user_id' => $titleOfficerInfo['id'],
-                                        'created_at' => date("Y-m-d H:i:s")
+                                        'created_at' => date("Y-m-d H:i:s"),
                                     );
                                     $this->db->insert('pct_order_title_officers_forms', $data);
                                 }
@@ -1632,7 +1607,7 @@ class Home extends MX_Controller
                                 $data = array(
                                     'form_id' => $inserted,
                                     'user_id' => $titleOfficer,
-                                    'created_at' => date("Y-m-d H:i:s")
+                                    'created_at' => date("Y-m-d H:i:s"),
                                 );
                                 $this->db->insert('pct_order_title_officers_forms', $data);
                             }
@@ -1728,7 +1703,7 @@ class Home extends MX_Controller
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
         // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
         // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
-        $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js'));
+        $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
         $this->admintemplate->addJS(base_url('assets/backend/js/companies.js?v=1'));
         $this->admintemplate->show("order/home", "companies", $data);
         // $this->load->view('order/layout/header', $data);
@@ -1800,7 +1775,7 @@ class Home extends MX_Controller
                 } else {
                     $nestedData[] = "<a href='javascript:void(0)' onclick='addOrUpdateDeliverables(" . $value['partner_id'] . ")'><i class='fas fa-plus-circle'></i></a>";
                 }
-                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteCompany(".$value['partner_id'].")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteCompany(" . $value['partner_id'] . ")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
                 $data[] = $nestedData;
                 $i++;
             }
@@ -1844,12 +1819,12 @@ class Home extends MX_Controller
                             'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
                             'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                             'state' => trim($response['AdminPartner']['MailingAddress']['State']),
-                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                            'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
                         );
                         $companyExist = $this->order->checkCompanyExist($partner_id);
                         if ($companyExist) {
                             $condition = array(
-                                'partner_id' => $response['AdminPartner']['PartnerCompanyID']
+                                'partner_id' => $response['AdminPartner']['PartnerCompanyID'],
                             );
                             unset($companyData['partner_id']);
                             $update = $this->home_model->update($companyData, $condition, 'pct_order_partner_company_info');
@@ -1883,7 +1858,8 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
-    public function deleteCompany() {
+    public function deleteCompany()
+    {
         $partner_id = $this->input->post('partner_id');
         if ($partner_id) {
             $this->db->select('*');
@@ -1891,17 +1867,17 @@ class Home extends MX_Controller
             $this->db->where('partner_id', $partner_id);
             $query = $this->db->get();
             $result = $query->row_array();
-            
+
             if (!empty($result)) {
                 $customerData = array(
-                    'status' => 0
+                    'status' => 0,
                 );
                 $condition = array('partner_id' => trim($partner_id));
                 $update = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
                 if ($update) {
-                    $activity = 'Company: '. $result['partner_name'] .' deleted successfully';
+                    $activity = 'Company: ' . $result['partner_name'] . ' deleted successfully';
                     $this->order->logAdminActivity($activity);
-                    echo json_encode(['status' => 'success', 'message' => 'Company: '. $result['partner_name'] .' deleted successfully']);exit;
+                    echo json_encode(['status' => 'success', 'message' => 'Company: ' . $result['partner_name'] . ' deleted successfully']);exit;
                 } else {
                     echo json_encode(['status' => 'failed', 'message' => 'Something went wrong, Please contact administrative']);exit;
                 }
@@ -1922,7 +1898,6 @@ class Home extends MX_Controller
             $keyword = $this->input->post('keyword');
             $params['keyword'] = $keyword;
         }
-
 
         $users = $this->home_model->get_user_with_duplicate_email($params);
 
@@ -1973,20 +1948,20 @@ class Home extends MX_Controller
                         $logid = $this->apiLogs->syncLogs($user['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, array(), 0, 0);
                         $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
                         $this->apiLogs->syncLogs($user['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, $result, 0, $logid);
-                        
+
                         if (isset($result) && !empty($result)) {
                             $response = json_decode($result, true);
 
                             if (isset($response['Employee']) && !empty($response['Employee'])) {
                                 $condition = array(
-                                    'id' => $user['id']
+                                    'id' => $user['id'],
                                 );
                                 $customerData = array(
                                     'is_password_updated' => 0,
                                     'is_new_user' => 0,
                                     'random_password' => '',
                                     'password' => 'Pacific1',
-                                    'is_primary' => 0
+                                    'is_primary' => 0,
                                 );
                                 $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
                             } else {
@@ -2006,7 +1981,7 @@ class Home extends MX_Controller
             }
 
             $params = array(
-                'id' => $id
+                'id' => $id,
             );
             $userInfo = $this->home_model->get_rows($params);
             $userUpdateData = array();
@@ -2021,108 +1996,87 @@ class Home extends MX_Controller
                             'RoleID' => 5033,
                             'Name' => 'Web Services: Access All Files for ResWare-to-ResWare Services',
                         ),
-                        1 =>
-                        array(
+                        1 => array(
                             'RoleID' => 6013,
                             'Name' => 'Web Services: Add Actions',
                         ),
-                        2 =>
-                        array(
+                        2 => array(
                             'RoleID' => 6005,
                             'Name' => 'Web Services: Add Documents',
                         ),
-                        3 =>
-                        array(
+                        3 => array(
                             'RoleID' => 6002,
                             'Name' => 'Web Services: Add Notes',
                         ),
-                        4 =>
-                        array(
+                        4 => array(
                             'RoleID' => 6009,
                             'Name' => 'Web Services: Add Partners',
                         ),
-                        5 =>
-                        array(
+                        5 => array(
                             'RoleID' => 6015,
                             'Name' => 'Web Services: Add WebURL Documents',
                         ),
-                        6 =>
-                        array(
+                        6 => array(
                             'RoleID' => 5027,
                             'Name' => 'Web Services: Bypass Address Validation',
                         ),
-                        7 =>
-                        array(
+                        7 => array(
                             'RoleID' => 6003,
                             'Name' => 'Web Services: Cancel Files',
                         ),
-                        8 =>
-                        array(
+                        8 => array(
                             'RoleID' => 5023,
                             'Name' => 'Web Services: Estimate Costs as 2010 HUD',
                         ),
-                        9 =>
-                        array(
+                        9 => array(
                             'RoleID' => 6016,
                             'Name' => 'Web Services: Expense Reports',
                         ),
-                        10 =>
-                        array(
+                        10 => array(
                             'RoleID' => 6012,
                             'Name' => 'Web Services: Get Actions',
                         ),
-                        11 =>
-                        array(
+                        11 => array(
                             'RoleID' => 6007,
                             'Name' => 'Web Services: Get Custom Fields',
                         ),
-                        12 =>
-                        array(
+                        12 => array(
                             'RoleID' => 6006,
                             'Name' => 'Web Services: Get Documents',
                         ),
-                        13 =>
-                        array(
+                        13 => array(
                             'RoleID' => 6001,
                             'Name' => 'Web Services: Get Notes',
                         ),
-                        14 =>
-                        array(
+                        14 => array(
                             'RoleID' => 6010,
                             'Name' => 'Web Services: Get Partners',
                         ),
-                        15 =>
-                        array(
+                        15 => array(
                             'RoleID' => 69,
                             'Name' => 'Web Services: Order Placement',
                         ),
-                        16 =>
-                        array(
+                        16 => array(
                             'RoleID' => 6004,
                             'Name' => 'Web Services: Override Property Address Validation and Reformatting',
                         ),
-                        17 =>
-                        array(
+                        17 => array(
                             'RoleID' => 6011,
                             'Name' => 'Web Services: Remove Partners',
                         ),
-                        18 =>
-                        array(
+                        18 => array(
                             'RoleID' => 6014,
                             'Name' => 'Web Services: Search Files',
                         ),
-                        19 =>
-                        array(
+                        19 => array(
                             'RoleID' => 6019,
                             'Name' => 'Web Services: Update Partner',
                         ),
-                        20 =>
-                        array(
+                        20 => array(
                             'RoleID' => 6008,
                             'Name' => 'Web Services: Write Custom Fields',
                         ),
-                        21 =>
-                        array(
+                        21 => array(
                             'RoleID' => 51,
                             'Name' => 'Website',
                         ),
@@ -2140,7 +2094,7 @@ class Home extends MX_Controller
                 $logid = $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, array(), 0, 0);
                 $result = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
                 $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, $result, 0, $logid);
-                
+
                 /* Start add resware api logs */
                 $reswareLogData = array(
                     'request_type' => 'update_password_to_resware_for_email_' . $userInfo['email_address'],
@@ -2148,7 +2102,7 @@ class Home extends MX_Controller
                     'request' => $userUpdateData,
                     'response' => $result,
                     'status' => 'success',
-                    'created_at' => date("Y-m-d H:i:s")
+                    'created_at' => date("Y-m-d H:i:s"),
                 );
                 $this->db->insert('pct_resware_log', $reswareLogData);
                 /* End add resware api logs */
@@ -2169,13 +2123,13 @@ class Home extends MX_Controller
                         $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
                         $responsePwd = json_decode($updatePwdResult, true);
                         $condition = array(
-                            'id' => $userInfo['id']
+                            'id' => $userInfo['id'],
                         );
                         $customerData = array(
                             'is_password_updated' => 0,
                             'random_password' => $random_password,
                             'password' => 'Pacific1',
-                            'is_primary' => 1
+                            'is_primary' => 1,
                         );
 
                         if (!empty($responsePwd['message'])) {
@@ -2197,13 +2151,13 @@ class Home extends MX_Controller
                     } else {
                         $msg = $response['ResponseStatus']['Errors'][0]['Message'];
                         $condition = array(
-                            'id' => $userInfo['id']
+                            'id' => $userInfo['id'],
                         );
                         $customerData = array(
                             'is_password_updated' => 0,
                             'password' => 'Pacific1',
                             'is_primary' => 1,
-                            'resware_error_msg' => $msg
+                            'resware_error_msg' => $msg,
                         );
                         $this->home_model->update($customerData, $condition, 'customer_basic_details');
                         $response = array('status' => 'error', 'message' => $msg);
@@ -2273,7 +2227,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['random_password'];
 
                 $type = isset($value['is_escrow']) && !empty($value['is_escrow']) ? 'Escrow' : 'Lender';
-                // $nestedData[] = $type;    
+                // $nestedData[] = $type;
                 $nestedData[] = $value['resware_error_msg'];
 
                 $action = "<a href='javascript:void(0);' onclick='resetPassword(" . $value['id'] . ")' class='btn btn-secondary'  title='Reset Password'>Reset</a>";
@@ -2294,7 +2248,7 @@ class Home extends MX_Controller
         $this->load->model('order/apiLogs');
         $id = $this->input->post('id');
         $params = array(
-            'id' => $id
+            'id' => $id,
         );
         $userInfo = $this->home_model->get_rows($params);
         $reswareUpdatePwdData = array(
@@ -2307,7 +2261,7 @@ class Home extends MX_Controller
         $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
         $responsePwd = json_decode($updatePwdResult, true);
         $condition = array(
-            'id' => $userInfo['id']
+            'id' => $userInfo['id'],
         );
         $customerData = array(
             'password' => 'Pacific1',
@@ -2335,8 +2289,8 @@ class Home extends MX_Controller
     {
         $body_params = http_build_query($postData);
         $ch = curl_init(env('RESWARE_UPDATE_PWD_API'));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -2379,7 +2333,7 @@ class Home extends MX_Controller
                                     'where' => array(
                                         'partner_id' => trim($row['Partner Company ID']),
                                     ),
-                                    'returnType' => 'count'
+                                    'returnType' => 'count',
                                 );
                                 $prevCount = $this->home_model->get_company_rows($con);
 
@@ -2424,7 +2378,7 @@ class Home extends MX_Controller
                                                     'address1' => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                                     'city' => trim($response['AdminPartner']['MailingAddress']['City']),
                                                     'state' => trim($response['AdminPartner']['MailingAddress']['State']),
-                                                    'zip' => trim($response['AdminPartner']['MailingAddress']['Zip'])
+                                                    'zip' => trim($response['AdminPartner']['MailingAddress']['Zip']),
                                                 );
 
                                                 if (strpos(strtolower(trim($row['Underwriter'])), 'commonwealth') !== false) {
@@ -2664,7 +2618,6 @@ class Home extends MX_Controller
         redirect(base_url() . 'order/admin/cpl-proposed-users');
     }
 
-
     public function sendPassword()
     {
         $data = array();
@@ -2861,7 +2814,6 @@ class Home extends MX_Controller
 
                 $nestedData[] = $value['company_name'];
 
-
                 $action = "<a href='javascript:void(0);' onclick='importOrders(" . $value['id'] . ")' class='btn btn-secondary'  title='Import'>Import</a>";
                 $nestedData[] = $action;
 
@@ -2941,13 +2893,13 @@ class Home extends MX_Controller
         $data = array();
         $notificationId = $this->input->post('notificationId');
         if ($notificationId == 5) {
-            $results = $this->load->view('emails/borrower', $data, TRUE);
+            $results = $this->load->view('emails/borrower', $data, true);
         } else if ($notificationId == 4) {
-            $results = $this->load->view('emails/order', $data, TRUE);
+            $results = $this->load->view('emails/order', $data, true);
         } else if ($notificationId == 7) {
-            $results = $this->load->view('emails/prelim', $data, TRUE);
+            $results = $this->load->view('emails/prelim', $data, true);
         } else if ($notificationId == 6) {
-            $results = $this->load->view('emails/search_package', $data, TRUE);
+            $results = $this->load->view('emails/search_package', $data, true);
         } else {
             $results = "<div style='margin:50px;'><h3>User Details:</h3><p>Name: </p><p>Telephone: </p><p>Email Address: </p><p>Company Name: </p><p>Street Address: </p><p>City: </p><p>Zipcode: </p><p>Property Address: </p></div>";
         }
@@ -2978,12 +2930,12 @@ class Home extends MX_Controller
         $AdditionalEmail = $this->input->post('AdditionalEmail');
         $partner_id = $this->input->post('partner_id');
         $condition = array(
-            'partner_id' => $partner_id
+            'partner_id' => $partner_id,
         );
         $this->home_model->update(array('deliverables' => implode(',', $AdditionalEmail)), $condition, 'pct_order_partner_company_info');
         $success = 'Deliverables added successfully.';
         $data = array(
-            "success" => $success
+            "success" => $success,
         );
         $this->session->set_userdata($data);
         redirect(base_url() . 'order/admin/companies');
@@ -3080,7 +3032,7 @@ class Home extends MX_Controller
                     'city' => $_POST['city'],
                     'state' => $_POST['state'],
                     'zip' => $_POST['zip'],
-                    'status' => 1
+                    'status' => 1,
                 );
 
                 $insert = $this->home_model->insert($escrowData, 'pct_order_partner_company_info');
@@ -3171,7 +3123,7 @@ class Home extends MX_Controller
                         'city' => $_POST['city'],
                         'state' => $_POST['state'],
                         'zip' => $_POST['zip'],
-                        'status' => 1
+                        'status' => 1,
                     );
 
                     $condition = array('id' => $id);
@@ -3226,7 +3178,7 @@ class Home extends MX_Controller
         $data['allow_duplication'] = $avoidFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $property_id
+            'id' => $property_id,
         );
         $this->db->update('property_details', $data, $condition);
         /** Save user Activity */
@@ -3247,7 +3199,7 @@ class Home extends MX_Controller
         $data['is_mortgage_user'] = $mortgageUserFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $user_id
+            'id' => $user_id,
         );
         /** Save user Activity */
         $user = $this->home_model->get_user($condition);
@@ -3325,7 +3277,7 @@ class Home extends MX_Controller
         $data['is_primary_mortgage_user'] = $primaryMortgageUserFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $user_id
+            'id' => $user_id,
         );
         $this->db->update('customer_basic_details', $data, $condition);
 
@@ -3379,7 +3331,7 @@ class Home extends MX_Controller
         $id = $this->input->post('id');
         $userdata = $this->session->userdata('admin');
         $params = array(
-            'id' => $id
+            'id' => $id,
         );
         $userInfo = $this->home_model->get_rows($params);
         $response = $this->addNewUserToResware($userInfo);
@@ -3408,7 +3360,7 @@ class Home extends MX_Controller
 
             $updateCondition = array(
                 'partner_id' => $userInfo['partner_id'],
-                'resware_user_id' => $userInfo['resware_user_id']
+                'resware_user_id' => $userInfo['resware_user_id'],
             );
             $this->home_model->update($customerData, $updateCondition);
         } else {
@@ -3425,7 +3377,7 @@ class Home extends MX_Controller
         $data['is_password_required'] = $is_password_required;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $user_id
+            'id' => $user_id,
         );
         $this->db->update('customer_basic_details', $data, $condition);
         /** Save user Activity */
@@ -3479,7 +3431,7 @@ class Home extends MX_Controller
         $data['is_dual_cpl'] = $dualCplUserFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $user_id
+            'id' => $user_id,
         );
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status' => 'success', 'msg' => 'Dual Cpl value updated successfully for user.');
@@ -3707,7 +3659,7 @@ class Home extends MX_Controller
                 'LoanAmount' => $order_details['loan_amount'],
                 'LoanNumber' => $order_details['loan_number'],
                 'EscrowNumber' => $order_details['escrow_officer_id'],
-                'randomString' => $order_details['random_number']
+                'randomString' => $order_details['random_number'],
             );
 
             $buyerDetails = $listingDetails = $parties_email = array();
@@ -3717,7 +3669,7 @@ class Home extends MX_Controller
                     'name' => $order_details['lender_first_name'],
                     'email' => $order_details['lender_email'],
                     'telephone' => $order_details['lender_telephone_no'],
-                    'company' => $order_details['lender_company_name']
+                    'company' => $order_details['lender_company_name'],
                 );
             }
 
@@ -3728,7 +3680,7 @@ class Home extends MX_Controller
                         'name' => $buyerDetails['name'],
                         'email' => $buyerDetails['email_address'],
                         'telephone' => $buyerDetails['telephone_no'],
-                        'company' => $buyerDetails['company']
+                        'company' => $buyerDetails['company'],
                     );
                 }
 
@@ -3741,14 +3693,14 @@ class Home extends MX_Controller
                         'name' => $listingDetails['name'],
                         'email' => $listingDetails['email_address'],
                         'telephone' => $listingDetails['telephone_no'],
-                        'company' => $listingDetails['company']
+                        'company' => $listingDetails['company'],
                     );
                 }
             }
 
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
-            $order_message_body = $this->load->view('emails/order.php', $data, TRUE);
+            $order_message_body = $this->load->view('emails/order.php', $data, true);
             $message = $order_message_body;
             $subject = 'PDF:' . $orderNumber;
             $to = $order_details['cust_email_address'];
@@ -3768,7 +3720,7 @@ class Home extends MX_Controller
                 'subject' => $subject,
                 'message' => json_encode($data),
                 'file' => json_encode($file),
-                'cc' => json_encode($cc)
+                'cc' => json_encode($cc),
             );
 
             if (isset($order_details['lp_file_number']) && !empty($order_details['lp_file_number'])) {
@@ -3810,14 +3762,14 @@ class Home extends MX_Controller
             'IsPrimaryTransactee' => 'true',
             'primary' => array(
                 'First' => $ownerFirstName,
-                'Last' => $ownerLastName
+                'Last' => $ownerLastName,
             ),
             'Address' => array(
                 'Address1' => $order_details['address'],
                 'City' => $order_details['property_city'],
                 'State' => $order_details['property_state'],
-                'Zip' => $order_details['property_zip']
-            )
+                'Zip' => $order_details['property_zip'],
+            ),
         );
 
         if (strpos($order_details['product_type'], 'Loan') !== false) {
@@ -3832,8 +3784,8 @@ class Home extends MX_Controller
                 'IsPrimaryTransactee' => 'true',
                 'primary' => array(
                     'First' => $borrowerFirstName,
-                    'Last' => !empty($borrowerLastName) ? $borrowerLastName : $borrowerFirstName
-                )
+                    'Last' => !empty($borrowerLastName) ? $borrowerLastName : $borrowerFirstName,
+                ),
             );
             $place_order['Sellers'][] = $legalEntity;
             $place_order['Buyers'][] = $borrowers;
@@ -3843,7 +3795,7 @@ class Home extends MX_Controller
 
         $place_order['TransactionProductType'] = array(
             "TransactionTypeID" => $order_details['transaction_type'],
-            'ProductTypeID' => $order_details['purchase_type']
+            'ProductTypeID' => $order_details['purchase_type'],
         );
         $loan = array();
         if (isset($order_details['loan_amount']) && !empty($order_details['loan_amount'])) {
@@ -3873,7 +3825,7 @@ class Home extends MX_Controller
             'City' => $order_details['property_city'],
             'State' => $order_details['property_state'],
             'County' => $order_details['county'],
-            'Zip' => $order_details['property_zip']
+            'Zip' => $order_details['property_zip'],
         );
         $place_order['Note']['APN'] = $order_details['apn'];
         $place_order['Note']['parcel_id'] = $order_details['apn'];
@@ -3892,7 +3844,7 @@ class Home extends MX_Controller
                 'name' => $order_details['buyer_agent_name'],
                 'email' => $order_details['buyer_agent_email_address'],
                 'telephone' => $order_details['buyer_agent_company'],
-                'company' => $order_details['buyer_agent_telephone_no']
+                'company' => $order_details['buyer_agent_telephone_no'],
             );
             $place_order['Note']['buyers_agent'] = $buyers_agent_details;
         }
@@ -3902,7 +3854,7 @@ class Home extends MX_Controller
                 'name' => $order_details['listing_agent_name'],
                 'email' => $order_details['listing_agent_email_address'],
                 'telephone' => $order_details['listing_agent_company'],
-                'company' => $order_details['listing_agent_telephone_no']
+                'company' => $order_details['listing_agent_telephone_no'],
             );
             $place_order['Note']['listing_agent'] = $listing_agent_details;
         }
@@ -3912,7 +3864,7 @@ class Home extends MX_Controller
                 'name' => $order_details['lender_first_name'],
                 'email' => $order_details['lender_email'],
                 'telephone' => $order_details['lender_telephone_no'],
-                'company' => $order_details['lender_company_name']
+                'company' => $order_details['lender_company_name'],
             );
             $place_order['Note']['lender_details'] = $lender_details;
         }
@@ -3929,7 +3881,6 @@ class Home extends MX_Controller
             $place_order['Note']['Notes'] = $order_details['notes'];
         }
 
-
         $user_data = array();
         $orderUser = $this->home_model->get_user(array('id' => $order_details['customer_id']));
         $user_data['email'] = $orderUser['email_address'];
@@ -3940,7 +3891,7 @@ class Home extends MX_Controller
         $con = array(
             'where' => array(
                 'partner_id' => $orderUser['partner_id'],
-            )
+            ),
         );
         $companyData = $this->home_model->get_company_rows($con);
         // echo "<pre>";
@@ -3965,7 +3916,7 @@ class Home extends MX_Controller
                     'request' => $order_data,
                     'response' => $result,
                     'status' => $message,
-                    'created_at' => date("Y-m-d H:i:s")
+                    'created_at' => date("Y-m-d H:i:s"),
                 );
                 $this->db->insert('pct_resware_log', $reswareLogData);
                 /* End add resware api logs */
@@ -3986,7 +3937,7 @@ class Home extends MX_Controller
                     'file_id' => $file_id,
                     'file_number' => $file_number,
                     'status' => $response['ResponseStatus'],
-                    'created_at' => date("Y-m-d H:i:s")
+                    'created_at' => date("Y-m-d H:i:s"),
                 );
                 $this->db->insert('pct_resware_log', $reswareLogData);
                 /* End add resware api logs */
@@ -4013,8 +3964,8 @@ class Home extends MX_Controller
                         'PartnerTypeID' => 10049,
                         'PartnerID' => 400023,
                         'PartnerType' => array(
-                            'PartnerTypeID' => 10049
-                        )
+                            'PartnerTypeID' => 10049,
+                        ),
                     );
                     $endPoint = 'files/' . $file_id . '/partners';
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $file_id, 0);
@@ -4035,8 +3986,8 @@ class Home extends MX_Controller
                             'PartnerTypeID' => (int) $lenderPartnerTypeID,
                             'PartnerID' => (int) $lender_partner_id,
                             'PartnerType' => array(
-                                'PartnerTypeID' => (int) $lenderPartnerTypeID
-                            )
+                                'PartnerTypeID' => (int) $lenderPartnerTypeID,
+                            ),
                         );
                     }
 
@@ -4067,8 +4018,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 39919,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $removePartnerFlag = 1;
                                     } else {
@@ -4080,8 +4031,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 6,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $removePartnerFlag = 1;
                                     } else {
@@ -4093,8 +4044,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 201324,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $removePartnerFlag = 1;
                                     } else {
@@ -4107,8 +4058,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 201324,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $underWriter = 'westcor';
                                     } else if ($underWriter == 'not_set') {
@@ -4117,8 +4068,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 201324,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $underWriter = 'westcor';
                                     }
@@ -4132,8 +4083,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 39919,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $removePartnerFlag = 1;
                                     } else {
@@ -4146,8 +4097,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 6,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $removePartnerFlag = 1;
                                     } else {
@@ -4159,8 +4110,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 201324,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $removePartnerFlag = 1;
                                     } else {
@@ -4173,8 +4124,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 201324,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $underWriter = 'westcor';
                                     } else if ($underWriter == 'not_set') {
@@ -4183,8 +4134,8 @@ class Home extends MX_Controller
                                             'PartnerTypeID' => 7,
                                             'PartnerID' => 201324,
                                             'PartnerType' => array(
-                                                'PartnerTypeID' => 7
-                                            )
+                                                'PartnerTypeID' => 7,
+                                            ),
                                         );
                                         $underWriter = 'westcor';
                                     }
@@ -4198,8 +4149,8 @@ class Home extends MX_Controller
                             'PartnerTypeID' => 7,
                             'PartnerID' => $resPartners['Partners'][$key]['PartnerID'],
                             'PartnerType' => array(
-                                'PartnerTypeID' => 7
-                            )
+                                'PartnerTypeID' => 7,
+                            ),
                         );
                         $removePartners[] = $removeExistingPartner;
                     }
@@ -4214,8 +4165,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 9997,
                                 'PartnerID' => $resPartners['Partners'][$escrowKey]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 9997
-                                )
+                                    'PartnerTypeID' => 9997,
+                                ),
                             );
                             $removePartners[] = $removeEscrowExistingPartner;
                         }
@@ -4224,8 +4175,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 10006,
                                 'PartnerID' => $resPartners['Partners'][$escrowKey1]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 10006
-                                )
+                                    'PartnerTypeID' => 10006,
+                                ),
                             );
                             $removePartners[] = $removeEscrowExistingPartner;
                         }
@@ -4234,8 +4185,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 10010,
                                 'PartnerID' => $resPartners['Partners'][$escrowKey2]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 10010
-                                )
+                                    'PartnerTypeID' => 10010,
+                                ),
                             );
                             $removePartners[] = $removeEscrowExistingPartner;
                         }
@@ -4250,8 +4201,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 3,
                                 'PartnerID' => $resPartners['Partners'][$lenderKey]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 3
-                                )
+                                    'PartnerTypeID' => 3,
+                                ),
                             );
                             $removePartners[] = $removeLenderExistingPartner;
                         }
@@ -4267,8 +4218,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 10010,
                                 'PartnerID' => $resPartners['Partners'][$escrowOfficerKey]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 10010
-                                )
+                                    'PartnerTypeID' => 10010,
+                                ),
                             );
                             $removePartners[] = $removeEscrowOfcExistingPartner;
                         }
@@ -4276,8 +4227,8 @@ class Home extends MX_Controller
                             'PartnerTypeID' => 10010,
                             'PartnerID' => (int) $escrowOfficer,
                             'PartnerType' => array(
-                                'PartnerTypeID' => 10010
-                            )
+                                'PartnerTypeID' => 10010,
+                            ),
                         );
                     }
 
@@ -4291,8 +4242,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 14,
                                 'PartnerID' => $resPartners['Partners'][$buyerAgentKey]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 14
-                                )
+                                    'PartnerTypeID' => 14,
+                                ),
                             );
                             $removePartners[] = $removeBuyerAgentExistingPartner;
                         }
@@ -4300,8 +4251,8 @@ class Home extends MX_Controller
                             'PartnerTypeID' => 14,
                             'PartnerID' => (int) $buyerAgentPartnerId,
                             'PartnerType' => array(
-                                'PartnerTypeID' => 14
-                            )
+                                'PartnerTypeID' => 14,
+                            ),
                         );
                     }
 
@@ -4315,8 +4266,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => 15,
                                 'PartnerID' => $resPartners['Partners'][$listingAgentKey]['PartnerID'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => 15
-                                )
+                                    'PartnerTypeID' => 15,
+                                ),
                             );
                             $removePartners[] = $removelistingAgentExistingPartner;
                         }
@@ -4324,15 +4275,15 @@ class Home extends MX_Controller
                             'PartnerTypeID' => 15,
                             'PartnerID' => (int) $listingAgentPartnerId,
                             'PartnerType' => array(
-                                'PartnerTypeID' => 15
-                            )
+                                'PartnerTypeID' => 15,
+                            ),
                         );
                     }
 
                     $salesRepKey = '';
                     $SalesRep = $order_details['sales_representative'];
                     $condition = array(
-                        'id' => $SalesRep
+                        'id' => $SalesRep,
                     );
                     $salesRepDetails = $this->home_model->getSalesRepDetails($condition);
                     if (!empty($salesRepDetails)) {
@@ -4343,8 +4294,8 @@ class Home extends MX_Controller
                                     'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
                                     'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
                                     'PartnerType' => array(
-                                        'PartnerTypeID' => (int) $salesRepDetails['partner_type_id']
-                                    )
+                                        'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
+                                    ),
                                 );
                                 $removePartners[] = $removeSalesRepExistingPartner;
                             }
@@ -4352,8 +4303,8 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
                                 'PartnerID' => (int) $salesRepDetails['partner_id'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => (int) $salesRepDetails['partner_type_id']
-                                )
+                                    'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
+                                ),
                             );
                         }
                     }
@@ -4361,7 +4312,7 @@ class Home extends MX_Controller
                     $titleOfficerKey = '';
                     $TitleOfficer = $order_details['title_officer'];
                     $condition = array(
-                        'id' => $TitleOfficer
+                        'id' => $TitleOfficer,
                     );
                     $titleOfficerDetails = $this->home_model->getTitleOfficerDetails($condition);
                     if (!empty($titleOfficerDetails)) {
@@ -4372,8 +4323,8 @@ class Home extends MX_Controller
                                     'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
                                     'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
                                     'PartnerType' => array(
-                                        'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id']
-                                    )
+                                        'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
+                                    ),
                                 );
                                 $removePartners[] = $removeTitleOfficerExistingPartner;
                             }
@@ -4381,14 +4332,14 @@ class Home extends MX_Controller
                                 'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
                                 'PartnerID' => (int) $titleOfficerDetails['partner_id'],
                                 'PartnerType' => array(
-                                    'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id']
-                                )
+                                    'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
+                                ),
                             );
                         }
                     }
 
                     $partnerUserData = array(
-                        'admin_api' => 1
+                        'admin_api' => 1,
                     );
 
                     if (!empty($removePartners)) {
@@ -4405,7 +4356,7 @@ class Home extends MX_Controller
                             'request' => $removePartnerData,
                             'response' => $resultRemovePartner,
                             'status' => '',
-                            'created_at' => date("Y-m-d H:i:s")
+                            'created_at' => date("Y-m-d H:i:s"),
                         );
                         $this->db->insert('pct_resware_log', $reswareLogData);
                         /* End add resware api logs */
@@ -4442,7 +4393,7 @@ class Home extends MX_Controller
                         'request' => $partnerData,
                         'response' => $resultPartner,
                         'status' => '',
-                        'created_at' => date("Y-m-d H:i:s")
+                        'created_at' => date("Y-m-d H:i:s"),
                     );
                     $this->db->insert('pct_resware_log', $reswareLogData);
                     /* End add resware api logs */
@@ -4461,7 +4412,7 @@ class Home extends MX_Controller
                         'request' => $remoteFileNumberData,
                         'response' => $resultRemotePartner,
                         'status' => '',
-                        'created_at' => date("Y-m-d H:i:s")
+                        'created_at' => date("Y-m-d H:i:s"),
                     );
                     $this->db->insert('pct_resware_log', $reswareLogData);
                     /* End add resware api logs */
@@ -4470,7 +4421,7 @@ class Home extends MX_Controller
                     $partnerApiData = array(
                         'request_url' => env('RESWARE_ORDER_API') . $endPoint,
                         'request_data' => $partnerData,
-                        'response_data' => $resultPartner
+                        'response_data' => $resultPartner,
                     );
 
                     $partnerApiId = $this->partnerApiLogs->insert($partnerApiData);
@@ -4521,7 +4472,7 @@ class Home extends MX_Controller
                         'LoanAmount' => $order_details['loan_amount'],
                         'LoanNumber' => $order_details['loan_number'],
                         'EscrowNumber' => $order_details['escrow_officer_id'],
-                        'randomString' => $this->order->randomPassword()
+                        'randomString' => $this->order->randomPassword(),
                     );
                     if (isset($order_details['lender_id']) && !empty($order_details['lender_id'])) {
                         $data['lender_details'] = $lender_details;
@@ -4536,13 +4487,13 @@ class Home extends MX_Controller
                             'name' => $listingDetails['listing_agent_name'],
                             'email' => $listingDetails['listing_agent_email_address'],
                             'telephone' => $listingDetails['listing_agent_telephone_no'],
-                            'company' => $listingDetails['listing_agent_company']
+                            'company' => $listingDetails['listing_agent_company'],
                         );
                     }
 
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
-                    $order_message_body = $this->load->view('emails/order.php', $data, TRUE);
+                    $order_message_body = $this->load->view('emails/order.php', $data, true);
                     $message = $order_message_body;
                     $subject = $orderNumber . ' - PCT Title Order Placed';
                     $to = $order_details['salerep_email_address'];
@@ -4551,7 +4502,7 @@ class Home extends MX_Controller
                         'from_name' => $from_name,
                         'to' => $to,
                         'subject' => $subject,
-                        'message' => json_encode($data)
+                        'message' => json_encode($data),
                     );
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail_from_admin', '', $mailParams, array(), $order_details['order_id'], 0);
                     try {
@@ -4593,7 +4544,7 @@ class Home extends MX_Controller
             ),
             'Description' => 'Legal & Vesting Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
@@ -4611,7 +4562,7 @@ class Home extends MX_Controller
             'request' => $document_api_data,
             'response' => $result,
             'status' => '',
-            'created_at' => date("Y-m-d H:i:s")
+            'created_at' => date("Y-m-d H:i:s"),
         );
         $this->db->insert('pct_resware_log', $reswareLogData);
         /* End add resware api logs */
@@ -4637,7 +4588,7 @@ class Home extends MX_Controller
             ),
             'Description' => 'Grant Deed Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
@@ -4655,7 +4606,7 @@ class Home extends MX_Controller
             'request' => $document_api_data,
             'response' => $result,
             'status' => '',
-            'created_at' => date("Y-m-d H:i:s")
+            'created_at' => date("Y-m-d H:i:s"),
         );
         $this->db->insert('pct_resware_log', $reswareLogData);
         /* End add resware api logs */
@@ -4682,7 +4633,7 @@ class Home extends MX_Controller
             ),
             'Description' => 'Tax Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
@@ -4700,7 +4651,7 @@ class Home extends MX_Controller
             'request' => $document_api_data,
             'response' => $result,
             'status' => '',
-            'created_at' => date("Y-m-d H:i:s")
+            'created_at' => date("Y-m-d H:i:s"),
         );
         $this->db->insert('pct_resware_log', $reswareLogData);
         /* End add resware api logs */
@@ -4759,9 +4710,9 @@ class Home extends MX_Controller
                                     'where' => array(
                                         'email_address' => $email_address,
                                         'resware_user_id' => $row['Partner Employee ID'],
-                                        'is_escrow' => 1
+                                        'is_escrow' => 1,
                                     ),
-                                    'returnType' => 'count'
+                                    'returnType' => 'count',
                                 );
                                 $prevCount = $this->home_model->get_rows($con);
 
@@ -5119,7 +5070,7 @@ class Home extends MX_Controller
                                     // 'doc_sub_type_description' => trim($row['Doc Subtype Description']),
                                     // 'doc_sub_type' => trim($row['Doc Subtype'])
                                 ),
-                                'returnType' => 'count'
+                                'returnType' => 'count',
                             );
                             $prevCount = $this->home_model->get_rows($con, 'pct_lp_document_types');
 
@@ -5307,8 +5258,8 @@ class Home extends MX_Controller
             $mappedSubType = explode(',', $lpDocDetails['sub_type_list']);
             $condition = array(
                 'whereIn' => array(
-                    'doc_type' => $mappedSubType
-                )
+                    'doc_type' => $mappedSubType,
+                ),
             );
             $getMappedSubType = $this->home_model->getMappedDocType($condition);
             // print_r($getMappedSubType);
@@ -5460,7 +5411,7 @@ class Home extends MX_Controller
         $data['is_display'] = $displayFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $lp_document_type_id
+            'id' => $lp_document_type_id,
         );
         $this->db->update('pct_lp_document_types', $data, $condition);
         $data = array('status' => 'success', 'msg' => 'LP document type flag updated successfully.');
@@ -5474,7 +5425,7 @@ class Home extends MX_Controller
         $data['is_ves'] = $isVesFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $lp_document_type_id
+            'id' => $lp_document_type_id,
         );
         $this->db->update('pct_lp_document_types', $data, $condition);
         $data = array('status' => 'success', 'msg' => 'LP document type Ves flag updated successfully.');
@@ -5542,7 +5493,7 @@ class Home extends MX_Controller
                     <th>Sub Type</th>
                     <th>Display in Section</th>
                     <th>VES</th>
-                    <th><label class='option block'><input type='checkbox' checked id='check_all' name='check_all'><span class='checkbox'></span></label></th>        
+                    <th><label class='option block'><input type='checkbox' checked id='check_all' name='check_all'><span class='checkbox'></span></label></th>
                 </tr>
             </thead>
         <tbody>";
@@ -5562,7 +5513,6 @@ class Home extends MX_Controller
         //                 $keySubType = array_search($instrumentRecord['document_sub_type'], array_column($displayDocList, 'doc_type'));
         //                 $displaySection = ((!empty($instrumentRecord['display_in_section'])) ? ($instrumentRecord['display_in_section']) : (!empty($displayDocList[$keySubType]['map_in_section']) ? $displayDocList[$keySubType]['map_in_section'] : $displayDocList[$keySubType]['display_in_section']));
         //             }
-
 
         //             $instrumentRecords[$i]['display_in_section'] = $displaySection;
         //             if ($displaySection == 'G') {
@@ -5604,9 +5554,9 @@ class Home extends MX_Controller
         if (!empty($instrumentRecords)) {
             foreach ($instrumentRecords as $instrumentRecord) {
                 // if (strlen(array_search($instrumentRecord['instrument'], array_column($filterArr, 'instrument'))) && $instrumentRecord['is_display'] == 1) {
-                //     $checked = "checked";                
+                //     $checked = "checked";
                 // } else if (strlen(array_search($instrumentRecord['instrument'], array_column($noticeArr, 'instrument'))) && $instrumentRecord['is_display'] == 1) {
-                //     $checked = "checked";                    
+                //     $checked = "checked";
                 // } else {
                 //     $checked = "";
                 // }
@@ -5617,9 +5567,9 @@ class Home extends MX_Controller
                     // }
 
                     //if ($vesCountData['ves_count'] == 0) {
-                        //$vesChecked = $instrumentRecord['instrument'] == $titlePointInstrumentDetails[0]['instrument'] ? 'checked' : '';
+                    //$vesChecked = $instrumentRecord['instrument'] == $titlePointInstrumentDetails[0]['instrument'] ? 'checked' : '';
                     //} else {
-                        $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? 'checked' : '';
+                    $vesChecked = $instrumentRecord['is_ves_display'] == 1 ? 'checked' : '';
                     //}
 
                     $document_name = $instrumentRecord['document_name'];
@@ -5660,7 +5610,7 @@ class Home extends MX_Controller
         $data .= '</tbody></table>';
         if (!empty($data)) {
             $result = array('status' => 'success', 'data' => $data);
-            // $result = array('status'=> 'success', 'data' => mb_convert_encoding($data, 'UTF-8', 'UTF-8'));    
+            // $result = array('status'=> 'success', 'data' => mb_convert_encoding($data, 'UTF-8', 'UTF-8'));
         } else {
             $result = array('status' => 'error', 'data' => $data);
         }
@@ -5675,7 +5625,7 @@ class Home extends MX_Controller
         $data['is_allow_only_resware_orders'] = $allowOnlyReswareOrderFlag;
         $data['updated_at'] = date("Y-m-d H:i:s");
         $condition = array(
-            'id' => $user_id
+            'id' => $user_id,
         );
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status' => 'success', 'msg' => 'Allow only Resware order value updated successfully for user.');
@@ -5948,7 +5898,7 @@ class Home extends MX_Controller
         $config['max_size'] = 12000;
         $this->load->library('upload', $config);
         if (!is_dir('/uploads/title-point')) {
-            mkdir('./uploads/title-point', 0777, TRUE);
+            mkdir('./uploads/title-point', 0777, true);
         }
         if (!empty($_FILES['file_upload']['name'])) {
             if (!$this->upload->do_upload('file_upload')) {
@@ -5982,7 +5932,7 @@ class Home extends MX_Controller
                     'loan_amount' => $this->input->post('amount') ? $this->input->post('amount') : null,
                     'created_at' => date("Y-m-d H:i:s"),
                     'amount' => 0,
-                    'is_display' => 1
+                    'is_display' => 1,
                 );
                 $id = $this->home_model->insert($instrumentData, 'pct_title_point_document_records');
 
@@ -6010,7 +5960,7 @@ class Home extends MX_Controller
         $fileNumber = $this->input->post('file_number');
         $generateImgResponse = $this->titlepoint->generateTaxImage($requestId, $orderId);
 
-        $generateImgResult = json_decode($generateImgResponse, TRUE);
+        $generateImgResult = json_decode($generateImgResponse, true);
         $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
         $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
 
@@ -6024,7 +5974,7 @@ class Home extends MX_Controller
                 $bin = base64_decode($base64_data, true);
 
                 if (!is_dir('uploads/tax')) {
-                    mkdir('./uploads/tax', 0777, TRUE);
+                    mkdir('./uploads/tax', 0777, true);
                 }
 
                 $pdfFilePath = './uploads/tax/' . $fileNumber . '.pdf';
@@ -6035,11 +5985,11 @@ class Home extends MX_Controller
             $tpData = array(
                 'tax_file_status' => $generateImgStatus,
                 'tax_file_message' => $generateImgMsg,
-                'tax_request_id' => $requestId
+                'tax_request_id' => $requestId,
             );
 
             $condition = array(
-                'file_number' => $fileNumber
+                'file_number' => $fileNumber,
             );
 
             $this->titlePointData->update($tpData, $condition);
@@ -6051,11 +6001,11 @@ class Home extends MX_Controller
             $tpData = array(
                 'tax_file_status' => $generateImgStatus,
                 'tax_file_message' => $generateImgMsg,
-                'tax_request_id' => $requestId
+                'tax_request_id' => $requestId,
             );
 
             $condition = array(
-                'file_number' => $fileNumber
+                'file_number' => $fileNumber,
             );
             $this->titlePointData->update($tpData, $condition);
             $data = array('status' => 'success', 'message' => 'Tax document generation still in progress.');
@@ -6067,10 +6017,10 @@ class Home extends MX_Controller
             $tpData = array(
                 'tax_file_status' => $generateImgReturnStatus,
                 'tax_file_message' => $error,
-                'tax_request_id' => $requestId
+                'tax_request_id' => $requestId,
             );
             $condition = array(
-                'file_number' => $fileNumber
+                'file_number' => $fileNumber,
             );
             $this->titlePointData->update($tpData, $condition);
             $data = array('status' => 'error', 'message' => $error);
@@ -6086,7 +6036,6 @@ class Home extends MX_Controller
         $serviceId = $this->input->post('cs3_service_id');
         $orderId = $this->input->post('order_id');
         $fileNumber = $this->input->post('file_number');
-
 
         $serviceId = isset($serviceId) && !empty($serviceId) ? $serviceId : '';
         $opts = array(
@@ -6115,7 +6064,7 @@ class Home extends MX_Controller
 
             $logid = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, array(), $orderId, 0);
             $response = $this->order->curl_post($requestUrl, $requestParams);
-            $result = json_decode($response, TRUE);
+            $result = json_decode($response, true);
 
             $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, $result, $orderId, $logid);
 
@@ -6128,7 +6077,7 @@ class Home extends MX_Controller
                 if (isset($requestId) && !empty($requestId)) {
                     $generateImgResponse = $this->titlepoint->generateTaxImage($requestId, $orderId);
 
-                    $generateImgResult = json_decode($generateImgResponse, TRUE);
+                    $generateImgResult = json_decode($generateImgResponse, true);
                     $generateImgReturnStatus = isset($generateImgResult['ReturnStatus']) && !empty($generateImgResult['ReturnStatus']) ? $generateImgResult['ReturnStatus'] : '';
                     $generateImgStatus = isset($generateImgResult['Status']) && !empty($generateImgResult['Status']) ? $generateImgResult['Status'] : '';
 
@@ -6141,7 +6090,7 @@ class Home extends MX_Controller
                             $bin = base64_decode($base64_data, true);
 
                             if (!is_dir('uploads/tax')) {
-                                mkdir('./uploads/tax', 0777, TRUE);
+                                mkdir('./uploads/tax', 0777, true);
                             }
 
                             $pdfFilePath = './uploads/tax/' . $fileNumber . '.pdf';
@@ -6153,10 +6102,10 @@ class Home extends MX_Controller
                             'tax_file_status' => $generateImgStatus,
                             'tax_file_message' => $generateImgMsg,
                             'tax_request_id' => $requestId,
-                            'tax_order_id' => $requestOrderId
+                            'tax_order_id' => $requestOrderId,
                         );
                         $condition = array(
-                            'file_number' => $fileNumber
+                            'file_number' => $fileNumber,
                         );
                         $this->titlePointData->update($tpData, $condition);
                         $data = array('status' => 'success', 'message' => 'Tax document generated successfully');
@@ -6168,10 +6117,10 @@ class Home extends MX_Controller
                             'tax_file_status' => $generateImgStatus,
                             'tax_file_message' => $generateImgMsg,
                             'tax_request_id' => $requestId,
-                            'tax_order_id' => $requestOrderId
+                            'tax_order_id' => $requestOrderId,
                         );
                         $condition = array(
-                            'file_number' => $fileNumber
+                            'file_number' => $fileNumber,
                         );
                         $this->titlePointData->update($tpData, $condition);
                         $data = array('status' => 'success', 'message' => 'Tax document generation still in progress.');
@@ -6184,10 +6133,10 @@ class Home extends MX_Controller
                             'tax_file_status' => $generateImgReturnStatus,
                             'tax_file_message' => $error,
                             'tax_request_id' => $requestId,
-                            'tax_order_id' => $requestOrderId
+                            'tax_order_id' => $requestOrderId,
                         );
                         $condition = array(
-                            'file_number' => $fileNumber
+                            'file_number' => $fileNumber,
                         );
                         $this->titlePointData->update($tpData, $condition);
                         $data = array('status' => 'error', 'message' => $error);
@@ -6200,10 +6149,10 @@ class Home extends MX_Controller
 
                 $tpData = array(
                     'tax_file_status' => $returnStatus,
-                    'tax_file_message' => $error
+                    'tax_file_message' => $error,
                 );
                 $condition = array(
-                    'file_number' => $fileNumber
+                    'file_number' => $fileNumber,
                 );
                 $this->titlePointData->update($tpData, $condition);
                 $data = array('status' => 'error', 'message' => $error);
@@ -6213,10 +6162,10 @@ class Home extends MX_Controller
         }
     }
 
-    public function changeClient() 
+    public function changeClient()
     {
         $file_id = $this->input->post('client_file_id');
-        $customer_id = $this->input->post('client_id');    
+        $customer_id = $this->input->post('client_id');
         $condition = array('file_id' => $file_id);
         $data = array('customer_id' => $customer_id);
         $this->home_model->update($data, $condition, 'order_details');
@@ -6291,12 +6240,12 @@ class Home extends MX_Controller
         if ($this->input->post()) {
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[pct_daily_email_receiver_list.email]', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique' => 'The %s is already taken'));
             $this->form_validation->set_rules('branch', 'Branch', 'required', array('required' => 'Please Select Branch'));
-            
+
             if ($this->form_validation->run() == true) {
                 $customerData = array(
                     'email' => $this->input->post('email'),
                     'branch' => $this->input->post('branch'),
-                    'status' => 1
+                    'status' => 1,
                 );
                 $insert = $this->home_model->insert($customerData, 'pct_daily_email_receiver_list');
                 if ($insert) {
@@ -6334,7 +6283,7 @@ class Home extends MX_Controller
                     $customerData = array(
                         'email' => $this->input->post('email'),
                         'branch' => $this->input->post('branch'),
-                        'status' => $this->input->post('status') ? 1 : 0 ,
+                        'status' => $this->input->post('status') ? 1 : 0,
                     );
 
                     $updateCondition = array(
@@ -6344,7 +6293,7 @@ class Home extends MX_Controller
                     if ($update) {
                         /** Save user Activity */
                         // $user =  $this->home_model->get_user($condition);
-                        $activity = 'Daily email receiver :- ' . $this->input->post('email') . ' -  '. $this->input->post('branch')  . ' details updated';
+                        $activity = 'Daily email receiver :- ' . $this->input->post('email') . ' -  ' . $this->input->post('branch') . ' details updated';
                         $this->order->logAdminActivity($activity);
                         /** End Save user activity */
                         $data['success_msg'] = 'Daily email receiver updated successfully.';
@@ -6419,5 +6368,85 @@ class Home extends MX_Controller
         $result = $this->order->sendNonOpenersEmail($sales_rep);
         $this->session->set_userdata('success', 'Mail sent to successfully to sales rep.');
         redirect(base_url() . 'order/admin/manual-report');
+    }
+
+    public function exportSalesRepReports()
+    {
+        $ordersList = $this->home_model->get_sales_rep_report();
+        // echo "<pre>";
+        // print_r($ordersList);die;
+        if (isset($ordersList) && !empty($ordersList)) {
+            // $export_data = array();
+            foreach ($ordersList as $key => $value) {
+                $file_id = isset($value['file_id']) && !empty(!empty($value['file_id'])) ? $value['file_id'] : '';
+                if ($file_id) {
+
+                    if ($order['file_number'] == 0 && !empty($order['lp_file_number'])) {
+                        $nestedData[] = ucfirst($order['lp_report_status']);
+                    } else {
+                        $nestedData[] = ucfirst($order['resware_status']);
+                    }
+
+                    $export_data[] = array(
+                        'transaction_status' => $value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
+                        'client_name' => $value['client_name'],
+                        'client_email' => $value['client_email'],
+                        'client_phone' => $value['client_phone'],
+                        'transaction_type' => $value['transaction_type'],
+                        'adrress' => $value['full_address'],
+                        'unit' => $value['unit_number'],
+                        'property_city' => $value['property_city'],
+                        'property_state' => $value['property_state'],
+                        'property_zip' => $value['property_zip'],
+                        'order' => (!empty($value['file_number']) ? $value['file_number'] : $value['lp_file_number']),
+                        'opened_date' => date('Y-m-d', strtotime($value['opened_date'])),
+                        'list_price' => '$' . (($value['prod_type'] == 'sale') ? $value['order_sales_amount'] : $value['order_loan_amount']),
+                        'created_date' => '', //date('Y-m-d', strtotime($value['opened_date'])),
+                        'sales_price' => '', //'$' . (($value['prod_type'] == 'sale') ? $value['order_sales_amount'] : $value['order_loan_amount']),
+                        'closing_date' => !empty($value['sent_to_accounting_date']) ? date('Y-m-d', strtotime($value['sent_to_accounting_date'])) : '',
+                        'title_premium' => $value['premium'], //'title_premium static for now',
+                        'escrow_fees' => '', //'escrow_fees static for now',
+                        'fees' => '', //'fees static for now',
+                        'notes' => '', //$value['notes'],
+                        'owner_name' => $value['sales_rep_name'],
+                        'owner_email' => $value['sales_rep_email'],
+
+                        // 'prod_type' => $value['prod_type'],
+                        // 'status' => ($value['file_number'] == 0 && !empty($value['lp_file_number'])) ? ucfirst($order['lp_report_status']) : ucfirst($order['resware_status']),
+
+                    );
+                }
+            }
+            if (isset($export_data) && !empty($export_data)) {
+                if (!is_dir('uploads/orders')) {
+                    mkdir('./uploads/orders', 0777, true);
+                }
+
+                $outputPath = './uploads/orders/sales_rep_report.csv';
+                $output = fopen($outputPath, "w");
+
+                $header = array("Transaction Status", "Client Name", "Client Email", "Client Phone", "Transaction Type", "Address", "Unit #", "City", "State", "Zipcode", "Order #", "Open Date", "List Price", "Created Date", "Sale Price", "Closing Date", "Title Premium", "Escrow Fee", "Fee", "Notes", "Owner Name", "Owner Email");
+                fputcsv($output, $header);
+
+                foreach ($export_data as $key => $value) {
+                    fputcsv($output, $value);
+                }
+
+                header('Content-Type: application/json');
+                $contents = file_get_contents($outputPath);
+                $binaryData = base64_encode($contents);
+                unlink($outputPath);
+                fclose($output);
+
+                $res = array('status' => 'success', 'data' => $binaryData);
+            } else {
+                $res = array('status' => 'error', 'data' => 'No data found.');
+            }
+        } else {
+            $res = array('status' => 'error', 'data' => 'No data found.');
+        }
+
+        echo json_encode($res);
+        exit;
     }
 }
