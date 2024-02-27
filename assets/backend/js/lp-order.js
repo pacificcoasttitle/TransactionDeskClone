@@ -1,10 +1,10 @@
 jQuery(document).ready(function ($) {
     $("#company_name").autocomplete({
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
-                url: base_url+"admin/order/order/getDetailsByName",
+                url: base_url + "admin/order/order/getDetailsByName",
                 data: {
-                    term : request.term        
+                    term: request.term
                 },
                 type: "POST",
                 dataType: "json",
@@ -14,14 +14,14 @@ jQuery(document).ready(function ($) {
                             return item;
                         }))
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 3,
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#company_name").val(ui.item.company);
             $("#email_address").val(ui.item.email_address);
@@ -29,7 +29,7 @@ jQuery(document).ready(function ($) {
             $("#last_name").val(ui.item.lname);
             $("#client_id").val(ui.item.id);
         },
-        change: function( event, ui ) {
+        change: function (event, ui) {
             if (ui.item == null) {
                 $("#company_name").parent().removeClass('state-success').addClass('state-error');
             }
@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
     });
 
     $("#document_type").autocomplete({
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
                 url: base_url + "order/admin/search-document-type",
                 data: {
@@ -52,22 +52,22 @@ jQuery(document).ready(function ($) {
                                 return item;
                             }));
                         } else {
-                            response([{ label: 'No results found.', val: -1}]);
+                            response([{ label: 'No results found.', val: -1 }]);
                         }
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 1,
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#document_type").val(ui.item.doc_type);
             $("#document_name").val(ui.item.doc_type_description);
         },
-        change: function( event, ui ) {
+        change: function (event, ui) {
             if (ui.item == null) {
                 $("#document_type").parent().removeClass('state-success').addClass('state-error');
             }
@@ -75,7 +75,7 @@ jQuery(document).ready(function ($) {
     });
 
     $("#document_sub_type").autocomplete({
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
                 url: base_url + "order/admin/search-document-sub-type",
                 data: {
@@ -91,22 +91,22 @@ jQuery(document).ready(function ($) {
                                 return item.doc_type;
                             }));
                         } else {
-                            response([{ label: 'No results found.', val: -1}]);
+                            response([{ label: 'No results found.', val: -1 }]);
                         }
                         console.log(result.data);
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 1,
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#document_sub_type").val(ui.item.value);
         },
-        change: function( event, ui ) {
+        change: function (event, ui) {
             if (ui.item == null) {
                 $("#document_sub_type").parent().removeClass('state-success').addClass('state-error');
             }
@@ -127,7 +127,7 @@ function getInstrumentData(file_id) {
         success: function (data) {
             var result = jQuery.parseJSON(data);
             $('body').animate({
-                    opacity: 1.0
+                opacity: 1.0
             }, "slow");
             if (result.status == 'success') {
                 $('#instrument_number_container').html(result.data);
@@ -163,17 +163,17 @@ function regenerateReport(file_id) {
         success: function (data) {
             var result = jQuery.parseJSON(data);
             $('body').animate({
-                    opacity: 1.0
+                opacity: 1.0
             }, "slow");
             $('#lp_order_success_msg').html(result.message).show();
             $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#lp_order_success_msg").offset().top
+                scrollTop: $("#lp_order_success_msg").offset().top
             }, 1000);
             lp_order_list.ajax.reload(null, false);
             setTimeout(function () {
                 $('#lp_order_success_msg').html('').hide();
             }, 5000);
-            
+
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
@@ -327,8 +327,7 @@ function downloadDocumentFromAws(url, documentType) {
     });
 }
 
-function addVesting(file_id)
-{
+function addVesting(file_id) {
     $('#file_id').val(file_id);
     $('body').animate({
         opacity: 0.5
@@ -342,12 +341,12 @@ function addVesting(file_id)
         success: function (data) {
             var result = jQuery.parseJSON(data);
             $('body').animate({
-                    opacity: 1.0
+                opacity: 1.0
             }, "slow");
             if (result.status == 'success') {
                 $("textarea#vesting_info").val(result.vesting_information);
                 $('#vesting_model').modal('show');
-            } 
+            }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
@@ -372,9 +371,8 @@ function changeClient(file_id) {
     $('#changeClientModel').modal('show');
 }
 
-function avoidDuplication()
-{    
-    $('input[type="checkbox"]').on('change', function() {
+function avoidDuplication() {
+    $('input[type="checkbox"]').on('change', function () {
         $('body').animate({ opacity: 0.5 }, "slow");
         var property_id = $(this).attr('id');
         if ($(this).is(":checked")) {
@@ -383,13 +381,13 @@ function avoidDuplication()
             var avoidFlag = 0;
         }
         $.ajax({
-            url: base_url+"update-avoid-duplication-flag",
+            url: base_url + "update-avoid-duplication-flag",
             method: "POST",
-            data : {
+            data: {
                 property_id: property_id,
                 avoidFlag: avoidFlag
             },
-            success: function(data){
+            success: function (data) {
                 var result = jQuery.parseJSON(data);
                 if (result.status == 'success') {
                     $('body').animate({ opacity: 1.0 }, "slow");
@@ -397,7 +395,7 @@ function avoidDuplication()
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#lp_order_success_msg").offset().top
                     }, 1000);
-                    order_list.ajax.reload( null, false );
+                    lp_order_list.ajax.reload(null, false);
                     setTimeout(function () {
                         $('#lp_order_success_msg').html('').hide();
                     }, 4000);
