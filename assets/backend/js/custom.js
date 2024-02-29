@@ -4676,7 +4676,10 @@ function exportSalesRepReports() {
         success: function (data) {
             if (data.status == 'success') {
                 download('sales_rep_report.csv', data.data);
-                $('#generateSalesReportModel').modal('show');
+                setTimeout(function () {
+                    $('#generateSalesReportModel').modal('hide');
+                }, 4000);
+                return;
             }
             else {
                 console.log('data ===', data);
