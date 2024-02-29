@@ -472,20 +472,20 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <label for="month" class="col-form-label">Select Month</label>
-                                                    <select id="month" required="" name="month" class="selectpicker" data-live-search="true" required>
-														<option value="1" <?php echo (date('m') == 1) ? "selected" : "" ?>>January</option>
-														<option value="2" <?php echo (date('m') == 2) ? "selected" : "" ?>>Febuary</option>
-														<option value="3" <?php echo (date('m') == 3) ? "selected" : "" ?>>March</option>
-														<option value="4" <?php echo (date('m') == 4) ? "selected" : "" ?>>April</option>
-														<option value="5" <?php echo (date('m') == 5) ? "selected" : "" ?>>May</option>
-														<option value="6" <?php echo (date('m') == 6) ? "selected" : "" ?>>June</option>
-														<option value="7" <?php echo (date('m') == 7) ? "selected" : "" ?>>July</option>
-														<option value="8" <?php echo (date('m') == 8) ? "selected" : "" ?>>August</option>
-														<option value="9" <?php echo (date('m') == 9) ? "selected" : "" ?>>September</option>
-														<option value="10" <?php echo (date('m') == 10) ? "selected" : "" ?>>October</option>
-														<option value="11" <?php echo (date('m') == 11) ? "selected" : "" ?>>November</option>
-														<option value="12" <?php echo (date('m') == 12) ? "selected" : "" ?>>December</option>
+                                                    <label for="select_month" class="col-form-label">Select Month</label>
+                                                    <select id="select_month" required="" name="select_month" required>
+														<option value="1" <?php echo (date('m') == 1) ? "selected" : "" ?> >January</option>
+														<option value="2" <?php echo (date('m') == 2) ? "selected" : "" ?> >Febuary</option>
+														<option value="3" <?php echo (date('m') == 3) ? "selected" : "" ?> >March</option>
+														<option value="4" <?php echo (date('m') == 4) ? "selected" : "" ?> >April</option>
+														<option value="5" <?php echo (date('m') == 5) ? "selected" : "" ?> >May</option>
+														<option value="6" <?php echo (date('m') == 6) ? "selected" : "" ?> >June</option>
+														<option value="7" <?php echo (date('m') == 7) ? "selected" : "" ?> >July</option>
+														<option value="8" <?php echo (date('m') == 8) ? "selected" : "" ?> >August</option>
+														<option value="9" <?php echo (date('m') == 9) ? "selected" : "" ?> >September</option>
+														<option value="10" <?php echo (date('m') == 10) ? "selected" : "" ?> >October</option>
+														<option value="11" <?php echo (date('m') == 11) ? "selected" : "" ?> >November</option>
+														<option value="12" <?php echo (date('m') == 12) ? "selected" : "" ?> >December</option>
 													</select>
                                                 </div>
                                             </div>
@@ -493,9 +493,8 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <label for="year" class="col-form-label">Select Role</label>
-                                                    <select id="year" required="" name="year" class="selectpicker" data-live-search="true" required>
-														<!-- <option value="">Select Role</option> -->
+                                                    <label for="select_year" class="col-form-label">Select Year</label>
+                                                    <select id="select_year" required="" name="select_year" required>
 														<?php
 $currently_selected = date('Y');
 $earliest_year = 2010;
