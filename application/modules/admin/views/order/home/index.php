@@ -46,7 +46,7 @@
 
                 <div class="col-sm-12 mb-4">
                     <button type="button" class="btn btn-success text-right float-right" onclick="sendDailyProductionReport();">Send Daily Production Email</button>
-                    <a href="javascript:void(0);" data-export-type="csv" onclick="exportSalesRepReports();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2">
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#generateSalesReportModel" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
@@ -447,3 +447,89 @@
 <!-- /.container-fluid -->
 
 <!-- /.content-wrapper -->
+
+<!-- Modal -->
+<div class="modal fade" id="generateSalesReportModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form  method="post" id="sales-rep-csv-report" onsubmit="exportSalesRepReports()">
+			<div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary" >Generate Sales Rep CSV Report</h6>
+                            </div>
+                            <div id="sales_report_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+                            <div id="sales_report_err_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+
+                            <div class="card-body">
+                                <div class="smart-forms smart-container">
+                                    <div class="modal-body search-result">
+
+
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="month" class="col-form-label">Select Month</label>
+                                                    <select id="month" required="" name="month" class="selectpicker" data-live-search="true" required>
+														<option value="1" <?php echo (date('m') == 1) ? "selected" : "" ?>>January</option>
+														<option value="2" <?php echo (date('m') == 2) ? "selected" : "" ?>>Febuary</option>
+														<option value="3" <?php echo (date('m') == 3) ? "selected" : "" ?>>March</option>
+														<option value="4" <?php echo (date('m') == 4) ? "selected" : "" ?>>April</option>
+														<option value="5" <?php echo (date('m') == 5) ? "selected" : "" ?>>May</option>
+														<option value="6" <?php echo (date('m') == 6) ? "selected" : "" ?>>June</option>
+														<option value="7" <?php echo (date('m') == 7) ? "selected" : "" ?>>July</option>
+														<option value="8" <?php echo (date('m') == 8) ? "selected" : "" ?>>August</option>
+														<option value="9" <?php echo (date('m') == 9) ? "selected" : "" ?>>September</option>
+														<option value="10" <?php echo (date('m') == 10) ? "selected" : "" ?>>October</option>
+														<option value="11" <?php echo (date('m') == 11) ? "selected" : "" ?>>November</option>
+														<option value="12" <?php echo (date('m') == 12) ? "selected" : "" ?>>December</option>
+													</select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="year" class="col-form-label">Select Role</label>
+                                                    <select id="year" required="" name="year" class="selectpicker" data-live-search="true" required>
+														<!-- <option value="">Select Role</option> -->
+														<?php
+$currently_selected = date('Y');
+$earliest_year = 2010;
+$latest_year = date('Y');
+foreach (range($latest_year, $earliest_year) as $i) {?>
+															<option value="<?php echo $i; ?>" <?php echo ($i == $currently_selected) ? "selected" : "" ?> > <?php echo $i; ?></option>
+														<?php }?>
+													</select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-footer" style="padding: 0px 1rem !important;">
+                                        <button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-check"></i>
+                                            </span>
+                                            <span class="text">Submit</span>
+                                        </button>
+                                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+                                            <span class="icon text-white-50">
+                                                <i class="fas fa-ban"></i>
+                                            </span>
+                                            <span class="text">Cancel</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<input type="hidden" name="admin_id" id="formId" value="">
+			</form>
+		</div>
+	</div>
+</div>
