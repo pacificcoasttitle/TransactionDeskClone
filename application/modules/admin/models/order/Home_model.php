@@ -2565,7 +2565,7 @@ class Home_model extends CI_Model
         );
     }
 
-    public function get_sales_rep_report()
+    public function get_sales_rep_report($month, $year)
     {
         $this->db->select('
             order_details.file_number,
@@ -2610,12 +2610,12 @@ class Home_model extends CI_Model
             ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->db->group_start();
-        $this->db->where('MONTH(order_details.created_at)', date('m'));
-        $this->db->where('YEAR(order_details.created_at)', date('Y'));
+        $this->db->where('MONTH(order_details.created_at)', $month);
+        $this->db->where('YEAR(order_details.created_at)', $year);
         $this->db->group_end();
         $this->db->or_group_start();
-        $this->db->where('MONTH(order_details.sent_to_accounting_date)', date('m'));
-        $this->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+        $this->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        $this->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
         $this->db->group_end();
         // $this->db->where('DATE(order_details.created_at)', date('2023-06-10'));
 

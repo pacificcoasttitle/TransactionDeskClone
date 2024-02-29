@@ -4660,40 +4660,47 @@ function exportOrders() {
 }
 
 function exportSalesRepReports() {
-    // var sales_rep = $('#FilterOrderListing').val();
-    // var seachValue = $('.dataTables_filter input').val();
-
+    let month = $('#sales-rep-csv-report #month').val();
+    let year = $('#sales-rep-csv-report #year').val();
+    if (!month || !year) {
+        alert("Please specify month and year to generate report");
+        return;
+    }
+    d = {};
+    d.month = month;
+    d.year = year;
     $.ajax({
         url: base_url + "order/admin/export_sales_rep_reports",
         method: "POST",
-
+        data: d,
         success: function (data) {
             if (data.status == 'success') {
                 download('sales_rep_report.csv', data.data);
+                $('#generateSalesReportModel').modal('show');
             }
             else {
                 console.log('data ===', data);
                 alert(data.data)
-                $('#order_error_msg').html(data.data).show();
+                $('#sales_report_err_msg').html(data.data).show();
                 $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#order_success_msg").offset().top
+                    scrollTop: $("#sales_report_msg").offset().top
                 }, 1000);
 
                 setTimeout(function () {
-                    $('#order_error_msg').html('').hide();
+                    $('#sales_report_err_msg').html('').hide();
                 }, 4000);
             }
 
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert('Something went wrong. Please try it again.');
-            $('#order_error_msg').html('Something went wrong. Please try it again.').show();
+            $('#sales_report_err_msg').html('Something went wrong. Please try it again.').show();
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#customer_success_msg").offset().top
             }, 1000);
 
             setTimeout(function () {
-                $('#order_error_msg').html('').hide();
+                $('#sales_report_err_msg').html('').hide();
             }, 4000);
         }
     });
