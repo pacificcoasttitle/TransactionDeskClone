@@ -46,7 +46,7 @@
 
                 <div class="col-sm-12 mb-4">
                     <button type="button" class="btn btn-success text-right float-right" onclick="sendDailyProductionReport();">Send Daily Production Email</button>
-                    <a href="javascript:void(0);" data-toggle="modal" data-target="#generateSalesReportModel" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2">
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#generateSalesReportModel" class="btn btn-success btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
@@ -453,7 +453,7 @@
 	aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
-			<form  method="post" id="sales-rep-csv-report" onsubmit="exportSalesRepReports()">
+			<form  method="post" id="sales-rep-csv-report">
 			<div class="row">
                     <div class="col-lg-12">
                         <div class="card shadow">
@@ -510,7 +510,7 @@ foreach (range($latest_year, $earliest_year) as $i) {?>
 
                                     </div>
                                     <div class="form-footer" style="padding: 0px 1rem !important;">
-                                        <button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+                                        <button type="button" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm" onclick="exportSalesRepReports()">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-check"></i>
                                             </span>
