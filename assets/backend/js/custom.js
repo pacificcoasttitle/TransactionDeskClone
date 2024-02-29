@@ -4660,8 +4660,8 @@ function exportOrders() {
 }
 
 function exportSalesRepReports() {
-    let month = $('#sales-rep-csv-report #month').val();
-    let year = $('#sales-rep-csv-report #year').val();
+    let month = $('#sales-rep-csv-report #select_month').val();
+    let year = $('#sales-rep-csv-report #select_year').val();
     if (!month || !year) {
         alert("Please specify month and year to generate report");
         return;
