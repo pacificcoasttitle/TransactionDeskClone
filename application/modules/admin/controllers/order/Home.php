@@ -6372,7 +6372,14 @@ class Home extends MX_Controller
 
     public function exportSalesRepReports()
     {
-        $ordersList = $this->home_model->get_sales_rep_report();
+        $month = $this->input->post('month');
+        $year = $this->input->post('year');
+        if (empty($month) || empty($year)) {
+            echo json_encode(array('status' => 'error', 'data' => 'Please specify month and year to generate reports.'));
+            exit;
+        }
+
+        $ordersList = $this->home_model->get_sales_rep_report($month, $year);
         // echo "<pre>";
         // print_r($ordersList);die;
         if (isset($ordersList) && !empty($ordersList)) {
