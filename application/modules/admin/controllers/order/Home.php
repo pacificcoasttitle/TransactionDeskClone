@@ -2485,7 +2485,7 @@ class Home extends MX_Controller
         $partnerId = $this->input->post('partner_id');
         $userId = $this->input->post('user_id');
         $userType = $this->input->post('user_type');
-        if (empty($partnerId) || empty($userId) || empty($userType)) {
+        if (empty($partnerId) || empty($userType)) {
             $data = array('status' => 'error', 'msg' => 'Invalid details.');
             echo json_encode($data);exit();
         }
