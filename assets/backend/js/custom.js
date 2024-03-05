@@ -5125,7 +5125,7 @@ function updateTitleSalesUser(partner_id, id, user_type) {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#companies_error_msg").offset().top
                 }, 1000);
-
+                $('body').animate({ opacity: 1.0 }, "slow");
                 setTimeout(function () {
                     $('#companies_error_msg').html('').hide();
                 }, 4000);
