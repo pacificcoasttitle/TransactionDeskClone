@@ -1,8 +1,8 @@
-<?php 
-    $userdata = $this->session->userdata('admin');
-	$roleList = $this->common->getRoleList();
-	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
-	$roleName = $roleList[$role_id];
+<?php
+$userdata = $this->session->userdata('admin');
+$roleList = $this->common->getRoleList();
+$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+$roleName = $roleList[$role_id];
 ?>
 <style>
 .dataTables_length {
@@ -16,56 +16,56 @@
 			<h1 class="h3 text-gray-800"> Companies </h1>
 		</div>
 		<div class="col-sm-8">
-            <a href="<?php echo base_url()?>order/admin/add-company"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="<?php echo base_url() ?>order/admin/add-company"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
-                <span class="text"> Add Company </span> 
+                <span class="text"> Add Company </span>
             </a>
-            <a href="<?php echo base_url()?>order/admin/import-underwriters"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="<?php echo base_url() ?>order/admin/import-underwriters"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-file-import"></i>
                 </span>
-                <span class="text"> Import Underwriter </span> 
+                <span class="text"> Import Underwriter </span>
             </a>
-            <a href="javascript:void(0);" id="refresh-company-data"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="javascript:void(0);" id="refresh-company-data"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-refresh"></i>
                 </span>
-                <span class="text"> Refresh </span> 
+                <span class="text"> Refresh </span>
             </a>
-            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-                <a href="javascript:void(0);" data-export-type="csv" id="export_companies" class="btn btn-success btn-icon-split float-right mr-2"> 
+            <?php if (!in_array($roleName, ['CS Admin'])): ?>
+                <a href="javascript:void(0);" data-export-type="csv" id="export_companies" class="btn btn-success btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
-                    <span class="text"> Export </span> 
+                    <span class="text"> Export </span>
                 </a>
-            <?php endif; ?>
+            <?php endif;?>
 		</div>
 	</div>
     <!-- DataTables Example -->
     <div class="card shadow mb-4">
         <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
+            <div class="datatable-header-titles" >
                 <span>
                     <i class="fas fa-building"></i>
                 </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Companies</h6> 
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Companies</h6>
             </div>
         </div>
-     
+
         <div class="card-body">
-            <?php if(!empty($success)) {?>
+            <?php if (!empty($success)) {?>
                 <div class="w-100 alert alert-success alert-dismissible">
-                    <?php echo $success;?>
+                    <?php echo $success; ?>
                 </div>
-            <?php } 
-                if(!empty($errors)) {?>
+            <?php }
+if (!empty($errors)) {?>
                     <div class="w-100 alert alert-success alert-dismissible">
-                        <?php echo $errors;?>
+                        <?php echo $errors; ?>
                     </div>
-            <?php } ?>
+            <?php }?>
             <div id="companies_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="companies_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
@@ -76,21 +76,23 @@
                             <th>Partner Company Id</th>
                             <th>Partner Company Name</th>
                             <th>Address</th>
+                            <th>Sales Rep</th>
+                            <th>Title Officer</th>
                             <th>Loan Underwriter</th>
                             <th>Sales Underwriter</th>
                             <th>Deliverables</th>
                             <th>Action</th>
                         </tr>
-                    </thead>                
+                    </thead>
                     <tbody></tbody>
                 </table>
             </div>
         </div>
-        
+
         <div class="modal fade" width="500px" id="deliverables_information" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document" style="width:40%;">
                 <div class="modal-content">
-                    <form method="POST" action="<?php echo base_url();?>store-deliverables">
+                    <form method="POST" action="<?php echo base_url(); ?>store-deliverables">
                         <div class="smart-forms smart-container wrap-2" style="margin:30px">
                             <div class="modal-body search-result">
                                 <div id="deliverables-details-fields">
