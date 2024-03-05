@@ -5097,6 +5097,53 @@ function updateUnderwriter(partner_id, underwriter_type, underwriter) {
     });
 }
 
+function updateTitleSalesUser(partner_id, id, user_type) {
+
+    $('body').animate({ opacity: 0.5 }, "slow");
+    $.ajax({
+        url: base_url + "order/admin/update-title-sales-company",
+        method: "POST",
+        data: {
+            partner_id: partner_id,
+            user_id: id,
+            user_type: user_type
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            if (result.status == 'success') {
+                $('body').animate({ opacity: 1.0 }, "slow");
+                $('#companies_success_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#companies_success_msg").offset().top
+                }, 1000);
+                companies_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#companies_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#companies_error_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#companies_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#companies_error_msg').html('').hide();
+                }, 4000);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#companies_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#companies_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#companies_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
+}
+
 function deleteFeesType(id) {
     if (id == '') {
         alert('Fee type ID is required.');

@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | and its corresponding controller class/method. The segments in a
 | URL normally follow this pattern:
 |
-|	example.com/class/method/id/
+|    example.com/class/method/id/
 |
 | In some instances, however, you may want to remap this relationship
 | so that a different class/function is called than the one
@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 | Please see the user guide for complete details:
 |
-|	https://codeigniter.com/user_guide/general/routing.html
+|    https://codeigniter.com/user_guide/general/routing.html
 |
 | -------------------------------------------------------------------------
 | RESERVED ROUTES
@@ -27,18 +27,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 | There are three reserved routes:
 |
-|	$route['default_controller'] = 'welcome';
+|    $route['default_controller'] = 'welcome';
 |
 | This route indicates which controller class should be loaded if the
 | URI contains no data. In the above example, the "welcome" class
 | would be loaded.
 |
-|	$route['404_override'] = 'errors/page_missing';
+|    $route['404_override'] = 'errors/page_missing';
 |
 | This route will tell the Router which controller/method to use if those
 | provided in the URL cannot be matched to a valid route.
 |
-|	$route['translate_uri_dashes'] = FALSE;
+|    $route['translate_uri_dashes'] = FALSE;
 |
 | This is not exactly a route, but allows you to automatically route
 | controller and method names that contain dashes. '-' isn't a valid
@@ -46,9 +46,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | When you set this option to TRUE, it will replace ALL dashes in the
 | controller and method URI segments.
 |
-| Examples:	my-controller/index	-> my_controller/index
-|		my-controller/my-method	-> my_controller/my_method
-*/
+| Examples:    my-controller/index    -> my_controller/index
+|        my-controller/my-method    -> my_controller/my_method
+ */
 
 /* Route for PCT static pages*/
 $route['default_controller'] = 'frontend/order/home/index';
@@ -234,7 +234,7 @@ $route['escrow-create-note'] = 'frontend/order/escrow/create_note';
 $route['add-borrower-on-order'] = 'frontend/order/escrow/addBorrowerOnOrder';
 $route['add-borrower-on-order-for-payoff'] = 'frontend/order/escrow/addBorrowerOnOrderForPayoff';
 $route['add-lender-on-order'] = 'frontend/order/escrow/addLenderOnOrder';
-$route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSellerForm/$1';            
+$route['borrower-seller-form/(:any)'] = 'frontend/order/dashboardMail/borrowerSellerForm/$1';
 $route['borrower-buyer-form/(:any)'] = 'frontend/order/dashboardMail/borrowerBuyerForm/$1';
 $route['sales-commission/(:num)'] = 'frontend/order/salesRep/commission/$1';
 $route['task-documents'] = 'frontend/order/escrow/taskDocuments';
@@ -310,6 +310,7 @@ $route['order/admin/add-fee'] = 'admin/order/fees/add_fee';
 $route['order/admin/edit-fee/:num'] = 'admin/order/fees/edit_fee';
 $route['order/admin/import-underwriters'] = 'admin/order/home/import_underwriters';
 $route['order/admin/update-underwriter'] = 'admin/order/home/updateUnderwriter';
+$route['order/admin/update-title-sales-company'] = 'admin/order/home/updateTitleSalesCompany';
 $route['order/admin/fees-types'] = 'admin/order/FeesTypes/index';
 $route['order/admin/add-fee-type'] = 'admin/order/FeesTypes/add_fee_type';
 $route['order/admin/edit-fee-type/:num'] = 'admin/order/FeesTypes/edit_fee_type';
@@ -368,7 +369,6 @@ $route['order/admin/commission-bonus'] = 'admin/order/commissionRange/index_bonu
 $route['order/admin/add-commission-bonus'] = 'admin/order/commissionRange/add_bonus';
 $route['order/admin/edit-commission-bonus/(:num)'] = 'admin/order/commissionRange/edit_bonus/$1';
 $route['order/admin/delete-commission-bonus/(:num)'] = 'admin/order/commissionRange/delete_bonus/$1';
-
 
 $route['order/admin/underwriter-tier'] = 'admin/order/commissionRange/index_underwriter_tier';
 $route['order/admin/add-underwriter-tier'] = 'admin/order/commissionRange/add_underwriter_tier';
@@ -608,27 +608,27 @@ $route['hr/admin/delete-escrow-instruction'] = 'admin/hr/escrowInstruction/delet
 $route['hr/admin/logout'] = 'admin/hr/dashboard/logout';
 /* End Route for HR-Center backend */
 
-$route['calculator'] = 'frontend/calc/welcome/index';  
-$route['calculator/signup'] = 'frontend/calc/welcome/signup';  
-$route['calculator/dashboard'] = 'frontend/calc/welcome/dashboard';  
-$route['calculator/logout'] = 'frontend/calc/welcome/logout'; 
+$route['calculator'] = 'frontend/calc/welcome/index';
+$route['calculator/signup'] = 'frontend/calc/welcome/signup';
+$route['calculator/dashboard'] = 'frontend/calc/welcome/dashboard';
+$route['calculator/logout'] = 'frontend/calc/welcome/logout';
 $route['calculator/view_quote/:num'] = 'frontend/calc/welcome/view_quote';
-$route['calculator/admin_login'] = 'frontend/calc/welcome/admin_login';  
+$route['calculator/admin_login'] = 'frontend/calc/welcome/admin_login';
 $route['calculator/admin_dashboard'] = 'admin/calc/admin/admin_dashboard';
-$route['calculator/admin/title_rates'] = 'admin/calc/admin/title_rates'; 
-$route['calculator/admin_dashboard_submit'] = 'admin/calc/admin/admin_dashboard_submit'; 
-$route['calculator/admin/import_title_rates'] = 'admin/calc/admin/import_title_rates'; 
-$route['calculator/admin/edit_title_rates/:num'] = 'admin/calc/admin/edit_title_rates'; 
-$route['calculator/admin/resale_rates'] = 'admin/calc/admin/resale_rates'; 
-$route['calculator/admin/add_resale_rates'] = 'admin/calc/admin/add_resale_rates'; 
-$route['calculator/admin/edit_resale_rates/:num'] = 'admin/calc/admin/edit_resale_rates'; 
-$route['calculator/admin/refinance_rates'] = 'admin/calc/admin/refinance_rates'; 
-$route['calculator/admin/add_refinance_rates'] = 'admin/calc/admin/add_refinance_rates'; 
-$route['calculator/admin/edit_refinance_rates/:num'] = 'admin/calc/admin/edit_refinance_rates'; 
-$route['calculator/admin/fees'] = 'admin/calc/admin/fees'; 
-$route['calculator/admin/add_fees'] = 'admin/calc/admin/add_fees'; 
-$route['calculator/admin/edit_fees/:num'] = 'admin/calc/admin/edit_fees'; 
-$route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout'; 
+$route['calculator/admin/title_rates'] = 'admin/calc/admin/title_rates';
+$route['calculator/admin_dashboard_submit'] = 'admin/calc/admin/admin_dashboard_submit';
+$route['calculator/admin/import_title_rates'] = 'admin/calc/admin/import_title_rates';
+$route['calculator/admin/edit_title_rates/:num'] = 'admin/calc/admin/edit_title_rates';
+$route['calculator/admin/resale_rates'] = 'admin/calc/admin/resale_rates';
+$route['calculator/admin/add_resale_rates'] = 'admin/calc/admin/add_resale_rates';
+$route['calculator/admin/edit_resale_rates/:num'] = 'admin/calc/admin/edit_resale_rates';
+$route['calculator/admin/refinance_rates'] = 'admin/calc/admin/refinance_rates';
+$route['calculator/admin/add_refinance_rates'] = 'admin/calc/admin/add_refinance_rates';
+$route['calculator/admin/edit_refinance_rates/:num'] = 'admin/calc/admin/edit_refinance_rates';
+$route['calculator/admin/fees'] = 'admin/calc/admin/fees';
+$route['calculator/admin/add_fees'] = 'admin/calc/admin/add_fees';
+$route['calculator/admin/edit_fees/:num'] = 'admin/calc/admin/edit_fees';
+$route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout';
 
 $route['reports'] = "frontend/report";
 $route['reports/(.+)'] = "frontend/report/$1";
@@ -637,7 +637,7 @@ $route['labels'] = "frontend/label";
 $route['labels/(.+)'] = "frontend/label/$1";
 $route['download-label-pdf'] = "frontend/label/downloadPdf";
 $route['pmas/(.+)'] = "frontend/pma/$1";
-$route['send_invite'] = 'frontend/order/home/send_invite'; 
+$route['send_invite'] = 'frontend/order/home/send_invite';
 $route['sales-snap-shot'] = "frontend/salesSnapShot";
 $route['sales-snap-shot/(.+)'] = "frontend/salesSnapShot/$1";
 
@@ -646,8 +646,7 @@ $route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';
 $route['api/send_title_doc_to_resware'] = 'frontend/api/pctCalculator/send_title_rates_document_to_resware';
 $route['order/admin/regenerate-tax-document'] = 'admin/order/home/regenerateTaxDocument';
 $route['order/admin/generate-tax-document'] = 'admin/order/home/generateTaxDocument';
-$route['check-document'] = 'frontend/order/home/checkDocument'; 
-
+$route['check-document'] = 'frontend/order/home/checkDocument';
 
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = false;

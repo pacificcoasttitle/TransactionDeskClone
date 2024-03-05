@@ -1728,9 +1728,31 @@ class Home extends MX_Controller
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
             $company_lists = $this->home_model->get_companies_list($params);
         }
-
         $data = array();
         if (isset($company_lists['data']) && !empty($company_lists['data'])) {
+            $this->load->model('order/sales_model');
+            $this->load->model('order/title_model');
+            $sales_rep_lists = $this->sales_model->get_sales_reps(['sales_rep_enable' => 1]);
+            $title_officer_lists = $this->title_model->get_title_officers([]);
+
+            $salesRepList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateTitleSalesUser(partner_id, this.value, \'sales\');" id="sales_rep" name="sales_rep">
+                                    <option value="">Select Sales Rep</option>';
+            if (isset($sales_rep_lists['data']) && !empty($sales_rep_lists['data'])) {
+                foreach ($sales_rep_lists['data'] as $key => $sales_rep) {
+                    $salesRepList .= '<option value="' . $sales_rep['id'] . '" data-partner-id="' . $sales_rep['partner_id'] . '">' . $sales_rep['first_name'] . ' ' . $sales_rep['last_name'] . '</option>';
+                }
+            }
+            $salesRepList .= '</select>';
+
+            $titleOfficerList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateTitleSalesUser(partner_id, this.value,  \'title\' );" id="title_officer" name="title_officer">
+                                    <option value="">Select Title Officer</option>';
+            if (isset($title_officer_lists['data']) && !empty($title_officer_lists['data'])) {
+                foreach ($title_officer_lists['data'] as $key => $title_officer) {
+                    $titleOfficerList .= '<option value="' . $title_officer['id'] . '" data-partner-id="' . $title_officer['partner_id'] . '">' . $title_officer['first_name'] . ' ' . $title_officer['last_name'] . '</option>';
+                }
+            }
+            $titleOfficerList .= '</select>';
+
             $i = $params['start'] + 1;
             foreach ($company_lists['data'] as $key => $value) {
                 $nestedData = array();
@@ -1738,6 +1760,20 @@ class Home extends MX_Controller
                 $nestedData[] = $value['partner_id'];
                 $nestedData[] = $value['partner_name'];
                 $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
+                $salesRepSelection = $salesRepList;
+                $salesRepSelection = str_replace('partner_id', $value['partner_id'], $salesRepSelection);
+                if (!empty($value['sales_rep_id'])) {
+                    $salesRepSelection = str_replace('value="' . $value['sales_rep_id'] . '"', 'value="' . $value['sales_rep_id'] . '" selected', $salesRepSelection);
+                }
+
+                $titleOfficerSelection = $titleOfficerList;
+                $titleOfficerSelection = str_replace('partner_id', $value['partner_id'], $titleOfficerSelection);
+                if (!empty($value['title_officer_id'])) {
+                    $titleOfficerSelection = str_replace('value="' . $value['title_officer_id'] . '"', 'value="' . $value['title_officer_id'] . '" selected', $titleOfficerSelection);
+                }
+
+                $nestedData[] = $salesRepSelection;
+                $nestedData[] = $titleOfficerSelection;
                 if (!empty($value['loan_underwriter'])) {
                     $loan_underwriter = $value['loan_underwriter'];
                 } else {
@@ -2443,6 +2479,36 @@ class Home extends MX_Controller
         $data = array('status' => 'success', 'msg' => 'Underwriter updated successfully.');
         echo json_encode($data);
     }
+
+    public function updateTitleSalesCompany()
+    {
+        $partnerId = $this->input->post('partner_id');
+        $userId = $this->input->post('user_id');
+        $userType = $this->input->post('user_type');
+        if (empty($partnerId) || empty($userId) || empty($userType)) {
+            $data = array('status' => 'error', 'msg' => 'Invalid details.');
+            echo json_encode($data);exit();
+        }
+
+        $updateData = [];
+        if ($userType === 'title') {
+            $updateData['title_officer_id'] = $userId;
+        } else if ($userType === 'sales') {
+            $updateData['sales_rep_id'] = $userId;
+        }
+        // $updateData = array($underwriter_type => $underwriter);
+
+        $condition = array('partner_id' => $partnerId);
+        $this->home_model->update($updateData, $condition, 'pct_order_partner_company_info');
+        // print_r($a);die;
+
+        /** Save user Activity */
+        $activity = 'Partner comapny id: ' . $partner_id . ' user type: ' . $userType . ' details  Updated value:- ' . $userId;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+
+        $data = array('status' => 'success', 'msg' => 'Details updated successfully.');
+        echo json_encode($data);
 
     public function cplProposedUsers()
     {
