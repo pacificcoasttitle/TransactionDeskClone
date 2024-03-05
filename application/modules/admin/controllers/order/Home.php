@@ -2509,6 +2509,7 @@ class Home extends MX_Controller
 
         $data = array('status' => 'success', 'msg' => 'Details updated successfully.');
         echo json_encode($data);
+    }
 
     public function cplProposedUsers()
     {
