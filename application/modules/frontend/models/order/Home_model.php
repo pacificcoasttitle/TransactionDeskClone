@@ -10,10 +10,12 @@ class Home_model extends CI_Model
     public function get_user($params = array())
     {
         $table = $this->table;
-        $this->db->select('*');
+        // $this->db->select('*');
+        $this->db->select('customer_basic_details.*, pc.title_officer_id, pc.sales_rep_id');
         $this->db->from($table);
+        $this->db->join('pct_order_partner_company_info as pc', 'customer_basic_details.partner_id = pc.partner_id', 'left');
         foreach ($params as $key => $val) {
-            $this->db->where($key, $val);
+            $this->db->where('customer_basic_details.' . $key, $val);
         }
         $query = $this->db->get();
         $result = $query->row_array();
@@ -29,10 +31,12 @@ class Home_model extends CI_Model
     {
         $table = $this->table;
 
-        $this->db->select('*');
+        $this->db->select('customer_basic_details.*');
         $this->db->from($table);
 
         if (array_key_exists("where", $params)) {
+            $this->db->select('pc.title_officer_id, pc.sales_rep_id');
+            $this->db->join('pct_order_partner_company_info as pc', 'customer_basic_details.partner_id = pc.partner_id', 'left');
             foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }

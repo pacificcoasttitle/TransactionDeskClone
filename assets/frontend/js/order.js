@@ -1,21 +1,17 @@
-$(document).ready(function() {
-    if($(".grant-deed-no-data").length)
-    {
+$(document).ready(function () {
+    if ($(".grant-deed-no-data").length) {
         notifyAdmin('Grant Deed Not Found');
     }
 
-    if($(".tax-no-data").length)
-    {
+    if ($(".tax-no-data").length) {
         notifyAdmin('Tax Document Not Found');
     }
 
-    if($(".legal-vesting-no-data").length)
-    {
+    if ($(".legal-vesting-no-data").length) {
         notifyAdmin('Legal Vesting Document Not Found');
-    }   
-    
-    if ($('#clone-email-address').length)
-    {
+    }
+
+    if ($('#clone-email-address').length) {
         $('#clone-email-address').cloneya({
             maximum: 5
         }).on('after_append.cloneya', function (event, toclone, newclone) {
@@ -23,14 +19,14 @@ $(document).ready(function() {
         }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
             $(clone).slideToggle('slow', function () {
                 $(clone).remove();
-                
+
             })
         });
     }
 
     getProductTypes();
 
-    $('.search-file-btn').children("input").bind('change', function() {
+    $('.search-file-btn').children("input").bind('change', function () {
         var fileName = '';
         fileName = $(this).val().split("\\").slice(-1)[0];
         $(this).parent().parent().children("span").html(fileName);
@@ -38,12 +34,12 @@ $(document).ready(function() {
 
     if ($('#CompanyName').length) {
         $("#CompanyName, #OpenEmail").autocomplete({
-            source: function(request, response) {
+            source: function (request, response) {
                 $.ajax({
-                    url: base_url+'getDetailsByName',
+                    url: base_url + 'getDetailsByName',
                     data: {
-                        term : request.term,
-                        is_master_search: 1           
+                        term: request.term,
+                        is_master_search: 1
                     },
                     type: "POST",
                     dataType: "json",
@@ -53,61 +49,68 @@ $(document).ready(function() {
                                 return item;
                             }))
                         } else {
-                            response([{ label: 'No results found.', val: -1}]);
+                            response([{ label: 'No results found.', val: -1 }]);
                         }
                     }
                 });
             },
             delay: 0,
             minLength: 3,
-            select: function( event, ui ) {
+            select: function (event, ui) {
+                console.log('ui.item ==========', ui.item);
                 event.preventDefault();
                 $("#CompanyName").val(ui.item.company);
                 $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');
-                $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+                $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');
                 $("#OpenName").val(ui.item.fname).parent().addClass('state-success');
                 $("#OpenLastName").val(ui.item.lname).parent().addClass('state-success');
                 $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
                 $("#City").val(ui.item.city).parent().addClass('state-success');
                 $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
                 $("#CustomerId").val(ui.item.id);
-                
+                if (ui.item.sales_rep_id) {
+                    $("#SalesRep").val(ui.item.sales_rep_id)
+                }
+
+                if (ui.item.title_officer_id) {
+                    $("#TitleOfficer").val(ui.item.title_officer_id)
+                }
+
 
                 var is_escrow = ui.item.is_escrow;
                 var is_mortgage_broker = ui.item.is_primary_mortgage_user;
 
-                if(is_mortgage_broker == 1) {
+                if (is_mortgage_broker == 1) {
                     $('#add-lender-section').show();
                     $('#add-escrow-section').show();
                     $('#email-notification-section').show();
                     $('#upload_lender').show();
                     $('#upload_escrow').show();
                 } else {
-                    if(is_escrow == 1) {
+                    if (is_escrow == 1) {
                         $('#add-lender-section').show();
                         $('#add-escrow-section').hide();
                         $('#escrow-details-fields').hide();
-                        $("#add-escrow-details").prop( "checked", false );
+                        $("#add-escrow-details").prop("checked", false);
                         $('#upload_lender').hide();
                         $('#upload_escrow').show();
                         $('#email-notification-section').hide();
                     } else {
                         $('#add-lender-section').hide();
                         $('#lender-details-fields').hide();
-                        $("#add-lender-details").prop( "checked", false );
+                        $("#add-lender-details").prop("checked", false);
                         $('#add-escrow-section').show();
                         $('#email-notification-section').show();
                         $('#upload_lender').show();
                         $('#upload_escrow').hide();
                     }
                 }
-                
+
                 getProductTypes();
                 getDeliverables(ui.item.partner_id);
             },
-            change: function( event, ui ) {
-                if (ui.item == null)
-                {
+            change: function (event, ui) {
+                if (ui.item == null) {
                     $("#CompanyName").parent().removeClass('state-success').addClass('state-error');
                     $("#OpenEmail").val('').parent().removeClass('state-success').addClass('state-error');
                     $("#Opentelephone").val('').parent().removeClass('state-success').addClass('state-error');
@@ -122,16 +125,16 @@ $(document).ready(function() {
         });
     }
 
-    $('#email-notification').on('click' , function() {
-        if ( $(this).is(":checked") ) {
+    $('#email-notification').on('click', function () {
+        if ($(this).is(":checked")) {
             $(this).val(1);
         } else {
             $(this).val(0);
         }
     });
-    
-    $("input[data-type='number']").keyup(function(event){
-        if(event.which >= 37 && event.which <= 40){
+
+    $("input[data-type='number']").keyup(function (event) {
+        if (event.which >= 37 && event.which <= 40) {
             event.preventDefault();
         }
         var $this = $(this);
@@ -143,8 +146,7 @@ $(document).ready(function() {
 });
 
 
-function createService4(fipCode,address,city,unit_no,apn,random_number,properyData='')
-{
+function createService4(fipCode, address, city, unit_no, apn, random_number, properyData = '') {
     let bedrooms = baths = lotSize = zoning = buildingArea = '';
     if (!$.isEmptyObject(properyData)) {
         bedrooms = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Bedrooms").text();
@@ -153,9 +155,9 @@ function createService4(fipCode,address,city,unit_no,apn,random_number,properyDa
         zoning = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Zoning").text();
         buildingArea = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("BuildingArea").text();
     }
-	$.ajax({
+    $.ajax({
         // url: 'php/createservice.php',
-        url: base_url+'createService',
+        url: base_url + 'createService',
         data: {
             fipCode: fipCode,
             address: address,
@@ -163,7 +165,7 @@ function createService4(fipCode,address,city,unit_no,apn,random_number,properyDa
             unit_no: unit_no,
             apn: apn,
             methodId: 4,
-            random_number:random_number,
+            random_number: random_number,
             bedRooms: bedrooms,
             baths: baths,
             lotSize: lotSize,
@@ -173,45 +175,42 @@ function createService4(fipCode,address,city,unit_no,apn,random_number,properyDa
         type: "POST",
         dataType: "xml"
     })
-    	.done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
-                
-                    $('#legalDescription, #vestingInformation').prev('.loader').hide();
-                    $('#legalDescription').html('No data found.');
-                    $('#vestingInformation').html('No data found.');
-                    $('#grantDeedInfoFile').prev('.loader').hide();
-                    $('#grantDeedInfoFile').css('border','1px solid #000000');
-                    $('#grantDeedInfoFile').css('padding','15px');
-                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                
-            } 
-            else if (responseStatus == 'Success') 
-            {
+
+            if (responseStatus == 'Failed') {
+
+                $('#legalDescription, #vestingInformation').prev('.loader').hide();
+                $('#legalDescription').html('No data found.');
+                $('#vestingInformation').html('No data found.');
+                $('#grantDeedInfoFile').prev('.loader').hide();
+                $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                $('#grantDeedInfoFile').css('padding', '15px');
+                $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+
+            }
+            else if (responseStatus == 'Success') {
                 $requestId = $(response).find('RequestID').text();
-                getRequestSummaries($requestId,'4',random_number);
+                getRequestSummaries($requestId, '4', random_number);
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
 
             $('#legalDescription, #vestingInformation').prev('.loader').hide();
             $('#legalDescription').html('No data found.');
             $('#vestingInformation').html('No data found.');
             $('#grantDeedInfoFile').prev('.loader').hide();
-            $('#grantDeedInfoFile').css('border','1px solid #000000');
-            $('#grantDeedInfoFile').css('padding','15px');
+            $('#grantDeedInfoFile').css('border', '1px solid #000000');
+            $('#grantDeedInfoFile').css('padding', '15px');
             $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-            alert('Something went wrong.Please hard refresh your page.');         
+            alert('Something went wrong.Please hard refresh your page.');
         });
 }
 
-function createService3(apn,state,county,random_number)
-{
-	$.ajax({
+function createService3(apn, state, county, random_number) {
+    $.ajax({
         // url: 'php/createservice.php',
-        url: base_url+'createService',
+        url: base_url + 'createService',
         data: {
             apn: apn,
             state: state,
@@ -222,27 +221,25 @@ function createService3(apn,state,county,random_number)
         dataType: "xml",
         type: "POST"
     })
-    	.done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
+
+            if (responseStatus == 'Failed') {
                 $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                $('#firstInstallment').css('border','1px solid #000000');
-                $('#firstInstallment').css('padding','15px');
+                $('#firstInstallment').css('border', '1px solid #000000');
+                $('#firstInstallment').css('padding', '15px');
                 $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                $('#secondInstallment').css('border','1px solid #000000');
-                $('#secondInstallment').css('padding','15px');
+                $('#secondInstallment').css('border', '1px solid #000000');
+                $('#secondInstallment').css('padding', '15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-            } 
-            else if (responseStatus == 'Success') 
-            {
+            }
+            else if (responseStatus == 'Success') {
                 $requestId = $(response).find('RequestID').text();
-                getRequestSummaries($requestId,'3',random_number);
+                getRequestSummaries($requestId, '3', random_number);
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             /*$('#firstInstallment, #secondInstallment').prev('.loader').hide();
             $('#firstInstallment').css('border','1px solid #000000');
             $('#firstInstallment').css('padding','15px');
@@ -250,15 +247,14 @@ function createService3(apn,state,county,random_number)
             $('#secondInstallment').css('border','1px solid #000000');
             $('#secondInstallment').css('padding','15px');
             $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
-            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.'); 
+            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.');
         });
 }
 
-function getRequestSummaries(requestId,methodId,random_number)
-{
+function getRequestSummaries(requestId, methodId, random_number) {
     var apn = $("#apn").val();
-	$.ajax({
-        url: base_url+'getRequestSummaries',
+    $.ajax({
+        url: base_url + 'getRequestSummaries',
         data: {
             requestId: requestId,
             methodId: methodId,
@@ -268,70 +264,65 @@ function getRequestSummaries(requestId,methodId,random_number)
         dataType: "xml",
         type: "POST"
     })
-    	.done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
-               $('#legalDescription, #vestingInformation').prev('.loader').hide();
+
+            if (responseStatus == 'Failed') {
+                $('#legalDescription, #vestingInformation').prev('.loader').hide();
                 $('#legalDescription').html('No data found.');
                 $('#vestingInformation').html('No data found.');
-                
+
                 $('#grantDeedInfoFile').prev('.loader').hide();
-                $('#grantDeedInfoFile').css('border','1px solid #000000');
-                $('#grantDeedInfoFile').css('padding','15px');
+                $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                $('#grantDeedInfoFile').css('padding', '15px');
                 $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-            
+
                 $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                $('#firstInstallment').css('border','1px solid #000000');
-                $('#firstInstallment').css('padding','15px');
+                $('#firstInstallment').css('border', '1px solid #000000');
+                $('#firstInstallment').css('padding', '15px');
                 $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                $('#secondInstallment').css('border','1px solid #000000');
-                $('#secondInstallment').css('padding','15px');
+                $('#secondInstallment').css('border', '1px solid #000000');
+                $('#secondInstallment').css('padding', '15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-                
-            } 
-            else if (responseStatus == 'Success') 
-            {
+
+            }
+            else if (responseStatus == 'Success') {
                 $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
-                if($resultId)
-                {
-                    getResultById($resultId,methodId,random_number);
+                if ($resultId) {
+                    getResultById($resultId, methodId, random_number);
                 }
-                else
-                {
-                    getRequestSummaries($requestId,methodId,random_number);
-                }              
-                
+                else {
+                    getRequestSummaries($requestId, methodId, random_number);
+                }
+
             }
         })
-        .fail(function(err) {
-                /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
-                $('#legalDescription').html('No data found.');
-                $('#vestingInformation').html('No data found.');
-                
-                $('#grantDeedInfoFile').prev('.loader').hide();
-                $('#grantDeedInfoFile').css('border','1px solid #000000');
-                $('#grantDeedInfoFile').css('padding','15px');
-                $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+        .fail(function (err) {
+            /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
+            $('#legalDescription').html('No data found.');
+            $('#vestingInformation').html('No data found.');
             
-                $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                $('#firstInstallment').css('border','1px solid #000000');
-                $('#firstInstallment').css('padding','15px');
-                $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                $('#secondInstallment').css('border','1px solid #000000');
-                $('#secondInstallment').css('padding','15px');
-                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
-            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.'); 
+            $('#grantDeedInfoFile').prev('.loader').hide();
+            $('#grantDeedInfoFile').css('border','1px solid #000000');
+            $('#grantDeedInfoFile').css('padding','15px');
+            $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+        
+            $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+            $('#firstInstallment').css('border','1px solid #000000');
+            $('#firstInstallment').css('padding','15px');
+            $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
+            $('#secondInstallment').css('border','1px solid #000000');
+            $('#secondInstallment').css('padding','15px');
+            $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
+            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.');
         });
 }
 
-function getResultById(resultId,methodId,random_number)
-{
+function getResultById(resultId, methodId, random_number) {
     var apn = $("#apn").val();
-	$.ajax({
-        url: base_url+'getResultById',
+    $.ajax({
+        url: base_url + 'getResultById',
         data: {
             resultId: resultId,
             apn: apn,
@@ -341,29 +332,27 @@ function getResultById(resultId,methodId,random_number)
         dataType: "xml",
         type: "POST"
     })
-    	.done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
+
+            if (responseStatus == 'Failed') {
                 $('#legalDescription, #vestingInformation').prev('.loader').hide();
                 $('#legalDescription').html('No data found.');
                 $('#vestingInformation').html('No data found.');
-                
-           
+
+
                 $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                $('#firstInstallment').css('border','1px solid #000000');
-                $('#firstInstallment').css('padding','15px');
+                $('#firstInstallment').css('border', '1px solid #000000');
+                $('#firstInstallment').css('padding', '15px');
                 $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                $('#secondInstallment').css('border','1px solid #000000');
-                $('#secondInstallment').css('padding','15px');
+                $('#secondInstallment').css('border', '1px solid #000000');
+                $('#secondInstallment').css('padding', '15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-                
-            } 
-            else if (responseStatus == 'Success') 
-            {
-            	/*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
+
+            }
+            else if (responseStatus == 'Success') {
+                /*if(L_V_CreateService == '' || L_V_GetRequestSummary == '' || L_V_GetResultById == '')
                 {
                     if(methodId == 4)
                     {
@@ -455,145 +444,129 @@ function getResultById(resultId,methodId,random_number)
                 }*/
             }
         })
-        .fail(function(err) {
-            
-                /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
-                $('#legalDescription').html('No data found.');
-                $('#vestingInformation').html('No data found.');
-                $('#firstInstallment, #secondInstallment').prev('.loader').hide();
-                $('#firstInstallment').css('border','1px solid #000000');
-                $('#firstInstallment').css('padding','15px');
-                $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
-                $('#secondInstallment').css('border','1px solid #000000');
-                $('#secondInstallment').css('padding','15px');
-                $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
-                alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.');
+        .fail(function (err) {
+
+            /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
+            $('#legalDescription').html('No data found.');
+            $('#vestingInformation').html('No data found.');
+            $('#firstInstallment, #secondInstallment').prev('.loader').hide();
+            $('#firstInstallment').css('border','1px solid #000000');
+            $('#firstInstallment').css('padding','15px');
+            $('#firstInstallment').html('<span class="orderinfo1">No data found.</span>');
+            $('#secondInstallment').css('border','1px solid #000000');
+            $('#secondInstallment').css('padding','15px');
+            $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');*/
+            alert('Something went wrong.Please hard refresh(Ctrl+F5) your page.');
         });
 }
 
-function imageCreateRequest(serviceId,methodId,fileNumber)
-{
-    if(methodId == 4)
-    {
+function imageCreateRequest(serviceId, methodId, fileNumber) {
+    if (methodId == 4) {
         $('#grantDeedInfoFile').next('.loader').show();
     }
-    
+
     $.ajax({
-        url: base_url+'imageCreateRequest',
+        url: base_url + 'imageCreateRequest',
         data: {
             serviceId: serviceId,
         },
         dataType: "xml",
         type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
-                if(methodId == 4)
-                {                    
+
+            if (responseStatus == 'Failed') {
+                if (methodId == 4) {
                     $('#grantDeedInfoFile').next('.loader').hide();
-                    $('#grantDeedInfoFile').css('border','1px solid #000000');
-                    $('#grantDeedInfoFile').css('padding','15px');
-                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');                    
+                    $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                    $('#grantDeedInfoFile').css('padding', '15px');
+                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
                 }
-                else if(methodId == 3)
-                {
+                else if (methodId == 3) {
                     $('#taxDocumentInfo').next('.loader').hide();
-                    $('#taxDocumentInfo').css('border','1px solid #000000');
-                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').css('border', '1px solid #000000');
+                    $('#taxDocumentInfo').css('padding', '15px');
                     $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
-                }                
-            } 
-            else if (responseStatus == 'Success') 
-            {
+                }
+            }
+            else if (responseStatus == 'Success') {
                 $requestId = $(response).find('RequestID').text();
-                getRequestStatus($requestId,methodId,fileNumber);
+                getRequestStatus($requestId, methodId, fileNumber);
             }
         })
-        .fail(function(err) {
-            if(methodId == 4)
-            {
+        .fail(function (err) {
+            if (methodId == 4) {
                 $('#grantDeedInfoFile').next('.loader').hide();
-                $('#grantDeedInfoFile').css('border','1px solid #000000');
-                $('#grantDeedInfoFile').css('padding','15px');
+                $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                $('#grantDeedInfoFile').css('padding', '15px');
                 $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                
+
             }
-            else if(methodId == 3)
-            {
+            else if (methodId == 3) {
                 $('#instrumentInfoFile').next('.loader').hide();
-                $('#instrumentInfoFile').css('border','1px solid #000000');
-                $('#instrumentInfoFile').css('padding','15px');
+                $('#instrumentInfoFile').css('border', '1px solid #000000');
+                $('#instrumentInfoFile').css('padding', '15px');
                 $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
             }
         });
 }
 
-function getRequestStatus(requestId,methodId,fileNumber)
-{
+function getRequestStatus(requestId, methodId, fileNumber) {
     $.ajax({
-        url: base_url+'getRequestStatus',
+        url: base_url + 'getRequestStatus',
         data: {
             requestId: requestId
         },
         dataType: "xml",
-        type:"POST"
+        type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
-                if(methodId == 4)
-                {
-                    
-                        $('#grantDeedInfoFile').next('.loader').hide();
-                        $('#grantDeedInfoFile').css('border','1px solid #000000');
-                        $('#grantDeedInfoFile').css('padding','15px');
-                        $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                    
+
+            if (responseStatus == 'Failed') {
+                if (methodId == 4) {
+
+                    $('#grantDeedInfoFile').next('.loader').hide();
+                    $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                    $('#grantDeedInfoFile').css('padding', '15px');
+                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+
                 }
-                else if(methodId == 3)
-                {
+                else if (methodId == 3) {
                     $('#taxDocumentInfo').next('.loader').hide();
-                    $('#taxDocumentInfo').css('border','1px solid #000000');
-                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').css('border', '1px solid #000000');
+                    $('#taxDocumentInfo').css('padding', '15px');
                     $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }
-            } 
-            else if (responseStatus == 'Success') 
-            {
+            }
+            else if (responseStatus == 'Success') {
                 $resultId = $(response).find("RequestId:first").text();
-                generateImage($resultId,methodId,fileNumber);
+                generateImage($resultId, methodId, fileNumber);
             }
         })
-        .fail(function(err) {
-            if(methodId == 4)
-            {
-                 $('#grantDeedInfoFile').next('.loader').hide();
-                    $('#grantDeedInfoFile').css('border','1px solid #000000');
-                    $('#grantDeedInfoFile').css('padding','15px');
-                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                
+        .fail(function (err) {
+            if (methodId == 4) {
+                $('#grantDeedInfoFile').next('.loader').hide();
+                $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                $('#grantDeedInfoFile').css('padding', '15px');
+                $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+
             }
-            else if(methodId == 3)
-            {
+            else if (methodId == 3) {
                 $('#taxDocumentInfo').next('.loader').hide();
-                $('#taxDocumentInfo').css('border','1px solid #000000');
-                $('#taxDocumentInfo').css('padding','15px');
+                $('#taxDocumentInfo').css('border', '1px solid #000000');
+                $('#taxDocumentInfo').css('padding', '15px');
                 $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
             }
         });
 }
 
-function generateImage(requestId,methodId,fileNumber)
-{
+function generateImage(requestId, methodId, fileNumber) {
     $.ajax({
-        url: base_url+'generateImage',
+        url: base_url + 'generateImage',
         data: {
             requestId: requestId,
             methodId: methodId,
@@ -602,97 +575,82 @@ function generateImage(requestId,methodId,fileNumber)
         dataType: "xml",
         type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
-                if(methodId == 4)
-                {
-                        $('#grantDeedInfoFile').prev('.loader').hide();
-                        $('#grantDeedInfoFile').css('border','1px solid #000000');
-                        $('#grantDeedInfoFile').css('padding','15px');
-                        $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                    
+
+            if (responseStatus == 'Failed') {
+                if (methodId == 4) {
+                    $('#grantDeedInfoFile').prev('.loader').hide();
+                    $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                    $('#grantDeedInfoFile').css('padding', '15px');
+                    $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
+
                 }
-                else if(methodId == 3)
-                {
+                else if (methodId == 3) {
                     $('#taxDocumentInfo').prev('.loader').hide();
-                    $('#taxDocumentInfo').css('border','1px solid #000000');
-                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').css('border', '1px solid #000000');
+                    $('#taxDocumentInfo').css('padding', '15px');
                     $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }
-                
-            } 
-            else if (responseStatus == 'Success') 
-            {
+
+            }
+            else if (responseStatus == 'Success') {
                 var base64_data = $(response).find("Data:first").text();
                 var bin = atob(base64_data);
 
-                if(methodId == 3)
-                {
-                    if (navigator.msSaveBlob)
-                    {
+                if (methodId == 3) {
+                    if (navigator.msSaveBlob) {
                         var filename = "Tax.pdf";
                         download(filename, base64_data);
                     }
-                    else
-                    {
+                    else {
                         download('GrantDeed.pdf', base64_data);
                     }
                     $('#taxDocumentInfo').next('.loader').hide();
                 }
-                else if(methodId == 4)
-                {
-                    if (navigator.msSaveBlob)
-                    {
-                        var filename = "L&V.pdf";                            
+                else if (methodId == 4) {
+                    if (navigator.msSaveBlob) {
+                        var filename = "L&V.pdf";
                         download(filename, base64_data);
                     }
-                    else
-                    {
+                    else {
                         download('L&V.pdf', base64_data);
                     }
                     $('#grantDeedInfoFile').next('.loader').hide();
                 }
             }
         })
-        .fail(function(err) {
-            if(methodId == 4)
-            {
-                if(methodId == 4)
-                {
+        .fail(function (err) {
+            if (methodId == 4) {
+                if (methodId == 4) {
                     $('#grantDeedInfoFile').prev('.loader').hide();
-                    $('#grantDeedInfoFile').css('border','1px solid #000000');
-                    $('#grantDeedInfoFile').css('padding','15px');
+                    $('#grantDeedInfoFile').css('border', '1px solid #000000');
+                    $('#grantDeedInfoFile').css('padding', '15px');
                     $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
                 }
-                else if(methodId == 3)
-                {
+                else if (methodId == 3) {
                     $('#taxDocumentInfo').prev('.loader').hide();
-                    $('#taxDocumentInfo').css('border','1px solid #000000');
-                    $('#taxDocumentInfo').css('padding','15px');
+                    $('#taxDocumentInfo').css('border', '1px solid #000000');
+                    $('#taxDocumentInfo').css('padding', '15px');
                     $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
                 }
             }
-            else if(methodId == 3)
-            {
+            else if (methodId == 3) {
                 $('#taxDocumentInfo').prev('.loader').hide();
-                $('#taxDocumentInfo').css('border','1px solid #000000');
-                $('#taxDocumentInfo').css('padding','15px');
+                $('#taxDocumentInfo').css('border', '1px solid #000000');
+                $('#taxDocumentInfo').css('padding', '15px');
                 $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
             }
-            
+
         });
 }
 
-function instrumentSearch(docId,recDate,state,county,fileNumber)
-{
+function instrumentSearch(docId, recDate, state, county, fileNumber) {
     $('#instrumentInfoFile').next('.loader').show();
     $.ajax({
         // url: 'php/createservice.php',
-        url: base_url+'instrumentService',
+        url: base_url + 'instrumentService',
         data: {
             state: state,
             county: county,
@@ -703,40 +661,37 @@ function instrumentSearch(docId,recDate,state,county,fileNumber)
         dataType: "xml",
         type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
-                
+
+            if (responseStatus == 'Failed') {
+
                 $('#instrumentInfoFile').prev('.loader').hide();
-                $('#instrumentInfoFile').css('border','1px solid #000000');
-                $('#instrumentInfoFile').css('padding','15px');
+                $('#instrumentInfoFile').css('border', '1px solid #000000');
+                $('#instrumentInfoFile').css('padding', '15px');
                 $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
-                
-            } 
-            else if (responseStatus == 'Success') 
-            {
+
+            }
+            else if (responseStatus == 'Success') {
                 $requestId = $(response).find('RequestID').text();
-                getInstrumentRequestSummaries($requestId,'3',fileNumber);
+                getInstrumentRequestSummaries($requestId, '3', fileNumber);
             }
         })
-        .fail(function(err) {
-            
+        .fail(function (err) {
+
             $('#instrumentInfoFile').prev('.loader').hide();
-            $('#instrumentInfoFile').css('border','1px solid #000000');
-            $('#instrumentInfoFile').css('padding','15px');
-            $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>'); 
-                      
+            $('#instrumentInfoFile').css('border', '1px solid #000000');
+            $('#instrumentInfoFile').css('padding', '15px');
+            $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
+
         });
 }
 
-function getInstrumentRequestSummaries(requestId,methodId,fileNumber)
-{
+function getInstrumentRequestSummaries(requestId, methodId, fileNumber) {
     var apn = $("#apn").val();
     $.ajax({
-        url: base_url+'getRequestSummaries',
+        url: base_url + 'getRequestSummaries',
         data: {
             requestId: requestId,
             methodId: methodId,
@@ -745,28 +700,26 @@ function getInstrumentRequestSummaries(requestId,methodId,fileNumber)
         dataType: "xml",
         type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('ReturnStatus').text();
-            
-            if (responseStatus == 'Failed') 
-            {
+
+            if (responseStatus == 'Failed') {
                 $('#instrumentInfoFile').prev('.loader').hide();
-                $('#instrumentInfoFile').css('border','1px solid #000000');
-                $('#instrumentInfoFile').css('padding','15px');
+                $('#instrumentInfoFile').css('border', '1px solid #000000');
+                $('#instrumentInfoFile').css('padding', '15px');
                 $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
-            } 
-            else if (responseStatus == 'Success') 
-            {
-                serviceId = '';                
+            }
+            else if (responseStatus == 'Success') {
+                serviceId = '';
                 serviceId = $(response).find("RequestSummaries:first").find("RequestSummary:first").find("Order:first").find("Services:first").find("Service:first").find("ID:first").text();
-                imageCreateRequest(serviceId,methodId,fileNumber);
+                imageCreateRequest(serviceId, methodId, fileNumber);
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             $('#instrumentInfoFile').prev('.loader').hide();
-            $('#instrumentInfoFile').css('border','1px solid #000000');
-            $('#instrumentInfoFile').css('padding','15px');
+            $('#instrumentInfoFile').css('border', '1px solid #000000');
+            $('#instrumentInfoFile').css('padding', '15px');
             $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
         });
 }
@@ -810,41 +763,38 @@ function download(filename, text) {
     }
     else
     {*/
-        if (navigator.msSaveBlob)
-        {
-            var csvData = base64toBlob(text,'application/octet-stream');
-            var csvURL = navigator.msSaveBlob(csvData, filename);
-            var element = document.createElement('a');
-            element.setAttribute('href', csvURL);
-            element.setAttribute('download', filename);
+    if (navigator.msSaveBlob) {
+        var csvData = base64toBlob(text, 'application/octet-stream');
+        var csvURL = navigator.msSaveBlob(csvData, filename);
+        var element = document.createElement('a');
+        element.setAttribute('href', csvURL);
+        element.setAttribute('download', filename);
 
-            element.style.display = 'none';
-            document.body.appendChild(element);
+        element.style.display = 'none';
+        document.body.appendChild(element);
 
-            document.body.removeChild(element);
-        }
-        else
-        {
-            var csvURL = 'data:application/octet-stream;base64,'+text;
-            var element = document.createElement('a');
-            element.setAttribute('href', csvURL);
-            element.setAttribute('download', filename);
+        document.body.removeChild(element);
+    }
+    else {
+        var csvURL = 'data:application/octet-stream;base64,' + text;
+        var element = document.createElement('a');
+        element.setAttribute('href', csvURL);
+        element.setAttribute('download', filename);
 
-            element.style.display = 'none';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        }
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
     /*}*/
 
-    
+
 }
 
-function generateGrantDeed(fips,year,docId,fileNumber)
-{
+function generateGrantDeed(fips, year, docId, fileNumber) {
     $('#instrumentInfoFile').next('.loader').show();
     $.ajax({
-        url: base_url+'generate-grant-deed',
+        url: base_url + 'generate-grant-deed',
         data: {
             fips: fips,
             year: year,
@@ -854,46 +804,41 @@ function generateGrantDeed(fips,year,docId,fileNumber)
         dataType: "xml",
         type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('Documents:first').find('DocumentResponse:first').find('DocStatus:first').find('Msg:first').text();
-            
-            if (responseStatus == 'OK') 
-            {
+
+            if (responseStatus == 'OK') {
                 var base64_data = $(response).find("Documents:first").find("DocumentResponse:first").find("Document:first").find("Body:first").find("Body:first").text();
-                var bin = atob(base64_data);                
-                if (navigator.msSaveBlob)
-                {
+                var bin = atob(base64_data);
+                if (navigator.msSaveBlob) {
                     var filename = "GrantDeed.pdf";
                     download(filename, base64_data);
                 }
-                else
-                {
+                else {
                     download('GrantDeed.pdf', base64_data);
                 }
                 $('#instrumentInfoFile').next('.loader').hide();
             }
-            else
-            {
+            else {
                 $('#instrumentInfoFile').prev('.loader').hide();
-                $('#instrumentInfoFile').css('border','1px solid #000000');
-                $('#instrumentInfoFile').css('padding','15px');
+                $('#instrumentInfoFile').css('border', '1px solid #000000');
+                $('#instrumentInfoFile').css('padding', '15px');
                 $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             $('#instrumentInfoFile').prev('.loader').hide();
-            $('#instrumentInfoFile').css('border','1px solid #000000');
-            $('#instrumentInfoFile').css('padding','15px');
+            $('#instrumentInfoFile').css('border', '1px solid #000000');
+            $('#instrumentInfoFile').css('padding', '15px');
             $('#instrumentInfoFile').html('<span class="orderinfo1">No data found.</span>');
         });
 }
 
-function generateTaxDoc(apn,serviceId,fileNumber)
-{
+function generateTaxDoc(apn, serviceId, fileNumber) {
     $('#taxDocumentInfo').next('.loader').show();
     $.ajax({
-        url: base_url+'generate-tax-doc',
+        url: base_url + 'generate-tax-doc',
         data: {
             apn: apn,
             serviceId: serviceId,
@@ -902,73 +847,65 @@ function generateTaxDoc(apn,serviceId,fileNumber)
         dataType: "xml",
         type: "POST"
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('Documents:first').find('DocumentResponse:first').find('DocStatus:first').find('Msg:first').text();
-            
-            if (responseStatus == 'OK') 
-            {
+
+            if (responseStatus == 'OK') {
                 var base64_data = $(response).find("Documents:first").find("DocumentResponse:first").find("Document:first").find("Body:first").find("Body:first").text();
-                var bin = atob(base64_data);                
-                if (navigator.msSaveBlob)
-                {
+                var bin = atob(base64_data);
+                if (navigator.msSaveBlob) {
                     var filename = "Tax.pdf";
                     download(filename, base64_data);
                 }
-                else
-                {
+                else {
                     download('Tax.pdf', base64_data);
                 }
                 $('#taxDocumentInfo').next('.loader').hide();
             }
-            else
-            {
+            else {
                 $('#taxDocumentInfo').prev('.loader').hide();
-                $('#taxDocumentInfo').css('border','1px solid #000000');
-                $('#taxDocumentInfo').css('padding','15px');
+                $('#taxDocumentInfo').css('border', '1px solid #000000');
+                $('#taxDocumentInfo').css('padding', '15px');
                 $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             $('#taxDocumentInfo').prev('.loader').hide();
-            $('#taxDocumentInfo').css('border','1px solid #000000');
-            $('#taxDocumentInfo').css('padding','15px');
+            $('#taxDocumentInfo').css('border', '1px solid #000000');
+            $('#taxDocumentInfo').css('padding', '15px');
             $('#taxDocumentInfo').html('<span class="orderinfo1">No data found.</span>');
         });
 }
 
-function notifyAdmin(subject)
-{
+function notifyAdmin(subject) {
     var customer_id = $("#CustomerId").val();
     var property_full_address = $("#property-full-address").val();
-    if(customer_id)
-    {
+    if (customer_id) {
         $.ajax({
-           url: base_url+'notifyAdmin',
-           type: "POST",//type of posting the data
-           data: {
+            url: base_url + 'notifyAdmin',
+            type: "POST",//type of posting the data
+            data: {
                 customer_id: customer_id,
                 property: property_full_address,
                 subject: subject,
-           },
-           success: function (data) {
+            },
+            success: function (data) {
                 console.log(data);
-           },
-           error: function(xhr, ajaxOptions, thrownError){
-              
-           },
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            },
         });
-    }    
+    }
 }
 
-function getProductTypes()
-{
+function getProductTypes() {
     var email = $('#OpenEmail').val();
     var customerId = $('#CustomerId').val();
-    if(email)
-    {
+    if (email) {
         $.ajax({
-            url: base_url+'get-product-types',
+            url: base_url + 'get-product-types',
             type: "POST",//type of posting the data
             data: {
                 email: email,
@@ -976,60 +913,60 @@ function getProductTypes()
             },
             success: function (data) {
                 var res = jQuery.parseJSON(data);
-                
-                if(res)
-                {
+
+                if (res) {
                     var output = [];
                     output.push('<option value="">Select Product</option>')
-                    $.each(res, function(key, value) {
-                        output.push('<option value="'+ key +'">'+ value +'</option>');
+                    $.each(res, function (key, value) {
+                        output.push('<option value="' + key + '">' + value + '</option>');
                     });
                     $('#ProductTypeID').html(output.join(''));
                 }
             },
-            error: function(xhr, ajaxOptions, thrownError){
-                
+            error: function (xhr, ajaxOptions, thrownError) {
+
             },
         });
     }
 }
 
-function getDeliverables(partner_id)
-{
+function getDeliverables(partner_id) {
     $.ajax({
-        url:base_url+"admin/order/home/getDeliverables",
+        url: base_url + "frontend/order/home/getDeliverables",
         type: "POST",
         data: {
             partner_id: partner_id,
         },
         async: true,
-        success: function(result) {
-            var res = jQuery.parseJSON(result);
-            var preDeliverables = $("input[name^='AdditionalEmail']").length;
-            for (j=1; j< preDeliverables; j++) {
-                $("#cloner"+j)[0].click();
-            }
-            $('#AdditionalEmail').val('');
+        success: function (result) {
+            if (result) {
+                var res = jQuery.parseJSON(result);
+                var preDeliverables = $("input[name^='AdditionalEmail']").length;
+                for (j = 1; j < preDeliverables; j++) {
+                    $("#cloner" + j)[0].click();
+                }
+                $('#AdditionalEmail').val('');
 
-            if (res.deliverables.length > 0) {
-                
-                for (i = 0; i < res.deliverables.length; i++) {
-                    if(i == 0) {
-                        $('#AdditionalEmail').val(res.deliverables[i]);
-                    } else {
-                        $("#clonea")[0].click();
-                    } 
+                if (res.deliverables.length > 0) {
+
+                    for (i = 0; i < res.deliverables.length; i++) {
+                        if (i == 0) {
+                            $('#AdditionalEmail').val(res.deliverables[i]);
+                        } else {
+                            $("#clonea")[0].click();
+                        }
+                    }
+                    for (i = 0; i < res.deliverables.length; i++) {
+                        if (i != 0) {
+                            var emailVal = res.deliverables[i];
+                            $('#AdditionalEmail' + i).val(emailVal);
+                        }
+                    }
                 }
-                for (i = 0; i < res.deliverables.length; i++) {
-                    if(i != 0) {
-                        var emailVal = res.deliverables[i];
-                        $('#AdditionalEmail'+i).val(emailVal);
-                    } 
-                }
-            } 
+            }
         },
-        error:function(){
-            
+        error: function () {
+
         },
     });
 }
