@@ -39,7 +39,7 @@
 	.center-wrapper {
 		margin: 0 auto;
 	}
-	
+
 	.form-control {
 		padding: 1.5rem 0.75rem;
 	}
@@ -215,16 +215,16 @@
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
-											if (isset($salesRep) && !empty($salesRep)) {
-												foreach ($salesRep as $k => $v) {
-													$name      = array($v['first_name'], $v['last_name']);
-													$full_name = implode(' ', $name);
-        									?>
-													<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+if (isset($salesRep) && !empty($salesRep)) {
+    foreach ($salesRep as $k => $v) {
+        $name = array($v['first_name'], $v['last_name']);
+        $full_name = implode(' ', $name);
+        ?>
+													<option value="<?php echo $v['id']; ?>"  <?php echo ($v['id'] == $customer_data['sales_rep_id']) ? "selected" : '' ?> ><?php echo $full_name; ?></option>
 										<?php
-												}
-											}
-										?>
+}
+}
+?>
 									</select>
 								</div>
 							</div>
@@ -234,14 +234,14 @@
 										<option value="">Title Officer</option>
 										<?php
 
-										if (isset($titleOfficer) && !empty($titleOfficer)) {
-											foreach ($titleOfficer as $key => $value) {
-												?>
-													<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+if (isset($titleOfficer) && !empty($titleOfficer)) {
+    foreach ($titleOfficer as $key => $value) {
+        ?>
+													<option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] == $customer_data['title_officer_id']) ? "selected" : '' ?> ><?php echo $value['name']; ?></option>
 										<?php
-											}
-										}
-										?>
+}
+}
+?>
 									</select>
 								</div>
 							</div>
@@ -299,8 +299,8 @@
 
 							<div id="clone-email-address" class="cloneya-wrap" >
 								<?php if (!empty($deliverables)) {
-									$i = 0;
-									foreach ($deliverables as $deliverable) {?>
+    $i = 0;
+    foreach ($deliverables as $deliverable) {?>
 											<div class="row form-group toclone clone-widget cloneya">
 												<div class="col-sm-10">
 														<?php if ($i == 0) {?>
@@ -314,8 +314,7 @@
 
 											</div>
 
-										<?php $i++;}
-									} else {?>
+										<?php $i++;}} else {?>
 									<div class="row form-group toclone clone-widget cloneya">
 										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
@@ -341,10 +340,10 @@
 
 								<?php
 
-									$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-									$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
+$is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-									if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
+if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<div class="col-sm-3 align-display">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>
@@ -832,7 +831,7 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 												<?php
 if (isset($salesRep) && !empty($salesRep)) {
     foreach ($salesRep as $k => $v) {
-        $name      = array($v['first_name'], $v['last_name']);
+        $name = array($v['first_name'], $v['last_name']);
         $full_name = implode(' ', $name);
         ?>
 															<option value="<?php
@@ -972,7 +971,7 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 									</div>
 									<?php
 
-$is_escrow                = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+$is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
 $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
 if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
