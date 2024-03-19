@@ -282,7 +282,7 @@ class SalesRep extends MX_Controller
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $nestedData[] = $order['sales_first_name'] . " " . $order['sales_last_name'];
                 }
-                $nestedData[] = date("m/d/Y", strtotime($order['generated_date']));
+                $nestedData[] = date("m/d/Y", strtotime($order['created_at']));
                 $nestedData[] = $order['full_address'];
                 if ($order['file_number'] == 0 && !empty($order['lp_file_number'])) {
                     $nestedData[] = ucfirst($order['lp_report_status']);
