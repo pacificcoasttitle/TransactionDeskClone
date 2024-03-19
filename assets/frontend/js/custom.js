@@ -59,76 +59,69 @@ var counties = {
     'Yuba': '06115',
 };
 
-$(document).ready(function() {
-	reportData = {};
-	apnInfo = {};
-	var isNewSearch=false;
-	var request = '';
+$(document).ready(function () {
+    reportData = {};
+    apnInfo = {};
+    var isNewSearch = false;
+    var request = '';
 
-	autoComplete();
+    autoComplete();
     $(document).on('click', '.search-property', getAddress);
     $(document).on('click', '.search-apn', getAPN);
     $(document).on('click', '.switch-apn-button', switchAPN);
     $(document).on('click', '.switch-property-button', switchProperty);
 
     //customer no
-    $('#btn-place-order').click(function(e){
+    $('#btn-place-order').click(function (e) {
 
-            if($("input[name=add-agent-details]").is(":checked")) 
-            {
-                if(!$('#BuyerAgentEmailAddress').val() && !$('#ListingAgentEmailAddress').val())
-                {
-                    $('#required-agent-details').show();
-                }
-                 
-            } 
-            else 
-            {
-                $('#required-agent-details').hide(); 
-            } 
-        
+        if ($("input[name=add-agent-details]").is(":checked")) {
+            if (!$('#BuyerAgentEmailAddress').val() && !$('#ListingAgentEmailAddress').val()) {
+                $('#required-agent-details').show();
+            }
+
+        }
+        else {
+            $('#required-agent-details').hide();
+        }
+
     });
 
-    $('#getCustomerInfo').click(function(e){
+    $('#getCustomerInfo').click(function (e) {
         var customer_no = $('#CustomerNumber').val();
 
-        if(!customer_no)
-        {
+        if (!customer_no) {
             $('#CustomerNumber-error').html('Enter your customer number');
             $('#CustomerNumber-error').show();
             $("#CustomerNumber").parent().addClass('state-error');
         }
-        else
-        {
+        else {
             $.ajax({
-               // url: "php/search.php",
-               url: base_url+'home/getCustomerDetails',
-               type: "POST",//type of posting the data
-               data: {
+                // url: "php/search.php",
+                url: base_url + 'home/getCustomerDetails',
+                type: "POST",//type of posting the data
+                data: {
                     customer_no: customer_no
-               },
-               success: function (data) {
+                },
+                success: function (data) {
 
                     var res = jQuery.parseJSON(data);
-                    if(jQuery.isEmptyObject(res))
-                    {
+                    if (jQuery.isEmptyObject(res)) {
                         $("#CustomerNumber").removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                         $("#CustomerId").val('');
                         $('#CustomerNumber-error').html('Invalid customer number');
                         $('#CustomerNumber-error').show();
                     }
-                    else
-                    {
+                    else {
                         $('#CustomerNumber-error').html('');
                         $('#CustomerNumber-error').hide();
-                        $("#OpenName").val(res.first_name).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#OpenLastName").val(res.last_name).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#Opentelephone").val(res.telephone_no).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#OpenEmail").val(res.email_address).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#CompanyName").val(res.company_name).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#StreetAddress").val(res.street_address).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#City").val(res.city).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#Zipcode").val(res.zip_code).attr('readonly','readonly').parent().addClass('state-success');
+                        $("#OpenName").val(res.first_name).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#OpenLastName").val(res.last_name).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#Opentelephone").val(res.telephone_no).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#OpenEmail").val(res.email_address).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#CompanyName").val(res.company_name).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#StreetAddress").val(res.street_address).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#City").val(res.city).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#Zipcode").val(res.zip_code).attr('readonly', 'readonly').parent().addClass('state-success');
                         $("#CustomerId").val(res.id);
 
                         /*if(res.is_escrow == 1)
@@ -146,76 +139,76 @@ $(document).ready(function() {
                             $('#add-escrow-details').trigger('change');
                         }*/
                     }
-               },
-               error: function(xhr, ajaxOptions, thrownError){
-                  
-               },
-          });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                },
+            });
         }
     });
 
-    jQuery('#CustomerNumber').change(function(){
+    jQuery('#CustomerNumber').change(function () {
         $('#getCustomerInfo').trigger('click');
     });
 
     $("#find-customer-form").validate({
-                
+
         /* @validation states + elements 
         ------------------------------------------- */
         errorClass: "state-error",
         validClass: "state-success",
         errorElement: "em",
         onkeyup: false,
-        onclick: false,                     
-        
+        onclick: false,
+
         /* @validation rules 
         ------------------------------------------ */
-        rules: {                 
+        rules: {
             CustomerEmail: {
                 required: true,
                 email: true,
                 remote: {
                     // url: 'php/checkemail.php',
-                    url: base_url+'home/checkEmail',
+                    url: base_url + 'home/checkEmail',
                     type: "POST",
                     data: {
-                        title: function() {
+                        title: function () {
                             return $("#CustomerEmail").val();
                         }
                     },
                 },
             }
         },
-        
+
         /* @validation error messages 
         ---------------------------------------------- */
-        messages:{              
+        messages: {
             CustomerEmail: {
                 required: 'Enter your email address',
                 email: 'Enter a valid email address',
-                remote:"Email address not exist"
+                remote: "Email address not exist"
             }
         },
 
         /* @validation highlighting + error placement  
-        ---------------------------------------------------- */ 
-        highlight: function(element, errorClass, validClass) {
-                $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+        ---------------------------------------------------- */
+        highlight: function (element, errorClass, validClass) {
+            $(element).closest('.field').addClass(errorClass).removeClass(validClass);
         },
-        unhighlight: function(element, errorClass, validClass) {
-                $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).closest('.field').removeClass(errorClass).addClass(validClass);
         },
-        errorPlacement: function(error, element) {
-           if (element.is(":radio") || element.is(":checkbox")) {
-                    element.closest('.option-group').after(error);
-           } else {
-                    error.insertAfter(element.parent());
-           }
+        errorPlacement: function (error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+                element.closest('.option-group').after(error);
+            } else {
+                error.insertAfter(element.parent());
+            }
         },
-        
+
         /* @ajax form submition 
         ---------------------------------------------------- */
-        submitHandler:function(form) {
+        submitHandler: function (form) {
             /*$(form).ajaxSubmit({
                     
                 error:function(){
@@ -240,29 +233,26 @@ $(document).ready(function() {
             });*/
 
             $.ajax({
-                url: base_url+'home/getCustomerNumber',
+                url: base_url + 'home/getCustomerNumber',
                 type: "POST",
                 data: {
                     email_address: $("#CustomerEmail").val(),
                 },
-                success: function(result)
-                {
+                success: function (result) {
                     var res = jQuery.parseJSON(result);
-                    
+
                     $('#findCustomerModal').modal('hide');
-                    if(res.customer_number)
-                    {
-                        var content = "<h3>Your Customer Number is:"+res.customer_number+"</h3>";
+                    if (res.customer_number) {
+                        var content = "<h3>Your Customer Number is:" + res.customer_number + "</h3>";
 
                     }
-                    else
-                    {
+                    else {
                         var content = '<h3> No data found</h3>';
                     }
                     $("#showCustomerNumber").html(content);
                     $("#showCustomernumberModal").modal('show');
                 },
-                error:function(){
+                error: function () {
                     alert('Something went wrong');
                 },
             });
@@ -273,17 +263,15 @@ $(document).ready(function() {
         $(this).find('form#find-customer-form').trigger('reset');
     });
 
-    $('#findCustomerNumber').click(function(e){        
+    $('#findCustomerNumber').click(function (e) {
         $('#findCustomerModal').modal('show');
     });
 
-    $('#add-agent-details').change(function() {
-        if(this.checked) 
-        {
+    $('#add-agent-details').change(function () {
+        if (this.checked) {
             $('#agent-details-fields').show();
         }
-        else
-        {
+        else {
             $("#BuyerAgentName").val('').parent().removeClass('state-success');
             $("#BuyerAgentEmailAddress").val('').parent().removeClass('state-success');
             $("#BuyerAgentTelephone").val('').parent().removeClass('state-success');
@@ -296,57 +284,53 @@ $(document).ready(function() {
             $("#ListingAgentId").val('');
             $('#agent-details-fields').hide();
             $('#required-agent-details').hide();
-        }        
+        }
     });
 
-    $('#add-lender-details').change(function() {
-        if(this.checked) 
-        {
+    $('#add-lender-details').change(function () {
+        if (this.checked) {
             $('#lender-details-fields').show();
         }
-        else
-        {
+        else {
             $("#LenderName").val('').parent().removeClass('state-success');
             $("#LenderEmailAddress").val('').parent().removeClass('state-success');
             $("#LenderTelephone").val('').parent().removeClass('state-success');
             $("#LenderCompany").val('').parent().removeClass('state-success');
             $("#LenderId").val('');
             $('#lender-details-fields').hide();
-        }        
+        }
     });
 
-    $('#add-escrow-details').change(function() {
-        if(this.checked) 
-        {
+    $('#add-escrow-details').change(function () {
+        if (this.checked) {
             $('#escrow-details-fields').show();
         }
-        else
-        {
+        else {
             $("#EscrowName").val('').parent().removeClass('state-success');
             $("#EscrowEmailAddress").val('').parent().removeClass('state-success');
             $("#EscrowTelephone").val('').parent().removeClass('state-success');
             $("#EscrowCompany").val('').parent().removeClass('state-success');
             $("#EscrowId").val('');
             $('#escrow-details-fields').hide();
-        }        
+        }
     });
 
-    $('#add-escrow-officer-details').change(function() {
+    $('#add-escrow-officer-details').change(function () {
         if (this.checked) {
             $('#escrow-officer-field').show();
         } else {
             $('#escrow-officer-field').hide();
-        }        
+        }
     });
 
     $("#BuyerAgentName").autocomplete({
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
-                url: base_url+'agent/getAgentDetails',
+                url: base_url + 'agent/getAgentDetails',
                 // dataType: "json",
                 data: {
-                    term : request.term,//the value of the input is here
-                    
+                    term: request.term,//the value of the input is here
+
                 },
                 type: "POST",
                 dataType: "json",
@@ -356,28 +340,27 @@ $(document).ready(function() {
                             return item;
                         }))
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 3,
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
-            $('#required-agent-details').hide(); 
+            $('#required-agent-details').hide();
             $("#BuyerAgentName").val(ui.item.name);
             /*$("#AgentFirstName").val(ui.item.first_name);
             $("#AgentLastName").val(ui.item.last_name).attr('readonly','readonly').parent().addClass('state-success');*/
             $("#BuyerAgentEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-            $("#BuyerAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#BuyerAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#BuyerAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#BuyerAgentId").val(ui.item.id);
             $("#buyer_agent_partner_id").val(ui.item.partner_id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 /*$("#BuyerAgentEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
                 $("#BuyerAgentTelephone").val('').parent().removeClass('state-success').addClass('state-error');
                 $("#BuyerAgentCompany").val('').parent().removeClass('state-success').addClass('state-error');
@@ -388,12 +371,12 @@ $(document).ready(function() {
 
     /* Listing Agent autocomplete */
     $("#ListingAgentName").autocomplete({
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
-                url: base_url+'agent/getAgentDetails',
+                url: base_url + 'agent/getAgentDetails',
                 data: {
-                    term : request.term,//the value of the input is here
-                    
+                    term: request.term,//the value of the input is here
+
                 },
                 type: "POST",
                 dataType: "json",
@@ -403,27 +386,26 @@ $(document).ready(function() {
                             return item;
                         }))
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 3,
-        select: function( event, ui ) {
-            $('#required-agent-details').hide(); 
+        select: function (event, ui) {
+            $('#required-agent-details').hide();
             event.preventDefault();
             $("#ListingAgentName").val(ui.item.name);
-            
+
             $("#ListingAgentEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-            $("#ListingAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#ListingAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#ListingAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#ListingAgentId").val(ui.item.id);
             $("#listing_agent_partner_id").val(ui.item.partner_id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 // $("#AgentLastName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 /*$("#ListingAgentEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
                 $("#ListingAgentTelephone").val('').parent().removeClass('state-success').addClass('state-error');
@@ -437,13 +419,13 @@ $(document).ready(function() {
     /* Lender autocomplete */
     $("#LenderCompany").autocomplete({
         // source: "php/usersearch.php",
-        source: function(request, response) {
+        source: function (request, response) {
             $.ajax({
-                url: base_url+'home/getDetailsByName',
+                url: base_url + 'home/getDetailsByName',
                 data: {
-                    term : request.term,//the value of the input is here
-                    is_escrow : 0,                    
-                    is_from_order_form : 1                    
+                    term: request.term,//the value of the input is here
+                    is_escrow: 0,
+                    is_from_order_form: 1
                 },
                 type: "POST",
                 dataType: "json",
@@ -453,42 +435,42 @@ $(document).ready(function() {
                             return item;
                         }))
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 3,
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#LenderName").val(ui.item.name);
             $("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-            $("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#LenderCompany").val(ui.item.company).parent().addClass('state-success');
             $("#LenderId").val(ui.item.id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
-               /* $("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
-                $("#LenderId").val('');*/
+        change: function (event, ui) {
+            if (ui.item == null) {
+                /* $("#LenderEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
+                 $("#LenderTelephone").val('').parent().removeClass('state-success').addClass('state-error');
+                 $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
+                 $("#LenderId").val('');*/
             }
         }
     });
-    /* Lender autocomplete */ 
+    /* Lender autocomplete */
 
     /* Escrow autocomplete */
-    $("#EscrowCompany").autocomplete({
-        source: function(request, response) {
+    $("#EscrowCompany, #EscrowName").autocomplete({
+        source: function (request, response) {
+            console.log('FE js');
             $.ajax({
-                url: base_url+'home/getDetailsByName',
+                url: base_url + 'home/getDetailsByName',
                 data: {
-                    term : request.term,//the value of the input is here
-                    is_escrow : 1,
-                    is_from_order_form : 1                    
+                    term: request.term,//the value of the input is here
+                    is_escrow: 1,
+                    is_from_order_form: 1
                 },
                 type: "POST",
                 dataType: "json",
@@ -498,24 +480,23 @@ $(document).ready(function() {
                             return item;
                         }))
                     } else {
-                        response([{ label: 'No results found.', val: -1}]);
+                        response([{ label: 'No results found.', val: -1 }]);
                     }
                 }
             });
         },
         delay: 0,
         minLength: 3,
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#EscrowName").val(ui.item.name);
             $("#EscrowEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-            $("#EscrowTelephone").val(ui.item.telephone_no).parent().addClass('state-success');           
+            $("#EscrowTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#EscrowCompany").val(ui.item.company).parent().addClass('state-success');
             $("#EscrowId").val(ui.item.id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 /*$("#EscrowEmailAddress").val('').parent().removeClass('state-success').addClass('state-error');
                 $("#EscrowTelephone").val('').parent().removeClass('state-success').addClass('state-error');
                 $("#EscrowCompany").val('').parent().removeClass('state-success').addClass('state-error');
@@ -525,23 +506,23 @@ $(document).ready(function() {
     });
     /* Escrow autocomplete */
 
-    $('#ProductTypeID').change(function() {
+    $('#ProductTypeID').change(function () {
         var selectedText = $(this).find('option:selected').text();
         $('#sales-loan-amount-fields').show();
-        
-        if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '36' ||  $(this).val() == '22' || $(this).val() == '26' || $(this).val() == '24' || $(this).val() == '27' || $(this).val() == '40') {
+
+        if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '36' || $(this).val() == '22' || $(this).val() == '26' || $(this).val() == '24' || $(this).val() == '27' || $(this).val() == '40') {
             $('#add-escrow-officer-section').show();
         } else {
             $('#add-escrow-officer-section').hide();
             $('#escrow-officer-field').hide();
-            $('#add-escrow-officer-details').prop('checked', false); 
+            $('#add-escrow-officer-details').prop('checked', false);
         }
 
         if (selectedText.includes("Loan")) {
             $('#sales-loan-amount-fields #salesAmount').hide();
             $('#sales-loan-amount-fields #primaryBorrower').hide();
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
-        } else if(selectedText.includes("Sale")) {
+        } else if (selectedText.includes("Sale")) {
             $('#sales-loan-amount-fields #salesAmount').show();
             $('#sales-loan-amount-fields #primaryBorrower').show();
             $('#sales-loan-amount-fields #secondaryBorrower').show();
@@ -565,10 +546,10 @@ function autoComplete() {
         bounds: defaultBounds
     };
     autocomplete = new google.maps.places.Autocomplete(input, options);
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace(); // get address, without city and state
         $('#property-full-address').val(place.formatted_address);
-        setTimeout(function() {
+        setTimeout(function () {
             $('#property-search').val(place.name);
         }, 25); // just display street address
         for (var i = 0; i < place.address_components.length; i++) {
@@ -577,7 +558,7 @@ function autoComplete() {
                     var city = place.address_components[i].long_name;
                     $('#property-city').val(city);
                 }
-                else if (place.address_components[i].types[0] === ("administrative_area_level_1") && place.address_components[i].types.length>1 && place.address_components[i].types[1] === ("political")) { //administrative_area_level_1
+                else if (place.address_components[i].types[0] === ("administrative_area_level_1") && place.address_components[i].types.length > 1 && place.address_components[i].types[1] === ("political")) { //administrative_area_level_1
                     var state = place.address_components[i].short_name;
                     $('#property-state').val(state);
                 }
@@ -585,7 +566,7 @@ function autoComplete() {
                     var state = place.address_components[i].short_name;
                     $('#property-zip').val(state);
                 }
-                else if (place.address_components[i].types[0] === "neighborhood"  && place.address_components[i].types.length>1 && place.address_components[i].types[1] === ("political")) { 
+                else if (place.address_components[i].types[0] === "neighborhood" && place.address_components[i].types.length > 1 && place.address_components[i].types[1] === ("political")) {
                     var neighborhood = place.address_components[i].long_name;
                     $('#neighbourhood').val(neighborhood);
                 }
@@ -598,14 +579,13 @@ function autoComplete() {
 function getAddress() {
 
     $('.pma-error').hide();
-	isNewSearch=true;
+    isNewSearch = true;
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
 
     address = $('#property-search').val();
     address = $.trim(address);
 
-    if (address == '') 
-    {
+    if (address == '') {
         $('.pma-error').html('Please search any address.');
         $('.pma-error').show();
         $('#property-search').parent().addClass('state-error');
@@ -617,15 +597,15 @@ function getAddress() {
 
     $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
     var locale = $('#property-city').val();
-    locale = $.trim(locale);    
+    locale = $.trim(locale);
 
     state = $('#property-state').val();
     state = $.trim(state);
 
     if (isNaN(locale[0])) {
-       // locale += ', CA' // if locale is city rather than zip, add in state
-       if(state!==''){
-            locale += ', '+state;
+        // locale += ', CA' // if locale is city rather than zip, add in state
+        if (state !== '') {
+            locale += ', ' + state;
         } else {
             locale += ', CA' // if locale is city rather than zip, add in state
         }
@@ -633,19 +613,18 @@ function getAddress() {
     neighbourhood = $('#neighbourhood').val();
     neighbourhood = $.trim(neighbourhood);
     if (isNaN(neighbourhood[0])) {
-        if(state!==''){
-            neighbourhood += ', '+state;
+        if (state !== '') {
+            neighbourhood += ', ' + state;
         } else {
             neighbourhood += ', CA' // if neighbourhood is city rather than zip, add in state
         }
     }
     // data(address, locale);
-    data(address, locale,neighbourhood,false);
+    data(address, locale, neighbourhood, false);
 }
 
 // creates data object for AJAX call to API
-function data(address, locale,neighbourhood,retry) 
-{
+function data(address, locale, neighbourhood, retry) {
     dataObj = {};
     dataObj.Address = address;
     dataObj.LastLine = locale.toString();
@@ -654,52 +633,48 @@ function data(address, locale,neighbourhood,retry)
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
     request += $.param(dataObj);
     console.log(dataObj);
-    compileRequest(dataObj,neighbourhood,retry);
+    compileRequest(dataObj, neighbourhood, retry);
 }
 
 // create url for API request
-function compileRequest(dataObj,neighbourhood,retry) {
+function compileRequest(dataObj, neighbourhood, retry) {
     // var request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
-    var request ='http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?'
-    if(retry){
+    var request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?'
+    if (retry) {
         dataObj.LastLine = neighbourhood.toString();
         console.log(dataObj.LastLine);
     }
     request += $.param(dataObj);
-   // runQueries(request,dataObj,neighbourhood,retry);
-    fetchReports('187',request,dataObj,neighbourhood,retry);
+    // runQueries(request,dataObj,neighbourhood,retry);
+    fetchReports('187', request, dataObj, neighbourhood, retry);
 }
 
-function fetchReports(repNum,request,dataObj,neighbourhood,retry) 
-{
+function fetchReports(repNum, request, dataObj, neighbourhood, retry) {
     reportNum = repNum;
     $.ajax({
-        url: base_url+'home/getSearchResults?',
+        url: base_url + 'home/getSearchResults?',
         data: {
             requrl: request + '&reportType=' + reportNum
         },
         dataType: 'xml'
     })
-    	.done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
             var responseStatus = $(response).find('StatusCode').text();
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
-            
-            if (responseStatus == 'MM') 
-            {
+
+            if (responseStatus == 'MM') {
                 multipleResults(response);
                 $("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");
-            } 
-            else if (responseStatus != 'OK') 
-            {
-                if(!retry){
+            }
+            else if (responseStatus != 'OK') {
+                if (!retry) {
                     $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
-                    data(dataObj.Address,dataObj.LastLine,neighbourhood,true);
-                }else {
+                    data(dataObj.Address, dataObj.LastLine, neighbourhood, true);
+                } else {
                     displayError(responseStatus);
-                    
-                    if(base_url == 'http://localhost-pct.com/')
-                    {
+
+                    if (base_url == 'http://localhost-pct.com/') {
                         var fipCode = $('#property-fips').val();
                         var city = $('#property-city').val();
                         var apn = $('#apn').val();
@@ -708,33 +683,29 @@ function fetchReports(repNum,request,dataObj,neighbourhood,retry)
                         var property_full_add = $('#property-full-address').val();
                         // getProductTypes(county,state);
                         var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
-                        if($('#random_number').length)
-                        {
-                           $('#random_number').val(random_number); 
+                        if ($('#random_number').length) {
+                            $('#random_number').val(random_number);
                         }
-                       var unit_no = 1;
-                       createService4(fipCode,address,city,unit_no,apn,random_number);
-                        createService3(apn,state,county,random_number);
+                        var unit_no = 1;
+                        createService4(fipCode, address, city, unit_no, apn, random_number);
+                        createService3(apn, state, county, random_number);
                     }
-                }                
-            } 
-            else 
-            {
+                }
+            }
+            else {
                 compileXmlUrls(response, '187');
-                
-                if(isNewSearch)
-                {
+
+                if (isNewSearch) {
                     multipleResults(response);
                 }
-                else
-                {
+                else {
                     get187();
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");*/
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             $('.pma-error').text('Unsuccessful Request');
             $(".buttonNext").addClass("buttonDisabled");
         });
@@ -752,24 +723,23 @@ function compileXmlUrls(response, report) {
 
 function get187() {
     $.ajax({
-        url: base_url+'home/getSearchResults?',
+        url: base_url + 'home/getSearchResults?',
         data: {
             requrl: reportData.report187
         },
         dataType: "xml",
-        success: function(xml) {
+        success: function (xml) {
             reportXML = xml;
             parse187();
         },
-        error: function() {
+        error: function () {
             console.log("An error occurred while processing XML file.");
         }
     });
 }
 
 
-function parse187() 
-{
+function parse187() {
     let propertyCharacteristics = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics");
     let bedrooms = baths = lotSize = zoning = buildingArea = '';
     let properyData = [];
@@ -783,13 +753,13 @@ function parse187()
 
     var ownerNamePrimary = $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text();
     var ownerNameSecondary = $(reportXML).find("PropertyProfile").find("SecondaryOwnerName").text();
-    
+
     if (ownerNamePrimary.indexOf(';') !== -1) {
-  		ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(";") + 1)
-  		ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf(";"));
-  	} else if (ownerNamePrimary.indexOf('&') !== -1) {
+        ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(";") + 1)
+        ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf(";"));
+    } else if (ownerNamePrimary.indexOf('&') !== -1) {
         ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf("&") + 1)
-  		ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf("&"));
+        ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf("&"));
     }
     ownerNamePrimary = $.trim(ownerNamePrimary);
     ownerNameSecondary = $.trim(ownerNameSecondary);
@@ -807,35 +777,30 @@ function parse187()
     var full_address = [];
 
     var unit_no = $(reportXML).find("PropertyProfile").find("SiteUnit").text();
-    if(unit_no)
-    {
+    if (unit_no) {
         full_address.push(unit_no);
     }
 
     var address = toTitleCase($(reportXML).find("PropertyProfile").find("SiteAddress").text());
-    if(address)
-    {
+    if (address) {
         full_address.push(address);
     }
-    
+
     var city = toTitleCase($(reportXML).find("PropertyProfile").find("SiteCity").text());
-    
-    if(city)
-    {
+
+    if (city) {
         full_address.push(city);
     }
     var property_full_add = full_address.join(', ');
     var state = $(reportXML).find("PropertyProfile").find("SiteState").text();
-    
-    if(state)
-    {
+
+    if (state) {
         full_address.push(state);
     }
 
     var zip = $(reportXML).find("PropertyProfile").find("SiteZip").text();
-    
-    if(zip)
-    {
+
+    if (zip) {
         full_address.push(zip);
     }
 
@@ -864,9 +829,9 @@ function parse187()
     $("#searchResultModal").find(".apn-search-loader").addClass("hidden");
     $('#searchResultModal').modal('hide');
     var fipCode = $('#property-fips').val();
-    
+
     $.ajax({
-        url: base_url+'home/checkDuplicateOrder',
+        url: base_url + 'home/checkDuplicateOrder',
         type: "POST",
         data: {
             apn: apn
@@ -879,50 +844,46 @@ function parse187()
                 $('.pma-error').show();
                 return false;
             }
-            else
-            {
+            else {
                 var random_number = Date.now() + (Math.floor(Math.random() * (10000 - 1 + 1)) + 1);
-                if($('#random_number').length)
-                {
-                   $('#random_number').val(random_number); 
+                if ($('#random_number').length) {
+                    $('#random_number').val(random_number);
                 }
-                createService4(fipCode,address,city,unit_no,apn,random_number,properyData);
-                createService3(apn,state,county,random_number);
+                createService4(fipCode, address, city, unit_no, apn, random_number, properyData);
+                createService3(apn, state, county, random_number);
             }
         }
     });
-    
+
 }
 
 
-function multipleResults(response) 
-{ 
-	$('#searchResultModal').modal('show');
+function multipleResults(response) {
+    $('#searchResultModal').modal('show');
     $('.search-result table > tbody').html('');
-    $(response).find('Locations').children('Location').each(function(i) {
+    $(response).find('Locations').children('Location').each(function (i) {
 
-        var address = $(this).find('Address').text();       
+        var address = $(this).find('Address').text();
         apn = $(this).find('APN').text();
         apnInfo[apn] = {}
         var city = $(this).find('City').text();
 
         apnInfo[apn]['fips'] = $(this).find('FIPS').text();
-        var unit_number = $(this).find('UnitNumber').text();  
-        
+        var unit_number = $(this).find('UnitNumber').text();
+
         $('.search-result table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-unit-number"></span></td><td><button type="button" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm" onclick="apnData(this)"><span class="icon text-white-50"><i class="fas fa-check"></i></span><span class="text">Choose</span></button></td></tr>');
 
-        
 
-        $('.search-result table > tbody').find('tr').eq(i).find('.result-apn').text(apn);       
+
+        $('.search-result table > tbody').find('tr').eq(i).find('.result-apn').text(apn);
         $('.search-result table > tbody').find('tr').eq(i).find('.result-address').text(address + ', ' + city);
         // $('.search-result table > tbody').find('tr').eq(i).find('.result-city').text(city);
         $('.search-result table > tbody').find('tr').eq(i).find('.result-unit-number').text(unit_number);
     });
 }
 
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 }
 
 // display error returned in API query
@@ -965,15 +926,14 @@ function displayError(responseStatus) {
 function apnData(e) {
 
     $("#searchResultModal").find(".apn-search-loader").removeClass("hidden");
-    
-    isNewSearch=false;
+
+    isNewSearch = false;
 
     var apn = $(e).closest('tr').find('.result-apn').text();
     var fips = apnInfo[apn]['fips'];
     // var apn = "2350-013-020";
     // var fips = "06037";
-    if ($('#property-fips').length) 
-    {
+    if ($('#property-fips').length) {
         $('#property-fips').val(fips);
     }
 
@@ -990,35 +950,32 @@ function apnData(e) {
 function compileAPNRequest(dataobj) {
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
     request += $.param(dataObj);
-    fetchReports('187',request,dataObj);
+    fetchReports('187', request, dataObj);
 }
 
-function notifyAdminPlat(subject)
-{
+function notifyAdminPlat(subject) {
     var customer_id = $("#CustomerId").val();
 
-    if(customer_id)
-    {
+    if (customer_id) {
         $.ajax({
-           url: base_url+'notifyAdmin',
-           type: "POST",//type of posting the data
-           data: {
+            url: base_url + 'notifyAdmin',
+            type: "POST",//type of posting the data
+            data: {
                 customer_id: customer_id,
                 property: $('#property-full-address').val(),
                 subject: subject,
-           },
-           success: function (data) {
+            },
+            success: function (data) {
                 console.log(data);
-           },
-           error: function(xhr, ajaxOptions, thrownError){
-              
-           },
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            },
         });
-    }    
+    }
 }
 
-function switchAPN() 
-{
+function switchAPN() {
     $('.pma-error').html('');
     $('.pma-error').hide();
     $('#apn_num').parent().removeClass('state-error');
@@ -1027,18 +984,16 @@ function switchAPN()
     $('#apn_container').show();
 }
 
-function switchProperty() 
-{
+function switchProperty() {
     $('.pma-error').html('');
     $('.pma-error').hide();
     $('#property-search').parent().removeClass('state-error');
     $('#address_container').show();
-    $('#apn_container').hide();       
+    $('#apn_container').hide();
 }
 
-function getAPN() 
-{
-    isNewSearch=true;
+function getAPN() {
+    isNewSearch = true;
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
     var apn = $.trim($('#apn_num').val());
     var county = $.trim($('#apn_county').val());
@@ -1047,7 +1002,7 @@ function getAPN()
         $('.pma-error').show();
         $('#apn_num').parent().addClass('state-error');
         return;
-    } 
+    }
     if (county == '') {
         $('.pma-error').html('Please enter County Name.');
         $('.pma-error').show();
@@ -1057,7 +1012,7 @@ function getAPN()
     county = county.toUpperCase();
     county = county.replace('COUNTY', '');
     county = county.trim();
-    county = county.replace(/\w\S*/g, function(txt) {
+    county = county.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
     fips = counties[county];
@@ -1068,8 +1023,8 @@ function getAPN()
         dataObj.ClientReference = '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
         request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/ApnSearch?';
         request += $.param(dataObj)
-      //  fetchReports('187');
-        fetchReports('187',request,dataObj,'',true);
+        //  fetchReports('187');
+        fetchReports('187', request, dataObj, '', true);
     } else {
         $('.pma-error').html('Invalid County Name.');
         $('.pma-error').show();

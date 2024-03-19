@@ -199,31 +199,31 @@ function sendOrderToResware(file_id) {
             file_id: file_id
         },
         success: function (data) {
-            var result = jQuery.parseJSON(data);
-            if (result.status == 'success') {
-                $('body').animate({
-                    opacity: 1.0
-                }, "slow");
-                $('#lp_order_success_msg').html(result.message).show();
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#lp_order_success_msg").offset().top
-                }, 1000);
-                lp_order_list.ajax.reload(null, false);
-                setTimeout(function () {
-                    $('#lp_order_success_msg').html('').hide();
-                }, 5000);
-            } else {
-                $('body').animate({
-                    opacity: 1.0
-                }, "slow");
-                $('#lp_order_error_msg').html(result.message).show();
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#lp_order_error_msg").offset().top
-                }, 1000);
-                setTimeout(function () {
-                    $('#lp_order_error_msg').html('').hide();
-                }, 5000);
+            if (data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#lp_order_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#lp_order_success_msg").offset().top
+                    }, 1000);
+                    lp_order_list.ajax.reload(null, false);
+                    setTimeout(function () {
+                        $('#lp_order_success_msg').html('').hide();
+                    }, 5000);
+                } else {
+
+                    $('#lp_order_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#lp_order_error_msg").offset().top
+                    }, 1000);
+                    setTimeout(function () {
+                        $('#lp_order_error_msg').html('').hide();
+                    }, 5000);
+                }
             }
+            $('body').animate({
+                opacity: 1.0
+            }, "slow");
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
