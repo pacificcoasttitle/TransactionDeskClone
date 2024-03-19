@@ -70,6 +70,7 @@ class Home_model extends CI_Model
                     $this->db->where('is_escrow', $params['is_escrow']);
                     $this->db->group_start()
                         ->like('company_name', $params['company_name'])
+                        ->or_like("first_name", $params['company_name'])
                         ->or_like("email_address", $params['company_name'])
                         ->group_end();
                     $this->db->where('is_password_updated', 1);
