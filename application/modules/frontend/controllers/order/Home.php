@@ -1832,10 +1832,10 @@ class Home extends MX_Controller
 
         $resware_user_id = isset($customerDetails['resware_user_id']) && !empty($customerDetails['resware_user_id']) ? $customerDetails['resware_user_id'] : '';
         $endPoint = 'types/products?ClientsClientID=' . $resware_user_id;
-        $logid = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, $requestParams, array(), 0, 0);
+        $logid = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, $data, array(), 0, 0);
         $this->load->library('order/resware');
         $result = $this->resware->make_request('GET', $endPoint, array(), $data);
-        $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, array(), $result, 0, $logid);
+        $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, $data, $result, 0, $logid);
         $response = json_decode($result, true);
         $product_types = array();
 
