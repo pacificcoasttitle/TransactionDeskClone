@@ -522,18 +522,10 @@ class Common extends MX_Controller
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
         }
+
         $userdata = $this->session->userdata('user');
         $this->load->model('order/note');
         $this->load->model('order/document');
-        $fileId = $this->uri->segment(2);
-        $endPoint = 'files/' . $fileId . '/actions';
-        $user_data['admin_api'] = 1;
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), array(), 0, 0);
-        $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), $res, 0, $logid);
-        $result = json_decode($res, true);
-        $error = '';
-        $success = '';
 
         $config['upload_path'] = './uploads/prelim-upload-doc/';
         $config['allowed_types'] = 'pdf';
@@ -549,6 +541,15 @@ class Common extends MX_Controller
                 $this->session->set_userdata('error', $errorMsg);
                 $file_upload_error_msg = 1;
             } else {
+                $fileId = $this->uri->segment(2);
+                $endPoint = 'files/' . $fileId . '/actions';
+                $user_data['admin_api'] = 1;
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), array(), 0, 0);
+                $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), $res, 0, $logid);
+                $result = json_decode($res, true);
+                $error = '';
+                $success = '';
                 if (isset($result['Actions']) && !empty($result['Actions'])) {
                     $array_keymap = $this->order->array_recursive_search_key_map(126, $result['Actions']);
                     if (!empty($array_keymap)) {
@@ -568,6 +569,11 @@ class Common extends MX_Controller
 
                         if (!empty($result['FileActionID'])) {
                             $success = 'Prelim action updated successfully.';
+                            /** Save user Activity */
+                            $activity = 'Prelim action updated successfully at resware by ' . $userdata['email_address'] . ' for file id :- ' . $fileId;
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
+
                         } else {
                             $error = 'Something went wrong during update action prelim';
                         }
@@ -595,6 +601,10 @@ class Common extends MX_Controller
 
                         if (!empty($result['FileActionID'])) {
                             $success = 'Prelim action updated successfully. <br/>';
+                            /** Save user Activity */
+                            $activity = 'Prelim action updated successfully at resware by ' . $userdata['email_address'] . ' for file id :- ' . $fileId;
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
                         } else {
                             $errors = 'Something went wrong during update action prelim';
                         }
@@ -636,6 +646,10 @@ class Common extends MX_Controller
                         $id = $this->note->insert($notesData);
                         if ($noteId && $id) {
                             $success .= 'Note created successfully.';
+                            /** Save user Activity */
+                            $activity = 'Note created successfully at resware and in database by ' . $userdata['email_address'] . ' for file id :- ' . $fileId;
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
                         } else {
                             $errors .= 'Something went wrong. Please try again.';
                         }
@@ -684,6 +698,10 @@ class Common extends MX_Controller
                 $res = json_decode($result);
                 if (!empty($res->Document->DocumentID)) {
                     $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+                    /** Save user Activity */
+                    $activity = 'Document created successfully at resware and in database by ' . $userdata['email_address'] . ' for file id :- ' . $fileId;
+                    $this->order->logAdminActivity($activity);
+                    /** End Save user activity */
                     $success .= "Document uploaded successfully";
                 } else {
                     $errors .= " Something went wrong.Please try again";
