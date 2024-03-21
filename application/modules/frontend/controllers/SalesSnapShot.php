@@ -165,7 +165,6 @@ class SalesSnapShot extends MX_Controller
                 } else if ($this->input->post('month_option') == '12') {
                     $html = $this->load->view('salesSnapShot/twelve_month_pdf', $report_data, true);
                 }
-                print_r($html);die;
                 $this->load->library('snappy_pdf');
 
                 $document_name = time() . '_' . $last_id . '.pdf';
