@@ -314,7 +314,7 @@ form {
 }
 
 .btn-icon-split .text {
-	padding: 0.375rem 4px 0.375rem 2px;
+	padding: 0.375rem 0px 0.375rem 2px;
 }
 
 .align-btn {
