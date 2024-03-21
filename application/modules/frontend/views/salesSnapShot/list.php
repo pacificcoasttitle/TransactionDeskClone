@@ -312,6 +312,15 @@ form {
 .text-center {
 	text-align: center;
 }
+
+.btn-icon-split .text {
+	padding: 0.375rem 4px 0.375rem 2px;
+}
+
+.align-btn {
+	display: flex;
+	justify-content: space-between;
+}
 </style>
 
 <section class="section-sm section-defaulta" >
@@ -326,7 +335,7 @@ form {
 							</span>
 							<span class="text">Create F.A.R</span>
 						</a>
-						
+
 						<a href="<?php echo base_url('pmas'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fas fa-concierge-bell"></i>
@@ -362,14 +371,14 @@ form {
 					</h2> -->
 					<ul class="u-list">
 						<?php
-							foreach ($salesReps as $key => $salesRep):
-						?>
+foreach ($salesReps as $key => $salesRep):
+?>
 						<li>
 							<div class="u-pic">
 							<?php
 
-								$image_url = trim(env('AWS_PATH') . $salesRep['sales_rep_report_image']);
-								if (!empty($salesRep['sales_rep_report_image'])): ?>
+$image_url = trim(env('AWS_PATH') . $salesRep['sales_rep_report_image']);
+if (!empty($salesRep['sales_rep_report_image'])): ?>
 																<img src="<?php echo $image_url; ?>" alt="main-logo" class="retina">
 								<?php else: ?>
 								<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']), 0, 1) . substr(trim($salesRep['last_name']), 0, 1)); ?></span></div>
@@ -387,11 +396,11 @@ form {
 							</div>
 						</li>
 						<?php
-							if ($key == 9) {
-								break;
-							}
-							endforeach;
-						?>
+if ($key == 9) {
+    break;
+}
+endforeach;
+?>
 					</ul>
 						<?php if (count($salesReps) > 10): ?>
 							<div class="pull-right">
@@ -409,17 +418,17 @@ form {
 						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('sales-snap-shot/importData'); ?>">
 							<div class="form-body">
 								<?php
-									$prev_data = $this->session->flashdata('_previous_data');
-									if ($this->session->flashdata('error')):
-								?>
+$prev_data = $this->session->flashdata('_previous_data');
+if ($this->session->flashdata('error')):
+?>
 								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
 								<?php
-									elseif ($this->session->flashdata('success')):
-								?>
+elseif ($this->session->flashdata('success')):
+?>
 								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
 								<?php
-									endif;
-								?>
+endif;
+?>
 								<div class="frm-row">
 									<div class="row">
 										<div class="section colm colm6 col-md-6">
@@ -446,8 +455,8 @@ form {
 											<select id="sales_rep" name="sales_rep" class="form-control" placeholder="Select Sales Representative">
 												<option value="" >Select Sales Representative</option>
 												<?php
-													foreach ($salesReps as $salesRep):
-												?>
+foreach ($salesReps as $salesRep):
+?>
 												<option value="<?php echo $salesRep['id']; ?>" <?php if (!empty($prev_data['sales_rep']) && $prev_data['sales_rep'] == $salesRep['id']) {echo 'selected';}?>><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></option>
 												<?php endforeach;?>
 											</select>
@@ -487,6 +496,8 @@ form {
 					<div class="mt-5 text-center">
 						<h5>Recent Sales Activity Reports</h5>
 						<div class="table-container1">
+							<div class="alert alert-success hide" id="successMsg"></div>
+							<div class="alert alert-danger hide" id="errorMsg"></div>
 							<table class="table table-type-3 typography-last-elem no-footer table-bordered" id="report_listing">
 								<thead>
 									<tr>
@@ -498,17 +509,18 @@ form {
 								</thead>
 								<tbody>
 									<?php
-										foreach ($reports_data as $report) {
+foreach ($reports_data as $report) {
 
-										$pdf_url = trim(env('AWS_PATH') . 'sales-snap-shot/' . $report['report_url']);
-									?>
+    $pdf_url = trim(env('AWS_PATH') . 'sales-snap-shot/' . $report['report_url']);
+    $email = $report['email_address'];
+    ?>
 									<tr>
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
 										<td><?php echo $report['area_name']; ?></td>
-										<td>
+										<td class="align-btn" >
 										<?php
-											if (!empty($report['report_url'])): ?>
+if (!empty($report['report_url'])): ?>
 										<a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
 											<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
 											<span class="icon text-white-50">
@@ -516,12 +528,19 @@ form {
 											</span>
 											<span class="text">Download</span>
 										</a>
+										<a href="javascript:void(0);" class="btn btn-success btn-icon-split" onclick="sendEmailToSalesRep('<?=$email;?>', '<?=$pdf_url;?>');">
+											<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
+											<span class="icon text-white-50">
+												<i class="fas fa-envelope-square "></i>
+											</span>
+											<span class="text">Send to Reps</span>
+										</a>
 										<?php endif;?>
 										</td>
 									</tr>
 									<?php
-										}
-									?>
+}
+?>
 
 								</tbody>
 							</table>
@@ -533,4 +552,38 @@ form {
 	</div>
 </section>
 
+<script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
+
+<script>
+
+	function sendEmailToSalesRep(email, url) {
+
+		$.ajax({
+			url: base_url + "send-sales-snap-shot-email",
+			type: "post",
+			data: {
+				email : email,
+				url: url
+			},
+			// async: false,
+			success: function (response) {
+				let res = JSON.parse(response);
+				console.log(res);
+				if (res.status == "success") {
+					$('#successMsg').html(res.message).removeClass('hide').addClass('show');
+					setTimeout(function () {
+						$('#successMsg').html('').removeClass('show').addClass('hide');
+					},3000);
+				} else {
+					$('#errorMsg').html(res.message).removeClass('hide').addClass('show');
+					setTimeout(function () {
+						$('#errorMsg').html('').removeClass('show').addClass('hide');
+					},3000);
+				}
+			}
+		});
+	}
+
+
+</script>
 
