@@ -639,6 +639,8 @@ $route['download-label-pdf'] = "frontend/label/downloadPdf";
 $route['pmas/(.+)'] = "frontend/pma/$1";
 $route['send_invite'] = 'frontend/order/home/send_invite';
 $route['sales-snap-shot'] = "frontend/salesSnapShot";
+$route['send-sales-snap-shot-email'] = "frontend/salesSnapShot/sendEmailToSalesRep";
+
 $route['sales-snap-shot/(.+)'] = "frontend/salesSnapShot/$1";
 
 $route['api/get_file_details(/:num)?'] = 'frontend/api/pctCalculator/get_file_details$1';
