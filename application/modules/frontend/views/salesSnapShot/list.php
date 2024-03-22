@@ -313,8 +313,9 @@ form {
 	text-align: center;
 }
 
-.btn-icon-split .text {
-	padding: 0.375rem 0px 0.375rem 2px;
+#report_listing .btn-icon-split .text {
+	padding: 0.375rem 6px 0.375rem 6px;
+	font-size: 14px;
 }
 
 .align-btn {
