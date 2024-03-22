@@ -330,7 +330,7 @@ class SalesSnapShot extends MX_Controller
         $message = 'Please check attachment for Snap Shot document.';
         $subject = 'Snap Shot Document';
 
-        // $file[] = 'https://pct-doc.s3-us-west-2.amazonaws.com/sales-snap-shot/1710971265_42.pdf'; //$this->input->post('url');
+        // $file[] = 'https://pct-doc.s3-us-west-2.amazonaws.com/sales-snap-shot/1710971265_42.pdf'; // $this->input->post('url');
         // $to = 'piyush.j@crestinfosystems.net';
         $this->load->helper('sendemail');
         $data = array(
