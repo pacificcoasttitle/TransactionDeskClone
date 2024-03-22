@@ -558,7 +558,7 @@ if (!empty($report['report_url'])): ?>
 <script>
 
 	function sendEmailToSalesRep(email, url) {
-
+		$("#page-preloader").show();
 		$.ajax({
 			url: base_url + "send-sales-snap-shot-email",
 			type: "post",
@@ -581,6 +581,10 @@ if (!empty($report['report_url'])): ?>
 						$('#errorMsg').html('').removeClass('show').addClass('hide');
 					},3000);
 				}
+				$("#page-preloader").hide();
+			},
+			complete: function (res) {
+				$("#page-preloader").hide();
 			}
 		});
 	}
