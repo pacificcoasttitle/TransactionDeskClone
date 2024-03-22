@@ -9,7 +9,7 @@
     <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_header">
-                <h1>SALES SNAP SHOT</h1>
+                <h1>SALES SNAPSHOT</h1>
                 <div class="overview_text">12 MONTH OVERVIEW</div>
                 <div class="santa_monica" style="margin-top: 0px;"><?php echo $area_name; ?></div>
                 <!-- <img src="<?php echo base_url('assets/sales_snap_shot/logo.png') ?>" class="pacific_logo" alt=""> -->
