@@ -313,8 +313,9 @@ form {
 	text-align: center;
 }
 
-.btn-icon-split .text {
-	padding: 0.375rem 0px 0.375rem 2px;
+#report_listing .btn-icon-split .text {
+	padding: 0.375rem 6px 0.375rem 6px;
+	font-size: 14px;
 }
 
 .align-btn {
@@ -557,7 +558,7 @@ if (!empty($report['report_url'])): ?>
 <script>
 
 	function sendEmailToSalesRep(email, url) {
-
+		$("#page-preloader").show();
 		$.ajax({
 			url: base_url + "send-sales-snap-shot-email",
 			type: "post",
@@ -580,6 +581,10 @@ if (!empty($report['report_url'])): ?>
 						$('#errorMsg').html('').removeClass('show').addClass('hide');
 					},3000);
 				}
+				$("#page-preloader").hide();
+			},
+			complete: function (res) {
+				$("#page-preloader").hide();
 			}
 		});
 	}
