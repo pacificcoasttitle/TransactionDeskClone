@@ -64,7 +64,7 @@ class Home_model extends CI_Model
                     if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     } else {
-                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, customer_basic_details.city, customer_basic_details.state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     }
 
                     $this->db->where('is_escrow', $params['is_escrow']);
