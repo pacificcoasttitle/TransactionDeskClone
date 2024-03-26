@@ -4931,14 +4931,21 @@ class Home extends MX_Controller
         $data['title'] = 'PCT Order: Settings';
         if ($this->input->post()) {
             $input = $this->input->post();
-            // echo "<pre>";
-            // print_r($input);die;
-            $is_lp_enable = isset($input['is_lp_enable']) && !empty($input['is_lp_enable']) ? 1 : 0;
+
+            $escrow_commission = isset($input['escrow_commission']) && !empty($input['escrow_commission']) ? 1 : 0;
+
             $lpDocData = array(
-                'is_lp_enable' => $is_lp_enable,
+                'is_enable' => $escrow_commission,
             );
+
             $this->db->update('pct_configs', $lpDocData, array('slug' => 'escrow_commission'));
-            $msg = ($is_lp_enable == 1) ? 'Lp Enabled' : 'Lp Disabled';
+
+            $title_point_shut_off = isset($input['title_point_shut_off']) && !empty($input['title_point_shut_off']) ? 1 : 0;
+            $lpDocData = array(
+                'is_enable' => $title_point_shut_off,
+            );
+            $this->db->update('pct_configs', $lpDocData, array('slug' => 'title_point_shut_off'));
+            $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
             /** End Save user activity */
@@ -4946,14 +4953,23 @@ class Home extends MX_Controller
             $this->session->set_userdata('success', $successMsg);
             redirect(base_url() . 'order/admin/settings');
         }
-        $this->db->select('is_lp_enable');
+
+        $this->db->select('is_enable, slug');
         $this->db->from('pct_configs');
+        $this->db->where('slug !=', 'sales_rep_status_flag');
         $query = $this->db->get();
-        $res = $query->row();
-        $data['is_lp_enable'] = $res->is_lp_enable;
-        // echo "<pre>";
-        // print_r($data);die;
-        $this->admintemplate->show("order/home", "settings", $data);
+
+        $data = array();
+
+        foreach ($query->result_array() as $row) {
+            $data[$row['slug']] = $row;
+        }
+
+        $res['escrow_commission'] = $data['escrow_commission']['is_enable'];
+        $res['title_point_shut_off'] = $data['title_point_shut_off']['is_enable'];
+
+        // $data['is_lp_enable'] = $res->is_enable;
+        $this->admintemplate->show("order/home", "settings", $res);
     }
 
     public function lpDocumentTypes()
