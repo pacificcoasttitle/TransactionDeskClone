@@ -1238,6 +1238,7 @@ class Home extends MX_Controller
                     'currYear' => CURRENT_YEAR,
                     'randomString' => $randomString,
                     'titlePointDetails' => $titlePointDetails,
+                    'titlePointShutOff' => $titlePointShutOff,
                 );
 
                 $from_name = 'Pacific Coast Title Company';
@@ -1320,7 +1321,11 @@ class Home extends MX_Controller
                 $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
                 $this->apiLogs->syncLogs(0, 'email-check-order', 'email-check-order', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus, 'lp_file_number' => $orderDetails['lp_file_number']], array(), 0, 0);
 
-                if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) {
+                if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) &&
+                    $emailSentFlag != 1 &&
+                    ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
+                        ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) || $titlePointShutOff == 1)
+                ) {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
