@@ -3715,9 +3715,11 @@ class Order
             'id' => $orderDetails['customer_id'],
         );
         $customerDetails = $this->CI->home_model->get_customers($cond);
-
+        $configData = $this->getConfigData();
+        $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
         $timezone = -8;
         $orderNumber = $orderDetails['file_number'] ? $orderDetails['file_number'] : $orderDetails['lp_file_number'];
+
         $data = array(
             'orderNumber' => $orderNumber,
             'orderId' => $file_id,
@@ -3745,6 +3747,7 @@ class Order
             'EscrowNumber' => $orderDetails['escrow_number'],
             'randomString' => $this->CI->order->randomPassword(),
             'titlePointDetails' => $titlePointDetails[0],
+            'titlePointShutOff' => $titlePointShutOff,
         );
 
         $buyerDetails = $listingDetails = $parties_email = array();
@@ -3809,12 +3812,15 @@ class Order
         // $parties_email[] = 'evelasquez@pct.com';
         $parties_email[] = 'openorders@pct.com';
         $file = array();
-        $lvfilename = $orderNumber . '.pdf';
-        $deedfilename = $orderNumber . '.pdf';
-        $taxfilename = $orderNumber . '.pdf';
-        $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
-        $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
-        $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+        $lvfilename = $deedfilename = $taxfilename = '';
+        if ((empty($titlePointShutOff) || $titlePointShutOff == 0)) {
+            $lvfilename = $orderNumber . '.pdf';
+            $deedfilename = $orderNumber . '.pdf';
+            $taxfilename = $orderNumber . '.pdf';
+            $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
+            $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
+            $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+        }
 
         //$parties_email[] = env('ORDER_ADMIN_EMAIL');
         if (isset($orderDetails["title_officer_email"]) && !empty($orderDetails["title_officer_email"])) {
@@ -3840,7 +3846,9 @@ class Order
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$taxDataStatus' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
 
-        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) {
+        if ($emailSentFlag != 1 &&
+            ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
+                ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) || $titlePointShutOff == 1)) {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
 
                 $parties_email[] = 'rudy@pct.com';

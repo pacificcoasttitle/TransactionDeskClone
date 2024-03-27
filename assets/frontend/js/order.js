@@ -57,7 +57,6 @@ $(document).ready(function () {
             delay: 0,
             minLength: 3,
             select: function (event, ui) {
-                console.log('ui.item ==========', ui.item);
                 event.preventDefault();
                 $("#CompanyName").val(ui.item.company);
                 $("#OpenEmail").val(ui.item.email_address).parent().addClass('state-success');

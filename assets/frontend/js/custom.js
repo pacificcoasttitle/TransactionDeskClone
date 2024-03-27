@@ -464,7 +464,6 @@ $(document).ready(function () {
     /* Escrow autocomplete */
     $("#EscrowCompany, #EscrowName").autocomplete({
         source: function (request, response) {
-            console.log('FE js');
             $.ajax({
                 url: base_url + 'home/getDetailsByName',
                 data: {
@@ -632,7 +631,6 @@ function data(address, locale, neighbourhood, retry) {
     dataObj.OwnerName = '';
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
     request += $.param(dataObj);
-    console.log(dataObj);
     compileRequest(dataObj, neighbourhood, retry);
 }
 
@@ -642,7 +640,6 @@ function compileRequest(dataObj, neighbourhood, retry) {
     var request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?'
     if (retry) {
         dataObj.LastLine = neighbourhood.toString();
-        console.log(dataObj.LastLine);
     }
     request += $.param(dataObj);
     // runQueries(request,dataObj,neighbourhood,retry);
