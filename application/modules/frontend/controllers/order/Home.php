@@ -307,9 +307,12 @@ class Home extends MX_Controller
 
                 /** Start Get config value to check Lp Enable or not */
                 $configData = $this->order->getConfigData();
+                $isEnable = $configData['escrow_commission']['is_enable'];
+                $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
+
                 /** End Get config value to check Lp Enable or not */
                 $underWriter = '';
-                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($configData->is_lp_enable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') {
+                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') {
                     $lpOrderFlag = 1;
                     $loanFlag = 1;
                     if (strpos($ProductTypeTxt, 'Sale') !== false) {
@@ -1166,21 +1169,29 @@ class Home extends MX_Controller
                     //     rename(FCPATH . "/uploads/tax/" . $session_id . '.pdf', FCPATH . "/uploads/tax/" . $orderNumber .'.pdf');
                     //     $this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
                     // }
-
                     $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
 
-                    $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
-                    $this->titlepoint->generateTaxDoc($tax_serviceId, $orderNumber, $orderId);
+                    /** If Title point shuf off is enabled from admin setting then Legal Vesting, Tax Doc, Grant deed title point api will not call */
+                    /**
+                     * Comment from Jerry (26-03-2024)
+                     * The manual shutoff refrains from calling legal and vesting, tax document and grant deed. It  will allow for open order to be submitted to resware,
+                     * order number retrieved, and email confirmation to go out to all parties
+                     */
+                    if (empty($titlePointShutOff) || $titlePointShutOff == 0) {
+                        $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
+                        $this->titlepoint->generateTaxDoc($tax_serviceId, $orderNumber, $orderId);
 
-                    $serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
-                    $this->titlepoint->generateImg($serviceId, $orderNumber, $orderId);
+                        $serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+                        $this->titlepoint->generateImg($serviceId, $orderNumber, $orderId);
 
-                    $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+                        $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
 
-                    $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
-                    $fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+                        $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+                        $fips = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
 
-                    $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
+                        $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
+                    }
+
                 }
 
                 $orderDetails = $this->order->get_order_details($file_id);
@@ -1227,6 +1238,7 @@ class Home extends MX_Controller
                     'currYear' => CURRENT_YEAR,
                     'randomString' => $randomString,
                     'titlePointDetails' => $titlePointDetails,
+                    'titlePointShutOff' => $titlePointShutOff,
                 );
 
                 $from_name = 'Pacific Coast Title Company';
@@ -1253,17 +1265,17 @@ class Home extends MX_Controller
                     $this->uploadCurativeDocsToResware($orderDetails);
                 }
 
-                if ($this->order->fileExistOrNotOnS3('legal-vesting/' . $lvfilename)) {
+                if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('legal-vesting/' . $lvfilename)) {
                     $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
                     $this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails, $lpOrderFlag);
                 }
 
-                if ($this->order->fileExistOrNotOnS3('grant-deed/' . $deedfilename)) {
+                if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('grant-deed/' . $deedfilename)) {
                     $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
                     $this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails, $lpOrderFlag);
                 }
 
-                if ($this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
+                if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
                     $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
                     $this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
                 }
@@ -1309,7 +1321,11 @@ class Home extends MX_Controller
                 $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
                 $this->apiLogs->syncLogs(0, 'email-check-order', 'email-check-order', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus, 'lp_file_number' => $orderDetails['lp_file_number']], array(), 0, 0);
 
-                if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) {
+                if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) &&
+                    $emailSentFlag != 1 &&
+                    ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
+                        ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) || $titlePointShutOff == 1)
+                ) {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
@@ -1318,7 +1334,7 @@ class Home extends MX_Controller
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
-
+                    $cc[] = 'piyush.j@crestinfosystems.net';
                     // $to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
                     // $taxDataStatus = 'falied';
                     if ($taxDataStatus != 'success') {
@@ -1463,8 +1479,6 @@ class Home extends MX_Controller
         } else {
             $data['title'] = 'Open Order | Pacific Coast Title Company';
             $customer_data = $this->home_model->get_user(array('id' => $userdata['id']));
-            // echo "<pre>";
-            // print_r($customer_data);die;
             $is_master = isset($customer_data['is_master']) && !empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
 
             /*$condition = array(

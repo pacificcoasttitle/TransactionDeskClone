@@ -1,16 +1,16 @@
 
 <div class="content">
-    <?php if(!empty($this->session->userdata('success'))){ ?>
+    <?php if (!empty($this->session->userdata('success'))) {?>
         <div class="col-xs-12">
             <div class="alert alert-success"><?php echo $this->session->userdata('success'); ?></div>
         </div>
-    <?php } ?>
+    <?php }?>
 
-    <?php if(!empty($error_msg)){ ?>
+    <?php if (!empty($error_msg)) {?>
         <div class="col-xs-12">
             <div class="alert alert-danger"><?php echo $error_msg; ?></div>
         </div>
-    <?php } ?>
+    <?php }?>
 
     <div class="container-fluid">
         <div class="row mb-3">
@@ -24,17 +24,25 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Settings</h6>
                     </div>
-                    <div class="card-body">        
+                    <div class="card-body">
                         <form id="setting_form" method="POST">
 
                             <div class="form-group row ml-1">
                                 <label for="resware_username" class="col-sm-2 col-form-label">Is LP Enable<span class="required"> *</span></label>
                                 <div class="col-sm-2">
-                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="is_lp_enable" id="is_lp_enable" <?php echo isset($is_lp_enable) && !empty($is_lp_enable) ? 'Checked' : ''; ?>>
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="escrow_commission" id="escrow_commission" <?php echo isset($escrow_commission) && !empty($escrow_commission) ? 'Checked' : ''; ?>>
                                     <input type="hidden" value="" name="lp_enable" >
                                 </div>
                             </div>
-                            
+
+                            <div class="form-group row ml-1">
+                                <label for="resware_username" class="col-sm-2 col-form-label">Title Point Shut Off<span class="required"> *</span></label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="title_point_shut_off" id="title_point_shut_off" <?php echo isset($title_point_shut_off) && !empty($title_point_shut_off) ? 'Checked' : ''; ?>>
+                                    <!-- <input type="hidden" value="" name="title_point_shut_off" > -->
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">

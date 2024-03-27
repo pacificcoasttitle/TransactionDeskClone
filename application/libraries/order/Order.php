@@ -1,7 +1,7 @@
 <?php
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
-
+}
 
 class Order
 {
@@ -9,7 +9,7 @@ class Order
 
     public function __construct($params = array())
     {
-        $this->CI =& get_instance();
+        $this->CI = &get_instance();
         $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
@@ -398,7 +398,7 @@ class Order
             }
 
             /*if ($userdata['is_master'] == 0) {
-                $this->CI->db->where('order_details.customer_id', $userdata['id']);
+            $this->CI->db->where('order_details.customer_id', $userdata['id']);
             }*/
 
             $total_records = $this->CI->db->count_all_results();
@@ -523,7 +523,7 @@ class Order
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $total_records,
-            'data' => $orders_lists
+            'data' => $orders_lists,
         );
     }
 
@@ -551,21 +551,21 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('
             order_details.lp_file_number,
-            order_details.file_number, 
+            order_details.file_number,
             order_details.customer_id,
             order_details.id as order_id,
-            order_details.file_id, 
-            order_details.random_number, 
+            order_details.file_id,
+            order_details.random_number,
             order_details.westcor_order_id,
-            order_details.westcor_cpl_id, 
+            order_details.westcor_cpl_id,
             order_details.westcor_buyer_id,
-            order_details.westcor_seller_id, 
+            order_details.westcor_seller_id,
             order_details.westcor_secondary_buyer_id,
             order_details.westcor_secondary_seller_id,
             order_details.westcor_lender_id,
             order_details.westcor_file_id,
             order_details.is_regenerate_cpl,
-            order_details.created_at as opened_date, 
+            order_details.created_at as opened_date,
             order_details.fnf_agent_id,
             order_details.fnf_document_id,
             order_details.cpl_document_name,
@@ -584,16 +584,16 @@ class Order
             order_details.prod_type,
             order_details.resware_status,
             order_details.borrower_email,
-            property_details.id as property_id, 
-            property_details.address, 
-            property_details.full_address, 
-            property_details.property_type, 
-            property_details.city as property_city, 
-            property_details.state as property_state, 
-            property_details.zip as property_zip, 
-            property_details.county, 
-            property_details.westcor_property_id, 
-            property_details.legal_description, 
+            property_details.id as property_id,
+            property_details.address,
+            property_details.full_address,
+            property_details.property_type,
+            property_details.city as property_city,
+            property_details.state as property_state,
+            property_details.zip as property_zip,
+            property_details.county,
+            property_details.westcor_property_id,
+            property_details.legal_description,
             property_details.primary_owner,
             property_details.secondary_owner,
             property_details.escrow_lender_id,
@@ -613,11 +613,11 @@ class Order
             transaction_details.sales_amount,
             transaction_details.loan_amount,
             transaction_details.loan_number,
-            transaction_details.transaction_type, 
+            transaction_details.transaction_type,
             transaction_details.purchase_type,
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
-            transaction_details.borrower, 
+            transaction_details.borrower,
             transaction_details.secondary_borrower,
             transaction_details.vesting,
             transaction_details.escrow_number,
@@ -662,7 +662,7 @@ class Order
             pct_order_fnf_agents.underwriter,
             pct_order_product_types.product_type,
             pct_order_product_types.transaction_type,
-            pct_order_documents.created, 
+            pct_order_documents.created,
             p.created as proposed_document_created_date')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
@@ -707,16 +707,16 @@ class Order
     public function get_order_documents($fileId, $from_mail = 0)
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, 
-                order_details.file_id, 
-                order_details.id as order_id, 
-                pct_order_documents.document_name, 
-                pct_order_documents.document_name, 
-                pct_order_documents.original_document_name, 
-                pct_order_documents.is_sync, 
-                pct_order_documents.is_prelim_document, 
-                pct_order_documents.api_document_id, 
-                pct_order_documents.index_number, 
+        $this->CI->db->select('order_details.file_number,
+                order_details.file_id,
+                order_details.id as order_id,
+                pct_order_documents.document_name,
+                pct_order_documents.document_name,
+                pct_order_documents.original_document_name,
+                pct_order_documents.is_sync,
+                pct_order_documents.is_prelim_document,
+                pct_order_documents.api_document_id,
+                pct_order_documents.index_number,
                 pct_order_documents.is_linked_doc')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
@@ -739,16 +739,16 @@ class Order
     public function get_order_linked_documents($fileId, $from_mail = 0)
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, 
-                order_details.file_id, 
-                order_details.id as order_id, 
-                pct_order_documents.document_name, 
-                pct_order_documents.id, 
-                pct_order_documents.original_document_name, 
-                pct_order_documents.is_sync, 
-                pct_order_documents.is_prelim_document, 
-                pct_order_documents.api_document_id, 
-                pct_order_documents.index_number, 
+        $this->CI->db->select('order_details.file_number,
+                order_details.file_id,
+                order_details.id as order_id,
+                pct_order_documents.document_name,
+                pct_order_documents.id,
+                pct_order_documents.original_document_name,
+                pct_order_documents.is_sync,
+                pct_order_documents.is_prelim_document,
+                pct_order_documents.api_document_id,
+                pct_order_documents.index_number,
                 pct_order_documents.is_linked_doc')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
@@ -869,7 +869,6 @@ class Order
                 ->from('pct_order_documents');
             $total_records = $this->CI->db->count_all_results();
 
-
             if (isset($keyword) && !empty($keyword)) {
                 $this->CI->db->like('original_document_name', $keyword);
             }
@@ -917,7 +916,6 @@ class Order
 
             $this->CI->db->order_by('id', 'desc');
 
-
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
             }
@@ -931,7 +929,7 @@ class Order
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $total_records,
-            'data' => $document_lists
+            'data' => $document_lists,
         );
     }
 
@@ -995,7 +993,7 @@ class Order
                 }
 
                 $query = $this->CI->db->get();
-                $result = ($query->num_rows() > 0) ? $query->row_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->row_array() : false;
             }
         }
 
@@ -1066,13 +1064,13 @@ class Order
                     ->or_like('order_details.file_number', $keyword)
                     ->group_end();
             }
-            $this->CI->db->select('order_details.file_number, 
+            $this->CI->db->select('order_details.file_number,
                 order_details.file_id,
                 property_details.full_address,
-                order_details.id, 
-                customer_basic_details.company_name, 
-                pct_order_sales_rep.name, 
-                order_details.created_at, 
+                order_details.id,
+                customer_basic_details.company_name,
+                pct_order_sales_rep.name,
+                order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -1094,13 +1092,13 @@ class Order
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
 
-            $this->CI->db->select('order_details.file_number, 
+            $this->CI->db->select('order_details.file_number,
                 order_details.file_id,
                 property_details.full_address,
-                order_details.id, 
-                customer_basic_details.company_name, 
-                pct_order_sales_rep.name, 
-                order_details.created_at, 
+                order_details.id,
+                customer_basic_details.company_name,
+                pct_order_sales_rep.name,
+                order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -1120,13 +1118,13 @@ class Order
                 $orders_lists = $query->result_array();
             }
         } else {
-            $this->CI->db->select('order_details.file_number, 
+            $this->CI->db->select('order_details.file_number,
                 order_details.file_id,
                 property_details.full_address,
-                order_details.id, 
-                customer_basic_details.company_name, 
-                pct_order_sales_rep.name, 
-                order_details.created_at, 
+                order_details.id,
+                customer_basic_details.company_name,
+                pct_order_sales_rep.name,
+                order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -1141,13 +1139,13 @@ class Order
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $orders_lists = array();
 
-            $this->CI->db->select('order_details.file_number, 
+            $this->CI->db->select('order_details.file_number,
                 order_details.file_id,
                 property_details.full_address,
-                order_details.id, 
-                customer_basic_details.company_name, 
-                pct_order_sales_rep.name, 
-                order_details.created_at, 
+                order_details.id,
+                customer_basic_details.company_name,
+                pct_order_sales_rep.name,
+                order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -1171,7 +1169,7 @@ class Order
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $total_records,
-            'data' => $orders_lists
+            'data' => $orders_lists,
         );
     }
 
@@ -1192,16 +1190,16 @@ class Order
     public function get_order_uploaded_documents($fileId)
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, 
-                order_details.file_id, 
-                order_details.id as order_id, 
-                pct_order_documents.id, 
-                pct_order_documents.document_name, 
-                pct_order_documents.original_document_name, 
-                pct_order_documents.is_sync, 
-                pct_order_documents.is_prelim_document, 
-                pct_order_documents.api_document_id, 
-                pct_order_documents.index_number, 
+        $this->CI->db->select('order_details.file_number,
+                order_details.file_id,
+                order_details.id as order_id,
+                pct_order_documents.id,
+                pct_order_documents.document_name,
+                pct_order_documents.original_document_name,
+                pct_order_documents.is_sync,
+                pct_order_documents.is_prelim_document,
+                pct_order_documents.api_document_id,
+                pct_order_documents.index_number,
                 pct_order_documents.is_linked_doc')
             ->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
@@ -1228,7 +1226,6 @@ class Order
         $query = $this->CI->db->get();
         return $result = $query->row_array();
     }
-
 
     public function get_order($params)
     {
@@ -1257,14 +1254,13 @@ class Order
                 }
 
                 $query = $this->CI->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
 
         // Return fetched data
         return $result;
     }
-
 
     public function get_borrower_info($orderId, $buyerFlag)
     {
@@ -1336,7 +1332,7 @@ class Order
         $subject = 'CPL Document Not Generated';
         $property = $data['property_address'];
         $condition = array(
-            'id' => $customer_id
+            'id' => $customer_id,
         );
         $customerDetails = $this->CI->home_model->get_customers($condition);
 
@@ -1400,7 +1396,7 @@ class Order
         $result = curl_exec($ch);
 
         if (!is_dir('uploads/order_safewire_documents')) {
-            mkdir('./uploads/order_safewire_documents', 0777, TRUE);
+            mkdir('./uploads/order_safewire_documents', 0777, true);
         }
         file_put_contents('./uploads/order_safewire_documents/' . $orderDetails['file_id'] . '.pdf', $result);
 
@@ -1425,7 +1421,7 @@ class Order
         $resultWire = curl_exec($ch);
 
         if (!is_dir('uploads/wire_safewire_documents')) {
-            mkdir('./uploads/wire_safewire_documents', 0777, TRUE);
+            mkdir('./uploads/wire_safewire_documents', 0777, true);
         }
         file_put_contents('./uploads/wire_safewire_documents/' . $orderDetails['file_id'] . '.pdf', $resultWire);
         $binaryWireOrderData = base64_encode($resultWire);
@@ -1459,7 +1455,7 @@ class Order
             'is_prelim_document' => 0,
             'is_cpl_doc' => 0,
             'is_safewire_doc' => 1,
-            'created' => date("Y-m-d H:i:s")
+            'created' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_order_documents', $documentData);
         $documentId = $this->CI->db->insert_id();
@@ -1472,12 +1468,12 @@ class Order
             ),
             'Description' => 'Safewire Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
         $userData = array(
-            'admin_api' => 1
+            'admin_api' => 1,
         );
 
         $logid = $this->CI->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
@@ -1486,16 +1482,16 @@ class Order
         $res = json_decode($result);
 
         /* Start add resware api logs */
-		$reswareLogData = array(
-			'request_type' => 'send_safewire_to_resware',
-			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-			'request' => $document_api_data,
-			'response' => $result,
-			'status' => 'success',
-			'created_at' => date("Y-m-d H:i:s")
-		);
-		$this->CI->db->insert('pct_resware_log', $reswareLogData);
-		/* End add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'send_safewire_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $document_api_data,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
 
         $data = array();
         $data['updated'] = date("Y-m-d H:i:s");
@@ -1539,7 +1535,7 @@ class Order
                 'version' => '2006-03-01',
                 'credentials' => [
                     'key' => env('AWS_ACCESS_KEY_ID'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
                 ],
             ]);
 
@@ -1570,7 +1566,7 @@ class Order
                 'version' => '2006-03-01',
                 'credentials' => [
                     'key' => env('AWS_ACCESS_KEY_ID'),
-                    'secret' => env('AWS_SECRET_ACCESS_KEY')
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
                 ],
             ]);
             $result = $s3Client->doesObjectExist(env('AWS_BUCKET'), $key);
@@ -1598,7 +1594,7 @@ class Order
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
         $this->CI->db->where('transaction_details.sales_representative', $user_id);
-        $this->CI->db->where('order_details.underwriter != ', NULL);
+        $this->CI->db->where('order_details.underwriter != ', null);
 
         $query = $this->CI->db->get();
         $result = $query->result_array();
@@ -1619,7 +1615,7 @@ class Order
 
         } else {
             $this->CI->db->where('MONTH(order_details.created_at)', $month);
-    
+
             if ($year == 0) {
                 $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
             } else {
@@ -1700,8 +1696,8 @@ class Order
     {
         // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
-        ->from('order_details')
-        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
@@ -1755,9 +1751,9 @@ class Order
             $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
-            
+
             $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-    
+
             if ($year == 0) {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
             } else {
@@ -1795,13 +1791,13 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('order_details.resware_status', 'open');
-        // $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        // $this->CI->db->where('MONTH(order_details.created_at)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
         // if ($year == 0) {
-        //     $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
+        //     $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
         // } else {
-        //     $this->CI->db->where('YEAR(order_details.created_at)', $year); 
+        //     $this->CI->db->where('YEAR(order_details.created_at)', $year);
         // }
 
         if (is_array($userId)) {
@@ -1834,14 +1830,14 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('order_details.resware_status', 'open');
-        // $this->CI->db->where('MONTH(order_details.created_at)', $month); 
+        // $this->CI->db->where('MONTH(order_details.created_at)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         // if ($year == 0) {
-        //     $this->CI->db->where('YEAR(order_details.created_at)', date('Y')); 
+        //     $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
         // } else {
-        //     $this->CI->db->where('YEAR(order_details.created_at)', $year); 
+        //     $this->CI->db->where('YEAR(order_details.created_at)', $year);
         // }
 
         if (is_array($userId)) {
@@ -1876,14 +1872,14 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('order_details.resware_status', 'closed');
-        // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+        // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         // if ($year == 0) {
-        //     $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y')); 
+        //     $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
         // } else {
-        //     $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
+        //     $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
         // }
 
         if (is_array($userId)) {
@@ -1917,11 +1913,11 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('order_details.resware_status', 'closed');
-        // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month); 
+        // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
-        // if ($year == 0) { 
+        // if ($year == 0) {
 
         if (is_array($userId)) {
             if (!empty($userId)) {
@@ -1973,7 +1969,7 @@ class Order
                     $this->CI->db->limit($params['limit']);
                 }
                 $query = $this->CI->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
         return $result;
@@ -2029,7 +2025,6 @@ class Order
         return $count;
     }
 
-    
     public function countWorkedDaysOfFourMonth()
     {
         $startDate = date('Y-m-01', strtotime('-3 months', strtotime(date('Y-m-d'))));
@@ -2098,7 +2093,7 @@ class Order
             'description' => 'CPL Document',
             'is_sync' => 1,
             'is_prelim_document' => 0,
-            'is_cpl_doc' => 1
+            'is_cpl_doc' => 1,
         );
         $documentId = $this->CI->document->insert($documentData);
         $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
@@ -2109,7 +2104,7 @@ class Order
             ),
             'Description' => 'CPL Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
@@ -2130,40 +2125,40 @@ class Order
         $res = json_decode($result);
 
         /* Start add resware api logs */
-		$reswareLogData = array(
-			'request_type' => 'upload_cpl_document_to_resware',
-			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-			'request' => $document_api_data,
-			'response' => $result,
-			'status' => 'success',
-			'created_at' => date("Y-m-d H:i:s")
-		);
-		$this->CI->db->insert('pct_resware_log', $reswareLogData);
-		/* End add resware api logs */
-        
+        $reswareLogData = array(
+            'request_type' => 'upload_cpl_document_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $document_api_data,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
         /*$from_name = 'Pacific Coast Title Company';
-              $from_mail = env('FROM_EMAIL');
-              $order_message_body = 'Please check attachment for CPL document.';
-              $message = $order_message_body; 
-              $subject = 'CPL Document';
-              $to = $orderDetails['lender_email'];
-              $cc = array();
-              if (!empty($orderDetails['sales_representative'])) {
-                  $this->CI->db->select('*')
-                      ->from('pct_order_sales_rep');
-                  $this->CI->db->where('id', $orderDetails['sales_representative']);
-                  $query = $this->CI->db->get();
-                  $salesResult = $query->row_array();
-                  if (!empty($salesResult)) {
-                      $cc = array($salesResult['email_address']);
-                  }
-              }
-              $bcc = array();
-              $file = array(base_url().'uploads/documents/'.$document_name);
-              $this->CI->load->helper('sendemail');
-              $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
+    $from_mail = env('FROM_EMAIL');
+    $order_message_body = 'Please check attachment for CPL document.';
+    $message = $order_message_body;
+    $subject = 'CPL Document';
+    $to = $orderDetails['lender_email'];
+    $cc = array();
+    if (!empty($orderDetails['sales_representative'])) {
+    $this->CI->db->select('*')
+    ->from('pct_order_sales_rep');
+    $this->CI->db->where('id', $orderDetails['sales_representative']);
+    $query = $this->CI->db->get();
+    $salesResult = $query->row_array();
+    if (!empty($salesResult)) {
+    $cc = array($salesResult['email_address']);
+    }
+    }
+    $bcc = array();
+    $file = array(base_url().'uploads/documents/'.$document_name);
+    $this->CI->load->helper('sendemail');
+    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
     }
 
     public function uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData)
@@ -2186,7 +2181,7 @@ class Order
             'description' => 'Proposed Insured Document',
             'is_sync' => 1,
             'is_prelim_document' => 0,
-            'is_proposed_insured_doc' => 1
+            'is_proposed_insured_doc' => 1,
         );
         $documentId = $this->CI->document->insert($documentData);
         $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
@@ -2197,7 +2192,7 @@ class Order
             ),
             'Description' => 'Proposed Insured Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
@@ -2217,16 +2212,16 @@ class Order
         $res = json_decode($result);
 
         /* Start add resware api logs */
-		$reswareLogData = array(
-			'request_type' => 'upload_proposed_document_to_resware',
-			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-			'request' => $document_api_data,
-			'response' => $result,
-			'status' => 'success',
-			'created_at' => date("Y-m-d H:i:s")
-		);
-		$this->CI->db->insert('pct_resware_log', $reswareLogData);
-		/* End add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'upload_proposed_document_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $document_api_data,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
@@ -2251,7 +2246,7 @@ class Order
             'description' => 'Prelim Word Document',
             'is_sync' => 1,
             'is_prelim_document' => 0,
-            'is_proposed_insured_doc' => 1
+            'is_proposed_insured_doc' => 1,
         );
         $documentId = $this->CI->document->insert($documentData);
         $endPoint = 'files/' . $file_id . '/documents';
@@ -2262,7 +2257,7 @@ class Order
             ),
             'Description' => 'Prelim Word Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
@@ -2282,16 +2277,16 @@ class Order
         $res = json_decode($result);
 
         /* Start add resware api logs */
-		$reswareLogData = array(
-			'request_type' => 'upload_prelimdocx_document_to_resware',
-			'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-			'request' => $document_api_data,
-			'response' => $result,
-			'status' => 'success',
-			'created_at' => date("Y-m-d H:i:s")
-		);
-		$this->CI->db->insert('pct_resware_log', $reswareLogData);
-		/* End add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'upload_prelimdocx_document_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $document_api_data,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
@@ -2391,7 +2386,7 @@ class Order
 
         $options = array(
             'cluster' => env("PUSHER_CLUSTER"),
-            'useTLS' => true
+            'useTLS' => true,
         );
 
         $pusher = new Pusher\Pusher(
@@ -2445,7 +2440,6 @@ class Order
         return $query->result_array();
     }
 
-
     public function getEscrowOrders($params)
     {
         $userdata = $this->CI->session->userdata('user');
@@ -2484,7 +2478,7 @@ class Order
                 return array(
                     'recordsTotal' => 0,
                     'recordsFiltered' => 0,
-                    'data' => $orders_lists
+                    'data' => $orders_lists,
                 );
             }
         }
@@ -2497,7 +2491,7 @@ class Order
                 return array(
                     'recordsTotal' => 0,
                     'recordsFiltered' => 0,
-                    'data' => $orders_lists
+                    'data' => $orders_lists,
                 );
             }
         }
@@ -2629,7 +2623,7 @@ class Order
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $orders_lists
+            'data' => $orders_lists,
         );
     }
 
@@ -2670,12 +2664,12 @@ class Order
         $this->CI->load->model('order/home_model');
         $data = json_encode(array('FileNumber' => $file_number));
         $userData = array(
-            'admin_api' => 1
+            'admin_api' => 1,
         );
         $logid = $this->CI->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, array(), 0, 0);
         $res = $this->CI->resware->make_request('POST', 'files/search', $data, $userData);
         $this->CI->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
-        $result = json_decode($res, TRUE);
+        $result = json_decode($res, true);
 
         if (isset($result['Files']) && !empty($result['Files'])) {
             foreach ($result['Files'] as $res) {
@@ -2729,7 +2723,7 @@ class Order
                     'apn' => $apn,
                     'county' => $res['Properties'][0]['County'],
                     'legal_description' => $LegalDescription,
-                    'status' => 1
+                    'status' => 1,
                 );
 
                 $transactionData = array(
@@ -2741,7 +2735,7 @@ class Order
                     'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
                     'sales_representative' => $salesRepId,
                     'title_officer' => $titleOfficerId,
-                    'status' => 1
+                    'status' => 1,
                 );
 
                 $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
@@ -2785,7 +2779,7 @@ class Order
                     'random_number' => $randomString,
                     'resware_closed_status_date' => $completed_date,
                     'resware_status' => strtolower($res['Status']['Name']),
-                    'sent_to_accounting_date' => $completed_date
+                    'sent_to_accounting_date' => $completed_date,
                 );
                 $this->CI->home_model->insert($orderData, 'order_details');
                 $orderId = $this->CI->db->insert_id();
@@ -2812,18 +2806,18 @@ class Order
 
         $opts = array(
             'http' => array(
-                'header' => "User-Agent:MyAgent/1.0\r\n"
+                'header' => "User-Agent:MyAgent/1.0\r\n",
             ),
             "ssl" => array(
                 "verify_peer" => false,
                 "verify_peer_name" => false,
-            )
+            ),
         );
         $context = stream_context_create($opts);
         $file = file_get_contents($requestUrl, false, $context);
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
-        $result = json_decode($response, TRUE);
+        $result = json_decode($response, true);
         $property_info = array();
         if (isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK') {
             $reportUrl = (isset($result['ReportURL']) && !empty($result['ReportURL'])) ? $result['ReportURL'] : '';
@@ -2835,7 +2829,7 @@ class Order
                 $reportFile = file_get_contents($requestUrl, false, $context);
                 $reportData = simplexml_load_string($reportFile);
                 $response = json_encode($reportData);
-                $details = json_decode($response, TRUE);
+                $details = json_decode($response, true);
 
                 $property_info['property_type'] = isset($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) && !empty($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) ? $details['PropertyProfile']['PropertyCharacteristics']['UseCode'] : '';
                 $property_info['legaldescription'] = isset($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) && !empty($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) ? $details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription'] : '';
@@ -2966,9 +2960,9 @@ class Order
                     //print_r($data);exit;
 
                     if ($adminFlag == 1) {
-                        $message = $this->CI->load->view('frontend/emails/daily_production.php', $data, TRUE);
+                        $message = $this->CI->load->view('frontend/emails/daily_production.php', $data, true);
                     } else {
-                        $message = $this->CI->load->view('emails/daily_production.php', $data, TRUE);
+                        $message = $this->CI->load->view('emails/daily_production.php', $data, true);
                     }
 
                     $from_name = 'Pacific Coast Title Company';
@@ -2994,7 +2988,7 @@ class Order
                         'to' => $to,
                         'subject' => $subject,
                         'message' => json_encode($data),
-                        'cc' => $cc
+                        'cc' => $cc,
                     );
                     //$to = 'ghernandez@pct.com';
                     //$cc = array();
@@ -3051,10 +3045,10 @@ class Order
                 $this->CI->db->where('order_details.lp_file_number is not null');
                 $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
                 $this->CI->db->where_in('transaction_details.sales_representative', $salesRepUsers);
-                $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
-                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
+                $this->CI->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
+                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
                 $query = $this->CI->db->get();
-                $result   = $query->result_array(); 
+                $result = $query->result_array();
 
                 $data['totalReswareCount'] = 0;
                 $data['totalApprovedCount'] = 0;
@@ -3063,15 +3057,15 @@ class Order
                 $data['totalCount'] = $totalCount;
                 if (!empty($result)) {
                     $totalCount = count($result);
-                    $reswareOrders = array_filter($result, function($res) { return ( $res['file_number'] != 0 );});
-                    $approvedOrders = array_filter($result, function($res) { return ( $res['lp_report_status'] == 'approved' );});
+                    $reswareOrders = array_filter($result, function ($res) {return ($res['file_number'] != 0);});
+                    $approvedOrders = array_filter($result, function ($res) {return ($res['lp_report_status'] == 'approved');});
                     $data['totalReswareCount'] = count($reswareOrders);
                     $data['totalApprovedCount'] = count($approvedOrders);
-                    $data['totalReswareCountPer'] = number_format((count($reswareOrders)*100) / $totalCount, 2).'%';
-                    $data['totalApprovedCountPer'] = number_format((count($approvedOrders)*100) / $totalCount, 2).'%';
+                    $data['totalReswareCountPer'] = number_format((count($reswareOrders) * 100) / $totalCount, 2) . '%';
+                    $data['totalApprovedCountPer'] = number_format((count($approvedOrders) * 100) / $totalCount, 2) . '%';
                     $data['totalCount'] = $totalCount;
                 }
-                
+
                 $i = 0;
                 if (!empty($salesUsers)) {
                     foreach ($salesUsers as $salesrep) {
@@ -3079,20 +3073,18 @@ class Order
                         $resultForSalesRep = $this->CI->order->getLPOrdersForSalesRep($startDate, $endDate, $salesrep['id']);
                         $data['salesHistory'][$i]['salesrep_id'] = $salesrep['id'];
 
-
                         if (!empty($resultForSalesRep)) {
                             $totalCount = count($resultForSalesRep);
-                            $reswareOrders = array_filter($resultForSalesRep, function($res) { return ( $res['file_number'] != 0 );});
-                            $approvedOrders = array_filter($resultForSalesRep, function($res) { return ( $res['lp_report_status'] == 'approved' );});
+                            $reswareOrders = array_filter($resultForSalesRep, function ($res) {return ($res['file_number'] != 0);});
+                            $approvedOrders = array_filter($resultForSalesRep, function ($res) {return ($res['lp_report_status'] == 'approved');});
                             $data['salesHistory'][$i]['lp_open_count'] = $totalCount;
                             $data['salesHistory'][$i]['lp_approved_count'] = count($approvedOrders);
-                            $data['salesHistory'][$i]['lp_converted_rate'] = number_format((count($approvedOrders)*100) / $totalCount , 2).'%';
+                            $data['salesHistory'][$i]['lp_converted_rate'] = number_format((count($approvedOrders) * 100) / $totalCount, 2) . '%';
                         } else {
                             $data['salesHistory'][$i]['lp_open_count'] = 0;
                             $data['salesHistory'][$i]['lp_approved_count'] = 0;
                             $data['salesHistory'][$i]['lp_converted_rate'] = '0.00%';
                         }
-                        
 
                         // $openRefiResult = $this->CI->order->getOpenLPOrdersCountForRefiProducts($startDate, $endDate, $salesrep['id']);
 
@@ -3162,11 +3154,11 @@ class Order
                     $data['sales_name'] = $salesManger['first_name'] . " " . $salesManger['last_name'];
 
                     if ($adminFlag == 1) {
-                        $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, TRUE);
+                        $message = $this->CI->load->view('frontend/emails/lp_report.php', $data, true);
                     } else {
-                        $message = $this->CI->load->view('emails/lp_report.php', $data, TRUE);
+                        $message = $this->CI->load->view('emails/lp_report.php', $data, true);
                     }
-                    
+
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'LP Report';
@@ -3181,7 +3173,7 @@ class Order
                         'to' => $to,
                         'subject' => $subject,
                         'message' => json_encode($data),
-                        'cc' => $cc
+                        'cc' => $cc,
                     );
                     //$cc = array();
                     $this->CI->load->helper('sendemail');
@@ -3242,7 +3234,7 @@ class Order
         }
     }
 
-    /** 
+    /**
      * Generate LP Report for LP Order
      */
     public function createLpReport($fileNumber, $regerateGeoDoc = false, $regenerate = false)
@@ -3264,7 +3256,7 @@ class Order
         $condition = array(
             'where' => array(
                 'file_number' => $fileNumber,
-            )
+            ),
         );
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $file_id = $titlePointDetails[0]['file_id'];
@@ -3288,7 +3280,6 @@ class Order
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $orderDetails['opened_date'] = convertTimezone($orderDetails['opened_date']);
         /************** Plat map url integration Start ************** */
-
 
         $plat_map_url = '';
         if ($this->fileExistOrNotOnS3('plat-map/' . $fileNumber . '.png')) {
@@ -3322,12 +3313,12 @@ class Order
 
             $opts = array(
                 'http' => array(
-                    'header' => "User-Agent:MyAgent/1.0\r\n"
+                    'header' => "User-Agent:MyAgent/1.0\r\n",
                 ),
                 "ssl" => array(
                     "verify_peer" => false,
                     "verify_peer_name" => false,
-                )
+                ),
             );
 
             $context = stream_context_create($opts);
@@ -3336,7 +3327,7 @@ class Order
             $file = file_get_contents($requestUrl, false, $context);
             $xmlData = simplexml_load_string($file);
             $response = json_encode($xmlData);
-            $result = json_decode($response, TRUE);
+            $result = json_decode($response, true);
             // echo "<pre>";
             $this->CI->apiLogs->syncLogs($userdata['id'], 'black knight', 'address_search', $requestUrl, $requestParams, $result, $orderDetails['order_id'], $logid);
             // $property_info = array();
@@ -3354,12 +3345,12 @@ class Order
                     $reportData = simplexml_load_string($reportFile);
                     $response = json_encode($reportData);
                     $this->CI->apiLogs->syncLogs($userdata['id'], 'black knight plat map - 2 - response', 'address_search', $requestUrl, $requestParams, $response, $orderDetails['order_id'], $logid);
-                    $details = json_decode($response, TRUE);
+                    $details = json_decode($response, true);
                     if (isset($details['PlatMap']) && !empty($details['PlatMap']['Content'])) {
                         $imagedata = isset($details['PlatMap']['Content']) && !empty($details['PlatMap']['Content']) ? $details['PlatMap']['Content'] : '';
                         if ($imagedata) {
                             if (!is_dir('uploads/plat-map')) {
-                                mkdir('./uploads/plat-map', 0777, TRUE);
+                                mkdir('./uploads/plat-map', 0777, true);
                             }
                             $path = './uploads/plat-map/' . $fileNumber . '.png';
 
@@ -3403,7 +3394,7 @@ class Order
         $condition = array(
             'where' => array(
                 'file_number' => $fileNumber,
-            )
+            ),
         );
         // $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
         // $file_id = $titlePointDetails[0]['file_id'];
@@ -3431,7 +3422,7 @@ class Order
         // }, $sectionJList);
 
         $sectionGRecord = array_filter($titlePointInstrumentDetails, function ($v) {
-            // return (in_array($v['document_type'], $sectionGList) || in_array($v['document_sub_type'], $sectionGList)); 
+            // return (in_array($v['document_type'], $sectionGList) || in_array($v['document_sub_type'], $sectionGList));
             return ($v['display_in_section'] == 'G');
         });
         $sectionHRecord = array_filter($titlePointInstrumentDetails, function ($v) {
@@ -3514,7 +3505,7 @@ class Order
         $this->CI->snappy_pdf->pdf->setOption('zoom', '1.15');
 
         if (!is_dir('uploads/pre-listing-doc')) {
-            mkdir('./uploads/pre-listing-doc', 0777, TRUE);
+            mkdir('./uploads/pre-listing-doc', 0777, true);
         }
         $pdfFilePath = FCPATH . '/uploads/pre-listing-doc/' . $document_name;
         $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
@@ -3528,7 +3519,7 @@ class Order
     }
 
     /**
-     * Insert pre listing document record in document table 
+     * Insert pre listing document record in document table
      */
     public function insertRecord($document_name, $fileId, $orderDetails)
     {
@@ -3540,7 +3531,7 @@ class Order
         }
         $fileSize = filesize(env('AWS_PATH') . "pre-listing-doc/" . $document_name);
         // $contents = file_get_contents(env('AWS_PATH')."pre-listing-doc/".$document_name);
-        // $binaryData   = base64_encode($contents); 
+        // $binaryData   = base64_encode($contents);
 
         $documentData = array(
             'document_name' => $document_name,
@@ -3553,7 +3544,7 @@ class Order
             'is_sync' => 1,
             'is_prelim_document' => 0,
             'is_pre_listing_doc' => 0,
-            'is_pre_listing_report_doc' => 1
+            'is_pre_listing_report_doc' => 1,
         );
         $condition = array('is_pre_listing_report_doc' => 1, 'order_id' => $orderDetails['order_id']);
         $this->CI->document->delete($documentData, $condition);
@@ -3599,7 +3590,7 @@ class Order
                     'amount' => 0,
                     'is_display' => 1,
                     'is_ves_display' => 1,
-                    'is_csinstrument_record' => 1
+                    'is_csinstrument_record' => 1,
                 );
                 $this->CI->titlePointDocumentRecords->insert($insertData);
             } else {
@@ -3611,7 +3602,7 @@ class Order
 
                     $newInstuNum = $year . '-' . $latestInstuNum;
                     $condition = array(
-                        'id' => $titlePointId
+                        'id' => $titlePointId,
                     );
                     $tpData = array(
                         'cs4_instrument_no' => $newInstuNum,
@@ -3621,7 +3612,7 @@ class Order
                     $orderCondition = array(
                         'where' => array(
                             'file_id' => $fileId,
-                        )
+                        ),
                     );
 
                     $orderDetails = $this->get_rows($orderCondition);
@@ -3644,22 +3635,22 @@ class Order
             // if (!empty($latestInstuNum)) {
             // if(isset($recordedDate) && !empty($recordedDate))
             // {
-            // 	$time = strtotime($recordedDate);
-            // 	$year = date('Y',$time);
+            //     $time = strtotime($recordedDate);
+            //     $year = date('Y',$time);
             // }
             // $newInstuNum = $year.'-'.$latestInstuNum;
             // $condition = array(
-            // 	'id' => $titlePointId
+            //     'id' => $titlePointId
             // );
             // $tpData = array(
-            // 	'cs4_instrument_no' => $newInstuNum,
-            // 	'cs4_recorded_date' => $recordedDate,
+            //     'cs4_instrument_no' => $newInstuNum,
+            //     'cs4_recorded_date' => $recordedDate,
             // );
 
             // $orderCondition = array(
-            // 	'where' => array(
-            // 		'file_id' => $fileId,
-            // 	)
+            //     'where' => array(
+            //         'file_id' => $fileId,
+            //     )
             // );
 
             // $orderDetails = $this->get_rows($orderCondition);
@@ -3677,7 +3668,6 @@ class Order
             // }
 
             // }
-
 
         }
     }
@@ -3716,18 +3706,20 @@ class Order
         $condition = array(
             'where' => array(
                 'file_number' => $fileNumber,
-            )
+            ),
         );
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
         $file_id = $titlePointDetails[0]['file_id'];
         $orderDetails = $this->CI->order->get_order_details($file_id);
         $cond = array(
-            'id' => $orderDetails['customer_id']
+            'id' => $orderDetails['customer_id'],
         );
         $customerDetails = $this->CI->home_model->get_customers($cond);
-
+        $configData = $this->getConfigData();
+        $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
         $timezone = -8;
         $orderNumber = $orderDetails['file_number'] ? $orderDetails['file_number'] : $orderDetails['lp_file_number'];
+
         $data = array(
             'orderNumber' => $orderNumber,
             'orderId' => $file_id,
@@ -3754,7 +3746,8 @@ class Order
             'LoanNumber' => $orderDetails['loan_number'],
             'EscrowNumber' => $orderDetails['escrow_number'],
             'randomString' => $this->CI->order->randomPassword(),
-            'titlePointDetails' => $titlePointDetails[0]
+            'titlePointDetails' => $titlePointDetails[0],
+            'titlePointShutOff' => $titlePointShutOff,
         );
 
         $buyerDetails = $listingDetails = $parties_email = array();
@@ -3765,7 +3758,7 @@ class Order
                 'name' => $orderDetails['lender_first_name'],
                 'email' => $orderDetails['lender_email'],
                 'telephone' => $orderDetails['lender_telephone_no'],
-                'company' => $orderDetails['lender_company_name']
+                'company' => $orderDetails['lender_company_name'],
             );
         }
 
@@ -3777,7 +3770,7 @@ class Order
                     'name' => $buyerDetails['name'],
                     'email' => $buyerDetails['email_address'],
                     'telephone' => $buyerDetails['telephone_no'],
-                    'company' => $buyerDetails['company']
+                    'company' => $buyerDetails['company'],
                 );
             }
 
@@ -3791,14 +3784,14 @@ class Order
                     'name' => $listingDetails['name'],
                     'email' => $listingDetails['email_address'],
                     'telephone' => $listingDetails['telephone_no'],
-                    'company' => $listingDetails['company']
+                    'company' => $listingDetails['company'],
                 );
             }
         }
 
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
-        $order_message_body = $this->CI->load->view('emails/order.php', $data, TRUE);
+        $order_message_body = $this->CI->load->view('emails/order.php', $data, true);
         $message = $order_message_body;
         $subject = $orderNumber . ' - PCT Title Order Placed';
         $email_notification = $this->CI->session->userdata('email_notification');
@@ -3819,13 +3812,15 @@ class Order
         // $parties_email[] = 'evelasquez@pct.com';
         $parties_email[] = 'openorders@pct.com';
         $file = array();
-        $lvfilename = $orderNumber . '.pdf';
-        $deedfilename = $orderNumber . '.pdf';
-        $taxfilename = $orderNumber . '.pdf';
-        $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
-        $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
-        $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
-
+        $lvfilename = $deedfilename = $taxfilename = '';
+        if ((empty($titlePointShutOff) || $titlePointShutOff == 0)) {
+            $lvfilename = $orderNumber . '.pdf';
+            $deedfilename = $orderNumber . '.pdf';
+            $taxfilename = $orderNumber . '.pdf';
+            $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
+            $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
+            $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
+        }
 
         //$parties_email[] = env('ORDER_ADMIN_EMAIL');
         if (isset($orderDetails["title_officer_email"]) && !empty($orderDetails["title_officer_email"])) {
@@ -3843,15 +3838,17 @@ class Order
             'subject' => $subject,
             'message' => json_encode($data),
             'file' => json_encode($file),
-            'cc' => json_encode($cc)
+            'cc' => json_encode($cc),
         );
         $lvDocStatus = strtolower($titlePointDetails[0]['lv_file_status']);
         $taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
         $taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$taxDataStatus' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
-        
-        if ($emailSentFlag != 1 && ($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') && ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) {
+
+        if ($emailSentFlag != 1 &&
+            ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
+                ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) || $titlePointShutOff == 1)) {
             if (isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number'])) {
 
                 $parties_email[] = 'rudy@pct.com';
@@ -3863,7 +3860,7 @@ class Order
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     $cc = $parties_email;
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
-                    
+
                     /** Notify CS */
                     // array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $to = ['openorders@pct.com', 'cs@pct.com'];
@@ -3894,11 +3891,11 @@ class Order
                 $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
             }
             $tpData = array(
-                'email_sent_status' => ($mail_result) ? 1 : 0
+                'email_sent_status' => ($mail_result) ? 1 : 0,
             );
 
             $condition = array(
-                'file_number' => $fileNumber
+                'file_number' => $fileNumber,
             );
             $this->CI->titlePointData->update($tpData, $condition);
         }
@@ -3906,10 +3903,21 @@ class Order
 
     public function getConfigData()
     {
-        $this->CI->db->select('is_lp_enable');
+        // $this->CI->db->select('is_enable');
+        // $this->CI->db->from('pct_configs');
+        // $query = $this->CI->db->get();
+        // return $query->row();
+        $this->CI->db->select('is_enable, slug');
         $this->CI->db->from('pct_configs');
+        $this->CI->db->where('slug !=', 'sales_rep_status_flag');
         $query = $this->CI->db->get();
-        return $query->row();
+        $data = array();
+
+        foreach ($query->result_array() as $row) {
+            $data[$row['slug']] = $row;
+        }
+
+        return $data;
     }
 
     public function getSalesConfigData()
@@ -3927,7 +3935,7 @@ class Order
         $data = array(
             'user_id' => $userdata['id'],
             'message' => $activity,
-            'created_at' => date("Y-m-d H:i:s")
+            'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_admin_activity_logs', $data);
     }
@@ -3936,59 +3944,59 @@ class Order
     {
         $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
-        $month = sprintf('%02d',date('m', strtotime(date('Y-m')." -1 month")));
-        $year = date('Y', strtotime(date('Y-m')." -1 month"));
-        
+        $month = sprintf('%02d', date('m', strtotime(date('Y-m') . " -1 month")));
+        $year = date('Y', strtotime(date('Y-m') . " -1 month"));
+
         // $userdata = $this->CI->session->userdata('user');
         // if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
-        $user_data['admin_api'] = 1; 
+        $user_data['admin_api'] = 1;
         // } else {
         //     $user_data = array();
         // }
-        
-        $this->CI->db->select('order_details.file_id, 
-            order_details.file_number, 
-            order_details.customer_id, 
+
+        $this->CI->db->select('order_details.file_id,
+            order_details.file_number,
+            order_details.customer_id,
             order_details.id as order_id,
-            order_details.resware_status, 
+            order_details.resware_status,
             property_details.full_address,
             customer_basic_details.email_address as sales_email,
             CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_name,
             CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name,
-            user_details.email_address, 
-            user_details.company_name, 
-            user_details.is_escrow, 
+            user_details.email_address,
+            user_details.company_name,
+            user_details.is_escrow,
             user_details.partner_id,
             pci.partner_type_id,
             pci.partner_name,
             transaction_details.sales_representative');
         $this->CI->db->from('order_details');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
         if ($sales_rep_id == 0) {
             $this->CI->db->where('transaction_details.sales_representative != ""');
         } else {
             $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
         }
         $this->CI->db->where('customer_basic_details.email_address != ""');
-        $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
-        $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
-        $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
-        $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner');
-        $this->CI->db->join('pct_order_partner_company_info as pci', 'pci.partner_id = user_details.partner_id','left');
-        $this->CI->db->order_by('transaction_details.sales_representative asc, order_details.customer_id asc'); 
+        $this->CI->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
+        $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
+        $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative', 'inner');
+        $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id', 'inner');
+        $this->CI->db->join('pct_order_partner_company_info as pci', 'pci.partner_id = user_details.partner_id', 'left');
+        $this->CI->db->order_by('transaction_details.sales_representative asc, order_details.customer_id asc');
         $query = $this->CI->db->get();
-        $result   = $query->result_array();  
+        $result = $query->result_array();
         // echo "<pre>";
         // print_r($result);
         // die;
-        if(!empty($result)) {
+        if (!empty($result)) {
             $checkFlag = 0;
             $data = array();
             $i = 0;
             $userName = '';
             $companyName = '';
-            foreach($result as $res) {
+            foreach ($result as $res) {
                 if ($checkFlag == 0) {
                     $sales_rep_user_id = $res['sales_representative'];
                     $sales_rep_email = $res['sales_email'];
@@ -4000,49 +4008,49 @@ class Order
                 }
 
                 // $month = sprintf('%02d',date('m') - 2);
-                $month = sprintf('%02d',date('m', strtotime(date('Y-m')." -2 month")));
-                $year = date('Y', strtotime(date('Y-m')." -2 month"));
-                
+                $month = sprintf('%02d', date('m', strtotime(date('Y-m') . " -2 month")));
+                $year = date('Y', strtotime(date('Y-m') . " -2 month"));
+
                 $this->CI->db->select('COUNT(user_details.id) as order_count,user_details.`id`, user_details.company_name, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, user_details.is_escrow');
                 $this->CI->db->from('order_details');
                 $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year); 
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
                 $this->CI->db->where('transaction_details.sales_representative', $sales_rep_user_id);
                 $this->CI->db->where('customer_basic_details.email_address != ""');
-                $this->CI->db->join('property_details', 'order_details.property_id = property_details.id','inner');
-                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id','inner');
-                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
-                $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner');
-                $this->CI->db->group_by('user_details.id'); 
+                $this->CI->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
+                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
+                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative', 'inner');
+                $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id', 'inner');
+                $this->CI->db->group_by('user_details.id');
                 $query = $this->CI->db->get();
-                $resultMax   = $query->result_array(); 
+                $resultMax = $query->result_array();
 
                 $lenderName = '';
                 $escrowName = '';
                 $lenderCount = 0;
                 $escrowCount = 0;
 
-                foreach($resultMax as $resMax) {
+                foreach ($resultMax as $resMax) {
                     if ($resMax['is_escrow'] == '0') {
                         if ($resMax['order_count'] > $lenderCount) {
-                            $lenderName = $resMax['name']." - ".$resMax['company_name'];
+                            $lenderName = $resMax['name'] . " - " . $resMax['company_name'];
                             $lenderCount = $resMax['order_count'];
                         }
                     } else {
                         if ($resMax['order_count'] > $escrowCount) {
-                            $escrowName = $resMax['name']." - ".$resMax['company_name'];
+                            $escrowName = $resMax['name'] . " - " . $resMax['company_name'];
                             $escrowCount = $resMax['order_count'];
                         }
                     }
                 }
-                
+
                 if ($res['sales_representative'] == $sales_rep_user_id) {
-                    if($res['customer_id'] == $order_user_id) {
+                    if ($res['customer_id'] == $order_user_id) {
                         $j++;
                         $userName = $res['name'];
                         $companyName = $res['company_name'];
                         $sales_name = $res['sales_name'];
-                    } else {    
+                    } else {
                         $j = 1;
                         $i++;
                         $userName = $res['name'];
@@ -4056,21 +4064,21 @@ class Order
                     $data['lenderName'] = $lenderName;
                     $currentMonth = date('F');
                     $data['currentMonth'] = Date('F', strtotime($currentMonth . " last month"));
-                    
+
                     if ($res['partner_type_id']) {
                         $partner_type_id = explode(',', $res['partner_type_id']);
                         if (in_array(14, $partner_type_id) || in_array(15, $partner_type_id)) {
-                            $endPoint = 'files/'. $res['file_id'] .'/partners';
-                            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API').$endPoint, array(), array(), $res['file_id'], 0);
+                            $endPoint = 'files/' . $res['file_id'] . '/partners';
+                            $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $res['file_id'], 0);
                             $result = $this->CI->resware->make_request('GET', $endPoint, '', $user_data);
-                            $this->CI->apiLogs->syncLogs(0, 'resware', 'get_partners_from_client_summary', env('RESWARE_ORDER_API').$endPoint, array(), $result, $res['file_id'], $logid);
+                            $this->CI->apiLogs->syncLogs(0, 'resware', 'get_partners_from_client_summary', env('RESWARE_ORDER_API') . $endPoint, array(), $result, $res['file_id'], $logid);
                             $partners = json_decode($result, true);
                             // print_r($partners);die;
                             if (isset($partners['Partners']) && !empty($partners['Partners'])) {
                                 $partnersArr = $partners['Partners'];
                                 $key = array_search($res['partner_id'], array_column($partnersArr, 'PartnerID'));
                                 if ($partnersArr[$key]['PartnerTypeID'] == 14 || $partnersArr[$key]['PartnerTypeID'] == 15) {
-                                    $data['summary_info'][$i]['company_name'] = $companyName . ' - ' . $partnersArr[$key]['PartnerType'] ['PartnerTypeName'];
+                                    $data['summary_info'][$i]['company_name'] = $companyName . ' - ' . $partnersArr[$key]['PartnerType']['PartnerTypeName'];
                                 } else {
                                     continue;
                                 }
@@ -4089,13 +4097,12 @@ class Order
                     // $data['summary_info'][$i]['company_name'] = $companyName;
                     $data['summary_info'][$i]['count'] = $j;
                     // }
-                    
 
                 } else {
                     if ($sales_rep_id != 0) {
-                        $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, TRUE);
+                        $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, true);
                     } else {
-                        $message = $this->CI->load->view('emails/summary_new.php', $data, TRUE);
+                        $message = $this->CI->load->view('emails/summary_new.php', $data, true);
                     }
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
@@ -4103,20 +4110,20 @@ class Order
                     $to = $sales_rep_email;
                     $cc = array('ghernandez@pct.com');
                     $mailParams = array(
-                        'from_mail'=>$from_mail, 
-                        'from_name'=>$from_name, 
-                        'to'=> $to,
-                        'subject'=>$subject,
-                        'message'=>json_encode($data),
-                        'cc' => $cc
+                        'from_mail' => $from_mail,
+                        'from_name' => $from_name,
+                        'to' => $to,
+                        'subject' => $subject,
+                        'message' => json_encode($data),
+                        'cc' => $cc,
                     );
                     $to = 'ghernandez@pct.com';
-                    //$to = array('hitesh.p@crestinfosystems.com');   
-                    $cc = array('piyush.j@crestinfosystems.net');  
+                    //$to = array('hitesh.p@crestinfosystems.com');
+                    $cc = array('piyush.j@crestinfosystems.net');
                     $this->CI->load->helper('sendemail');
                     $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
-                    $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
-                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+                    $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
                     $data = array();
                     $i = 0;
                     $j = 1;
@@ -4138,34 +4145,34 @@ class Order
             }
             // echo "<pre>";
             // print_r($data);die;
-            if(!empty($data)){
+            if (!empty($data)) {
                 if ($sales_rep_id != 0) {
-                    $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, TRUE);
+                    $message = $this->CI->load->view('frontend/emails/summary_new.php', $data, true);
                 } else {
-                    $message = $this->CI->load->view('emails/summary_new.php', $data, TRUE);
+                    $message = $this->CI->load->view('emails/summary_new.php', $data, true);
                 }
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
                 $subject = 'Client Summary';
-                $to = $sales_rep_email;  
-                $cc = array('ghernandez@pct.com');          
+                $to = $sales_rep_email;
+                $cc = array('ghernandez@pct.com');
                 $this->CI->load->helper('sendemail');
                 $mailParams = array(
-                    'from_mail'=>$from_mail, 
-                    'from_name'=>$from_name, 
-                    'to'=> $to,
-                    'subject'=>$subject,
-                    'message'=>json_encode($data),
-                    'cc' => $cc
+                    'from_mail' => $from_mail,
+                    'from_name' => $from_name,
+                    'to' => $to,
+                    'subject' => $subject,
+                    'message' => json_encode($data),
+                    'cc' => $cc,
                 );
                 $to = 'ghernandez@pct.com';
                 // $to = 'piyush.j@crestinfosystems.net';
-                //$to = array('hitesh.p@crestinfosystems.com');   
-                $cc = array('piyush.j@crestinfosystems.net');  
+                //$to = array('hitesh.p@crestinfosystems.com');
+                $cc = array('piyush.j@crestinfosystems.net');
 
                 $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
-                $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
-                $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+                $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+                $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
             }
         }
     }
@@ -4187,33 +4194,33 @@ class Order
     {
         $this->CI->load->model('order/home_model');
         $this->CI->load->model('order/apiLogs');
-        $salesUser =  $this->CI->home_model->get_user(array('id' => $sales_rep_id));
+        $salesUser = $this->CI->home_model->get_user(array('id' => $sales_rep_id));
         $salesRepUsers = array();
         if (!empty($salesUser['sales_rep_users'])) {
             $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
             if (!in_array($sales_rep_id, $salesRepUsers)) {
                 $salesRepUsers[] = $userdata['id'];
             }
-        } 
+        }
         $startDate = date('Y-m-d 00:00:00', strtotime('-90 days', strtotime(date('Y-m-d'))));
         //$endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
         $this->CI->db->select('customer_basic_details.email_address, user_details.company_name, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_rep_name')
             ->from('order_details')
-            ->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id','inner')
-           
+            ->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id', 'inner')
+
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative','inner');
+            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative', 'inner');
         //$this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where("order_details.created_at <= '$startDate'");
         if (!empty($salesRepUsers)) {
-           // $this->CI->db->where_in('transaction_details.sales_representative', $salesRepUsers);
+            // $this->CI->db->where_in('transaction_details.sales_representative', $salesRepUsers);
             $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
         } else {
             $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
         }
         $this->CI->db->where('order_details.`is_imported` = 0');
         $this->CI->db->where('order_details.`file_number` != 0');
-        $this->CI->db->order_by('order_details.id asc'); 
+        $this->CI->db->order_by('order_details.id asc');
         $query = $this->CI->db->get();
         //echo $this->CI->db->last_query();exit;
         $result = $query->result_array();
@@ -4221,7 +4228,7 @@ class Order
         $users = array();
         $i = 0;
         if (!empty($result)) {
-            foreach($result as $res) {
+            foreach ($result as $res) {
                 if ($res['resware_status'] == 'open') {
                     if (!empty($res['name'])) {
                         $key = array_search($res['user_id'], array_column($users, 'id'));
@@ -4235,7 +4242,7 @@ class Order
                             $i++;
                         } else {
                             $users[$key]['last_deal_opened'] = date("m/d/Y", strtotime($res['created_at']));
-                        }	
+                        }
                     }
                 } else {
                     if ($res['resware_status'] != 'cancelled') {
@@ -4243,42 +4250,42 @@ class Order
                             $key = array_search($res['user_id'], array_column($users, 'id'));
                             if (strlen($key) > 0) {
                                 unset($users[$key]);
-                            }	
-                        } 			
+                            }
+                        }
                     }
                 }
             }
         }
-        if(!empty($users)){
+        if (!empty($users)) {
             $data['users'] = $users;
             $data['sales_rep_name'] = $sales_rep_name;
             if ($sales_rep_id != 0) {
-                $message = $this->CI->load->view('frontend/emails/non_openers.php', $data, TRUE);
+                $message = $this->CI->load->view('frontend/emails/non_openers.php', $data, true);
             } else {
-                $message = $this->CI->load->view('emails/non_openers.php', $data, TRUE);
+                $message = $this->CI->load->view('emails/non_openers.php', $data, true);
             }
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
             $subject = 'Non Openers';
-            $to = $sales_rep_email;  
-            $cc = array('ghernandez@pct.com');          
+            $to = $sales_rep_email;
+            $cc = array('ghernandez@pct.com');
             $this->CI->load->helper('sendemail');
             $mailParams = array(
-                'from_mail'=>$from_mail, 
-                'from_name'=>$from_name, 
-                'to'=> $to,
-                'subject'=>$subject,
-                'message'=>json_encode($data),
-                'cc' => $cc
+                'from_mail' => $from_mail,
+                'from_name' => $from_name,
+                'to' => $to,
+                'subject' => $subject,
+                'message' => json_encode($data),
+                'cc' => $cc,
             );
             $to = 'ghernandez@pct.com';
             // $to = 'piyush.j@crestinfosystems.net';
-            //$to = array('hitesh.p@crestinfosystems.com');   
-            $cc = array('piyush.j@crestinfosystems.net');  
+            //$to = array('hitesh.p@crestinfosystems.com');
+            $cc = array('piyush.j@crestinfosystems.net');
 
             $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'non_openers_mail_to_sales_rep', '', $mailParams, array(), 0, 0);
-            $escrow_mail_result = send_email($from_mail,$from_name, $to, $subject, $message, array(), $cc);
-            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'non_openers_mail_to_sales_rep', '', $mailParams, array('status'=> $escrow_mail_result), 0, $logid);
+            $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'non_openers_mail_to_sales_rep', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
         }
         return true;
     }
@@ -4295,8 +4302,8 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
 
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));        
-        
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+
         $this->CI->db->where('transaction_details.sales_representative', $userId);
         $query = $this->CI->db->get();
         $result = $query->result_array();
