@@ -4950,7 +4950,7 @@ class Home extends MX_Controller
             $this->order->logAdminActivity($msg);
             /** End Save user activity */
             $successMsg = $msg . ' successfully';
-            $this->session->set_userdata('success', $successMsg);
+            $this->session->set_flashdata('success', $successMsg);
             redirect(base_url() . 'order/admin/settings');
         }
 
