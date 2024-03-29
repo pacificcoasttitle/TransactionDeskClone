@@ -338,7 +338,7 @@ class Dashboard extends MX_Controller
         $calcResult = json_decode(curl_exec($ch), true);
         $calcResult['transactionType'] = $post_data['transactionType'];
         $data['is_escrow_flag'] = 0;
-        if (str_contains(str_contains(strtolower($orderDetails['product_type']), 'title and escrow'))) {
+        if (str_contains(strtolower($orderDetails['product_type']), 'title and escrow')) {
             $data['is_escrow_flag'] = 1;
         }
         // if ($orderDetails['is_client_escrow'] == 1 || $orderDetails['is_escrow'] == 1) {
