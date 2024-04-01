@@ -1557,7 +1557,7 @@ $(document).ready(function () {
                 "emptyTable": "Record(s) not found.",
             },
             initComplete: function () {
-
+                $("#page-preloader").show();
 
 
             },
@@ -1572,6 +1572,11 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/order/get_order_list", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                    // $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+                    // $('#page-preloader').css('display', 'block');
+                },
                 data: function (d) {
                     d.sales_rep = $('#FilterOrderListing').val();
                     d.created_by = $('#FilterCreatedBy').val();
@@ -1589,6 +1594,10 @@ $(document).ready(function () {
                     $("#tbl-orders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-orders-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                    // $('#page-preloader').css('display', 'none');
                 }
             }
         });
@@ -1654,6 +1663,11 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/order/get_lp_order_list", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                    // $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+                    // $('#page-preloader').css('display', 'block');
+                },
                 data: function (d) {
                     d.sales_rep = $('#FilterLpOrderListing').val();
                     d.start_date = $('#FilterLpStartDate').val();
@@ -1672,6 +1686,10 @@ $(document).ready(function () {
                     $("#tbl-lp-orders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-orders-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                    // $('#page-preloader').css('display', 'none');
                 }
             }
         });
