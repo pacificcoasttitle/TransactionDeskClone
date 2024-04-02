@@ -1319,7 +1319,7 @@ class Home extends MX_Controller
                 $taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
                 $taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
                 $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
-                $this->apiLogs->syncLogs(0, 'email-check-order', 'email-check-order', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus, 'lp_file_number' => $orderDetails['lp_file_number']], array(), 0, 0);
+                $this->apiLogs->syncLogs(0, 'email-check-order', 'email-check-order', $orderNumber, ['$titlePointShutOff' => $titlePointShutOff, '$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus, 'lp_file_number' => $orderDetails['lp_file_number']], array(), 0, 0);
 
                 if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) &&
                     $emailSentFlag != 1 &&
@@ -1331,10 +1331,10 @@ class Home extends MX_Controller
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
-                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderId, 0);
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array(), $orderId, 0);
+                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
-                    $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
-                    $cc[] = 'piyush.j@crestinfosystems.net';
+                    $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array('status' => $mail_result), $orderId, $logid);
                     // $to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
                     // $taxDataStatus = 'falied';
                     if ($taxDataStatus != 'success') {

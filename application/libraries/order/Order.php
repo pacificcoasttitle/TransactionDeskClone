@@ -3854,11 +3854,12 @@ class Order
                 $parties_email[] = 'rudy@pct.com';
                 $parties_email[] = 'evelasquez@pct.com';
                 $mailParams['cc'] = json_encode($cc);
-                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
+                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail_library', '', $mailParams, array(), $orderDetails['order_id'], 0);
                 try {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     $cc = $parties_email;
+                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
 
                     /** Notify CS */
@@ -3871,13 +3872,13 @@ class Order
                     /** End Notify CS */
                 } catch (Exception $e) {
                 }
-                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
+                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail_library', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
             } else {
-                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array(), $orderDetails['order_id'], 0);
+                $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_library', '', $mailParams, array(), $orderDetails['order_id'], 0);
                 try {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
-
+                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     /** Notify CS */
                     $to = ['openorders@pct.com', 'cs@pct.com'];
@@ -3888,7 +3889,7 @@ class Order
                     /** End Notify CS */
                 } catch (Exception $e) {
                 }
-                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
+                $this->CI->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_library', '', $mailParams, array('status' => $mail_result), $orderDetails['order_id'], $logid);
             }
             $tpData = array(
                 'email_sent_status' => ($mail_result) ? 1 : 0,
