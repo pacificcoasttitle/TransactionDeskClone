@@ -1247,6 +1247,7 @@ class Common extends MX_Controller
         $orderDetails = $this->order->get_order_details($fileId);
         $data = $this->westcor->generateCplDocument($fileId, $orderDetails);
         $this->session->set_userdata($data);
+        $this->session->unset_userdata('lender_details');
         if (!empty($userdata['id'])) {
             redirect(base_url() . 'cpl-dashboard');
         } else {
@@ -1278,6 +1279,7 @@ class Common extends MX_Controller
         $lender_details = array(
             'first_name' => $name[0],
             'last_name' => !empty($name[1]) ? $name[1] : '',
+            'lender_fullname' => $this->input->post('LenderName'),
             'state' => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
             'company_name' => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
             'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
@@ -1286,6 +1288,8 @@ class Common extends MX_Controller
             'assignment_clause' => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "",
         );
 
+        $this->session->set_userdata('lender_details', $lender_details);
+        unset($lender_details['lender_fullname']);
         $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
         if ($new_existing_lender == 'add_lender') {
             $lender_details['partner_id'] = $this->input->post('partner_id');
@@ -1795,6 +1799,7 @@ class Common extends MX_Controller
                 "success" => $success,
             );
         }
+        $this->session->unset_userdata('lender_details');
         $this->session->set_userdata($data);
         if (!empty($userdata['id'])) {
             redirect(base_url() . 'cpl-dashboard');
@@ -1884,6 +1889,7 @@ class Common extends MX_Controller
             "success" => $success,
         );
         $this->session->set_userdata($data);
+        $this->session->unset_userdata('lender_details');
         if (!empty($userdata['id'])) {
             redirect(base_url() . 'cpl-dashboard');
         } else {

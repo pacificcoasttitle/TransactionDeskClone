@@ -5,7 +5,7 @@
 class Order extends MX_Controller
 {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->helper(array('file', 'url'));
@@ -21,7 +21,7 @@ class Order extends MX_Controller
         $this->common->is_admin();
     }
 
-    function orders()
+    public function orders()
     {
         $params = array();
         $salesRep = $this->sales_model->get_sales_reps($params);
@@ -30,7 +30,7 @@ class Order extends MX_Controller
             'where' => array(
                 'is_master' => 1,
                 'status' => 1,
-            )
+            ),
         );
         $product_type = $this->uri->segment(4);
         $master_users = $this->home_model->get_rows($con);
@@ -46,7 +46,7 @@ class Order extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
-    function get_order_list()
+    public function get_order_list()
     {
         $params = array();
         $params['length'] = $this->input->post('length');
@@ -91,13 +91,13 @@ class Order extends MX_Controller
         $json_data = array(
             "recordsTotal" => $ordersList['recordsTotal'],
             "recordsFiltered" => $ordersList['recordsFiltered'],
-            "data" => $data
+            "data" => $data,
         );
 
         echo json_encode($json_data);
     }
 
-    function order_details()
+    public function order_details()
     {
         $file_id = $this->uri->segment(4);
         $data = array();
@@ -121,7 +121,7 @@ class Order extends MX_Controller
         }
     }
 
-    function export_orders()
+    public function export_orders()
     {
         $sales_rep = $this->input->post('sales_rep');
         $seachValue = $this->input->post('seachValue');
@@ -183,13 +183,13 @@ class Order extends MX_Controller
                         'escrow_lender_first_name' => $order_details['escrow_lender_first_name'],
                         'escrow_lender_last_name' => $order_details['escrow_lender_last_name'],
                         'escrow_lender_email' => $order_details['escrow_lender_email'],
-                        'escrow_lender_telephone_no' => $order_details['escrow_lender_telephone_no']
+                        'escrow_lender_telephone_no' => $order_details['escrow_lender_telephone_no'],
                     );
                 }
             }
             if (isset($export_data) && !empty($export_data)) {
                 if (!is_dir('uploads/orders')) {
-                    mkdir('./uploads/orders', 0777, TRUE);
+                    mkdir('./uploads/orders', 0777, true);
                 }
 
                 $outputPath = './uploads/orders/output.csv';
@@ -220,7 +220,7 @@ class Order extends MX_Controller
         exit;
     }
 
-    function partnerApiLogs()
+    public function partnerApiLogs()
     {
         $data = array();
         $data['title'] = 'PCT Order: Partner Api Log';
@@ -237,7 +237,7 @@ class Order extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
-    function get_partner_api_logs()
+    public function get_partner_api_logs()
     {
         $this->load->model('order/partnerApiLogs');
 
@@ -295,7 +295,7 @@ class Order extends MX_Controller
                     }
                 }
                 $response_data = $value['response_data'];
-                $response = json_decode($response_data, TRUE);
+                $response = json_decode($response_data, true);
                 if (empty($response)) {
                     $nestedData[] = 'Success';
                 } else {
@@ -314,7 +314,7 @@ class Order extends MX_Controller
         echo json_encode($json_data);
     }
 
-    function update_order_details()
+    public function update_order_details()
     {
         $this->load->model('order/partnerApiLogs');
         $logs_list = $this->partnerApiLogs->get_api_logs();
@@ -342,7 +342,7 @@ class Order extends MX_Controller
         exit;
     }
 
-    function cplErrorLogs()
+    public function cplErrorLogs()
     {
         $data = array();
         $data['title'] = 'PCT Order: CPL Api Error Logs';
@@ -352,7 +352,7 @@ class Order extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
-    function getCplErrorLogs()
+    public function getCplErrorLogs()
     {
         $params = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -390,14 +390,14 @@ class Order extends MX_Controller
         echo json_encode($json_data);
     }
 
-    function reswareLogs()
+    public function reswareLogs()
     {
         $data = array();
         $data['title'] = 'PCT Order: Resware API Logs';
         $this->admintemplate->show("order/home", "resware_api_log", $data);
     }
 
-    function getReswareLogs()
+    public function getReswareLogs()
     {
         $params = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -482,7 +482,7 @@ class Order extends MX_Controller
         echo json_encode($json_data);
     }
 
-    function lpOrders()
+    public function lpOrders()
     {
         $params = array();
         if ($this->session->userdata('errors')) {
@@ -499,7 +499,7 @@ class Order extends MX_Controller
             'where' => array(
                 'is_master' => 1,
                 'status' => 1,
-            )
+            ),
         );
         $product_type = $this->uri->segment(4);
         $master_users = $this->home_model->get_rows($con);
@@ -539,7 +539,7 @@ class Order extends MX_Controller
         exit;
     }
 
-    function get_lp_order_list()
+    public function get_lp_order_list()
     {
         $params = array();
         $params['length'] = $this->input->post('length');
@@ -590,14 +590,13 @@ class Order extends MX_Controller
             }
             $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
 
-
             $nestedData[] = !empty($value['file_number']) ? 'Yes' : 'No';
             $nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['file_id'];
             $file_id = $value['file_id'];
             $action = "<div class='dropdown'>
-                <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type 
-                    <span class='caret'></span> 
+                <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
+                    <span class='caret'></span>
                 </a>
                 <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
                     <li>
@@ -654,12 +653,12 @@ class Order extends MX_Controller
                         </button>
                     </a>
                 </li>
-                <li> 
+                <li>
                     <a href='#' title ='Select Document' onclick='getInstrumentData($file_id);'>
                         <button class='btn btn-grad-2a button-color' type='button'>
                             <i class='fa fa-external-link' style='margin-right:5px;'></i>
                             Get Instrument Data
-                        </button>   
+                        </button>
                     </a>
                 </li>";
             }
@@ -668,7 +667,7 @@ class Order extends MX_Controller
                         <button class='btn btn-grad-2a button-color' type='button'>
                             <i class='fa fa-upload' style='margin-right:5px;'></i>
                             Upload Doc
-                        </button>   
+                        </button>
                     </a>
                 </li></ul></div>";
             // <i class="fa-solid fa-up-right-from-square"></i>
@@ -680,13 +679,13 @@ class Order extends MX_Controller
         $json_data = array(
             "recordsTotal" => $ordersList['recordsTotal'],
             "recordsFiltered" => $ordersList['recordsFiltered'],
-            "data" => $data
+            "data" => $data,
         );
 
         echo json_encode($json_data);
     }
 
-    function exportLpOrders()
+    public function exportLpOrders()
     {
         $sales_rep = $this->input->post('sales_rep');
         $seachValue = $this->input->post('seachValue');
@@ -715,13 +714,13 @@ class Order extends MX_Controller
                         'report_status' => !empty($value['document_name']) ? $value['document_name'] : '',
                         'status' => $value['lp_report_status'],
                         'report_link' => 'https://pct-doc.s3-us-west-2.amazonaws.com/pre-listing-doc/pre_listing_report_' . $value['lp_file_number'] . '.pdf',
-                        'created_at' => $value['created_at']
+                        'created_at' => $value['created_at'],
                     );
                 }
             }
             if (isset($export_data) && !empty($export_data)) {
                 if (!is_dir('uploads/orders')) {
-                    mkdir('./uploads/orders', 0777, TRUE);
+                    mkdir('./uploads/orders', 0777, true);
                 }
 
                 $outputPath = './uploads/orders/output.csv';
@@ -782,7 +781,7 @@ class Order extends MX_Controller
                     <th>Document Name</th>
                     <th>Instrument</th>
                     <th>Recorded Date</th>
-                    <th>Action</th>        
+                    <th>Action</th>
                 </tr>
             </thead>
         <tbody>";
@@ -886,38 +885,38 @@ class Order extends MX_Controller
         exit;
     }
 
-    function getDetailsByName()
+    public function getDetailsByName()
     {
-    	$searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
-    	$condition = array(
-            'company_name' => $searchTerm
-        );    	
-    	$condition['where']['is_sales_rep'] = 0;
-    	$userDetails = $this->home_model->get_customers_search($condition);
-    	$userInfo = array();
+        $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+        $condition = array(
+            'company_name' => $searchTerm,
+        );
+        $condition['where']['is_sales_rep'] = 0;
+        $userDetails = $this->home_model->get_customers_search($condition);
+        $userInfo = array();
 
-    	if(isset($userDetails) && !empty($userDetails)) {
-    		foreach ($userDetails as $key => $value) {
-    			$data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
-	            $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
-				$data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
-	            $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
-	            $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
-	            $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
-	            $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
-	            $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
-				$data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
-				$data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
-				$data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
-				$data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
-				$data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
-				$data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
-				$data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
-				$data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
-	            // array_push($userInfo, $data); 
-	            $userInfo[] =$data;
-    		}
-    	}
-    	echo json_encode($userInfo);
+        if (isset($userDetails) && !empty($userDetails)) {
+            foreach ($userDetails as $key => $value) {
+                $data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+                $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+                $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+                $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+                $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+                $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+                $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+                $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+                $data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+                $data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+                $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+                $data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+                $data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+                $data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
+                $data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
+                // array_push($userInfo, $data);
+                $userInfo[] = $data;
+            }
+        }
+        echo json_encode($userInfo);
     }
 }
