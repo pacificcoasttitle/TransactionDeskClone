@@ -35,6 +35,8 @@ class SalesSnapShot extends MX_Controller
             'added_by' => $this->user['id'],
         );
         $data['reports_data'] = $this->salesSnapShot_model->getData($report_condition);
+        // echo "<pre>";
+        // print_r($data);die;
         // $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
         // $this->template->show("report", "list", $data);
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=pma_' . $this->report_js_version));
@@ -167,7 +169,7 @@ class SalesSnapShot extends MX_Controller
                 }
                 $this->load->library('snappy_pdf');
 
-                $document_name = time() . '_' . $last_id . '.pdf';
+                $document_name = $report_data['area_name'] . '_' . time() . '_' . $last_id . '.pdf';
                 if (!is_dir(FCPATH . 'uploads/sales-snap-shot')) {
                     mkdir(FCPATH . 'uploads/sales-snap-shot', 0777, true);
                 }
@@ -328,10 +330,10 @@ class SalesSnapShot extends MX_Controller
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $message = 'Please check attachment for Snap Shot document.';
-        $subject = 'Snap Shot Document';
+        $subject = 'Sales Snapshot Ready!';
 
         // $file[] = 'https://pct-doc.s3-us-west-2.amazonaws.com/sales-snap-shot/1710971265_42.pdf'; // $this->input->post('url');
-        // $to = 'piyush.j@crestinfosystems.net';
+        $to = 'piyush.j@crestinfosystems.net';
         $this->load->helper('sendemail');
         $data = array(
             'link' => $url,
