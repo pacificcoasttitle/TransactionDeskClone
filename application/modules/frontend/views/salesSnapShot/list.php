@@ -534,7 +534,7 @@ if (!empty($report['report_url'])): ?>
 											<span class="icon text-white-50">
 												<i class="fas fa-envelope-square "></i>
 											</span>
-											<span class="text">Send to Reps</span>
+											<span class="text">Send to Rep</span>
 										</a>
 										<?php endif;?>
 										</td>
