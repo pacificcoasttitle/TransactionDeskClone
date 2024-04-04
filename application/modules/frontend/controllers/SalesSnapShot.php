@@ -333,7 +333,7 @@ class SalesSnapShot extends MX_Controller
         $subject = 'Sales Snapshot Ready!';
 
         // $file[] = 'https://pct-doc.s3-us-west-2.amazonaws.com/sales-snap-shot/1710971265_42.pdf'; // $this->input->post('url');
-        $to = 'piyush.j@crestinfosystems.net';
+        // $to = 'piyush.j@crestinfosystems.net';
         $this->load->helper('sendemail');
         $data = array(
             'link' => $url,
