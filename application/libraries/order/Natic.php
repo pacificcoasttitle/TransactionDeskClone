@@ -186,7 +186,7 @@ class Natic
             $orderDetails['lender_company_name'] = $lenderDetails['company_name'];
             $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
             $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
-            $orderDetails['lender_fullname'] = $lenderDetails['lender_fullname'];
+            $orderDetails['lender_fullname'] = $lenderFormData['lender_fullname'];
         }
 
         $borrower = $orderDetails['borrowers_vesting'];
