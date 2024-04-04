@@ -1,18 +1,19 @@
 <?php
-if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
 class Natic
 {
     public static $CI;
-    
-	public function __construct($params = array())
-	{
-		$this->CI =& get_instance();                        
-		$this->CI->load->database();
+
+    public function __construct($params = array())
+    {
+        $this->CI = &get_instance();
+        $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-		self::$CI = $this->CI;
+        self::$CI = $this->CI;
     }
 
     public function make_request($xml, $endpoint)
@@ -23,19 +24,19 @@ class Natic
             "Connection: close",
         );
 
-        $ch = curl_init(); 
-        curl_setopt($ch, CURLOPT_URL,getenv('NATIC_URL').$endpoint);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, getenv('NATIC_URL') . $endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT,500); 
+        curl_setopt($ch, CURLOPT_TIMEOUT, 500);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $data = curl_exec($ch); 
-        if(curl_errno($ch)) {
+        $data = curl_exec($ch);
+        if (curl_errno($ch)) {
             return curl_error($ch);
         } else {
             curl_close($ch);
-            return $data;	
+            return $data;
         }
     }
 
@@ -43,7 +44,7 @@ class Natic
     {
         if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(!empty($this->CI->session->userdata('admin'))) {
+        } else if (!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -52,10 +53,10 @@ class Natic
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
-                            <UserName>".getenv('NATIC_USERNAME')."</UserName>
-                            <Password>".getenv('NATIC_PASSWORD')."#</Password>
-                            <TransactionId>".rand(10000,99999)."</TransactionId>
-                            <CompanyName>".getenv('NATIC_COMPANY')."</CompanyName>
+                            <UserName>" . getenv('NATIC_USERNAME') . "</UserName>
+                            <Password>" . getenv('NATIC_PASSWORD') . "#</Password>
+                            <TransactionId>" . rand(10000, 99999) . "</TransactionId>
+                            <CompanyName>" . getenv('NATIC_COMPANY') . "</CompanyName>
                             <AuthorizationRequest>
                                 <PropertyState>CA</PropertyState>
                                 <RequestType>ClosingProtectionLetter</RequestType>
@@ -64,16 +65,16 @@ class Natic
 
         $endPoint = 'Authorize';
         $this->CI->load->model('order/apiLogs');
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL').$endPoint, $xmlData, array(), 0, 0);                
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL') . $endPoint, $xmlData, array(), 0, 0);
         $resultAuthorize = $this->make_request($xmlData, $endPoint);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL').$endPoint, $xmlData, $resultAuthorize, 0, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL') . $endPoint, $xmlData, $resultAuthorize, 0, $logid);
         $responseData = $this->xml2array($resultAuthorize, 0);
-        if(!empty($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList'])) {
-           
-            foreach($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList']['ApprovedSettlementOffice'] as $branches) {
+        if (!empty($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList'])) {
+
+            foreach ($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList']['ApprovedSettlementOffice'] as $branches) {
                 if (strpos($branches['Name'], 'Pacific Coast Title Company') !== false) {
-                    $addressInfo = explode(',',$branches['Name']);
-                    if(count($addressInfo) == 5) {
+                    $addressInfo = explode(',', $branches['Name']);
+                    if (count($addressInfo) == 5) {
                         $address = $addressInfo[1];
                         $address1 = $addressInfo[2];
                         $city = $addressInfo[3];
@@ -90,49 +91,49 @@ class Natic
                         $zipcode = null;
                     }
 
-                    if(!empty($address) && !empty($city) && !empty($zipcode)) {
+                    if (!empty($address) && !empty($city) && !empty($zipcode)) {
                         $this->CI->db->select('*');
                         $this->CI->db->from('pct_order_natic_branches');
                         $this->CI->db->like('city', $city);
                         $query = $this->CI->db->get();
                         $result = $query->row_array();
-                        if(!empty($result)) {
+                        if (!empty($result)) {
                             $condition = array(
-                                'city' => $result['city']
-                            ); 
+                                'city' => $result['city'],
+                            );
                             $branchData = array(
-                                'unique_id' => $branches['UniqueId'], 
-                                'address' =>  $address,
-                                'address1' =>  $address1,
-                                'state' => 'CA', 
+                                'unique_id' => $branches['UniqueId'],
+                                'address' => $address,
+                                'address1' => $address1,
+                                'state' => 'CA',
                                 'zip' => $zipcode,
-                                'updated_at' => date('Y-m-d H:i:s')
+                                'updated_at' => date('Y-m-d H:i:s'),
                             );
                             $this->CI->db->update('pct_order_natic_branches', $branchData, $condition);
-                            $branchData['city'] =  $result['city'];
+                            $branchData['city'] = $result['city'];
                         } else {
                             $branchData = array(
-                                'unique_id' => $branches['UniqueId'], 
-                                'address' =>  $address,
-                                'address1' =>  $address1,
+                                'unique_id' => $branches['UniqueId'],
+                                'address' => $address,
+                                'address1' => $address1,
                                 'city' => $city,
-                                'state' => 'CA', 
+                                'state' => 'CA',
                                 'zip' => $zipcode,
-                                'created_at' => date('Y-m-d H:i:s')
+                                'created_at' => date('Y-m-d H:i:s'),
                             );
-                            $this->CI->db->insert('pct_order_natic_branches', $branchData); 
+                            $this->CI->db->insert('pct_order_natic_branches', $branchData);
                         }
                         $branchesData[] = $branchData;
-                    }  
+                    }
                 }
             }
             return $branchesData;
-		} else {
-			return false;
-		}
+        } else {
+            return false;
+        }
     }
 
-    public function getBranches($id=0)
+    public function getBranches($id = 0)
     {
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_natic_branches');
@@ -140,15 +141,15 @@ class Natic
             $this->CI->db->where('id', $id);
         }
         $query = $this->CI->db->get();
-        if($id == 0) {
+        if ($id == 0) {
             $result = $query->result_array();
         } else {
             $result = $query->row_array();
         }
-        if (!empty($result)) { 
+        if (!empty($result)) {
             return $result;
         } else {
-           return false;
+            return false;
         }
     }
 
@@ -157,7 +158,7 @@ class Natic
         $this->CI->load->library('order/order');
         if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
-        } else if(!empty($this->CI->session->userdata('admin'))) {
+        } else if (!empty($this->CI->session->userdata('admin'))) {
             $userdata = $this->CI->session->userdata('admin');
         } else {
             $userdata = array();
@@ -172,20 +173,22 @@ class Natic
         $zipcode = $orderDetails['cpl_proposed_property_zip'];
 
         $this->CI->load->model('order/home_model');
-        $orderUser =  $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
 
         if (!empty($orderDetails['cpl_lender_id'])) {
             $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-            $orderDetails['lender_assignment_clause'] =  $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
-            $orderDetails['lender_address'] = $lenderDetails['street_address'];
-            $orderDetails['lender_city'] = $lenderDetails['city'];
-            $orderDetails['lender_state'] = $lenderDetails['state'];
-            $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+            $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
+            $orderDetails['lender_assignment_clause'] = (!empty($lenderFormData) ? $lenderFormData['assignment_clause'] : ($lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : ''));
+            $orderDetails['lender_address'] = !empty($lenderFormData) ? $lenderFormData['street_address'] : $lenderDetails['street_address'];
+            $orderDetails['lender_city'] = !empty($lenderFormData) ? $lenderFormData['city'] : $lenderDetails['city'];
+            $orderDetails['lender_state'] = !empty($lenderFormData) ? $lenderFormData['state'] : $lenderDetails['state'];
+            $orderDetails['lender_zipcode'] = !empty($lenderFormData) ? $lenderFormData['zip_code'] : $lenderDetails['zip_code'];
             $orderDetails['lender_company_name'] = $lenderDetails['company_name'];
             $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
             $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
+            $orderDetails['lender_fullname'] = $lenderDetails['lender_fullname'];
         }
-        
+
         $borrower = $orderDetails['borrowers_vesting'];
 
         $branchData = $this->getBranches($orderDetails['fnf_agent_id']);
@@ -193,14 +196,14 @@ class Natic
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
                     <Name>Agent's File Number</Name>
-                    <Value>".$orderDetails['file_number']."</Value>
+                    <Value>" . $orderDetails['file_number'] . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>PropertyAddress1</FieldId>
                     <Name>Property Address 1</Name>
-                    <Value>".htmlspecialchars($address, ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($address, ENT_XML1) . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -208,70 +211,70 @@ class Natic
                 <Field>
                     <FieldId>PropertyCity</FieldId>
                     <Name>Property City</Name>
-                    <Value>".$city ."</Value>
+                    <Value>" . $city . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>PropertyState</FieldId>
                     <Name>Property State</Name>
-                    <Value>".$state."</Value>
+                    <Value>" . $state . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>PropertyPostalCode</FieldId>
                     <Name>Property Postal Code</Name>
-                    <Value>".$zipcode."</Value>
+                    <Value>" . $zipcode . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>PropertyDescription</FieldId>
                     <Name>Brief Legal Description</Name>
-                    <Value>".htmlspecialchars($orderDetails['legal_description'], ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($orderDetails['legal_description'], ENT_XML1) . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LoanNumber</FieldId>
                     <Name>Loan Number</Name>
-                    <Value>Loan No: ".$orderDetails['loan_number']."</Value>
+                    <Value>Loan No: " . $orderDetails['loan_number'] . "</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>
                 <Field>
                     <FieldId>LoanAmount</FieldId>
                     <Name>Loan Amount</Name>
-                    <Value>".$orderDetails['loan_amount']."</Value>
+                    <Value>" . $orderDetails['loan_amount'] . "</Value>
                     <Type>Decimal</Type>
                     <Required>false</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderName</FieldId>
                     <Name>Lender Name</Name>
-                    <Value>".htmlspecialchars($orderDetails['lender_company_name'], ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($orderDetails['lender_company_name'], ENT_XML1) . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderNote</FieldId>
                     <Name>Lender Note</Name>
-                    <Value>".htmlspecialchars($orderDetails['lender_assignment_clause'], ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($orderDetails['lender_assignment_clause'], ENT_XML1) . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderContactName</FieldId>
                     <Name>Lender Contact Name</Name>
-                    <Value>".$orderDetails['lender_first_name']." ".$orderDetails['lender_last_name']."</Value>
+                    <Value>" . $orderDetails['lender_fullname'] . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderAddress1</FieldId>
                     <Name>Lender Address 1</Name>
-                    <Value>".htmlspecialchars($orderDetails['lender_address'], ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($orderDetails['lender_address'], ENT_XML1) . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -285,21 +288,21 @@ class Natic
                 <Field>
                     <FieldId>LenderCity</FieldId>
                     <Name>Lender City</Name>
-                    <Value>".$orderDetails['lender_city']."</Value>
+                    <Value>" . $orderDetails['lender_city'] . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderState</FieldId>
                     <Name>Lender State</Name>
-                    <Value>".$orderDetails['lender_state']."</Value>
+                    <Value>" . $orderDetails['lender_state'] . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
                 <Field>
                     <FieldId>LenderPostalCode</FieldId>
                     <Name>Lender Postal Code</Name>
-                    <Value>".$orderDetails['lender_zipcode']."</Value>
+                    <Value>" . $orderDetails['lender_zipcode'] . "</Value>
                     <Type>String</Type>
                     <Required>true</Required>
                 </Field>
@@ -315,40 +318,40 @@ class Natic
                     <Name>Title Company Address 1</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".htmlspecialchars($branchData['address'], ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($branchData['address'], ENT_XML1) . "</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyAddress2</FieldId>
                     <Name>Title Company Address 2</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData['address1']."</Value>
+                    <Value>" . $branchData['address1'] . "</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyCity</FieldId>
                     <Name>Title Company City</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData['city']."</Value>
+                    <Value>" . $branchData['city'] . "</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyState</FieldId>
                     <Name>Title Company State</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData['state']."</Value>
+                    <Value>" . $branchData['state'] . "</Value>
                 </Field>
                 <Field>
                     <FieldId>TitleCompanyPostalCode</FieldId>
                     <Name>Title Company Postal Code</Name>
                     <Type>String</Type>
                     <Required>false</Required>
-                    <Value>".$branchData['zip']."</Value>
+                    <Value>" . $branchData['zip'] . "</Value>
                 </Field>
                 <Field>
                     <FieldId>Buyer</FieldId>
                     <Name>Buyer/Borrower Name</Name>
-                    <Value>".htmlspecialchars($borrower, ENT_XML1)."</Value>
+                    <Value>" . htmlspecialchars($borrower, ENT_XML1) . "</Value>
                     <Type>String</Type>
                     <Required>false</Required>
                 </Field>
@@ -356,20 +359,20 @@ class Natic
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
-                            <UserName>".getenv('NATIC_USERNAME')."</UserName>
-                            <Password>".getenv('NATIC_PASSWORD')."#</Password>
-                            <TransactionId>".rand(10000,99999)."</TransactionId>
-                            <CompanyName>".getenv('NATIC_COMPANY')."</CompanyName>
+                            <UserName>" . getenv('NATIC_USERNAME') . "</UserName>
+                            <Password>" . getenv('NATIC_PASSWORD') . "#</Password>
+                            <TransactionId>" . rand(10000, 99999) . "</TransactionId>
+                            <CompanyName>" . getenv('NATIC_COMPANY') . "</CompanyName>
                             <DocumentCollection>
                                 <PropertyState>CA</PropertyState>
                                 <DocumentList>
                                     <Document>
-                                        <DocumentId>".getenv('NATIC_DOCUMENT_ID')."</DocumentId>
-                                        <ReferenceId>".rand(100000,999999)."</ReferenceId>
+                                        <DocumentId>" . getenv('NATIC_DOCUMENT_ID') . "</DocumentId>
+                                        <ReferenceId>" . rand(100000, 999999) . "</ReferenceId>
                                         <Name>CAStateLetter</Name>
                                         <RequestType>ClosingProtectionLetter</RequestType>
                                         <FieldList>
-                                        ".$xmlData."
+                                        " . $xmlData . "
                                         </FieldList>
                                     </Document>
                                 </DocumentList>
@@ -379,117 +382,134 @@ class Natic
                         </RequestWrapper>";
 
         $endPoint = 'GetDocuments';
-        
+
         $this->CI->load->model('order/apiLogs');
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL').$endPoint, $xmlData, array(), $orderDetails['order_id'], 0);                
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL') . $endPoint, $xmlData, array(), $orderDetails['order_id'], 0);
         $resultDocument = $this->make_request($xmlData, $endPoint);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL').$endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL') . $endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
         $responseData = $this->xml2array($resultDocument, 0);
-        if(!empty($responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content'])) {
-			return array('success'=> true, 'content' => $responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content']);
-		} else {
-			return array('success'=> false, 'error' => $responseData['ResponseWrapper']['Error']['ErrorMessage']);
-		}
+        if (!empty($responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content'])) {
+            return array('success' => true, 'content' => $responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content']);
+        } else {
+            return array('success' => false, 'error' => $responseData['ResponseWrapper']['Error']['ErrorMessage']);
+        }
     }
 
-    public function xml2array($contents, $get_attributes=1, $priority = 'tag') 
+    public function xml2array($contents, $get_attributes = 1, $priority = 'tag')
     {
-	    if(!$contents) return array();
+        if (!$contents) {
+            return array();
+        }
 
-	    if(!function_exists('xml_parser_create')) {
-	        return array();
-	    }
+        if (!function_exists('xml_parser_create')) {
+            return array();
+        }
 
-	    $parser = xml_parser_create('');
-	    xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); 
-	    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-	    xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-	    xml_parse_into_struct($parser, trim($contents), $xml_values);
-	    xml_parser_free($parser);
+        $parser = xml_parser_create('');
+        xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8");
+        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+        xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+        xml_parse_into_struct($parser, trim($contents), $xml_values);
+        xml_parser_free($parser);
 
-	    if(!$xml_values) return;
+        if (!$xml_values) {
+            return;
+        }
 
-	    $xml_array = array();
-	    $parents = array();
-	    $opened_tags = array();
-	    $arr = array();
-	    $current = &$xml_array;
-	    $repeated_tag_index = array();
+        $xml_array = array();
+        $parents = array();
+        $opened_tags = array();
+        $arr = array();
+        $current = &$xml_array;
+        $repeated_tag_index = array();
 
-	    foreach($xml_values as $data) {
+        foreach ($xml_values as $data) {
 
-	        unset($attributes,$value);
-	        extract($data);
+            unset($attributes, $value);
+            extract($data);
 
-	        $result = array();
-	        $attributes_data = array();
+            $result = array();
+            $attributes_data = array();
 
-	        if(isset($value)) {         
-	            if($priority == 'tag')  $result = $value;  else  $result['value'] = $value;
-	        }   
-	        if(isset($attributes) and $get_attributes) {            
-	            foreach($attributes as $attr => $val) {             
-	                if($priority == 'tag') 
-	                    $attributes_data[$attr] = $val;
-	                else 
-	                    $result['attr'][$attr] = $val;
-	            }
-	        }       
-	        if($type == "open") {       
-	            $parent[$level-1] = &$current;          
-	            if(!is_array($current) or (!in_array($tag, array_keys($current)))) {            
-	                $current[$tag] = $result;               
-	                if($attributes_data) $current[$tag. '_attr'] = $attributes_data;                
-	                $repeated_tag_index[$tag.'_'.$level] = 1;
-	                $current = &$current[$tag];             
-	            } else {            
-	                if(isset($current[$tag][0])) {              
-	                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-	                    $repeated_tag_index[$tag.'_'.$level]++;                 
-	                } else {                
-	                    $current[$tag] = array($current[$tag],$result);
-	                    $repeated_tag_index[$tag.'_'.$level] = 2;                   
-	                    if(isset($current[$tag.'_attr'])) {                 
-	                        $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-	                        unset($current[$tag.'_attr']);
-	                    }
-	                }               
-	                $last_item_index = $repeated_tag_index[$tag.'_'.$level]-1;
-	                $current = &$current[$tag][$last_item_index];
-	            }
+            if (isset($value)) {
+                if ($priority == 'tag') {
+                    $result = $value;
+                } else {
+                    $result['value'] = $value;
+                }
 
-	        } elseif($type == "complete") { 
-	            if(!isset($current[$tag])) {            
-	                $current[$tag] = $result;
-	                $repeated_tag_index[$tag.'_'.$level] = 1;
-	                if($priority == 'tag' and $attributes_data) $current[$tag. '_attr'] = $attributes_data;             
-	            } else {            
-	                if(isset($current[$tag][0]) and is_array($current[$tag])) {                 
-	                    $current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
-	                    if($priority == 'tag' and $get_attributes and $attributes_data) {
-	                        $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
-	                    }
-	                    $repeated_tag_index[$tag.'_'.$level]++;                 
-	                } else {                
-	                    $current[$tag] = array($current[$tag],$result); 
-	                    $repeated_tag_index[$tag.'_'.$level] = 1;
-	                    if($priority == 'tag' and $get_attributes) {
-	                        if(isset($current[$tag.'_attr'])) { 
-	                            $current[$tag]['0_attr'] = $current[$tag.'_attr'];
-	                            unset($current[$tag.'_attr']);
-	                        }
-	                        if($attributes_data) {
-	                            $current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
-	                        }
-	                    }
-	                    $repeated_tag_index[$tag.'_'.$level]++; 
-	                }
-	            }           
-	        } elseif($type == 'close') { 
-	            $current = &$parent[$level-1];
-	        }
-	    }
-	    return($xml_array);
-	}
-    
+            }
+            if (isset($attributes) and $get_attributes) {
+                foreach ($attributes as $attr => $val) {
+                    if ($priority == 'tag') {
+                        $attributes_data[$attr] = $val;
+                    } else {
+                        $result['attr'][$attr] = $val;
+                    }
+
+                }
+            }
+            if ($type == "open") {
+                $parent[$level - 1] = &$current;
+                if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
+                    $current[$tag] = $result;
+                    if ($attributes_data) {
+                        $current[$tag . '_attr'] = $attributes_data;
+                    }
+
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
+                    $current = &$current[$tag];
+                } else {
+                    if (isset($current[$tag][0])) {
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                        $repeated_tag_index[$tag . '_' . $level]++;
+                    } else {
+                        $current[$tag] = array($current[$tag], $result);
+                        $repeated_tag_index[$tag . '_' . $level] = 2;
+                        if (isset($current[$tag . '_attr'])) {
+                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                            unset($current[$tag . '_attr']);
+                        }
+                    }
+                    $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
+                    $current = &$current[$tag][$last_item_index];
+                }
+
+            } elseif ($type == "complete") {
+                if (!isset($current[$tag])) {
+                    $current[$tag] = $result;
+                    $repeated_tag_index[$tag . '_' . $level] = 1;
+                    if ($priority == 'tag' and $attributes_data) {
+                        $current[$tag . '_attr'] = $attributes_data;
+                    }
+
+                } else {
+                    if (isset($current[$tag][0]) and is_array($current[$tag])) {
+                        $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
+                        if ($priority == 'tag' and $get_attributes and $attributes_data) {
+                            $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
+                        }
+                        $repeated_tag_index[$tag . '_' . $level]++;
+                    } else {
+                        $current[$tag] = array($current[$tag], $result);
+                        $repeated_tag_index[$tag . '_' . $level] = 1;
+                        if ($priority == 'tag' and $get_attributes) {
+                            if (isset($current[$tag . '_attr'])) {
+                                $current[$tag]['0_attr'] = $current[$tag . '_attr'];
+                                unset($current[$tag . '_attr']);
+                            }
+                            if ($attributes_data) {
+                                $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
+                            }
+                        }
+                        $repeated_tag_index[$tag . '_' . $level]++;
+                    }
+                }
+            } elseif ($type == 'close') {
+                $current = &$parent[$level - 1];
+            }
+        }
+        return ($xml_array);
+    }
+
 }
