@@ -331,7 +331,15 @@
             </td>
           </tr>
         </table>
-
+        <!-- Layout 35 (Full width image) -->
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="full-image" style="border-collapse:collapse;font-size:0;">
+              <img width="800" src="<?php echo base_url() . 'assets/frontend/images/snapshot_email_header.jpg'; ?>"alt="" style="border: none; display: block;">
+            </td>
+          </tr>
+        </table>
+        <!-- End Layout 35 (Full width image) -->
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" style="background-color:#ffffff;">
