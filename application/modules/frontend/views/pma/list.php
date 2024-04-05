@@ -358,6 +358,12 @@ form {
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Concierge Profile
+						<a href="<?php echo base_url('sales-activity-report'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
+							<span class="icon text-white-50">
+								<i class="fa fa-tag"></i>
+							</span>
+							<span class="text">Create Activity</span>
+						</a>
 						<a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right">
 							<span class="icon text-white-50">
 								<i class="fa fa-camera"></i>
@@ -379,7 +385,7 @@ form {
 							<span class="text">Create Labels</span>
 						</a>
 
-					</h2>					
+					</h2>
 					<div class="ui-decor-1a bg-accent"></div>
 				</div>
 			</div>
@@ -402,7 +408,7 @@ form {
 						</div>
 					</div>
 					<ul class="u-list" id="rep-list-data"></ul>
-						
+
 							<div class="pull-right hide" id="show_all_rep">
 								<a href="<?=base_url('reports/sales_rep')?>" class="btn btn-success">View All</a>
 							</div>
@@ -414,23 +420,23 @@ form {
 						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('pma/importData') ?>">
 							<div class="form-body">
 								<?php
-								$prev_data = $this->session->flashdata('_previous_data');
-								if($this->session->flashdata('error')) :
-								?>
-								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error');?></div>
+$prev_data = $this->session->flashdata('_previous_data');
+if ($this->session->flashdata('error')):
+?>
+								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
 								<?php
-								elseif($this->session->flashdata('success')):
-								?>
-								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
+elseif ($this->session->flashdata('success')):
+?>
+								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
 								<?php
-								endif;
-								?>
+endif;
+?>
 								<div class="frm-row">
 									<div class="row">
 										<div class="section colm col-md-6">
 											<label class="field prepend-icon">
-												<input type="text" class="js-pma-address form-control" name="address_input" id="js-property-search" 
-												value="<?php echo (!empty($prev_data['address_input'])) ? $prev_data['address_input'] : '';?>" placeholder="Property Address">
+												<input type="text" class="js-pma-address form-control" name="address_input" id="js-property-search"
+												value="<?php echo (!empty($prev_data['address_input'])) ? $prev_data['address_input'] : ''; ?>" placeholder="Property Address">
 												<input id="js-apn-search" placeholder="APN" class="formpma js-pma-apn form-control" type="text" value="" name="subject">
 												<span class="field-icon"><i class="fa fa-map-marker"></i></span>
 											</label>
@@ -438,7 +444,7 @@ form {
 
 										<div class="section colm col-md-6">
 											<label class="field prepend-icon">
-												<input type="text" class="js-pma-city js-pma-fips form-control" name="city_input" value="<?php echo (!empty($prev_data['city_input'])) ? $prev_data['city_input'] : '';?>" placeholder="City">
+												<input type="text" class="js-pma-city js-pma-fips form-control" name="city_input" value="<?php echo (!empty($prev_data['city_input'])) ? $prev_data['city_input'] : ''; ?>" placeholder="City">
 												<span class="field-icon"><i class="fa fa-map-marker "></i></span>
 											</label>
 										</div>
@@ -459,14 +465,14 @@ form {
 											</button>
 										</div>
 									</div>
-											
-										
+
+
 								</div>
 							</div>
 						</form>
 					</div>
 
-					
+
 					<div style="margin-bottom: 50px" class="hide search-result-div mt-5 text-center">
 						<h5>Search Results</h5>
 						<div class="address-result">
@@ -485,7 +491,7 @@ form {
 									<td><span class="result-address"></span></td>
 									<td><span class="result-city"></span></td>
 									<td><button type="button" class="btn btn-info js-run-pma-button">Create</button></td>
-									
+
 								</tbody>
 							</table>
 						</div>
@@ -504,7 +510,7 @@ form {
 									</tr>
 								</thead>
 								<tbody>
-									
+
 								</tbody>
 							</table>
 						</div>
@@ -646,9 +652,9 @@ form {
 
 		</div>
 	</div>
-	
-</div><!-- comp selection -->
-	
-	
 
-   
+</div><!-- comp selection -->
+
+
+
+

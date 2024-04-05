@@ -330,6 +330,12 @@ form {
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Sales Snap Shot
+						<a href="<?php echo base_url('sales-activity-report'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
+							<span class="icon text-white-50">
+								<i class="fa fa-tag"></i>
+							</span>
+							<span class="text">Create Activity</span>
+						</a>
                         <a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fas fa-concierge-bell"></i>
