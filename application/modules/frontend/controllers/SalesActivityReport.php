@@ -150,7 +150,7 @@ class SalesActivityReport extends MX_Controller
                 // print_r($html);die;
                 $this->load->library('snappy_pdf');
 
-                $document_name = $report_data['salesRep']['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . time() . '_' . $last_id . '.pdf';
+                $document_name = $report_data['salesRep']['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . date('Y') . '_' . $last_id . '.pdf';
                 if (!is_dir(FCPATH . 'uploads/sales-activity')) {
                     mkdir(FCPATH . 'uploads/sales-activity', 0777, true);
                 }
