@@ -147,6 +147,11 @@
         .employee-name{
             font-size: 30px;
         }
+        .sales_rep_profile {
+            height: 136px;
+            width: 136px;
+            border-radius: 50%;
+        }
         /* .footer {
             width: 100%;
             height: 145px;
@@ -245,10 +250,10 @@ if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_pro
                                                                         <?php
 if (isset($img) && !empty($img)) {
     ?>
-                                                                                                        <td class="w40 pr-20">
-                                                                                                            <img src="<?php echo $img; ?>" class="w100" alt="">
-                                                                                                        </td>
-                                                                                                        <?php
+    <td class="w40 pr-20">
+        <img class="sales_rep_profile" src="<?php echo $img; ?>" class="w100" alt="">
+    </td>
+    <?php
 }?>
                                     <td class="w60">
                                         <div class="employee-name text-grey"><b><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></b></div>
