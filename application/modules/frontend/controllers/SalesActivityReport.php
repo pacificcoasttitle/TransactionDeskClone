@@ -146,7 +146,7 @@ class SalesActivityReport extends MX_Controller
 
                 $html = $this->load->view('salesReport/sales_activity_report', $report_data, true);
 
-                print_r($html);die;
+                // print_r($html);die;
                 $this->load->library('snappy_pdf');
 
                 $document_name = $salesRep['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . time() . '_' . $last_id . '.pdf';
