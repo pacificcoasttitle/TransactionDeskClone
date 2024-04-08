@@ -99,6 +99,7 @@ class SalesActivityReport extends MX_Controller
             $main_record['month'] = $this->input->post('month');
             $main_record['added_by'] = $this->user['id'];
             $last_id = $this->salesReport_model->insert($main_record);
+            // $last_id = 4; //$this->salesReport_model->insert($main_record);
 
             $records = array();
             $i = 0;
@@ -149,7 +150,7 @@ class SalesActivityReport extends MX_Controller
                 // print_r($html);die;
                 $this->load->library('snappy_pdf');
 
-                $document_name = $salesRep['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . time() . '_' . $last_id . '.pdf';
+                $document_name = $report_data['salesRep']['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . time() . '_' . $last_id . '.pdf';
                 if (!is_dir(FCPATH . 'uploads/sales-activity')) {
                     mkdir(FCPATH . 'uploads/sales-activity', 0777, true);
                 }
@@ -160,7 +161,7 @@ class SalesActivityReport extends MX_Controller
                 $dir_name = str_replace('\\', '/', $dir_name);
 
                 $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
-                //  $this->snappy_pdf->pdf->setOption('zoom', '1.05');
+                // $this->snappy_pdf->pdf->setOption('zoom', '1.05');
                 $this->snappy_pdf->pdf->generateFromHtml($html, $dir_name . $document_name);
                 $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-activity');
                 if ($response) {
