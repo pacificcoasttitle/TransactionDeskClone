@@ -161,7 +161,7 @@ class SalesActivityReport extends MX_Controller
                 $dir_name = str_replace('\\', '/', $dir_name);
 
                 $this->snappy_pdf->pdf->setOption('page-size', 'Letter');
-                $this->snappy_pdf->pdf->setOption('zoom', '1.05');
+                $this->snappy_pdf->pdf->setOption('zoom', '1');
                 $this->snappy_pdf->pdf->generateFromHtml($html, $dir_name . $document_name);
                 $response = $this->order->uploadDocumentOnAwsS3($document_name, 'sales-activity');
                 if ($response) {
