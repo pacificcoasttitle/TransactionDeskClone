@@ -642,6 +642,8 @@ $route['sales-snap-shot'] = "frontend/salesSnapShot";
 $route['send-sales-snap-shot-email'] = "frontend/salesSnapShot/sendEmailToSalesRep";
 
 $route['sales-snap-shot/(.+)'] = "frontend/salesSnapShot/$1";
+$route['sales-activity-report'] = "frontend/salesActivityReport";
+$route['sales-activity-report/(.+)'] = "frontend/salesActivityReport/$1";
 
 $route['api/get_file_details(/:num)?'] = 'frontend/api/pctCalculator/get_file_details$1';
 $route['api/add_calc_details'] = 'frontend/api/pctCalculator/add_calc_details';

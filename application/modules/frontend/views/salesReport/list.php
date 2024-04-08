@@ -312,6 +312,16 @@ form {
 .text-center {
 	text-align: center;
 }
+
+#report_listing .btn-icon-split .text {
+	padding: 0.375rem 6px 0.375rem 6px;
+	font-size: 14px;
+}
+
+.align-btn {
+	display: flex;
+	justify-content: space-evenly;
+}
 </style>
 
 <section class="section-sm section-defaulta" >
@@ -319,18 +329,18 @@ form {
 		<div class="card shadow p-5">
 			<div class="row">
 				<div class="col-sm-12">
-					<h2 class="ui-title-block ui-title-block_light">Farm Analysis
-						<a href="<?php echo base_url('sales-activity-report'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
-							<span class="icon text-white-50">
-								<i class="fa fa-tag"></i>
-							</span>
-							<span class="text">Create Activity</span>
-						</a>
-						<a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right">
+					<h2 class="ui-title-block ui-title-block_light">Sales Activity Report
+                        <a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right">
 							<span class="icon text-white-50">
 								<i class="fa fa-camera"></i>
 							</span>
 							<span class="text">Sales Snap Shot</span>
+						</a>
+                        <a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
+							<span class="icon text-white-50">
+								<i class="fas fa-concierge-bell"></i>
+							</span>
+							<span class="text">Create F.A.R</span>
 						</a>
 
 						<a href="<?php echo base_url('pmas'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
@@ -345,6 +355,7 @@ form {
 							</span>
 							<span class="text">Create Labels</span>
 						</a>
+
 					</h2>
 						<!-- <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a> -->
 						<!-- <a style="margin-right:10px;" href="<?php echo base_url('labels'); ?>" class="pull-right report_switch_btn">Create Labels</a> -->
@@ -407,12 +418,9 @@ endforeach;
 				</div>
 				<div class="col-md-1"></div>
 				<div class="col-md-8">
-					<h5 class="text-center" ><span>Create New Report</span>
-						<!-- <a href="<?=base_url('pmas');?>" class="pull-right">Create PMA</a> -->
-
-					</h5>
+					<h5 class="text-center" ><span>Create New Report</span></h5>
 					<div class="smart-forms smart-container">
-						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('reports/importData'); ?>">
+						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('sales-activity-report/importData'); ?>">
 							<div class="form-body">
 								<?php
 $prev_data = $this->session->flashdata('_previous_data');
@@ -438,11 +446,23 @@ endif;
 											</label>
 										</div>
 
-										<div class="section colm colm6 col-md-6">
-											<label class="field prepend-icon">
-												<input type="text" class="form-control" name="area_name" value="<?php echo (!empty($prev_data['area_name'])) ? $prev_data['area_name'] : ''; ?>" placeholder="What Area?">
-												<span class="field-icon"><i class="fa fa-map-marker "></i></span>
-											</label>
+										<div class="section colm colm4 col-md-6">
+											<select id="month" name="month" class="form-control">
+												<option value="">Select Month</option>
+												<option value="1" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "1") {echo 'selected';}?>>January</option>
+												<option value="2" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "2") {echo 'selected';}?>>February</option>
+												<option value="3" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "3") {echo 'selected';}?>>March</option>
+												<option value="4" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "4") {echo 'selected';}?>>April</option>
+												<option value="5" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "5") {echo 'selected';}?>>May</option>
+												<option value="6" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "6") {echo 'selected';}?>>June</option>
+												<option value="7" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "7") {echo 'selected';}?>>July</option>
+												<option value="8" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "8") {echo 'selected';}?>>August</option>
+												<option value="9" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "9") {echo 'selected';}?>>September</option>
+												<option value="10" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "10") {echo 'selected';}?>>October</option>
+												<option value="11" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "11") {echo 'selected';}?>>November</option>
+                                                <option value="12" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "12") {echo 'selected';}?>>December</option>
+											</select>
+											<i class="arrow"></i>
 										</div>
 									</div>
 
@@ -455,18 +475,6 @@ endif;
 foreach ($salesReps as $salesRep):
 ?>
 												<option value="<?php echo $salesRep['id']; ?>" <?php if (!empty($prev_data['sales_rep']) && $prev_data['sales_rep'] == $salesRep['id']) {echo 'selected';}?>><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></option>
-												<?php endforeach;?>
-											</select>
-											<i class="arrow"></i>
-										</div>
-
-										<div class="section colm colm4 col-md-6">
-											<select id="sort_by" name="sort_by" class="form-control">
-												<option value="">Select Sorting Order</option>
-												<?php
-foreach ($sorting_fields as $key => $field_name):
-?>
-												<option value="<?php echo $key; ?>" <?php if (!empty($prev_data['sort_by']) && $prev_data['sort_by'] == $key) {echo 'selected';}?>><?php echo $field_name; ?></option>
 												<?php endforeach;?>
 											</select>
 											<i class="arrow"></i>
@@ -495,26 +503,30 @@ foreach ($sorting_fields as $key => $field_name):
 					<div class="mt-5 text-center">
 						<h5>Recent Sales Activity Reports</h5>
 						<div class="table-container1">
+							<div class="alert alert-success hide" id="successMsg"></div>
+							<div class="alert alert-danger hide" id="errorMsg"></div>
 							<table class="table table-type-3 typography-last-elem no-footer table-bordered" id="report_listing">
 								<thead>
 									<tr>
 										<th>Date</th>
 										<th>Sales Rep</th>
-										<th>Zipcode</th>
+										<th>Month</th>
 										<th>Download</th>
 									</tr>
 								</thead>
 								<tbody>
-									<?php
-foreach ($reports_data as $report) {
+								<?php
+if (!empty($reports_data)) {
+    foreach ($reports_data as $report) {
 
-    $pdf_url = trim(env('AWS_PATH') . 'sales-rep/pdf/' . $report['report_url']);
-    ?>
+        $pdf_url = trim(env('AWS_PATH') . 'sales-activity/' . $report['report_url']);
+        $email = $report['email_address'];
+        ?>
 									<tr>
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
-										<td><?php echo $report['zip_code']; ?></td>
-										<td>
+										<td><?php echo $monthNameList[$report['month']]; ?></td>
+										<td class="align-btn" >
 										<?php
 if (!empty($report['report_url'])): ?>
 										<a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
@@ -529,8 +541,13 @@ if (!empty($report['report_url'])): ?>
 									</tr>
 									<?php
 }
-?>
-
+} else {
+    ?>
+                                    <tr>
+										<td colspan="4" > No Record Found</td>
+									</tr>
+									<?php
+}?>
 								</tbody>
 							</table>
 						</div>
@@ -541,4 +558,42 @@ if (!empty($report['report_url'])): ?>
 	</div>
 </section>
 
+<script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
+
+<script>
+
+	function sendEmailToSalesRep(email, url) {
+		$("#page-preloader").show();
+		$.ajax({
+			url: base_url + "send-sales-snap-shot-email",
+			type: "post",
+			data: {
+				email : email,
+				url: url
+			},
+			// async: false,
+			success: function (response) {
+				let res = JSON.parse(response);
+				console.log(res);
+				if (res.status == "success") {
+					$('#successMsg').html(res.message).removeClass('hide').addClass('show');
+					setTimeout(function () {
+						$('#successMsg').html('').removeClass('show').addClass('hide');
+					},3000);
+				} else {
+					$('#errorMsg').html(res.message).removeClass('hide').addClass('show');
+					setTimeout(function () {
+						$('#errorMsg').html('').removeClass('show').addClass('hide');
+					},3000);
+				}
+				$("#page-preloader").hide();
+			},
+			complete: function (res) {
+				$("#page-preloader").hide();
+			}
+		});
+	}
+
+
+</script>
 
