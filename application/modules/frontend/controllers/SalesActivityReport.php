@@ -131,7 +131,7 @@ class SalesActivityReport extends MX_Controller
                     unset($records[$key]['rcon']);
                     unset($records[$key]['rsfr']);
                 }
-                $report_data['records'] = $records;
+                $report_data['records'] = array_chunk($records, 25, true);
                 $monthNumber = $this->input->post('month');
                 $report_data['monthNumber'] = $monthNumber;
                 $report_data['monthName'] = $this->monthArr[$monthNumber];
