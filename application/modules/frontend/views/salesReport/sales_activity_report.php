@@ -122,7 +122,7 @@
             color: #fff;
             font-weight: 700;
         }
-        .data-table{
+        .data-table {
             font-family: 'Calibri';
             font-size: 20px;
             color: #2c2e35;
@@ -132,6 +132,12 @@
             background-color: #091932;
             color: #fff;
             font-weight: 300;
+        }
+        .data-table thead {
+            font-size: 20px;
+        }
+        .data-table tbody {
+            font-size: 18px;
         }
         .data-table tbody td {
             border: 1px solid #dfe0e1;
