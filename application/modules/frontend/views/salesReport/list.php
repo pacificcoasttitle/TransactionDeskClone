@@ -330,7 +330,7 @@ form {
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Sales Activity Report
-                        <a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right">
+                        <a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fa fa-camera"></i>
 							</span>
@@ -523,7 +523,7 @@ if (!empty($reports_data)) {
         $email = $report['email_address'];
         ?>
 									<tr>
-										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>
+										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('m/d/Y', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
 										<td><?php echo $monthNameList[$report['month']]; ?></td>
 										<td class="align-btn" >

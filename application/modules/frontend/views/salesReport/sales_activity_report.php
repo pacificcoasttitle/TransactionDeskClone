@@ -122,7 +122,7 @@
             color: #fff;
             font-weight: 700;
         }
-        .data-table{
+        .data-table {
             font-family: 'Calibri';
             font-size: 20px;
             color: #2c2e35;
@@ -132,6 +132,12 @@
             background-color: #091932;
             color: #fff;
             font-weight: 300;
+        }
+        .data-table thead {
+            font-size: 20px;
+        }
+        .data-table tbody {
+            font-size: 16px;
         }
         .data-table tbody td {
             border: 1px solid #dfe0e1;
@@ -163,81 +169,80 @@
         .container {
             height: calc(100% - 145px);;
         } */
+        @media print {
+            .page-break-class {page-break-after: always;}
+        }
     </style>
 </head>
 <body>
     <div class="page_container">
+    <?php foreach ($records as $k => $record) {?>
         <div class="pdf_page size_letter">
-            <!-- <div class="container" > -->
-                <table class="w100">
-                    <tr>
-                        <td class="w33 pr-20 h100">
-                            <img src="<?php echo base_url() . 'assets/frontend/images/sales_activity_building.png' ?>" alt="..." class="w100">
-                            <div class="orange-bar">
-                                <div class="recentsale">
-                                    Recent Sales
-                                    <b><?=$monthName;?></b>
-                                    <?=date('Y');?>
-                                </div>
+            <table class="w100">
+                <tr>
+                    <td class="w33 pr-20 h100">
+                        <img src="<?php echo base_url() . 'assets/frontend/images/sales_activity_building.png' ?>" alt="..." class="w100">
+                        <div class="orange-bar">
+                            <div class="recentsale">
+                                Recent Sales
+                                <b><?=$monthName;?></b>
+                                <?=date('Y');?>
                             </div>
-                        </td>
-                        <td class="w67" valign="top">
-                            <table class="w100">
+                        </div>
+                    </td>
+                    <td class="w67" valign="top">
+                        <table class="w100">
+                            <tr>
+                                <td align="right">
+                                    <a href="#"><img src="<?php echo base_url() . 'assets/frontend/images/sales_activity_logo.png' ?>" alt=""></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    <div class="home-sales">LA County Home Sale Activity</div>
+                                    <div class="report-sales">This report includes resale of single family residences, <br> condos, and new homes.</div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="w100 data-table">
+                            <thead>
                                 <tr>
-                                    <td align="right">
-                                        <a href="#"><img src="<?php echo base_url() . 'assets/frontend/images/sales_activity_logo.png' ?>" alt=""></a>
-                                    </td>
+                                    <td></td>
+                                    <td colspan="2" class="bg-grey">SFR’s</td>
+                                    <td colspan="2" class="bg-grey">Condos</td>
                                 </tr>
                                 <tr>
-                                    <td align="left">
-                                        <div class="home-sales">LA County Home Sale Activity</div>
-                                        <div class="report-sales">This report includes resale of single family residences, <br> condos, and new homes.</div>
-                                    </td>
+                                    <td class="bg-black">City</td>
+                                    <td class="bg-black"># Sold</td>
+                                    <td class="bg-black">Median $</td>
+                                    <td class="bg-black"># Sold</td>
+                                    <td class="bg-black">Median $</td>
                                 </tr>
-                            </table>
-                            <table class="w100 data-table">
-                                <thead>
-                                    <tr>
-                                        <td></td>
-                                        <td colspan="2" class="bg-grey">SFR’s</td>
-                                        <td colspan="2" class="bg-grey">Condos</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bg-black">City</td>
-                                        <td class="bg-black"># Sold</td>
-                                        <td class="bg-black">Median $</td>
-                                        <td class="bg-black"># Sold</td>
-                                        <td class="bg-black">Median $</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($records as $key => $val) {?>
-                                    <tr>
-                                        <td><?=$key;?></td>
-                                        <td><?=$val['SFR']['count'];?></td>
-                                        <td>$<?=number_format($val['SFR']['avgSalePrice'], 2, '.', ',');?></td>
-                                        <td><?=$val['Condos']['count'];?></td>
-                                        <td>$<?=number_format($val['Condos']['avgSalePrice'], 2, '.', ',');?></td>
-                                    </tr>
-                                    <?php }?>
-
-
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                <table class="w100">
-                    <tr><td style="height: 20px;"></td></tr>
-                </table>
-            <!-- </div>
-            <div class="footer" > -->
-                <table class="w100">
-                    <tr>
-                        <td class="w50">
-                            <table class="w100">
+                            </thead>
+                            <tbody>
+                                <?php foreach ($record as $key => $val) {?>
                                 <tr>
-                                <?php
+                                    <td><?=$key;?></td>
+                                    <td><?=$val['SFR']['count'];?></td>
+                                    <td>$<?=number_format($val['SFR']['avgSalePrice'], 2, '.', ',');?></td>
+                                    <td><?=$val['Condos']['count'];?></td>
+                                    <td>$<?=number_format($val['Condos']['avgSalePrice'], 2, '.', ',');?></td>
+                                </tr>
+                                <?php }?>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table class="w100">
+                <tr><td style="height: 20px;"></td></tr>
+            </table>
+            <table class="w100">
+                <tr>
+                    <td class="w50">
+                        <table class="w100">
+                            <tr>
+                            <?php
 if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_profile_img'])) {
     if (env('AWS_ENABLE_FLAG') == 1) {
         $salesRep['sales_rep_profile_img'] = str_replace('uploads/', '', $salesRep['sales_rep_profile_img']);
@@ -247,34 +252,37 @@ if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_pro
     }
 
 }
-?>
-                                                                        <?php
-if (isset($img) && !empty($img)) {
     ?>
-    <td class="w40 pr-20">
-        <img class="sales_rep_profile" src="<?php echo $img; ?>" class="w100" alt="">
-    </td>
-    <?php
+                                                                                                                                            <?php
+if (isset($img) && !empty($img)) {
+        ?>
+                                                                        <td class="w40 pr-20">
+                                                                            <img class="sales_rep_profile" src="<?php echo $img; ?>" class="w100" alt="">
+                                                                        </td>
+                                                                        <?php
 }?>
-                                    <td class="w60">
-                                        <div class="employee-name text-grey"><b><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></b></div>
-                                        <div class="text-orange"><?php echo $salesRep['title']; ?></div>
-                                        <div class="text-grey"><b><?php echo $salesRep['telephone_no']; ?></b></div>
-                                        <div class="text-grey"><?php echo $salesRep['email_address']; ?></div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td class="w10"></td>
-                        <td class="w40" align="right">
-                            <div class="text-orange">CUSTOMER SERVICE</div>
-                            <div class="text-grey">(866) 724-1050 | cs@pct.com</div>
-                            <div class="text-orange">OPEN ORDERS</div>
-                            <div class="text-grey">openorders@pct.com</div>
-                        </td>
-                    </tr>
-                </table>
-            <!-- </div> -->
+                                <td class="w60">
+                                    <div class="employee-name text-grey"><b><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></b></div>
+                                    <div class="text-orange"><?php echo $salesRep['title']; ?></div>
+                                    <div class="text-grey"><b><?php echo $salesRep['telephone_no']; ?></b></div>
+                                    <div class="text-grey"><?php echo $salesRep['email_address']; ?></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="w10"></td>
+                    <td class="w40" align="right">
+                        <div class="text-orange">CUSTOMER SERVICE</div>
+                        <div class="text-grey">(866) 724-1050 | cs@pct.com</div>
+                        <div class="text-orange">OPEN ORDERS</div>
+                        <div class="text-grey">openorders@pct.com</div>
+                    </td>
+                </tr>
+            </table>
         </div>
+        <?php if ($k < (count($records) - 1)) {?>
+        <div class="page-break-class" style="page-break-after: always;" ></div>
+        <?php }?>
+    <?php }?>
     </div>
 </body>
