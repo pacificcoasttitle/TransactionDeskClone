@@ -523,7 +523,7 @@ if (!empty($reports_data)) {
         $email = $report['email_address'];
         ?>
 									<tr>
-										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('d M y H:i', strtotime($report['created_at'])); ?></td>
+										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('m/d/Y', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
 										<td><?php echo $monthNameList[$report['month']]; ?></td>
 										<td class="align-btn" >
