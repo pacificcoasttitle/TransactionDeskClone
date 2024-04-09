@@ -137,7 +137,7 @@
             font-size: 20px;
         }
         .data-table tbody {
-            font-size: 18px;
+            font-size: 16px;
         }
         .data-table tbody td {
             border: 1px solid #dfe0e1;
