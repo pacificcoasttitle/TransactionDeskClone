@@ -334,8 +334,6 @@ class SalesRep extends MX_Controller
 
                 $datediff = $datetime1->diff($datetime2)->format("%a");
 
-                // $datediff = $now - $your_date;
-                // $datediff = round($datediff / (60 * 60 * 24));
                 if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0 && strtolower($order['resware_status']) == 'open'))) {
                     foreach ($lpAlertRange as $key => $val) {
                         if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
@@ -368,7 +366,6 @@ class SalesRep extends MX_Controller
         $data['sales_user_id'] = $userId;
         $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
         if ($userdata['is_sales_rep_manager'] == 1) {
-            //echo "hehe";exit;
             $salesUser = $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
@@ -711,6 +708,30 @@ class SalesRep extends MX_Controller
         }
     }
 
+    public function salesReports()
+    {
+        $this->load->model('salesReport_model');
+        $userdata = $this->session->userdata('user');
+        $userId = $this->uri->segment(2);
+
+        $data['title'] = 'Sales Reports | Pacific Coast Title Company';
+        if ($userdata['is_sales_rep_manager'] == 1) {
+
+            $data['sales_user_id'] = $userId;
+            $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+
+            $report_condition = array(
+                'sales_rep' => $userId,
+            );
+
+            $data['reports_data'] = $this->salesReport_model->getData($report_condition);
+
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_1' . $this->sales_dashboard_js_version));
+            $this->salesdashboardtemplate->show("order", "sales_report", $data);
+        } else {
+            redirect(base_url() . 'sales-dashboard/' . $userId);
+        }
+    }
     public function getRevenueData()
     {
         $sales_rep_id = $this->input->post('sales_rep_id');
@@ -726,7 +747,6 @@ class SalesRep extends MX_Controller
                 </tr>
             </thead>
         <tbody>";
-        $i = 0;
 
         $i = 1;
         if (!empty($revenueData)) {

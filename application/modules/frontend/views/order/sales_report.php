@@ -325,176 +325,24 @@ form {
 </style>
 
 <section class="section-sm section-defaulta" >
-	<div class="container-fluid padding-l-r">
-		<div class="card shadow p-5">
+	<div class="container-fluid">
+		<div class="card shadow p-4">
 			<div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Sales Activity Report
-                        <a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
+						<a href="<?php echo base_url(); ?>sales-dashboard/<?php echo $sales_user_id; ?>" class="btn btn-info btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
-								<i class="fa fa-camera"></i>
+								<i class="fas fa-arrow-left"></i>
 							</span>
-							<span class="text">Sales Snap Shot</span>
+							<span class="text">Back</span>
 						</a>
-                        <a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
-							<span class="icon text-white-50">
-								<i class="fas fa-concierge-bell"></i>
-							</span>
-							<span class="text">Create F.A.R</span>
-						</a>
-
-						<a href="<?php echo base_url('pmas'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
-							<span class="icon text-white-50">
-								<i class="fas fa-concierge-bell"></i>
-							</span>
-							<span class="text">Create Concierge</span>
-						</a>
-						<a href="<?php echo base_url('labels'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
-							<span class="icon text-white-50">
-								<i class="fa fa-tag"></i>
-							</span>
-							<span class="text">Create Labels</span>
-						</a>
-
 					</h2>
-						<!-- <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a> -->
-						<!-- <a style="margin-right:10px;" href="<?php echo base_url('labels'); ?>" class="pull-right report_switch_btn">Create Labels</a> -->
-
 					<div class="ui-decor-1a bg-accent"></div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-3">
-					<div class="row">
-						<div class="col-sm-9">
-							<h5>Total Ran</h5>
-						</div>
-						<div class="col-sm-3">
-							<h4 class="pma-total pma_val"> <?php echo $report_total; ?> </h4>
-						</div>
-					</div>
-					<!-- <h2>
-						<span>Representative(s)</span>
-
-					</h2> -->
-					<ul class="u-list">
-						<?php
-foreach ($salesReps as $key => $salesRep):
-?>
-						<li>
-							<div class="u-pic">
-							<?php
-
-$image_url = trim(env('AWS_PATH') . $salesRep['sales_rep_report_image']);
-if (!empty($salesRep['sales_rep_report_image'])): ?>
-																<img src="<?php echo $image_url; ?>" alt="main-logo" class="retina">
-								<?php else: ?>
-								<div class="no-report-image"><span><?php echo strtoupper(substr(trim($salesRep['first_name']), 0, 1) . substr(trim($salesRep['last_name']), 0, 1)); ?></span></div>
-								<?php endif;?>
-							</div>
-							<div class="u-info">
-								<div class="u-name"><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></div>
-								<div><?php echo $salesRep['email_address']; ?></div>
-								<div>
-								<?php echo $salesRep['telephone_no']; ?>
-								</div>
-							</div>
-							<div class="u-count">
-								<div class="pma_val"><?php echo $salesRep['report_count']; ?></div>
-							</div>
-						</li>
-						<?php
-if ($key == 9) {
-    break;
-}
-endforeach;
-?>
-					</ul>
-						<?php if (count($salesReps) > 10): ?>
-							<div class="pull-right">
-								<a href="<?=base_url('reports/sales_rep');?>" class="btn btn-success">View All</a>
-							</div>
-						<?php endif;?>
-				</div>
-				<div class="col-md-1"></div>
-				<div class="col-md-8">
-					<h5 class="text-center" ><span>Create New Report</span></h5>
-					<div class="smart-forms smart-container">
-						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate" action="<?php echo base_url('sales-activity-report/importData'); ?>">
-							<div class="form-body">
-								<?php
-$prev_data = $this->session->flashdata('_previous_data');
-if ($this->session->flashdata('error')): ?>
-								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
-								<?php elseif ($this->session->flashdata('success')): ?>
-								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
-								<?php endif;?>
-								<div class="frm-row">
-									<div class="row">
-										<div class="section colm colm6 col-md-6">
-											<label class="field prepend-icon file">
-												<span class="button"> Choose File </span>
-												<input type="file" class="gui-file form-control" name="csvFile" id="csvFile"
-												onChange="document.getElementById('uploader1').value = this.value;" accept=".csv">
-												<input type="text" class="gui-input form-control" id="uploader1" placeholder="no file selected" readonly>
-												<span class="field-icon"><i class="fa fa-upload"></i></span>
-											</label>
-										</div>
-
-										<div class="section colm colm4 col-md-6">
-											<select id="month" name="month" class="form-control">
-												<option value="">Select Month</option>
-												<option value="1" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "1") {echo 'selected';}?>>January</option>
-												<option value="2" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "2") {echo 'selected';}?>>February</option>
-												<option value="3" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "3") {echo 'selected';}?>>March</option>
-												<option value="4" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "4") {echo 'selected';}?>>April</option>
-												<option value="5" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "5") {echo 'selected';}?>>May</option>
-												<option value="6" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "6") {echo 'selected';}?>>June</option>
-												<option value="7" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "7") {echo 'selected';}?>>July</option>
-												<option value="8" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "8") {echo 'selected';}?>>August</option>
-												<option value="9" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "9") {echo 'selected';}?>>September</option>
-												<option value="10" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "10") {echo 'selected';}?>>October</option>
-												<option value="11" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "11") {echo 'selected';}?>>November</option>
-                                                <option value="12" <?php if (!empty($prev_data['month']) && $prev_data['month'] == "12") {echo 'selected';}?>>December</option>
-											</select>
-											<i class="arrow"></i>
-										</div>
-									</div>
-
-									<div class="row">
-
-										<div class="section colm colm4 col-md-6 ">
-											<select id="sales_rep" name="sales_rep" class="form-control" placeholder="Select Sales Representative">
-												<option value="" >Select Sales Representative</option>
-												<?php foreach ($salesReps as $salesRep): ?>
-												<option value="<?php echo $salesRep['id']; ?>" <?php if (!empty($prev_data['sales_rep']) && $prev_data['sales_rep'] == $salesRep['id']) {echo 'selected';}?>><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></option>
-												<?php endforeach;?>
-											</select>
-											<i class="arrow"></i>
-										</div>
-									</div>
-									<div class="row">
-										<div class="section colm colm4 col-md-6">
-											<button type="reset" class="btn btn-danger btn-icon-split">
-												<span class="icon text-white-50">
-                                                    <i class="fas fa-refresh"></i>
-                                                </span>
-                                                <span class="text">Reset Form</span>
-											</button>
-											<button type="submit" class="btn btn-success btn-icon-split">
-												<span class="icon text-white-50">
-                                                    <i class="fas fa-save"></i>
-                                                </span>
-                                                <span class="text">Submit Form</span>
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="mt-5 text-center">
-						<h5>Recent Sales Activity Reports</h5>
+				<div class="col-md-12">
+					<div class="text-center">
 						<div class="table-container1">
 							<div class="alert alert-success hide" id="successMsg"></div>
 							<div class="alert alert-danger hide" id="errorMsg"></div>
@@ -508,20 +356,18 @@ if ($this->session->flashdata('error')): ?>
 									</tr>
 								</thead>
 								<tbody>
-								<?php
-if (!empty($reports_data)) {
+								<?php if (!empty($reports_data)) {
+    $monthNameList = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
     foreach ($reports_data as $report) {
 
         $pdf_url = trim(env('AWS_PATH') . 'sales-activity/' . $report['report_url']);
-        $email = $report['email_address'];
-        ?>
+        $email = $report['email_address'];?>
 									<tr>
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('m/d/Y', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
 										<td><?php echo $monthNameList[$report['month']]; ?></td>
 										<td class="align-btn" >
-										<?php
-if (!empty($report['report_url'])): ?>
+										<?php if (!empty($report['report_url'])): ?>
 										<a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
 											<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
 											<span class="icon text-white-50">
@@ -534,13 +380,11 @@ if (!empty($report['report_url'])): ?>
 									</tr>
 									<?php
 }
-} else {
-    ?>
+} else {?>
                                     <tr>
 										<td colspan="4" > No Record Found</td>
 									</tr>
-									<?php
-}?>
+									<?php }?>
 								</tbody>
 							</table>
 						</div>
