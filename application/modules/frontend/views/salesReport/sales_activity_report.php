@@ -242,25 +242,19 @@
                     <td class="w50">
                         <table class="w100">
                             <tr>
-                            <?php
-if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_profile_img'])) {
+                            <?php if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_profile_img'])) {
     if (env('AWS_ENABLE_FLAG') == 1) {
         $salesRep['sales_rep_profile_img'] = str_replace('uploads/', '', $salesRep['sales_rep_profile_img']);
         $img = env('AWS_PATH') . $salesRep['sales_rep_profile_img'];
     } else {
         $img = base_url() . $salesRep['sales_rep_profile_img'];
     }
-
-}
-    ?>
-                                                                                                                                            <?php
-if (isset($img) && !empty($img)) {
-        ?>
-                                                                        <td class="w40 pr-20">
-                                                                            <img class="sales_rep_profile" src="<?php echo $img; ?>" class="w100" alt="">
-                                                                        </td>
-                                                                        <?php
 }?>
+<?php if (isset($img) && !empty($img)) {?>
+    <td class="w40 pr-20">
+        <img class="sales_rep_profile" src="<?php echo $img; ?>" class="w100" alt="">
+    </td>
+<?php }?>
                                 <td class="w60">
                                     <div class="employee-name text-grey"><b><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></b></div>
                                     <div class="text-orange"><?php echo $salesRep['title']; ?></div>

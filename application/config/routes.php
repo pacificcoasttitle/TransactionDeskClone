@@ -223,6 +223,7 @@ $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
 $route['generate-payoff'] = 'frontend/order/payOff/generatePayoff';
 $route['trends/:any'] = 'frontend/order/salesRep/trends';
 $route['sales-summary/:any'] = 'frontend/order/salesRep/summary';
+$route['sales-reports/:any'] = 'frontend/order/salesRep/salesReports';
 $route['mark-as-read'] = 'frontend/order/common/markAsRead';
 $route['escrow-dashboard'] = 'frontend/order/escrow/index';
 $route['order/escrow/order-tasks/(:num)'] = 'frontend/order/escrow/orderTasks/$1';
