@@ -51,7 +51,7 @@ class SalesActivityReport extends MX_Controller
         $data['reports_data'] = $this->salesReport_model->getData($report_condition);
         // echo "<pre>";
         // print_r($data);die;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=pma_' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_' . $this->js_version));
         $this->salesdashboardtemplate->show("salesReport", "list", $data);
     }
 

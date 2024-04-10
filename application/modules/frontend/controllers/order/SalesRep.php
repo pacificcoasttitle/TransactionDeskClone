@@ -711,6 +711,30 @@ class SalesRep extends MX_Controller
         }
     }
 
+    public function salesReports()
+    {
+        $this->load->model('salesReport_model');
+        $userdata = $this->session->userdata('user');
+        $userId = $this->uri->segment(2);
+
+        $data['title'] = 'Sales Reports | Pacific Coast Title Company';
+        if ($userdata['is_sales_rep_manager'] == 1) {
+
+            $data['sales_user_id'] = $userId;
+            $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+
+            $report_condition = array(
+                'sales_rep' => $userId,
+            );
+
+            $data['reports_data'] = $this->salesReport_model->getData($report_condition);
+
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_1' . $this->sales_dashboard_js_version));
+            $this->salesdashboardtemplate->show("order", "sales_report", $data);
+        } else {
+            redirect(base_url() . 'sales-dashboard/' . $userId);
+        }
+    }
     public function getRevenueData()
     {
         $sales_rep_id = $this->input->post('sales_rep_id');
