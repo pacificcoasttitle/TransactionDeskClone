@@ -334,8 +334,6 @@ class SalesRep extends MX_Controller
 
                 $datediff = $datetime1->diff($datetime2)->format("%a");
 
-                // $datediff = $now - $your_date;
-                // $datediff = round($datediff / (60 * 60 * 24));
                 if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0 && strtolower($order['resware_status']) == 'open'))) {
                     foreach ($lpAlertRange as $key => $val) {
                         if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
@@ -368,7 +366,6 @@ class SalesRep extends MX_Controller
         $data['sales_user_id'] = $userId;
         $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
         if ($userdata['is_sales_rep_manager'] == 1) {
-            //echo "hehe";exit;
             $salesUser = $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
                 $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
@@ -750,7 +747,6 @@ class SalesRep extends MX_Controller
                 </tr>
             </thead>
         <tbody>";
-        $i = 0;
 
         $i = 1;
         if (!empty($revenueData)) {
