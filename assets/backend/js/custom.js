@@ -2753,9 +2753,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_lp_document_list",
                 type: "post",
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 data: function (d) {
                     d.is_display = $('#isDisplayFilter').val();
                 },
@@ -2770,9 +2767,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-lp-document-types-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-document-types-listing_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             }
         });
@@ -2816,9 +2810,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_lp_alert_list",
                 type: "post",
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 data: function (d) {
                     // d.is_display= $('#isDisplayFilter').val();
                 },
@@ -2833,9 +2824,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-lp-alert-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-alert-listing_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             }
         });
@@ -3424,9 +3412,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/fees/get_fees", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3438,9 +3423,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-fees tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-fees_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             },
 
@@ -3476,9 +3458,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/holidays/get_holidays", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3491,9 +3470,6 @@ $(document).ready(function () {
                     $("#tbl-holidays tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-holidays_processing").css("display", "none");
                 },
-                complete: function () {
-                    $("#page-preloader").hide();
-                }
             },
 
         });
@@ -3528,9 +3504,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "order/admin/get-daily-emailer", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3542,9 +3515,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-daily-email-control tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-daily-email-control_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             },
         });
@@ -3619,9 +3589,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/feesTypes/get_fees_types", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3633,9 +3600,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-fees-types tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-fees-types_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             },
 
@@ -3687,9 +3651,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/codeBook/get_code_book", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3701,9 +3662,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-code-book tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-code-book_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             },
 
@@ -3846,9 +3804,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_password_list",
                 type: "post",
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 data: function (d) {
                     d.user_type = $('#user_filter').val();
                 },
@@ -3863,9 +3818,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-password-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-password-listing_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             }
         });
@@ -4107,9 +4059,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/rulesManager/get_rules", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -4121,9 +4070,6 @@ $(document).ready(function () {
                     }
                     $("#tbl-rules-manager tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-rules-manager_processing").css("display", "none");
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             },
 
@@ -4256,9 +4202,6 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_notifications_list", // json datasource
                 type: "post",
-                beforeSend: function () {
-                    $("#page-preloader").show();
-                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -4271,9 +4214,6 @@ $(document).ready(function () {
                     $("#tbl-notifications-listing tbody").append('<tr><td colspan="5" class="text-center">No records found</td></tr>');
                     $("#tbl-notifications-listing_processing").css("display", "none");
 
-                },
-                complete: function () {
-                    $("#page-preloader").hide();
                 }
             },
         });
