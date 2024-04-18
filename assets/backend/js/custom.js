@@ -1558,8 +1558,6 @@ $(document).ready(function () {
             },
             initComplete: function () {
                 $("#page-preloader").show();
-
-
             },
             "dom": 'lf<"FilterOrderListing">rtip',
             "drawCallback": function () {

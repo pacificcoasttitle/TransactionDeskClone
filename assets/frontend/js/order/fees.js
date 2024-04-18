@@ -15,20 +15,19 @@ $(document).ready(function () {
                 "search": "",
             },
             /*"searching": false,*/
-            initComplete: function () {
-                
-                
-            },
+            initComplete: function () { },
             dom: 'Bfrtip',
             buttons: [],
-            "drawCallback": function () {
-                
-            },
+            "drawCallback": function () { },
             "ordering": false,
             "serverSide": true,
             "ajax": {
                 url: base_url + "get-transaction-orders", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $('#page-list-loader').css('background-color', 'rgba(0,0,0,.5)');
+                    $('#page-list-loader').css('display', 'block');
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -41,7 +40,10 @@ $(document).ready(function () {
                     $("#fees tbody").append(
                         '<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#fees_processing").css("display", "none");
-
+                },
+                complete: function () {
+                    $("#page-list-loader").hide();
+                    $('#page-list-loader').css('display', 'none');
                 }
             }
         });

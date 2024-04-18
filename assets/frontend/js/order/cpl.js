@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("input[name=new_existing_lender]").change(function(){
+    $("input[name=new_existing_lender]").change(function () {
         $("#LenderName").val('');
         $("#LenderState").val('');
         $("#LenderCompany").val('');
@@ -44,6 +44,10 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "get-orders-cpl", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $('#page-list-loader').css('background-color', 'rgba(0,0,0,.5)');
+                    $('#page-list-loader').css('display', 'block');
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -56,24 +60,28 @@ $(document).ready(function () {
                     $("#cpl_listing tbody").append(
                         '<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#cpl_listing_processing").css("display", "none");
+                },
+                complete: function () {
+                    $("#page-list-loader").hide();
+                    $('#page-list-loader').css('display', 'none');
                 }
             }
         });
     }
 });
 
-$("#LenderCompany" ).focusin(function() {
+$("#LenderCompany").focusin(function () {
     if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') {
-        if($('.ui-widget.ui-autocomplete').length > 0) {
-            $('#LenderCompany').autocomplete( "enable" );
+        if ($('.ui-widget.ui-autocomplete').length > 0) {
+            $('#LenderCompany').autocomplete("enable");
         }
         $("#LenderCompany").autocomplete({
-            source: function(request, response) {
+            source: function (request, response) {
                 $.ajax({
-                    url: base_url+'getDetailsByName',
+                    url: base_url + 'getDetailsByName',
                     data: {
-                        term : request.term,//the value of the input is here
-                        is_escrow : 0                    
+                        term: request.term,//the value of the input is here
+                        is_escrow: 0
                     },
                     type: "POST",
                     dataType: "json",
@@ -83,42 +91,42 @@ $("#LenderCompany" ).focusin(function() {
                                 return item;
                             }))
                         } else {
-                            response([{ label: 'No results found.', val: -1}]);
+                            response([{ label: 'No results found.', val: -1 }]);
                         }
                     }
                 });
             },
             delay: 0,
             minLength: 3,
-            select: function( event, ui ) {
+            select: function (event, ui) {
                 event.preventDefault();
                 $("#LenderCompany").val(ui.item.company);
-                
-                if(ui.item.state) {
-                    $("#LenderState").val(ui.item.state).parent().addClass('state-success');           
+
+                if (ui.item.state) {
+                    $("#LenderState").val(ui.item.state).parent().addClass('state-success');
                 } else {
                     $("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
                 }
 
-                if(ui.item.name) {
-                    $("#LenderName").val(ui.item.name).parent().addClass('state-success');       
+                if (ui.item.name) {
+                    $("#LenderName").val(ui.item.name).parent().addClass('state-success');
                 } else {
                     $("#LenderName").val('').parent().removeClass('state-success').addClass('state-error');
                 }
 
-                if(ui.item.address) {
+                if (ui.item.address) {
                     $("#LenderAddress").val(ui.item.address).parent().addClass('state-success');
                 } else {
                     $("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
                 }
 
-                if(ui.item.city) {
+                if (ui.item.city) {
                     $("#LenderCity").val(ui.item.city).parent().addClass('state-success');
                 } else {
                     $("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
                 }
-                    
-                if(ui.item.zip_code) {
+
+                if (ui.item.zip_code) {
                     $("#LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
                 } else {
                     $("#LenderZipcode").val('').parent().removeClass('state-success').addClass('state-error');
@@ -130,11 +138,10 @@ $("#LenderCompany" ).focusin(function() {
                     $("#assignment_clause").val('');
                 }
                 $("#LenderId").val(ui.item.id);
-                
+
             },
-            change: function( event, ui ) {
-                if (ui.item == null)
-                {
+            change: function (event, ui) {
+                if (ui.item == null) {
                     $("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
                     $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
                     $("#LenderAddress").val('').parent().removeClass('state-success').addClass('state-error');
@@ -146,20 +153,20 @@ $("#LenderCompany" ).focusin(function() {
             }
         });
     } else {
-        if($('.ui-widget.ui-autocomplete').length > 0) {
-            $('#LenderCompany').autocomplete( "disable" );
+        if ($('.ui-widget.ui-autocomplete').length > 0) {
+            $('#LenderCompany').autocomplete("disable");
         }
     }
 });
-/* Lender autocomplete */ 
+/* Lender autocomplete */
 
 /* Agent autocomplete */
 $("#agent_name").autocomplete({
-    source: function(request, response) {
+    source: function (request, response) {
         $.ajax({
-            url: base_url+'agent/getAgentDetails',
+            url: base_url + 'agent/getAgentDetails',
             data: {
-                term : request.term
+                term: request.term
             },
             type: "POST",
             dataType: "json",
@@ -169,26 +176,25 @@ $("#agent_name").autocomplete({
                         return item;
                     }))
                 } else {
-                    response([{ label: 'No results found.', val: -1}]);
+                    response([{ label: 'No results found.', val: -1 }]);
                 }
             }
         });
     },
     delay: 0,
     minLength: 3,
-    select: function( event, ui ) {
+    select: function (event, ui) {
         event.preventDefault();
         $("#agent_name").val(ui.item.name);
         $("#agent_id").val(ui.item.id);
     },
-    change: function( event, ui ) {
-        
+    change: function (event, ui) {
+
     }
 });
-/* Agent autocomplete */ 
+/* Agent autocomplete */
 
-function downloadDocumentFromAws(url, documentType)
-{
+function downloadDocumentFromAws(url, documentType) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var fileNameIndex = url.lastIndexOf("/") + 1;
@@ -197,7 +203,7 @@ function downloadDocumentFromAws(url, documentType)
         url: base_url + "download-aws-document",
         type: "post",
         data: {
-            url : url
+            url: url
         },
         async: false,
         success: function (response) {
@@ -207,7 +213,7 @@ function downloadDocumentFromAws(url, documentType)
                     var csvURL = navigator.msSaveBlob(csvData, filename);
                     var element = document.createElement('a');
                     element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
+                    element.setAttribute('download', documentType + "_" + filename);
                     element.style.display = 'none';
                     document.body.appendChild(element);
                     document.body.removeChild(element);
@@ -216,7 +222,7 @@ function downloadDocumentFromAws(url, documentType)
                     var csvURL = 'data:application/octet-stream;base64,' + response;
                     var element = document.createElement('a');
                     element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
+                    element.setAttribute('download', documentType + "_" + filename);
                     element.style.display = 'none';
                     document.body.appendChild(element);
                     element.click();
@@ -228,8 +234,7 @@ function downloadDocumentFromAws(url, documentType)
     });
 }
 
-function lender_pop_up(lenderFlag, fileId) 
-{
+function lender_pop_up(lenderFlag, fileId) {
     if (lenderFlag == 1) {
         $(this).form.submit();
     } else {
@@ -244,27 +249,27 @@ function lender_pop_up(lenderFlag, fileId)
             success: function (response) {
                 var res = jQuery.parseJSON(response);
                 console.log('res ==', res);
-                if(res.status == 'success') {
+                if (res.status == 'success') {
                     var optionsAsString = "";
                     if ((res.orderDetails.hasOwnProperty("agents_data")) && (res.orderDetails['agents_data'].length > 0)) {
-                        for(var i = 0; i < res.orderDetails['agents_data'].length; i++) {
+                        for (var i = 0; i < res.orderDetails['agents_data'].length; i++) {
                             var selected = '';
-                            if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
+                            if (res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
                                 selected = 'selected';
                             }
                             if (res.orderDetails['cpl_api'] == 'westcor' || res.orderDetails['cpl_api'] == 'natic') {
-                                optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
+                                optionsAsString += "<option " + selected + " value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
                             } else if (res.orderDetails['cpl_api'] == 'natic') {
-                                optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
+                                optionsAsString += "<option " + selected + " value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
                             } else {
-                                optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
+                                optionsAsString += "<option " + selected + " value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
                             }
                         }
                     }
                     $('select[name="branch"]').children('option:not(:first)').remove();
-                    $( 'select[name="branch"]' ).append( optionsAsString );
-                    $("#branch").prop('required',true);
-                    
+                    $('select[name="branch"]').append(optionsAsString);
+                    $("#branch").prop('required', true);
+
                     $('#cpl_api').val(res.orderDetails['cpl_api']);
                     $("#LenderName").val(res.orderDetails['lender_name']);
                     $("#LenderState").val(res.orderDetails['lender_state']);
@@ -276,8 +281,8 @@ function lender_pop_up(lenderFlag, fileId)
                     $("#LenderId").val(res.orderDetails['lender_id']);
                     $("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
                     $("#loan_number").val(res.orderDetails['loan_number']);
-                    if(res.orderDetails['unit_number']) {
-                        $("#property_address").val(res.orderDetails['unit_number']+", "+res.orderDetails['property_address']);
+                    if (res.orderDetails['unit_number']) {
+                        $("#property_address").val(res.orderDetails['unit_number'] + ", " + res.orderDetails['property_address']);
                     } else {
                         $("#property_address").val(res.orderDetails['property_address']);
                     }
@@ -289,7 +294,7 @@ function lender_pop_up(lenderFlag, fileId)
                     } else {
                         $("#add_lender").prop("checked", true);
                     }
-                }  
+                }
                 $('#page-preloader').css('display', 'none');
                 $('#lender_information').modal('show');
                 $('#file_id').val(fileId);
@@ -299,13 +304,12 @@ function lender_pop_up(lenderFlag, fileId)
     }
 }
 
-$("form").submit(function(){
+$("form").submit(function () {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
 });
 
-function base64toBlob(base64Data, contentType) 
-{
+function base64toBlob(base64Data, contentType) {
     contentType = contentType || '';
     var sliceSize = 1024;
     var byteCharacters = atob(base64Data);

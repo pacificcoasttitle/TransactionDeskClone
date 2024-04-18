@@ -29,8 +29,12 @@ $(document).ready(function () {
 			"ordering": false,
 			"serverSide": true,
 			"ajax": {
-				url: base_url + "get-proposed-orders", // json datasource
-				type: "post", // method  , by default get
+				url: base_url + "get-proposed-orders",
+				type: "post",
+				beforeSend: function () {
+					$('#page-list-loader').css('background-color', 'rgba(0,0,0,.5)');
+					$('#page-list-loader').css('display', 'block');
+				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					if (parseInt(XMLHttpRequest.status) == 419) {
 						alert("You are logged out. Please login.");
@@ -44,6 +48,10 @@ $(document).ready(function () {
 						'<tr><td colspan="4" class="text-center">No records found</td></tr>');
 					$("#orders_listing_processing").css("display", "none");
 
+				},
+				complete: function () {
+					$("#page-list-loader").hide();
+					$('#page-list-loader').css('display', 'none');
 				}
 			}
 		});
@@ -606,11 +614,11 @@ function editInformation(fileId) {
 					if (res.status == 'success') {
 						/*if(res.orderDetails['is_escrow'] == 1)
 						{
-						    $('#edit-order-details #lender-details-fields').show();
+							$('#edit-order-details #lender-details-fields').show();
 						}
 						else
 						{
-						    $('#edit-order-details #lender-details-fields').hide();
+							$('#edit-order-details #lender-details-fields').hide();
 						}*/
 						$("#edit_LenderName").val(res.orderDetails['lender_name']);
 						// $("#edit_LenderEmailAddress").val(res.orderDetails['lender_email']);
