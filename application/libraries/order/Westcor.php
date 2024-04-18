@@ -266,7 +266,7 @@ class Westcor
 
         $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
         $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
-        $name = $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
+        $name = !empty($lenderFormData) ? $lenderFormData['lender_fullname'] : $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         if (!empty($lenderDetails)) {
             $lenders[] = array(
                 'Id' => $orderDetails['westcor_lender_id'] ? $orderDetails['westcor_lender_id'] : 0,
