@@ -20,7 +20,7 @@
     <!-- Custom styles for this template-->
     <link href="<?php echo base_url(); ?>assets/backend/css/jquery-ui.css" rel="stylesheet">
     <!-- <link href="<?php echo base_url(); ?>assets/backend/css/sb-admin.css" rel="stylesheet"> -->
-    <link href="<?php echo base_url(); ?>assets/backend/css/custom.css" rel="stylesheet">
+    <link href="<?php echo base_url(); ?>assets/backend/css/custom.css?v=1" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/backend/css/daterangepicker.css" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"> -->
     <link href="<?php echo base_url(); ?>assets/backend/hr/css/sb-admin-2.min.css?v=02" rel="stylesheet" type="text/css">
