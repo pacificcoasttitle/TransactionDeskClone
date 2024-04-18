@@ -357,9 +357,6 @@ form {
 						</a>
 
 					</h2>
-						<!-- <a href="<?php echo base_url('pmas'); ?>" class="pull-right report_switch_btn">Create Concierge</a> -->
-						<!-- <a style="margin-right:10px;" href="<?php echo base_url('labels'); ?>" class="pull-right report_switch_btn">Create Labels</a> -->
-
 					<div class="ui-decor-1a bg-accent"></div>
 				</div>
 			</div>
@@ -373,10 +370,6 @@ form {
 							<h4 class="pma-total pma_val"> <?php echo $report_total; ?> </h4>
 						</div>
 					</div>
-					<!-- <h2>
-						<span>Representative(s)</span>
-
-					</h2> -->
 					<ul class="u-list">
 						<?php
 foreach ($salesReps as $key => $salesRep):
@@ -523,7 +516,6 @@ if (!empty($reports_data)) {
 										<?php
 if (!empty($report['report_url'])): ?>
 										<a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
-											<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
 											<span class="icon text-white-50">
 												<i class="fas fa-download"></i>
 											</span>

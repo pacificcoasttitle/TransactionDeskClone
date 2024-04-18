@@ -14,7 +14,6 @@ class SalesReport_model extends CI_Model
         }
 
         if (!empty($data)) {
-
             // Insert data
             $insert = $this->db->insert($table, $data);
 
@@ -85,13 +84,9 @@ class SalesReport_model extends CI_Model
 
     public function delete_records($condition = array(), $table = '')
     {
-
         if (empty($table)) {
             $table = $this->table;
         }
-
         $this->db->delete($table, $condition);
-
     }
-
 }
