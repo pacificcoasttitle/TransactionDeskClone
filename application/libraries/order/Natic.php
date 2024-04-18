@@ -183,7 +183,7 @@ class Natic
             $orderDetails['lender_city'] = !empty($lenderFormData) ? $lenderFormData['city'] : $lenderDetails['city'];
             $orderDetails['lender_state'] = !empty($lenderFormData) ? $lenderFormData['state'] : $lenderDetails['state'];
             $orderDetails['lender_zipcode'] = !empty($lenderFormData) ? $lenderFormData['zip_code'] : $lenderDetails['zip_code'];
-            $orderDetails['lender_company_name'] = $lenderDetails['company_name'];
+            $orderDetails['lender_company_name'] = !empty($lenderFormData) ? $lenderFormData['company_name'] : $lenderDetails['company_name'];
             $orderDetails['lender_first_name'] = $lenderDetails['first_name'];
             $orderDetails['lender_last_name'] = $lenderDetails['last_name'];
             $orderDetails['lender_fullname'] = $lenderFormData['lender_fullname'];
