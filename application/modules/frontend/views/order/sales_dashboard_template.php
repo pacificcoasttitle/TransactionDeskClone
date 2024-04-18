@@ -34,6 +34,7 @@
 </head>
 <body id="page-top">
     <div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
+    <div id="page-list-loader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="wrapper">
         <?php echo $sidebar; ?>
         <div id="content-wrapper" class="d-flex flex-column">
@@ -61,7 +62,7 @@
     <script src="<?php echo base_url(); ?>assets/backend/hr/js/sb-admin-2.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/custom.js?random=<?php echo uniqid(); ?>"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
@@ -96,7 +97,7 @@
 	</noscript>
 
     <?php $userdata = $this->session->userdata('user');
-        if(!empty($userdata)) { ?>
+if (!empty($userdata)) {?>
             <script type="text/javascript">
                 $(document).ready(function() {
                     "use strict";
@@ -121,8 +122,8 @@
                     cluster: '<?php echo env("PUSHER_CLUSTER"); ?>'
                 });
 
-                var channel = pusher.subscribe('admin-channel-'+'<?php echo $userdata['id'];?>');
-                channel.bind('admin-event-'+'<?php echo $userdata['id'];?>', function(data) {
+                var channel = pusher.subscribe('admin-channel-'+'<?php echo $userdata['id']; ?>');
+                channel.bind('admin-event-'+'<?php echo $userdata['id']; ?>', function(data) {
                     var notification = data;
                     var alertClass = '';
                     var iconClass = '';
@@ -136,9 +137,9 @@
                         alertClass = 'bg-warning';
                         iconClass = 'fa-exclamation-triangle';
                     }
-                     
+
                     var existingNotifications = notifications.html();
-                    
+
                     var newNotificationHtml = `<a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="mr-3">
                                         <div class="icon-circle `+alertClass+`">
@@ -149,13 +150,13 @@
                                         <div class="small text-gray-500">`+notification.date+`</div>
                                         `+notification.message+`
                                     </div>
-                                </a>`; 
- 
+                                </a>`;
+
                     if (notificationsCount > 0 ){
                         notifications.html(newNotificationHtml + existingNotifications);
                     } else {
                         notifications.html(newNotificationHtml);
-                    }     
+                    }
                     notificationsCount += 1;
                     notificationsCountElem.attr('data-count', notificationsCount);
                     notificationsWrapper.find('.badge-counter').removeClass('d-none').text(notificationsCount);
@@ -165,21 +166,21 @@
 
                 $('#adminNotificationDropdown').click(function(e) {
                     if(notificationClickFlag == 0 || newNotificationFlag == 1) {
-                        if( notificationsCount > 0 ) {                            
+                        if( notificationsCount > 0 ) {
                             $.ajax({
                                 type: "POST",
                                 url: base_url + "mark-as-read",
-                                async: false,                                          
-                                success: function(response){     
-                                    notificationClickFlag = 1; 
+                                async: false,
+                                success: function(response){
+                                    notificationClickFlag = 1;
                                     notificationsCountElem.attr('data-count', 0);
                                     notificationsCount = 0;
                                     notificationsWrapper.find('.badge-counter').addClass('d-none').text(0);
                                     newNotificationFlag = 0;
                                 },
-                                error: function(response){	
-                                    notificationClickFlag = 0;  
-                                }                                        
+                                error: function(response){
+                                    notificationClickFlag = 0;
+                                }
                             });
                         }
                     } else {
@@ -189,15 +190,15 @@
                                     <span class="font-weight-bold">No new notification found</span>
                                 </div>
                             </a>`;
-                        notifications.html(newNotificationHtml); 
+                        notifications.html(newNotificationHtml);
                         notificationsCountElem.attr('data-count', 0);
                         notificationsCount = 0;
-                        notificationsWrapper.find('.badge-counter').addClass('d-none').text(0); 
-                    }  
-                }); 
+                        notificationsWrapper.find('.badge-counter').addClass('d-none').text(0);
+                    }
+                });
             </script>
         <?php }
-    ?>
+?>
 </body>
 
 </html>
