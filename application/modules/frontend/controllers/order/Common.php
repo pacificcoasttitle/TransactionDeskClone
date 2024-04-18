@@ -1628,6 +1628,15 @@ class Common extends MX_Controller
 
         if ($userTokenData === false) {
             $userTokenData = $this->fnf->generateUserToken($orderDetails);
+            if (!$userTokenData) {
+                $errors[] = "Authentication failed, Please try again.";
+                $data = array(
+                    "errors" => $errors,
+                    "success" => $success,
+                );
+                $this->session->set_userdata($data);
+                redirect(base_url() . 'cpl-dashboard');
+            }
         }
         $oldOrderFlag = 0;
 
