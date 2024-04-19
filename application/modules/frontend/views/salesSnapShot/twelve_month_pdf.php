@@ -93,11 +93,11 @@ if (!empty($salesRep['sales_rep_report_image'])):
                         </div>
                     </div>
                 </div>
-                <div class="sales-price">
+                <!-- <div class="sales-price">
                     Report as of <?php echo date('m/d/Y'); ?> <br>
                     995K Max Sales Price <br>
                     SFR's Only
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

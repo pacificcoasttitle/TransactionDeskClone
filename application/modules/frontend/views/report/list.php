@@ -324,7 +324,7 @@ form {
 							<span class="icon text-white-50">
 								<i class="fa fa-tag"></i>
 							</span>
-							<span class="text">Create Activity</span>
+							<span class="text">County Activity</span>
 						</a>
 						<a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">

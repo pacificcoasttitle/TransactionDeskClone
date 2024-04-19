@@ -521,6 +521,13 @@ if (!empty($report['report_url'])): ?>
 											</span>
 											<span class="text">Download</span>
 										</a>
+										<a href="javascript:void(0);" class="btn btn-success btn-icon-split" onclick="sendEmailToSalesRep('<?=$email;?>', '<?=$pdf_url;?>');">
+											<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
+											<span class="icon text-white-50">
+												<i class="fas fa-envelope-square "></i>
+											</span>
+											<span class="text">Send to Rep</span>
+										</a>
 										<?php endif;?>
 										</td>
 									</tr>
@@ -542,3 +549,43 @@ if (!empty($report['report_url'])): ?>
 		</div>
 	</div>
 </section>
+
+<script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
+
+<script>
+
+	function sendEmailToSalesRep(email, url) {
+		$("#page-preloader").show();
+		$.ajax({
+			url: base_url + "send-sales-snap-shot-email",
+			type: "post",
+			data: {
+				email : email,
+				url: url,
+				key: 'activity-email'
+			},
+			// async: false,
+			success: function (response) {
+				let res = JSON.parse(response);
+				console.log(res);
+				if (res.status == "success") {
+					$('#successMsg').html(res.message).removeClass('hide').addClass('show');
+					setTimeout(function () {
+						$('#successMsg').html('').removeClass('show').addClass('hide');
+					},3000);
+				} else {
+					$('#errorMsg').html(res.message).removeClass('hide').addClass('show');
+					setTimeout(function () {
+						$('#errorMsg').html('').removeClass('show').addClass('hide');
+					},3000);
+				}
+				$("#page-preloader").hide();
+			},
+			complete: function (res) {
+				$("#page-preloader").hide();
+			}
+		});
+	}
+
+
+</script>

@@ -129,7 +129,8 @@ class SalesActivityReport extends MX_Controller
                     unset($records[$key]['rcon']);
                     unset($records[$key]['rsfr']);
                 }
-                $report_data['records'] = array_chunk($records, 27, true);
+                ksort($records);
+                $report_data['records'] = array_chunk($records, 30, true);
                 $monthNumber = $this->input->post('month');
                 $report_data['monthNumber'] = $monthNumber;
                 $report_data['monthName'] = $this->monthArr[$monthNumber];
@@ -140,7 +141,6 @@ class SalesActivityReport extends MX_Controller
                 );
 
                 $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
-
                 $html = $this->load->view('salesReport/sales_activity_report', $report_data, true);
                 // print_r($html);die;
                 $this->load->library('snappy_pdf');

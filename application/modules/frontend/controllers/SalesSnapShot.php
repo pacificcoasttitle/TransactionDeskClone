@@ -323,23 +323,24 @@ class SalesSnapShot extends MX_Controller
     {
         $to = $this->input->post('email');
         $url = $this->input->post('url');
-        if (empty($to) || empty($url)) {
+        $key = $this->input->post('key');
+        if (empty($to) || empty($url) || empty($key)) {
             echo json_encode(['status' => 'error', 'message' => 'Details missing']);exit;
         }
         $file[] = $url;
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $message = 'Please check attachment for Snap Shot document.';
-        $subject = 'Sales Snapshot Ready!';
+        $subject = ($key === 'snapshot-email') ? 'Sales Snapshot Ready!' : 'Sales Activity Report Ready!';
 
-        // $file[] = 'https://pct-doc.s3-us-west-2.amazonaws.com/sales-snap-shot/1710971265_42.pdf'; // $this->input->post('url');
-        // $to = 'piyush.j@crestinfosystems.net';
         $this->load->helper('sendemail');
         $data = array(
             'link' => $url,
         );
         $cc[] = 'piyush-crest@yopmail.com';
-        $message = $this->load->view('salesSnapShot/snapshot_email_template.php', $data, true);
+        // $to = 'piyush-crest@yopmail.com';
+        $template = ($key === 'snapshot-email') ? 'salesSnapShot/snapshot_email_template.php' : 'salesReport/activity_email_template.php';
+        $message = $this->load->view($template, $data, true);
         $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
         if ($mail_result) {
             echo json_encode(['status' => 'success', 'message' => 'Email sent!']);exit;
