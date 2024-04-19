@@ -334,7 +334,7 @@ form {
 							<span class="icon text-white-50">
 								<i class="fa fa-tag"></i>
 							</span>
-							<span class="text">Create Activity</span>
+							<span class="text">County Activity</span>
 						</a>
                         <a href="<?php echo base_url('reports'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
@@ -570,7 +570,8 @@ if (!empty($report['report_url'])): ?>
 			type: "post",
 			data: {
 				email : email,
-				url: url
+				url: url,
+				key: 'snapshot-email'
 			},
 			// async: false,
 			success: function (response) {
