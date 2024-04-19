@@ -222,11 +222,11 @@
                             <tbody>
                                 <?php foreach ($record as $key => $val) {?>
                                 <tr>
-                                    <td><?=$key;?></td>
+                                    <td align="left" ><?=$key;?></td>
                                     <td><?=$val['SFR']['count'];?></td>
-                                    <td>$<?=number_format($val['SFR']['avgSalePrice'], 2, '.', ',');?></td>
+                                    <td>$<?=str_replace(".00", "", number_format($val['SFR']['avgSalePrice'], 2, '.', ','));?></td>
                                     <td><?=$val['Condos']['count'];?></td>
-                                    <td>$<?=number_format($val['Condos']['avgSalePrice'], 2, '.', ',');?></td>
+                                    <td>$<?=str_replace(".00", "", number_format($val['Condos']['avgSalePrice'], 2, '.', ','));?></td>
                                 </tr>
                                 <?php }?>
                             </tbody>
@@ -244,8 +244,9 @@
                             <tr>
                             <?php if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_profile_img'])) {
     if (env('AWS_ENABLE_FLAG') == 1) {
-        $salesRep['sales_rep_profile_img'] = str_replace('uploads/', '', $salesRep['sales_rep_profile_img']);
-        $img = env('AWS_PATH') . $salesRep['sales_rep_profile_img'];
+        $img = env('AWS_PATH') . (!empty($salesRep['sales_rep_report_image']) ? $salesRep['sales_rep_report_image'] : str_replace('uploads/', '', $salesRep['sales_rep_profile_img']));
+        // $salesRep['sales_rep_profile_img'] = str_replace('uploads/', '', $salesRep['sales_rep_profile_img']);
+        // $img = env('AWS_PATH') . $salesRep['sales_rep_profile_img'];
     } else {
         $img = base_url() . $salesRep['sales_rep_profile_img'];
     }
