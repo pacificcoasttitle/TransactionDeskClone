@@ -371,7 +371,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td align="center" valign="middle" class="mcnButtonContent" style="font-family: Helvetica; font-size: 18px; padding: 18px;">
-                                                        <a class="mcnButton " title="Generate Fees" href="<?=$link?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;" download>Download Document</a>
+                                                        <a class="mcnButton " title="Doanload document" href="<?=$link?>" target="_blank" style="font-weight: bold;letter-spacing: -0.5px;line-height: 100%;text-align: center;text-decoration: none;color: #FFFFFF;" download>Download Document</a>
                                                     </td>
                                                 </tr>
                                             </tbody>

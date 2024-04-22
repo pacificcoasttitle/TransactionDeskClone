@@ -329,7 +329,7 @@ form {
 		<div class="card shadow p-5">
 			<div class="row">
 				<div class="col-sm-12">
-					<h2 class="ui-title-block ui-title-block_light">Sales Activity Report
+					<h2 class="ui-title-block ui-title-block_light"> County Activity
                         <a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fa fa-camera"></i>
@@ -465,6 +465,18 @@ if ($this->session->flashdata('error')): ?>
 											</select>
 											<i class="arrow"></i>
 										</div>
+										<div class="section colm colm4 col-md-6">
+											<select id="county" name="county" class="form-control">
+												<option value="">Select County</option>
+												<option value="Los Angeles" <?php if (!empty($prev_data['county']) && strtolower($prev_data['county']) == "los angeles") {echo 'selected';}?>>Los Angeles</option>
+												<option value="Orange" <?php if (!empty($prev_data['county']) && strtolower($prev_data['county']) == "orange") {echo 'selected';}?>>Orange</option>
+												<option value="Riverside" <?php if (!empty($prev_data['county']) && strtolower($prev_data['county']) == "riverside") {echo 'selected';}?>>Riverside</option>
+												<option value="San Bernardino" <?php if (!empty($prev_data['county']) && strtolower($prev_data['county']) == "san bernardino") {echo 'selected';}?>>San Bernardino</option>
+												<option value="San Diego" <?php if (!empty($prev_data['county']) && strtolower($prev_data['county']) == "san diego") {echo 'selected';}?>>San Diego</option>
+                                                <option value="Ventura" <?php if (!empty($prev_data['county']) && strtolower($prev_data['county']) == "ventura") {echo 'selected';}?>>Ventura</option>
+											</select>
+											<i class="arrow"></i>
+										</div>
 									</div>
 									<div class="row">
 										<div class="section colm colm4 col-md-6">
@@ -487,7 +499,7 @@ if ($this->session->flashdata('error')): ?>
 						</form>
 					</div>
 					<div class="mt-5 text-center">
-						<h5>Recent Sales Activity Reports</h5>
+						<h5>Recent County Activity</h5>
 						<div class="table-container1">
 							<div class="alert alert-success hide" id="successMsg"></div>
 							<div class="alert alert-danger hide" id="errorMsg"></div>

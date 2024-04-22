@@ -63,6 +63,9 @@ class SalesActivityReport extends MX_Controller
         } else if (empty($this->input->post('month'))) {
             $valid = false;
             $this->session->set_flashdata('error', 'Please Select Motth');
+        } else if (empty($this->input->post('county'))) {
+            $valid = false;
+            $this->session->set_flashdata('error', 'Please Select County');
         } else if (empty($_FILES['csvFile']['tmp_name'])) {
             $valid = false;
             $this->session->set_flashdata('error', 'Please select csv file');
@@ -96,8 +99,9 @@ class SalesActivityReport extends MX_Controller
             $main_record['sales_rep'] = $this->input->post('sales_rep');
             $main_record['month'] = $this->input->post('month');
             $main_record['added_by'] = $this->user['id'];
+            $main_record['county'] = $this->input->post('county');
             $last_id = $this->salesReport_model->insert($main_record);
-            // $last_id = 4; //$this->salesReport_model->insert($main_record);
+            // $last_id = 4;
 
             $records = array();
             $i = 0;
