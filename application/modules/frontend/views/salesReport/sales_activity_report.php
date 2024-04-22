@@ -73,8 +73,17 @@
             font-family: 'Open sans' sans-serif;
             margin-bottom:15px;
         }
+        .pr-5{
+            padding-right: 5px;
+        }
         .pr-20{
             padding-right: 20px;
+        }
+        .pl-25 {
+            padding-left: 25px;
+        }
+        .pr-25 {
+            padding-right: 25px;
         }
         .orange-bar {
             background-color: #f16a2a;
@@ -82,7 +91,7 @@
             height: calc(100% - 210px);
             position: relative;
             /* padding-top: 140px; */
-            min-height: 680px;
+            min-height: 670px;
         }
         .recentsale b {
             display: block;
@@ -116,6 +125,7 @@
             top: auto;
             bottom: 160px;
             left: -85;
+            line-height: 50px;
         }
         .bg-grey{
             background-color: #9fa0a3;
@@ -147,12 +157,14 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 18px;
             font-weight: 500;
+            line-height: 18px;
         }
         .text-grey{
             color: #707176;
         }
         .employee-name{
             font-size: 30px;
+            line-height: 30px;
         }
         .sales_rep_profile {
             height: 136px;
@@ -224,9 +236,9 @@
                                 <tr>
                                     <td align="left" ><?=$key;?></td>
                                     <td><?=$val['SFR']['count'];?></td>
-                                    <td>$<?=str_replace(".00", "", number_format($val['SFR']['avgSalePrice'], 2, '.', ','));?></td>
+                                    <td>$<?=number_format($val['SFR']['avgSalePrice']);?></td>
                                     <td><?=$val['Condos']['count'];?></td>
-                                    <td>$<?=str_replace(".00", "", number_format($val['Condos']['avgSalePrice'], 2, '.', ','));?></td>
+                                    <td>$<?=number_format($val['Condos']['avgSalePrice']);?></td>
                                 </tr>
                                 <?php }?>
                             </tbody>
@@ -251,12 +263,16 @@
         $img = base_url() . $salesRep['sales_rep_profile_img'];
     }
 }?>
-<?php if (isset($img) && !empty($img)) {?>
-    <td class="w40 pr-20">
+<?php
+$imageExistFlag = false;
+    if (isset($img) && !empty($img)) {
+        $imageExistFlag = true;?>
+    <td class="w30 pl-25 pr-5">
         <img class="sales_rep_profile" src="<?php echo $img; ?>" class="w100" alt="">
     </td>
-<?php }?>
-                                <td class="w60">
+<?php
+}?>
+                                <td class="w70 <?php (!$imageExistFlag) ? 'pl-25' : '';?>">
                                     <div class="employee-name text-grey"><b><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></b></div>
                                     <div class="text-orange"><?php echo $salesRep['title']; ?></div>
                                     <div class="text-grey"><b><?php echo $salesRep['telephone_no']; ?></b></div>
@@ -265,8 +281,8 @@
                             </tr>
                         </table>
                     </td>
-                    <td class="w10"></td>
-                    <td class="w40" align="right">
+                    <!-- <td class="w10"></td> -->
+                    <td class="w40 pr-25" align="right">
                         <div class="text-orange">CUSTOMER SERVICE</div>
                         <div class="text-grey">(866) 724-1050 | cs@pct.com</div>
                         <div class="text-orange">OPEN ORDERS</div>
