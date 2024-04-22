@@ -91,7 +91,7 @@
             height: calc(100% - 210px);
             position: relative;
             /* padding-top: 140px; */
-            min-height: 670px;
+            min-height: 667px;
         }
         .recentsale b {
             display: block;
