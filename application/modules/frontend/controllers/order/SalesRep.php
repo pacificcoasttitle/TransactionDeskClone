@@ -715,10 +715,10 @@ class SalesRep extends MX_Controller
         $userId = $this->uri->segment(2);
 
         $data['title'] = 'Sales Reports | Pacific Coast Title Company';
-        if ($userdata['is_sales_rep_manager'] == 1) {
+        if ($userdata['is_sales_rep'] == 1) {
 
             $data['sales_user_id'] = $userId;
-            $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+            // $data['is_sales_rep'] = $userdata['is_sales_rep'];
 
             $report_condition = array(
                 'sales_rep' => $userId,
