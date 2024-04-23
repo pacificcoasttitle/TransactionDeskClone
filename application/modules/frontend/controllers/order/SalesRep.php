@@ -724,7 +724,7 @@ class SalesRep extends MX_Controller
                 'sales_rep' => $userId,
             );
 
-            $data['reports_data'] = $this->salesReport_model->getData($report_condition);
+            $data['reports_data'] = $this->salesReport_model->getSalesAllReportData($report_condition);
 
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_1' . $this->sales_dashboard_js_version));
             $this->salesdashboardtemplate->show("order", "sales_report", $data);
