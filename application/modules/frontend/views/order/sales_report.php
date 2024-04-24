@@ -329,7 +329,7 @@ form {
 		<div class="card shadow p-4">
 			<div class="row">
 				<div class="col-sm-12">
-					<h2 class="ui-title-block ui-title-block_light">Data Reports
+					<h2 class="ui-title-block ui-title-block_light">Farming Reports
 						<a href="<?php echo base_url(); ?>sales-dashboard/<?php echo $sales_user_id; ?>" class="btn btn-info btn-icon-split pull-right mr-1">
 							<span class="icon text-white-50">
 								<i class="fas fa-arrow-left"></i>
