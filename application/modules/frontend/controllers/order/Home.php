@@ -1245,7 +1245,11 @@ class Home extends MX_Controller
                 $from_mail = env('FROM_EMAIL');
                 $order_message_body = $this->load->view('emails/order.php', $data, true);
                 $message = $order_message_body;
-                $subject = $orderNumber . ' - PCT Title Order Placed';
+                $addInSubject = '';
+                if (str_contains(strtolower($PropertyType), 'vacant land')) {
+                    $addInSubject = ' - APN: ' . $apn;
+                }
+                $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
                 $email_notification = $this->input->post('email_notification');
 
                 $this->session->set_userdata('email_notification', $email_notification);
@@ -1332,13 +1336,13 @@ class Home extends MX_Controller
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array(), $orderId, 0);
-                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array('status' => $mail_result), $orderId, $logid);
-                    // $to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
+                    // $to = ['piyush.j@crestinfosystems.net'];
+                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     // $taxDataStatus = 'falied';
                     if ($taxDataStatus != 'success') {
-                        $subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
+                        // $subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
                         //send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                         //$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_order_mail_CS_notification', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
                     }

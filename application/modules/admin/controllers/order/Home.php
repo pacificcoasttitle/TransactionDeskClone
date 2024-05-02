@@ -4562,7 +4562,12 @@ class Home extends MX_Controller
                     $from_mail = env('FROM_EMAIL');
                     $order_message_body = $this->load->view('emails/order.php', $data, true);
                     $message = $order_message_body;
-                    $subject = $orderNumber . ' - PCT Title Order Placed';
+                    $addInSubject = '';
+                    if (str_contains(strtolower($order_details['property_type']), 'vacant land')) {
+                        $addInSubject = ' - APN: ' . $order_details['apn'];
+                    }
+
+                    $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
                     $to = $order_details['salerep_email_address'];
                     $mailParams = array(
                         'from_mail' => $from_mail,

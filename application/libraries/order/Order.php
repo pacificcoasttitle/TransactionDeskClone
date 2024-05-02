@@ -3793,7 +3793,11 @@ class Order
         $from_mail = env('FROM_EMAIL');
         $order_message_body = $this->CI->load->view('emails/order.php', $data, true);
         $message = $order_message_body;
-        $subject = $orderNumber . ' - PCT Title Order Placed';
+        $addInSubject = '';
+        if (str_contains(strtolower($orderDetails['property_type']), 'vacant land')) {
+            $addInSubject = ' - APN: ' . $orderDetails['apn'];
+        }
+        $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
         $email_notification = $this->CI->session->userdata('email_notification');
         $this->CI->session->unset_userdata('email_notification');
         if ($orderDetails["salerep_is_mail_notification"] == 1) {
@@ -3844,7 +3848,7 @@ class Order
         $taxDataStatus = strtolower($titlePointDetails[0]['tax_data_status']);
         $taxDocStatus = strtolower($titlePointDetails[0]['tax_file_status']);
         $emailSentFlag = strtolower($titlePointDetails[0]['email_sent_status']);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$taxDataStatus' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'email-check_mail_library', 'email-check', '', ['$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, '$taxDataStatus' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus], array(), $orderDetails['order_id'], 0);
 
         if ($emailSentFlag != 1 &&
             ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
@@ -3866,7 +3870,7 @@ class Order
                     // array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $to = ['openorders@pct.com', 'cs@pct.com'];
                     if ($taxDataStatus != 'success') {
-                        $subject = $subject . ' But Tax details not found';
+                        // $subject = $subject . ' But Tax details not found';
                         //send_email($from_mail, $from_name, $to, $subject, $message, $file, array(), array());
                     }
                     /** End Notify CS */
