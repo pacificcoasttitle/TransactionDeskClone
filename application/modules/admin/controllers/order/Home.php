@@ -4564,7 +4564,7 @@ class Home extends MX_Controller
                     $message = $order_message_body;
                     $addInSubject = '';
                     if (str_contains(strtolower($order_details['property_type']), 'vacant land')) {
-                        $addInSubject = ' - APN: ' . $apn;
+                        $addInSubject = ' - APN: ' . $order_details['apn'];
                     }
 
                     $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
