@@ -254,13 +254,13 @@
                     <td class="w50">
                         <table class="w100">
                             <tr>
-                            <?php if (isset($salesRep['sales_rep_profile_img']) && !empty($salesRep['sales_rep_profile_img'])) {
+                            <?php if (isset($salesRep['sales_rep_report_image']) && !empty($salesRep['sales_rep_report_image'])) {
     if (env('AWS_ENABLE_FLAG') == 1) {
-        $img = env('AWS_PATH') . (!empty($salesRep['sales_rep_report_image']) ? $salesRep['sales_rep_report_image'] : str_replace('uploads/', '', $salesRep['sales_rep_profile_img']));
-        // $salesRep['sales_rep_profile_img'] = str_replace('uploads/', '', $salesRep['sales_rep_profile_img']);
-        // $img = env('AWS_PATH') . $salesRep['sales_rep_profile_img'];
+        $img = env('AWS_PATH') . (!empty($salesRep['sales_rep_report_image']) ? $salesRep['sales_rep_report_image'] : str_replace('uploads/', '', $salesRep['sales_rep_report_image']));
+        // $salesRep['sales_rep_report_image'] = str_replace('uploads/', '', $salesRep['sales_rep_report_image']);
+        // $img = env('AWS_PATH') . $salesRep['sales_rep_report_image'];
     } else {
-        $img = base_url() . $salesRep['sales_rep_profile_img'];
+        $img = base_url() . $salesRep['sales_rep_report_image'];
     }
 }?>
 <?php
