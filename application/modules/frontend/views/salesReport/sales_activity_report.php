@@ -211,7 +211,7 @@
                             </tr>
                             <tr>
                                 <td align="left">
-                                    <div class="home-sales">LA County Home Sale Activity</div>
+                                    <div class="home-sales"><?=$country;?> County Home Sale Activity</div>
                                     <div class="report-sales">This report includes resale of single family residences, <br> condos, and new homes.</div>
                                 </td>
                             </tr>
