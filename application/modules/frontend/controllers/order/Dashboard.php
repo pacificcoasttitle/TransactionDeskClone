@@ -308,7 +308,7 @@ class Dashboard extends MX_Controller
 
             if (!empty($resPartners)) {
                 $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company')) {
                     $post_data['underwriter'] = 3;
                 } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                     $post_data['underwriter'] = 4;
