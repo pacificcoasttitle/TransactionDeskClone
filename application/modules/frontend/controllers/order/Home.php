@@ -462,7 +462,7 @@ class Home extends MX_Controller
                                 if (!empty($companyData)) {
                                     if (!empty($resPartners)) {
                                         $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                        if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                                        if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                                             $underWriter = 'north_american';
                                         } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                                             $underWriter = 'westcor';
@@ -820,7 +820,7 @@ class Home extends MX_Controller
                                     $resultRemovePartnerRes = json_decode($resultRemovePartner, true);
                                     $partnerKey = '';
                                     if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
-                                        if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
+                                        if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Doma Title Insurance') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
                                             $partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
                                             if (strlen($partnerKey) > 0) {
                                                 array_splice($partners, $partnerKey, 1);
