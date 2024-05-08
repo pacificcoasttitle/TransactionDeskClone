@@ -175,11 +175,11 @@ page {
 .sales_activity_hero {
   background: linear-gradient(
       to right,
-      rgba(17,78,107,0.60),
-      rgba(17,78,107,0.60)
+      rgba(17,78,107,0.50),
+      rgba(17,78,107,0.50)
     ),
     url(/assets/media/reports/Santa-Barbara-USA-taken-in-2015.jpg);
-  background: -webkit-gradient( linear, left top, right top, from(rgba(17,78,107,0.60)), to(rgba(17,78,107,0.60)) ), url(/assets/media/reports/Santa-Barbara-USA-taken-in-2015.jpg);
+  background: -webkit-gradient( linear, left top, right top, from(rgba(17,78,107,0.50)), to(rgba(17,78,107,0.50)) ), url(/assets/media/reports/Santa-Barbara-USA-taken-in-2015.jpg);
   background-size: cover;
   color: #fff;
   padding: 30px 30px 25px;
