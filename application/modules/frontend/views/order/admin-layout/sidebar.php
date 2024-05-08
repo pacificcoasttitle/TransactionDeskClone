@@ -106,7 +106,7 @@ if ($userdata['is_sales_rep'] == 1) {
 			</a>
 		</li>
 		<?php if ($userdata['is_master'] == 1) {?>
-		<li class="nav-item <?php if ($this->uri->segment(1) == 'reports') {echo 'active';}?>">
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'reports' || $this->uri->segment(1) == 'labels' || $this->uri->segment(1) == 'pmas' || $this->uri->segment(1) == 'sales-snap-shot' || $this->uri->segment(1) == 'sales-activity-report') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>reports">
 				<i class="fa fa-file"></i>
 				<span>Reports</span>
