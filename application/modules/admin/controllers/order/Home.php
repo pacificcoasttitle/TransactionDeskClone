@@ -4063,7 +4063,7 @@ class Home extends MX_Controller
                     if (!empty($companyData)) {
                         if (!empty($resPartners)) {
                             $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                            if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                            if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                                 $underWriter = 'north_american';
                             } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                                 $underWriter = 'westcor';
@@ -4429,7 +4429,7 @@ class Home extends MX_Controller
                         /* End add resware api logs */
                         $partnerKey = '';
                         if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
-                            if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
+                            if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Doma Title Insurance') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
                                 $partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
                                 if (strlen($partnerKey) > 0) {
                                     array_splice($partners, $partnerKey, 1);
@@ -4562,7 +4562,12 @@ class Home extends MX_Controller
                     $from_mail = env('FROM_EMAIL');
                     $order_message_body = $this->load->view('emails/order.php', $data, true);
                     $message = $order_message_body;
-                    $subject = $orderNumber . ' - PCT Title Order Placed';
+                    $addInSubject = '';
+                    if (str_contains(strtolower($order_details['property_type']), 'vacant land')) {
+                        $addInSubject = ' - APN: ' . $order_details['apn'];
+                    }
+
+                    $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
                     $to = $order_details['salerep_email_address'];
                     $mailParams = array(
                         'from_mail' => $from_mail,

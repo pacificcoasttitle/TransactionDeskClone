@@ -138,12 +138,12 @@ class SalesActivityReport extends MX_Controller
                 $monthNumber = $this->input->post('month');
                 $report_data['monthNumber'] = $monthNumber;
                 $report_data['monthName'] = $this->monthArr[$monthNumber];
+                $report_data['country'] = $this->input->post('county');
                 $condition = array(
                     'is_sales_rep' => 1,
                     'status' => 1,
                     'id' => $this->input->post('sales_rep'),
                 );
-
                 $report_data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
                 $html = $this->load->view('salesReport/sales_activity_report', $report_data, true);
                 // print_r($html);die;

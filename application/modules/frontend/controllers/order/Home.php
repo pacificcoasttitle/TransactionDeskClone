@@ -462,7 +462,7 @@ class Home extends MX_Controller
                                 if (!empty($companyData)) {
                                     if (!empty($resPartners)) {
                                         $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                        if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                                        if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                                             $underWriter = 'north_american';
                                         } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                                             $underWriter = 'westcor';
@@ -820,7 +820,7 @@ class Home extends MX_Controller
                                     $resultRemovePartnerRes = json_decode($resultRemovePartner, true);
                                     $partnerKey = '';
                                     if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
-                                        if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
+                                        if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Doma Title Insurance') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
                                             $partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
                                             if (strlen($partnerKey) > 0) {
                                                 array_splice($partners, $partnerKey, 1);
@@ -1245,7 +1245,11 @@ class Home extends MX_Controller
                 $from_mail = env('FROM_EMAIL');
                 $order_message_body = $this->load->view('emails/order.php', $data, true);
                 $message = $order_message_body;
-                $subject = $orderNumber . ' - PCT Title Order Placed';
+                $addInSubject = '';
+                if (str_contains(strtolower($PropertyType), 'vacant land')) {
+                    $addInSubject = ' - APN: ' . $apn;
+                }
+                $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
                 $email_notification = $this->input->post('email_notification');
 
                 $this->session->set_userdata('email_notification', $email_notification);
@@ -1332,13 +1336,13 @@ class Home extends MX_Controller
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array(), $orderId, 0);
-                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array('status' => $mail_result), $orderId, $logid);
-                    // $to = ['hitesh.p@crestinfosystems.com', 'piyush.j@crestinfosystems.net'];
+                    // $to = ['piyush.j@crestinfosystems.net'];
+                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     // $taxDataStatus = 'falied';
                     if ($taxDataStatus != 'success') {
-                        $subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
+                        // $subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
                         //send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                         //$this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_order_mail_CS_notification', '', $mailParams, array('status' => $mail_result), $orderId, $logid);
                     }

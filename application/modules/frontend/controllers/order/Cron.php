@@ -3475,6 +3475,7 @@ class Cron extends MX_Controller
                 $updateData = array('resware_status' => 'open');
                 $this->db->set($updateData);
                 $this->db->where('lp_file_number IS NOT NULL');
+                $this->db->where('file_number', 0);
                 $this->db->update('order_details');
 
                 $documentName = pathinfo($filePath);
@@ -4745,7 +4746,7 @@ class Cron extends MX_Controller
             $underWriter = '';
             if (!empty($resPartners)) {
                 $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                if ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                     $underWriter = 'north_american';
                 } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
                     $underWriter = 'westcor';
@@ -4781,10 +4782,10 @@ class Cron extends MX_Controller
             order_details.resware_status,
             order_details.resware_closed_status_date,
             property_details.full_address,
-            customer_basic_details.first_name,
-            customer_basic_details.last_name,
-            customer_basic_details.email_address as sales_email,
-            customer_basic_details.sales_rep_profile_thank_you_img,
+            client.first_name,
+            client.last_name,
+            client.email_address as sales_email,
+            client.sales_rep_profile_thank_you_img,
             property_details.escrow_lender_id,
             escrow_details.email_address,
             transaction_details.sales_representative');

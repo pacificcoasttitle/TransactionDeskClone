@@ -277,7 +277,8 @@ class Order extends MX_Controller
                 $nestedData[] = $value['sales_rep_name'];
                 if (!empty($value['underwriter'])) {
                     if ($value['underwriter'] == 'north_american') {
-                        $nestedData[] = 'North American Title Insurance Company';
+                        // $nestedData[] = 'North American Title Insurance Company';
+                        $nestedData[] = 'Doma Title Insurance, Inc. fka NATIC';
                     } else if ($value['underwriter'] == 'commonwealth') {
                         $nestedData[] = 'Commonwealth Land Title Insurance Company';
                     } else if ($value['underwriter'] == 'westcor') {
@@ -285,7 +286,8 @@ class Order extends MX_Controller
                     }
                 } else {
                     if (strpos($value['cpl_document_name'], 'natic') !== false) {
-                        $nestedData[] = 'North American Title Insurance Company';
+                        // $nestedData[] = 'North American Title Insurance Company';
+                        $nestedData[] = 'Doma Title Insurance, Inc. fka NATIC';
                     } else if (strpos($value['cpl_document_name'], 'fnf') !== false) {
                         $nestedData[] = 'Commonwealth Land Title Insurance Company';
                     } else if (strpos($value['cpl_document_name'], 'westcor') !== false) {
