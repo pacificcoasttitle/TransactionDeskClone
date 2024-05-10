@@ -3492,7 +3492,9 @@ class Cron extends MX_Controller
                     // else {
                     //     exec($command . " > /dev/null &");
                     // }
-                    $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+
+                    /** Commented this function to avoid duplicate email suggested by Jerry on 10/05/2024 */
+                    // $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
                 }
                 $this->updateAllowDuplicationFlag();
                 echo date('Y-m-d H:i:s');exit;
