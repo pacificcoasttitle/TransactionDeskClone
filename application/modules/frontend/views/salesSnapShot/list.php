@@ -473,9 +473,21 @@ foreach ($salesReps as $salesRep):
 										<div class="section colm colm4 col-md-6">
 											<select id="month_option" name="month_option" class="form-control">
 												<option value="">Select Month Option</option>
-												<option value="3" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == $key) {echo 'selected';}?>>3</option>
-                                                <option value="6" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == $key) {echo 'selected';}?>>6</option>
-                                                <option value="12" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == $key) {echo 'selected';}?>>12</option>
+												<option value="3" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "3") {echo 'selected';}?>>3</option>
+                                                <option value="6" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "6") {echo 'selected';}?>>6</option>
+                                                <option value="12" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "9") {echo 'selected';}?>>12</option>
+											</select>
+											<i class="arrow"></i>
+										</div>
+									</div>
+									<div class="row">
+										<div class="section colm colm4 col-md-6">
+											<select id="property_type" name="property_type" class="form-control">
+												<option value="">Select Types of Properties</option>
+												<option value="SFR" <?php if (!empty($prev_data['property_type']) && $prev_data['property_type'] == "SFR") {echo 'selected';}?>>SFR</option>
+                                                <option value="Condo" <?php if (!empty($prev_data['property_type']) && $prev_data['property_type'] == "Condo") {echo 'selected';}?>>Condo</option>
+                                                <option value="2-4 Units" <?php if (!empty($prev_data['property_type']) && $prev_data['property_type'] == "2-4 Units") {echo 'selected';}?>>2-4 Units</option>
+                                                <option value="5 Units & Up" <?php if (!empty($prev_data['property_type']) && $prev_data['property_type'] == "5 Units & Up") {echo 'selected';}?>>5 Units & Up</option>
 											</select>
 											<i class="arrow"></i>
 										</div>

@@ -18,7 +18,7 @@
                 <div class="grid">
                     <div>
                         <img src="<?php echo base_url('assets/sales_snap_shot/report.png') ?>" alt="report">
-                        <h4>Total SFR Sales</h4>
+                        <h4>Total <?=$property_type?> Sales</h4>
                         <div class="count"><?php echo $total_records; ?></div>
                     </div>
                     <div>

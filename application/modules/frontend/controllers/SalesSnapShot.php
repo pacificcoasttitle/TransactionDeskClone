@@ -89,6 +89,7 @@ class SalesSnapShot extends MX_Controller
             $main_record['sales_rep'] = $this->input->post('sales_rep');
             $main_record['month_option'] = $this->input->post('month_option');
             $main_record['area_name'] = $this->input->post('area_name');
+            $main_record['property_type'] = $this->input->post('property_type');
             $main_record['added_by'] = $this->user['id'];
             $last_id = $this->salesSnapShot_model->insert($main_record);
 
@@ -115,6 +116,7 @@ class SalesSnapShot extends MX_Controller
                 }
 
                 $report_data['area_name'] = $this->input->post('area_name');
+                $report_data['property_type'] = $this->input->post('property_type');
                 $condition = array(
                     'is_sales_rep' => 1,
                     'status' => 1,
