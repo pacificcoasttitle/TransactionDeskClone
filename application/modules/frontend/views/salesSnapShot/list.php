@@ -461,9 +461,7 @@ endif;
 										<div class="section colm colm4 col-md-6 ">
 											<select id="sales_rep" name="sales_rep" class="form-control" placeholder="Select Sales Representative">
 												<option value="" >Select Sales Representative</option>
-												<?php
-foreach ($salesReps as $salesRep):
-?>
+												<?php foreach ($salesReps as $salesRep): ?>
 												<option value="<?php echo $salesRep['id']; ?>" <?php if (!empty($prev_data['sales_rep']) && $prev_data['sales_rep'] == $salesRep['id']) {echo 'selected';}?>><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></option>
 												<?php endforeach;?>
 											</select>
