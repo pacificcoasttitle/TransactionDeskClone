@@ -461,9 +461,7 @@ endif;
 										<div class="section colm colm4 col-md-6 ">
 											<select id="sales_rep" name="sales_rep" class="form-control" placeholder="Select Sales Representative">
 												<option value="" >Select Sales Representative</option>
-												<?php
-foreach ($salesReps as $salesRep):
-?>
+												<?php foreach ($salesReps as $salesRep): ?>
 												<option value="<?php echo $salesRep['id']; ?>" <?php if (!empty($prev_data['sales_rep']) && $prev_data['sales_rep'] == $salesRep['id']) {echo 'selected';}?>><?php echo $salesRep['first_name'] . ' ' . $salesRep['last_name']; ?></option>
 												<?php endforeach;?>
 											</select>
@@ -475,7 +473,7 @@ foreach ($salesReps as $salesRep):
 												<option value="">Select Month Option</option>
 												<option value="3" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "3") {echo 'selected';}?>>3</option>
                                                 <option value="6" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "6") {echo 'selected';}?>>6</option>
-                                                <option value="12" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "9") {echo 'selected';}?>>12</option>
+                                                <option value="12" <?php if (!empty($prev_data['month_option']) && $prev_data['month_option'] == "12") {echo 'selected';}?>>12</option>
 											</select>
 											<i class="arrow"></i>
 										</div>
