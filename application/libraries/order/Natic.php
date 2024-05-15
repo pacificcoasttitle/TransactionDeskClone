@@ -25,7 +25,7 @@ class Natic
         );
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, getenv('NATIC_URL') . $endpoint);
+        curl_setopt($ch, CURLOPT_URL, $endpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 500);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -40,7 +40,7 @@ class Natic
         }
     }
 
-    public function getBranchesFromApi()
+    public function getBranchesFromApi($cplApi = 'natic')
     {
         if (!empty($this->CI->session->userdata('user'))) {
             $userdata = $this->CI->session->userdata('user');
@@ -51,12 +51,26 @@ class Natic
             $userdata['id'] = 0;
         }
 
+        $username = getenv('NATIC_USERNAME');
+        $password = getenv('NATIC_PASSWORD');
+        $companyName = getenv('NATIC_COMPANY');
+        $url = getenv('NATIC_URL');
+        $branchTableName = 'pct_order_natic_branches';
+
+        if ($cplApi == 'doma') {
+            $username = getenv('DOMA_USERNAME');
+            $password = getenv('DOMA_PASSWORD');
+            $companyName = getenv('DOMA_COMPANY');
+            $url = getenv('DOMA_URL');
+            $branchTableName = 'pct_order_doma_branches';
+        }
+
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
-                            <UserName>" . getenv('NATIC_USERNAME') . "</UserName>
-                            <Password>" . getenv('NATIC_PASSWORD') . "#</Password>
+                            <UserName>" . $username . "</UserName>
+                            <Password>" . $password . "#</Password>
                             <TransactionId>" . rand(10000, 99999) . "</TransactionId>
-                            <CompanyName>" . getenv('NATIC_COMPANY') . "</CompanyName>
+                            <CompanyName>" . $companyName . "</CompanyName>
                             <AuthorizationRequest>
                                 <PropertyState>CA</PropertyState>
                                 <RequestType>ClosingProtectionLetter</RequestType>
@@ -65,9 +79,9 @@ class Natic
 
         $endPoint = 'Authorize';
         $this->CI->load->model('order/apiLogs');
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL') . $endPoint, $xmlData, array(), 0, 0);
-        $resultAuthorize = $this->make_request($xmlData, $endPoint);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_branches', getenv('NATIC_URL') . $endPoint, $xmlData, $resultAuthorize, 0, $logid);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], $cplApi, 'get_branches', $url . $endPoint, $xmlData, array(), 0, 0);
+        $resultAuthorize = $this->make_request($xmlData, $url . $endPoint);
+        $this->CI->apiLogs->syncLogs($userdata['id'], $cplApi, 'get_branches', $url . $endPoint, $xmlData, $resultAuthorize, 0, $logid);
         $responseData = $this->xml2array($resultAuthorize, 0);
         if (!empty($responseData['ResponseWrapper']['AuthorizationResponse']['DocumentCollection']['ApprovedSettlementOfficeList'])) {
 
@@ -93,7 +107,7 @@ class Natic
 
                     if (!empty($address) && !empty($city) && !empty($zipcode)) {
                         $this->CI->db->select('*');
-                        $this->CI->db->from('pct_order_natic_branches');
+                        $this->CI->db->from($branchTableName);
                         $this->CI->db->like('city', $city);
                         $query = $this->CI->db->get();
                         $result = $query->row_array();
@@ -109,7 +123,7 @@ class Natic
                                 'zip' => $zipcode,
                                 'updated_at' => date('Y-m-d H:i:s'),
                             );
-                            $this->CI->db->update('pct_order_natic_branches', $branchData, $condition);
+                            $this->CI->db->update($branchTableName, $branchData, $condition);
                             $branchData['city'] = $result['city'];
                         } else {
                             $branchData = array(
@@ -121,7 +135,7 @@ class Natic
                                 'zip' => $zipcode,
                                 'created_at' => date('Y-m-d H:i:s'),
                             );
-                            $this->CI->db->insert('pct_order_natic_branches', $branchData);
+                            $this->CI->db->insert($branchTableName, $branchData);
                         }
                         $branchesData[] = $branchData;
                     }
@@ -153,7 +167,27 @@ class Natic
         }
     }
 
-    public function getDocumentContentForCpl($fileId, $orderDetails)
+    public function getDomaBranches($id = 0)
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_order_doma_branches');
+        if (!empty($id)) {
+            $this->CI->db->where('id', $id);
+        }
+        $query = $this->CI->db->get();
+        if ($id == 0) {
+            $result = $query->result_array();
+        } else {
+            $result = $query->row_array();
+        }
+        if (!empty($result)) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
+
+    public function getDocumentContentForCpl($fileId, $orderDetails, $cplApi = 'natic')
     {
         $this->CI->load->library('order/order');
         if (!empty($this->CI->session->userdata('user'))) {
@@ -190,8 +224,24 @@ class Natic
         }
 
         $borrower = $orderDetails['borrowers_vesting'];
+        $username = getenv('NATIC_USERNAME');
+        $password = getenv('NATIC_PASSWORD');
+        $companyName = getenv('NATIC_COMPANY');
+        $url = getenv('NATIC_URL');
+        $documentId = getenv('NATIC_DOCUMENT_ID');
+        $branchTableName = 'pct_order_natic_branches';
 
-        $branchData = $this->getBranches($orderDetails['fnf_agent_id']);
+        if ($cplApi == 'doma') {
+            $username = getenv('DOMA_USERNAME');
+            $password = getenv('DOMA_PASSWORD');
+            $companyName = getenv('DOMA_COMPANY');
+            $url = getenv('DOMA_URL');
+            $documentId = getenv('DOMA_DOCUMENT_ID');
+            $branchTableName = 'pct_order_doma_branches';
+            $branchData = $this->getDomaBranches($orderDetails['fnf_agent_id']);
+        } else {
+            $branchData = $this->getBranches($orderDetails['fnf_agent_id']);
+        }
 
         $xmlData = "<Field>
                     <FieldId>FileNumber</FieldId>
@@ -359,15 +409,15 @@ class Natic
 
         $xmlData = "<?xml version='1.0' encoding='utf-8'?>
                         <RequestWrapper>
-                            <UserName>" . getenv('NATIC_USERNAME') . "</UserName>
-                            <Password>" . getenv('NATIC_PASSWORD') . "#</Password>
+                            <UserName>" . $username . "</UserName>
+                            <Password>" . $password . "#</Password>
                             <TransactionId>" . rand(10000, 99999) . "</TransactionId>
-                            <CompanyName>" . getenv('NATIC_COMPANY') . "</CompanyName>
+                            <CompanyName>" . $companyName . "</CompanyName>
                             <DocumentCollection>
                                 <PropertyState>CA</PropertyState>
                                 <DocumentList>
                                     <Document>
-                                        <DocumentId>" . getenv('NATIC_DOCUMENT_ID') . "</DocumentId>
+                                        <DocumentId>" . $documentId . "</DocumentId>
                                         <ReferenceId>" . rand(100000, 999999) . "</ReferenceId>
                                         <Name>CAStateLetter</Name>
                                         <RequestType>ClosingProtectionLetter</RequestType>
@@ -384,9 +434,9 @@ class Natic
         $endPoint = 'GetDocuments';
 
         $this->CI->load->model('order/apiLogs');
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL') . $endPoint, $xmlData, array(), $orderDetails['order_id'], 0);
-        $resultDocument = $this->make_request($xmlData, $endPoint);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'natic', 'get_document', getenv('NATIC_URL') . $endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], $cplApi, 'get_document', $url . $endPoint, $xmlData, array(), $orderDetails['order_id'], 0);
+        $resultDocument = $this->make_request($xmlData, $url . $endPoint);
+        $this->CI->apiLogs->syncLogs($userdata['id'], $cplApi, 'get_document', $url . $endPoint, $xmlData, $resultDocument, $orderDetails['order_id'], $logid);
         $responseData = $this->xml2array($resultDocument, 0);
         if (!empty($responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content'])) {
             return array('success' => true, 'content' => $responseData['ResponseWrapper']['DocumentCollection']['DocumentList']['Document']['Content']);
