@@ -5,7 +5,7 @@
 class Common extends MX_Controller
 {
 
-    private $cpl_js_version = '01';
+    private $cpl_js_version = '02';
     private $proposed_js_version = '01';
     private $prelim_orders_js_version = '01';
     private $prelim_order_js_version = '02';
