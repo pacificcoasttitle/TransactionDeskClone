@@ -1390,6 +1390,8 @@ class Common extends MX_Controller
             redirect(base_url() . "create-cpl-for-fnf/" . $file_id);
         } else if ($cplApi == 'westcor') {
             redirect(base_url() . "create-cpl/" . $file_id);
+        } else if ($cplApi == 'doma') {
+            redirect(base_url() . "create-cpl-for-doma/" . $file_id);
         } else {
             redirect(base_url() . "create-cpl-for-natic/" . $file_id);
         }
@@ -1399,6 +1401,7 @@ class Common extends MX_Controller
     {
         $this->load->library('order/fnf');
         $this->load->library('order/natic');
+        // $this->load->library('order/doma');
         $this->load->model('order/home_model');
         $this->load->library('order/resware');
         $fileId = $this->input->post('fileId');
@@ -1530,9 +1533,22 @@ class Common extends MX_Controller
         if (!empty($resPartners)) {
             $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
             $underWriter = 'westcor';
-            if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company')) {
+            if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance')) {
+                $cplApi = 'doma';
+                $orderDetails['cpl_api'] = 'doma';
+                $branchesData = $this->natic->getDomaBranches();
+                // $branchesData = false;
+                if ($branchesData === false) {
+                    $branchesData = $this->natic->getBranchesFromApi($cplApi);
+                }
+                // echo "<pre>";
+                // print_r($branchesData);die;
+                $orderDetails['agents_data'] = $branchesData;
+                $underWriter = 'north_american';
+            } elseif (($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company')) {
                 $orderDetails['cpl_api'] = 'natic';
                 $branchesData = $this->natic->getBranches();
+                // $branchesData = false;
                 if ($branchesData === false) {
                     $branchesData = $this->natic->getBranchesFromApi();
                 }
@@ -1829,11 +1845,14 @@ class Common extends MX_Controller
             $userdata['id'] = 0;
         }
         $fileId = $this->uri->segment(2);
+        $currentRoute = $this->uri->segment(1);
+        $cplApi = ($currentRoute === 'create-cpl-for-doma') ? 'doma' : 'natic';
+
         $orderDetails = $this->order->get_order_details($fileId);
-        $responseArr = $this->natic->getDocumentContentForCpl($fileId, $orderDetails);
+        $responseArr = $this->natic->getDocumentContentForCpl($fileId, $orderDetails, $cplApi);
         if ($responseArr['success']) {
             $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
-            $document_name = "natic_" . $cplCount . "_" . $fileId . ".pdf";
+            $document_name = $cplApi . "_" . $cplCount . "_" . $fileId . ".pdf";
             if (!is_dir('uploads/documents')) {
                 mkdir('./uploads/documents', 0777, true);
             }
@@ -1905,6 +1924,95 @@ class Common extends MX_Controller
             redirect(base_url() . 'generate-cpl/' . $orderDetails['random_number']);
         }
     }
+
+    /*public function createCPlForDoma()
+    {
+    $this->load->library('order/doma');
+    $this->load->model('order/home_model');
+    $this->load->model('order/document');
+    $errors = array();
+    $success = array();
+    $userdata = $this->session->userdata('user');
+    if (empty($userdata)) {
+    $userdata['id'] = 0;
+    }
+    $fileId = $this->uri->segment(2);
+    $orderDetails = $this->order->get_order_details($fileId);
+    $responseArr = $this->doma->getDocumentContentForCpl($fileId, $orderDetails);
+    if ($responseArr['success']) {
+    $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
+    $document_name = "doma_" . $cplCount . "_" . $fileId . ".pdf";
+    if (!is_dir('uploads/documents')) {
+    mkdir('./uploads/documents', 0777, true);
+    }
+    file_put_contents('./uploads/documents/' . $document_name, base64_decode($responseArr['content']));
+    $this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
+    $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
+    $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
+    $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+    if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+    $notificationData = array(
+    'sent_user_id' => $orderDetails['customer_id'],
+    'message' => $message,
+    'is_admin' => 0,
+    'type' => 'created',
+    );
+    $this->home_model->insert($notificationData, 'pct_order_notifications');
+    $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+    } else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+    $notificationData = array(
+    'sent_user_id' => $orderDetails['title_officer'],
+    'message' => $message,
+    'is_admin' => 0,
+    'type' => 'created',
+    );
+    $this->home_model->insert($notificationData, 'pct_order_notifications');
+    $this->order->sendNotification($message, 'assigned', $orderDetails['title_officer'], 0);
+    } else {
+    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+    $notificationData = array(
+    'sent_user_id' => $orderDetails['title_officer'],
+    'message' => $message,
+    'is_admin' => 0,
+    'type' => 'created',
+    );
+    $this->home_model->insert($notificationData, 'pct_order_notifications');
+    $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+    $notificationData = array(
+    'sent_user_id' => $orderDetails['customer_id'],
+    'message' => $message,
+    'is_admin' => 0,
+    'type' => 'created',
+    );
+    $this->home_model->insert($notificationData, 'pct_order_notifications');
+    $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+    }
+    } else {
+    $errors[] = $responseArr['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+    $cplErrorData = array(
+    'order_id' => $orderDetails['order_id'],
+    'file_number' => $orderDetails['file_number'],
+    'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+    'error' => $responseArr['error'],
+    'customer_id' => $orderDetails['customer_id'],
+    'property_address' => $orderDetails['full_address'],
+    );
+    $this->order->storeCplError($cplErrorData);
+    }
+    $data = array(
+    "errors" => $errors,
+    "success" => $success,
+    );
+    $this->session->set_userdata($data);
+    $this->session->unset_userdata('lender_details');
+    if (!empty($userdata['id'])) {
+    redirect(base_url() . 'cpl-dashboard');
+    } else {
+    redirect(base_url() . 'generate-cpl/' . $orderDetails['random_number']);
+    }
+    }*/
 
     public function getDetailsByName()
     {
