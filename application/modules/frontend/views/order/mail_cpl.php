@@ -1,9 +1,9 @@
 <style>
-	
-	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}  
+
+	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}
 	.ui-autocomplete {
 		max-height: 300px !important;
-	} 
+	}
 	.radio {
 		top: 5px !important;
 		margin: 0px 10px !important;
@@ -15,8 +15,8 @@
 
 <body>
 	<?php
-        $this->load->view('layout/header_dashboard');
-    ?>
+$this->load->view('layout/header_dashboard');
+?>
 
 	<section class="section-type-4a section-defaulta" style="padding-bottom:100px;">
 		<div class="container">
@@ -28,20 +28,20 @@
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Generate your CPL</h3>
 						</div>
-						<?php if(!empty($success)) {?>
+						<?php if (!empty($success)) {?>
 						<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-							<?php foreach($success as $sucess) {
-									echo $sucess."<br \>";	
-								}?>
+							<?php foreach ($success as $sucess) {
+    echo $sucess . "<br \>";
+}?>
 						</div>
-						<?php } 
-						 if(!empty($errors)) {?>
+						<?php }
+if (!empty($errors)) {?>
 						<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-							<?php foreach($errors as $error) {
-									echo $error."<br \>";	
-								}?>
+							<?php foreach ($errors as $error) {
+    echo $error . "<br \>";
+}?>
 						</div>
-						<?php } ?>
+						<?php }?>
 						<!-- <div class="loader"></div> -->
 						<div class="typography-sectiona">
 							<div class="col-md-12">
@@ -57,17 +57,17 @@
 											</tr>
 										</thead>
 										<tbody>
-											<?php if(!empty($file_number)) {?>
+											<?php if (!empty($file_number)) {?>
 												<tr role="row" class="odd">
 													<td>1</td>
-													<td><?php echo $file_number;?></td>
-													<td><?php echo $full_address;?></td>
-													<td><?php echo $created;?></td>
-													<td><?php echo $action;?></td> 
+													<td><?php echo $file_number; ?></td>
+													<td><?php echo $full_address; ?></td>
+													<td><?php echo $created; ?></td>
+													<td><?php echo $action; ?></td>
 												</tr>
-											<?php } else { ?>
+											<?php } else {?>
 												<tr role="row" class="odd"><td colspan="4" class="text-center">No record found</td></tr>
-											<?php }  ?>
+											<?php }?>
 										</tbody>
 									</table>
 								</div>
@@ -83,7 +83,7 @@
 		aria-labelledby="Lender Infromation" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 			<div class="modal-content">
-				<form method="POST" action="<?php echo base_url();?>add-lender-order" enctype="multipart/form-data">
+				<form method="POST" action="<?php echo base_url(); ?>add-lender-order" enctype="multipart/form-data">
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
@@ -94,7 +94,7 @@
 								<div class="frm-row">
 									<div class="section colm colm12">
 										<label class="field prepend-icon">
-											<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender	
+											<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender
 											<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
 										</label>
 									</div>
@@ -106,7 +106,7 @@
 											<input type="text" name="LenderCompany" id="LenderCompany" class="gui-input ui-autocomplete-input"
 												placeholder="Lender Company Name" required="required">
 											<span class="field-icon"><i class="fa fa-user"></i></span>
-											
+
 											<input type="hidden" name="LenderId" id="LenderId" value="">
 											<input type="hidden" name="file_id" id="file_id" value="">
 											<input type="hidden" name="partner_id" id="partner_id" value="">
@@ -237,7 +237,7 @@
 								</div>
 
 								<input type="hidden" id="cpl_api" name="cpl_api" value="">
-								
+
 								<div id="fnf">
 									<div class="spacer-b20">
 										<div class="tagline"><span>Select Branch</span></div>
@@ -266,8 +266,8 @@
 		</div>
 	</div>
 	<?php
-        $this->load->view('layout/footer');
-    ?>
+$this->load->view('layout/footer');
+?>
 </body>
 
 </html>
@@ -280,13 +280,13 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script> 
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
 
 
 <script>
 	/* Lender autocomplete */
-    
+
 	$("#LenderCompany" ).focusin(function() {
 		if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') {
 			if($('.ui-widget.ui-autocomplete').length > 0) {
@@ -298,7 +298,7 @@
 						url: base_url+'getDetailsByName',
 						data: {
 							term : request.term,//the value of the input is here
-							is_escrow : 0                    
+							is_escrow : 0
 						},
 						type: "POST",
 						dataType: "json",
@@ -318,15 +318,15 @@
 				select: function( event, ui ) {
 					event.preventDefault();
 					$("#LenderCompany").val(ui.item.company);
-					
+
 					if(ui.item.state) {
-						$("#LenderState").val(ui.item.state).parent().addClass('state-success');           
+						$("#LenderState").val(ui.item.state).parent().addClass('state-success');
 					} else {
 						$("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
 					}
 
 					if(ui.item.name) {
-						$("#LenderName").val(ui.item.name).parent().addClass('state-success');       
+						$("#LenderName").val(ui.item.name).parent().addClass('state-success');
 					} else {
 						$("#LenderName").val('').parent().removeClass('state-success').addClass('state-error');
 					}
@@ -342,7 +342,7 @@
 					} else {
 						$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
 					}
-						
+
 					if(ui.item.zip_code) {
 						$("#LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
 					} else {
@@ -355,7 +355,7 @@
 						$("#assignment_clause").val('');
 					}
 					$("#LenderId").val(ui.item.id);
-					
+
 				},
 				change: function( event, ui ) {
 					if (ui.item == null)
@@ -379,7 +379,7 @@
 			// 		$.ajax({
 			// 			url: base_url+"admin/order/home/get_company_list",
 			// 			data: {
-			// 				term : request.term        
+			// 				term : request.term
 			// 			},
 			// 			type: "POST",
 			// 			dataType: "json",
@@ -399,7 +399,7 @@
 			// 	select: function( event, ui ) {
 			// 		event.preventDefault();
 			// 		$("#LenderCompany").val(ui.item.partner_name);
-				
+
 			// 		if(ui.item.address1) {
 			// 			$("#LenderAddress").val(ui.item.address1).parent().addClass('state-success');
 			// 		} else {
@@ -411,7 +411,7 @@
 			// 		} else {
 			// 			$("#LenderCity").val('').parent().removeClass('state-success').addClass('state-error');
 			// 		}
-						
+
 			// 		if(ui.item.zip) {
 			// 			$("#LenderZipcode").val(ui.item.zip).parent().addClass('state-success');
 			// 		} else {
@@ -429,7 +429,7 @@
 			// });
         }
     });
-	/* Lender autocomplete */ 
+	/* Lender autocomplete */
 
 	/* Agent autocomplete */
     $("#agent_name").autocomplete({
@@ -460,10 +460,10 @@
 			$("#agent_id").val(ui.item.id);
         },
         change: function( event, ui ) {
-            
+
         }
     });
-	/* Agent autocomplete */ 
+	/* Agent autocomplete */
 
 	$(document).ready(function () {
 		$("input[name=new_existing_lender]").change(function(){
@@ -477,8 +477,8 @@
 			$("#LenderId").val('');
 		});
 	});
-	
-    function lender_pop_up(lenderFlag, fileId) 
+
+    function lender_pop_up(lenderFlag, fileId)
     {
 		if (lenderFlag == 1) {
 			$(this).form.submit();
@@ -500,17 +500,17 @@
 							if(res.orderDetails['agents_data'][i]['id'] == res.orderDetails['fnf_agent_id']) {
 								selected = 'selected';
 							}
-							if (res.orderDetails['cpl_api'] == 'westcor' || res.orderDetails['cpl_api'] == 'natic') {
+							if (res.orderDetails['cpl_api'] == 'westcor' || res.orderDetails['cpl_api'] == 'natic' || res.orderDetails['cpl_api'] == 'doma') {
 								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['city'] + "</option>";
 							} else {
 								optionsAsString += "<option "+ selected +" value='" + res.orderDetails['agents_data'][i]['id'] + "'>" + res.orderDetails['agents_data'][i]['location_city'] + "</option>";
 							}
-								
+
 						}
 						$('select[name="branch"]').children('option:not(:first)').remove();
 						$( 'select[name="branch"]' ).append( optionsAsString );
 						$("#branch").prop('required',true);
-						
+
 						$('#cpl_api').val(res.orderDetails['cpl_api']);
 						$("#LenderName").val(res.orderDetails['lender_name']);
 						$("#LenderState").val(res.orderDetails['lender_state']);
@@ -535,7 +535,7 @@
 						} else {
 							$("#add_lender").prop("checked", true);
 						}
-					}  
+					}
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');
 					$('#file_id').val(fileId);
