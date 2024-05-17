@@ -1,20 +1,27 @@
 <body>
-    <script  type="text/javascript" src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/frontend/js/jspdf.debug.js"></script>
-    <script src="<?php echo base_url(); ?>assets/frontend/js/html2canvas.min.js"></script>
-    <script src="<?php echo base_url(); ?>assets/frontend/js/html2pdf.bundle.js"></script>
 
-    <link rel="stylesheet" href="<?php echo base_url() ?>assets/front/css/style.css" media="screen" type="text/css" />
+  <script src="<?php echo base_url(); ?>assets/frontend/js/jspdf.debug.js">
+  </script>
+  <script src="<?php echo base_url(); ?>assets/frontend/js/html2canvas.min.js"></script>
+  <script src="<?php echo base_url(); ?>assets/frontend/js/html2pdf.bundle.js"></script>
 
-<?php //$this->load->view('layout/header_dashboard'); ?>
-  <section class="content-wrapper" id="content-wrapper" style="margin-bottom:50px;">
+  <link rel="stylesheet" href="<?php echo base_url() ?>assets/front/css/style.css" media="screen" type="text/css" />
+
+  <?php
+  $this->load->view('layout/header_dashboard');
+  ?>
+  <section class="content-wrapper" id="content-wrapper">
     <div class="row"></div>
     <div class="row">
       <div class="recipt-body" id="artcle_main">
         <div class="article" id="artcle_div">
-          <?php if (empty($calcResult)) {?>
+          <?php
+          if (empty($calcResult)) {
+          ?>
             <span style='font-size: 20px;color: red;'>Fees estimation does not exist.</span>
-          <?php } else {?>
+          <?php
+          } else {
+          ?>
             <table class="table" style="max-width:100%">
               <tbody>
                 <tr>
@@ -35,21 +42,33 @@
                   <td>
                     <?php echo isset($full_address) && !empty($full_address) ? $full_address : '-'; ?>
                   </td>
-                  <?php if (isset($loan_amount) && !empty($loan_amount)) {$loan_amount = str_replace(",", "", $loan_amount);?>
+                  <?php
+                  if (isset($loan_amount) && !empty($loan_amount)) {
+                    $loan_amount = str_replace(",", "", $loan_amount);
+                  ?>
                     <td><b>Loan Amount </b></td>
                     <td>$<?php echo number_format($loan_amount); ?></td>
-                  <?php } else {?>
+                  <?php
+                  } else {
+                  ?>
                     <td></td>
                     <td></td>
-                  <?php }?>
+                  <?php
+                  }
+                  ?>
                 </tr>
                 <tr>
-                  <?php if (isset($sales_amount) && !empty($sales_amount)) {$sales_amount = str_replace(",", "", $sales_amount);?>
+                  <?php
+                  if (isset($sales_amount) && !empty($sales_amount)) {
+                    $sales_amount = str_replace(",", "", $sales_amount);
+                  ?>
                     <td><b>Sales Amount </b></td>
                     <td>$<?php echo number_format($sales_amount); ?> </td>
                     <td></td>
                     <td></td>
-                  <?php }?>
+                  <?php
+                  }
+                  ?>
 
                 </tr>
               </tbody>
@@ -68,7 +87,7 @@
                             <td class="bg-gray" colspan="2" style="width:60%"><b>Title Fees</b></td>
                         </tr>
 
-                        <?php if ($calcResult['transactionType'] == 'Re-Finance') {?>
+                        <?php  if ($calcResult['transactionType'] == 'Re-Finance') { ?>
                             <tr>
                                 <td>ALTA Residential Loan Policy</td>
                                 <td class="aright">
@@ -81,7 +100,7 @@
                                     <b><?php echo $calcResult['title_total']; ?></b>
                                 </td>
                             </tr>
-                        <?php } else {?>
+                        <?php } else { ?>
                             <tr>
                                 <td>Alta Homeowners Policy</td>
                                 <td class="aright">
@@ -100,59 +119,62 @@
                                     <b><?php echo $calcResult['title_total']; ?></b>
                                 </td>
                             </tr>
-                        <?php }?>
+                        <?php } ?>
 
                         <tr class="bg-gray">
                             <td class="bg-gray" colspan="2" style="width:60%"><b>Escrow Fees</b></td>
                         </tr>
 
-                        <?php if (!empty($calcResult['escrowInitalFee'])) {?>
+                        <?php if (!empty($calcResult['escrowInitalFee'])) { ?>
                             <tr>
                                 <td>Escrow Initial Fees</td>
                                 <td class="aright">
                                     <?php echo $calcResult['escrowInitalFee']; ?>
                                 </td>
                             </tr>
-                        <?php }?>
+                        <?php } ?>   
 
-                        <?php if (isset($calcResult['escrowAdditionalFees']) && !empty($calcResult['escrowAdditionalFees'])) {foreach ($calcResult['escrowAdditionalFees'] as $fee) {?>
+                        <?php if (isset($calcResult['escrowAdditionalFees']) && !empty($calcResult['escrowAdditionalFees'])) { 
+                            foreach($calcResult['escrowAdditionalFees'] as $fee)  { ?>
                                  <tr>
-                                    <td><?php echo $fee['name']; ?></td>
+                                    <td><?php echo $fee['name'];?></td>
                                     <td class="aright">
                                         $<?php echo number_format($fee['value'], 2); ?>
                                     </td>
                                 </tr>
-                            <?php }}?>
+                            <?php } 
+                        } ?>
 
-                        <?php if (!empty($calcResult['escrowTotal'])) {?>
+                        <?php if (!empty($calcResult['escrowTotal'])) { ?>
                             <tr>
                                 <td><b>Total</b></td>
                                 <td class="aright">
                                     <b><?php echo $calcResult['escrowTotal']; ?></b>
                                 </td>
                             </tr>
-                        <?php }?>
+                        <?php } ?>   
 
                         <tr class="bg-gray">
                             <td class="bg-gray" colspan="2" style="width:60%"><b>Recording Fees</b></td>
                         </tr>
 
-                        <?php if (isset($calcResult['recordingAdditionalFees']) && !empty($calcResult['recordingAdditionalFees'])) {foreach ($calcResult['recordingAdditionalFees'] as $fee) {?>
+                        <?php if (isset($calcResult['recordingAdditionalFees']) && !empty($calcResult['recordingAdditionalFees'])) { 
+                            foreach($calcResult['recordingAdditionalFees'] as $fee)  { ?>
                                  <tr>
-                                    <td><?php echo $fee['name']; ?></td>
+                                    <td><?php echo $fee['name'];?></td>
                                     <td class="aright">
                                         $<?php echo number_format($fee['value'], 2); ?>
                                     </td>
                                 </tr>
-                            <?php }?>
+                            <?php } ?>
                             <tr>
                                 <td><b>Total</b></td>
                                 <td class="aright">
                                     <b><?php echo $calcResult['recordingTotal']; ?></b>
                                 </td>
                             </tr>
-
-                        <?php }?>
+                         
+                        <?php } ?>
 
                         <tr class="bg-gray">
                             <td class="bg-gray" colspan="2" style="width:60%"><b>Transfer Tax</b></td>
@@ -179,28 +201,30 @@
                             </td>
                         </tr>
 
-                        <?php if (!empty($calcResult['other_additional_fees_total'])) {?>
+                        <?php if (!empty($calcResult['other_additional_fees_total'])) { ?>
 
                             <tr class="bg-gray">
                                 <td class="bg-gray" colspan="2" style="width:60%"><b>Other Fees</b></td>
                             </tr>
 
-                            <?php if (isset($calcResult['other_additional_fees']) && !empty($calcResult['other_additional_fees'])) {foreach ($calcResult['other_additional_fees'] as $fee) {?>
+                            <?php if (isset($calcResult['other_additional_fees']) && !empty($calcResult['other_additional_fees'])) { 
+                                foreach($calcResult['other_additional_fees'] as $fee)  { ?>
                                     <tr>
-                                        <td><?php echo $fee['name']; ?></td>
+                                        <td><?php echo $fee['name'];?></td>
                                         <td class="aright">
                                             $<?php echo number_format($fee['value'], 2); ?>
                                         </td>
                                     </tr>
-                                <?php }?>
+                                <?php } ?>
                                 <tr>
                                     <td><b>Total</b></td>
                                     <td class="aright">
                                         <b><?php echo $calcResult['other_additional_fees_total']; ?></b>
                                     </td>
-                                </tr>
-                            <?php }?>
-                        <?php }?>
+                                </tr>       
+                            <?php } ?>
+
+                        <?php } ?>
                       </tbody>
                     </table>
                   </td>
@@ -208,18 +232,21 @@
               </tbody>
             </table>
         </div>
-        <div class="clearfix" id="act_btns" data-html2canvas-ignore="true" style="padding-left: 30px;" >
+        <div class="clearfix" id="act_btns" data-html2canvas-ignore="true">
           <br />
           <a class="button small orange" id="download_estimate" data-closing-fee-id="<?php echo $closing_fee_estimate_id; ?>" href="javascript:void(0);">Download Fee Estimate</a>
         </div>
       <?php
-}
-?>
+          }
+      ?>
 
 
       </div>
+      <!--   </div> -->
   </section>
-<?php // $this->load->view('layout/footer'); ?>
+  <?php
+  $this->load->view('layout/footer');
+  ?>
 </body>
 
 </html>

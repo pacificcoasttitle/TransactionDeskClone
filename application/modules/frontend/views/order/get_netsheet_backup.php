@@ -25,65 +25,13 @@
 </style>
 
 <body>
-	<?php // $this->load->view('layout/header_dashboard'); ?>
+	<?php
+        $this->load->view('layout/header_dashboard');
+    ?>
 
 	<section class="section-type-4a section-defaulta" style="padding-bottom:100px;">
-        <div class="container-fluid">
-            <div class="row mb-3">
-                <div class="col-sm-6">
-                    <h1 class="h3 text-gray-800">Netsheet </h1>
-                </div>
-            </div>
-            <div class="card shadow mb-4">
-                <div class="card-header datatable-header py-3">
-                    <div class="datatable-header-titles" >
-                        <span>
-                            <i class="fas fa-users"></i>
-                        </span>
-                        <h6 class="m-0 font-weight-bold text-primary pl-10">Generate your Netsheet</h6>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <?php if (!empty($success)) {?>
-                    <div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-                        <?php foreach ($success as $sucess) {echo $sucess . "<br \>";}?>
-                    </div>
-                    <?php }if (!empty($errors)) {?>
-                    <div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-                        <?php foreach ($errors as $error) {echo $error . "<br \>";}?>
-                    </div>
-                    <?php }?>
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="cpl_listing" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>File Number</th>
-                                    <th>Property Address</th>
-                                    <th>Created</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($file_number)) {?>
-                                <tr role="row" class="odd">
-                                    <td>1</td>
-                                    <td><?php echo $file_number; ?></td>
-                                    <td><?php echo $full_address; ?></td>
-                                    <td><?php echo $created; ?></td>
-                                    <td><?php echo $action; ?></td>
-                                </tr>
-                                <?php } else {?>
-                                <tr role="row" class="odd">
-                                    <td colspan="4" class="text-center">No record found</td>
-                                </tr>
-                                <?php }?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-			<!-- <div class="row">
+		<div class="container">
+			<div class="row">
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="typography-section__inner" style="padding: 0px 17px;">
@@ -91,16 +39,21 @@
 							<div class="ui-decor-1a bg-accent"></div>
 							<h3 class="ui-title-block_light">Generate your Netsheet</h3>
 						</div>
-						<?php if (!empty($success)) {?>
+						<?php if(!empty($success)) {?>
 						<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-							<?php foreach ($success as $sucess) {echo $sucess . "<br \>";}?>
+							<?php foreach($success as $sucess) {
+									echo $sucess."<br \>";	
+								}?>
 						</div>
-						<?php }if (!empty($errors)) {?>
+						<?php } 
+						 if(!empty($errors)) {?>
 						<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-							<?php foreach ($errors as $error) {echo $error . "<br \>";}?>
+							<?php foreach($errors as $error) {
+									echo $error."<br \>";	
+								}?>
 						</div>
-						<?php }?>
-
+						<?php } ?>
+						<!-- <div class="loader"></div> -->
 						<div class="typography-sectiona">
 							<div class="col-md-12">
 								<div class="table-container">
@@ -115,19 +68,19 @@
 											</tr>
 										</thead>
 										<tbody>
-											<?php if (!empty($file_number)) {?>
+											<?php if(!empty($file_number)) {?>
 											<tr role="row" class="odd">
 												<td>1</td>
-												<td><?php echo $file_number; ?></td>
-												<td><?php echo $full_address; ?></td>
-												<td><?php echo $created; ?></td>
-												<td><?php echo $action; ?></td>
+												<td><?php echo $file_number;?></td>
+												<td><?php echo $full_address;?></td>
+												<td><?php echo $created;?></td>
+												<td><?php echo $action;?></td>
 											</tr>
-											<?php } else {?>
+											<?php } else { ?>
 											<tr role="row" class="odd">
 												<td colspan="4" class="text-center">No record found</td>
 											</tr>
-											<?php }?>
+											<?php }  ?>
 										</tbody>
 									</table>
 								</div>
@@ -135,7 +88,7 @@
 						</div>
 					</div>
 				</div>
-			</div> -->
+			</div>
 		</div>
 	</section>
 
@@ -143,7 +96,7 @@
 		aria-labelledby="Netsheet Infromation" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 			<div class="modal-content">
-				<form method="POST" action="<?php echo base_url(); ?>create-netsheet/<?php echo $random_number; ?>" enctype="multipart/form-data">
+				<form method="POST" action="<?php echo base_url();?>create-netsheet/<?php echo $random_number;?>" enctype="multipart/form-data">
 					<div class="smart-forms smart-container wrap-2" style="margin:30px">
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
@@ -242,7 +195,9 @@
 			</div>
 		</div>
 	</div>
-	<?php // $this->load->view('layout/footer'); ?>
+	<?php
+        $this->load->view('layout/footer');
+    ?>
 </body>
 
 </html>
@@ -251,7 +206,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/frontend/css/jquery-ui.css">
 
-<script  type="text/javascript" src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
+
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
@@ -261,7 +216,7 @@
 
 
 <script>
-	$(document).ready(function() {
+	$(document).ready(function() { 
         $(".priceInput").mask("000,000,000,000,000.00", {reverse: true});
         $(".daysInput").mask("000", {reverse: true});
 
@@ -289,11 +244,9 @@
         });
 	});
 
-	function generate_netsheet(formFlag)
+	function generate_netsheet(formFlag) 
     {
         if (formFlag == 1) {
-            console.log($(this));
-            console.log($(this).form);
 			$(this).form.submit();
 		} else {
             $('#page-preloader').css('display', 'none');

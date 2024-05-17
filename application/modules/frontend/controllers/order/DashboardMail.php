@@ -1,58 +1,62 @@
 <?php
 
-(defined('BASEPATH')) OR exit('No direct script access allowed');
+(defined('BASEPATH')) or exit('No direct script access allowed');
 use mikehaertl\pdftk\Pdf;
-class DashboardMail extends MX_Controller {
 
-	private $marital_status = array();
-	private $vesting_choice = array();
+class DashboardMail extends MX_Controller
+{
 
-    function __construct() {
+    private $marital_status = array();
+    private $vesting_choice = array();
+
+    public function __construct()
+    {
         parent::__construct();
         $this->load->helper(
-            array('file', 'url','form')
+            array('file', 'url', 'form')
         );
         $this->load->library('session');
+        $this->load->library('order/salesDashboardTemplate');
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/home_model');
-		$this->load->model('order/fees_model');
-		$this->load->library('order/resware');
+        $this->load->model('order/fees_model');
+        $this->load->library('order/resware');
         $this->load->library('order/twilio');
         $this->load->model('order/titleOfficer');
         $this->load->model('order/twilioMessage');
         $this->load->model('order/titlePointData');
         $this->load->library('order/titlepoint');
-		$this->marital_status = array(
-			"husband_and_wife"=>['show_married_option'=>"1","text"=>"Husband and Wife"],
-			"wife_and_husband"=>['show_married_option'=>"1","text"=>"Wife and Husband"],
-			"a_married_couple"=>['show_married_option'=>"1","text"=>"A Married Couple"],
-			"a_single_man"=>['show_married_option'=>"0","text"=>"A Single Man (never married)"],
-			"a_single_woman"=>['show_married_option'=>"0","text"=>"A Single Woman (never married)"],
-			"a_single_person"=>['show_married_option'=>"0","text"=>"A Single Person (never married)"],
-			"a_married_man"=>['show_married_option'=>"0","text"=>"A Married Man (as his sole and separate property)*"],
-			"a_married_woman"=>['show_married_option'=>"0","text"=>"A Married Woman (as her sole and separate property)*"],
-			"a_married_person"=>['show_married_option'=>"0","text"=>"A Married Person (as his/her sole and separate property)*"],
-			"an_unmarried_man"=>['show_married_option'=>"0","text"=>"An Unmarried Man (divorced)"],
-			"an_unmarried_woman"=>['show_married_option'=>"0","text"=>"An Unmarried Woman (divorced)"],
-			"an_unmarried_person"=>['show_married_option'=>"0","text"=>"An Unmarried Person (divorced)"],
-			"a_widow"=>['show_married_option'=>"0","text"=>"A Widow (spouse deceased)"],
-			"a_widower"=>['show_married_option'=>"0","text"=>"A Widower (spouse deceased)"],
-			"registered_domestic_partners"=>['show_married_option'=>"1","text"=>"Registered Domestic Partners"],
-		);
+        $this->marital_status = array(
+            "husband_and_wife" => ['show_married_option' => "1", "text" => "Husband and Wife"],
+            "wife_and_husband" => ['show_married_option' => "1", "text" => "Wife and Husband"],
+            "a_married_couple" => ['show_married_option' => "1", "text" => "A Married Couple"],
+            "a_single_man" => ['show_married_option' => "0", "text" => "A Single Man (never married)"],
+            "a_single_woman" => ['show_married_option' => "0", "text" => "A Single Woman (never married)"],
+            "a_single_person" => ['show_married_option' => "0", "text" => "A Single Person (never married)"],
+            "a_married_man" => ['show_married_option' => "0", "text" => "A Married Man (as his sole and separate property)*"],
+            "a_married_woman" => ['show_married_option' => "0", "text" => "A Married Woman (as her sole and separate property)*"],
+            "a_married_person" => ['show_married_option' => "0", "text" => "A Married Person (as his/her sole and separate property)*"],
+            "an_unmarried_man" => ['show_married_option' => "0", "text" => "An Unmarried Man (divorced)"],
+            "an_unmarried_woman" => ['show_married_option' => "0", "text" => "An Unmarried Woman (divorced)"],
+            "an_unmarried_person" => ['show_married_option' => "0", "text" => "An Unmarried Person (divorced)"],
+            "a_widow" => ['show_married_option' => "0", "text" => "A Widow (spouse deceased)"],
+            "a_widower" => ['show_married_option' => "0", "text" => "A Widower (spouse deceased)"],
+            "registered_domestic_partners" => ['show_married_option' => "1", "text" => "Registered Domestic Partners"],
+        );
 
-		$this->vesting_choice = array(
-			"community_property"=>["text"=>"Community Property","pdf_val"=>"Community Property"],
-			"community_property_with_right"=>["text"=>"Community Property with Right of Survivorship","pdf_val"=>"Community Property with Right of Survivorship"],
-			"joint_tenants"=>["text"=>"Joint Tenants","pdf_val"=>"Joint Tenants"],
-			"tenants_in_common"=>["text"=>"Tenants In Common (Please Give Interest Amounts)","pdf_val"=>"Tenants In Common (Please Give Interest Amounts)"],
-			"sole_and_separate_property"=>["text"=>"Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.)","pdf_val"=>"Sole and Separ"],
-			"partnership"=>["text"=>"Partnership (Limited Or General) ","pdf_val"=>"Partnership"],
-			"corporation"=>["text"=>"Corporation (California Or Other State) ","pdf_val"=>"Corporation"],
-			"a_trust"=>["text"=>"A Trust (attach copy of Trust Agreement) ","pdf_val"=>"A Trust"],
-			"other"=>["text"=>"Other","pdf_val"=>"Other"],
-		);
+        $this->vesting_choice = array(
+            "community_property" => ["text" => "Community Property", "pdf_val" => "Community Property"],
+            "community_property_with_right" => ["text" => "Community Property with Right of Survivorship", "pdf_val" => "Community Property with Right of Survivorship"],
+            "joint_tenants" => ["text" => "Joint Tenants", "pdf_val" => "Joint Tenants"],
+            "tenants_in_common" => ["text" => "Tenants In Common (Please Give Interest Amounts)", "pdf_val" => "Tenants In Common (Please Give Interest Amounts)"],
+            "sole_and_separate_property" => ["text" => "Sole and Separate Property (If Married or Domestic Partnership, an Interspousal Grant Deed, A Quitclaim Deed, Statement Of Information and Appropriate Instructions Will Need To Be Submitted.)", "pdf_val" => "Sole and Separ"],
+            "partnership" => ["text" => "Partnership (Limited Or General) ", "pdf_val" => "Partnership"],
+            "corporation" => ["text" => "Corporation (California Or Other State) ", "pdf_val" => "Corporation"],
+            "a_trust" => ["text" => "A Trust (attach copy of Trust Agreement) ", "pdf_val" => "A Trust"],
+            "other" => ["text" => "Other", "pdf_val" => "Other"],
+        );
     }
 
     public function generateCplFromMail()
@@ -67,9 +71,9 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        $random_number = $this->uri->segment(2); 
+        $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];  
+        $fileId = $order[0]['file_id'];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $orderDetails = $this->order->get_order_details($fileId, 1);
@@ -81,48 +85,58 @@ class DashboardMail extends MX_Controller {
         if (!empty($orderDetails['cpl_document_name'])) {
             $documentName = $orderDetails['cpl_document_name'];
             if (env('AWS_ENABLE_FLAG') == 1) {
-                $documentUrl = env('AWS_PATH')."documents/".$documentName;
-                $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"cpl"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                $documentUrl = env('AWS_PATH') . "documents/" . $documentName;
+                // $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"cpl"' . ");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+                // <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                $data['action'] = "<div style='display:flex;justify-content: space-around;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"cpl"' . ");' title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a>
+                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
             } else {
-                $documentUrl = FCPATH.'uploads/documents/'.$documentName;
-                $data['action'] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                $documentUrl = FCPATH . 'uploads/documents/' . $documentName;
+                // $data['action'] = "<div style='display:flex;'><a href='$documentUrl' download><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+                //                 <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+                $data['action'] = "<div style='display:flex;justify-content: space-around;'><a href='$documentUrl' download title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a>
+                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
             }
-            
-        } else if(!empty($orderDetails['westcor_file_id'])) {
+
+        } else if (!empty($orderDetails['westcor_file_id'])) {
             $westcorFileId = $orderDetails['westcor_file_id'];
             $westcorOrderId = $orderDetails['westcor_order_id'];
-            $data['action'] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+            // $data['action'] = "<div style='display:flex;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
+            //                     <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+            $data['action'] = "<div style='display:flex;justify-content: space-around;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);' title='Download' title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a>
+                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
         } else {
-            $data['action'] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='".base_url()."create-cpl/".$file_id."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
-                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
-        }        
-        $this->load->view('layout/head_dashboard', $data);
-        $this->load->view('order/mail_cpl', $data);
+            // $data['action'] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='" . base_url() . "create-cpl/" . $file_id . "' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
+            //                     <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
+            $data['action'] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $file_id);' action='" . base_url() . "create-cpl/" . $order['file_id'] . "' method='POST'><a href='javascript:void(0);'  title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span><span class='text'>Generate</span></a></form>
+                                <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
+        }
+        // $this->load->view('layout/head_dashboard', $data);
+        // $this->load->view('order/mail_cpl', $data);
+        $data['displaySidebar'] = false;
+        $this->salesdashboardtemplate->show("order", "mail_cpl", $data);
     }
 
     public function generateFeesFromMail()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $random_number = $this->uri->segment(2); 
+        $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
         $fileId = $order[0]['file_id'];
 
-        $orderDetails = $this->order->get_order_details($fileId,1);
+        $orderDetails = $this->order->get_order_details($fileId, 1);
         $post_data = $result_decoded = array();
         $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
-		$userData = array(
-			'admin_api' => 1
-		);
+        $userData = array(
+            'admin_api' => 1,
+        );
 
-		$result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
-		if (json_decode($result) && count(json_decode($result)->Files)) {
-			$result_decoded = json_decode($result);
-			$loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
-			$salesAmount = $result_decoded->Files[0]->SalesPrice;
+        $result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
+        if (json_decode($result) && count(json_decode($result)->Files)) {
+            $result_decoded = json_decode($result);
+            $loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
+            $salesAmount = $result_decoded->Files[0]->SalesPrice;
         }
 
         $result_decoded = json_decode($result);
@@ -135,58 +149,58 @@ class DashboardMail extends MX_Controller {
         $property_data = $result_decoded->Files[0]->Properties[0];
         $buyer_data = $result_decoded->Files[0]->Buyers[0];
         $buyer_name = $buyer_data->Primary;
-        
+
         $post_data['file_id'] = $result_decoded->Files[0]->FileID;
         $post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
         $post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
         $post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
         $post_data['city'] = $property_data->City;
         $post_data['county'] = $property_data->County;
-        $post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First." ".$result_decoded->Files[0]->Buyers[0]->Primary->Last;
+        $post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First . " " . $result_decoded->Files[0]->Buyers[0]->Primary->Last;
         $post_data['full_address'] = $property_data->StreetNumber;
-        $post_data['full_address'] .= ! empty($property_data->StreetDirection) ?' '.substr($property_data->StreetDirection, 0, 1) : '';
-        $post_data['full_address'] .= ' '.$property_data->StreetName;
-        $post_data['full_address'] .= ' '.$property_data->StreetSuffix;	
-        $post_data['full_address'] .= ', '.$property_data->City;	
-        $post_data['full_address'] .= ', '.$property_data->State;	
-        $post_data['full_address'] .= ' '.$property_data->Zip;	
-        $post_data['borrower'] = ! empty($buyer_name->First) ? $buyer_name->First : '';
-        $post_data['borrower'] .= ! empty($buyer_name->Middle) ? ' '.$buyer_name->Middle : '';
-        $post_data['borrower'] .= ! empty($buyer_name->Last) ? ' '.$buyer_name->Last : '';
+        $post_data['full_address'] .= !empty($property_data->StreetDirection) ? ' ' . substr($property_data->StreetDirection, 0, 1) : '';
+        $post_data['full_address'] .= ' ' . $property_data->StreetName;
+        $post_data['full_address'] .= ' ' . $property_data->StreetSuffix;
+        $post_data['full_address'] .= ', ' . $property_data->City;
+        $post_data['full_address'] .= ', ' . $property_data->State;
+        $post_data['full_address'] .= ' ' . $property_data->Zip;
+        $post_data['borrower'] = !empty($buyer_name->First) ? $buyer_name->First : '';
+        $post_data['borrower'] .= !empty($buyer_name->Middle) ? ' ' . $buyer_name->Middle : '';
+        $post_data['borrower'] .= !empty($buyer_name->Last) ? ' ' . $buyer_name->Last : '';
         $post_data['borrower'] = trim($post_data['borrower']);
 
-        if(empty($post_data['borrower'])) {
-            $post_data['borrower'] = ! empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
+        if (empty($post_data['borrower'])) {
+            $post_data['borrower'] = !empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
         }
 
-        $post_data['ECD']='';
-        if(!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
-            $ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "",$result_decoded->Files[0]->Dates->FileCompletedDate));
-            $ecd_date = date('m/d/Y', $ecd_timestamp/1000);
+        $post_data['ECD'] = '';
+        if (!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
+            $ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "", $result_decoded->Files[0]->Dates->FileCompletedDate));
+            $ecd_date = date('m/d/Y', $ecd_timestamp / 1000);
             $post_data['ECD'] = $ecd_date;
         }
 
         if (strpos($result_decoded->Files[0]->TransactionProductType->ProductType, 'Sale') !== false) {
             $netsheet_for = $this->input->post('req_type');
-            $post_data['lenderInsurance'] = 1; 
-            $post_data['transactionType'] = 'Resale'; 
-            $post_data['transferTaxesCheck'] = 1; 
-            
+            $post_data['lenderInsurance'] = 1;
+            $post_data['transactionType'] = 'Resale';
+            $post_data['transferTaxesCheck'] = 1;
+
         } else {
-            $post_data['netsheet_for'] = ''; 
-            $post_data['lenderInsurance'] = 0; 
-            $post_data['transactionType'] = 'Re-Finance'; 
-            $post_data['transferTaxesCheck'] = 0; 
+            $post_data['netsheet_for'] = '';
+            $post_data['lenderInsurance'] = 0;
+            $post_data['transactionType'] = 'Re-Finance';
+            $post_data['transferTaxesCheck'] = 0;
         }
-        $post_data['escrowPriceCheck'] = 1; 
-        $post_data['recordingPriceCheck'] = 1; 
-    
-        $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
+        $post_data['escrowPriceCheck'] = 1;
+        $post_data['recordingPriceCheck'] = 1;
+
+        $ch = curl_init(env('CALC_API_URL') . 'index.php?welcome/createNetsheetDoc');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Authorization: Bearer '.env('PCT_CALC_TOKEN'),
+            'Authorization: Bearer ' . env('PCT_CALC_TOKEN'),
             'Content-Type: application/json',
             'Content-Length: ' . strlen(json_encode($post_data)))
         );
@@ -201,68 +215,75 @@ class DashboardMail extends MX_Controller {
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         $data['sales_amount'] = $salesAmount;
         $data['loan_amount'] = $loanAmount;
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/mail_fees');
+
+        // $this->load->view('layout/head_dashboard', $data);
+        // $this->load->view('order/mail_fees');
+
+        $data['displaySidebar'] = false;
+        $this->salesdashboardtemplate->show("order", "mail_fees", $data);
     }
 
-	public function proposedInsured()
+    public function proposedInsured()
     {
         $data['errors'] = array();
-		$data['success'] = array();
+        $data['success'] = array();
 
-		if ($this->session->userdata('errors')) {
-			$data['errors'] = $this->session->userdata('errors');
-			$this->session->unset_userdata('errors');
-		}
-
-		if ($this->session->userdata('success')) {
-			$data['success'] = $this->session->userdata('success');
-			$this->session->unset_userdata('success');
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
         }
-        $random_number = $this->uri->segment(2); 
+
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id']; 
+        $fileId = $order[0]['file_id'];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		$data['mail_dashboard'] = 1;
-		$orderDetails = $this->order->get_order_details($fileId,1);
-        
+        $data['mail_dashboard'] = 1;
+        $orderDetails = $this->order->get_order_details($fileId, 1);
+
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
-		$data['created'] = !empty($orderDetails['proposed_document_created_date']) ? date("m/d/Y", strtotime($orderDetails['proposed_document_created_date'])) : '';
+        $data['created'] = !empty($orderDetails['proposed_document_created_date']) ? date("m/d/Y", strtotime($orderDetails['proposed_document_created_date'])) : '';
 
-        if (!empty($orderDetails['proposed_insured_document_name'])) 
-        {
+        if (!empty($orderDetails['proposed_insured_document_name'])) {
             $file_id = $orderDetails['file_id'];
             $documentName = $orderDetails['proposed_insured_document_name'];
             if (env('AWS_ENABLE_FLAG') == 1) {
-                $documentUrl = env('AWS_PATH')."proposed-insured/".$documentName;
-                $action = "<a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"proposed_insured"'.");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
+                $documentUrl = env('AWS_PATH') . "proposed-insured/" . $documentName;
+                // $action = "<a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"proposed_insured"' . ");'><button class='btn btn-grad-2a' type='button' style='background: #d35411;'>Download</button></a>";
+                $action = '<div style="display:flex;justify-content: space-around; width: 100%;" ><a href="' . $documentUrl . '" target="_blanck"  onclick="downloadDocumentFromAws(' . $documentUrl . ',' . 'proposed_insured' . ');" type="button" title="Download" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>';
             } else {
-                $documentUrl = FCPATH.'uploads/proposed-insured/'.$documentName;
-                $action = '<a href="'.$documentUrl.'" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+                $documentUrl = FCPATH . 'uploads/proposed-insured/' . $documentName;
+                // $action = '<a href="' . $documentUrl . '" download><button class="btn btn-grad-2a" type="button" style="background: #d35411;">Download</button></a>';
+                $action = '<div style="display:flex;justify-content: space-around; width: 100%;" ><a href="' . $documentUrl . '"  target="_blanck" download type="button" title="Download" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>';
             }
-        }
-        else
-        {
-            $action = '<a href="javascript:void(0);" onclick="generateProposedInsured('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+        } else {
+            // $action = '<a href="javascript:void(0);" onclick="generateProposedInsured(' . $orderDetails['file_id'] . ');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
+            $action = '<div style="display:flex;justify-content: space-around; width: 100%;" ><a href="javascript:void(0);" onclick="generateProposedInsured(' . $orderDetails['file_id'] . ');" type="button" title="Generate" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-seedling"></i></span><span class="text">Generate</span></a>';
         }
 
-		$action .= '<a href="javascript:void(0);" onclick="editInformation('.$orderDetails['file_id'].');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+        // $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $orderDetails['file_id'] . ');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
+        $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $orderDetails['file_id'] . ');" class="btn btn-primary btn-icon-split" ><span class="icon text-white-50"><i class="fas fa-edit"></i></span><span class="text">Edit</span></a></div>';
 
         $data['action'] = $action;
         $condition = array(
             'where' => array(
-                'status' => 1
-            )
+                'status' => 1,
+            ),
         );
-        
+
         $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
         $data['proposedBranches'] = $this->order->getProposedBranches();
 
-        $this->load->view('layout/head_dashboard',$data);
-        $this->load->view('order/mail_proposed_insured', $data);
-	}
-	
+        // $this->load->view('layout/head_dashboard', $data);
+        // $this->load->view('order/mail_proposed_insured', $data);
+        $data['displaySidebar'] = false;
+        $this->salesdashboardtemplate->show("order", "mail_proposed_insured", $data);
+    }
+
     public function borrowerInformation()
     {
         $random_number = $this->uri->segment(2);
@@ -276,11 +297,11 @@ class DashboardMail extends MX_Controller {
         $condition = array(
             'where' => array(
                 'random_number' => $random_number,
-            )
+            ),
         );
         $order = $this->order->get_order($condition);
 
-        if(!empty($order)) {
+        if (!empty($order)) {
             $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
             $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
             $data['sellerFlag'] = $sellerFlag;
@@ -295,83 +316,82 @@ class DashboardMail extends MX_Controller {
                 $borrower_mobile_number = isset($orderDetails['borrower_mobile_number']) && !empty($orderDetails['borrower_mobile_number']) ? $orderDetails['borrower_mobile_number'] : '';
             }
 
-            if(!empty($orderDetails['escrow_officer_id'])) {
+            if (!empty($orderDetails['escrow_officer_id'])) {
                 $escrowOfficerCon = array(
                     'where' => array(
                         'partner_id' => $orderDetails['escrow_officer_id'],
-                    )
+                    ),
                 );
                 $escrowOfficerData = $this->home_model->get_company_rows($escrowOfficerCon);
-                $data['escrow_officer'] =  $escrowOfficerData[0]['partner_name'];
+                $data['escrow_officer'] = $escrowOfficerData[0]['partner_name'];
             } else {
                 $data['escrow_officer'] = '';
             }
-            
-        
+
             if ($orderDetails['sales_amount'] > 0) {
                 if ($sellerFlag) {
                     if (!empty($orderDetails['primary_owner'])) {
                         $borrowerNameInfo = explode(" ", $orderDetails['primary_owner']);
-                        if(count($borrowerNameInfo) == 3) {
+                        if (count($borrowerNameInfo) == 3) {
                             $data['borrower_first_name'] = $borrowerNameInfo[0];
                             $data['borrower_middle_name'] = $borrowerNameInfo[1];
                             $data['borrower_last_name'] = $borrowerNameInfo[2];
-                        } else if(count($borrowerNameInfo) == 2) {
+                        } else if (count($borrowerNameInfo) == 2) {
                             $data['borrower_first_name'] = $borrowerNameInfo[0];
-                            $data['borrower_middle_name'] = '' ;
+                            $data['borrower_middle_name'] = '';
                             $data['borrower_last_name'] = $borrowerNameInfo[1];
                         } else {
-                            $data['borrower_first_name'] = '' ;
-                            $data['borrower_middle_name'] = '' ;
-                            $data['borrower_last_name'] = '' ;
+                            $data['borrower_first_name'] = '';
+                            $data['borrower_middle_name'] = '';
+                            $data['borrower_last_name'] = '';
                         }
                     } else {
-                        $data['borrower_first_name'] = '' ;
-                        $data['borrower_middle_name'] = '' ;
-                        $data['borrower_last_name'] = '' ;
+                        $data['borrower_first_name'] = '';
+                        $data['borrower_middle_name'] = '';
+                        $data['borrower_last_name'] = '';
                     }
                 } else {
                     if (!empty($orderDetails['borrower'])) {
                         $borrowerNameInfo = explode(" ", $orderDetails['borrower']);
-                        if(count($borrowerNameInfo) == 3) {
+                        if (count($borrowerNameInfo) == 3) {
                             $data['borrower_first_name'] = $borrowerNameInfo[0];
                             $data['borrower_middle_name'] = $borrowerNameInfo[1];
                             $data['borrower_last_name'] = $borrowerNameInfo[2];
-                        } else if(count($borrowerNameInfo) == 2) {
+                        } else if (count($borrowerNameInfo) == 2) {
                             $data['borrower_first_name'] = $borrowerNameInfo[0];
-                            $data['borrower_middle_name'] = '' ;
+                            $data['borrower_middle_name'] = '';
                             $data['borrower_last_name'] = $borrowerNameInfo[1];
                         } else {
-                            $data['borrower_first_name'] = '' ;
-                            $data['borrower_middle_name'] = '' ;
-                            $data['borrower_last_name'] = '' ;
+                            $data['borrower_first_name'] = '';
+                            $data['borrower_middle_name'] = '';
+                            $data['borrower_last_name'] = '';
                         }
                     } else {
-                        $data['borrower_first_name'] = '' ;
-                        $data['borrower_middle_name'] = '' ;
-                        $data['borrower_last_name'] = '' ;
+                        $data['borrower_first_name'] = '';
+                        $data['borrower_middle_name'] = '';
+                        $data['borrower_last_name'] = '';
                     }
                 }
             } else {
                 if (!empty($orderDetails['primary_owner'])) {
                     $borrowerNameInfo = explode(" ", $orderDetails['primary_owner']);
-                    if(count($borrowerNameInfo) == 3) {
+                    if (count($borrowerNameInfo) == 3) {
                         $data['borrower_first_name'] = $borrowerNameInfo[0];
                         $data['borrower_middle_name'] = $borrowerNameInfo[1];
                         $data['borrower_last_name'] = $borrowerNameInfo[2];
-                    } else if(count($borrowerNameInfo) == 2) {
+                    } else if (count($borrowerNameInfo) == 2) {
                         $data['borrower_first_name'] = $borrowerNameInfo[0];
-                        $data['borrower_middle_name'] = '' ;
+                        $data['borrower_middle_name'] = '';
                         $data['borrower_last_name'] = $borrowerNameInfo[1];
                     } else {
-                        $data['borrower_first_name'] = '' ;
-                        $data['borrower_middle_name'] = '' ;
-                        $data['borrower_last_name'] = '' ;
+                        $data['borrower_first_name'] = '';
+                        $data['borrower_middle_name'] = '';
+                        $data['borrower_last_name'] = '';
                     }
                 } else {
-                    $data['borrower_first_name'] = '' ;
-                    $data['borrower_middle_name'] = '' ;
-                    $data['borrower_last_name'] = '' ;
+                    $data['borrower_first_name'] = '';
+                    $data['borrower_middle_name'] = '';
+                    $data['borrower_last_name'] = '';
                 }
             }
 
@@ -394,7 +414,7 @@ class DashboardMail extends MX_Controller {
                 }
                 $borrowerInfo = $this->order->get_borrower_info($order[0]['id'], $sellerFlag ? 0 : 1);
                 $borrowerResidenceInfo = $this->order->get_borrower_residence_info($order[0]['id'], $sellerFlag ? 0 : 1);
-                $data['borrower_name'] = $borrowerInfo['first_name']." ".$borrowerInfo['middle_name']." ".$borrowerInfo['last_name'];
+                $data['borrower_name'] = $borrowerInfo['first_name'] . " " . $borrowerInfo['middle_name'] . " " . $borrowerInfo['last_name'];
                 $data['borrower_address'] = $borrowerResidenceInfo[0]['address'];
                 $this->load->view('layout/head_dashboard', $data);
                 $this->load->view('order/borrower', $data);
@@ -407,8 +427,8 @@ class DashboardMail extends MX_Controller {
                 $data['file_id'] = $fileId;
                 $data['errors'] = array();
                 $data['success'] = array();
-                
-                $data['borrower_mobile_number'] =  $borrower_mobile_number;
+
+                $data['borrower_mobile_number'] = $borrower_mobile_number;
                 if ($this->session->userdata('errors')) {
                     $data['errors'] = $this->session->userdata('errors');
                     $this->session->unset_userdata('errors');
@@ -423,7 +443,7 @@ class DashboardMail extends MX_Controller {
                     $this->home_model->update(array('is_code_verified' => 0), array('file_id' => $fileId), 'order_details');
                 }
                 $this->load->view('layout/head_dashboard', $data);
-                $this->load->view('order/borrower', $data); 
+                $this->load->view('order/borrower', $data);
             } else {
                 $propertyAddress = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
                 $data['orderNumber'] = $orderNumber;
@@ -434,7 +454,7 @@ class DashboardMail extends MX_Controller {
                 $this->load->view('order/borrower_login', $data);
             }
         } else {
-            redirect(base_url().'order');
+            redirect(base_url() . 'order');
         }
     }
 
@@ -443,17 +463,17 @@ class DashboardMail extends MX_Controller {
         $phoneNumber = $this->input->post('phone_number');
         $is_seller = $this->input->post('is_seller');
 
-        if(isset($phoneNumber) && !empty($phoneNumber)) {
+        if (isset($phoneNumber) && !empty($phoneNumber)) {
             $randomNumber = $this->input->post('random_number');
-            $code = rand(10000000,99999999);
+            $code = rand(10000000, 99999999);
             $sid = env('TWILIO_SID');
             $token = env('TWILIO_TOKEN');
             $from = env('TWILIO_FROM');
-            $message = "Your Pacific Coast Safe Wire code is: ".$code;
-            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token,'to'=>'', 'from'=>$from), array(), 0, 0);
+            $message = "Your Pacific Coast Safe Wire code is: " . $code;
+            $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('message' => $message, 'account_sid' => $sid, 'token' => $token, 'to' => '', 'from' => $from), array(), 0, 0);
 
             try {
-                $result = $this->twilio->message($phoneNumber, $message,'',array('from'=>$from));
+                $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
                 $response = $result->toArray();
                 $response['msg_status'] = 'success';
                 $response['code'] = $code;
@@ -472,16 +492,16 @@ class DashboardMail extends MX_Controller {
                 $response['errorMessage'] = $e->getMessage();
             }
 
-            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code'=>$code,'account_sid'=>$sid,'token'=>$token,'to'=>'', 'from'=>$from), $response, 0, $logid);
+            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', array('code' => $code, 'account_sid' => $sid, 'token' => $token, 'to' => '', 'from' => $from), $response, 0, $logid);
 
-            if($response['msg_status'] == 'success') {
+            if ($response['msg_status'] == 'success') {
 
-                if($is_seller) {
-                    $this->home_model->update(array('borrower_mobile_number_for_seller' => $phoneNumber, 'verification_code_for_seller' => $code,'is_code_verified_for_seller' => 0,'code_created_at_for_seller'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+                if ($is_seller) {
+                    $this->home_model->update(array('borrower_mobile_number_for_seller' => $phoneNumber, 'verification_code_for_seller' => $code, 'is_code_verified_for_seller' => 0, 'code_created_at_for_seller' => date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
                 } else {
-                    $this->home_model->update(array('borrower_mobile_number' => $phoneNumber, 'verification_code' => $code,'is_code_verified' => 0,'code_created_at'=> date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
+                    $this->home_model->update(array('borrower_mobile_number' => $phoneNumber, 'verification_code' => $code, 'is_code_verified' => 0, 'code_created_at' => date("Y-m-d H:i:s")), array('random_number' => $randomNumber), 'order_details');
                 }
-            
+
                 $data = array(
                     'message' => $response['body'],
                     'sent_from' => $response['from'],
@@ -493,14 +513,14 @@ class DashboardMail extends MX_Controller {
                 );
 
                 $this->twilioMessage->insert($data);
-                $result = array('msg_status'=>'success', 'message'=> 'Code generated successfully.');
+                $result = array('msg_status' => 'success', 'message' => 'Code generated successfully.');
             } else {
-                $result = array('msg_status'=>'error', 'error_message'=> $response['errorMessage']);
+                $result = array('msg_status' => 'error', 'error_message' => $response['errorMessage']);
             }
         } else {
-            $result = array('msg_status'=>'error', 'error_message'=> 'Please enter phone number.');               
+            $result = array('msg_status' => 'error', 'error_message' => 'Please enter phone number.');
         }
-        echo json_encode($result); exit;
+        echo json_encode($result);exit;
     }
 
     public function borrowerInfoSubmit()
@@ -509,8 +529,8 @@ class DashboardMail extends MX_Controller {
         $success = array();
         $condition = array(
             'where' => array(
-                'id' =>  $this->input->post('order_id'),
-            )
+                'id' => $this->input->post('order_id'),
+            ),
         );
         $order = $this->order->get_order($condition);
         $is_seller = $this->input->post('is_seller');
@@ -564,16 +584,16 @@ class DashboardMail extends MX_Controller {
             'signature' => $this->input->post('signature'),
             'is_buyer' => $this->input->post('is_seller') == 1 ? 0 : 1,
             'spouse_signature' => $this->input->post('spouse_signature'),
-            'created_at' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
         );
-        $borrowerId = $this->home_model->insert($borrowerInfoData,'pct_order_borrower_info');
+        $borrowerId = $this->home_model->insert($borrowerInfoData, 'pct_order_borrower_info');
 
         $residence_addresses = $this->input->post('residence_addresses');
         $residence_from_dates = $this->input->post('residence_from_dates');
         $residence_to_dates = $this->input->post('residence_to_dates');
         $i = 0;
 
-        foreach($residence_addresses as $residence_address) {
+        foreach ($residence_addresses as $residence_address) {
             $borrowerResidenceData = array(
                 'address' => $residence_address,
                 'from_date' => $residence_from_dates[$i],
@@ -587,14 +607,14 @@ class DashboardMail extends MX_Controller {
         }
 
         $employment_status = $this->input->post('employment_status');
-        if($employment_status == 'add_business') {
+        if ($employment_status == 'add_business') {
             $business_names = $this->input->post('business_names');
             $employment_addresses = $this->input->post('employment_addresses');
             $employment_from_dates = $this->input->post('employment_from_dates');
             $employment_to_dates = $this->input->post('employment_to_dates');
             $j = 0;
 
-            foreach($business_names as $business_name) {
+            foreach ($business_names as $business_name) {
                 $borrowerEmploymentData = array(
                     'business_name' => $business_name,
                     'address' => $employment_addresses[$j],
@@ -610,37 +630,36 @@ class DashboardMail extends MX_Controller {
             }
 
             /*$partner_business_names = $this->input->post('partner_business_names');
-            $partner_addresses = $this->input->post('partner_addresses');
-            $partner_from_dates = $this->input->post('partner_from_dates');
-            $partner_to_dates = $this->input->post('partner_to_dates');
-            $k = 0;
+        $partner_addresses = $this->input->post('partner_addresses');
+        $partner_from_dates = $this->input->post('partner_from_dates');
+        $partner_to_dates = $this->input->post('partner_to_dates');
+        $k = 0;
 
-            if(!empty($partner_business_names)) {
-                foreach($partner_business_names as $partner_business_name) {
-                    $borrowerEmploymentPartnerData = array(
-                        'business_name' => $partner_business_name,
-                        'address' => $partner_addresses[$k],
-                        'from_date' => $partner_from_dates[$k],
-                        'to_date' => $partner_to_dates[$k],
-                        'order_id' => $this->input->post('order_id'),
-                        'is_partner_info' => 1,
-                        'created_at' => date('Y-m-d H:i:s'),
-                    );
-                    $this->home_model->insert($borrowerEmploymentPartnerData, 'pct_order_borrower_employment_info');
-                    $k++;
-                }
-            }*/
+        if(!empty($partner_business_names)) {
+        foreach($partner_business_names as $partner_business_name) {
+        $borrowerEmploymentPartnerData = array(
+        'business_name' => $partner_business_name,
+        'address' => $partner_addresses[$k],
+        'from_date' => $partner_from_dates[$k],
+        'to_date' => $partner_to_dates[$k],
+        'order_id' => $this->input->post('order_id'),
+        'is_partner_info' => 1,
+        'created_at' => date('Y-m-d H:i:s'),
+        );
+        $this->home_model->insert($borrowerEmploymentPartnerData, 'pct_order_borrower_employment_info');
+        $k++;
+        }
+        }*/
         }
 
-        if($is_seller == 1) {
+        if ($is_seller == 1) {
             $this->home_model->update(array('borrower_info_submitted_for_seller' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
         } else {
             $this->home_model->update(array('borrower_info_submitted' => 1), array('random_number' => $order[0]['random_number']), 'order_details');
         }
-       
 
         /* Generate PDF */
-        
+
         $borrower_info = $this->order->get_borrower_info($this->input->post('order_id'), $this->input->post('is_seller') == 1 ? 0 : 1);
 
         $borrower_residence_info = $this->order->get_borrower_residence_info($this->input->post('order_id'), $this->input->post('is_seller') == 1 ? 0 : 1);
@@ -653,10 +672,9 @@ class DashboardMail extends MX_Controller {
 
         $borrower_data['borrower_employment_info'] = isset($borrower_employment_info) && !empty($borrower_employment_info) ? $borrower_employment_info : array();
 
-        
         $this->load->library('m_pdf');
 
-        $html=$this->load->view('order/borrower_pdf',$borrower_data, true);
+        $html = $this->load->view('order/borrower_pdf', $borrower_data, true);
 
         $stylesheet = file_get_contents('assets/frontend/css/bootstrap.min.css');
 
@@ -664,21 +682,20 @@ class DashboardMail extends MX_Controller {
 
         $combinedCss = $stylesheet . $customCss;
 
-
         $this->m_pdf->pdf->WriteHTML($combinedCss, 1); // CSS Script goes here.
-        $this->m_pdf->pdf->WriteHTML($html,2);
+        $this->m_pdf->pdf->WriteHTML($html, 2);
         $this->load->model('order/document');
         $borrowerDocumentCount = $this->document->countBorrowerDocument($orderDetails['order_id']);
-        $document_name = "borrower_".$borrowerDocumentCount."_".$fileId.".pdf";
+        $document_name = "borrower_" . $borrowerDocumentCount . "_" . $fileId . ".pdf";
         if (!is_dir('uploads/borrower-information')) {
-            mkdir('./uploads/borrower-information', 0777, TRUE);
+            mkdir('./uploads/borrower-information', 0777, true);
         }
 
-        $pdfFilePath = './uploads/borrower-information/'.$document_name;
-        $this->m_pdf->pdf->Output($pdfFilePath,'F');
+        $pdfFilePath = './uploads/borrower-information/' . $document_name;
+        $this->m_pdf->pdf->Output($pdfFilePath, 'F');
 
         $contents = file_get_contents($pdfFilePath);
-        $binaryData   = base64_encode($contents);
+        $binaryData = base64_encode($contents);
 
         $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
 
@@ -687,83 +704,82 @@ class DashboardMail extends MX_Controller {
         /* Generate PDF */
 
         $success[] = "Borrower form submitted successfully.";
-        $endPoint = 'files/'. $fileId.'/actions';
-        $user_data['admin_api'] = 1; 
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), array(), 0, 0);
+        $endPoint = 'files/' . $fileId . '/actions';
+        $user_data['admin_api'] = 1;
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), array(), 0, 0);
         $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API').$endPoint, array(), $res, 0, $logid);
-        $result = json_decode($res,TRUE);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), $res, 0, $logid);
+        $result = json_decode($res, true);
 
         if (isset($result['Actions']) && !empty($result['Actions'])) {
             $array_keymap = $this->order->array_recursive_search_key_map(108, $result['Actions']);
-            if(!empty($array_keymap)) {
+            if (!empty($array_keymap)) {
                 $actionData = array(
                     'StartTask' => array(
-                        'CoordinatorTypeID'=> 19,
-                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                        'CoordinatorTypeID' => 19,
+                        'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
                     ),
                     'CompleteTask' => array(
                         'CoordinatorTypeID' => 30,
-                        'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
+                        'DueDate' => '/Date(' . (strtotime("+1 day", strtotime(date('Y-m-d H:i:s'))) * 1000) . '-0000)/',
                     ),
                 );
-                $endPoint = 'files/'. $fileId.'/actions/'.$result['Actions'][$array_keymap[0]]['FileActionID'];
-                $user_data['admin_api'] = 1; 
+                $endPoint = 'files/' . $fileId . '/actions/' . $result['Actions'][$array_keymap[0]]['FileActionID'];
+                $user_data['admin_api'] = 1;
                 $actionData = json_encode($actionData);
-                $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $this->input->post('order_id'), 0);
-                $res = $this->resware->make_request('PUT', $endPoint,  $actionData, $user_data);
-                $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API').$endPoint,  $actionData, $res, $this->input->post('order_id'), $logid);
-                $result = json_decode($res,TRUE);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $this->input->post('order_id'), 0);
+                $res = $this->resware->make_request('PUT', $endPoint, $actionData, $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $this->input->post('order_id'), $logid);
+                $result = json_decode($res, true);
             } else {
                 $actionData = array(
                     'ActionType' => array(
-                        'ActionTypeID' => 108
+                        'ActionTypeID' => 108,
                     ),
                     'Group' => array(
-                        'ActionGroupID' => 6
-                    ),    
+                        'ActionGroupID' => 6,
+                    ),
                     'StartTask' => array(
-                        'CoordinatorTypeID'=> 19,
-                        'DueDate' => '/Date('.(strtotime(date('Y-m-d H:i:s'))*1000).'-0000)/'
+                        'CoordinatorTypeID' => 19,
+                        'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
                     ),
                     'CompleteTask' => array(
                         'CoordinatorTypeID' => 30,
-                        'DueDate' => '/Date('.(strtotime("+1 day", strtotime(date('Y-m-d H:i:s')))*1000).'-0000)/'
+                        'DueDate' => '/Date(' . (strtotime("+1 day", strtotime(date('Y-m-d H:i:s'))) * 1000) . '-0000)/',
                     ),
                 );
-                $endPoint = 'files/'. $fileId.'/actions/';
-                $user_data['admin_api'] = 1; 
+                $endPoint = 'files/' . $fileId . '/actions/';
+                $user_data['admin_api'] = 1;
                 $actionData = json_encode($actionData);
-                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, array(), $this->input->post('order_id'), 0);
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $this->input->post('order_id'), 0);
                 $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
-                $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API').$endPoint, $actionData, $res, $this->input->post('order_id'), $logid);
-                $result = json_decode($res,TRUE);
+                $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $this->input->post('order_id'), $logid);
+                $result = json_decode($res, true);
             }
-        } 
+        }
         $data = array(
-            "errors" =>  $errors,
-            "success" => $success
+            "errors" => $errors,
+            "success" => $success,
         );
         $this->session->set_userdata($data);
-        if($is_seller == 1) {
-            redirect(base_url().'/borrower-information/seller/'.$order[0]['random_number']);
+        if ($is_seller == 1) {
+            redirect(base_url() . '/borrower-information/seller/' . $order[0]['random_number']);
         } else {
-            redirect(base_url().'/borrower-information/'.$order[0]['random_number']);
+            redirect(base_url() . '/borrower-information/' . $order[0]['random_number']);
         }
     }
-    
+
     public function code_verification()
     {
         $code = $this->input->post('code');
         $is_seller = $this->input->post('is_seller');
 
-        if(isset($code) && !empty($code))
-        {
+        if (isset($code) && !empty($code)) {
             $fileId = $this->input->post('fileId');
 
             $orderDetails = $this->order->get_order_details($fileId, 1);
 
-            if($is_seller) {
+            if ($is_seller) {
                 $verification_code = isset($orderDetails['verification_code_for_seller']) && !empty($orderDetails['verification_code_for_seller']) ? $orderDetails['verification_code_for_seller'] : '';
                 $code_created_at = isset($orderDetails['code_created_at_for_seller']) && !empty($orderDetails['code_created_at_for_seller']) ? $orderDetails['code_created_at_for_seller'] : '';
             } else {
@@ -771,80 +787,69 @@ class DashboardMail extends MX_Controller {
                 $code_created_at = isset($orderDetails['code_created_at']) && !empty($orderDetails['code_created_at']) ? $orderDetails['code_created_at'] : '';
             }
 
-            if($verification_code == $code)
-            {
-                $expire_date = date('Y-m-d H:i',strtotime('+3 minutes',strtotime($code_created_at)));
+            if ($verification_code == $code) {
+                $expire_date = date('Y-m-d H:i', strtotime('+3 minutes', strtotime($code_created_at)));
 
                 $now = date("Y-m-d H:i:s"); //current time
 
-
-                if ($now > $expire_date) 
-                { //if current time is greater then created time
-                    $response = array('status'=>'error', 'message'=> 'Your verification code has been expired.');
-                }
-                else
-                {
-                    if($is_seller) {
+                if ($now > $expire_date) { //if current time is greater then created time
+                    $response = array('status' => 'error', 'message' => 'Your verification code has been expired.');
+                } else {
+                    if ($is_seller) {
                         $this->home_model->update(array('is_code_verified_for_seller' => 1), array('id' => $orderDetails['order_id']), 'order_details');
                     } else {
                         $this->home_model->update(array('is_code_verified' => 1), array('id' => $orderDetails['order_id']), 'order_details');
                     }
-                    $response = array('status'=>'success');
-                }                
+                    $response = array('status' => 'success');
+                }
+            } else {
+                $response = array('status' => 'error', 'message' => 'Please enter valid verification code.');
             }
-            else
-            {
-                $response = array('status'=>'error', 'message'=> 'Please enter valid verification code.');
-            }
-            
-        }
-        else
-        {
-            $response = array('status'=>'error', 'message'=> 'Please enter verification code.');
+
+        } else {
+            $response = array('status' => 'error', 'message' => 'Please enter verification code.');
         }
 
-        echo json_encode($response); exit;
+        echo json_encode($response);exit;
     }
-
 
     public function genericLandingPage()
     {
-        if ($this->input->post()) { 
-            $this->form_validation->set_rules('order_number', 'Order Number', 'trim|required', array('required'=> 'Please enter Order Number'));
-            if ($this->form_validation->run($this) == FALSE) {
-                $response = array('status'=>'error', 'order_number_php_error'=> form_error('order_number'));
-                echo json_encode($response); exit;
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('order_number', 'Order Number', 'trim|required', array('required' => 'Please enter Order Number'));
+            if ($this->form_validation->run($this) == false) {
+                $response = array('status' => 'error', 'order_number_php_error' => form_error('order_number'));
+                echo json_encode($response);exit;
             } else {
                 $order_number = $this->input->post('order_number');
                 $condition = array(
                     'where' => array(
                         'file_number' => $order_number,
-                    )
+                    ),
                 );
                 $order = $this->order->get_order($condition);
                 if (!empty($order)) {
                     if (empty($order[0]['random_number'])) {
                         $randomString = $this->order->randomPassword();
-                        $randomString = md5($order[0]['id'].$randomString);
+                        $randomString = md5($order[0]['id'] . $randomString);
                         $this->home_model->update(array('random_number' => $randomString), array('id' => $order[0]['id']), 'order_details');
                         $order[0]['random_number'] = $randomString;
                     }
-                    $response = array('status'=> 'success', 'random_number'=> $order[0]['random_number'], 'prod_type' => $order[0]['prod_type']);
-                    echo json_encode($response); exit;
+                    $response = array('status' => 'success', 'random_number' => $order[0]['random_number'], 'prod_type' => $order[0]['prod_type']);
+                    echo json_encode($response);exit;
                 } else {
                     $data = json_encode(array('FileNumber' => $order_number));
                     $userData = array(
-                        'admin_api' => 1
-                    );	
-                    $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, array(), 0, 0);
+                        'admin_api' => 1,
+                    );
+                    $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, array(), 0, 0);
                     $res = $this->resware->make_request('POST', 'files/search', $data, $userData);
-                    $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API').'files/search', $data, $res, 0, $logid);
-                    $result = json_decode($res,TRUE);
-    
+                    $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
+                    $result = json_decode($res, true);
+
                     if (isset($result['Files']) && !empty($result['Files'])) {
 
-                        foreach ($result['Files'] as $res) 
-                        {
+                        foreach ($result['Files'] as $res) {
                             /* partners details */
                             $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
                             $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
@@ -856,31 +861,30 @@ class DashboardMail extends MX_Controller {
                                 'company_name' => $partner_name,
                                 'is_pass' => $partner_name,
                             );
-                            $user_details =  $this->home_model->get_user_by_name($condition);
+                            $user_details = $this->home_model->get_user_by_name($condition);
 
                             $customerId = 0;
-                            if(isset($user_details) && !empty($user_details))
-                            {
+                            if (isset($user_details) && !empty($user_details)) {
                                 $customerId = $user_details['id'];
                             }
                             /* partners details */
-                            $FullProperty = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
-                            $address = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'];
+                            $FullProperty = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'] . ", " . $res['Properties'][0]['City'] . ", " . $res['Properties'][0]['State'] . ", " . $res['Properties'][0]['Zip'];
+                            $address = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'];
                             $locale = $res['Properties'][0]['City'];
-                            
+
                             if (($locale)) {
                                 if (!empty($res['Properties'][0]['State'])) {
-                                    $locale .= ', '.$res['Properties'][0]['State'];
+                                    $locale .= ', ' . $res['Properties'][0]['State'];
                                 } else {
                                     $locale .= ', CA';
                                 }
                             }
                             $property_details = $this->getSearchResult($address, $locale);
-                            
+
                             $property_type = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
                             $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
                             $apn = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
-                            
+
                             $propertyData = array(
                                 'customer_id' => $customerId,
                                 'buyer_agent_id' => 0,
@@ -896,46 +900,46 @@ class DashboardMail extends MX_Controller {
                                 'apn' => $apn,
                                 'county' => $res['Properties'][0]['County'],
                                 'legal_description' => $LegalDescription,
-                                'status'=> 1
+                                'status' => 1,
                             );
 
                             $transactionData = array(
                                 'customer_id' => $customerId,
-                                'sales_amount' =>  !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                'sales_amount' => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
                                 'loan_number' => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
                                 'loan_amount' => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                 'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                 'purchase_type' => $res['TransactionProductType']['ProductTypeID'],
-                                'status'=> 1
+                                'status' => 1,
                             );
 
                             $primary_owner = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
-                            $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " ".$res['Buyers'][0]['Primary']['Middle'] : '';
-                            $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " ".$res['Buyers'][0]['Primary']['Last'] : '';
+                            $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
+                            $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
                             $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
                             $secondary_owner .= ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
-                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " ".$res['Buyers'][0]['Secondary']['Last'] : '';
+                            $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
                             $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
 
                             if (strpos($ProductTypeTxt, 'Loan') !== false) {
                                 $propertyData['primary_owner'] = $primary_owner;
                                 $propertyData['secondary_owner'] = $secondary_owner;
                                 $prod_type = 'loan';
-                            } elseif(strpos($ProductTypeTxt, 'Sale') !== false) {
+                            } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                                 $transactionData['borrower'] = $primary_owner;
                                 $transactionData['secondary_borrower'] = $secondary_owner;
                                 $propertyData['primary_owner'] = isset($property_details['primary_owner']) && !empty($property_details['primary_owner']) ? $property_details['primary_owner'] : '';
                                 $propertyData['secondary_owner'] = isset($property_details['secondary_owner']) && !empty($property_details['secondary_owner']) ? $property_details['secondary_owner'] : '';
                                 $prod_type = 'sale';
                             }
-                            
-                            $propertyId = $this->home_model->insert($propertyData,'property_details');
-                            $transactionId = $this->home_model->insert($transactionData,'transaction_details');
-                            $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "",$res['Dates']['OpenedDate'])))/1000);
+
+                            $propertyId = $this->home_model->insert($propertyData, 'property_details');
+                            $transactionId = $this->home_model->insert($transactionData, 'transaction_details');
+                            $time = round((int) (str_replace("-0000)/", "", str_replace("/Date(", "", $res['Dates']['OpenedDate']))) / 1000);
                             $created_date = date('Y-m-d H:i:s', $time);
                             $randomString = $this->order->randomPassword();
-							
-							$randomString = md5($randomString);
+
+                            $randomString = md5($randomString);
 
                             $orderData = array(
                                 'customer_id' => $customerId,
@@ -944,22 +948,22 @@ class DashboardMail extends MX_Controller {
                                 'property_id' => $propertyId,
                                 'transaction_id' => $transactionId,
                                 'created_at' => $created_date,
-                                'status'=> 1,
-                                'is_imported'=> 1,
-                                'is_sales_rep_order'=> 0,
+                                'status' => 1,
+                                'is_imported' => 1,
+                                'is_sales_rep_order' => 0,
                                 'random_number' => $randomString,
                                 'prod_type' => $prod_type,
-                                'resware_status'=> strtolower($res['Status']['Name']),
+                                'resware_status' => strtolower($res['Status']['Name']),
                             );
 
-                            $orderId = $this->home_model->insert($orderData,'order_details');
-                            $response = array('status'=> 'success', 'random_number'=> $randomString, 'prod_type' => $order[0]['prod_type']);
-                            echo json_encode($response); exit;
+                            $orderId = $this->home_model->insert($orderData, 'order_details');
+                            $response = array('status' => 'success', 'random_number' => $randomString, 'prod_type' => $order[0]['prod_type']);
+                            echo json_encode($response);exit;
                         }
                     } else {
-                        $response = array('status'=>'error', 'order_number_php_error'=> 'Please enter correct order number');
+                        $response = array('status' => 'error', 'order_number_php_error' => 'Please enter correct order number');
                     }
-                    echo json_encode($response); exit;
+                    echo json_encode($response);exit;
                 }
             }
         } else {
@@ -972,7 +976,7 @@ class DashboardMail extends MX_Controller {
         $this->load->model('order/document');
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
-        $fileSize = filesize('./uploads/borrower-information/'.$document_name);
+        $fileSize = filesize('./uploads/borrower-information/' . $document_name);
         $documentData = array(
             'document_name' => $document_name,
             'original_document_name' => $document_name,
@@ -987,82 +991,79 @@ class DashboardMail extends MX_Controller {
             'is_borrower_doc' => 1,
         );
         $documentId = $this->document->insert($documentData);
-        $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
-        $documentApiData = array(           
+        $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
+        $documentApiData = array(
             'DocumentName' => $document_name,
             'DocumentType' => array(
                 'DocumentTypeID' => 1037,
             ),
             'Description' => 'Statement Of Information Document',
             'InternalOnly' => false,
-            'DocumentBody' => $binaryData
+            'DocumentBody' => $binaryData,
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-        
-        $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
         $user_data['email'] = $orderUser['email_address'];
         $user_data['password'] = $orderUser['random_password'];
         $user_data['from_mail'] = 1;
-        
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
         $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
         $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 
     public function getSearchResult($address, $locale)
     {
-        $data=new stdClass();
-        $data->Address= $address;
-        $data->LastLine= (string) $locale;
-        $data->ClientReference= '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
-        $data->OwnerName= '';
-        $data->key= env('BLACK_KNIGHT_KEY');
-        $data->ReportType= '187';
+        $data = new stdClass();
+        $data->Address = $address;
+        $data->LastLine = (string) $locale;
+        $data->ClientReference = '<CustCompFilter><CompNum>8</CompNum><MonthsBack>12</MonthsBack></CustCompFilter>';
+        $data->OwnerName = '';
+        $data->key = env('BLACK_KNIGHT_KEY');
+        $data->ReportType = '187';
 
         $request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
 
-        $requestUrl = $request.http_build_query($data);
+        $requestUrl = $request . http_build_query($data);
 
-        $getsortedresults = isset($_GET['getsortedresults'])?$_GET['getsortedresults']:'false';
-        
+        $getsortedresults = isset($_GET['getsortedresults']) ? $_GET['getsortedresults'] : 'false';
+
         $opts = array(
-            'http'=>array(
-                'header' => "User-Agent:MyAgent/1.0\r\n"
+            'http' => array(
+                'header' => "User-Agent:MyAgent/1.0\r\n",
             ),
-            "ssl"=>array(
-                "verify_peer"=>false,
-                "verify_peer_name"=>false,
-            )
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
         );
         $context = stream_context_create($opts);
-        $file = file_get_contents($requestUrl,false,$context);
+        $file = file_get_contents($requestUrl, false, $context);
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
-        $result = json_decode($response,TRUE);
+        $result = json_decode($response, true);
         $property_info = array();
-        if(isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK')
-        {
+        if (isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK') {
             $reportUrl = (isset($result['ReportURL']) && !empty($result['ReportURL'])) ? $result['ReportURL'] : '';
 
-            if($reportUrl)
-            {
-                $rdata=new stdClass();
-                $rdata->key= env('BLACK_KNIGHT_KEY');
-                $requestUrl = $reportUrl.http_build_query($rdata);
-                $reportFile = file_get_contents($requestUrl,false,$context);
+            if ($reportUrl) {
+                $rdata = new stdClass();
+                $rdata->key = env('BLACK_KNIGHT_KEY');
+                $requestUrl = $reportUrl . http_build_query($rdata);
+                $reportFile = file_get_contents($requestUrl, false, $context);
                 $reportData = simplexml_load_string($reportFile);
                 $response = json_encode($reportData);
-                $details = json_decode($response,TRUE);
+                $details = json_decode($response, true);
 
                 $property_info['property_type'] = isset($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) && !empty($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) ? $details['PropertyProfile']['PropertyCharacteristics']['UseCode'] : '';
                 $property_info['legaldescription'] = isset($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) && !empty($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) ? $details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription'] : '';
                 $property_info['apn'] = isset($details['PropertyProfile']['APN']) && !empty($details['PropertyProfile']['APN']) ? $details['PropertyProfile']['APN'] : '';
 
                 $property_info['unit_no'] = isset($details['PropertyProfile']['SiteUnit']) && !empty($details['PropertyProfile']['SiteUnit']) ? $details['PropertyProfile']['SiteUnit'] : '';
-                
+
                 $property_info['fips'] = isset($details['SubjectValueInfo']['FIPS']) && !empty($details['SubjectValueInfo']['FIPS']) ? $details['SubjectValueInfo']['FIPS'] : '';
 
                 $primaryOwner = isset($details['PropertyProfile']['PrimaryOwnerName']) && !empty($details['PropertyProfile']['PrimaryOwnerName']) ? $details['PropertyProfile']['PrimaryOwnerName'] : '';
@@ -1075,65 +1076,59 @@ class DashboardMail extends MX_Controller {
         return $property_info;
     }
 
-    public function tpCreateService($methodId,$random_number,$propertyData=array(), $userdata = array())
+    public function tpCreateService($methodId, $random_number, $propertyData = array(), $userdata = array())
     {
-        /* Insert into table */        
-        if($random_number)
-        {
-            $session_id = 'tp_api_id_'.$random_number;
-        
-            $con =  array(
-                        'where' => array(
-                            'session_id' => $session_id
-                        ),
-                        'returnType' => 'count'
-                    );
+        /* Insert into table */
+        if ($random_number) {
+            $session_id = 'tp_api_id_' . $random_number;
+
+            $con = array(
+                'where' => array(
+                    'session_id' => $session_id,
+                ),
+                'returnType' => 'count',
+            );
 
             $prevCount = $this->titlePointData->gettitlePointDetails($con);
-            if($prevCount < 0)
-            {
+            if ($prevCount < 0) {
                 $tpData = array(
-                        'session_id' => $session_id,
-                    );
+                    'session_id' => $session_id,
+                );
                 $tpId = $this->titlePointData->insert($tpData);
             }
-            
-        }        
+
+        }
         /* Insert into table */
 
         $requestParams = array(
             'userID' => env('TP_USERNAME'),
             'password' => env('TP_PASSWORD'),
-            'orderNo' =>  '',
-            'customerRef'=>  '',
-            'company'=>  '',
-            'department'=>  '',
-            'titleOfficer'=>  '',
-            'orderComment'=>  '',
-            'starterRemarks'=>  '',
+            'orderNo' => '',
+            'customerRef' => '',
+            'company' => '',
+            'department' => '',
+            'titleOfficer' => '',
+            'orderComment' => '',
+            'starterRemarks' => '',
         );
 
-        if($methodId == 4)
-        {
+        if ($methodId == 4) {
             $fipsCode = isset($propertyData['fipsCode']) && !empty($propertyData['fipsCode']) ? $propertyData['fipsCode'] : '';
             $address = isset($propertyData['address']) && !empty($propertyData['address']) ? $propertyData['address'] : '';
             $city = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] : '';
             $unit_no = isset($propertyData['unit_no']) && !empty($propertyData['unit_no']) ? $propertyData['unit_no'] : '';
             $apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
-            if($unit_no)
-            {
-                $unitinfo =  'UnitNumber '.$unit_no.', '; 
+            if ($unit_no) {
+                $unitinfo = 'UnitNumber ' . $unit_no . ', ';
             }
 
             $requestParams['serviceType'] = env('SERVICE_TYPE');
 
-            $requestParams['parameters'] = 'Address1='.$address.';City='.$city.';Pin='.$apn.';LvLookup=Address;LvLookupValue='.$address.', '.$unitinfo.$city.';LvReportFormat=LV;IncludeTaxAssessor=true';
+            $requestParams['parameters'] = 'Address1=' . $address . ';City=' . $city . ';Pin=' . $apn . ';LvLookup=Address;LvLookupValue=' . $address . ', ' . $unitinfo . $city . ';LvReportFormat=LV;IncludeTaxAssessor=true';
             $requestParams['fipsCode'] = $fipsCode;
-            $requestUrl= env('TP_CREATE_SERVICE_ENDPOINT');
-            $request_type= 'sales_create_service_4';
-        }
-        else if($methodId == 3)
-        {
+            $requestUrl = env('TP_CREATE_SERVICE_ENDPOINT');
+            $request_type = 'sales_create_service_4';
+        } else if ($methodId == 3) {
             $apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
             $apn = str_replace('0000', '0-000', $apn);
 
@@ -1143,481 +1138,400 @@ class DashboardMail extends MX_Controller {
 
             $requestParams['serviceType'] = env('TAX_SEARCH_SERVICE_TYPE');
 
-            $requestParams['parameters'] = 'Tax.APN='.$apn.';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
+            $requestParams['parameters'] = 'Tax.APN=' . $apn . ';General.AutoSearchTaxes=true;General.AutoSearchProperty=false';
             $requestParams['state'] = $state;
             $requestParams['county'] = $county;
-            $requestUrl= env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
-            $request_type= 'sales_create_service_3';
+            $requestUrl = env('TP_TAX_INSTRUMENT_CREATE_SERVICE_ENDPOINT');
+            $request_type = 'sales_create_service_3';
         }
-        $request = $requestUrl.http_build_query($requestParams);
+        $request = $requestUrl . http_build_query($requestParams);
 
         $logid = $this->apiLogs->syncLogs(0, 'titlepoint', $request_type, $request, $requestParams, array(), $random_number, 0);
 
         $opts = array(
-            "ssl"=>array(
-                "verify_peer"=>false,
-                "verify_peer_name"=>false,
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
             ),
         );
 
         $context = stream_context_create($opts);
-        $file = file_get_contents($request,false,$context);
+        $file = file_get_contents($request, false, $context);
 
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
-        $result = json_decode($response,TRUE);
+        $result = json_decode($response, true);
 
         $this->apiLogs->syncLogs(0, 'titlepoint', $request_type, $request, $requestParams, $result, $random_number, $logid);
-        $session_id = 'tp_api_id_'.$random_number;
-        $con =  array(
-                    'where' => array(
-                        'session_id' => $session_id
-                    ),
-                    'returnType' => 'count'
-                );
+        $session_id = 'tp_api_id_' . $random_number;
+        $con = array(
+            'where' => array(
+                'session_id' => $session_id,
+            ),
+            'returnType' => 'count',
+        );
         $prevCount = $this->titlePointData->gettitlePointDetails($con);
 
-        if(isset($result) && empty($result))
-        {
-            $tpData =   array(
+        if (isset($result) && empty($result)) {
+            $tpData = array(
                 'cs4_message' => 'Failed',
             );
-            
-            
-            if($prevCount > 0) 
-            {
-                $session_id = 'tp_api_id_'.$random_number;
+
+            if ($prevCount > 0) {
+                $session_id = 'tp_api_id_' . $random_number;
                 $condition = array(
-                    'session_id' => $session_id
-                );              
-                $this->titlePointData->update($tpData,$condition);
-            }
-            else
-            {
-                $tpData['session_id'] = 'tp_api_id_'.$random_number;
-                
+                    'session_id' => $session_id,
+                );
+                $this->titlePointData->update($tpData, $condition);
+            } else {
+                $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                 $tpId = $this->titlePointData->insert($tpData);
             }
-        }
-        else
-        {
-            
+        } else {
+
             $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
-        
-            if($methodId == 4)
-            {
-                if($responseStatus == 'Success')
-                {
-                    $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
-                    $tpData =   array(
-                                    'cs4_request_id' => $requestId,
-                                );
 
-                    if ($prevCount > 0) 
-                    {
+            if ($methodId == 4) {
+                if ($responseStatus == 'Success') {
+                    $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
+                    $tpData = array(
+                        'cs4_request_id' => $requestId,
+                    );
+
+                    if ($prevCount > 0) {
                         $condition = array(
-                            'session_id' => $session_id
-                        );              
-                        $this->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
-                        
+                            'session_id' => $session_id,
+                        );
+                        $this->titlePointData->update($tpData, $condition);
+                    } else {
+                        $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                         $tpId = $this->titlePointData->insert($tpData);
                     }
 
                     /* Get Request Summary */
-                    $response = $this->tpGetRequestSummaries(4,$requestId, $random_number);
+                    $response = $this->tpGetRequestSummaries(4, $requestId, $random_number);
                     /* Get Request Summary */
-                }
-                else
-                {
+                } else {
                     $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                    $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
-                
+
             }
-            if($methodId == 3)
-            {
-                if($responseStatus == 'Success')
-                {
+            if ($methodId == 3) {
+                if ($responseStatus == 'Success') {
                     $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
 
-                    $tpData =   array(
-                                    'cs3_request_id' => $requestId,
-                                );
+                    $tpData = array(
+                        'cs3_request_id' => $requestId,
+                    );
 
-                    if($prevCount > 0) 
-                    {
+                    if ($prevCount > 0) {
                         $condition = array(
-                            'session_id' => $session_id
-                        );              
-                        $this->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
-                        
+                            'session_id' => $session_id,
+                        );
+                        $this->titlePointData->update($tpData, $condition);
+                    } else {
+                        $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                         $tpId = $this->titlePointData->insert($tpData);
                     }
 
                     /* Get Request Summary */
-                    $response = $this->tpGetRequestSummaries(3,$requestId, $random_number);
+                    $response = $this->tpGetRequestSummaries(3, $requestId, $random_number);
                     /* Get Request Summary */
-                }
-                else
-                {
+                } else {
                     $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                    $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
         }
     }
 
-    public function addLogs($methodId,$returnStatus,$status='',$error,$random_number)
+    public function addLogs($methodId, $returnStatus, $status = '', $error, $random_number)
     {
-        if($returnStatus == 'Failed')
-        {
-            if($methodId == 4)
-            {
-                $tpData =   array(
-                                'cs4_message' => $error,
-                            );
+        if ($returnStatus == 'Failed') {
+            if ($methodId == 4) {
+                $tpData = array(
+                    'cs4_message' => $error,
+                );
+            } elseif ($methodId == 3) {
+                $tpData = array(
+                    'cs3_message' => $error,
+                );
             }
-            elseif($methodId == 3)
-            {
-                $tpData =   array(
-                                'cs3_message' => $error,
-                            );
-            }
-            
-        }
-        else
-        {
-            if($methodId == 4)
-            {
-                $tpData =   array(
-                                'cs4_message' => $status,
-                            );
-            }
-            elseif($methodId == 3)
-            {
-                $tpData =   array(
-                                'cs3_message' => $status,
-                            );
+
+        } else {
+            if ($methodId == 4) {
+                $tpData = array(
+                    'cs4_message' => $status,
+                );
+            } elseif ($methodId == 3) {
+                $tpData = array(
+                    'cs3_message' => $status,
+                );
             }
         }
 
-        $session_id = 'tp_api_id_'.$random_number;
-        $con =  array(
-                    'where' => array(
-                        'session_id' => $session_id
-                    ),
-                    'returnType' => 'count'
-                );
+        $session_id = 'tp_api_id_' . $random_number;
+        $con = array(
+            'where' => array(
+                'session_id' => $session_id,
+            ),
+            'returnType' => 'count',
+        );
         $prevCount = $this->titlePointData->gettitlePointDetails($con);
 
-        if ($prevCount > 0) 
-        {
+        if ($prevCount > 0) {
             $condition = array(
-                'session_id' => $session_id
-            );              
-            $this->titlePointData->update($tpData,$condition);
-        }
-        else
-        {
-            $tpData['session_id'] = 'tp_api_id_'.$random_number;            
+                'session_id' => $session_id,
+            );
+            $this->titlePointData->update($tpData, $condition);
+        } else {
+            $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
             $tpId = $this->titlePointData->insert($tpData);
         }
-        
+
     }
 
     public function tpGetRequestSummaries($methodId, $requestId, $random_number)
     {
         $requestParams = array(
-                            'userID' => env('TP_USERNAME'),
-                            'password' => env('TP_PASSWORD'),
-                            'company'=>  '',
-                            'department'=>  '',
-                            'titleOfficer'=>  '',
-                            'requestId'=>  $requestId,
-                            'maxWaitSeconds'=>  20
-                        );
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
+            'company' => '',
+            'department' => '',
+            'titleOfficer' => '',
+            'requestId' => $requestId,
+            'maxWaitSeconds' => 20,
+        );
 
-        $request = env('TP_REQUEST_SUMMARY_ENDPOINT').http_build_query($requestParams);
+        $request = env('TP_REQUEST_SUMMARY_ENDPOINT') . http_build_query($requestParams);
 
-        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'get_request_summary_'.$methodId, $request, $requestParams, array(), $random_number, 0);
+        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'get_request_summary_' . $methodId, $request, $requestParams, array(), $random_number, 0);
 
         $opts = array(
-            "ssl"=>array(
-                "verify_peer"=>false,
-                "verify_peer_name"=>false,
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
             ),
         );
         $context = stream_context_create($opts);
-        $file = file_get_contents($request,false,$context);
+        $file = file_get_contents($request, false, $context);
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
-        $result = json_decode($response,TRUE);
+        $result = json_decode($response, true);
 
-        $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_request_summary_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
+        $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_request_summary_' . $methodId, $request, $requestParams, $result, $random_number, $logid);
 
-        $session_id = 'tp_api_id_'.$random_number;
+        $session_id = 'tp_api_id_' . $random_number;
 
-        $con =  array(
-                    'where' => array(
-                        'session_id' => $session_id
-                    ),
-                    'returnType' => 'count'
-                );
+        $con = array(
+            'where' => array(
+                'session_id' => $session_id,
+            ),
+            'returnType' => 'count',
+        );
         $prevCount = $this->titlePointData->gettitlePointDetails($con);
 
-        if(isset($result) && empty($result))
-        {
-            $tpData =   array(
+        if (isset($result) && empty($result)) {
+            $tpData = array(
                 'cs4_message' => 'Failed',
             );
 
-            if($prevCount > 0) 
-            {
+            if ($prevCount > 0) {
                 $condition = array(
-                    'session_id' => $session_id
-                );              
-                $this->titlePointData->update($tpData,$condition);
-            }
-            else
-            {
-                $tpData['session_id'] = 'tp_api_id_'.$random_number;                
+                    'session_id' => $session_id,
+                );
+                $this->titlePointData->update($tpData, $condition);
+            } else {
+                $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                 $tpId = $this->titlePointData->insert($tpData);
             }
-        }
-        else
-        {
+        } else {
             $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 
             $session_data = array();
 
-            if($methodId == 4)
-            {
-                if($responseStatus == 'Success')
-                {
+            if ($methodId == 4) {
+                if ($responseStatus == 'Success') {
                     $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
-                    
-                    if($status == 'Complete')
-                    {
-                        $resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : ''; 
+
+                    if ($status == 'Complete') {
+                        $resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : '';
                         $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-                        
-                        $tpData =   array(
+
+                        $tpData = array(
                             'cs4_result_id' => $resultId,
                             'cs4_service_id' => $serviceId,
                         );
-                    }
-                    else
-                    {
-                        $tpData =   array(
+                    } else {
+                        $tpData = array(
                             'cs4_message' => $status,
                         );
                     }
 
-                    if($prevCount > 0) 
-                    {
+                    if ($prevCount > 0) {
                         $condition = array(
-                            'session_id' => $session_id
-                        );              
-                        $this->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
-                        
+                            'session_id' => $session_id,
+                        );
+                        $this->titlePointData->update($tpData, $condition);
+                    } else {
+                        $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                         $tpId = $this->titlePointData->insert($tpData);
                     }
 
-                    if($status == 'Complete')
-                    {
-                        $this->tpGetResultById(4,$resultId,$random_number);
+                    if ($status == 'Complete') {
+                        $this->tpGetResultById(4, $resultId, $random_number);
                     }
 
-                }
-                else
-                {
+                } else {
                     $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                    $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
-            if($methodId == 3)
-            {
-                if($responseStatus == 'Success')
-                {
+            if ($methodId == 3) {
+                if ($responseStatus == 'Success') {
                     $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
 
-                    if($status == 'Complete')
-                    {
+                    if ($status == 'Complete') {
                         $resultId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
                         $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
-                        $tpData =   array(
+                        $tpData = array(
                             'cs3_result_id' => $resultId,
                             'cs3_service_id' => $serviceId,
                         );
-                    }
-                    else
-                    {
-                        $tpData =   array(
+                    } else {
+                        $tpData = array(
                             'cs3_message' => $status,
                         );
                     }
-                    
-                    
-                    if($prevCount > 0) 
-                    {
+
+                    if ($prevCount > 0) {
                         $condition = array(
-                            'session_id' => $session_id
-                        );              
-                        $this->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                        $tpData['session_id'] = 'tp_api_id_'.$random_number;                  
+                            'session_id' => $session_id,
+                        );
+                        $this->titlePointData->update($tpData, $condition);
+                    } else {
+                        $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                         $tpId = $this->titlePointData->insert($tpData);
                     }
-                    if($status == 'Complete')
-                    {
-                        $this->tpGetResultById(3,$resultId,$random_number);
+                    if ($status == 'Complete') {
+                        $this->tpGetResultById(3, $resultId, $random_number);
                     }
-                }
-                else
-                {
+                } else {
                     $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                    $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
         }
     }
 
-    public function tpGetResultById($methodId,$resultId, $random_number)
+    public function tpGetResultById($methodId, $resultId, $random_number)
     {
         $requestParams = array(
-                            'userID' => env('TP_USERNAME'),
-                            'password' => env('TP_PASSWORD'),
-                            'company'=>  '',
-                            'department'=>  '',
-                            'titleOfficer'=>  '',
-                            'resultID'=>  $resultId
-                        );
+            'userID' => env('TP_USERNAME'),
+            'password' => env('TP_PASSWORD'),
+            'company' => '',
+            'department' => '',
+            'titleOfficer' => '',
+            'resultID' => $resultId,
+        );
 
         $resultUrl = env('TP_GET_RESULT_BY_ID');
 
-        if($methodId == 3)
-        {
+        if ($methodId == 3) {
             $requestParams['requestingTPXML'] = 'true';
             $resultUrl = env('TP_GET_RESULT_BY_ID_3');
         }
 
-        $request = $resultUrl.http_build_query($requestParams);
+        $request = $resultUrl . http_build_query($requestParams);
 
-        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_result_by_id_'.$methodId, $request, $requestParams, array(), $random_number, 0);
+        $logid = $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_result_by_id_' . $methodId, $request, $requestParams, array(), $random_number, 0);
 
         $opts = array(
-            "ssl"=>array(
-                "verify_peer"=>false,
-                "verify_peer_name"=>false,
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
             ),
         );
         $context = stream_context_create($opts);
-        $file = file_get_contents($request,false,$context);
+        $file = file_get_contents($request, false, $context);
 
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);
-        $result = json_decode($response,TRUE);
+        $result = json_decode($response, true);
 
-        $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_result_by_id_'.$methodId, $request, $requestParams, $result, $random_number, $logid);
+        $this->apiLogs->syncLogs(0, 'titlepoint', 'sales_get_result_by_id_' . $methodId, $request, $requestParams, $result, $random_number, $logid);
 
-        $session_id = 'tp_api_id_'.$random_number;
-        
-        $con =  array(
-                    'where' => array(
-                        'session_id' => $session_id
-                    ),
-                    'returnType' => 'count'
-                );
+        $session_id = 'tp_api_id_' . $random_number;
+
+        $con = array(
+            'where' => array(
+                'session_id' => $session_id,
+            ),
+            'returnType' => 'count',
+        );
         $prevCount = $this->titlePointData->gettitlePointDetails($con);
 
-        if(isset($result) && empty($result))
-        {
-            $tpData =   array(
+        if (isset($result) && empty($result)) {
+            $tpData = array(
                 'cs4_message' => 'Failed',
             );
 
-            if($prevCount > 0) 
-            {
+            if ($prevCount > 0) {
                 $condition = array(
-                    'session_id' => $session_id
-                );              
-                $this->titlePointData->update($tpData,$condition);
-            }
-            else
-            {
-                $tpData['session_id'] = 'tp_api_id_'.$random_number;                
+                    'session_id' => $session_id,
+                );
+                $this->titlePointData->update($tpData, $condition);
+            } else {
+                $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                 $tpId = $this->titlePointData->insert($tpData);
             }
-        }
-        else
-        {
+        } else {
             $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $session_data = array();
-            
-            if($methodId == 4)
-            {
-                if($responseStatus == 'Success')
-                {
+
+            if ($methodId == 4) {
+                if ($responseStatus == 'Success') {
                     $briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
-                    
+
                     $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
 
                     $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
-                    
+
                     $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : array();
-                    
-                    if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE))
-                    {
+
+                    if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE)) {
                         $docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
                         $docType = strtolower($docType);
 
-                        if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution')
-                        {
+                        if ($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution') {
                             $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
                             $recordedDate = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
                         }
-                        
-                    }
-                    else
-                    {
-                        foreach ($legal_vesting_info as $key => $value) 
-                        {
+
+                    } else {
+                        foreach ($legal_vesting_info as $key => $value) {
                             $docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
                             $docType = strtolower($docType);
-                            
-                            if($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution')
-                            {
+
+                            if ($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution') {
                                 $instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
                                 $recordedDate = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
                                 break;
                             }
-                        }                   
+                        }
                     }
                     $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
 
-                    $tpData =   array(
+                    $tpData = array(
                         'legal_description' => $briefLegal,
                         'vesting_information' => $vesting,
                         'cs4_instrument_no' => $instrumentNumber,
@@ -1627,78 +1541,60 @@ class DashboardMail extends MX_Controller {
                         // 'cs4_result_id_status' => $status,
                     );
 
-                    if($prevCount > 0) 
-                    {
+                    if ($prevCount > 0) {
                         $condition = array(
-                            'session_id' => $session_id
-                        );              
-                        $this->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                        $tpData['session_id'] = 'tp_api_id_'.$random_number;
-                        
+                            'session_id' => $session_id,
+                        );
+                        $this->titlePointData->update($tpData, $condition);
+                    } else {
+                        $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                         $tpId = $this->titlePointData->insert($tpData);
 
                     }
-                    $this->addLogs($methodId,$responseStatus,$status,$error,$random_number);
-                }
-                else
-                {
+                    $this->addLogs($methodId, $responseStatus, $status, $error, $random_number);
+                } else {
                     $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                    $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
-            if($methodId == 3)
-            {
-                if($responseStatus == 'Success')
-                {
+            if ($methodId == 3) {
+                if ($responseStatus == 'Success') {
                     $firstInstallment = $secondInstallment = array();
-                    if(isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0]))
-                    {
-                        $firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];                  
+                    if (isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0])) {
+                        $firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];
                     }
 
-                    if(isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1]))
-                    {
-                        $secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];         
+                    if (isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1])) {
+                        $secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];
                     }
-                    
+
                     $status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
-                    if($status == 'Success')
-                    {
+                    if ($status == 'Success') {
                         $message = 'Success';
-                    }
-                    else
-                    {
+                    } else {
                         $message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
                     }
-                    
-                    $tpData =   array(
+
+                    $tpData = array(
                         'first_installment' => json_encode($firstInstallment),
                         'second_installment' => json_encode($secondInstallment),
                     );
 
-                    if($prevCount > 0) 
-                    {
+                    if ($prevCount > 0) {
                         $condition = array(
-                            'session_id' => $session_id
-                        );              
-                        $this->titlePointData->update($tpData,$condition);
-                    }
-                    else
-                    {
-                        $tpData['session_id'] = 'tp_api_id_'.$random_number;                 
+                            'session_id' => $session_id,
+                        );
+                        $this->titlePointData->update($tpData, $condition);
+                    } else {
+                        $tpData['session_id'] = 'tp_api_id_' . $random_number;
 
                         $tpId = $this->titlePointData->insert($tpData);
                     }
-                    $this->addLogs($methodId,$responseStatus,$message,$error,$random_number);
-                }
-                else
-                {
+                    $this->addLogs($methodId, $responseStatus, $message, $error, $random_number);
+                } else {
                     $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
-                    $this->addLogs($methodId,$responseStatus,'',$error,$random_number);
+                    $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
         }
@@ -1710,14 +1606,14 @@ class DashboardMail extends MX_Controller {
             ->from('order_details');
         $this->db->group_start()
             ->where("file_id", $FileIdOrRandomNum)
-            ->or_where('random_number',$FileIdOrRandomNum)
-            ->group_end();    
+            ->or_where('random_number', $FileIdOrRandomNum)
+            ->group_end();
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
             return array();
-        }         
+        }
     }
 
     public function createOrderSafewire()
@@ -1725,13 +1621,13 @@ class DashboardMail extends MX_Controller {
         $file_id = $this->input->post('file_id');
         $order_id = $this->input->post('order_id');
         $orderDetails = $this->order->get_order_details($file_id);
-        if ($orderDetails['sales_amount'] > 0)  {
+        if ($orderDetails['sales_amount'] > 0) {
             $purchase_price = $orderDetails['sales_amount'];
         } else {
             $purchase_price = $orderDetails['loan_amount'];
         }
         $orderData = array(
-            'FileNumber' =>  $orderDetails['file_number'],
+            'FileNumber' => $orderDetails['file_number'],
             'FileID' => $orderDetails['file_id'],
             'Properties' => array(
                 array(
@@ -1739,57 +1635,57 @@ class DashboardMail extends MX_Controller {
                     'City' => $orderDetails['property_city'],
                     'State' => $orderDetails['property_state'],
                     'County' => $orderDetails['county'],
-                    'Zip' => $orderDetails['property_zip'], 
-                )
+                    'Zip' => $orderDetails['property_zip'],
+                ),
             ),
             'Buyers' => array(
                 array(
                     'FirstName' => $this->input->post('firstname'),
                     'LastName' => $this->input->post('lastname'),
                     'MobilePhone' => $this->input->post('mobile'),
-                    'Email' => $this->input->post('email')
-                )
+                    'Email' => $this->input->post('email'),
+                ),
             ),
             'SalesPrice' => $purchase_price,
         );
 
-        if(!empty($orderDetails['escrow_officer_id'])) {
+        if (!empty($orderDetails['escrow_officer_id'])) {
             $escrowOfficerCon = array(
                 'where' => array(
                     'partner_id' => $orderDetails['escrow_officer_id'],
-                )
+                ),
             );
             $escrowOfficerData = $this->home_model->get_company_rows($escrowOfficerCon);
-            if(!empty($escrowOfficerData)) {
+            if (!empty($escrowOfficerData)) {
                 $name = explode(" ", $escrowOfficerData[0]['partner_name']);
-                $orderData['EscrowPartner'][] =  array(
+                $orderData['EscrowPartner'][] = array(
                     'PartnerID' => $orderDetails['escrow_officer_id'],
-                    'FirstName' =>  $name[0],
+                    'FirstName' => $name[0],
                     'LastName' => $name[1],
                     'Email' => $escrowOfficerData[0]['email'],
-                    'MobilePhone' => null
+                    'MobilePhone' => null,
                 );
             }
-            
+
         }
-       
+
         $bodyParams = array('FileInformations' => $orderData);
         $body_params = json_encode($bodyParams, JSON_UNESCAPED_SLASHES);
         if ($orderDetails['is_create_order_on_safewire'] == 1) {
-            $url = env('SAFEWIRE_URL').$file_id."/synchronize";
+            $url = env('SAFEWIRE_URL') . $file_id . "/synchronize";
             $method = 'GET';
         } else {
-            $url = env('SAFEWIRE_URL')."invite";
+            $url = env('SAFEWIRE_URL') . "invite";
             $method = 'POST';
         }
-       
+
         $logid = $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', $url, $body_params, array(), $order_id, 0);
-        $ch = curl_init($url);                                    
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);                        
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Api-Key: '.env('SAFEWIRE_API_KEY'),
+            'Api-Key: ' . env('SAFEWIRE_API_KEY'),
             'Content-Type: application/json',
             'Content-Length: ' . strlen($body_params))
         );
@@ -1797,34 +1693,34 @@ class DashboardMail extends MX_Controller {
         $result = curl_exec($ch);
         $this->apiLogs->syncLogs(0, 'safewire', 'create_order_on_safewire', $url, $body_params, $result, $order_id, $logid);
         $res = json_decode($result, true);
-        if(isset($res['action_link']) && !empty($res['action_link'])) {
+        if (isset($res['action_link']) && !empty($res['action_link'])) {
             $this->home_model->update(array('is_create_order_on_safewire' => 1, 'safewire_action_link' => $res['action_link']), array('id' => $orderDetails['order_id']), 'order_details');
-            $response = array('success' => true, 'message'=> 'order created successfully', 'action_link' => $res['action_link']);
-        } else if(isset($res['result']) && $res['result'] == 'success') {
-            $response = array('success' => true, 'message'=> 'order updated successfully', 'action_link' => $orderDetails['safewire_action_link']);
+            $response = array('success' => true, 'message' => 'order created successfully', 'action_link' => $res['action_link']);
+        } else if (isset($res['result']) && $res['result'] == 'success') {
+            $response = array('success' => true, 'message' => 'order updated successfully', 'action_link' => $orderDetails['safewire_action_link']);
         } else {
-            if(isset($error_msg) && !empty($error_msg)) {
-                $response = array('success' => false, 'message'=> $error_msg);
+            if (isset($error_msg) && !empty($error_msg)) {
+                $response = array('success' => false, 'message' => $error_msg);
             } else {
-                $response = array('success' => false, 'message'=> $res['error']);
+                $response = array('success' => false, 'message' => $res['error']);
             }
         }
-        echo json_encode($response); exit;
+        echo json_encode($response);exit;
     }
 
     public function getSafewireOrderStatus()
     {
-        ini_set('max_execution_time', 0); 
-		ini_set('memory_limit','2048M');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
         $json = file_get_contents('php://input');
         $response = array();
         $logId = $this->apiLogs->syncLogs(0, 'safewire', 'send_order_status', null, $json, array());
         $order_id = 0;
 
-		if ($json) { 
-            $data = json_decode($json,TRUE);
+        if ($json) {
+            $data = json_decode($json, true);
             $orderDetails = $this->order->get_order_details($data['order_id'], 1);
-            if(!empty($orderDetails)) {
+            if (!empty($orderDetails)) {
                 $order_id = $orderDetails['order_id'];
                 $this->order->syncSafewireDocuments($data['order_details'], $data['wire_instruction_details'], $orderDetails);
                 $this->home_model->update(array('safewire_order_status' => $data['status']), array('file_id' => $data['order_id']), 'order_details');
@@ -1854,9 +1750,9 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        $random_number = $this->uri->segment(2); 
+        $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];  
+        $fileId = $order[0]['file_id'];
         $data['title'] = 'Get Policy | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $orderDetails = $this->order->get_order_details($fileId, 1);
@@ -1866,22 +1762,22 @@ class DashboardMail extends MX_Controller {
         $data['order_id'] = $orderDetails['order_id'];
         $data['created'] = !empty($orderDetails['opened_date']) ? date("m/d/Y", strtotime($orderDetails['opened_date'])) : '';
         $user_data['admin_api'] = 1;
-        $user_data['from_mail'] = 1; 
-        $endPoint = 'files/'.$fileId.'/documents';
-					
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $orderDetails['order_id'], 0);
+        $user_data['from_mail'] = 1;
+        $endPoint = 'files/' . $fileId . '/documents';
+
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $orderDetails['order_id'], 0);
         $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $orderDetails['order_id'], $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API') . $endPoint, array(), $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result, true);
-        
+
         $policyDocuments = array();
         $i = 0;
-        foreach($res['Documents'] as $document) {
+        foreach ($res['Documents'] as $document) {
             if ($document['DocumentType']['DocumentTypeID'] == 103) {
                 $policyDocuments[$i]['no'] = $i + 1;
                 $policyDocuments[$i]['api_document_id'] = $document['DocumentID'];
                 $policyDocuments[$i]['document_name'] = $document['DocumentName'];
-                $time = round((int)(str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate'])))/1000);
+                $time = round((int) (str_replace("-0000)/", "", str_replace("/Date(", "", $document['CreateDate']))) / 1000);
                 $created_date = date('m/d/Y', $time);
                 $policyDocuments[$i]['created_at'] = $created_date;
                 $i++;
@@ -1889,28 +1785,30 @@ class DashboardMail extends MX_Controller {
         }
 
         $data['policyDocuments'] = $policyDocuments;
-        $this->load->view('layout/head_dashboard', $data);
-        $this->load->view('order/mail_policy_package', $data);
+        // $this->load->view('layout/head_dashboard', $data);
+        // $this->load->view('order/mail_policy_package', $data);
+        $data['displaySidebar'] = false;
+        $this->salesdashboardtemplate->show("order", "mail_policy_package", $data);
     }
 
     public function downloadPolicyDoc()
-	{
-		$documentId = $this->input->post('documentId');
+    {
+        $documentId = $this->input->post('documentId');
         $order_id = $this->input->post('order_id');
-        $endPoint = 'documents/'.$documentId.'?format=json';
+        $endPoint = 'documents/' . $documentId . '?format=json';
         $user_data['admin_api'] = 1;
-        $user_data['from_mail'] = 1; 
-        			
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order_id, 0);
+        $user_data['from_mail'] = 1;
+
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order_id, 0);
         $result = $this->resware->make_request('GET', $endPoint, '', $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API').$endPoint, array(), $result,  $order_id, $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_resware_document', env('RESWARE_ORDER_API') . $endPoint, array(), $result, $order_id, $logid);
         $res = json_decode($result, true);
         //echo "<pre>";
         //print_r($res);exit;
-		if (isset($res['Document']) && !empty($res['Document'])) {
-			echo $res['Document']['DocumentBody'];exit;
-		}	
-	}
+        if (isset($res['Document']) && !empty($res['Document'])) {
+            echo $res['Document']['DocumentBody'];exit;
+        }
+    }
 
     public function uploadBorrowerDocument($task, $random_number)
     {
@@ -1926,7 +1824,7 @@ class DashboardMail extends MX_Controller {
             $this->session->unset_userdata('success');
         }
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];  
+        $fileId = $order[0]['file_id'];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $data['orderDetails'] = $this->order->get_order_details($fileId, 1);
@@ -1938,106 +1836,105 @@ class DashboardMail extends MX_Controller {
         $this->load->view('order/mail_borrower_document', $data);
     }
 
-    public function borrower_document_upload() 
-	{
+    public function borrower_document_upload()
+    {
         $this->load->model('order/document');
-		$success = array();
+        $success = array();
         $errors = array();
         $documentNames = array();
         $config['upload_path'] = './uploads/borrower/';
-		$config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';   
-		$config['max_size'] = 18000;
-		$this->load->library('upload', $config);
+        $config['allowed_types'] = 'doc|docx|gif|msg|pdf|tif|tiff|xls|xlsx|xml';
+        $config['max_size'] = 18000;
+        $this->load->library('upload', $config);
         $fileId = $this->input->post('file_id');
         $task_name = $this->input->post('task_name');
-        
 
         if (!is_dir('uploads/borrower')) {
-			mkdir('./uploads/borrower', 0777, TRUE);
-		}
+            mkdir('./uploads/borrower', 0777, true);
+        }
 
         if (!empty($_FILES['document_files']['name'])) {
             foreach ($_FILES['document_files']['name'] as $key => $file) {
-                $_FILES['file']['name']= $_FILES['document_files']['name'][$key];
-                $_FILES['file']['type']= $_FILES['document_files']['type'][$key];
-                $_FILES['file']['tmp_name']= $_FILES['document_files']['tmp_name'][$key];
-                $_FILES['file']['error']= $_FILES['document_files']['error'][$key];
-                $_FILES['file']['size']= $_FILES['document_files']['size'][$key];
-               
-                if (! $this->upload->do_upload('file')) {
+                $_FILES['file']['name'] = $_FILES['document_files']['name'][$key];
+                $_FILES['file']['type'] = $_FILES['document_files']['type'][$key];
+                $_FILES['file']['tmp_name'] = $_FILES['document_files']['tmp_name'][$key];
+                $_FILES['file']['error'] = $_FILES['document_files']['error'][$key];
+                $_FILES['file']['size'] = $_FILES['document_files']['size'][$key];
+
+                if (!$this->upload->do_upload('file')) {
                     $errors[] = $this->upload->display_errors();
-                } else { 
+                } else {
                     $data = $this->upload->data();
                     $contents = file_get_contents($data['full_path']);
-                    $binaryData   = base64_encode($contents); 
-                    $document_name = date('YmdHis')."_".$data['file_name'];
-                    rename(FCPATH."/uploads/borrower/".$data['file_name'], FCPATH."/uploads/borrower/".$document_name);
+                    $binaryData = base64_encode($contents);
+                    $document_name = date('YmdHis') . "_" . $data['file_name'];
+                    rename(FCPATH . "/uploads/borrower/" . $data['file_name'], FCPATH . "/uploads/borrower/" . $document_name);
                     $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
 
                     if ($this->input->post('task_id')) {
-                        $task_id =  $this->input->post('task_id');
+                        $task_id = $this->input->post('task_id');
                     } else {
                         $task_id = 62;
                     }
-                    
+
                     $documentData = array(
-						'document_name' => $document_name,
-						'original_document_name' => $data['file_name'],
-						'document_type_id' => 1041,
-						'document_size' => ($data['file_size'] * 1000),
-						'user_id' => 0,
-						'order_id' => $this->input->post('order_id'),
-						'task_id' => $task_id,
-						'description' => 'Borrower Document',
-						'is_sync' => 1,
-						'is_uploaded_by_borrower' => 1
-					);
+                        'document_name' => $document_name,
+                        'original_document_name' => $data['file_name'],
+                        'document_type_id' => 1041,
+                        'document_size' => ($data['file_size'] * 1000),
+                        'user_id' => 0,
+                        'order_id' => $this->input->post('order_id'),
+                        'task_id' => $task_id,
+                        'description' => 'Borrower Document',
+                        'is_sync' => 1,
+                        'is_uploaded_by_borrower' => 1,
+                    );
                     $this->document->insert($documentData);
-                    $success[] = $data['file_name']." uploaded successfully";
+                    $success[] = $data['file_name'] . " uploaded successfully";
                     $documentNames[] = $data['file_name'];
                 }
             }
-        }		
-	
-		$data = array(
-			"errors" =>  $errors,
-			"success" => $success
-		);
-        
+        }
+
+        $data = array(
+            "errors" => $errors,
+            "success" => $success,
+        );
+
         $this->load->model('admin/escrow/order_model');
         $this->load->model('admin/escrow/escrow_user_model');
         $this->load->library('order/common');
         $this->load->model('admin/hr/order_users_model');
         $this->load->model('admin/hr/users_model');
-        
+
         $orderInfo = $this->order_model->get($this->input->post('order_id'));
-        if (count($documentNames) == 1 ) {
-            $message = implode(',', $documentNames)." document uploaded by borrower for file number ".$orderInfo->file_number;
+        if (count($documentNames) == 1) {
+            $message = implode(',', $documentNames) . " document uploaded by borrower for file number " . $orderInfo->file_number;
         } else {
-            $message = implode(',', $documentNames)." documents uploaded by borrower for file number ".$orderInfo->file_number;
+            $message = implode(',', $documentNames) . " documents uploaded by borrower for file number " . $orderInfo->file_number;
         }
-		$this->session->set_userdata($data);
+        $this->session->set_userdata($data);
         if (!empty($orderInfo->escrow_officer_id)) {
-            $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
+            $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id);
             $notificationData = array(
                 'sent_user_id' => $escrowInfoFromOrder['id'],
                 'message' => $message,
-                'type' =>  'completed'
+                'type' => 'completed',
             );
             $this->home_model->insert($notificationData, 'pct_order_notifications');
             $this->order->sendNotification($message, 'completed', $escrowInfoFromOrder['id'], 0);
-            
+
             $escrowHrInfo = $this->escrow_user_model->get_by(array('email' => $escrowInfoFromOrder['email_address']));
             $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowHrInfo->branch_id, 'position_id' => 15))), true);
-            $assistantUserEmails = array_column($assistantUsersInfo, 'email');	
-            $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails); 
-            
+            $assistantUserEmails = array_column($assistantUsersInfo, 'email');
+            $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails);
+
             if (!empty($assistantOrderUsersInfo)) {
                 foreach ($assistantOrderUsersInfo as $assistantUser) {
                     $notificationData = array(
                         'sent_user_id' => $assistantUser['id'],
                         'message' => $message,
-                        'type' =>  'completed'
+                        'type' => 'completed',
                     );
                     $this->home_model->insert($notificationData, 'pct_order_notifications');
                     $this->order->sendNotification($message, 'completed', $assistantUser['id'], 0);
@@ -2045,18 +1942,18 @@ class DashboardMail extends MX_Controller {
             }
 
             $managersInfo = $this->users_model->get_many_by(array('user_type_id' => 4, 'department_id' => 4));
-            foreach ($managersInfo as $manager) { 
+            foreach ($managersInfo as $manager) {
                 $notificationData = array(
                     'sent_user_id' => $manager->id,
                     'message' => $message,
-                    'type' =>  'completed'
+                    'type' => 'completed',
                 );
                 $this->home_model->insert($notificationData, 'pct_hr_notifications');
                 $this->order->sendNotification($message, 'completed', $manager->id, 1);
             }
         }
-        redirect(base_url().'borrower-document/'.$task_name."/".$orderInfo->random_number);
-	}
+        redirect(base_url() . 'borrower-document/' . $task_name . "/" . $orderInfo->random_number);
+    }
 
     public function borrowerSellerForm($random_number)
     {
@@ -2071,7 +1968,7 @@ class DashboardMail extends MX_Controller {
         $this->db->order_by('id', 'desc');
         $this->db->limit(1);
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             $data['sellerInfo'] = $query->row_array();
         } else {
             $data['sellerInfo'] = array();
@@ -2082,12 +1979,11 @@ class DashboardMail extends MX_Controller {
         $this->db->where('order_id', $order[0]['id']);
         $this->db->where('(is_commission_doc = 1 or is_escrow_instruction_doc = 1)');
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             $data['docsInfo'] = $query->result_array();
         } else {
             $data['docsInfo'] = array();
         }
-        
 
         if (!empty($orderDetails['borrower'])) {
             $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
@@ -2103,46 +1999,46 @@ class DashboardMail extends MX_Controller {
 
         if (!empty($orderDetails['borrower'])) {
             $seller_owner_names = explode(' ', $orderDetails['borrower']);
-            if(count($seller_owner_names) == 3) {
+            if (count($seller_owner_names) == 3) {
                 $orderDetails['seller_first_name'] = $seller_owner_names[0];
                 $orderDetails['seller_middle_name'] = $seller_owner_names[1];
                 $orderDetails['seller_last_name'] = $seller_owner_names[2];
-            } else if(count($seller_owner_names) == 2) {
+            } else if (count($seller_owner_names) == 2) {
                 $orderDetails['seller_first_name'] = $seller_owner_names[0];
-                $orderDetails['seller_middle_name'] = '' ;
+                $orderDetails['seller_middle_name'] = '';
                 $orderDetails['seller_last_name'] = $seller_owner_names[1];
             } else {
                 $orderDetails['seller_first_name'] = $seller_owner_names[0];
-                $orderDetails['seller_middle_name'] = '' ;
-                $orderDetails['seller_last_name'] = '' ;
+                $orderDetails['seller_middle_name'] = '';
+                $orderDetails['seller_last_name'] = '';
             }
         } else {
-            $orderDetails['seller_first_name'] = '' ;
-            $orderDetails['seller_middle_name'] = '' ;
-            $orderDetails['seller_last_name'] = '' ;
+            $orderDetails['seller_first_name'] = '';
+            $orderDetails['seller_middle_name'] = '';
+            $orderDetails['seller_last_name'] = '';
         }
 
         if (!empty($orderDetails['secondary_borrower'])) {
-            $second_seller_owner_names =  explode(' ', $orderDetails['secondary_borrower']);
-            if(count($second_seller_owner_names) == 3) {
+            $second_seller_owner_names = explode(' ', $orderDetails['secondary_borrower']);
+            if (count($second_seller_owner_names) == 3) {
                 $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
                 $orderDetails['second_seller_middle_name'] = $second_seller_owner_names[1];
                 $orderDetails['second_seller_last_name'] = $second_seller_owner_names[2];
-            } else if(count($second_seller_owner_names) == 2) {
+            } else if (count($second_seller_owner_names) == 2) {
                 $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
-                $orderDetails['second_seller_middle_name'] = '' ;
+                $orderDetails['second_seller_middle_name'] = '';
                 $orderDetails['second_seller_last_name'] = $second_seller_owner_names[1];
             } else {
                 $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
-                $orderDetails['second_seller_middle_name'] = '' ;
-                $orderDetails['second_seller_last_name'] = '' ;
+                $orderDetails['second_seller_middle_name'] = '';
+                $orderDetails['second_seller_last_name'] = '';
             }
         } else {
-            $orderDetails['second_seller_first_name'] = '' ;
-            $orderDetails['second_seller_middle_name'] = '' ;
-            $orderDetails['second_seller_last_name'] = '' ;
+            $orderDetails['second_seller_first_name'] = '';
+            $orderDetails['second_seller_middle_name'] = '';
+            $orderDetails['second_seller_last_name'] = '';
         }
-        
+
         $data['orderDetails'] = $orderDetails;
         $errors = array();
         $data['errors'] = array();
@@ -2155,16 +2051,16 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        
-        $user_data['admin_api'] = 1; 
-        $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+
+        $user_data['admin_api'] = 1;
+        $endPoint = 'files/' . $order[0]['file_id'] . '/documents';
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order[0]['id'], 0);
         $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API') . $endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
         $resDocuments = json_decode($resultDocuments, true);
         $documentIds = array(1015, 1534, 1040, 1405, 1039, 1038, 1020);
 
-        if(!empty($resDocuments['Documents'])) {
+        if (!empty($resDocuments['Documents'])) {
             foreach ($resDocuments['Documents'] as $document) {
                 if (in_array($document['DocumentType']['DocumentTypeID'], $documentIds)) {
                     $key = array_search($document['DocumentID'], array_column($data['docsInfo'], 'api_document_id'));
@@ -2172,26 +2068,26 @@ class DashboardMail extends MX_Controller {
                     // print_r($data['docsInfo']);
                     // print_r(array_column($data['docsInfo'], 'api_document_id'));exit;
                     $this->load->model('order/document');
-                    if(strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
-                        $document_name = date('YmdHis')."_".$document['DocumentName'];
+                    if (strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
+                        $document_name = date('YmdHis') . "_" . $document['DocumentName'];
                         $ext = end(explode('.', $document['DocumentName']));
 
-                        if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+                        if (strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
                             $document_name = str_replace($ext, 'pdf', $document_name);
                         }
 
-                        $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
-                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+                        $endPoint = 'documents/' . $document['DocumentID'] . '?format=json';
+                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order[0]['id'], 0);
                         $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
+                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), $resultDocument, $order[0]['id'], $logid);
                         $resDocument = json_decode($resultDocument, true);
 
-                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
                             $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
                             if (!is_dir('uploads/instruction_documents')) {
-                                mkdir(FCPATH.'/uploads/instruction_documents', 0777, TRUE);
+                                mkdir(FCPATH . '/uploads/instruction_documents', 0777, true);
                             }
-                            file_put_contents(FCPATH.'/uploads/instruction_documents/'.$document_name, $documentContent);
+                            file_put_contents(FCPATH . '/uploads/instruction_documents/' . $document_name, $documentContent);
                             $this->order->uploadDocumentOnAwsS3($document_name, 'instruction_documents');
                             $documentData = array(
                                 'document_name' => $document_name,
@@ -2204,9 +2100,9 @@ class DashboardMail extends MX_Controller {
                                 'description' => $document['DocumentName'],
                                 'created' => date('Y-m-d H:i:s'),
                                 'is_sync' => 0,
-                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038  ||$document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
-                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534  ||$document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
-                            );  
+                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038 || $document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
+                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534 || $document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
+                            );
                             $data['docsInfo'][] = $documentData;
                             $this->document->insert($documentData);
                         }
@@ -2214,9 +2110,9 @@ class DashboardMail extends MX_Controller {
                 }
             }
         }
-        
+
         if ($this->input->post()) {
-            
+
             $sellerEscrowInstructionData = array();
             $sellerCommissionInstructionData = array();
             $sellerOwnerEscrowInfoData = array(
@@ -2356,7 +2252,7 @@ class DashboardMail extends MX_Controller {
                 'signature' => $this->input->post('signature') ? $this->input->post('signature') : null,
                 'second_signature' => $this->input->post('second_signature') ? $this->input->post('second_signature') : null,
             );
-            $this->home_model->insert($sellerStatementInfoData, 'pct_order_borrower_seller_statement_of_info'); 
+            $this->home_model->insert($sellerStatementInfoData, 'pct_order_borrower_seller_statement_of_info');
 
             $seller593CPart1Data = array(
                 'order_id' => $this->input->post('order_id'),
@@ -2400,14 +2296,14 @@ class DashboardMail extends MX_Controller {
                 'transferee_ssn_or_itin' => $this->input->post('transferee_ssn_or_itin') ? $this->input->post('transferee_ssn_or_itin') : null,
                 'transferee_spouse_first_name' => $this->input->post('transferee_spouse_first_name') ? $this->input->post('transferee_spouse_first_name') : null,
                 'transferee_spouse_initial_name' => $this->input->post('transferee_spouse_initial_name') ? $this->input->post('transferee_spouse_initial_name') : null,
-                'transferee_spouse_last_name' => $this->input->post('transferee_spouse_last_name') ? $this->input->post('transferee_spouse_last_name') : null
+                'transferee_spouse_last_name' => $this->input->post('transferee_spouse_last_name') ? $this->input->post('transferee_spouse_last_name') : null,
             );
             $this->home_model->insert($seller593CPart1Data, 'pct_order_borrower_seller_593_c_form_part_1');
 
             $seller593CPart2Data = array(
                 'transferee_spouse_ssn_or_itin' => $this->input->post('transferee_spouse_ssn_or_itin') ? $this->input->post('transferee_spouse_ssn_or_itin') : null,
                 'transferee_nongrantor_trust_name' => $this->input->post('transferee_nongrantor_trust_name') ? $this->input->post('transferee_nongrantor_trust_name') : null,
-                'transferee_business_num' => $this->input->post('transferee_business_num') ? implode(',' , $this->input->post('transferee_business_num')) : null,
+                'transferee_business_num' => $this->input->post('transferee_business_num') ? implode(',', $this->input->post('transferee_business_num')) : null,
                 'transferee_address' => $this->input->post('transferee_address') ? $this->input->post('transferee_address') : null,
                 'transferee_city' => $this->input->post('transferee_city') ? $this->input->post('transferee_city') : null,
                 'transferee_state' => $this->input->post('transferee_state') ? $this->input->post('transferee_state') : null,
@@ -2486,8 +2382,8 @@ class DashboardMail extends MX_Controller {
                 'tenant_id' => $this->input->post('tenant_id') ? $this->input->post('tenant_id') : null,
                 'doc_type' => $this->input->post('doc_type') ? $this->input->post('doc_type') : null,
             );
-            $this->home_model->insert($sellerOtherInfoData, 'pct_order_borrower_seller_other_info');    
-  
+            $this->home_model->insert($sellerOtherInfoData, 'pct_order_borrower_seller_other_info');
+
             $pdfData = array_merge($sellerEscrowInstructionData, $sellerCommissionInstructionData, $sellerOwnerEscrowInfoData, $sellerStatementInfoData, $seller593CPart1Data, $seller593CPart2Data, $sellerOtherInfoData);
             $pdfData['seller_invoices'] = $this->input->post('seller_invoices');
             $pdfData['full_address'] = $data['orderDetails']['full_address'];
@@ -2501,16 +2397,16 @@ class DashboardMail extends MX_Controller {
             $pdfData['calculation_amount'] = $this->input->post('calculation_amount') ? $this->input->post('calculation_amount') : array();
             $pdfData['perjury'] = $this->input->post('perjury') ? $this->input->post('perjury') : array();
             $pdfData['docsInfo'] = $data['docsInfo'];
-           
+
             $this->load->model('order/document');
-            $document_name = "borrower_seller_".date('YmdHis')."_".$order[0]['file_id'].".pdf";
+            $document_name = "borrower_seller_" . date('YmdHis') . "_" . $order[0]['file_id'] . ".pdf";
             if (!is_dir('uploads/borrower')) {
-                mkdir('./uploads/borrower', 0777, TRUE);
+                mkdir('./uploads/borrower', 0777, true);
             }
-            $pdfFilePath = './uploads/borrower/'.$document_name;
+            $pdfFilePath = './uploads/borrower/' . $document_name;
 
             try {
-                ob_clean(); 
+                ob_clean();
                 $mpdf = new \Mpdf\Mpdf();
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_seller_pdf', $pdfData, true);
@@ -2520,8 +2416,8 @@ class DashboardMail extends MX_Controller {
                 $mpdf->WriteHTML($stylesheet1, 1);
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
-                $mpdf->WriteHTML($html,2);
-                $mpdf->Output($pdfFilePath,'F');
+                $mpdf->WriteHTML($html, 2);
+                $mpdf->Output($pdfFilePath, 'F');
                 ob_end_flush();
             } catch (\Mpdf\MpdfException $e) {
                 echo $e->getMessage();
@@ -2538,18 +2434,18 @@ class DashboardMail extends MX_Controller {
                 'task_id' => 4,
                 'description' => 'Borrower Seller Document',
                 'is_sync' => 1,
-                'is_uploaded_by_borrower' => 1
+                'is_uploaded_by_borrower' => 1,
             );
             $this->document->insert($documentData);
             $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
 
             $success[] = "Borrower seller info saved successfully and sent to Escrow officer/assistant users to verify data.";
             $data = array(
-                "errors" =>  $errors,
-                "success" => $success
+                "errors" => $errors,
+                "success" => $success,
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'borrower-seller-form/'.$random_number);exit;
+            redirect(base_url() . 'borrower-seller-form/' . $random_number);exit;
         }
         $this->load->view('order/borrower_seller', $data);
     }
@@ -2567,54 +2463,54 @@ class DashboardMail extends MX_Controller {
         $this->db->order_by('id', 'desc');
         $this->db->limit(1);
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             $data['buyerInfo'] = $query->row_array();
         } else {
             $data['buyerInfo'] = array();
         }
-        
+
         if (!empty($orderDetails['primary_owner'])) {
             $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
-            if(count($buyer_owner_names) == 3) {
+            if (count($buyer_owner_names) == 3) {
                 $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
                 $orderDetails['buyer_middle_name'] = $buyer_owner_names[1];
                 $orderDetails['buyer_last_name'] = $buyer_owner_names[2];
-            } else if(count($buyer_owner_names) == 2) {
+            } else if (count($buyer_owner_names) == 2) {
                 $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
-                $orderDetails['buyer_middle_name'] = '' ;
+                $orderDetails['buyer_middle_name'] = '';
                 $orderDetails['buyer_last_name'] = $buyer_owner_names[1];
             } else {
                 $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
-                $orderDetails['buyer_middle_name'] = '' ;
-                $orderDetails['buyer_last_name'] = '' ;
+                $orderDetails['buyer_middle_name'] = '';
+                $orderDetails['buyer_last_name'] = '';
             }
         } else {
-            $orderDetails['buyer_first_name'] = '' ;
-            $orderDetails['buyer_middle_name'] = '' ;
-            $orderDetails['buyer_last_name'] = '' ;
+            $orderDetails['buyer_first_name'] = '';
+            $orderDetails['buyer_middle_name'] = '';
+            $orderDetails['buyer_last_name'] = '';
         }
 
         if (!empty($orderDetails['secondary_owner'])) {
-            $second_buyer_owner_names =  explode(' ', $orderDetails['secondary_owner']);
-            if(count($second_buyer_owner_names) == 3) {
+            $second_buyer_owner_names = explode(' ', $orderDetails['secondary_owner']);
+            if (count($second_buyer_owner_names) == 3) {
                 $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
                 $orderDetails['second_buyer_middle_name'] = $second_buyer_owner_names[1];
                 $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[2];
-            } else if(count($buyer_owner_names) == 2) {
+            } else if (count($buyer_owner_names) == 2) {
                 $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
-                $orderDetails['second_buyer_middle_name'] = '' ;
+                $orderDetails['second_buyer_middle_name'] = '';
                 $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[1];
             } else {
                 $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
-                $orderDetails['second_buyer_middle_name'] = '' ;
-                $orderDetails['second_buyer_last_name'] = '' ;
+                $orderDetails['second_buyer_middle_name'] = '';
+                $orderDetails['second_buyer_last_name'] = '';
             }
         } else {
-            $orderDetails['second_buyer_first_name'] = '' ;
-            $orderDetails['second_buyer_middle_name'] = '' ;
-            $orderDetails['second_buyer_last_name'] = '' ;
+            $orderDetails['second_buyer_first_name'] = '';
+            $orderDetails['second_buyer_middle_name'] = '';
+            $orderDetails['second_buyer_last_name'] = '';
         }
-		
+
         $data['orderDetails'] = $orderDetails;
         $errors = array();
         $data['errors'] = array();
@@ -2667,9 +2563,9 @@ class DashboardMail extends MX_Controller {
                 'vesting_form_date' => $this->input->post('vesting_form_date'),
                 'vesting_form_signature' => $this->input->post('vesting_form_signature'),
                 'tenant_id' => $this->input->post('tenant_id'),
-                'doc_type' => $this->input->post('doc_type')
+                'doc_type' => $this->input->post('doc_type'),
             );
-            $this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_packet_info');
+            $this->home_model->insert($borrowerBuyerInfoData, 'pct_order_borrower_buyer_packet_info');
 
             $borrowerBuyerEscrowInsData = array(
                 'order_id' => $this->input->post('order_id'),
@@ -2678,7 +2574,7 @@ class DashboardMail extends MX_Controller {
                 'is_condominium' => $this->input->post('is_condominium'),
                 'is_residence' => $this->input->post('is_residence'),
                 'is_divorced' => $this->input->post('is_divorced'),
-                'is_changed' => $this->input->post('is_changed') ,
+                'is_changed' => $this->input->post('is_changed'),
                 'is_death' => $this->input->post('is_death'),
                 'is_survey' => $this->input->post('is_survey'),
                 'is_structural' => $this->input->post('is_structural') ? $this->input->post('is_structural') : 'no',
@@ -2788,7 +2684,7 @@ class DashboardMail extends MX_Controller {
                 'signature' => $this->input->post('signature'),
                 'second_signature' => $this->input->post('second_signature'),
             );
-            $this->home_model->insert($borrowerBuyerStatementInfoData, 'pct_order_borrower_buyer_statement_of_info');   
+            $this->home_model->insert($borrowerBuyerStatementInfoData, 'pct_order_borrower_buyer_statement_of_info');
 
             $borrowerBuyerPreliminaryInfoData = array(
                 'order_id' => $this->input->post('order_id'),
@@ -2798,13 +2694,13 @@ class DashboardMail extends MX_Controller {
                 'buyer_email_address' => $this->input->post('buyer_email_address'),
                 'real_property_addres' => $this->input->post('real_property_addres'),
                 'is_principal_residence' => $this->input->post('is_principal_residence'),
-                'date_of_occupancy' => $this->input->post('intended_occupancy_day')."-".$this->input->post('intended_occupancy_month')."-".$this->input->post('intended_occupancy_year'),
-                'is_disabled_veteran' => $this->input->post('is_disabled_veteran') ,
+                'date_of_occupancy' => $this->input->post('intended_occupancy_day') . "-" . $this->input->post('intended_occupancy_month') . "-" . $this->input->post('intended_occupancy_year'),
+                'is_disabled_veteran' => $this->input->post('is_disabled_veteran'),
                 'mail_property_tax_name' => $this->input->post('mail_property_tax_name'),
                 'mail_property_tax_address' => $this->input->post('mail_property_tax_address'),
                 'mail_property_tax_city' => $this->input->post('mail_property_tax_city'),
                 'mail_property_tax_state' => $this->input->post('mail_property_tax_state'),
-                'mail_property_tax_zipcode' => $this->input->post('mail_property_tax_zipcode')
+                'mail_property_tax_zipcode' => $this->input->post('mail_property_tax_zipcode'),
             );
             $this->home_model->insert($borrowerBuyerPreliminaryInfoData, 'pct_order_borrower_buyer_preliminary_change_info');
 
@@ -2819,7 +2715,7 @@ class DashboardMail extends MX_Controller {
                 'is_cotenant_death' => $this->input->post('is_cotenant_death'),
                 'is_replace_principal_residence_own' => $this->input->post('is_replace_principal_residence_own'),
                 'is_replace_principal_residence_own_in_same_county' => $this->input->post('is_replace_principal_residence_own_in_same_county'),
-                'is_replace_principal_residence_person_disabled' => $this->input->post('is_replace_principal_residence_person_disabled') ,
+                'is_replace_principal_residence_person_disabled' => $this->input->post('is_replace_principal_residence_person_disabled'),
                 'is_replace_principal_residence_person_disabled_in_same_county' => $this->input->post('is_replace_principal_residence_person_disabled_in_same_county'),
                 'is_replace_principal_residence_damaged' => $this->input->post('is_replace_principal_residence_damaged'),
                 'is_replace_principal_residence_damaged_in_same_county' => $this->input->post('is_replace_principal_residence_damaged_in_same_county'),
@@ -2850,8 +2746,7 @@ class DashboardMail extends MX_Controller {
                 'start_percentage_range' => $this->input->post('start_percentage_range') ? $this->input->post('start_percentage_range') : null,
                 'end_percentage_range' => $this->input->post('end_percentage_range') ? $this->input->post('end_percentage_range') : null,
             );
-            $this->home_model->insert($borrowerBuyerTransferInfoData, 'pct_order_borrower_buyer_transfer_info');    
-    
+            $this->home_model->insert($borrowerBuyerTransferInfoData, 'pct_order_borrower_buyer_transfer_info');
 
             $borrowerBuyerPurchaseSaleInfoData = array(
                 'order_id' => $this->input->post('order_id'),
@@ -2896,8 +2791,8 @@ class DashboardMail extends MX_Controller {
                 'corporate_officer_name' => $this->input->post('corporate_officer_name'),
                 'corporate_officer_email' => $this->input->post('corporate_officer_email'),
             );
-            $this->home_model->insert($borrowerBuyerPurchaseSaleInfoData, 'pct_order_borrower_buyer_purchase_sale_info');   
-            
+            $this->home_model->insert($borrowerBuyerPurchaseSaleInfoData, 'pct_order_borrower_buyer_purchase_sale_info');
+
             $pdfData = array_merge($borrowerBuyerInfoData, $borrowerBuyerEscrowInsData, $borrowerBuyerStatementInfoData, $borrowerBuyerPreliminaryInfoData, $borrowerBuyerTransferInfoData, $borrowerBuyerPurchaseSaleInfoData);
             $pdfData['full_address'] = $data['orderDetails']['full_address'];
             $pdfData['types_of_transfer'] = $this->input->post('types_of_transfer');
@@ -2906,17 +2801,17 @@ class DashboardMail extends MX_Controller {
             $pdfData['second_deed_payment_types'] = $this->input->post('second_deed_payment_types') ? $this->input->post('second_deed_payment_types') : array();
             $pdfData['appropriate_choice'] = $this->input->post('appropriate_choice') ? $this->input->post('appropriate_choice') : array();
             $pdfData['pick_ups'] = $this->input->post('pick_ups') ? $this->input->post('pick_ups') : array();
-            
+
             $this->load->model('order/document');
             $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
-            $document_name = "borrower_buyer_".date('YmdHis')."_".$order[0]['file_id'].".pdf";
+            $document_name = "borrower_buyer_" . date('YmdHis') . "_" . $order[0]['file_id'] . ".pdf";
             if (!is_dir('uploads/borrower')) {
-                mkdir('./uploads/borrower', 0777, TRUE);
+                mkdir('./uploads/borrower', 0777, true);
             }
-            $pdfFilePath = './uploads/borrower/'.$document_name;
+            $pdfFilePath = './uploads/borrower/' . $document_name;
 
             try {
-                ob_clean(); 
+                ob_clean();
                 $mpdf = new \Mpdf\Mpdf();
                 ini_set("pcre.backtrack_limit", "5000000");
                 $html = $this->load->view('order/borrower_buyer_pdf', $pdfData, true);
@@ -2926,10 +2821,10 @@ class DashboardMail extends MX_Controller {
                 $mpdf->WriteHTML($stylesheet1, 1);
                 $stylesheet2 = file_get_contents('assets/frontend/css/buyer-seller-package/style_pdf.css');
                 $mpdf->WriteHTML($stylesheet2, 1);
-                $mpdf->WriteHTML($html,2);
-                $mpdf->Output($pdfFilePath,'F');
+                $mpdf->WriteHTML($html, 2);
+                $mpdf->Output($pdfFilePath, 'F');
                 ob_end_flush();
-            } catch (\Mpdf\MpdfException $e) { 
+            } catch (\Mpdf\MpdfException $e) {
                 echo $e->getMessage();
             }
 
@@ -2944,17 +2839,17 @@ class DashboardMail extends MX_Controller {
                 'task_id' => 4,
                 'description' => 'Borrower Buyer Document',
                 'is_sync' => 1,
-                'is_uploaded_by_borrower' => 1
+                'is_uploaded_by_borrower' => 1,
             );
             $this->document->insert($documentData);
             $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
             $success[] = "Borrower buyer info saved successfully and sent to Escrow officer/assistant users to verify data.";
             $data = array(
-                "errors" =>  $errors,
-                "success" => $success
+                "errors" => $errors,
+                "success" => $success,
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'borrower-buyer-form/'.$random_number);exit;
+            redirect(base_url() . 'borrower-buyer-form/' . $random_number);exit;
         }
         $this->load->view('order/borrower_buyer', $data);
     }
@@ -2967,12 +2862,12 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['orderDetails'] = $orderDetails;
-		$buyer_where['order_id']=$orderDetails['order_id'];
-		$buyer_order['is_main_buyer']='desc';
-		$data['buyers'] = $this->home_model->get_records('pct_order_borrower_buyer_info',$buyer_where,$buyer_order);
-		$data['marital_status'] = $this->marital_status;
-		$data['vesting_choice'] = $this->vesting_choice;
-	
+        $buyer_where['order_id'] = $orderDetails['order_id'];
+        $buyer_order['is_main_buyer'] = 'desc';
+        $data['buyers'] = $this->home_model->get_records('pct_order_borrower_buyer_info', $buyer_where, $buyer_order);
+        $data['marital_status'] = $this->marital_status;
+        $data['vesting_choice'] = $this->vesting_choice;
+
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -2986,101 +2881,100 @@ class DashboardMail extends MX_Controller {
         }
 
         if ($this->input->post()) {
-			$buyers_names = $buyer_pdf = array();
-			$buyer_infos = $this->input->post('buyer');
-			$vesting_info = $skip_vesting= $main_buyer = array();
-			$is_first = 1;
+            $buyers_names = $buyer_pdf = array();
+            $buyer_infos = $this->input->post('buyer');
+            $vesting_info = $skip_vesting = $main_buyer = array();
+            $is_first = 1;
             $buyer_email = '';
-			foreach ($buyer_infos as $buyer_key => $buyer_value) {
-				// Check Keys
-				$buyer_info = [
-					'order_id'=>$this->input->post('order_id'),
-					'first_name'=>$buyer_value['first_name']?$buyer_value['first_name']:null,
-					'last_name'=>$buyer_value['last_name']?$buyer_value['last_name']:null,
-					'email'=>$buyer_value['email']?$buyer_value['email']:null,
-					'phone'=>$buyer_value['phone']?$buyer_value['phone']:null,
-					'birth_month'=>$buyer_value['birth_month']?$buyer_value['birth_month']:null,
-					'birth_date'=>$buyer_value['birth_date']?$buyer_value['birth_date']:null,
-					'birth_year'=>$buyer_value['birth_year']?$buyer_value['birth_year']:null,
-					'ssn'=>$buyer_value['ssn']?$buyer_value['ssn']:null,
-					'current_mailing_address'=>$buyer_value['current_mailing_address']?$buyer_value['current_mailing_address']:null,
-					'mailing_address_port_closing'=>$buyer_value['mailing_address_port_closing']?$buyer_value['mailing_address_port_closing']:null,
-                    'marital_status' => $buyer_value['marital_status']?$buyer_value['marital_status']:null,
-                    'married_to' => $buyer_value['married_to']?$buyer_value['married_to']:null
-				];
-				if($buyer_info['first_name'] && $buyer_info['last_name']) {
-					if ($buyer_key == 'new') {
-						$buyer_info['is_main_buyer'] = 0;
-						$new_buyer_id = $this->home_model->insert($buyer_info,'pct_order_borrower_buyer_info');
-					} else {
-						//Update Value
-						$buyer_update['id'] = $buyer_key;
-						$this->home_model->update($buyer_info,$buyer_update,'pct_order_borrower_buyer_info');
-					}
+            foreach ($buyer_infos as $buyer_key => $buyer_value) {
+                // Check Keys
+                $buyer_info = [
+                    'order_id' => $this->input->post('order_id'),
+                    'first_name' => $buyer_value['first_name'] ? $buyer_value['first_name'] : null,
+                    'last_name' => $buyer_value['last_name'] ? $buyer_value['last_name'] : null,
+                    'email' => $buyer_value['email'] ? $buyer_value['email'] : null,
+                    'phone' => $buyer_value['phone'] ? $buyer_value['phone'] : null,
+                    'birth_month' => $buyer_value['birth_month'] ? $buyer_value['birth_month'] : null,
+                    'birth_date' => $buyer_value['birth_date'] ? $buyer_value['birth_date'] : null,
+                    'birth_year' => $buyer_value['birth_year'] ? $buyer_value['birth_year'] : null,
+                    'ssn' => $buyer_value['ssn'] ? $buyer_value['ssn'] : null,
+                    'current_mailing_address' => $buyer_value['current_mailing_address'] ? $buyer_value['current_mailing_address'] : null,
+                    'mailing_address_port_closing' => $buyer_value['mailing_address_port_closing'] ? $buyer_value['mailing_address_port_closing'] : null,
+                    'marital_status' => $buyer_value['marital_status'] ? $buyer_value['marital_status'] : null,
+                    'married_to' => $buyer_value['married_to'] ? $buyer_value['married_to'] : null,
+                ];
+                if ($buyer_info['first_name'] && $buyer_info['last_name']) {
+                    if ($buyer_key == 'new') {
+                        $buyer_info['is_main_buyer'] = 0;
+                        $new_buyer_id = $this->home_model->insert($buyer_info, 'pct_order_borrower_buyer_info');
+                    } else {
+                        //Update Value
+                        $buyer_update['id'] = $buyer_key;
+                        $this->home_model->update($buyer_info, $buyer_update, 'pct_order_borrower_buyer_info');
+                    }
 
-					$buyers_names[] = $buyer_info['first_name'].' '.$buyer_info['last_name'];
+                    $buyers_names[] = $buyer_info['first_name'] . ' ' . $buyer_info['last_name'];
                     $buyer_pdf['first_names'][] = $buyer_info['first_name'];
                     $buyer_pdf['last_names'][] = $buyer_info['last_name'];
                     $buyer_pdf['current_mailing_address'][] = $buyer_info['current_mailing_address'];
-					$buyer_pdf['phones'][] = $buyer_info['phone'];
-					$buyer_pdf['emails'][] = $buyer_info['email'];
-					$buyer_pdf['ssns'][] = $buyer_info['ssn'];
-                    $buyer_pdf['birth_dates'][] = $buyer_info['birth_month']."/".$buyer_info['birth_date']."/".$buyer_info['birth_year'];
+                    $buyer_pdf['phones'][] = $buyer_info['phone'];
+                    $buyer_pdf['emails'][] = $buyer_info['email'];
+                    $buyer_pdf['ssns'][] = $buyer_info['ssn'];
+                    $buyer_pdf['birth_dates'][] = $buyer_info['birth_month'] . "/" . $buyer_info['birth_date'] . "/" . $buyer_info['birth_year'];
 
-					if($is_first) {
-						$buyer_pdf['current_address'] = $buyer_info['current_mailing_address'];
-						$buyer_pdf['closing_address'] = $buyer_info['mailing_address_port_closing'];
-						$main_buyer = $buyer_info;
+                    if ($is_first) {
+                        $buyer_pdf['current_address'] = $buyer_info['current_mailing_address'];
+                        $buyer_pdf['closing_address'] = $buyer_info['mailing_address_port_closing'];
+                        $main_buyer = $buyer_info;
                         $buyer_email = $buyer_value['email'];
-						$is_first = 0;
-					}
-					if(!(in_array($buyer_key,$skip_vesting))) {
+                        $is_first = 0;
+                    }
+                    if (!(in_array($buyer_key, $skip_vesting))) {
 
-						$vesting_name = $buyer_info['first_name'].' '.$buyer_info['last_name'];
-						
-						if($buyer_info['married_to'] && $buyer_infos[$buyer_info['married_to']]) {
-							// echo "in";die;
+                        $vesting_name = $buyer_info['first_name'] . ' ' . $buyer_info['last_name'];
 
-							$vesting_name .= ' And '.$buyer_infos[$buyer_info['married_to']]['first_name'].' '.$buyer_infos[$buyer_info['married_to']]['last_name'];
-							$vesting_name .= ' '.ucwords(str_replace("_", " ", $buyer_info['marital_status']));
+                        if ($buyer_info['married_to'] && $buyer_infos[$buyer_info['married_to']]) {
+                            // echo "in";die;
 
-							$skip_vesting[] = $buyer_info['married_to'];
-						}
-						else {
-							$vesting_name .= ' '.ucwords(str_replace("_", " ", $buyer_info['marital_status']));
-						}
+                            $vesting_name .= ' And ' . $buyer_infos[$buyer_info['married_to']]['first_name'] . ' ' . $buyer_infos[$buyer_info['married_to']]['last_name'];
+                            $vesting_name .= ' ' . ucwords(str_replace("_", " ", $buyer_info['marital_status']));
 
-						$vesting_info['names'][] = $vesting_name;
-						$vesting_info['marital_status'][] = $buyer_info['marital_status'];
-					}
-				}
-			}
-			// echo '<pre>';var_dump($vesting_info);
-			// die;
-			$buyer_pdf['buyers_name'] = $buyers_names;
-        
-            $this->home_model->update(array('married_to' => $new_buyer_id), array('married_to' => 'new_buyer', 'order_id' => $this->input->post('order_id')),'pct_order_borrower_buyer_info');
+                            $skip_vesting[] = $buyer_info['married_to'];
+                        } else {
+                            $vesting_name .= ' ' . ucwords(str_replace("_", " ", $buyer_info['marital_status']));
+                        }
+
+                        $vesting_info['names'][] = $vesting_name;
+                        $vesting_info['marital_status'][] = $buyer_info['marital_status'];
+                    }
+                }
+            }
+            // echo '<pre>';var_dump($vesting_info);
+            // die;
+            $buyer_pdf['buyers_name'] = $buyers_names;
+
+            $this->home_model->update(array('married_to' => $new_buyer_id), array('married_to' => 'new_buyer', 'order_id' => $this->input->post('order_id')), 'pct_order_borrower_buyer_info');
             $borrowerBuyerInfoData = array(
-				'order_id'=>$this->input->post('order_id'),
-				'is_same_property'=>$this->input->post('is_same_property'),
-				'loan_amount'=>$this->input->post('loan_amount'),
-				'lender_name'=>$this->input->post('lender_name'),
-				'loan_officer_name'=>$this->input->post('loan_officer_name'),
-				'loan_officer_email'=>$this->input->post('loan_officer_email'),
-				'loan_officer_phone'=>$this->input->post('loan_officer_phone'),
-				'is_loan_processor'=>$this->input->post('is_loan_processor'),
-				'loan_processor_name'=>$this->input->post('loan_processor_name'),
-				'loan_processor_email'=>$this->input->post('loan_processor_email'),
-				'loan_processor_phone'=>$this->input->post('loan_processor_phone'),
-				'is_home_ins'=>$this->input->post('is_home_ins'),
-				'ins_agency_name'=>$this->input->post('ins_agency_name'),
-				'ins_agent_name'=>$this->input->post('ins_agent_name'),
-				'ins_agent_email'=>$this->input->post('ins_agent_email'),
-				'ins_agent_phone'=>$this->input->post('ins_agent_phone'),
-				'annual_premium'=>$this->input->post('annual_premium'),
-                'property_vested'=>$this->input->post('property_vested')
+                'order_id' => $this->input->post('order_id'),
+                'is_same_property' => $this->input->post('is_same_property'),
+                'loan_amount' => $this->input->post('loan_amount'),
+                'lender_name' => $this->input->post('lender_name'),
+                'loan_officer_name' => $this->input->post('loan_officer_name'),
+                'loan_officer_email' => $this->input->post('loan_officer_email'),
+                'loan_officer_phone' => $this->input->post('loan_officer_phone'),
+                'is_loan_processor' => $this->input->post('is_loan_processor'),
+                'loan_processor_name' => $this->input->post('loan_processor_name'),
+                'loan_processor_email' => $this->input->post('loan_processor_email'),
+                'loan_processor_phone' => $this->input->post('loan_processor_phone'),
+                'is_home_ins' => $this->input->post('is_home_ins'),
+                'ins_agency_name' => $this->input->post('ins_agency_name'),
+                'ins_agent_name' => $this->input->post('ins_agent_name'),
+                'ins_agent_email' => $this->input->post('ins_agent_email'),
+                'ins_agent_phone' => $this->input->post('ins_agent_phone'),
+                'annual_premium' => $this->input->post('annual_premium'),
+                'property_vested' => $this->input->post('property_vested'),
             );
-            $inserted_wizard_id=$this->home_model->insert($borrowerBuyerInfoData,'pct_order_borrower_buyer_info_wizard');
+            $inserted_wizard_id = $this->home_model->insert($borrowerBuyerInfoData, 'pct_order_borrower_buyer_info_wizard');
 
             $buyerInfo2Data = array(
                 'is_used_another_last_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
@@ -3119,19 +3013,17 @@ class DashboardMail extends MX_Controller {
                 'is_another_occupation_spouse_domestic' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : null,
                 'another_spouse_company_name' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : null,
                 'another_from_spouse_date' => $this->input->post('another_from_spouse_date') ? $this->input->post('another_from_spouse_date') : null,
-                'another_to_spouse_date' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : null
+                'another_to_spouse_date' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : null,
             );
             $this->home_model->insert($buyerInfo2Data, 'pct_order_borrower_buyer_info_wizard_2');
 
-			
-			$vesting_buyer_name  = implode(', ',$vesting_info['names']);
-			
+            $vesting_buyer_name = implode(', ', $vesting_info['names']);
 
-            $pdf_fields_val  = [
+            $pdf_fields_val = [
                 'buyer_another_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
-				'escrow_number' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'escrow_number' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
                 'escrow_number_1' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
-				'title_number' => $orderDetails['file_number'],
+                'title_number' => $orderDetails['file_number'],
                 'title_number_1' => $orderDetails['file_number'],
                 'property_address' => $orderDetails['full_address'],
                 'property_address_1' => $orderDetails['full_address'],
@@ -3154,7 +3046,7 @@ class DashboardMail extends MX_Controller {
                 'tc_name' => '',
                 'tc_phone' => '',
                 'tc_email' => '',
-                'buyer_married' => $this->input->post('marriage_or_domestic_month') ? 'Yes' : 'No', 
+                'buyer_married' => $this->input->post('marriage_or_domestic_month') ? 'Yes' : 'No',
                 'escrow_number_3' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
                 'escrow_number_2' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
                 'residence_address' => $this->input->post('is_property_sell_2') == 'Yes' ? $orderDetails['full_address'] : $this->input->post('another_property_sell'),
@@ -3179,13 +3071,13 @@ class DashboardMail extends MX_Controller {
                 'buyer_occupation_from_2' => '',
                 'buyer_occupation_to' => $this->input->post('to_employee_date') ? $this->input->post('to_employee_date') : '',
                 'buyer_occupation_to_1' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : '',
-                'buyer_occupation_to_2' =>  '',
+                'buyer_occupation_to_2' => '',
                 'buyer_ssn_2' => $buyer_pdf['ssns'][0],
                 'buyer_state_residence' => '',
                 'buyer_first_name_2' => $buyer_pdf['first_names'][0],
                 'buyer_birth_date_2' => $buyer_pdf['birth_dates'][0],
                 'spouse_birth_place' => '',
-                'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month')."/".$this->input->post('spouse_birth_day')."/".$this->input->post('spouse_birth_year') : '',
+                'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month') . "/" . $this->input->post('spouse_birth_day') . "/" . $this->input->post('spouse_birth_year') : '',
                 'spouse_domestic_address' => $this->input->post('spouse_company_name') ? $this->input->post('spouse_company_name') : '',
                 'spouse_domestic_address_1' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : '',
                 'spouse_domestic_address_2' => '',
@@ -3195,12 +3087,12 @@ class DashboardMail extends MX_Controller {
                 'spouse_domestic_to' => $this->input->post('to_spouse_date') ? $this->input->post('to_spouse_date') : '',
                 'spouse_domestic_to_1' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : '',
                 'spouse_domestic_to_2' => '',
-                'spouse_driver_license' =>  '',
+                'spouse_driver_license' => '',
                 'spouse_first_name' => $this->input->post('spouse_first_name') ? $this->input->post('spouse_first_name') : '',
                 'spouse_last_name' => $this->input->post('spouse_last_name') ? $this->input->post('spouse_last_name') : '',
                 'spouse_lived_in_usa' => '',
-                'spouse_marriage_date' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
-                'buyer_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'spouse_marriage_date' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month') . "/" . $this->input->post('marriage_or_domestic_day') . "/" . $this->input->post('marriage_or_domestic_year') : '',
+                'buyer_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month') . "/" . $this->input->post('marriage_or_domestic_day') . "/" . $this->input->post('marriage_or_domestic_year') : '',
                 'spouse_other_last_name' => '',
                 'spouse_residence' => '',
                 'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : '',
@@ -3229,34 +3121,34 @@ class DashboardMail extends MX_Controller {
                 'lender_loan_amount' => $this->input->post('lender_loan_amount') ? $this->input->post('lender_loan_amount') : '',
                 'lender_acct_no' => $this->input->post('lender_acct_no') ? $this->input->post('lender_acct_no') : '',
             ];
-            
+
             //print_r($vesting_info['marital_status']);
-            if($vesting_info['marital_status'] && is_array($vesting_info['marital_status'])) {
-				foreach($vesting_info['marital_status'] as $vesting_info) {
+            if ($vesting_info['marital_status'] && is_array($vesting_info['marital_status'])) {
+                foreach ($vesting_info['marital_status'] as $vesting_info) {
                     $pdf_fields_val[$vesting_info] = 'Checked';
-				}
-			}
+                }
+            }
 
             //print_r($pdf_fields_val);exit;
-			
+
             if (count($buyer_pdf['emails']) > 0) {
                 $total_count = count($buyer_pdf['emails']);
                 $i = 1;
                 $j = 1;
                 $email_sent_flag = 0;
-                foreach($buyer_pdf['emails'] as $buyer_email) {
+                foreach ($buyer_pdf['emails'] as $buyer_email) {
                     if ($total_count == $i) {
                         if ($i % 2 != 0) {
-                            $pdf_fields_val['buyer_first_name'] = $buyer_pdf['first_names'][$i-1];
-                            $pdf_fields_val['buyer_last_name'] = $buyer_pdf['last_names'][$i-1];
-                            $pdf_fields_val['buyer_cell_phone'] = $buyer_pdf['phones'][$i-1];
+                            $pdf_fields_val['buyer_first_name'] = $buyer_pdf['first_names'][$i - 1];
+                            $pdf_fields_val['buyer_last_name'] = $buyer_pdf['last_names'][$i - 1];
+                            $pdf_fields_val['buyer_cell_phone'] = $buyer_pdf['phones'][$i - 1];
                             $pdf_fields_val['buyer_home_phone'] = '';
-                            $pdf_fields_val['buyer_email'] = $buyer_pdf['emails'][$i-1];
-                            $pdf_fields_val['buyer_ssn'] = $buyer_pdf['ssns'][$i-1];
-                            $pdf_fields_val['buyer_current_mailing_address'] = $buyer_pdf['current_mailing_address'][$i-1];
+                            $pdf_fields_val['buyer_email'] = $buyer_pdf['emails'][$i - 1];
+                            $pdf_fields_val['buyer_ssn'] = $buyer_pdf['ssns'][$i - 1];
+                            $pdf_fields_val['buyer_current_mailing_address'] = $buyer_pdf['current_mailing_address'][$i - 1];
                             $pdf_fields_val['buyer_num_field_1'] = $i;
-                            $pdf_fields_val['signature_1_name'] = $buyer_pdf['first_names'][$i-1]." ".$buyer_pdf['last_names'][$i-1];
-                
+                            $pdf_fields_val['signature_1_name'] = $buyer_pdf['first_names'][$i - 1] . " " . $buyer_pdf['last_names'][$i - 1];
+
                             $pdf_fields_val['buyer_first_name_1'] = "";
                             $pdf_fields_val['buyer_last_name_1'] = "";
                             $pdf_fields_val['buyer_cell_phone_1'] = "";
@@ -3270,33 +3162,32 @@ class DashboardMail extends MX_Controller {
                         }
                     }
                     if ($i % 2 == 0) {
-                        $pdf_fields_val['buyer_first_name'] = $buyer_pdf['first_names'][$i-2];
-                        $pdf_fields_val['buyer_last_name'] = $buyer_pdf['last_names'][$i-2];
-                        $pdf_fields_val['buyer_cell_phone'] = $buyer_pdf['phones'][$i-2];
+                        $pdf_fields_val['buyer_first_name'] = $buyer_pdf['first_names'][$i - 2];
+                        $pdf_fields_val['buyer_last_name'] = $buyer_pdf['last_names'][$i - 2];
+                        $pdf_fields_val['buyer_cell_phone'] = $buyer_pdf['phones'][$i - 2];
                         $pdf_fields_val['buyer_home_phone'] = '';
-                        $pdf_fields_val['buyer_email'] = $buyer_pdf['emails'][$i-2];
-                        $pdf_fields_val['buyer_ssn'] = $buyer_pdf['ssns'][$i-2];
-                        $pdf_fields_val['buyer_current_mailing_address'] = $buyer_pdf['current_mailing_address'][$i-2];
-                        $pdf_fields_val['buyer_num_field_1'] = $i-1;
-                        $pdf_fields_val['signature_1_name'] = $buyer_pdf['first_names'][$i-2]." ".$buyer_pdf['last_names'][$i-2];
-                        
-                
-                        $pdf_fields_val['buyer_first_name_1'] = $buyer_pdf['first_names'][$i-1];
-                        $pdf_fields_val['buyer_last_name_1'] = $buyer_pdf['last_names'][$i-1];
-                        $pdf_fields_val['buyer_cell_phone_1'] = $buyer_pdf['phones'][$i-1];
+                        $pdf_fields_val['buyer_email'] = $buyer_pdf['emails'][$i - 2];
+                        $pdf_fields_val['buyer_ssn'] = $buyer_pdf['ssns'][$i - 2];
+                        $pdf_fields_val['buyer_current_mailing_address'] = $buyer_pdf['current_mailing_address'][$i - 2];
+                        $pdf_fields_val['buyer_num_field_1'] = $i - 1;
+                        $pdf_fields_val['signature_1_name'] = $buyer_pdf['first_names'][$i - 2] . " " . $buyer_pdf['last_names'][$i - 2];
+
+                        $pdf_fields_val['buyer_first_name_1'] = $buyer_pdf['first_names'][$i - 1];
+                        $pdf_fields_val['buyer_last_name_1'] = $buyer_pdf['last_names'][$i - 1];
+                        $pdf_fields_val['buyer_cell_phone_1'] = $buyer_pdf['phones'][$i - 1];
                         $pdf_fields_val['buyer_home_phone_1'] = '';
-                        $pdf_fields_val['buyer_email_1'] = $buyer_pdf['emails'][$i-1];
-                        $pdf_fields_val['buyer_ssn_1'] = $buyer_pdf['ssns'][$i-1];
-                        $pdf_fields_val['buyer_current_mailing_address_1'] = $buyer_pdf['current_mailing_address'][$i-1];
-                        
-                        $pdf_fields_val['signature_2_name'] = $buyer_pdf['first_names'][$i-1]." ".$buyer_pdf['last_names'][$i-1];
+                        $pdf_fields_val['buyer_email_1'] = $buyer_pdf['emails'][$i - 1];
+                        $pdf_fields_val['buyer_ssn_1'] = $buyer_pdf['ssns'][$i - 1];
+                        $pdf_fields_val['buyer_current_mailing_address_1'] = $buyer_pdf['current_mailing_address'][$i - 1];
+
+                        $pdf_fields_val['signature_2_name'] = $buyer_pdf['first_names'][$i - 1] . " " . $buyer_pdf['last_names'][$i - 1];
                         $pdf_fields_val['buyer_num_field_2'] = $i;
                         $email_sent_even_flag = 1;
                     }
 
                     if ($email_sent_odd_flag == 1 || $email_sent_even_flag == 1) {
                         $mergeFieldInfo = array();
-                        foreach($pdf_fields_val as $key => $value) {
+                        foreach ($pdf_fields_val as $key => $value) {
                             $mergeFieldInfo[] = array(
                                 'fieldName' => $key,
                                 'defaultValue' => $value,
@@ -3307,85 +3198,85 @@ class DashboardMail extends MX_Controller {
                             $postData = array(
                                 'fileInfos' => [
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_STATEMENT_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_STATEMENT_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_VESTING_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_VESTING_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_PROCEED_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_PROCEED_DOCUMENT_ID'),
                                     ],
                                 ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
-                                    array (
+                                    array(
                                         'memberInfos' => array(
                                             array(
-                                                'email' => $pdf_fields_val['buyer_email']
+                                                'email' => $pdf_fields_val['buyer_email'],
                                             ),
                                         ),
-                                        'name' => $pdf_fields_val['buyer_first_name']." ".$pdf_fields_val['buyer_last_name'],
+                                        'name' => $pdf_fields_val['buyer_first_name'] . " " . $pdf_fields_val['buyer_last_name'],
                                         'order' => 1,
                                         'role' => 'SIGNER',
                                     ),
                                 ),
                                 'mergeFieldInfo' => $mergeFieldInfo,
                                 'signatureType' => 'ESIGN',
-                                'state' => 'IN_PROCESS'
+                                'state' => 'IN_PROCESS',
                             );
                         } else {
                             $postData = array(
                                 'fileInfos' => [
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_STATEMENT_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_STATEMENT_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_VESTING_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_VESTING_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_BUYER_PROCEED_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_BUYER_PROCEED_DOCUMENT_ID'),
                                     ],
                                 ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
-                                    array (
+                                    array(
                                         'memberInfos' => array(
                                             array(
-                                                'email' => $pdf_fields_val['buyer_email']
+                                                'email' => $pdf_fields_val['buyer_email'],
                                             ),
                                         ),
-                                        'name' => $pdf_fields_val['buyer_first_name']." ".$pdf_fields_val['buyer_last_name'],
+                                        'name' => $pdf_fields_val['buyer_first_name'] . " " . $pdf_fields_val['buyer_last_name'],
                                         'order' => 1,
                                         'role' => 'SIGNER',
                                     ),
-                                    array (
+                                    array(
                                         'memberInfos' => array(
                                             array(
-                                                'email' => $pdf_fields_val['buyer_email_1']
+                                                'email' => $pdf_fields_val['buyer_email_1'],
                                             ),
                                         ),
-                                        'name' => $pdf_fields_val['buyer_first_name_1']." ".$pdf_fields_val['buyer_last_name_1'],
+                                        'name' => $pdf_fields_val['buyer_first_name_1'] . " " . $pdf_fields_val['buyer_last_name_1'],
                                         'order' => 1,
                                         'role' => 'SIGNER',
                                     ),
                                 ),
                                 'mergeFieldInfo' => $mergeFieldInfo,
                                 'signatureType' => 'ESIGN',
-                                'state' => 'IN_PROCESS'
+                                'state' => 'IN_PROCESS',
                             );
                         }
-                        
+
                         $request_data = [
-                            'url'			=>'api/rest/v6/agreements',
-                            'request_type'	=>'POST',
-                            'data_type'		=>'JSON',
-                            'post_data' => $postData
+                            'url' => 'api/rest/v6/agreements',
+                            'request_type' => 'POST',
+                            'data_type' => 'JSON',
+                            'post_data' => $postData,
                         ];
                         $this->load->library('order/adobe');
                         $response = $this->adobe->send_request($request_data);
@@ -3394,19 +3285,19 @@ class DashboardMail extends MX_Controller {
                             $result = json_decode($response['result'], true);
                             if (!empty($result['id'])) {
                                 $request_data = [
-                                    'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
-                                    'request_type'	=>'GET'
+                                    'url' => 'api/rest/v6/agreements/' . $result['id'] . '/combinedDocument',
+                                    'request_type' => 'GET',
                                 ];
                                 $response_doc = $this->adobe->send_request($request_data);
                                 if (!empty($response_doc['status']) && $response_doc['result']) {
                                     if (!is_dir('uploads/borrower')) {
-                                        mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                                        mkdir(FCPATH . '/uploads/borrower', 0777, true);
                                     }
-                                    $document_name = $orderDetails['file_number'].'_seller_sign_'.$j.'.pdf';
+                                    $document_name = $orderDetails['file_number'] . '_seller_sign_' . $j . '.pdf';
                                     $j++;
                                     $email_sent_odd_flag = 0;
                                     $email_sent_even_flag = 0;
-                                    file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
+                                    file_put_contents(FCPATH . '/uploads/borrower/' . $document_name, $response_doc['result']);
                                     $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
                                     $documentData = array(
                                         'document_name' => $document_name,
@@ -3419,10 +3310,10 @@ class DashboardMail extends MX_Controller {
                                         'description' => 'Borrower Document',
                                         'is_seller_pdf_adobe_doc' => 1,
                                         'is_sync' => 1,
-                                        'is_uploaded_by_borrower' => 1
+                                        'is_uploaded_by_borrower' => 1,
                                     );
                                     $this->document->insert($documentData);
-                                    $pdf_url = env('AWS_PATH')."borrower/".$document_name;
+                                    $pdf_url = env('AWS_PATH') . "borrower/" . $document_name;
                                     $success[0] = "Borrower buyer info saved successfully. <br>
                                     We also sent mail to buyer users for sign document.";
                                 }
@@ -3437,11 +3328,11 @@ class DashboardMail extends MX_Controller {
                 }
             }
             $data = array(
-                "errors" =>  $errors,
-                "success" => $success
+                "errors" => $errors,
+                "success" => $success,
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'buyer-info/'.$random_number);exit;
+            redirect(base_url() . 'buyer-info/' . $random_number);exit;
         }
         $this->load->view('order/borrower_buyer_info1', $data);
     }
@@ -3454,9 +3345,9 @@ class DashboardMail extends MX_Controller {
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
         $data['orderDetails'] = $orderDetails;
-		$seller_where['order_id']=$orderDetails['order_id'];
-		$seller_order['is_main_seller']='desc';
-		$data['sellers'] = $this->home_model->get_records('pct_order_borrower_seller_info',$seller_where,$seller_order);
+        $seller_where['order_id'] = $orderDetails['order_id'];
+        $seller_order['is_main_seller'] = 'desc';
+        $data['sellers'] = $this->home_model->get_records('pct_order_borrower_seller_info', $seller_where, $seller_order);
         $errors = array();
         $data['errors'] = array();
         $data['success'] = array();
@@ -3468,57 +3359,57 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        
-        if ($this->input->post()) {
-			$seller_infos = $this->input->post('seller');
-			$vesting_info = $skip_vesting= $main_seller = $seller_info_pdf = array();
-			$is_first = 1;
-            $seller_email = '';
-			foreach ($seller_infos as $seller_key => $seller_value) {
-				// Check Keys
-				$seller_info = [
-					'order_id'=>$this->input->post('order_id'),
-					'first_name'=>$seller_value['first_name']?$seller_value['first_name']:null,
-					'last_name'=>$seller_value['last_name']?$seller_value['last_name']:null,
-					'email'=>$seller_value['email']?$seller_value['email']:null,
-					'phone'=>$seller_value['phone']?$seller_value['phone']:null,
-					'birth_month'=>$seller_value['birth_month']?$seller_value['birth_month']:null,
-					'birth_date'=>$seller_value['birth_date']?$seller_value['birth_date']:null,
-					'birth_year'=>$seller_value['birth_year']?$seller_value['birth_year']:null,
-					'ssn'=>$seller_value['ssn']?$seller_value['ssn']:null,
-					'current_mailing_address'=>$seller_value['current_mailing_address']?$seller_value['current_mailing_address']:null,
-					'mailing_address_port_closing'=>$seller_value['mailing_address_port_closing']?$seller_value['mailing_address_port_closing']:null,
-                    'marital_status' => $seller_value['marital_status']?$seller_value['marital_status']:null,
-                    'married_to' => $seller_value['married_to']?$seller_value['married_to']:null
-				];
 
-                if($is_first) {
+        if ($this->input->post()) {
+            $seller_infos = $this->input->post('seller');
+            $vesting_info = $skip_vesting = $main_seller = $seller_info_pdf = array();
+            $is_first = 1;
+            $seller_email = '';
+            foreach ($seller_infos as $seller_key => $seller_value) {
+                // Check Keys
+                $seller_info = [
+                    'order_id' => $this->input->post('order_id'),
+                    'first_name' => $seller_value['first_name'] ? $seller_value['first_name'] : null,
+                    'last_name' => $seller_value['last_name'] ? $seller_value['last_name'] : null,
+                    'email' => $seller_value['email'] ? $seller_value['email'] : null,
+                    'phone' => $seller_value['phone'] ? $seller_value['phone'] : null,
+                    'birth_month' => $seller_value['birth_month'] ? $seller_value['birth_month'] : null,
+                    'birth_date' => $seller_value['birth_date'] ? $seller_value['birth_date'] : null,
+                    'birth_year' => $seller_value['birth_year'] ? $seller_value['birth_year'] : null,
+                    'ssn' => $seller_value['ssn'] ? $seller_value['ssn'] : null,
+                    'current_mailing_address' => $seller_value['current_mailing_address'] ? $seller_value['current_mailing_address'] : null,
+                    'mailing_address_port_closing' => $seller_value['mailing_address_port_closing'] ? $seller_value['mailing_address_port_closing'] : null,
+                    'marital_status' => $seller_value['marital_status'] ? $seller_value['marital_status'] : null,
+                    'married_to' => $seller_value['married_to'] ? $seller_value['married_to'] : null,
+                ];
+
+                if ($is_first) {
                     $seller_email = $seller_value['email'];
                     $is_first = 0;
                 }
-				if($seller_info['first_name'] && $seller_info['last_name']) {
-					if ($seller_key == 'new') {
-						$seller_info['is_main_seller'] = 0;
-						$new_seller_id = $this->home_model->insert($seller_info,'pct_order_borrower_seller_info');
-					} else {
-						//Update Value
-						$seller_update['id'] = $seller_key;
-						$this->home_model->update($seller_info,$seller_update,'pct_order_borrower_seller_info');
-					}
-					if(empty($main_seller)) {
-						$main_seller = $seller_info;
-					}
-					
-					$seller_info_pdf['first_names'][] = $seller_info['first_name'];
+                if ($seller_info['first_name'] && $seller_info['last_name']) {
+                    if ($seller_key == 'new') {
+                        $seller_info['is_main_seller'] = 0;
+                        $new_seller_id = $this->home_model->insert($seller_info, 'pct_order_borrower_seller_info');
+                    } else {
+                        //Update Value
+                        $seller_update['id'] = $seller_key;
+                        $this->home_model->update($seller_info, $seller_update, 'pct_order_borrower_seller_info');
+                    }
+                    if (empty($main_seller)) {
+                        $main_seller = $seller_info;
+                    }
+
+                    $seller_info_pdf['first_names'][] = $seller_info['first_name'];
                     $seller_info_pdf['last_names'][] = $seller_info['last_name'];
-					$seller_info_pdf['phones'][] = $seller_info['phone'];
+                    $seller_info_pdf['phones'][] = $seller_info['phone'];
                     $seller_info_pdf['current_mailing_address'][] = $seller_info['current_mailing_address'];
-					$seller_info_pdf['emails'][] = $seller_info['email'];
-					$seller_info_pdf['ssns'][] = $seller_info['ssn'];
-                    $seller_info_pdf['birth_dates'][] = $seller_info['birth_month']."/".$seller_info['birth_date']."/".$seller_info['birth_year'];
-				}
-			}
-           
+                    $seller_info_pdf['emails'][] = $seller_info['email'];
+                    $seller_info_pdf['ssns'][] = $seller_info['ssn'];
+                    $seller_info_pdf['birth_dates'][] = $seller_info['birth_month'] . "/" . $seller_info['birth_date'] . "/" . $seller_info['birth_year'];
+                }
+            }
+
             $sellerInfoData = array(
                 'order_id' => $this->input->post('order_id'),
                 'is_trustee' => $this->input->post('is_trustee') ? $this->input->post('is_trustee') : null,
@@ -3601,17 +3492,17 @@ class DashboardMail extends MX_Controller {
                 'is_another_occupation_spouse_domestic' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : null,
                 'another_spouse_company_name' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : null,
                 'another_from_spouse_date' => $this->input->post('another_from_spouse_date') ? $this->input->post('another_from_spouse_date') : null,
-                'another_to_spouse_date' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : null
+                'another_to_spouse_date' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : null,
             );
             $this->home_model->insert($sellerInfo2Data, 'pct_order_borrower_seller_packet_info_2');
 
-			//Generate PDF
-			$pdf_fields_val  = [
-				'Custom Field 1' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
-				'Custom Field 2' => $orderDetails['file_number'],
+            //Generate PDF
+            $pdf_fields_val = [
+                'Custom Field 1' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
+                'Custom Field 2' => $orderDetails['file_number'],
                 'Custom Field 17' => $orderDetails['full_address'],
                 'Custom Field 24' => $orderDetails['full_address'],
-                'Custom Field 37' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],				'Custom Field 38' => $orderDetails['file_number'],
+                'Custom Field 37' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'], 'Custom Field 38' => $orderDetails['file_number'],
                 'Custom Field 18' => $this->input->post('lender_name') ? $this->input->post('lender_name') : '',
                 'Copy of Custom Field 9 (1)' => $this->input->post('lender_address') ? $this->input->post('lender_address') : '',
                 'Custom Field 19' => $this->input->post('loan_number') ? $this->input->post('loan_number') : '',
@@ -3633,7 +3524,7 @@ class DashboardMail extends MX_Controller {
                 'Custom Field 29' => $this->input->post('water_company') ? $this->input->post('water_company') : '',
                 'Copy of Custom Field 28 (1)' => $this->input->post('water_company_address') ? $this->input->post('water_company_address') : '',
                 'Custom Field 31' => $this->input->post('water_phone_number') ? $this->input->post('water_phone_number') : '',
-                'Drop Down 1' => $this->input->post('is_married') == 'married' ? 'Yes' : 'No', 
+                'Drop Down 1' => $this->input->post('is_married') == 'married' ? 'Yes' : 'No',
                 'escrow_number' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
                 'escrow_number_2' => $orderDetails['escrow_number'] ? $orderDetails['escrow_number'] : $orderDetails['file_number'],
                 'residence_address' => $this->input->post('is_property_sell_2') == 'Yes' ? $orderDetails['full_address'] : $this->input->post('another_property_sell'),
@@ -3646,7 +3537,7 @@ class DashboardMail extends MX_Controller {
                 'residence_to_1' => $this->input->post('another_to_date') ? $this->input->post('another_to_date') : '',
                 'residence_to_2' => '',
                 'seller_birth_place' => '',
-                'seller_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'seller_date_of_marriage' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month') . "/" . $this->input->post('marriage_or_domestic_day') . "/" . $this->input->post('marriage_or_domestic_year') : '',
                 'seller_last_name' => $seller_info_pdf['last_names'][0],
                 'seller_lived_in_usa' => '',
                 'seller_married' => $this->input->post('is_married') == 'married' ? 'Yes' : 'No',
@@ -3659,15 +3550,15 @@ class DashboardMail extends MX_Controller {
                 'seller_occupation_from_2' => '',
                 'seller_occupation_to' => $this->input->post('to_employee_date') ? $this->input->post('to_employee_date') : '',
                 'seller_occupation_to_1' => $this->input->post('another_to_employee_date') ? $this->input->post('another_to_employee_date') : '',
-                'seller_occupation_to_2' =>  '',
+                'seller_occupation_to_2' => '',
                 'seller_ssn' => $seller_info_pdf['ssns'][0],
                 'seller_state_residence' => '',
                 'seller_first_name' => $seller_info_pdf['first_names'][0],
-                'signature_3_name' => $seller_info_pdf['first_names'][0]." ".$seller_info_pdf['last_names'][0],
+                'signature_3_name' => $seller_info_pdf['first_names'][0] . " " . $seller_info_pdf['last_names'][0],
                 'seller_birth_date' => $seller_info_pdf['birth_dates'][0],
-                'signature_4_name' => $seller_info_pdf['first_names'][1]." ".$seller_info_pdf['last_names'][1],
+                'signature_4_name' => $seller_info_pdf['first_names'][1] . " " . $seller_info_pdf['last_names'][1],
                 'spouse_birth_place' => '',
-                'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month')."/".$this->input->post('spouse_birth_day')."/".$this->input->post('spouse_birth_year') : '',
+                'spouse_date_of_birth' => $this->input->post('spouse_birth_day') ? $this->input->post('spouse_birth_month') . "/" . $this->input->post('spouse_birth_day') . "/" . $this->input->post('spouse_birth_year') : '',
                 'spouse_domestic_address' => $this->input->post('spouse_company_name') ? $this->input->post('spouse_company_name') : '',
                 'spouse_domestic_address_1' => $this->input->post('another_spouse_company_name') ? $this->input->post('another_spouse_company_name') : '',
                 'spouse_domestic_address_2' => '',
@@ -3677,11 +3568,11 @@ class DashboardMail extends MX_Controller {
                 'spouse_domestic_to' => $this->input->post('to_spouse_date') ? $this->input->post('to_spouse_date') : '',
                 'spouse_domestic_to_1' => $this->input->post('another_to_spouse_date') ? $this->input->post('another_to_spouse_date') : '',
                 'spouse_domestic_to_2' => '',
-                'spouse_driver_license' =>  '',
+                'spouse_driver_license' => '',
                 'spouse_first_name' => $this->input->post('spouse_first_name') ? $this->input->post('spouse_first_name') : '',
                 'spouse_last_name' => $this->input->post('spouse_last_name') ? $this->input->post('spouse_last_name') : '',
                 'spouse_lived_in_usa' => '',
-                'spouse_marriage_date' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month')."/".$this->input->post('marriage_or_domestic_day')."/".$this->input->post('marriage_or_domestic_year') : '',
+                'spouse_marriage_date' => $this->input->post('marriage_or_domestic_month') ? $this->input->post('marriage_or_domestic_month') . "/" . $this->input->post('marriage_or_domestic_day') . "/" . $this->input->post('marriage_or_domestic_year') : '',
                 'spouse_other_last_name' => '',
                 'spouse_residence' => '',
                 'spouse_ssn' => $this->input->post('spouse_ssn') ? $this->input->post('spouse_ssn') : '',
@@ -3699,17 +3590,17 @@ class DashboardMail extends MX_Controller {
                 $i = 1;
                 $j = 1;
                 $email_sent_flag = 0;
-                foreach($seller_info_pdf['emails'] as $seller_email) {
+                foreach ($seller_info_pdf['emails'] as $seller_email) {
                     if ($total_count == $i) {
                         if ($i % 2 != 0) {
-                            $pdf_fields_val['Custom Field 3'] = $seller_info_pdf['first_names'][$i-1];
-                            $pdf_fields_val['Custom Field 4'] = $seller_info_pdf['last_names'][$i-1];
-                            $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i-1];
+                            $pdf_fields_val['Custom Field 3'] = $seller_info_pdf['first_names'][$i - 1];
+                            $pdf_fields_val['Custom Field 4'] = $seller_info_pdf['last_names'][$i - 1];
+                            $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i - 1];
                             $pdf_fields_val['Custom Field 6'] = '';
-                            $pdf_fields_val['Custom Field 7'] = $seller_info_pdf['emails'][$i-1];
-                            $pdf_fields_val['Custom Field 8'] = $seller_info_pdf['ssns'][$i-1];
-                            $pdf_fields_val['Custom Field 9'] = $seller_info_pdf['current_mailing_address'][$i-1];
-                            $pdf_fields_val['Custom Field 35'] = $seller_info_pdf['first_names'][$i-1];
+                            $pdf_fields_val['Custom Field 7'] = $seller_info_pdf['emails'][$i - 1];
+                            $pdf_fields_val['Custom Field 8'] = $seller_info_pdf['ssns'][$i - 1];
+                            $pdf_fields_val['Custom Field 9'] = $seller_info_pdf['current_mailing_address'][$i - 1];
+                            $pdf_fields_val['Custom Field 35'] = $seller_info_pdf['first_names'][$i - 1];
                             $pdf_fields_val['Custom Field 39'] = $i;
 
                             $pdf_fields_val['Custom Field 10'] = "";
@@ -3726,32 +3617,32 @@ class DashboardMail extends MX_Controller {
                         }
                     }
                     if ($i % 2 == 0) {
-                        $pdf_fields_val['Custom Field 3'] = $seller_info_pdf['first_names'][$i-2];
-                        $pdf_fields_val['Custom Field 4'] = $seller_info_pdf['last_names'][$i-2];
-                        $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i-2];
+                        $pdf_fields_val['Custom Field 3'] = $seller_info_pdf['first_names'][$i - 2];
+                        $pdf_fields_val['Custom Field 4'] = $seller_info_pdf['last_names'][$i - 2];
+                        $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i - 2];
                         $pdf_fields_val['Custom Field 6'] = '';
-                        $pdf_fields_val['Custom Field 7'] = $seller_info_pdf['emails'][$i-2];
-                        $pdf_fields_val['Custom Field 8'] = $seller_info_pdf['ssns'][$i-2];
-                        $pdf_fields_val['Custom Field 9'] = $seller_info_pdf['current_mailing_address'][$i-2];
-                        $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i-2];
-                        $pdf_fields_val['Custom Field 39'] = $i-1;
+                        $pdf_fields_val['Custom Field 7'] = $seller_info_pdf['emails'][$i - 2];
+                        $pdf_fields_val['Custom Field 8'] = $seller_info_pdf['ssns'][$i - 2];
+                        $pdf_fields_val['Custom Field 9'] = $seller_info_pdf['current_mailing_address'][$i - 2];
+                        $pdf_fields_val['Custom Field 5'] = $seller_info_pdf['phones'][$i - 2];
+                        $pdf_fields_val['Custom Field 39'] = $i - 1;
 
-                        $pdf_fields_val['Custom Field 10'] = $seller_info_pdf['first_names'][$i-1];
-                        $pdf_fields_val['Custom Field 11'] = $seller_info_pdf['last_names'][$i-1];
-                        $pdf_fields_val['Custom Field 12'] = $seller_info_pdf['phones'][$i-1];
+                        $pdf_fields_val['Custom Field 10'] = $seller_info_pdf['first_names'][$i - 1];
+                        $pdf_fields_val['Custom Field 11'] = $seller_info_pdf['last_names'][$i - 1];
+                        $pdf_fields_val['Custom Field 12'] = $seller_info_pdf['phones'][$i - 1];
                         $pdf_fields_val['Custom Field 13'] = '';
-                        $pdf_fields_val['Custom Field 14'] = $seller_info_pdf['emails'][$i-1];
-                        $pdf_fields_val['Custom Field 15'] = $seller_info_pdf['ssns'][$i-1];
-                        $pdf_fields_val['Custom Field 16'] = $seller_info_pdf['current_mailing_address'][$i-1];
-                        $pdf_fields_val['Custom Field 35'] = $seller_info_pdf['first_names'][$i-2]." ".$seller_info_pdf['last_names'][$i-2];
-                        $pdf_fields_val['Custom Field 36'] = $seller_info_pdf['first_names'][$i-1]." ".$seller_info_pdf['last_names'][$i-1];
+                        $pdf_fields_val['Custom Field 14'] = $seller_info_pdf['emails'][$i - 1];
+                        $pdf_fields_val['Custom Field 15'] = $seller_info_pdf['ssns'][$i - 1];
+                        $pdf_fields_val['Custom Field 16'] = $seller_info_pdf['current_mailing_address'][$i - 1];
+                        $pdf_fields_val['Custom Field 35'] = $seller_info_pdf['first_names'][$i - 2] . " " . $seller_info_pdf['last_names'][$i - 2];
+                        $pdf_fields_val['Custom Field 36'] = $seller_info_pdf['first_names'][$i - 1] . " " . $seller_info_pdf['last_names'][$i - 1];
                         $pdf_fields_val['Copy of Custom Field 39 (1)'] = $i;
                         $email_sent_even_flag = 1;
                     }
 
                     if ($email_sent_odd_flag == 1 || $email_sent_even_flag == 1) {
                         $mergeFieldInfo = array();
-                        foreach($pdf_fields_val as $key => $value) {
+                        foreach ($pdf_fields_val as $key => $value) {
                             $mergeFieldInfo[] = array(
                                 'fieldName' => $key,
                                 'defaultValue' => $value,
@@ -3762,85 +3653,85 @@ class DashboardMail extends MX_Controller {
                             $postData = array(
                                 'fileInfos' => [
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => 'CBJCHBCAABAADo5s4v2-sHYm9aHJf-iURR5n-EsI6NKK'
+                                        'libraryDocumentId' => 'CBJCHBCAABAADo5s4v2-sHYm9aHJf-iURR5n-EsI6NKK',
                                     ],
                                     [
-                                        'libraryDocumentId' => 'CBJCHBCAABAAJE8Vvvn8ale4sCEVAPYEt0tOmP5LqekR'
+                                        'libraryDocumentId' => 'CBJCHBCAABAAJE8Vvvn8ale4sCEVAPYEt0tOmP5LqekR',
                                     ],
                                 ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
-                                    array (
+                                    array(
                                         'memberInfos' => array(
                                             array(
-                                                'email' => $pdf_fields_val['Custom Field 7']
+                                                'email' => $pdf_fields_val['Custom Field 7'],
                                             ),
                                         ),
-                                        'name' => $pdf_fields_val['Custom Field 3']." ".$pdf_fields_val['Custom Field 4'],
+                                        'name' => $pdf_fields_val['Custom Field 3'] . " " . $pdf_fields_val['Custom Field 4'],
                                         'order' => 1,
                                         'role' => 'SIGNER',
                                     ),
                                 ),
                                 'mergeFieldInfo' => $mergeFieldInfo,
                                 'signatureType' => 'ESIGN',
-                                'state' => 'IN_PROCESS'
+                                'state' => 'IN_PROCESS',
                             );
                         } else {
                             $postData = array(
                                 'fileInfos' => [
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID')
+                                        'libraryDocumentId' => getenv('ADOBE_SELLER_STATEMENT_DOCUMENT_ID'),
                                     ],
                                     [
-                                        'libraryDocumentId' => 'CBJCHBCAABAADo5s4v2-sHYm9aHJf-iURR5n-EsI6NKK'
+                                        'libraryDocumentId' => 'CBJCHBCAABAADo5s4v2-sHYm9aHJf-iURR5n-EsI6NKK',
                                     ],
                                     [
-                                        'libraryDocumentId' => 'CBJCHBCAABAAJE8Vvvn8ale4sCEVAPYEt0tOmP5LqekR'
+                                        'libraryDocumentId' => 'CBJCHBCAABAAJE8Vvvn8ale4sCEVAPYEt0tOmP5LqekR',
                                     ],
                                 ],
                                 'name' => 'Test',
                                 'participantSetsInfo' => array(
-                                    array (
+                                    array(
                                         'memberInfos' => array(
                                             array(
-                                                'email' => $pdf_fields_val['Custom Field 7']
+                                                'email' => $pdf_fields_val['Custom Field 7'],
                                             ),
                                         ),
-                                        'name' => $pdf_fields_val['Custom Field 3']." ".$pdf_fields_val['Custom Field 4'],
+                                        'name' => $pdf_fields_val['Custom Field 3'] . " " . $pdf_fields_val['Custom Field 4'],
                                         'order' => 1,
                                         'role' => 'SIGNER',
                                     ),
-                                    array (
+                                    array(
                                         'memberInfos' => array(
                                             array(
-                                                'email' => $pdf_fields_val['Custom Field 14']
+                                                'email' => $pdf_fields_val['Custom Field 14'],
                                             ),
                                         ),
-                                        'name' => $pdf_fields_val['Custom Field 10']." ".$pdf_fields_val['Custom Field 11'],
+                                        'name' => $pdf_fields_val['Custom Field 10'] . " " . $pdf_fields_val['Custom Field 11'],
                                         'order' => 1,
                                         'role' => 'SIGNER',
                                     ),
                                 ),
                                 'mergeFieldInfo' => $mergeFieldInfo,
                                 'signatureType' => 'ESIGN',
-                                'state' => 'IN_PROCESS'
+                                'state' => 'IN_PROCESS',
                             );
                         }
-                        
+
                         $request_data = [
-                            'url'			=>'api/rest/v6/agreements',
-                            'request_type'	=>'POST',
-                            'data_type'		=>'JSON',
-                            'post_data' => $postData
+                            'url' => 'api/rest/v6/agreements',
+                            'request_type' => 'POST',
+                            'data_type' => 'JSON',
+                            'post_data' => $postData,
                         ];
                         $this->load->library('order/adobe');
                         $response = $this->adobe->send_request($request_data);
@@ -3849,19 +3740,19 @@ class DashboardMail extends MX_Controller {
                             $result = json_decode($response['result'], true);
                             if (!empty($result['id'])) {
                                 $request_data = [
-                                    'url'			=>'api/rest/v6/agreements/'.$result['id'].'/combinedDocument',
-                                    'request_type'	=>'GET'
+                                    'url' => 'api/rest/v6/agreements/' . $result['id'] . '/combinedDocument',
+                                    'request_type' => 'GET',
                                 ];
                                 $response_doc = $this->adobe->send_request($request_data);
                                 if (!empty($response_doc['status']) && $response_doc['result']) {
                                     if (!is_dir('uploads/borrower')) {
-                                        mkdir(FCPATH.'/uploads/borrower', 0777, TRUE);
+                                        mkdir(FCPATH . '/uploads/borrower', 0777, true);
                                     }
-                                    $document_name = $orderDetails['file_number'].'_seller_sign_'.$j.'.pdf';
+                                    $document_name = $orderDetails['file_number'] . '_seller_sign_' . $j . '.pdf';
                                     $j++;
                                     $email_sent_odd_flag = 0;
                                     $email_sent_even_flag = 0;
-                                    file_put_contents(FCPATH.'/uploads/borrower/'.$document_name, $response_doc['result']);
+                                    file_put_contents(FCPATH . '/uploads/borrower/' . $document_name, $response_doc['result']);
                                     $this->order->uploadDocumentOnAwsS3($document_name, 'borrower');
                                     $documentData = array(
                                         'document_name' => $document_name,
@@ -3874,10 +3765,10 @@ class DashboardMail extends MX_Controller {
                                         'description' => 'Borrower Document',
                                         'is_seller_pdf_adobe_doc' => 1,
                                         'is_sync' => 1,
-                                        'is_uploaded_by_borrower' => 1
+                                        'is_uploaded_by_borrower' => 1,
                                     );
                                     $this->document->insert($documentData);
-                                    $pdf_url = env('AWS_PATH')."borrower/".$document_name;
+                                    $pdf_url = env('AWS_PATH') . "borrower/" . $document_name;
                                     $success[0] = "Borrower seller info saved successfully. <br>
                                     We also sent mail to seller users for sign document.";
                                 }
@@ -3891,21 +3782,21 @@ class DashboardMail extends MX_Controller {
                     $i++;
                 }
             }
-			
+
             $data = array(
-                "errors" =>  $errors,
-                "success" => $success
+                "errors" => $errors,
+                "success" => $success,
             );
             $this->session->set_userdata($data);
-            redirect(base_url().'seller-info/'.$random_number);exit;
+            redirect(base_url() . 'seller-info/' . $random_number);exit;
         }
         $this->load->view('order/borrower_seller_info_1', $data);
     }
 
-	function generatPdfTest($random_number,$type = 'seller') 
+    public function generatPdfTest($random_number, $type = 'seller')
     {
 
-		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
         $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
@@ -3916,7 +3807,7 @@ class DashboardMail extends MX_Controller {
         $this->db->order_by('id', 'desc');
         $this->db->limit(1);
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             $data['sellerInfo'] = $query->row_array();
         } else {
             $data['sellerInfo'] = array();
@@ -3927,12 +3818,11 @@ class DashboardMail extends MX_Controller {
         $this->db->where('order_id', $order[0]['id']);
         $this->db->where('(is_commission_doc = 1 or is_escrow_instruction_doc = 1)');
         $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
+        if ($query->num_rows() > 0) {
             $data['docsInfo'] = $query->result_array();
         } else {
             $data['docsInfo'] = array();
         }
-        
 
         if (!empty($orderDetails['borrower'])) {
             $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
@@ -3948,46 +3838,46 @@ class DashboardMail extends MX_Controller {
 
         if (!empty($orderDetails['borrower'])) {
             $seller_owner_names = explode(' ', $orderDetails['borrower']);
-            if(count($seller_owner_names) == 3) {
+            if (count($seller_owner_names) == 3) {
                 $orderDetails['seller_first_name'] = $seller_owner_names[0];
                 $orderDetails['seller_middle_name'] = $seller_owner_names[1];
                 $orderDetails['seller_last_name'] = $seller_owner_names[2];
-            } else if(count($seller_owner_names) == 2) {
+            } else if (count($seller_owner_names) == 2) {
                 $orderDetails['seller_first_name'] = $seller_owner_names[0];
-                $orderDetails['seller_middle_name'] = '' ;
+                $orderDetails['seller_middle_name'] = '';
                 $orderDetails['seller_last_name'] = $seller_owner_names[1];
             } else {
                 $orderDetails['seller_first_name'] = $seller_owner_names[0];
-                $orderDetails['seller_middle_name'] = '' ;
-                $orderDetails['seller_last_name'] = '' ;
+                $orderDetails['seller_middle_name'] = '';
+                $orderDetails['seller_last_name'] = '';
             }
         } else {
-            $orderDetails['seller_first_name'] = '' ;
-            $orderDetails['seller_middle_name'] = '' ;
-            $orderDetails['seller_last_name'] = '' ;
+            $orderDetails['seller_first_name'] = '';
+            $orderDetails['seller_middle_name'] = '';
+            $orderDetails['seller_last_name'] = '';
         }
 
         if (!empty($orderDetails['secondary_borrower'])) {
-            $second_seller_owner_names =  explode(' ', $orderDetails['secondary_borrower']);
-            if(count($second_seller_owner_names) == 3) {
+            $second_seller_owner_names = explode(' ', $orderDetails['secondary_borrower']);
+            if (count($second_seller_owner_names) == 3) {
                 $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
                 $orderDetails['second_seller_middle_name'] = $second_seller_owner_names[1];
                 $orderDetails['second_seller_last_name'] = $second_seller_owner_names[2];
-            } else if(count($second_seller_owner_names) == 2) {
+            } else if (count($second_seller_owner_names) == 2) {
                 $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
-                $orderDetails['second_seller_middle_name'] = '' ;
+                $orderDetails['second_seller_middle_name'] = '';
                 $orderDetails['second_seller_last_name'] = $second_seller_owner_names[1];
             } else {
                 $orderDetails['second_seller_first_name'] = $second_seller_owner_names[0];
-                $orderDetails['second_seller_middle_name'] = '' ;
-                $orderDetails['second_seller_last_name'] = '' ;
+                $orderDetails['second_seller_middle_name'] = '';
+                $orderDetails['second_seller_last_name'] = '';
             }
         } else {
-            $orderDetails['second_seller_first_name'] = '' ;
-            $orderDetails['second_seller_middle_name'] = '' ;
-            $orderDetails['second_seller_last_name'] = '' ;
+            $orderDetails['second_seller_first_name'] = '';
+            $orderDetails['second_seller_middle_name'] = '';
+            $orderDetails['second_seller_last_name'] = '';
         }
-        
+
         $data['orderDetails'] = $orderDetails;
         $errors = array();
         $data['errors'] = array();
@@ -4000,16 +3890,16 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        
-        $user_data['admin_api'] = 1; 
-        $endPoint = 'files/'. $order[0]['file_id'] .'/documents';
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+
+        $user_data['admin_api'] = 1;
+        $endPoint = 'files/' . $order[0]['file_id'] . '/documents';
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order[0]['id'], 0);
         $resultDocuments = $this->resware->make_request('GET', $endPoint, '', $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
+        $this->apiLogs->syncLogs(0, 'resware', 'get_documents', env('RESWARE_ORDER_API') . $endPoint, array(), $resultDocuments, $order[0]['id'], $logid);
         $resDocuments = json_decode($resultDocuments, true);
         $documentIds = array(1015, 1534, 1040, 1405, 1039, 1038, 1020);
 
-        if(!empty($resDocuments['Documents'])) {
+        if (!empty($resDocuments['Documents'])) {
             foreach ($resDocuments['Documents'] as $document) {
                 if (in_array($document['DocumentType']['DocumentTypeID'], $documentIds)) {
                     $key = array_search($document['DocumentID'], array_column($data['docsInfo'], 'api_document_id'));
@@ -4017,26 +3907,26 @@ class DashboardMail extends MX_Controller {
                     // print_r($data['docsInfo']);
                     // print_r(array_column($data['docsInfo'], 'api_document_id'));exit;
                     $this->load->model('order/document');
-                    if(strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
-                        $document_name = date('YmdHis')."_".$document['DocumentName'];
+                    if (strlen($key) == 0 && strpos(strtolower($document['DocumentName']), 'snapshot') === false) {
+                        $document_name = date('YmdHis') . "_" . $document['DocumentName'];
                         $ext = end(explode('.', $document['DocumentName']));
 
-                        if(strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
+                        if (strtolower($ext) == 'doc' || strtolower($ext) == 'docx') {
                             $document_name = str_replace($ext, 'pdf', $document_name);
                         }
 
-                        $endPoint = 'documents/'.$document['DocumentID'].'?format=json';
-                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), array(), $order[0]['id'], 0);
+                        $endPoint = 'documents/' . $document['DocumentID'] . '?format=json';
+                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order[0]['id'], 0);
                         $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API').$endPoint, array(), $resultDocument, $order[0]['id'], $logid);
+                        $this->apiLogs->syncLogs(0, 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), $resultDocument, $order[0]['id'], $logid);
                         $resDocument = json_decode($resultDocument, true);
 
-                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) { 
+                        if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
                             $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
                             if (!is_dir('uploads/instruction_documents')) {
-                                mkdir(FCPATH.'/uploads/instruction_documents', 0777, TRUE);
+                                mkdir(FCPATH . '/uploads/instruction_documents', 0777, true);
                             }
-                            file_put_contents(FCPATH.'/uploads/instruction_documents/'.$document_name, $documentContent);
+                            file_put_contents(FCPATH . '/uploads/instruction_documents/' . $document_name, $documentContent);
                             $this->order->uploadDocumentOnAwsS3($document_name, 'instruction_documents');
                             $documentData = array(
                                 'document_name' => $document_name,
@@ -4049,9 +3939,9 @@ class DashboardMail extends MX_Controller {
                                 'description' => $document['DocumentName'],
                                 'created' => date('Y-m-d H:i:s'),
                                 'is_sync' => 0,
-                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038  ||$document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
-                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534  ||$document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
-                            );  
+                                'is_commission_doc' => ($document['DocumentType']['DocumentTypeID'] == 1039 || $document['DocumentType']['DocumentTypeID'] == 1038 || $document['DocumentType']['DocumentTypeID'] == 1020) ? 1 : 0,
+                                'is_escrow_instruction_doc' => ($document['DocumentType']['DocumentTypeID'] == 1015 || $document['DocumentType']['DocumentTypeID'] == 1534 || $document['DocumentType']['DocumentTypeID'] == 1040) ? 1 : 0,
+                            );
                             $data['docsInfo'][] = $documentData;
                             $this->document->insert($documentData);
                         }
@@ -4060,95 +3950,92 @@ class DashboardMail extends MX_Controller {
             }
         }
 
+        $this->load->library('snappy_pdf');
 
-
-		$this->load->library('snappy_pdf');
-                
         // header('Content-Type: application/pdf');
-        $document_name = $type.'_'.time().'.pdf';
-        $dir_to_upload = 'uploads/escrow/'.$type;
-        if (!is_dir(FCPATH.$dir_to_upload)) {
-            mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+        $document_name = $type . '_' . time() . '.pdf';
+        $dir_to_upload = 'uploads/escrow/' . $type;
+        if (!is_dir(FCPATH . $dir_to_upload)) {
+            mkdir(FCPATH . $dir_to_upload, 0777, true);
         }
-        chmod(FCPATH.$dir_to_upload, 0777);
-        $dir_name = FCPATH.$dir_to_upload.'/';
+        chmod(FCPATH . $dir_to_upload, 0777);
+        $dir_name = FCPATH . $dir_to_upload . '/';
         $dir_name = str_replace('\\', '/', $dir_name);
         // echo $dir_name.$document_name;die;
-		$report_data = $data;
-		if($type == 'seller') {
+        $report_data = $data;
+        if ($type == 'seller') {
 
-			$html = $this->load->view('order/borrower_seller',$report_data,true);
-		}
-		else {
-			$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $data['mail_dashboard'] = 1;
-        $order = $this->getOrderInfo($random_number);
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
-
-        $this->db->select('*')
-            ->from('pct_order_borrower_buyer_info');
-        $this->db->where('order_id', $order[0]['id']);
-        $this->db->order_by('id', 'desc');
-        $this->db->limit(1);
-        $query = $this->db->get();
-        if ($query->num_rows() > 0)  {
-            $data['buyerInfo'] = $query->row_array();
+            $html = $this->load->view('order/borrower_seller', $report_data, true);
         } else {
-            $data['buyerInfo'] = array();
-        }
-        
-        if (!empty($orderDetails['primary_owner'])) {
-            $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
-            if(count($buyer_owner_names) == 3) {
-                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
-                $orderDetails['buyer_middle_name'] = $buyer_owner_names[1];
-                $orderDetails['buyer_last_name'] = $buyer_owner_names[2];
-            } else if(count($buyer_owner_names) == 2) {
-                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
-                $orderDetails['buyer_middle_name'] = '' ;
-                $orderDetails['buyer_last_name'] = $buyer_owner_names[1];
+            $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+            $data['mail_dashboard'] = 1;
+            $order = $this->getOrderInfo($random_number);
+            $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+
+            $this->db->select('*')
+                ->from('pct_order_borrower_buyer_info');
+            $this->db->where('order_id', $order[0]['id']);
+            $this->db->order_by('id', 'desc');
+            $this->db->limit(1);
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $data['buyerInfo'] = $query->row_array();
             } else {
-                $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
-                $orderDetails['buyer_middle_name'] = '' ;
-                $orderDetails['buyer_last_name'] = '' ;
+                $data['buyerInfo'] = array();
             }
-        } else {
-            $orderDetails['buyer_first_name'] = '' ;
-            $orderDetails['buyer_middle_name'] = '' ;
-            $orderDetails['buyer_last_name'] = '' ;
-        }
 
-        if (!empty($orderDetails['secondary_owner'])) {
-            $second_buyer_owner_names =  explode(' ', $orderDetails['secondary_owner']);
-            if(count($second_buyer_owner_names) == 3) {
-                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
-                $orderDetails['second_buyer_middle_name'] = $second_buyer_owner_names[1];
-                $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[2];
-            } else if(count($buyer_owner_names) == 2) {
-                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
-                $orderDetails['second_buyer_middle_name'] = '' ;
-                $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[1];
+            if (!empty($orderDetails['primary_owner'])) {
+                $buyer_owner_names = explode(' ', $orderDetails['primary_owner']);
+                if (count($buyer_owner_names) == 3) {
+                    $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                    $orderDetails['buyer_middle_name'] = $buyer_owner_names[1];
+                    $orderDetails['buyer_last_name'] = $buyer_owner_names[2];
+                } else if (count($buyer_owner_names) == 2) {
+                    $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                    $orderDetails['buyer_middle_name'] = '';
+                    $orderDetails['buyer_last_name'] = $buyer_owner_names[1];
+                } else {
+                    $orderDetails['buyer_first_name'] = $buyer_owner_names[0];
+                    $orderDetails['buyer_middle_name'] = '';
+                    $orderDetails['buyer_last_name'] = '';
+                }
             } else {
-                $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
-                $orderDetails['second_buyer_middle_name'] = '' ;
-                $orderDetails['second_buyer_last_name'] = '' ;
+                $orderDetails['buyer_first_name'] = '';
+                $orderDetails['buyer_middle_name'] = '';
+                $orderDetails['buyer_last_name'] = '';
             }
-        } else {
-            $orderDetails['second_buyer_first_name'] = '' ;
-            $orderDetails['second_buyer_middle_name'] = '' ;
-            $orderDetails['second_buyer_last_name'] = '' ;
-        }
-		
-        $data['orderDetails'] = $orderDetails;
-        $errors = array();
-        $data['errors'] = array();
-        $data['success'] = array();
-		$report_data = $data;
-			$html = $this->load->view('order/borrower_buyer',$report_data,true);
-		}
-        $this->snappy_pdf->pdf->generateFromHtml($html,$dir_name.$document_name);
 
-		echo $dir_name.$document_name;
+            if (!empty($orderDetails['secondary_owner'])) {
+                $second_buyer_owner_names = explode(' ', $orderDetails['secondary_owner']);
+                if (count($second_buyer_owner_names) == 3) {
+                    $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                    $orderDetails['second_buyer_middle_name'] = $second_buyer_owner_names[1];
+                    $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[2];
+                } else if (count($buyer_owner_names) == 2) {
+                    $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                    $orderDetails['second_buyer_middle_name'] = '';
+                    $orderDetails['second_buyer_last_name'] = $second_buyer_owner_names[1];
+                } else {
+                    $orderDetails['second_buyer_first_name'] = $second_buyer_owner_names[0];
+                    $orderDetails['second_buyer_middle_name'] = '';
+                    $orderDetails['second_buyer_last_name'] = '';
+                }
+            } else {
+                $orderDetails['second_buyer_first_name'] = '';
+                $orderDetails['second_buyer_middle_name'] = '';
+                $orderDetails['second_buyer_last_name'] = '';
+            }
+
+            $data['orderDetails'] = $orderDetails;
+            $errors = array();
+            $data['errors'] = array();
+            $data['success'] = array();
+            $report_data = $data;
+            $html = $this->load->view('order/borrower_buyer', $report_data, true);
+        }
+        $this->snappy_pdf->pdf->generateFromHtml($html, $dir_name . $document_name);
+
+        echo $dir_name . $document_name;
 
         // $returnData = array();
         // $returnData['pdfLink'] = $dir_to_upload.'/'.$document_name;
@@ -4161,55 +4048,53 @@ class DashboardMail extends MX_Controller {
         //     }
         // }
         // echo json_encode($returnData);exit;
-	}
+    }
 
-	public function testPdfkt() 
+    public function testPdfkt()
     {
 
-		
-		$pdf_templates_file = FCPATH.'assets/pdf_templates/buyer_check.pdf';
-		$pdf = new Pdf($pdf_templates_file);
-		$type = 'buyer';
-		$document_name = $type.'_'.time().'.pdf';
-        $dir_to_upload = 'uploads/escrow/'.$type;
-        if (!is_dir(FCPATH.$dir_to_upload)) {
-            mkdir(FCPATH.$dir_to_upload, 0777, TRUE);
+        $pdf_templates_file = FCPATH . 'assets/pdf_templates/buyer_check.pdf';
+        $pdf = new Pdf($pdf_templates_file);
+        $type = 'buyer';
+        $document_name = $type . '_' . time() . '.pdf';
+        $dir_to_upload = 'uploads/escrow/' . $type;
+        if (!is_dir(FCPATH . $dir_to_upload)) {
+            mkdir(FCPATH . $dir_to_upload, 0777, true);
         }
-        chmod(FCPATH.$dir_to_upload, 0777);
-        $dir_name = FCPATH.$dir_to_upload.'/';
+        chmod(FCPATH . $dir_to_upload, 0777);
+        $dir_name = FCPATH . $dir_to_upload . '/';
         $dir_name = str_replace('\\', '/', $dir_name);
-		$file_full_path = $dir_name.$document_name;
+        $file_full_path = $dir_name . $document_name;
 
-		$pdf->fillForm([
-			'Date'    => '10/08/2022',
-			'Escrow#' => '123',
-			'The Undersigned hereby authorizes and directs Pacific Coast Title Company to disburse proceeds as follows' => 1,
-			'All' => 'No',
-			'Or' => 'Yes',
-			'All Net Proceeds or'=>'123.34',
-			'To'=>'Test to',
-			'Attn' => 'TestAtn',
-			'Escrow No'=>'es1'
-			])
-			->needAppearances()
-			->saveAs($file_full_path);
-			echo $file_full_path;
-	}
+        $pdf->fillForm([
+            'Date' => '10/08/2022',
+            'Escrow#' => '123',
+            'The Undersigned hereby authorizes and directs Pacific Coast Title Company to disburse proceeds as follows' => 1,
+            'All' => 'No',
+            'Or' => 'Yes',
+            'All Net Proceeds or' => '123.34',
+            'To' => 'Test to',
+            'Attn' => 'TestAtn',
+            'Escrow No' => 'es1',
+        ])
+            ->needAppearances()
+            ->saveAs($file_full_path);
+        echo $file_full_path;
+    }
 
     public function fillPDFSample()
     {
-        include(APPPATH.'libraries/SetaPDF/Autoload.php');// library for filling in PDF text fields
+        include APPPATH . 'libraries/SetaPDF/Autoload.php'; // library for filling in PDF text fields
         $reader = new SetaPDF_Core_Reader_File('./uploads/borrower/borrower_seller.pdf');
-        $writer = new SetaPDF_Core_Writer_File('new'.time().'.pdf');
+        $writer = new SetaPDF_Core_Writer_File('new' . time() . '.pdf');
         // $document = SetaPDF_Core_Document::loadByFilename('test.pdf');
         $document = SetaPDF_Core_Document::load($reader, $writer);
 
         $formFiller = new SetaPDF_FormFiller($document);
         $fields = $formFiller->getFields();
 
-
         $allFields = $fields->getAll();
-        
+
         $keyReplaceInfo = array(
             'order_id' => '1 Sellers',
             'escrow_home_phone_number' => 'undefined#2',
@@ -4385,17 +4270,17 @@ class DashboardMail extends MX_Controller {
 
         $fields = $formFiller->getFields();
         $fieldNames = $fields->getNames();
-       
-        $i =0;
+
+        $i = 0;
 
         $keyReplaceInfo = array('seller_name' => '1 Sellers', 'escrow_home_phone_number' => 'undefined#2', 'work_phone_number' => 'undefined_2#2', 'd' => 'newD');
 
-        foreach ($fieldNames AS $key=>$fieldName) {
+        foreach ($fieldNames as $key => $fieldName) {
             echo $fieldName . "<br>";
             $fields[$fieldName]->setValue($fieldName);
             $i++;
         }
-        
+
         // $fields->flatten();
 
         $document->save()->finish();
@@ -4405,59 +4290,59 @@ class DashboardMail extends MX_Controller {
     {
         $order = $this->getOrderInfo($random_number);
         $data = json_encode(array('FileNumber' => $order[0]['file_number']));
-		$userData = array(
-			'admin_api' => 1
-		);
-		$result = $this->resware->make_request('POST', 'files/search', $data, $userData);
-		if (json_decode($result) && count(json_decode($result)->Files)) {
+        $userData = array(
+            'admin_api' => 1,
+        );
+        $result = $this->resware->make_request('POST', 'files/search', $data, $userData);
+        if (json_decode($result) && count(json_decode($result)->Files)) {
             $post_data = $result_decoded = array();
-			$result_decoded = json_decode($result);
-			$orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
+            $result_decoded = json_decode($result);
+            $orderDetails = $this->order->get_order_details($result_decoded->Files[0]->FileID, 1);
 
-			if (!empty($orderDetails)) {
-				$post_data['seller'] = $orderDetails['primary_owner'];
-			} else {
-				$post_data['seller'] = '';
-			}
-			$property_data = $result_decoded->Files[0]->Properties[0];
-			$buyer_data = $result_decoded->Files[0]->Buyers[0];
-			$buyer_name = $buyer_data->Primary;
-			
-			$post_data['file_id'] = $result_decoded->Files[0]->FileID;
-			$post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
-			$post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
-			$post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
-			$post_data['city'] = $property_data->City;
-			$post_data['county'] = $property_data->County;
-			$post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First." ".$result_decoded->Files[0]->Buyers[0]->Primary->Last;
-			$post_data['full_address'] = $property_data->StreetNumber;
-			$post_data['full_address'] .= ! empty($property_data->StreetDirection) ?' '.substr($property_data->StreetDirection, 0, 1) : '';
-			$post_data['full_address'] .= ' '.$property_data->StreetName;
-			$post_data['full_address'] .= ' '.$property_data->StreetSuffix;	
-			$post_data['full_address'] .= ', '.$property_data->City;	
-			$post_data['full_address'] .= ', '.$property_data->State;	
-			$post_data['full_address'] .= ' '.$property_data->Zip;	
-			$post_data['borrower'] = ! empty($buyer_name->First) ? $buyer_name->First : '';
-			$post_data['borrower'] .= ! empty($buyer_name->Middle) ? ' '.$buyer_name->Middle : '';
-			$post_data['borrower'] .= ! empty($buyer_name->Last) ? ' '.$buyer_name->Last : '';
-			$post_data['borrower'] = trim($post_data['borrower']);
+            if (!empty($orderDetails)) {
+                $post_data['seller'] = $orderDetails['primary_owner'];
+            } else {
+                $post_data['seller'] = '';
+            }
+            $property_data = $result_decoded->Files[0]->Properties[0];
+            $buyer_data = $result_decoded->Files[0]->Buyers[0];
+            $buyer_name = $buyer_data->Primary;
 
-			if(empty($post_data['borrower'])) {
-				$post_data['borrower'] = ! empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
-			}
+            $post_data['file_id'] = $result_decoded->Files[0]->FileID;
+            $post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
+            $post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
+            $post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
+            $post_data['city'] = $property_data->City;
+            $post_data['county'] = $property_data->County;
+            $post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First . " " . $result_decoded->Files[0]->Buyers[0]->Primary->Last;
+            $post_data['full_address'] = $property_data->StreetNumber;
+            $post_data['full_address'] .= !empty($property_data->StreetDirection) ? ' ' . substr($property_data->StreetDirection, 0, 1) : '';
+            $post_data['full_address'] .= ' ' . $property_data->StreetName;
+            $post_data['full_address'] .= ' ' . $property_data->StreetSuffix;
+            $post_data['full_address'] .= ', ' . $property_data->City;
+            $post_data['full_address'] .= ', ' . $property_data->State;
+            $post_data['full_address'] .= ' ' . $property_data->Zip;
+            $post_data['borrower'] = !empty($buyer_name->First) ? $buyer_name->First : '';
+            $post_data['borrower'] .= !empty($buyer_name->Middle) ? ' ' . $buyer_name->Middle : '';
+            $post_data['borrower'] .= !empty($buyer_name->Last) ? ' ' . $buyer_name->Last : '';
+            $post_data['borrower'] = trim($post_data['borrower']);
 
-			$post_data['ECD']='';
-			if(!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
-				$ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "",$result_decoded->Files[0]->Dates->FileCompletedDate));
-				$ecd_date = date('m/d/Y', $ecd_timestamp/1000);
-				$post_data['ECD'] = $ecd_date;
-			}
+            if (empty($post_data['borrower'])) {
+                $post_data['borrower'] = !empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
+            }
+
+            $post_data['ECD'] = '';
+            if (!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
+                $ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "", $result_decoded->Files[0]->Dates->FileCompletedDate));
+                $ecd_date = date('m/d/Y', $ecd_timestamp / 1000);
+                $post_data['ECD'] = $ecd_date;
+            }
 
             if (strpos($result_decoded->Files[0]->TransactionProductType->ProductType, 'Sale') !== false) {
                 $netsheet_for = $this->input->post('req_type');
-                $post_data['lenderInsurance'] = 1; 
-                $post_data['transactionType'] = 'Resale'; 
-                $post_data['transferTaxesCheck'] = 1; 
+                $post_data['lenderInsurance'] = 1;
+                $post_data['transactionType'] = 'Resale';
+                $post_data['transferTaxesCheck'] = 1;
                 if ($netsheet_for == 'buyer') {
                     $post_data['netsheet_for'] = 'buyer';
                     $post_data['buyer_fees']['origin_charge'] = $this->input->post('origin_charge');
@@ -4471,21 +4356,21 @@ class DashboardMail extends MX_Controller {
                     $post_data['netsheet_for'] = 'seller';
                 }
             } else {
-                $post_data['netsheet_for'] = ''; 
-                $post_data['lenderInsurance'] = 0; 
-                $post_data['transactionType'] = 'Re-Finance'; 
-                $post_data['transferTaxesCheck'] = 0; 
+                $post_data['netsheet_for'] = '';
+                $post_data['lenderInsurance'] = 0;
+                $post_data['transactionType'] = 'Re-Finance';
+                $post_data['transferTaxesCheck'] = 0;
             }
-            $post_data['escrowPriceCheck'] = 1; 
-            $post_data['recordingPriceCheck'] = 1; 
-            $post_data['print_pdf'] = 1; 
+            $post_data['escrowPriceCheck'] = 1;
+            $post_data['recordingPriceCheck'] = 1;
+            $post_data['print_pdf'] = 1;
             //print_r($post_data);
-            $ch = curl_init(env('CALC_API_URL').'index.php?welcome/createNetsheetDoc');                                    
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');                        
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));                   
+            $ch = curl_init(env('CALC_API_URL') . 'index.php?welcome/createNetsheetDoc');
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization: Bearer '.env('PCT_CALC_TOKEN'),
+                'Authorization: Bearer ' . env('PCT_CALC_TOKEN'),
                 'Content-Type: application/json',
                 'Content-Length: ' . strlen(json_encode($post_data)))
             );
@@ -4506,11 +4391,11 @@ class DashboardMail extends MX_Controller {
             $errors[] = "Order not found.";
         }
         $data = array(
-            "errors" =>  $errors,
-            "success" => $success
+            "errors" => $errors,
+            "success" => $success,
         );
         $this->session->set_userdata($data);
-        redirect(base_url().'/get-netsheet/'.$order[0]['random_number']);
+        redirect(base_url() . '/get-netsheet/' . $order[0]['random_number']);
     }
 
     public function get_netsheet($random_number)
@@ -4524,9 +4409,9 @@ class DashboardMail extends MX_Controller {
         if ($this->session->userdata('success')) {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
-        } 
+        }
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];  
+        $fileId = $order[0]['file_id'];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $orderDetails = $this->order->get_order_details($fileId, 1);
@@ -4538,24 +4423,39 @@ class DashboardMail extends MX_Controller {
 
         if (!empty($order[0]['calc_title_doc_name'])) {
             $documentName = $order[0]['calc_title_doc_name'];
-            $documentUrl = env('AWS_PATH')."calc_title_rates/".$documentName;
+            $documentUrl = env('AWS_PATH') . "calc_title_rates/" . $documentName;
             if ($order[0]['prod_type'] == 'loan') {
-                $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"netsheet"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['random_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>Regenerate</button></form></div>";
+                $data['action'] = "<div style='display:flex;justify-content: space-around;'><button onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"netsheet"' . ");'  title='Download' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
+                <span class='text'>Download</span></button>
+                <form onclick='return generate_netsheet(1);' action='" . base_url() . "create-netsheet/" . $orderDetails['random_number'] . "' method='POST'>
+                <button title='Regenerate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
+                        <span class='text'>Regenerate</span></button></form></div>";
             } else {
-                $data['action'] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(".'"'.$documentUrl.'"'.", ".'"netsheet"'.");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a>
-                <a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Regenerate</button></a></div>";
+                $data['action'] = "<div style='display:flex;justify-content: space-around;'>
+                <button onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"netsheet"' . ");' title='Download' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
+                <span class='text'>Download</span></button>
+                <button onclick='return generate_netsheet(0);' title='Regenerate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
+                <span class='text'>Regenerate</span></button></div>";
             }
         } else {
             if ($order[0]['prod_type'] == 'loan') {
-                $data['action'] = "<div style='display:flex;'>
-                        <form onclick='return generate_netsheet(1);' action='".base_url()."create-netsheet/".$orderDetails['random_number']."' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></form></div>";
+                $data['action'] = "<div style='display:flex;justify-content: space-around;'>
+                        <form onclick='return generate_netsheet(1);' action='" . base_url() . "create-netsheet/" . $orderDetails['random_number'] . "' method='POST'>
+                        <button title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
+                        <span class='text'>Generate</span></button></form></div>";
             } else {
-                $data['action'] = "<div style='display:flex;'><a onclick='return generate_netsheet(0);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='submit'>Generate</button></a></div>";
+                $data['action'] = "<div style='display:flex;'>
+                <button onclick='return generate_netsheet(0);' title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
+                <span class='text'>Generate</span></button>
+                </div>";
             }
-        }        
-        $this->load->view('layout/head_dashboard', $data);
-        $this->load->view('order/get_netsheet', $data);
+        }
+
+        $data['displaySidebar'] = false;
+        $this->salesdashboardtemplate->show("order", "get_netsheet", $data);
+
+        // $this->load->view('layout/head_dashboard', $data);
+        // $this->load->view('order/get_netsheet', $data);
     }
 
     public function sendPackage()
@@ -4570,9 +4470,9 @@ class DashboardMail extends MX_Controller {
             $data['success'] = $this->session->userdata('success');
             $this->session->unset_userdata('success');
         }
-        $random_number = $this->uri->segment(2); 
+        $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];   
+        $fileId = $order[0]['file_id'];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $orderDetails = $this->order->get_order_details($fileId, 1);
@@ -4581,18 +4481,18 @@ class DashboardMail extends MX_Controller {
         $data['full_address'] = $orderDetails['full_address'];
         $data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
 
-        $buyer_color = $order[0]['is_buyer_packet_mail_sent'] == '1'  ? 'green' : '#f96414';
-        $seller_color = $order[0]['is_seller_packet_mail_sent'] == '1'  ? 'green' : '#f96414';
+        $buyer_color = $order[0]['is_buyer_packet_mail_sent'] == '1' ? 'green' : '#f96414';
+        $seller_color = $order[0]['is_seller_packet_mail_sent'] == '1' ? 'green' : '#f96414';
         $data['action'] = '<div style="display:flex;">
                             <a data-target="#buyer_welcome" data-toggle="modal" style="margin-right:10px;">
-                                <button class="btn btn-grad-2a generate" style="background:'.$buyer_color.';color:white" type="submit">Send Buyer welcome</button>
+                                <button class="btn btn-grad-2a generate" style="background:' . $buyer_color . ';color:white" type="submit">Send Buyer welcome</button>
                             </a>
                             <a data-target="#seller_welcome" data-toggle="modal">
-                                <button class="btn btn-grad-2a generate" style="background:'.$seller_color.';color:white" type="submit">Send Seller welcome</button>
+                                <button class="btn btn-grad-2a generate" style="background:' . $seller_color . ';color:white" type="submit">Send Seller welcome</button>
                             </a>
-                            
+
                         </div>';
-              
+
         $this->load->view('layout/head_dashboard', $data);
         $this->load->view('order/send_package', $data);
     }
@@ -4601,8 +4501,8 @@ class DashboardMail extends MX_Controller {
     {
         $userdata = $this->session->userdata('user');
         $file_id = $this->input->post('file_id');
-		$order_id = $this->input->post('order_id');
-		$buyer_emails = $this->input->post('buyer_emails');
+        $order_id = $this->input->post('order_id');
+        $buyer_emails = $this->input->post('buyer_emails');
         $buyer_first_names = $this->input->post('buyer_first_names');
         $buyer_last_names = $this->input->post('buyer_last_names');
         $is_main_buyer = $this->input->post('is_main_buyer');
@@ -4617,7 +4517,7 @@ class DashboardMail extends MX_Controller {
 
         $this->db->delete('pct_order_borrower_buyer_info', array('order_id' => $order_id));
 
-        foreach($buyer_emails as $buyerEmail) {
+        foreach ($buyer_emails as $buyerEmail) {
             $is_main_buyer_flag = ((str_replace("is_main_buyer", "", $is_main_buyer)) == $i) ? 1 : 0;
             $buyer_email = $buyerEmail;
             $buyerInfo = array(
@@ -4625,63 +4525,62 @@ class DashboardMail extends MX_Controller {
                 'first_name' => $buyer_first_names[$i],
                 'last_name' => $buyer_last_names[$i],
                 'email' => $buyerEmail,
-                'is_main_buyer' => $is_main_buyer_flag
+                'is_main_buyer' => $is_main_buyer_flag,
             );
             $this->home_model->insert($buyerInfo, 'pct_order_borrower_buyer_info');
-           
 
-            $form_url = base_url().'buyer-info/'.$orderDetails['random_number'];
+            $form_url = base_url() . 'buyer-info/' . $orderDetails['random_number'];
             $email_data = array(
-                'name' => $buyer_first_names[$i]." ".$buyer_last_names[$i],
+                'name' => $buyer_first_names[$i] . " " . $buyer_last_names[$i],
                 'buyer_first_names' => $buyer_first_names,
                 'buyer_last_names' => $buyer_last_names,
-                'file_number'=> $orderDetails['file_number'],
-                'property_address'=> $orderDetails['full_address'],
-                'random_number'=>  $orderDetails['random_number'],
-                'borrrower'=> $orderDetails['primary_owner'],
+                'file_number' => $orderDetails['file_number'],
+                'property_address' => $orderDetails['full_address'],
+                'random_number' => $orderDetails['random_number'],
+                'borrrower' => $orderDetails['primary_owner'],
                 'form_url' => $form_url,
-                'escrow_officer' => $userdata['name']
+                'escrow_officer' => $userdata['name'],
             );
-            
-            $borrower_message_body = $this->load->view('emails/welcome_buyer.php', $email_data, TRUE);
-            $message_body = $borrower_message_body; 
-            $subject = $orderDetails['file_number'].' - '.$orderDetails['full_address'].' - Welcome to Escrow';
-            
+
+            $borrower_message_body = $this->load->view('emails/welcome_buyer.php', $email_data, true);
+            $message_body = $borrower_message_body;
+            $subject = $orderDetails['file_number'] . ' - ' . $orderDetails['full_address'] . ' - Welcome to Escrow';
+
             $mailParams = array(
-                'from_mail' => $from_mail, 
-                'from_name' => $from_name, 
+                'from_mail' => $from_mail,
+                'from_name' => $from_name,
                 'subject' => $subject,
-                'message'=>json_encode($email_data)
+                'message' => json_encode($email_data),
             );
-            
+
             if (!empty($buyer_email)) {
                 $to = $buyer_email;
                 $mailParams['to'] = $to;
                 $this->load->helper('sendemail');
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array(), $order_id, 0);
-                $buyer_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array('status'=>$buyer_mail_result), $order_id, $logid);
+                $buyer_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_buyer', '', $mailParams, array('status' => $buyer_mail_result), $order_id, $logid);
             }
             $i++;
         }
-       
+
         $request = array();
-        $endPoint = 'files/'.$file_id.'/notes';
+        $endPoint = 'files/' . $file_id . '/notes';
         $request['Subject'] = 'Buyer Welcome Email';
-        $request['Body'] = 'Buyers welcome email sent to successfully to '.implode(', ', $buyer_emails)." users.";
+        $request['Body'] = 'Buyers welcome email sent to successfully to ' . implode(', ', $buyer_emails) . " users.";
         $request['FileID'] = $file_id;
         $notes_data = json_encode($request);
-        $user_data['admin_api'] = 1; 
-        
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $user_data['admin_api'] = 1;
+
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $order_id, 0);
         $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
-        
+        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $order_id, $logid);
+
         if (isset($result) && !empty($result)) {
-            $response = json_decode($result, TRUE);
+            $response = json_decode($result, true);
             if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
                 $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-                
+
             } else {
                 $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
                 $notesData = array(
@@ -4690,29 +4589,29 @@ class DashboardMail extends MX_Controller {
                     'note' => $request['Body'],
                     'user_id' => 0,
                     'order_id' => $order_id,
-                    'task_id' => 4
+                    'task_id' => 4,
                 );
                 $this->home_model->insert($notesData, 'pct_order_notes');
             }
         }
 
-        $success[] = "Mail sent succesfully to buyers."; 
+        $success[] = "Mail sent succesfully to buyers.";
         $data['errors'] = $errors;
-		$data['success'] = $success;
-		$data = array(
-			"errors" =>  $errors,
-			"success" => $success
-		);
-		$this->session->set_userdata($data);
-		redirect(base_url().'send-package/'.$orderDetails['random_number']);
+        $data['success'] = $success;
+        $data = array(
+            "errors" => $errors,
+            "success" => $success,
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url() . 'send-package/' . $orderDetails['random_number']);
     }
 
     public function addSellerOnOrder()
     {
         $userdata = $this->session->userdata('user');
         $file_id = $this->input->post('file_id');
-		$order_id = $this->input->post('order_id');
-		$seller_emails = $this->input->post('seller_emails');
+        $order_id = $this->input->post('order_id');
+        $seller_emails = $this->input->post('seller_emails');
         $seller_first_names = $this->input->post('seller_first_names');
         $seller_last_names = $this->input->post('seller_last_names');
         $is_main_seller = $this->input->post('is_main_seller');
@@ -4726,7 +4625,7 @@ class DashboardMail extends MX_Controller {
         $this->home_model->update(array('is_seller_packet_mail_sent' => 1), array('file_id' => $file_id), 'order_details');
         $this->db->delete('pct_order_borrower_seller_info', array('order_id' => $order_id));
 
-        foreach($seller_emails as $sellerEmail) {
+        foreach ($seller_emails as $sellerEmail) {
             $is_main_seller_flag = ((str_replace("is_main_buyer", "", $is_main_seller)) == $i) ? 1 : 0;
             $seller_email = $sellerEmail;
             $sellerInfo = array(
@@ -4734,63 +4633,62 @@ class DashboardMail extends MX_Controller {
                 'first_name' => $seller_first_names[$i],
                 'last_name' => $seller_last_names[$i],
                 'email' => $sellerEmail,
-                'is_main_seller' => $is_main_seller_flag
+                'is_main_seller' => $is_main_seller_flag,
             );
             $this->home_model->insert($sellerInfo, 'pct_order_borrower_seller_info');
-           
 
-            $form_url = base_url().'seller-info/'.$orderDetails['random_number'];
+            $form_url = base_url() . 'seller-info/' . $orderDetails['random_number'];
             $email_data = array(
-                'name' => $seller_first_names[$i]." ".$seller_last_names[$i],
+                'name' => $seller_first_names[$i] . " " . $seller_last_names[$i],
                 'seller_first_names' => $seller_first_names,
                 'seller_last_names' => $seller_last_names,
-                'file_number'=> $orderDetails['file_number'],
-                'property_address'=> $orderDetails['full_address'],
-                'random_number'=>  $orderDetails['random_number'],
-                'borrrower'=> $orderDetails['primary_owner'],
+                'file_number' => $orderDetails['file_number'],
+                'property_address' => $orderDetails['full_address'],
+                'random_number' => $orderDetails['random_number'],
+                'borrrower' => $orderDetails['primary_owner'],
                 'form_url' => $form_url,
-                'escrow_officer' => $userdata['name']
+                'escrow_officer' => $userdata['name'],
             );
-            
-            $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, TRUE);
-            $message_body = $borrower_message_body; 
-            $subject = $orderDetails['file_number'].' - '.$orderDetails['full_address'].' - Welcome to Escrow';
-            
+
+            $borrower_message_body = $this->load->view('emails/welcome_seller.php', $email_data, true);
+            $message_body = $borrower_message_body;
+            $subject = $orderDetails['file_number'] . ' - ' . $orderDetails['full_address'] . ' - Welcome to Escrow';
+
             $mailParams = array(
-                'from_mail' => $from_mail, 
-                'from_name' => $from_name, 
+                'from_mail' => $from_mail,
+                'from_name' => $from_name,
                 'subject' => $subject,
-                'message'=>json_encode($email_data)
+                'message' => json_encode($email_data),
             );
-            
+
             if (!empty($seller_email)) {
                 $to = $seller_email;
                 $mailParams['to'] = $to;
                 $this->load->helper('sendemail');
                 $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_seller', '', $mailParams, array(), $order_id, 0);
-                $seller_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body);
-                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status'=>$seller_mail_result), $order_id, $logid);
+                $seller_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_seller', '', $mailParams, array('status' => $seller_mail_result), $order_id, $logid);
             }
             $i++;
         }
-       
+
         $request = array();
-        $endPoint = 'files/'.$file_id.'/notes';
+        $endPoint = 'files/' . $file_id . '/notes';
         $request['Subject'] = 'Seller Welcome Email';
-        $request['Body'] = 'Sellers welcome email sent to successfully to '.implode(', ', $seller_emails)." users.";
+        $request['Body'] = 'Sellers welcome email sent to successfully to ' . implode(', ', $seller_emails) . " users.";
         $request['FileID'] = $file_id;
         $notes_data = json_encode($request);
-        $user_data['admin_api'] = 1; 
-        
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, array(), $order_id, 0);        
+        $user_data['admin_api'] = 1;
+
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $order_id, 0);
         $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API').$endPoint, $notes_data, $result, $order_id, $logid);
-        
+        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $order_id, $logid);
+
         if (isset($result) && !empty($result)) {
-            $response = json_decode($result, TRUE);
+            $response = json_decode($result, true);
             if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
                 $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-                
+
             } else {
                 $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
                 $notesData = array(
@@ -4799,21 +4697,21 @@ class DashboardMail extends MX_Controller {
                     'note' => $request['Body'],
                     'user_id' => 0,
                     'order_id' => $order_id,
-                    'task_id' => 4
+                    'task_id' => 4,
                 );
                 $this->home_model->insert($notesData, 'pct_order_notes');
             }
         }
 
-        $success[] = "Mail sent succesfully to sellers."; 
+        $success[] = "Mail sent succesfully to sellers.";
         $data['errors'] = $errors;
-		$data['success'] = $success;
-		$data = array(
-			"errors" =>  $errors,
-			"success" => $success
-		);
-		$this->session->set_userdata($data);
-        redirect(base_url().'send-package/'.$orderDetails['random_number']);
+        $data['success'] = $success;
+        $data = array(
+            "errors" => $errors,
+            "success" => $success,
+        );
+        $this->session->set_userdata($data);
+        redirect(base_url() . 'send-package/' . $orderDetails['random_number']);
     }
 
 }
