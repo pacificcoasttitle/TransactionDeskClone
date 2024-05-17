@@ -139,7 +139,109 @@
 		</div>
 	</section>
 
-	<div class="modal fade" width="500px" id="netsheet_information" tabindex="-1" role="dialog"
+	<div class="modal fade" width="500px" id="netsheet_information" tabindex="-1" role="dialog" aria-labelledby="Netsheet Infromation" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" style="width:40%;">
+            <div class="modal-content">
+				<form method="POST" action="<?php echo base_url(); ?>create-netsheet/<?php echo $random_number; ?>" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card shadow">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary" >Create Netsheet</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="smart-forms smart-container">
+                                        <div class="modal-body search-result">
+                                            <div class="form-group">
+                                                <div class="row form-grp-title mt-0">
+                                                    <div class="col-sm-12">
+                                                        <div class="tagline"><span> Select Options </span></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-8 d-flex align-space">
+														<input class="radio" type="radio" name="req_type" id="buyer" value="buyer" required="required">Buyer
+														<input class="radio" type="radio" name="req_type" id="seller" value="seller">Seller
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display:none;">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="origin_charge" class="col-form-label">Origin</label>
+                                                        <input type="text" name="origin_charge" id="origin_charge" class="form-control gui-input ui-autocomplete-input" placeholder="Origination Charge Fee">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <label for="appraisal_fee" class="col-form-label">Appraisal Fee</label>
+                                                        <input type="text" name="appraisal_fee" id="appraisal_fee" class="form-control gui-input ui-autocomplete-input" placeholder="Appraisal Fee">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display:none;">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label for="credit_repot" class="col-form-label">Credit Report</label>
+                                                        <input type="text" name="credit_repot" id="credit_repot" class="gui-input form-control" placeholder="Credit Report">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="prepaid_interest" class="col-form-label">Prepaid Interest</label>
+                                                        <input type="text" name="prepaid_interest" id="prepaid_interest" class="gui-input form-control" placeholder="Prepaid Interest">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display: none;">
+                                                <div class="col-sm-6" >
+                                                    <label for="prepaid_interest_days" class="col-form-label">Prepaid Interest Days</label>
+                                                    <input type="text" name="Prepaid Interest Days" id="prepaid_interest_days" class="gui-input form-control" placeholder="prepaid_interest_days" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display: none;">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label for="home_ins" class="col-form-label">Home Ins</label>
+                                                        <input type="text" name="home_ins" id="home_ins" class="gui-input form-control" placeholder="Home Ins">
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="process_fee" class="col-form-label">Process Fee</label>
+                                                        <input type="text" name="process_fee" id="process_fee" class="gui-input form-control" placeholder="Process Fee">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-footer" style="padding: 0px 1rem !important;">
+
+                                            <button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <span class="text">Submit</span>
+                                            </button>
+
+                                            <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+                                                <span class="icon text-white-50">
+                                                    <i class="fas fa-ban"></i>
+                                                </span>
+                                                <span class="text">Cancel</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+	<!-- <div class="modal fade" width="500px" id="netsheet_information" tabindex="-1" role="dialog"
 		aria-labelledby="Netsheet Infromation" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 			<div class="modal-content">
@@ -148,7 +250,7 @@
 						<div class="modal-body search-result">
 							<div id="lender-details-fields" style="">
 								<div class="spacer-b20">
-									<div class="tagline"><span>Select Options</span></div><!-- .tagline -->
+									<div class="tagline"><span>Select Options</span></div>
 								</div>
 
 								<div class="frm-row">
@@ -241,7 +343,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<?php // $this->load->view('layout/footer'); ?>
 </body>
 
