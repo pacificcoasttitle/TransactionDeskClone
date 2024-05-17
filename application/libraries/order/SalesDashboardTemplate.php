@@ -1,6 +1,7 @@
 <?php
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class SalesDashboardTemplate
 {
@@ -11,7 +12,7 @@ class SalesDashboardTemplate
 
     public function __construct()
     {
-        $this->CI =& get_instance();
+        $this->CI = &get_instance();
         $this->CI->load->helper('url');
         $this->addJS(base_url('assets/backend/js/jquery-ui.min.js'));
     }
@@ -26,7 +27,11 @@ class SalesDashboardTemplate
             $data['unreadNotificationCount'] = $this->getUnreadNotificationCount(5);
 
             $this->data['header'] = $this->CI->load->view('order/admin-layout/header.php', $data, true);
-            $this->data['sidebar'] = $this->CI->load->view('order/admin-layout/sidebar.php', $data, true);
+            if (isset($data['displaySidebar']) && !$data['displaySidebar']) {
+                $this->data['sidebar'] = null;
+            } else {
+                $this->data['sidebar'] = $this->CI->load->view('order/admin-layout/sidebar.php', $data, true);
+            }
             $this->data['content'] = $this->CI->load->view($folder . '/' . $page . '.php', $data, true);
             $this->data['footer'] = $this->CI->load->view('order/admin-layout/footer.php', $data, true);
             $this->CI->load->view('order/sales_dashboard_template.php', $this->data);

@@ -2,12 +2,12 @@
 	.smart-forms .prepend-icon .field-icon {
 		top: 14px !important;
 	}
-	.ui-autocomplete { 
+	.ui-autocomplete {
 		position: absolute; cursor: default;z-index:10000 !important;
-	}  
+	}
 	.ui-autocomplete {
 		max-height: 300px !important;
-	} 
+	}
 	.radio {
 		top: 5px !important;
 		margin: 0px 10px !important;
@@ -15,11 +15,11 @@
 	.radio:before {
 		background: none !important;
 	}
-	
+
 </style>
 
-<?php
-    if(!empty($policyDocuments))  { ?>
+<?php if (!empty($policyDocuments)) {
+    ?>
         <div class="container-fluid padding-0">
             <div class="row mb-3">
                 <div class="col-sm-12">
@@ -29,14 +29,14 @@
             </div>
             <div class="card-body shadow mb-4">
                 <div class="card-header datatable-header" style="border: none;">
-                    <div class="datatable-header-titles"> 
-                        <h6 class="m-0 font-weight-bold text-primary pl-10">File Number:</h6>&nbsp;<?php echo $file_number;?>
+                    <div class="datatable-header-titles">
+                        <h6 class="m-0 font-weight-bold text-primary pl-10">File Number:</h6>&nbsp;<?php echo $file_number; ?>
                     </div>
-                    
+
                 </div>
                 <div class="card-header datatable-header py-3">
-                    <div class="datatable-header-titles"> 
-                        <h6 class="m-0 font-weight-bold text-primary pl-10">Property Address:</h6> &nbsp;<?php echo $full_address;?>
+                    <div class="datatable-header-titles">
+                        <h6 class="m-0 font-weight-bold text-primary pl-10">Property Address:</h6> &nbsp;<?php echo $full_address; ?>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -50,14 +50,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($policyDocuments as $policyDocument) {
-                                $documentName = $policyDocument['document_name'];?>
+                            <?php foreach ($policyDocuments as $policyDocument) {
+        $documentName = $policyDocument['document_name'];?>
                                 <tr>
-                                    <td><?php echo $policyDocument['no'];?></td>
-                                    <td><?php echo $documentName;?></td>
-                                    <td><?php echo $policyDocument['created_at'];?></td>
+                                    <td><?php echo $policyDocument['no']; ?></td>
+                                    <td><?php echo $documentName; ?></td>
+                                    <td><?php echo $policyDocument['created_at']; ?></td>
                                     <td>
-                                        <a href='javascript:void(0);' onclick='download_policy_doc(<?php echo $policyDocument["api_document_id"];?>, <?php echo $order_id;?>, "<?php echo $documentName;?>");'>
+                                        <a href='javascript:void(0);' onclick='download_policy_doc(<?php echo $policyDocument["api_document_id"]; ?>, <?php echo $order_id; ?>, "<?php echo $documentName; ?>");'>
                                             <button type='submit' class='btn btn-success btn-icon-split'>
                                                 <span class='icon text-white-50'>
                                                     <i class='fas fa-download'></i>
@@ -65,22 +65,26 @@
                                                 <span class='text'>Download</span>
                                             </button>
                                         </a>
-                                    </td> 
+                                    </td>
                                 </tr>
-                            <?php }  ?>
+                            <?php
+
+    }?>
                         </tbody>
                     </table>
                 </div>
-            </div>                  
-        </div>               
-<?php } else { ?>
+            </div>
+        </div>
+<?php
+
+} else {?>
     <div class="container-fluid padding-0">
         <div class="row mb-3">
             <div class="col-sm-12">
                 <h1 class="h3 text-gray-800">Get Policy</h1>
             </div>
         </div>
-                          
+
         <div class="card-body shadow mb-4">
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%" cellspacing="0">
@@ -96,9 +100,9 @@
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td><?php echo $file_number;?></td>
-                            <td><?php echo $full_address;?></td>
-                            <td><?php echo $created;?></td>
+                            <td><?php echo $file_number; ?></td>
+                            <td><?php echo $full_address; ?></td>
+                            <td><?php echo $created; ?></td>
                             <td>
                                 <a href='javascript:void(0)'>
                                     <button type='submit' class='btn btn-info btn-icon-split'>
@@ -108,14 +112,14 @@
 										<span class='text'>Not Ready</span>
 									</button>
                                 </a>
-                            </td> 
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-<?php } ?>	
+<?php }?>
 
 
 <script>
@@ -127,7 +131,7 @@
 			type: "post",
 			data: {
 				documentId: documentId,
-				order_id: order_id 
+				order_id: order_id
 			},
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');
@@ -180,5 +184,5 @@
 		});
 	}
 
-	
+
 </script>

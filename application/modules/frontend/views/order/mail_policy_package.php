@@ -2,12 +2,12 @@
 	.smart-forms .prepend-icon .field-icon {
 		top: 14px !important;
 	}
-	.ui-autocomplete { 
+	.ui-autocomplete {
 		position: absolute; cursor: default;z-index:10000 !important;
-	}  
+	}
 	.ui-autocomplete {
 		max-height: 300px !important;
-	} 
+	}
 	.radio {
 		top: 5px !important;
 		margin: 0px 10px !important;
@@ -18,127 +18,114 @@
 	th {
 		text-align: center;
 	}
+
+    table tbody tr {
+        text-align: center;
+    }
 </style>
 <body>
-	<?php
-        $this->load->view('layout/header_dashboard');
-		if(!empty($policyDocuments))  { ?>
-			<section class="section-type-4a section-defaulta" style="padding-bottom:100px;">
-				<div class="container">
-					<div class="row">
-						<div class="row">
-							<div class="col-xs-12">
-								<div class="typography-section__inner" style="padding: 0px 17px;">
-									<h2 class="ui-title-block ui-title-block_light">Get Policy</h2>
-									<div class="ui-decor-1a bg-accent"></div>
-									<h3 class="ui-title-block_light">File Number <?php echo $file_number;?></h3>
-									<h3 class="ui-title-block_light"><?php echo $full_address;?></h3>
-								</div>
-
-								<?php if(!empty($success)) {?>
-									<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-										<?php foreach($success as $sucess) {
-												echo $sucess."<br \>";	
-											}?>
-									</div>
-								<?php } 
-								if(!empty($errors)) {?>
-									<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-										<?php foreach($errors as $error) {
-												echo $error."<br \>";	
-											}?>
-									</div>
-								<?php } ?>
-								<div class="typography-sectiona">
-									<div class="col-md-12">
-										<div class="table-container">
-											<table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
-												<thead>
-													<tr>
-														<th>#</th>
-														<th>Document Name</th>
-														<th>Created</th>
-														<th>Action</th>
-													</tr>
-												</thead>
-												<tbody>
-													<?php foreach($policyDocuments as $policyDocument) {
-														$documentName = $policyDocument['document_name'];?>
-														<tr role="row" class="odd">
-															<td><?php echo $policyDocument['no'];?></td>
-															<td><?php echo $documentName;?></td>
-															<td><?php echo $policyDocument['created_at'];?></td>
-															<td><a href='javascript:void(0);' onclick='download_policy_doc(<?php echo $policyDocument["api_document_id"];?>, <?php echo $order_id;?>, "<?php echo $documentName;?>");'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Download</button></a></td> 
-														</tr>
-													<?php }  ?>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-	<?php } else { ?>
-		<section class="section-type-4a section-defaulta" style="padding-bottom:100px;">
-			<div class="container">
-				<div class="row">
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="typography-section__inner" style="padding: 0px 17px;">
-								<h2 class="ui-title-block ui-title-block_light">Get Policy</h2>
-								<div class="ui-decor-1a bg-accent"></div>
-							</div>
-							<?php if(!empty($success)) {?>
-							<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-								<?php foreach($success as $sucess) {
-										echo $sucess."<br \>";	
-									}?>
-							</div>
-							<?php } 
-							if(!empty($errors)) {?>
-							<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-								<?php foreach($errors as $error) {
-										echo $error."<br \>";	
-									}?>
-							</div>
-							<?php } ?>
-							<div class="typography-sectiona">
-								<div class="col-md-12">
-									<div class="table-container">
-										<table class="table table-type-3 typography-last-elem no-footer" id="cpl_listing">
-											<thead>
-												<tr>
-													<th>#</th>
-													<th>File Number</th>
-													<th>Property Address</th>
-													<th>Created</th>
-													<th>Action</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr role="row" class="odd">
-													<td>1</td>
-													<td><?php echo $file_number;?></td>
-													<td><?php echo $full_address;?></td>
-													<td><?php echo $created;?></td>
-													<td><a href='javascript:void(0)'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a></td> 
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-	<?php }
-        $this->load->view('layout/footer');
+<?php if (!empty($policyDocuments)) {
     ?>
+        <div class="container-fluid padding-0">
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <h1 class="h3 text-gray-800">Get Policy</h1>
+                    <div class="ui-decor-1a bg-accent"></div>
+                </div>
+            </div>
+            <div class="card-body shadow mb-4">
+                <div class="card-header datatable-header" style="border: none;">
+                    <div class="datatable-header-titles">
+                        <h6 class="m-0 font-weight-bold text-primary pl-10">File Number:</h6>&nbsp;<?php echo $file_number; ?>
+                    </div>
+
+                </div>
+                <div class="card-header datatable-header py-3">
+                    <div class="datatable-header-titles">
+                        <h6 class="m-0 font-weight-bold text-primary pl-10">Property Address:</h6> &nbsp;<?php echo $full_address; ?>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Document Name</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($policyDocuments as $policyDocument) {
+        $documentName = $policyDocument['document_name'];?>
+                                <tr>
+                                    <td><?php echo $policyDocument['no']; ?></td>
+                                    <td><?php echo $documentName; ?></td>
+                                    <td><?php echo $policyDocument['created_at']; ?></td>
+                                    <td>
+                                        <a href='javascript:void(0);' onclick='download_policy_doc(<?php echo $policyDocument["api_document_id"]; ?>, <?php echo $order_id; ?>, "<?php echo $documentName; ?>");'>
+                                            <button type='submit' class='btn btn-success btn-icon-split'>
+                                                <span class='icon text-white-50'>
+                                                    <i class='fas fa-download'></i>
+                                                </span>
+                                                <span class='text'>Download</span>
+                                            </button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php
+
+    }?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+<?php
+
+} else {?>
+    <div class="container-fluid padding-0">
+        <div class="row mb-3">
+            <div class="col-sm-12">
+                <h1 class="h3 text-gray-800">Get Policy</h1>
+            </div>
+        </div>
+
+        <div class="card-body shadow mb-4">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>File Number</th>
+                            <th>Property Address</th>
+                            <th>Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><?php echo $file_number; ?></td>
+                            <td><?php echo $full_address; ?></td>
+                            <td><?php echo $created; ?></td>
+                            <td>
+                                <a href='javascript:void(0)'>
+                                    <button type='submit' class='btn btn-info btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>Not Ready</span>
+									</button>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<?php }?>
 </body>
 
 </html>
@@ -150,7 +137,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.form.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/additional-methods.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script> 
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/smart-form.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-ui.min.js"></script>
 
 
@@ -163,7 +150,7 @@
 			type: "post",
 			data: {
 				documentId: documentId,
-				order_id: order_id 
+				order_id: order_id
 			},
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');
@@ -216,5 +203,5 @@
 		});
 	}
 
-	
+
 </script>

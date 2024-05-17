@@ -1,9 +1,9 @@
 <style>
-	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}  
+	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}
 	.ui-autocomplete {
 		max-height: 300px !important;
 		overflow: hidden !important;
-	} 
+	}
 	.radio {
 		top: 5px !important;
 		margin: 0px 10px !important;
@@ -46,47 +46,53 @@
 				<h1 class="h3 text-gray-800">Closing Protection Letters </h1>
 			</div>
 			<!-- <div class="col-sm-6">
-				<a href="<?php echo base_url()?>order/admin/add-title-officer"  class="btn btn-success btn-icon-split float-right mr-2"> 
+				<a href="<?php echo base_url(); ?>order/admin/add-title-officer"  class="btn btn-success btn-icon-split float-right mr-2">
 					<span class="icon text-white-50">
 						<i class="fas fa-plus"></i>
 					</span>
-					<span class="text"> Add Title Officer </span> 
+					<span class="text"> Add Title Officer </span>
 				</a>
-				<?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-					<a href="javascript:void(0);" data-export-type="csv" id="export-title-officer-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+				<?php if (!in_array($roleName, ['CS Admin'])): ?>
+					<a href="javascript:void(0);" data-export-type="csv" id="export-title-officer-data" class="btn btn-success btn-icon-split float-right mr-2">
 						<span class="icon text-white-50">
 							<i class="fas fa-file-export"></i>
 						</span>
-						<span class="text"> Export </span> 
+						<span class="text"> Export </span>
 					</a>
-				<?php endif; ?>
+				<?php endif;?>
 			</div> -->
 		</div>
 		<div class="card shadow mb-4">
 			<div class="card-header datatable-header py-3">
-				<div class="datatable-header-titles" > 
+				<div class="datatable-header-titles" >
 					<span>
 						<i class="fas fa-users"></i>
 					</span>
-					<h6 class="m-0 font-weight-bold text-primary pl-10">Generate your CPL</h6> 
+					<h6 class="m-0 font-weight-bold text-primary pl-10">Generate your CPL</h6>
 				</div>
 			</div>
-		
+
 			<div class="card-body">
-				<?php if(!empty($success)) {?>
+				<?php if (!empty($success)) {
+    ?>
 				<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-					<?php foreach($success as $sucess) {
-							echo $sucess."<br \>";	
-						}?>
+					<?php foreach ($success as $sucess) {
+        echo $sucess . "<br \>";
+    }?>
 				</div>
-				<?php } 
-					if(!empty($errors)) {?>
+				<?php
+
+}
+if (!empty($errors)) {
+    ?>
 				<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-					<?php foreach($errors as $error) {
-						echo $error."<br \>";	
-					}?>
+					<?php foreach ($errors as $error) {
+        echo $error . "<br \>";
+    }?>
 				</div>
-				<?php } ?>
+				<?php
+
+}?>
 				<div class="table-responsive">
 					<table class="table table-bordered" id="cpl_listing" width="100%" cellspacing="0">
 						<thead>
@@ -97,7 +103,7 @@
 								<th>Created</th>
 								<th>Action</th>
 							</tr>
-						</thead>                
+						</thead>
 						<tbody></tbody>
 					</table>
 				</div>
@@ -111,20 +117,26 @@
 						<div class="ui-decor-1a bg-accent"></div>
 						<h3 class="ui-title-block_light">Generate your CPL</h3>
 					</div>
-					<?php if(!empty($success)) {?>
+					<?php if (!empty($success)) {
+    ?>
 					<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
-						<?php foreach($success as $sucess) {
-								echo $sucess."<br \>";	
-							}?>
+						<?php foreach ($success as $sucess) {
+        echo $sucess . "<br \>";
+    }?>
 					</div>
-					<?php } 
-						if(!empty($errors)) {?>
+					<?php
+
+}
+if (!empty($errors)) {
+    ?>
 					<div id="agent_error_msg" class="w-100 alert alert-danger alert-dismissible">
-						<?php foreach($errors as $error) {
-							echo $error."<br \>";	
-						}?>
+						<?php foreach ($errors as $error) {
+        echo $error . "<br \>";
+    }?>
 					</div>
-					<?php } ?>
+					<?php
+
+}?>
 					<div class="typography-sectiona">
 						<div class="col-md-12">
 							<div class="table-container">
@@ -151,18 +163,17 @@
 	</div>
 </section>
 
-<div class="modal fade" width="500px" id="lender_information" tabindex="-1" role="dialog"
-	aria-labelledby="Lender Infromation" aria-hidden="true">
+<div class="modal fade" width="500px" id="lender_information" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>add-lender-order" enctype="multipart/form-data">
+			<form method="POST" action="<?php echo base_url(); ?>add-lender-order" enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="card shadow">
 							<!-- <div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary" >Lender Details</h6>
 							</div> -->
-							<div class="card-body"> 
+							<div class="card-body">
 								<div class="smart-forms smart-container">
 									<div class="modal-body search-result">
 										<div class="row form-grp-title mt-0">
@@ -174,7 +185,7 @@
 											<div class="row">
 												<div class="col-sm-8 d-flex fs-2">
 													<!-- <label for="email_id" class="col-form-label">Email</label> -->
-													<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender	
+													<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender
 													<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
 													<!-- <input name="email_id" required="" type="email" class="form-control" id="email_id"> -->
 												</div>
@@ -207,10 +218,10 @@
 													<label for="LenderName" class="col-form-label">Lender Name</label>
 													<input type="text" name="LenderName" id="LenderName" class="gui-input form-control" placeholder="Attention" autocomplete="off">
 												</div>
-												
+
 											</div>
 										</div>
-										
+
 										<div class="form-group">
 											<div class="row">
 												<div class="col-sm-6">
@@ -346,7 +357,7 @@
 							<div class="frm-row">
 								<div class="section colm colm12">
 									<label class="field prepend-icon">
-										<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender	
+										<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender
 										<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
 									</label>
 								</div>
@@ -358,7 +369,7 @@
 										<input type="text" name="LenderCompany" id="LenderCompany" class="gui-input ui-autocomplete-input"
 											placeholder="Lender Company Name" required="required">
 										<span class="field-icon"><i class="fa fa-user"></i></span>
-										
+
 										<input type="hidden" name="LenderId" id="LenderId" value="">
 										<input type="hidden" name="file_id" id="file_id" value="">
 										<input type="hidden" name="partner_id" id="partner_id" value="">
@@ -488,7 +499,7 @@
 								</div>
 							</div>
 
-							
+
 							<div id="fnf">
 								<div class="spacer-b20">
 									<div class="tagline"><span>Select Branch</span></div>
@@ -517,8 +528,3 @@
 		</div>
 	</div>
 </div>
-	
-
-
-
-
