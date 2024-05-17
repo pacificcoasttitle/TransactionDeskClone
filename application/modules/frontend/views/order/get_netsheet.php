@@ -21,6 +21,29 @@
 	th {
 		text-align: center;
 	}
+	.form-grp-title {
+		margin-top: 30px;
+    	margin-bottom: 20px;
+	}
+	.form-grp-title .tagline {
+		height: 0;
+		border-top: 1px solid #D9DDE5;
+	}
+	.form-grp-title .tagline span {
+		text-transform: uppercase;
+		display: inline-block;
+		position: relative;
+		padding: 0 0px;
+		background: #ffffff;
+		color: #d35411;
+		top: -10px;
+		font-size: 16px;
+		font-weight: 700;
+		letter-spacing: 0.25px;
+	}
+	.mt-0 {
+		margin-top: 0px;
+	}
 	.display-inline {
 		display: inline-block;
     	vertical-align: top;
