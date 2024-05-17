@@ -4425,15 +4425,15 @@ class DashboardMail extends MX_Controller
             $documentName = $order[0]['calc_title_doc_name'];
             $documentUrl = env('AWS_PATH') . "calc_title_rates/" . $documentName;
             if ($order[0]['prod_type'] == 'loan') {
-                $data['action'] = "<div style='display:flex;justify-content: space-around;'><button onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"netsheet"' . ");'  title='Download' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
-                <span class='text'>Download</span></button>
+                $data['action'] = "<div style='display:flex;justify-content: space-around;'><a href=" . $documentUrl . " target='_blanck' download onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"netsheet"' . ");'  title='Download' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span>
+                <span class='text'>Download</span></a>
                 <form onclick='return generate_netsheet(1);' action='" . base_url() . "create-netsheet/" . $orderDetails['random_number'] . "' method='POST'>
                 <button title='Regenerate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
                         <span class='text'>Regenerate</span></button></form></div>";
             } else {
                 $data['action'] = "<div style='display:flex;justify-content: space-around;'>
-                <button onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"netsheet"' . ");' title='Download' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
-                <span class='text'>Download</span></button>
+                <a href=" . $documentUrl . " target='_blanck' download onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"netsheet"' . ");' title='Download' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span>
+                <span class='text'>Download</span></a>
                 <button onclick='return generate_netsheet(0);' title='Regenerate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span>
                 <span class='text'>Regenerate</span></button></div>";
             }
