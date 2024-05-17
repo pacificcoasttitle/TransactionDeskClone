@@ -37,6 +37,10 @@
 	.mt-0 {
 		margin-top: 0px;
 	}
+    .display-inline {
+		display: inline-block;
+    	vertical-align: top;
+	}
 </style>
 
 <body>
@@ -171,7 +175,7 @@ if (!empty($errors)) {
                         <div class="col-lg-12">
                             <div class="card shadow">
                                 <div class="card-body">
-                                    <div class="">
+                                    <div class="smart-forms smart-container">
                                         <div class="modal-body search-result">
                                             <div class="row form-grp-title mt-0">
                                                 <div class="col-sm-12">
@@ -180,7 +184,7 @@ if (!empty($errors)) {
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-sm-8 d-flex fs-2">
+                                                    <div class="col-sm-8 display-inline fs-2">
                                                         <input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender
                                                         <input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
                                                     </div>

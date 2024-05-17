@@ -21,7 +21,10 @@
 	th {
 		text-align: center;
 	}
-
+	.display-inline {
+		display: inline-block;
+    	vertical-align: top;
+	}
 </style>
 
 <body>
@@ -150,7 +153,7 @@
                                     <h6 class="m-0 font-weight-bold text-primary" >Create Netsheet</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="smart-forms smart-container">
+									<div class="smart-forms smart-container">
                                         <div class="modal-body search-result">
                                             <div class="form-group">
                                                 <div class="row form-grp-title mt-0">
@@ -159,7 +162,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-8 d-flex align-space">
+                                                    <div class="col-sm-8 display-inline align-space">
 														<input class="radio" type="radio" name="req_type" id="buyer" value="buyer" required="required">Buyer
 														<input class="radio" type="radio" name="req_type" id="seller" value="seller">Seller
                                                     </div>
