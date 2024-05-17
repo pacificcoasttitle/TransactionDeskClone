@@ -53,6 +53,10 @@
 	.mt-0 {
 		margin-top: 0px;
 	}
+    .display-inline {
+		display: inline-block;
+    	vertical-align: top;
+	}
 </style>
 <body>
 	<?php // $this->load->view('layout/header_dashboard'); ;;;?>
@@ -381,7 +385,7 @@ if (isset($proposedBranches) && !empty($proposedBranches)) {
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-sm-8 d-flex align-space">
+                                                    <div class="col-sm-8 display-inline align-space">
                                                         <input class="radio" type="radio" name="edit_new_existing_lender" id="edit_add_lender" value="add_lender">New Lender
                                                         <input class="radio" type="radio" name="edit_new_existing_lender" id="edit_existing_lender" value="existing_lender">Existing Lender
                                                     </div>
