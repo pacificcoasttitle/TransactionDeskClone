@@ -4293,7 +4293,10 @@ class DashboardMail extends MX_Controller
         $userData = array(
             'admin_api' => 1,
         );
+        $logid = $this->apiLogs->syncLogs(0, 'resware', 'create_sheet_generate_landing_page', env('RESWARE_ORDER_API') . 'files/search', $data, array(), $order[0]['file_number'], 0);
         $result = $this->resware->make_request('POST', 'files/search', $data, $userData);
+        $this->apiLogs->syncLogs(0, 'resware', 'create_note', env('RESWARE_ORDER_API') . 'files/search', $data, $result, $order[0]['file_number'], $logid);
+
         if (json_decode($result) && count(json_decode($result)->Files)) {
             $post_data = $result_decoded = array();
             $result_decoded = json_decode($result);
@@ -4376,6 +4379,7 @@ class DashboardMail extends MX_Controller
             );
             $error_msg = curl_error($ch);
             $calcResult = json_decode(curl_exec($ch), true);
+            $this->apiLogs->syncLogs(0, 'calculator_create_netsheet', 'createNetsheetDoc', env('CALC_API_URL') . 'index.php?welcome/createNetsheetDoc', $post_data, json_encode($calcResult), $order[0]['file_number'], 0);
             //print_r($calcResult);exit;
             if (!empty($calcResult)) {
                 if ($calcResult['success'] && !empty($calcResult['document_name'])) {
@@ -4714,4 +4718,121 @@ class DashboardMail extends MX_Controller
         redirect(base_url() . 'send-package/' . $orderDetails['random_number']);
     }
 
+    public function nationalForm()
+    {
+        $this->load->model('order/document');
+        $data['title'] = 'National Form | Pacific Coast Title Company';
+        $data['mail_dashboard'] = 1;
+
+        $errors = array();
+        $data['errors'] = array();
+        $data['success'] = array();
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+
+        if ($this->input->post()) {
+            $buyers_names = $buyer_pdf = array();
+            $input = $this->input->post();
+            $this->form_validation->set_rules('buyer_name', 'Buyer/borrower name', 'required', array('required' => 'Enter Buyer/borrower name'));
+            $this->form_validation->set_rules('buyer_current_address', 'Buyer/borrower current address', 'required', array('required' => 'Enter buyer/borrower current address'));
+            $this->form_validation->set_rules('buyer_email', 'Borrower Email', 'required', array('required' => 'Please enter borrower Email'));
+            $this->form_validation->set_rules('buyer_mobile', 'Borrower Phone', 'required', array('required' => 'Please enter borrower Phone'));
+
+            $this->form_validation->set_rules('buyer_property_address', 'Subject property address', 'required', array('required' => 'Please enter subject property address'));
+            $this->form_validation->set_rules('title_hold_reason', 'How will buyer/borrower(s) hold Title?', 'required', array('required' => 'Please enter hold title'));
+            $this->form_validation->set_rules('ssn', 'SSN', 'required', array('required' => 'Please enter SSN'));
+            $this->form_validation->set_rules('estimated_closing_date', 'Estimated closing date', 'required', array('required' => 'Please enter Estimated closing date'));
+            $this->form_validation->set_rules('lender', 'Lender', 'required', array('required' => 'Please enter lender'));
+            $this->form_validation->set_rules('loan_amount', 'Loan amount', 'required', array('required' => 'Please enter Loan amount'));
+            $this->form_validation->set_rules('loan_number', 'Loan number', 'required', array('required' => 'Please enter Loan number'));
+            $this->form_validation->set_rules('type_of_loan', 'Type of loan', 'required', array('required' => 'Please enter Type of loan'));
+            $this->form_validation->set_rules('title_items_required_by', 'Title items required by Lender', 'required', array('required' => 'Please enter Title items required by Lender'));
+            $this->form_validation->set_rules('lender_clause', 'Lender/Mortgagee clause', 'required', array('required' => 'Please enter Lender/Mortgagee clause'));
+            $this->form_validation->set_rules('return_document_to', 'Return documents to', 'required', array('required' => 'Please enter Return documents to'));
+            $this->form_validation->set_rules('main_lender_contact', 'Main Lender contact', 'required', array('required' => 'Please enter Main Lender contact'));
+            $this->form_validation->set_rules('loan_officer', 'Loan officer', 'required', array('required' => 'Please enter Loan officer'));
+
+            if ($this->form_validation->run($this) == true) {
+                $inputData = [
+                    "buyer_name" => isset($input['buyer_name']) && !empty($input['buyer_name']) ? $input['buyer_name'] : null,
+                    "buyer_current_address" => isset($input['buyer_current_address']) && !empty($input['buyer_current_address']) ? $input['buyer_current_address'] : null,
+                    "buyer_email" => isset($input['buyer_email']) && !empty($input['buyer_email']) ? $input['buyer_email'] : null,
+                    "buyer_mobile" => isset($input['buyer_mobile']) && !empty($input['buyer_mobile']) ? $input['buyer_mobile'] : null,
+                    "buyer_property_address" => isset($input['buyer_property_address']) && !empty($input['buyer_property_address']) ? $input['buyer_property_address'] : null,
+                    "title_hold_reason" => isset($input['title_hold_reason']) && !empty($input['title_hold_reason']) ? $input['title_hold_reason'] : null,
+                    "ssn" => isset($input['ssn']) && !empty($input['ssn']) ? $input['ssn'] : null,
+                    "estimated_closing_date" => isset($input['estimated_closing_date']) && !empty($input['estimated_closing_date']) ? $input['estimated_closing_date'] : null,
+                    "lender" => isset($input['lender']) && !empty($input['lender']) ? $input['lender'] : null,
+                    "loan_amount" => isset($input['loan_amount']) && !empty($input['loan_amount']) ? $input['loan_amount'] : null,
+                    "loan_number" => isset($input['loan_number']) && !empty($input['loan_number']) ? $input['loan_number'] : null,
+                    "type_of_loan" => isset($input['type_of_loan']) && !empty($input['type_of_loan']) ? $input['type_of_loan'] : null,
+                    "title_items_required_by" => isset($input['title_items_required_by']) && !empty($input['title_items_required_by']) ? $input['title_items_required_by'] : null,
+                    "lender_clause" => isset($input['lender_clause']) && !empty($input['lender_clause']) ? $input['lender_clause'] : null,
+                    "return_document_to" => isset($input['return_document_to']) && !empty($input['return_document_to']) ? $input['return_document_to'] : null,
+                    "main_lender_contact" => isset($input['main_lender_contact']) && !empty($input['main_lender_contact']) ? $input['main_lender_contact'] : null,
+                    "loan_officer" => isset($input['loan_officer']) && !empty($input['loan_officer']) ? $input['loan_officer'] : null,
+
+                ];
+
+                $this->home_model->insert($inputData, 'pct_order_national_form_data');
+
+                $borrower_message_body = $this->load->view('emails/national_form.php', $inputData, true);
+                $message_body = $borrower_message_body;
+                $subject = 'Subject to national form submission';
+                $from_mail = env('FROM_EMAIL');
+                $from_name = 'Pacific Coast Title Company';
+                $mailParams = array(
+                    'from_mail' => $from_mail,
+                    'from_name' => $from_name,
+                    'subject' => $subject,
+                    'message' => json_encode($email_data),
+                );
+
+                // if (!empty($buyer_email)) {
+                $to = "national@pct.com";
+                $cc = ['piyush.j@crestinfosystems.net'];
+                $mailParams['to'] = $to;
+                $this->load->helper('sendemail');
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_national_pct', '', $mailParams, array(), 10, 0);
+                $result = send_email($from_mail, $from_name, $to, $subject, $message_body, null, $cc, []);
+                // $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_national_pct', '', $mailParams, array('status' => $result), 10, $logid);
+                if ($result) {
+                    $success = 'Email sent successfully.';
+                } else {
+                    $error = 'Please try again later.';
+                }
+                $data['errors'] = $error;
+                $data['success'] = $success;
+                $this->session->set_userdata($data);
+                redirect(base_url() . 'national-form/');exit;
+            } else {
+                $data['buyer_name_error_msg'] = form_error('buyer_name');
+                $data['buyer_current_address_error_msg'] = form_error('buyer_current_address');
+                $data['buyer_email_error_msg'] = form_error('buyer_email');
+                $data['buyer_mobile_error_msg'] = form_error('buyer_mobile');
+                $data['buyer_property_address_error_msg'] = form_error('buyer_property_address');
+                $data['title_hold_reason_error_msg'] = form_error('title_hold_reason');
+                $data['ssn_error_msg'] = form_error('ssn');
+                $data['estimated_closing_date_error_msg'] = form_error('estimated_closing_date');
+                $data['lender_error_msg'] = form_error('lender');
+                $data['loan_amount_error_msg'] = form_error('loan_amount');
+                $data['loan_number_error_msg'] = form_error('loan_number');
+                $data['type_of_loan_error_msg'] = form_error('type_of_loan');
+                $data['title_items_required_by_error_msg'] = form_error('title_items_required_by');
+                $data['lender_clause_error_msg'] = form_error('lender_clause');
+                $data['return_document_to_error_msg'] = form_error('return_document_to');
+                $data['main_lender_contact_error_msg'] = form_error('main_lender_contact');
+                $data['loan_officer_error_msg'] = form_error('loan_officer');
+            }
+
+        }
+        $this->load->view('order/national_form', $data);
+    }
 }
