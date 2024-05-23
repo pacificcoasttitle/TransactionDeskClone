@@ -4799,10 +4799,10 @@ class DashboardMail extends MX_Controller
                 $cc = ['piyush.j@crestinfosystems.net'];
                 $mailParams['to'] = $to;
                 $this->load->helper('sendemail');
-                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_national_pct', '', $mailParams, array(), 10, 0);
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_national_pct', '', $mailParams, array(), 0, 0);
                 $result = send_email($from_mail, $from_name, $to, $subject, $message_body, null, $cc, []);
                 // $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
-                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_national_pct', '', $mailParams, array('status' => $result), 10, $logid);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_national_pct', '', $mailParams, array('status' => $result), 0, $logid);
                 if ($result) {
                     $success = 'Email sent successfully.';
                 } else {
