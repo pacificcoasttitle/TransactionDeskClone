@@ -256,6 +256,7 @@ $route['send-package/:any'] = 'frontend/order/dashboardMail/sendPackage';
 $route['add-buyer-on-order-mail'] = 'frontend/order/dashboardMail/addBuyerOnOrder';
 $route['add-seller-on-order-mail'] = 'frontend/order/dashboardMail/addSellerOnOrder';
 
+$route['national-form'] = 'frontend/order/dashboardMail/nationalForm';
 /* Route for PCT-Order backend*/
 $route['order/admin'] = 'admin/order/login/login';
 $route['order/admin/login/do_login'] = 'admin/order/login/do_login';
