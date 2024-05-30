@@ -1488,6 +1488,7 @@ class Order
             'request' => $document_api_data,
             'response' => $result,
             'status' => 'success',
+            'user_id' => 0,
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
@@ -2131,6 +2132,7 @@ class Order
             'request' => $document_api_data,
             'response' => $result,
             'status' => 'success',
+            'user_id' => $userdata['id'],
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
@@ -2218,6 +2220,7 @@ class Order
             'request' => $document_api_data,
             'response' => $result,
             'status' => 'success',
+            'user_id' => $userdata['id'],
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
@@ -2283,6 +2286,7 @@ class Order
             'request' => $document_api_data,
             'response' => $result,
             'status' => 'success',
+            'user_id' => $userdata['id'],
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);

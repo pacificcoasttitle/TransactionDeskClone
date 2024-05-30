@@ -698,6 +698,7 @@ class Common extends MX_Controller
                     'request' => $document_api_data,
                     'response' => $result,
                     'status' => 'success',
+                    'user_id' => $userdata['id'],
                     'created_at' => date("Y-m-d H:i:s"),
                 );
                 $this->db->insert('pct_resware_log', $reswareLogData);

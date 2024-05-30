@@ -411,6 +411,7 @@ class Home extends MX_Controller
                                 'request' => $order_data,
                                 'response' => $result,
                                 'status' => $message,
+                                'user_id' => $userdata['id'],
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
 
@@ -435,6 +436,7 @@ class Home extends MX_Controller
                                 'status' => $response['ResponseStatus'],
                                 'file_id' => $file_id,
                                 'file_number' => $orderNumber,
+                                'user_id' => $userdata['id'],
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
 
@@ -811,6 +813,7 @@ class Home extends MX_Controller
                                         'request' => $removePartnerData,
                                         'response' => $resultRemovePartner,
                                         'status' => 'success',
+                                        'user_id' => $userdata['id'],
                                         'created_at' => date("Y-m-d H:i:s"),
                                     );
 
@@ -851,6 +854,7 @@ class Home extends MX_Controller
                                     'request' => $partnerData,
                                     'response' => $resultPartner,
                                     'status' => 'success',
+                                    'user_id' => $userdata['id'],
                                     'created_at' => date("Y-m-d H:i:s"),
                                 );
                                 $this->db->insert('pct_resware_log', $reswareData);
@@ -870,6 +874,7 @@ class Home extends MX_Controller
                                     'request' => $remoteFileNumberData,
                                     'response' => $resultRemotePartner,
                                     'status' => 'success',
+                                    'user_id' => $userdata['id'],
                                     'created_at' => date("Y-m-d H:i:s"),
                                 );
                                 $this->db->insert('pct_resware_log', $reswareData);
@@ -1948,6 +1953,7 @@ class Home extends MX_Controller
                 'request' => $document_api_data,
                 'response' => $result,
                 'status' => 'success',
+                'user_id' => $userdata['id'],
                 'created_at' => date("Y-m-d H:i:s"),
             );
             $this->db->insert('pct_resware_log', $reswareLogData);
@@ -2016,6 +2022,7 @@ class Home extends MX_Controller
                 'request' => $document_api_data,
                 'response' => $result,
                 'status' => 'success',
+                'user_id' => $userdata['id'],
                 'created_at' => date("Y-m-d H:i:s"),
             );
             $this->db->insert('pct_resware_log', $reswareLogData);
@@ -2087,6 +2094,7 @@ class Home extends MX_Controller
                 'request' => $document_api_data,
                 'response' => $result,
                 'status' => 'success',
+                'user_id' => $userdata['id'],
                 'created_at' => date("Y-m-d H:i:s"),
             );
             $this->db->insert('pct_resware_log', $reswareLogData);
@@ -2225,6 +2233,7 @@ class Home extends MX_Controller
             'request' => $document_api_data,
             'response' => $result,
             'status' => 'success',
+            'user_id' => $userdata['id'],
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->db->insert('pct_resware_log', $reswareLogData);
