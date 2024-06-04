@@ -25,13 +25,12 @@ class SalesDashboardTemplate
             $this->load_JS_and_css();
             $data['notifications'] = $this->getNotifications(5);
             $data['unreadNotificationCount'] = $this->getUnreadNotificationCount(5);
-
+            $data['sidebar'] = true;
             $this->data['header'] = $this->CI->load->view('order/admin-layout/header.php', $data, true);
             if (isset($data['displaySidebar']) && !$data['displaySidebar']) {
-                $this->data['sidebar'] = null;
-            } else {
-                $this->data['sidebar'] = $this->CI->load->view('order/admin-layout/sidebar.php', $data, true);
+                $data['sidebar'] = false;
             }
+            $this->data['sidebar'] = $this->CI->load->view('order/admin-layout/sidebar.php', $data, true);
             $this->data['content'] = $this->CI->load->view($folder . '/' . $page . '.php', $data, true);
             $this->data['footer'] = $this->CI->load->view('order/admin-layout/footer.php', $data, true);
             $this->CI->load->view('order/sales_dashboard_template.php', $this->data);
