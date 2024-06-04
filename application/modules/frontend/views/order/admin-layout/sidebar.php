@@ -27,7 +27,7 @@ if ($userdata['is_sales_rep'] == 1) {
 	</a>
 	<hr class="sidebar-divider my-0">
 
-	<?php if ($userdata['is_sales_rep'] == 1) {?>
+	<?php if (($userdata['is_sales_rep'] == 1) && ($sidebar)) {?>
 
 		<!-- Divider -->
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'sales-dashboard') {echo 'active';}?>">
@@ -73,14 +73,14 @@ if ($userdata['is_sales_rep'] == 1) {
 			</a>
 		</li>
 
-	<?php } else if ($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) {?>
+	<?php } else if (($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) && ($sidebar)) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'escrow-dashboard' || $this->uri->segment(1) == 'pay-off-dashboard' || $this->uri->segment(1) == 'special-lender-dashboard') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Dashboard Home</span>
 			</a>
 		</li>
-	<?php } else {?>
+	<?php } else if ($sidebar) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == 'title-officer-dashboard') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
