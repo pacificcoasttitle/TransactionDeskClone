@@ -77,7 +77,7 @@
                             <div class="form-group">
                                 <label for="admin_notes" class="col-sm-2 col-form-label">Admin Notes<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <textarea type="text" class="form-control" name="admin_notes" id="admin_notes" class="form-control" placeholder="Admin_notes" ><?php echo isset($vendor_info['admin_notes']) && !empty($vendor_info['admin_notes']) ? $vendor_info['admin_notes'] : '' ?></textarea>
+                                    <textarea type="text" class="form-control" name="admin_notes" id="admin_notes" class="form-control" placeholder="Admin Notes" ><?php echo isset($vendor_info['admin_notes']) && !empty($vendor_info['admin_notes']) ? $vendor_info['admin_notes'] : '' ?></textarea>
 
                                     <?php if (!empty($admin_notes_error_msg)) {?>
                                         <span class="error"><?php echo $admin_notes_error_msg; ?></span>

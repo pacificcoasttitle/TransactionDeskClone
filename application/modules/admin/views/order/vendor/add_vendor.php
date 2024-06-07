@@ -70,11 +70,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="notes" class="col-sm-2 col-form-label">Add Notes<span class="required"> *</span></label>
+                                    <label for="admin_notes" class="col-sm-2 col-form-label">Add Admin Notes<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <textarea type="text" class="form-control" name="notes" id="notes" class="form-control" placeholder="Add Notes"></textarea>
-                                        <?php if (!empty($notes_error_msg)) {?>
-                                            <span class="error"><?php echo $notes_error_msg; ?></span>
+                                        <textarea type="text" class="form-control" name="admin_notes" id="admin_notes" class="form-control" placeholder="Add Admin Notes"></textarea>
+                                        <?php if (!empty($admin_notes_error_msg)) {?>
+                                            <span class="error"><?php echo $admin_notes_error_msg; ?></span>
                                         <?php }?>
                                     </div>
                                 </div>

@@ -467,7 +467,7 @@ class PayOff extends MX_Controller
             $this->form_validation->set_rules('account_number', 'Email', 'required', array('required' => 'Please Enter Account Number'));
             $this->form_validation->set_rules('aba', 'ABA/Routing', 'required', array('required' => 'Please Enter ABA/Routing'));
             $this->form_validation->set_rules('bank_name', 'Bank Name', 'required', array('required' => 'Please Enter Bank Name'));
-            $this->form_validation->set_rules('notes', 'Notes', 'required', array('required' => 'Please Enter Notes'));
+            $this->form_validation->set_rules('admin_notes', 'Admin Notes', 'required', array('required' => 'Please Enter Admin Notes'));
 
             if ($this->form_validation->run() == true) {
                 $vendorData = array(
@@ -476,7 +476,7 @@ class PayOff extends MX_Controller
                     'account_number' => $_POST['account_number'],
                     'aba' => $_POST['aba'],
                     'bank_name' => $_POST['bank_name'],
-                    'notes' => $_POST['notes'],
+                    'admin_notes' => $_POST['admin_notes'],
                     'submitted' => date('Y-m-d'),
                     'approved_by' => $userdata['id'],
                     'is_approved' => 1,
@@ -499,7 +499,7 @@ class PayOff extends MX_Controller
                 $data['account_number_error_msg'] = form_error('account_number_address');
                 $data['aba_error_msg'] = form_error('teleaba');
                 $data['bank_name_error_msg'] = form_error('bank_name');
-                $data['notes_error_msg'] = form_error('notes');
+                $data['admin_notes_error_msg'] = form_error('admin_notes');
             }
         }
         // $this->admintemplate->addCSS(base_url('assets/backend/css/vendor.css?v=payoff_' . $this->payoff_js_version));
