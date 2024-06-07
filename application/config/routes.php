@@ -218,6 +218,11 @@ $route['upload-document'] = 'frontend/order/common/upload_document';
 $route['add-partner-for-orders'] = 'frontend/order/cron/addPartnerForOrders';
 $route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
 $route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
+$route['get-vendors'] = 'frontend/order/payOff/get_vendors';
+$route['add-vendor'] = 'frontend/order/payOff/addVendor';
+$route['upload-vendor-documents'] = 'frontend/order/payOff/uploadVendorDocuments';
+$route['get-vendor-document-list'] = 'frontend/order/payOff/getVendorDocumentList';
+
 $route['download-pay-off-document'] = 'frontend/order/payOff/downloadPayOffDocument';
 $route['update-pay-off-action'] = 'frontend/order/payOff/updatePayOffAction';
 $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
@@ -389,6 +394,20 @@ $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
 $route['order/admin/escrow-officers'] = 'admin/order/home/escrow_officers';
 $route['order/admin/add-escrow-officer'] = 'admin/order/home/add_escrow_officer';
 $route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_officer';
+
+$route['order/admin/payoff-users'] = 'admin/order/home/payoff_users';
+$route['order/admin/add-payoff-user'] = 'admin/order/home/add_payoff_user';
+$route['order/admin/edit-payoff-user/:num'] = 'admin/order/home/edit_payoff_user';
+$route['order/admin/update-user-status'] = 'admin/order/home/updateUserStatus';
+$route['order/admin/delete-payoff-user'] = 'admin/order/home/delete_payoff_user';
+
+$route['order/admin/vendors-list'] = 'admin/order/payoff/vendors_list';
+$route['order/admin/add-vendor'] = 'admin/order/payoff/add_vendor';
+$route['order/admin/get-vendor-list'] = 'admin/order/payoff/get_vendors_list';
+$route['order/admin/update-vendor-status'] = 'admin/order/payoff/update_vendor_status';
+$route['order/admin/get-vendor-details'] = 'admin/order/payoff/get_vendor_details';
+$route['order/admin/edit-vendor-details/(:num)'] = 'admin/order/payoff/edit_vendor_details/$1';
+$route['order/admin/delete-vendor-details'] = 'admin/order/payoff/delete_vendor_details';
 
 $route['order/admin/admin_users'] = 'admin/order/adminUsers/index';
 $route['order/admin/admin_users_email'] = 'admin/order/adminUsers/email_check';

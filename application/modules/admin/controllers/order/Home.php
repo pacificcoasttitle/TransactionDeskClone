@@ -3230,6 +3230,321 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
+    public function payoff_users()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Payoff Users';
+        $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
+        $this->admintemplate->show("order/payoff", "payoff_users", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/escrow_officers', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_payoff_users_list()
+    {
+        $params = array();
+        $this->load->model('order/payoff_model');
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length']) + 1;
+
+            $payoff_users_list = $this->payoff_model->get_payoff_users($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $payoff_users_list = $this->payoff_model->get_payoff_users($params);
+        }
+
+        $data = array();
+        // echo "<pre>";
+        // print_r($payoff_users_list);die;
+        if (isset($payoff_users_list['data']) && !empty($payoff_users_list['data'])) {
+            foreach ($payoff_users_list['data'] as $key => $value) {
+                $nestedData = array();
+                $user_id = $value['id'];
+                $nestedData[] = $value['first_name'] . ' ' . $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $status = $value['status'];
+                if ($status == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                // $nestedData[] = "<input $checked onclick='enablePayoffUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+
+                $action = "";
+                $editUrl = base_url() . 'order/admin/edit-payoff-user/' . $value['id'];
+                $action = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Payoff User Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+
+                $action .= "<a href='javascript:void(0);' onclick='deletePayoffUser(" . $value['id'] . ")' title='Delete Payoff User'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                $nestedData[] = $action;
+
+                $data[] = $nestedData;
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval($payoff_users_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($payoff_users_list['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function add_payoff_user()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Add Payoff User.';
+        $data['pageTitle'] = 'Payoff User.';
+
+        $titleOfficerData = array();
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required' => 'Please Enter First Name'));
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required' => 'Please Enter Last Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('company_name', 'Company Name', 'required', array('required' => 'Please Enter Company Name'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required' => 'Please Enter Address'));
+            $this->form_validation->set_rules('city', 'City', 'required', array('required' => 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required' => 'Please Enter State'));
+            $this->form_validation->set_rules('zip', 'Zip', 'required', array('required' => 'Please Enter Zip'));
+
+            if ($this->form_validation->run() == true) {
+                $payoffUserData = array(
+                    'first_name' => $_POST['first_name'],
+                    'last_name' => $_POST['last_name'],
+                    'email_address' => $_POST['email_address'],
+                    'company_name' => $_POST['company_name'],
+                    'street_address' => $_POST['address'],
+                    'city' => $_POST['city'],
+                    'state' => $_POST['state'],
+                    'zip_code' => $_POST['zip'],
+                    'is_password_updated' => 1,
+                    'is_payoff_user' => 1,
+                    'status' => 1,
+                );
+                $this->load->model('order/payoff_model');
+                $insert = $this->payoff_model->insert($payoffUserData);
+                /** Save user Activity */
+                $activity = 'Payoff user created :- ' . $_POST['email_address'];
+                $this->common->logAdminActivity($activity);
+                /** End save user activity */
+                if ($insert) {
+                    $data['success_msg'] = 'Payoff User added successfully.';
+                } else {
+                    $data['error_msg'] = 'Payoff User not added.';
+                }
+
+            } else {
+                $data['first_name_error_msg'] = form_error('first_name');
+                $data['last_name_error_msg'] = form_error('last_name');
+                $data['email_error_msg'] = form_error('email_address');
+                $data['company_name_error_msg'] = form_error('company_name');
+                $data['address_error_msg'] = form_error('address');
+                $data['city_error_msg'] = form_error('city');
+                $data['state_error_msg'] = form_error('state');
+                $data['zip_error_msg'] = form_error('zip');
+            }
+        }
+
+        $this->admintemplate->show("order/payoff", "add_payoff_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/title/add_title_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function delete_payoff_user()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+        if ($id) {
+            $this->load->model('order/payoff_model');
+
+            $payoffUserData = array('status' => 0);
+            $condition = array('id' => $id);
+            $payoffUser = $this->payoff_model->getPayoffUsers($condition);
+            $update = $this->payoff_model->update($payoffUserData, $condition);
+            if ($update) {
+                /** Save user Activity */
+                $activity = 'Payoff user deleted :- ' . $payoffUser['email_address'];
+                $this->common->logAdminActivity($activity);
+                /** End save user activity */
+                $successMsg = 'Payoff user deleted successfully.';
+                $response = array('status' => 'success', 'message' => $successMsg);
+            }
+        } else {
+            $msg = 'Payoff user ID is required.';
+            $response = array('status' => 'error', 'message' => $msg);
+        }
+        echo json_encode($response);
+    }
+
+    public function edit_payoff_user()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Payoff User';
+        $data['pageTitle'] = 'Payoff User.';
+        $id = $this->uri->segment('4');
+        $this->load->model('order/payoff_model');
+        if (isset($id) && !empty($id)) {
+            if (isset($_POST) && !empty($_POST)) {
+
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required' => 'Please Enter First Name'));
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required' => 'Please Enter Last Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('company_name', 'Company Name', 'required', array('required' => 'Please Enter Company Name'));
+                $this->form_validation->set_rules('street_address', 'Address', 'required', array('required' => 'Please Enter Address'));
+                $this->form_validation->set_rules('city', 'City', 'required', array('required' => 'Please Enter City'));
+                $this->form_validation->set_rules('state', 'State', 'required', array('required' => 'Please Enter State'));
+                $this->form_validation->set_rules('zip', 'Zip', 'required', array('required' => 'Please Enter Zip'));
+
+                if ($this->form_validation->run() == true) {
+                    $payoffUserData = array(
+                        'first_name' => $_POST['first_name'],
+                        'last_name' => $_POST['last_name'],
+                        'email_address' => $_POST['email_address'],
+                        'company_name' => $_POST['company_name'],
+                        'street_address' => $_POST['street_address'],
+                        'city' => $_POST['city'],
+                        'state' => $_POST['state'],
+                        'zip_code' => $_POST['zip'],
+                        'is_password_updated' => 1,
+                        'is_payoff_user' => 1,
+                        'status' => 1,
+                    );
+                    $condition = array('id' => $id);
+                    $update = $this->payoff_model->update($payoffUserData, $condition);
+                    /** Save user Activity */
+                    $activity = 'Payoff User updated :- ' . $_POST['email_address'];
+                    $this->common->logAdminActivity($activity);
+                    /** End save user activity */
+                    if ($update) {
+                        $data['success_msg'] = 'Payoff User updated successfully.';
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating Payoff User';
+                    }
+                } else {
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg'] = form_error('last_name');
+                    $data['email_error_msg'] = form_error('email_address');
+                    $data['company_name_error_msg'] = form_error('company_name');
+                    $data['street_address_error_msg'] = form_error('street_address');
+                    $data['city_error_msg'] = form_error('city');
+                    $data['state_error_msg'] = form_error('state');
+                    $data['zip_error_msg'] = form_error('zip');
+                }
+            }
+            $con = array('id' => $id);
+            $payoff_user_info = $this->payoff_model->getPayoffUsers($con);
+        } else {
+            redirect('order/admin/payoff-users');
+        }
+        // echo "<pre>";
+        // print_r($payoff_user_info);die;
+        $data['payoff_user_info'] = $payoff_user_info;
+        $this->admintemplate->show("order/payoff", "edit_payoff_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/title/edit_title_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function updateUserStatus()
+    {
+        $user_id = $this->input->post('user_id');
+        $status = $this->input->post('status');
+        $data['status'] = $status;
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $condition = array(
+            'id' => $user_id,
+        );
+        /** Save user Activity */
+        $user = $this->home_model->get_user($condition);
+        $activity = 'User ' . $user['email_address'] . 'status updated to :- ' . $status;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+        $res = $this->db->update('customer_basic_details', $data, $condition);
+        // print_r($res);die;
+        $data = array('status' => 'success', 'msg' => 'User\'s status updated successfully.');
+        echo json_encode($data);
+    }
+
+    public function vendors_list()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Vendors List';
+        $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
+        $this->admintemplate->show("order/payoff", "vendors_list", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/escrow_officers', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_vendors_list()
+    {
+        $params = array();
+        $this->load->model('order/home_model');
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+
+            $pageno = ($params['start'] / $params['length']) + 1;
+
+            $payoff_users_list = $this->home_model->get_payoff_users($params);
+
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $payoff_users_list = $this->home_model->get_payoff_users($params);
+        }
+
+        $data = array();
+        if (isset($payoff_users_list['data']) && !empty($payoff_users_list['data'])) {
+            foreach ($payoff_users_list['data'] as $key => $value) {
+                $nestedData = array();
+                $user_id = $value['id'];
+                $nestedData[] = $value['first_name'] . ' ' . $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $status = $value['status'];
+                if ($status == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                // $nestedData[] = "<input $checked onclick='enablePayoffUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+
+                $action = "";
+                $editUrl = base_url() . 'order/admin/edit-vendor-user/' . $value['id'];
+                $action = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Vendor Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+
+                $action .= "<a href='javascript:void(0);' onclick='deleteVendor(" . $value['id'] . ")' title='Delete Vendor'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                $nestedData[] = $action;
+
+                $data[] = $nestedData;
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal'] = intval($payoff_users_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($payoff_users_list['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
     public function downloadAwsDocument()
     {
         $url = $this->input->post('url');

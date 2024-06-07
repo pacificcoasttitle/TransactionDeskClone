@@ -1,0 +1,112 @@
+<div class="content">
+    <?php if (!empty($success_msg)) {?>
+        <div class="col-xs-12">
+            <div class="alert alert-success"><?php echo $success_msg; ?></div>
+        </div>
+    <?php }?>
+    <?php if (!empty($error_msg)) {?>
+        <div class="col-xs-12">
+            <div class="alert alert-danger"><?php echo $error_msg; ?></div>
+        </div>
+    <?php }?>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="h3 text-gray-800"><?=$pageTitle?></h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Edit <?=$pageTitle?></h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="frm-update-vendor" method="POST">
+
+                            <div class="form-group">
+                                <label for="transctee_name" class="col-sm-2 col-form-label">Transctee Name<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="transctee_name" id="transctee_name" class="form-control" value="<?php echo $vendor_info['transctee_name']; ?>" placeholder="First Name">
+                                    <?php if (!empty($transctee_name_error_msg)) {?>
+                                        <span class="error"><?php echo $transctee_name_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="file_number" class="col-sm-2 col-form-label">File Number<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="file_number" id="file_number" class="form-control" value="<?php echo $vendor_info['file_number']; ?>" placeholder="Last Name">
+                                    <?php if (!empty($file_number_error_msg)) {?>
+                                        <span class="error"><?php echo $file_number_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="account_number" class="col-sm-2 col-form-label">Account Number<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="account_number" id="account_number" class="form-control" placeholder="Email Address" value="<?php echo isset($vendor_info['account_number']) && !empty($vendor_info['account_number']) ? $vendor_info['account_number'] : '' ?>">
+                                    <?php if (!empty($email_error_msg)) {?>
+                                        <span class="error"><?php echo $email_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="aba" class="col-sm-2 col-form-label">ABA/Routing #<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="aba" id="aba" class="form-control" placeholder="Company Name" value="<?php echo isset($vendor_info['aba']) && !empty($vendor_info['aba']) ? $vendor_info['aba'] : '' ?>">
+                                    <?php if (!empty($aba_error_msg)) {?>
+                                        <span class="error"><?php echo $aba_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bank_name" class="col-sm-2 col-form-label">Bank Name<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="bank_name" id="bank_name" class="form-control" placeholder="Address" value="<?php echo isset($vendor_info['bank_name']) && !empty($vendor_info['bank_name']) ? $vendor_info['bank_name'] : '' ?>">
+                                    <?php if (!empty($bank_name_error_msg)) {?>
+                                        <span class="error"><?php echo $bank_name_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="admin_notes" class="col-sm-2 col-form-label">Admin Notes<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <textarea type="text" class="form-control" name="admin_notes" id="admin_notes" class="form-control" placeholder="Admin_notes" ><?php echo isset($vendor_info['admin_notes']) && !empty($vendor_info['admin_notes']) ? $vendor_info['admin_notes'] : '' ?></textarea>
+
+                                    <?php if (!empty($admin_notes_error_msg)) {?>
+                                        <span class="error"><?php echo $admin_notes_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-6">
+                                    <button type="submit" id="update-vendor" name="update-vendor" class="btn btn-info btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-save"></i>
+                                        </span>
+                                        <span class="text">Update</span>
+                                    </button>
+                                    <!-- <button type="submit" class="btn btn-secondary">Update</button> -->
+                                    <a href="<?php echo site_url('order/admin/vendors-list'); ?>" class="btn btn-secondary btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </span>
+                                        <span class="text">Cancel</span>
+                                    </a>
+                                </div>
+                                <!-- <a href="<?php echo base_url() . 'order/admin/agents'; ?>" id="cancel" name="cancel" class="btn btn-secondary">Cancel</a> -->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
