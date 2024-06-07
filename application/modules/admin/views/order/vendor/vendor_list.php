@@ -565,7 +565,7 @@ function editVendor(id, editFlag)
 					$('#aba').val(res_data.aba);
 					$('#bank_name').val(res_data.bank_name);
 					$('#note').val(res_data.notes);
-					$('#admin_note').val(res_data.admin_note);
+					$('#admin_note').val(res_data.admin_notes);
                     $('input, textarea').attr('disabled', true);
                     $('.form-footer').addClass('d-none');
                     if(editFlag) {
