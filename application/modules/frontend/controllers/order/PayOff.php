@@ -416,7 +416,7 @@ class PayOff extends MX_Controller
                     'bank_name' => $_POST['bank_name'],
                     'notes' => $_POST['notes'],
                     'submitted' => date('Y-m-d'),
-                    'approved_by' => $userdata['id'],
+                    // 'approved_by' => $userdata['id'],
                 );
                 $this->load->model('order/vendor_model');
                 $insert = $this->vendor_model->insert($vendorData);
