@@ -4222,6 +4222,116 @@ $(document).ready(function () {
         });
     }
 
+    if ($('#tbl-payoff-users-listing').length) {
+        payoff_user_list = $('#tbl-payoff-users-listing').DataTable({
+            /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1, 2] }
+            ],
+            "language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                // var $buttons = jQuery('.dt-buttons').hide();
+                // jQuery('#export_customer').on('click', function () {
+                //     var export_type = jQuery(this).attr('data-export-type');
+                //     if (export_type) {
+                //         var btnClass = '.buttons-' + export_type;
+                //     }
+                //     if (btnClass) $buttons.find(btnClass).click();
+                // })
+            },
+            dom: '<"FilterCredentialListing">lfrtip',
+
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_payoff_users_list", // json datasource
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-payoff-users-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-payoff-users-listing-listing_processing").css("display", "none");
+
+                }
+            },
+        });
+    }
+
+    if ($('#tbl-vendors-listing').length) {
+        vendor_list = $('#tbl-vendors-listing').DataTable({
+            /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1, 2] }
+            ],
+            "language": {
+                // searchPlaceholder: "Customer Number",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                // var $buttons = jQuery('.dt-buttons').hide();
+                // jQuery('#export_customer').on('click', function () {
+                //     var export_type = jQuery(this).attr('data-export-type');
+                //     if (export_type) {
+                //         var btnClass = '.buttons-' + export_type;
+                //     }
+                //     if (btnClass) $buttons.find(btnClass).click();
+                // })
+            },
+            dom: '<"FilterCredentialListing">lfrtip',
+
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "order/admin/get-vendor-list", // json datasource
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-vendors-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-vendors-listing-listing_processing").css("display", "none");
+
+                }
+            },
+        });
+    }
+
     if ($('#frm-add-sales-rep #accordionEx.accordion').length) {
         var collapse_class_id = $(".form-group .error").closest(".collapse").attr('id');
         $('#' + collapse_class_id).collapse('show');
@@ -4684,6 +4794,61 @@ function deleteTitleOfficer(id) {
         return false;
     }
 }
+
+function deletePayoffUser(id) {
+    if (id == '') {
+        alert('Payoff User ID is required.');
+        return false;
+    }
+
+    var ready = confirm("Are you sure want to delete?");
+
+    if (ready) {
+        $.ajax({
+            url: base_url + "order/admin/delete-payoff-user",
+            method: "POST",
+            data: {
+                id: id,
+                status: 0
+            },
+            success: function (data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('#payoff_user_success_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#payoff_user_success_msg").offset().top
+                    }, 1000);
+                    payoff_user_list.ajax.reload(null, false);
+                    setTimeout(function () {
+                        $('#payoff_user_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#payoff_user_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#payoff_user_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#payoff_user_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#payoff_user_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#payoff_user_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#payoff_user_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
 function download(filename, text) {
     if (navigator.msSaveBlob) {
         var csvData = base64toBlob(text, 'application/octet-stream');

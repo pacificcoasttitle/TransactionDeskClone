@@ -4314,4 +4314,96 @@ class Order
         $result = $query->result_array();
         return $result;
     }
+
+    public function get_vendors($params)
+    {
+        // $userdata = $this->CI->session->userdata('user');
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = trim($params['searchvalue']);
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like("pct_vendors.transctee_name", $keyword)
+                    ->or_like('pct_vendors.file_number', $keyword)
+                    ->or_like('pct_vendors.account_number', $keyword)
+                    ->or_like('pct_vendors.aba', $keyword)
+                    ->or_like('pct_vendors.bank_name', $keyword)
+                    ->or_like('pct_vendors.notes', $keyword)
+                    ->or_like('pct_vendors.admin_notes', $keyword)
+                    ->group_end();
+            }
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $venders_lists = array();
+
+            $this->CI->db->select('
+                    pct_vendors.id,
+                    pct_vendors.transctee_name,
+                    pct_vendors.file_number,
+                    pct_vendors.account_number,
+                    pct_vendors.aba,
+                    pct_vendors.bank_name,
+                    pct_vendors.submitted,
+                    pct_vendors.notes,
+                    pct_vendors.admin_notes,
+                    pct_vendors.approved_by,
+                    pct_vendors.is_approved,
+                    customer_basic_details.first_name,
+                    customer_basic_details.last_name,
+                ')
+                ->from('pct_vendors')
+                ->join('customer_basic_details', 'customer_basic_details.id = pct_vendors.approved_by', 'left')
+                ->where('is_approved', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+
+            if ($query->num_rows() > 0) {
+                $venders_lists = $query->result_array();
+            }
+        } else {
+
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $venders_lists = array();
+
+            $this->CI->db->select('
+                    pct_vendors.id,
+                    pct_vendors.transctee_name,
+                    pct_vendors.file_number,
+                    pct_vendors.account_number,
+                    pct_vendors.aba,
+                    pct_vendors.bank_name,
+                    pct_vendors.submitted,
+                    pct_vendors.notes,
+                    pct_vendors.admin_notes,
+                    pct_vendors.approved_by,
+                    pct_vendors.is_approved,
+                    customer_basic_details.first_name,
+                    customer_basic_details.last_name,
+                ')
+                ->from('pct_vendors')
+                ->join('customer_basic_details', 'customer_basic_details.id = pct_vendors.approved_by', 'left')
+                ->where('is_approved', 1);
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+
+            if ($query->num_rows() > 0) {
+                $venders_lists = $query->result_array();
+            }
+        }
+        // print_r($this->CI->db->last_query());die;
+        return array(
+            'recordsTotal' => count($venders_lists),
+            'recordsFiltered' => count($venders_lists),
+            'data' => $venders_lists,
+        );
+    }
 }

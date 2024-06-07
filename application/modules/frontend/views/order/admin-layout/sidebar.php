@@ -18,6 +18,7 @@ if ($userdata['is_sales_rep'] == 1) {
 } else {
     $dashboardUrl = base_url() . 'dashboard';
 }
+
 ?>
 
 	<!-- Sidebar - Brand -->
@@ -80,6 +81,14 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Dashboard Home</span>
 			</a>
 		</li>
+		<?php if ($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1) {?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'pay-off-dashboard') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>pay-off-dashboard">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Payoff Home</span>
+			</a>
+		</li>
+		<?php }?>
 	<?php } else if ($sidebar) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == 'title-officer-dashboard') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
