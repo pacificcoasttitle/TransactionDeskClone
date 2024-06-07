@@ -14,7 +14,7 @@ class PayOff extends MX_Controller
         $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->library('order/template');
-        $this->load->library('order/vendorTemplate');
+        $this->load->library('order/VendorTemplate');
         $this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/home_model');
