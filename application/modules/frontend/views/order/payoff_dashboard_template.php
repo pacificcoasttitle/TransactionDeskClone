@@ -32,7 +32,7 @@
 		document.cookie = "user_timezone="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";
     </script>
 </head>
-<body id="page-top">
+<body id="page-top sidebar-toggled">
     <div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="page-list-loader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="wrapper">

@@ -1,7 +1,7 @@
 <?php $userdata = $this->session->userdata('hr_admin');?>
 <!-- Sidebar -->
 <div class="pc__sidebar">
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
     <?php
 $userdata = $this->session->userdata('user');
 // echo "<pre>";
@@ -24,7 +24,7 @@ if ($userdata['is_sales_rep'] == 1) {
 	<!-- Sidebar - Brand -->
 	<a class="sidebar-brand d-flex align-items-center justify-content-center"
 		href="<?php echo $dashboardUrl; ?>">
-		<img style="width:200px;" src="<?php echo base_url(); ?>assets/backend/hr/img/logo2.png">
+		<img style="" class="payOffLogo w-70" src="<?php echo base_url(); ?>assets/backend/hr/img/pct_payoff_dashboard_logo.png">
 	</a>
 	<hr class="sidebar-divider my-0">
 

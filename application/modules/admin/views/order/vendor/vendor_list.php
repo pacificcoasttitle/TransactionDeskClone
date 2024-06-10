@@ -1,4 +1,8 @@
+<?php
+$payoff_user = isset($payoff_user) && !empty($payoff_user) ? $payoff_user : array();
+$payoff_user = json_encode($payoff_user);
 
+?>
 <style type="text/css">
 
 	table#orders_listing tr td:last-child {
@@ -90,11 +94,16 @@
 	}
 
 </style>
+<script>
+    var payoff_user_list = '<?php echo $payoff_user; ?>';
+
+    console.log('payoff_user_list ==', jQuery.parseJSON(payoff_user_list));
+</script>
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 	<div class="container-fluid pc__top-element">
         <div class="row mb-3">
             <div class="col-sm-6">
-                <h1 class="h3 text-gray-800"> Vendors </h1>
+                <h1 class="h3 text-gray-800"> <?=$pageTitle?> </h1>
             </div>
             <div class="col-sm-6">
                 <a href="<?php echo base_url() ?>order/admin/add-vendor"  class="btn btn-success btn-icon-split float-right mr-2">

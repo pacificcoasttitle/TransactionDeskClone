@@ -6,7 +6,7 @@
     background-color: #355f72;
 }
 #content-wrapper .navbar {
-    background-color: #043e59 !important;
+    background-color: #355f72 !important;
     height: auto;
     padding: 40px 25px 80px;
 }
@@ -16,8 +16,8 @@
 #content-wrapper .navbar h3 {
     padding: 0;
     color: #ffffff;
-    font-weight: 900;
-    font-size: 50px;
+    font-weight: 400;
+    font-size: 35px;
 }
 .pc__sidebar .sidebar {
     min-height: 130vh;

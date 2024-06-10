@@ -4347,13 +4347,16 @@ class Order
                     pct_vendors.notes,
                     pct_vendors.admin_notes,
                     pct_vendors.approved_by,
+                    pct_vendors.created_by,
                     pct_vendors.is_approved,
-                    customer_basic_details.first_name,
-                    customer_basic_details.last_name,
+                    pct_vendors.approved_date,
+                    admin.first_name,
+                    admin.last_name,
                 ')
                 ->from('pct_vendors')
-                ->join('customer_basic_details', 'customer_basic_details.id = pct_vendors.approved_by', 'left')
-                ->where('is_approved', 1);
+                ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
+                ->where('is_approved', 1)
+                ->order_by('pct_vendors.transctee_name', 'asc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);
@@ -4380,14 +4383,17 @@ class Order
                     pct_vendors.submitted,
                     pct_vendors.notes,
                     pct_vendors.admin_notes,
+                    pct_vendors.created_by,
                     pct_vendors.approved_by,
                     pct_vendors.is_approved,
-                    customer_basic_details.first_name,
-                    customer_basic_details.last_name,
+                    pct_vendors.approved_date,
+                    admin.first_name,
+                    admin.last_name,
                 ')
                 ->from('pct_vendors')
-                ->join('customer_basic_details', 'customer_basic_details.id = pct_vendors.approved_by', 'left')
-                ->where('is_approved', 1);
+                ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
+                ->where('is_approved', 1)
+                ->order_by('pct_vendors.transctee_name', 'asc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->CI->db->limit($limit, $offset);

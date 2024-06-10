@@ -41,7 +41,7 @@ class PayOff extends MX_Controller
         $data['name'] = $name;
         $data['user_email'] = $userdata['email'];
         $data['title'] = 'Payoff Dashboard | Pacific Coast Title Company';
-        $data['pageTitle'] = 'Payoffs';
+        $data['pageTitle'] = 'Pacific Coast Title - Approved Wire List';
         // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
         // $this->template->show("order/pay_off", "pay_off_dashboard", $data);
         $this->vendortemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
@@ -148,8 +148,10 @@ class PayOff extends MX_Controller
                 $nestedData[] = $order['account_number'];
                 $nestedData[] = $order['aba'];
                 $nestedData[] = $order['bank_name'];
-                $nestedData[] = date("Y/m/d", strtotime($order['submitted']));
-                $nestedData[] = $order['first_name'] . ' ' . $order['last_name'];
+                $nestedData[] = $order['created_by'] . ' ' . date("m/d/Y", strtotime($order['submitted']));
+                // $nestedData[] = $order['first_name'] . ' ' . $order['last_name'] . ' ' . date("m/d/Y @ g:i a", strtotime($order['approved_date']));
+                $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . date("m/d/Y @ g:i a", strtotime($order['approved_date'])) : '';
+
                 $nestedData[] = "<div style='display: flex; justify-content: space-around;' >
                                     <a href='javascript:void(0);' onclick='openNotes(" . '"' . $id . '"' . ", " . '"' . $notes . '"' . ", " . '"' . $admin_notes . '"' . ");' class='btn btn-secondary btn-icon-split'>
                                         <span class='icon text-white-50'>
@@ -416,7 +418,8 @@ class PayOff extends MX_Controller
                     'bank_name' => $_POST['bank_name'],
                     'notes' => $_POST['notes'],
                     'submitted' => date('Y-m-d'),
-                    // 'approved_by' => $userdata['id'],
+                    'created_by' => 'user',
+                    'created_by_id' => $userdata['id'],
                 );
                 $this->load->model('order/vendor_model');
                 $insert = $this->vendor_model->insert($vendorData);
