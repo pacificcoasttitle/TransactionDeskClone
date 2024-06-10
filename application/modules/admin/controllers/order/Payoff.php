@@ -497,7 +497,7 @@ class PayOff extends MX_Controller
                     'created_by' => 'admin',
                     'created_by_id' => $userdata['id'],
                     'approved_date' => date('Y-m-d H:i:s'),
-                    'approved_by' => $userdata['name'],
+                    'approved_by' => $userdata['id'],
                     'is_approved' => 1,
                 );
                 // $this->load->model('order/vendor_model');
