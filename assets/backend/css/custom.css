@@ -116,6 +116,15 @@
     -webkit-animation: spin 1s infinite linear;
     animation: spin 1s infinite linear;
 }
+
+.payOffLogo {
+    width: 100px !important;
+}
+
+.toggled .payOffLogo {
+    width: 70px !important;
+}
+
 /* .smart-forms input:checked + .checkbox {
     border: 3px solid #1fe61a !important;
 }

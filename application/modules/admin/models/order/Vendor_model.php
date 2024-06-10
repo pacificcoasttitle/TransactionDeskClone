@@ -37,13 +37,22 @@ class Vendor_model extends CI_Model
                     pct_vendors.submitted,
                     pct_vendors.notes,
                     pct_vendors.admin_notes,
+                    pct_vendors.created_by,
                     pct_vendors.approved_by,
                     pct_vendors.is_approved,
-                    customer_basic_details.first_name,
-                    customer_basic_details.last_name,
+                    pct_vendors.approved_date,
+                    admin.first_name,
+                    admin.last_name,
+                    a.first_name as a_first_name,
+                    a.last_name as a_last_name,
+                    c.first_name as c_first_name,
+                    c.last_name as c_last_name,
                 ')
                 ->from('pct_vendors')
-                ->join('customer_basic_details', 'customer_basic_details.id = pct_vendors.approved_by', 'left');
+                ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
+                ->join('admin as a', 'a.id = pct_vendors.created_by_id', 'left')
+                ->join('customer_basic_details as c', 'c.id = pct_vendors.created_by_id', 'left')
+                ->order_by('pct_vendors.transctee_name', 'asc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
@@ -59,7 +68,12 @@ class Vendor_model extends CI_Model
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
             $venders_lists = array();
+            $payoffUserId = isset($params['user_id']) && !empty($params['user_id']) ? $params['user_id'] : '';
 
+            if (isset($payoffUserId) && !empty($payoffUserId)) {
+                $this->db->where('pct_vendors.created_by', 'user');
+                $this->db->where('pct_vendors.created_by_id', $payoffUserId);
+            }
             $this->db->select('
                     pct_vendors.id,
                     pct_vendors.transctee_name,
@@ -70,13 +84,22 @@ class Vendor_model extends CI_Model
                     pct_vendors.submitted,
                     pct_vendors.notes,
                     pct_vendors.admin_notes,
+                    pct_vendors.created_by,
                     pct_vendors.approved_by,
                     pct_vendors.is_approved,
-                    customer_basic_details.first_name,
-                    customer_basic_details.last_name,
+                    pct_vendors.approved_date,
+                    admin.first_name,
+                    admin.last_name,
+                    a.first_name as a_first_name,
+                    a.last_name as a_last_name,
+                    c.first_name as c_first_name,
+                    c.last_name as c_last_name,
                 ')
                 ->from('pct_vendors')
-                ->join('customer_basic_details', 'customer_basic_details.id = pct_vendors.approved_by', 'left');
+                ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
+                ->join('admin as a', 'a.id = pct_vendors.created_by_id', 'left')
+                ->join('customer_basic_details as c', 'c.id = pct_vendors.created_by_id', 'left')
+                ->order_by('pct_vendors.transctee_name', 'asc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);

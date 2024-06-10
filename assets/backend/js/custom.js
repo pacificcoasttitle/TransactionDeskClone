@@ -4303,7 +4303,7 @@ $(document).ready(function () {
                 //     if (btnClass) $buttons.find(btnClass).click();
                 // })
             },
-            dom: '<"FilterCredentialListing">lfrtip',
+            dom: '<"FilterVendorListing">lfrtip',
 
             "drawCallback": function () {
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
@@ -4315,6 +4315,12 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "order/admin/get-vendor-list", // json datasource
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                data: function (d) {
+                    d.user_id = $('#FilterVendorListing').val();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -4326,11 +4332,27 @@ $(document).ready(function () {
                     }
                     $("#tbl-vendors-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-vendors-listing-listing_processing").css("display", "none");
-
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
         });
+
+        if (payoff_user_list) {
+            var obj = jQuery.parseJSON(payoff_user_list);
+            var options = '';
+            $.each(obj, function (key, value) {
+                options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
+            });
+            $("div.FilterVendorListing").html('<div class="col-sm-12" style="display: flex; justify-content: flex-end;"><label> User List: <select style="width:auto;" name="FilterVendorListing" id="FilterVendorListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label></div>');
+        }
+
     }
+
+    $("#FilterVendorListing").on("change", function () {
+        vendor_list.ajax.reload();
+    });
 
     if ($('#frm-add-sales-rep #accordionEx.accordion').length) {
         var collapse_class_id = $(".form-group .error").closest(".collapse").attr('id');

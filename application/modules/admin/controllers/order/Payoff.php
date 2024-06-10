@@ -40,7 +40,17 @@ class PayOff extends MX_Controller
         $data['name'] = $name;
         $data['user_email'] = $userdata['email'];
         $data['title'] = 'Payoff Admin Dashboard | Pacific Coast Title Company';
-        $data['pageTitle'] = 'Payoffs';
+        $data['pageTitle'] = 'Pacific Coast Title - Approved Wire List';
+
+        $con = array(
+            'where' => array(
+                'is_payoff_user' => 1,
+                'status' => 1,
+            ),
+        );
+        $data['payoff_user'] = $this->home_model->get_rows($con);
+        // echo "<pre>";
+        // print_r($data);die;
         // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
         // $this->template->show("order/pay_off", "pay_off_dashboard", $data);
         $this->admintemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
@@ -124,6 +134,7 @@ class PayOff extends MX_Controller
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['user_id'] = isset($_POST['user_id']) && !empty($_POST['user_id']) ? $_POST['user_id'] : '';
             $pageno = ($params['start'] / $params['length']) + 1;
             $order_lists = $this->vendor_model->get_vendors($params);
             $json_data['draw'] = intval($params['draw']);
@@ -137,7 +148,10 @@ class PayOff extends MX_Controller
         if (isset($order_lists['data']) && !empty($order_lists['data'])) {
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order) {
-                // onclick='openNotes(" . $order['id'] . "','" . $order['notes'] . "','" . $order['admin_notes'] . ");'
+                $createdBy = $order['a_first_name'] . ' ' . $order['a_last_name'];
+                if ($order['created_by'] == 'user') {
+                    $createdBy = $order['c_first_name'] . ' ' . $order['c_last_name'];
+                }
                 $nestedData = array();
                 $nestedData[] = $i;
                 $id = $order['id'];
@@ -149,8 +163,8 @@ class PayOff extends MX_Controller
                 $nestedData[] = $order['account_number'];
                 $nestedData[] = $order['aba'];
                 $nestedData[] = $order['bank_name'];
-                $nestedData[] = date("Y/m/d", strtotime($order['submitted']));
-                $nestedData[] = $order['first_name'] . ' ' . $order['last_name'];
+                $nestedData[] = $createdBy . ' ' . date("m/d/Y", strtotime($order['submitted']));
+                $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . date("m/d/Y @ g:i a", strtotime($order['approved_date'])) : '';
                 // $nestedData[] = $order['first_name'] . ' ' . $order['last_name'];
                 $isApproved = $order['is_approved'];
                 if ($isApproved == 1) {
@@ -225,7 +239,8 @@ class PayOff extends MX_Controller
 
         $data['is_approved'] = $status;
         $data['updated_at'] = date("Y-m-d H:i:s");
-        $data['approved_by'] = $name;
+        $data['approved_by'] = $userdata['id'];
+        $data['approved_date'] = date("Y-m-d H:i:s");
 
         // $user = $this->home_model->get_user($condition);
         $condition = array(
@@ -329,7 +344,8 @@ class PayOff extends MX_Controller
                         'aba' => $_POST['aba'],
                         'bank_name' => $_POST['bank_name'],
                         'admin_notes' => $_POST['admin_notes'],
-                        'submitted' => date('Y-m-d'),
+                        // 'submitted' => date('Y-m-d'),
+                        'approved_date' => date('Y-m-d H:i:s'),
                         'approved_by' => $userdata['id'],
                         'is_approved' => 1,
                     );
@@ -477,8 +493,11 @@ class PayOff extends MX_Controller
                     'aba' => $_POST['aba'],
                     'bank_name' => $_POST['bank_name'],
                     'admin_notes' => $_POST['admin_notes'],
-                    'submitted' => date('Y-m-d'),
-                    'approved_by' => $userdata['id'],
+                    'submitted' => date('Y-m-d H:i:s'),
+                    'created_by' => 'admin',
+                    'created_by_id' => $userdata['id'],
+                    'approved_date' => date('Y-m-d H:i:s'),
+                    'approved_by' => $userdata['name'],
                     'is_approved' => 1,
                 );
                 // $this->load->model('order/vendor_model');
