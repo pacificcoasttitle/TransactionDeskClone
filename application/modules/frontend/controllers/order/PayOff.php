@@ -136,7 +136,10 @@ class PayOff extends MX_Controller
         if (isset($order_lists['data']) && !empty($order_lists['data'])) {
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order) {
-                // onclick='openNotes(" . $order['id'] . "','" . $order['notes'] . "','" . $order['admin_notes'] . ");'
+                $createdBy = $order['a_first_name'] . ' ' . $order['a_last_name'];
+                if ($order['created_by'] == 'user') {
+                    $createdBy = $order['c_first_name'] . ' ' . $order['c_last_name'];
+                }
                 $nestedData = array();
                 $nestedData[] = $i;
                 $id = $order['id'];
@@ -148,7 +151,7 @@ class PayOff extends MX_Controller
                 $nestedData[] = $order['account_number'];
                 $nestedData[] = $order['aba'];
                 $nestedData[] = $order['bank_name'];
-                $nestedData[] = $order['created_by'] . ' ' . date("m/d/Y", strtotime($order['submitted']));
+                $nestedData[] = $createdBy . ' ' . date("m/d/Y", strtotime($order['submitted']));
                 // $nestedData[] = $order['first_name'] . ' ' . $order['last_name'] . ' ' . date("m/d/Y @ g:i a", strtotime($order['approved_date']));
                 $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . date("m/d/Y @ g:i a", strtotime($order['approved_date'])) : '';
 
