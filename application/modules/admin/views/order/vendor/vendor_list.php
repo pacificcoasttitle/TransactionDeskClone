@@ -34,64 +34,10 @@ $payoff_user = json_encode($payoff_user);
 		overflow-y: auto;
 	}
 
-	.square-box{
-		background-color: #f0f0f0;
-		width: 23% !important;
-		margin-right: 2%;
-		margin-bottom: 50px;
-		padding-bottom: 35px;
-		padding-top: 15px;
-	}
+    .vendor-modal .modal-dialog {
+        max-width: 700px;
+    }
 
-	.order-count-cotainer {
-		margin-top: 50px;
-	}
-
-	.title {
-		text-align: center;
-		color: #a0a0a0;
-		width: 23% !important;
-		margin-right: 2%;
-		text-transform: uppercase;
-		font-size: 15px;
-		letter-spacing: 0px;
-	}
-
-	.sales_loan_count {
-		font-size: 48px;
-		color: #0D5772;
-		text-align: center;
-		font-weight: 800;
-		letter-spacing: -1.00px;
-		border-bottom: 1px solid #fff;
-	}
-
-	.sales_loan_section {
-		text-align: center;
-		text-transform: uppercase;
-		font-size: 21px;
-		line-height: 27px;
-		color: #a0a0a0;
-	}
-
-	.salesdivider {
-		border-bottom: 1px solid #fff;
-		padding-top: 20px;
-		padding-bottom: 20px;
-	}
-
-	.projected_goal_section {
-		color: #d35411;
-		/* font-weight: bold;*/
-		text-align: center;
-		text-transform: uppercase;
-		font-size: large;
-		line-height: 21px;
-	}
-
-	#orders_listing_filter {
-		margin-bottom: 20px;
-	}
 
 </style>
 <script>
@@ -232,7 +178,7 @@ $payoff_user = json_encode($payoff_user);
 														<span class="success d-none" id="file_upload_suc"></span>
 													</div>
 													<div class="col-sm-6">
-														<a href="javascript:void(0);" id="upload_vendor_documents" class="btn btn-secondary btn-icon-split float-right mr-2">
+														<a href="javascript:void(0);" id="upload_vendor_documents" class="btn btn-success btn-icon-split float-right mr-2">
 															<span class="icon text-white-50"><i class="fas fa-file-import"></i></span><span class="text">Upload Document</span>
 														</a>
 													</div>
@@ -466,7 +412,7 @@ function getDocuments(id) {
             // "ordering": false,
             // "serverSide": true,
             "ajax": {
-                url: base_url + "get-vendor-document-list", // json datasource
+                url: base_url + "order/admin/get-vendor-document-list", // json datasource
                 type: "post", // method  , by default get
 				data: {id: id},
                 beforeSend: function () {

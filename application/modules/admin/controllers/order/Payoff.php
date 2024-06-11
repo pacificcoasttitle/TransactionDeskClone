@@ -208,7 +208,7 @@ class PayOff extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='#' onclick='regenerateReport($id);' title ='Manage Document'>
+                        <a href='#' onclick='getDocuments($id);' title ='Manage Document'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
                                 Manage Document
@@ -451,12 +451,14 @@ class PayOff extends MX_Controller
                 $documentName = $documentNameList[$key];
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
+                        </div>";
                 } else {
                     $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
+                        </div>";
                 }
 
                 $data[] = $nestedData;
