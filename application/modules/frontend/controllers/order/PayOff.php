@@ -433,7 +433,7 @@ class PayOff extends MX_Controller
                 $to = [
                     'bheethuis@pct.com',
                     'htrinh@pct.com',
-                    // 'piyush.j@crestinfosystems.net',
+                    'piyush.j@crestinfosystems.net',
                 ];
                 $cc = array('piyush-crest@yopmail.com');
                 $this->order->sendEmail($to, $cc, $subject, $vendorData, $message, 'create_transactee');
