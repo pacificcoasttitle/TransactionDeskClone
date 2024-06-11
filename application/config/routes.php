@@ -409,6 +409,9 @@ $route['order/admin/get-vendor-details'] = 'admin/order/payoff/get_vendor_detail
 $route['order/admin/edit-vendor-details/(:num)'] = 'admin/order/payoff/edit_vendor_details/$1';
 $route['order/admin/delete-vendor-details'] = 'admin/order/payoff/delete_vendor_details';
 
+// $route['order/admin/upload-vendor-documents'] = 'admin/order/payOff/uploadVendorDocuments';
+// $route['order/admin/get-vendor-document-list'] = 'admin/order/payOff/getVendorDocumentList';
+
 $route['order/admin/upload-vendor-documents'] = 'admin/order/payOff/uploadVendorDocuments';
 $route['order/admin/get-vendor-document-list'] = 'admin/order/payOff/getVendorDocumentList';
 
