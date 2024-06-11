@@ -412,7 +412,7 @@ function getDocuments(id) {
             // "ordering": false,
             // "serverSide": true,
             "ajax": {
-                url: base_url + "order/admin/get-vendor-document-listtt", // json datasource
+                url: base_url + "order/admin/get-vendor-document-list", // json datasource
                 type: "post", // method  , by default get
 				data: {id: id},
                 beforeSend: function () {
