@@ -209,4 +209,25 @@ class Common
         }
         return $roleList;
     }
+
+    public function checkRoleAccess()
+    {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata)) {
+            if ($userdata['role_id'] == 5) {
+                // if ($this->CI->uri->uri_string() == 'order/admin/vendors-list' ||
+                //     $this->CI->uri->uri_string() == 'order/admin/payoff-users' ||
+                //     $this->CI->uri->segment(3) == 'payoff-users' ||
+                //     $this->CI->uri->uri_string() == 'order/admin/add-payoff-user' ||
+                //     $this->CI->uri->uri_string(3) == 'order/admin/edit-payoff-user') {
+                //     return true;
+                // }
+                // echo "<pre>";
+                // print_r($userdata);die;
+                redirect(base_url() . 'order/admin/vendors-list');
+            } else {
+                return true;
+            }
+        }
+    }
 }

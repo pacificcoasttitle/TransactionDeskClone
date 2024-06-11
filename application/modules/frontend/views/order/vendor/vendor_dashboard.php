@@ -26,7 +26,7 @@
 	}
 
 	.modal-body{
-		height: 700px;
+		height: auto;
 		overflow-y: auto;
 	}
 
@@ -103,7 +103,7 @@
 					<span>
 						<i class="fas fa-users"></i>
 					</span>
-					<h6 class="m-0 font-weight-bold text-primary pl-10">Below is order list of vendos</h6>
+					<h6 class="m-0 font-weight-bold text-primary pl-10"> Below is order list of approved Transactee/Beneficiaries </h6>
 				</div>
 			</div>
 			<?php if (!empty($success)) {?>

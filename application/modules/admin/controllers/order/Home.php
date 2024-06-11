@@ -33,10 +33,12 @@ class Home extends MX_Controller
         $this->load->library('order/common');
         $this->load->library('order/order');
         $this->common->is_admin();
+
     }
 
     public function index()
     {
+        $this->common->checkRoleAccess();
         $data = array();
         // $data['title'] = 'PCT Order: Dashboard';
         $order_filter = ['for_month' => date('m'), 'for_year' => date('Y')];
