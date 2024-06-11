@@ -426,10 +426,18 @@ class PayOff extends MX_Controller
                 );
                 $this->load->model('order/vendor_model');
                 $insert = $this->vendor_model->insert($vendorData);
-                /** Save user Activity */
-                // $activity = 'Transctee created :- ' . $_POST['transctee_name'];
-                // $this->common->logAdminActivity($activity);
-                /** End save user activity */
+                $vendorData['submitted_by'] = $userdata['name'];
+                $message = $this->load->view('frontend/emails/create_transactee.php', $vendorData, true);
+
+                $subject = 'New Payoff: Approval Needed';
+                $to = [
+                    'bheethuis@pct.com',
+                    'htrinh@pct.com',
+                    // 'piyush.j@crestinfosystems.net',
+                ];
+                $cc = array('piyush-crest@yopmail.com');
+                $this->order->sendEmail($to, $cc, $subject, $vendorData, $message, 'create_transactee');
+
                 if ($insert) {
                     $data['success_msg'] = 'Vendor created successfully.';
                 } else {

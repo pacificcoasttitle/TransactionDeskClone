@@ -4412,4 +4412,24 @@ class Order
             'data' => $venders_lists,
         );
     }
+
+    public function sendEmail($to, $cc, $subject, $data, $message, $logName)
+    {
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+
+        $this->CI->load->helper('sendemail');
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', $logName, '', $mailParams, array(), 0, 0);
+        $email_send_status = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', $logName, '', $mailParams, array('status' => $email_send_status), 0, $logid);
+    }
 }
