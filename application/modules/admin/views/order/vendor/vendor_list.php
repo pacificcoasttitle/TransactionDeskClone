@@ -38,6 +38,12 @@ $payoff_user = json_encode($payoff_user);
         max-width: 700px;
     }
 
+    .success {
+        color: #28a745 !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+        padding-top: 10px !important;
+    }
 
 </style>
 <script>

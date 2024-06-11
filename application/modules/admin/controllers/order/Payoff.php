@@ -451,12 +451,12 @@ class PayOff extends MX_Controller
                 $documentName = $documentNameList[$key];
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download target='_blank'><i class='fas fa-fw fa-download'></i></a>
                         <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
                         </div>";
                 } else {
                     $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download target='_blank'><i class='fas fa-fw fa-download'></i></a>
                         <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
                         </div>";
                 }

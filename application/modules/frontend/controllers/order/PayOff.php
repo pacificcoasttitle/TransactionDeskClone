@@ -269,12 +269,14 @@ class PayOff extends MX_Controller
                 $documentName = $documentNameList[$key];
                 if (env('AWS_ENABLE_FLAG') == 1) {
                     $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' target='_blank'  download><i class='fas fa-fw fa-download'></i></a>
+                        <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
+                        </div>";
                 } else {
                     $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download target='_blank'><i class='fas fa-fw fa-download'></i></a>
+                        <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
+                        </div>";
                 }
 
                 $data[] = $nestedData;
