@@ -412,8 +412,8 @@ $route['order/admin/delete-vendor-details'] = 'admin/order/payoff/delete_vendor_
 // $route['order/admin/upload-vendor-documents'] = 'admin/order/payOff/uploadVendorDocuments';
 // $route['order/admin/get-vendor-document-list'] = 'admin/order/payOff/getVendorDocumentList';
 
-$route['order/admin/upload-vendor-documents'] = 'admin/order/payOff/uploadVendorDocuments';
-$route['order/admin/get-vendor-document-list'] = 'admin/order/payOff/getVendorDocumentList';
+$route['order/admin/upload-vendor-documents'] = 'admin/order/payoff/uploadVendorDocuments';
+$route['order/admin/get-vendor-document-list'] = 'admin/order/payoff/getVendorDocumentList';
 
 $route['order/admin/admin_users'] = 'admin/order/adminUsers/index';
 $route['order/admin/admin_users_email'] = 'admin/order/adminUsers/email_check';
