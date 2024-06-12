@@ -36,8 +36,8 @@ if ($userdata['is_sales_rep'] == 1) {
 			</a>
 		</li>
         <hr class="sidebar-divider my-0">
-		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'add-vendor') {echo 'active';}?>">
-			<a class="nav-link" href="<?php echo base_url(); ?>add-vendor">
+		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'add-transactee') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>add-transactee">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Add New Transactee</span>
 			</a>

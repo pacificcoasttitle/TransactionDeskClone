@@ -414,7 +414,7 @@ $roleName = $roleList[$role_id];
 
 		<?php if ($role_id == 1 || $role_id == 5) {
     $payoffSectionLink = false;
-    if ($this->uri->uri_string() == 'order/admin/vendors-list' ||
+    if ($this->uri->uri_string() == 'order/admin/transactees-list' ||
         $this->uri->uri_string() == 'order/admin/payoff-users' ||
         $this->uri->segment(3) == 'payoff-users' ||
         $this->uri->uri_string() == 'order/admin/add-payoff-user' ||
@@ -422,16 +422,16 @@ $roleName = $roleList[$role_id];
     ) {$payoffSectionLink = true;}
     ?>
 		<li class="nav-item <?php if ($payoffSectionLink) {echo 'active';}?>">
-			<a class="nav-link <?php if (!$payoffSectionLink) {echo 'collapsed';}?>" href="#" id="li_vendors" role="button" data-toggle="collapse" data-target="#li_vendors_list"  aria-haspopup="true" aria-expanded="false">
+			<a class="nav-link <?php if (!$payoffSectionLink) {echo 'collapsed';}?>" href="#" id="li_transactees" role="button" data-toggle="collapse" data-target="#li_transactees_list"  aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-fw fa-gear"></i>
 				<span>Payoffs</span>
 			</a>
-			<div class="collapse <?php if ($payoffSectionLink) {echo 'show';}?>" aria-labelledby="li_vendors" id="li_vendors_list">
+			<div class="collapse <?php if ($payoffSectionLink) {echo 'show';}?>" aria-labelledby="li_transactees" id="li_transactees_list">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/payoff-users' || $this->uri->segment(3) == 'payoff-users' || $this->uri->uri_string() == 'order/admin/add-payoff-user' || $this->uri->uri_string(3) == 'order/admin/edit-payoff-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/payoff-users'; ?>">Payoff Team</a>
 
-					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/vendors-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/vendors-list'; ?>">
-						Vendors List
+					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/transactees-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/transactees-list'; ?>">
+						Transactee List
 					</a>
 
 				</div>

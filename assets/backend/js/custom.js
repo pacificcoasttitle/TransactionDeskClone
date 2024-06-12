@@ -4277,8 +4277,8 @@ $(document).ready(function () {
         });
     }
 
-    if ($('#tbl-vendors-listing').length) {
-        vendor_list = $('#tbl-vendors-listing').DataTable({
+    if ($('#tbl-transactees-listing').length) {
+        transactee_list = $('#tbl-transactees-listing').DataTable({
             /*"pageLength": 2,*/
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
@@ -4286,7 +4286,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1, 2] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Search",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -4303,7 +4303,7 @@ $(document).ready(function () {
                 //     if (btnClass) $buttons.find(btnClass).click();
                 // })
             },
-            dom: '<"FilterVendorListing">lfrtip',
+            dom: '<"FilterTransacteeListing">lfrtip',
 
             "drawCallback": function () {
                 $('.dataTables_paginate > .pagination li').addClass('page-item');
@@ -4313,13 +4313,13 @@ $(document).ready(function () {
             "ordering": false,
             "serverSide": true,
             "ajax": {
-                url: base_url + "order/admin/get-vendor-list", // json datasource
+                url: base_url + "order/admin/get-transactee-list", // json datasource
                 type: "post",
                 beforeSend: function () {
                     $("#page-preloader").show();
                 },
                 data: function (d) {
-                    d.user_id = $('#FilterVendorListing').val();
+                    d.user_id = $('#FilterTransacteeListing').val();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -4330,8 +4330,8 @@ $(document).ready(function () {
                             location.reload();
                         }, 1000);
                     }
-                    $("#tbl-vendors-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
-                    $("#tbl-vendors-listing-listing_processing").css("display", "none");
+                    $("#tbl-transactees-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-transactees-listing-listing_processing").css("display", "none");
                 },
                 complete: function () {
                     $("#page-preloader").hide();
@@ -4345,13 +4345,13 @@ $(document).ready(function () {
             $.each(obj, function (key, value) {
                 options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
             });
-            $("div.FilterVendorListing").html('<div class="col-sm-12" style="display: flex; justify-content: flex-end;"><label> User List: <select style="width:auto;" name="FilterVendorListing" id="FilterVendorListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label></div>');
+            $("div.FilterTransacteeListing").html('<div class="col-sm-12" style="display: flex; justify-content: flex-end;"><label> User List: <select style="width:auto;" name="FilterTransacteeListing" id="FilterTransacteeListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label></div>');
         }
 
     }
 
-    $("#FilterVendorListing").on("change", function () {
-        vendor_list.ajax.reload();
+    $("#FilterTransacteeListing").on("change", function () {
+        transactee_list.ajax.reload();
     });
 
     if ($('#frm-add-sales-rep #accordionEx.accordion').length) {

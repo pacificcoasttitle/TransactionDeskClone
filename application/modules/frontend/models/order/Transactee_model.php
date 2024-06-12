@@ -1,5 +1,5 @@
 <?php
-class Vendor_model extends CI_Model
+class Transactee_model extends CI_Model
 {
     public function __construct()
     {

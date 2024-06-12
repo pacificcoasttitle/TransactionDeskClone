@@ -4315,11 +4315,27 @@ class Order
         return $result;
     }
 
-    public function get_vendors($params)
+    public function get_transactees($params)
     {
         // $userdata = $this->CI->session->userdata('user');
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = trim($params['searchvalue']);
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like("pct_vendors.transctee_name", $keyword)
+                    ->or_like('pct_vendors.file_number', $keyword)
+                    ->or_like('pct_vendors.account_number', $keyword)
+                    ->or_like('pct_vendors.aba', $keyword)
+                    ->or_like('pct_vendors.bank_name', $keyword)
+                    ->or_like('pct_vendors.notes', $keyword)
+                    ->or_like('pct_vendors.admin_notes', $keyword)
+                    ->group_end();
+            }
+
+            $this->CI->db->from('pct_vendors');
+            $this->CI->db->where('is_approved', 1);
+            $filter_total_records = $this->CI->db->count_all_results();
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->CI->db->group_start()
@@ -4371,6 +4387,11 @@ class Order
 
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+
+            $this->CI->db->from('pct_vendors');
+            $this->CI->db->where('is_approved', 1);
+            $filter_total_records = $this->CI->db->count_all_results();
+
             $venders_lists = array();
 
             $this->CI->db->select('
@@ -4407,8 +4428,8 @@ class Order
         }
         // print_r($this->CI->db->last_query());die;
         return array(
-            'recordsTotal' => count($venders_lists),
-            'recordsFiltered' => count($venders_lists),
+            'recordsTotal' => $filter_total_records,
+            'recordsFiltered' => $filter_total_records,
             'data' => $venders_lists,
         );
     }

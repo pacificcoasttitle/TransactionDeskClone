@@ -16,13 +16,13 @@ class PayOff extends MX_Controller
         $this->load->library('order/adminTemplate');
         $this->load->model('order/home_model');
         $this->load->model('order/order_model');
-        $this->load->model('order/vendor_model');
+        $this->load->model('order/transactee_model');
         $this->load->library('order/common');
         $this->load->library('order/order');
         $this->common->is_admin();
     }
 
-    public function vendors_list()
+    public function transactees_list()
     {
         $data['errors'] = array();
         $data['success'] = array();
@@ -55,8 +55,8 @@ class PayOff extends MX_Controller
         // $this->template->show("order/pay_off", "pay_off_dashboard", $data);
         $this->admintemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
 
-        // $this->admintemplate->addCSS(base_url('assets/backend/css/vendor.css?v=payoff_' . $this->payoff_js_version));
-        $this->admintemplate->show("order/vendor", "vendor_list", $data);
+        // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        $this->admintemplate->show("order/transactee", "transactee_list", $data);
     }
 
     public function get_pay_off_orders()
@@ -121,7 +121,7 @@ class PayOff extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function get_vendors_list()
+    public function get_transactees_list()
     {
         $params = array();
         $data = array();
@@ -136,11 +136,11 @@ class PayOff extends MX_Controller
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
             $params['user_id'] = isset($_POST['user_id']) && !empty($_POST['user_id']) ? $_POST['user_id'] : '';
             $pageno = ($params['start'] / $params['length']) + 1;
-            $order_lists = $this->vendor_model->get_vendors($params);
+            $order_lists = $this->transactee_model->get_transactees($params);
             $json_data['draw'] = intval($params['draw']);
         } else {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $order_lists = $this->vendor_model->get_vendors($params);
+            $order_lists = $this->transactee_model->get_transactees($params);
         }
         // echo "<pre>";
         // print_r($order_lists);die;
@@ -172,11 +172,11 @@ class PayOff extends MX_Controller
                 } else {
                     $checked = '';
                 }
-                $nestedData[] = "<input $checked class='$isApproved' onclick='activateVendor();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                $nestedData[] = "<input $checked class='$isApproved' onclick='activateTransactee();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
 
                 // $editOrderUrl = 'test';
-                $editOrderUrl = base_url() . 'order/admin/edit-vendor-details/' . $id;
-                $deleteOrderUrl = base_url() . 'order/admin/delete-vendor-details/' . $id;
+                $editOrderUrl = base_url() . 'order/admin/edit-transactee-details/' . $id;
+                $deleteOrderUrl = base_url() . 'order/admin/delete-transactee-details/' . $id;
 
                 $action = "<div class='dropdown'>
                 <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
@@ -184,7 +184,7 @@ class PayOff extends MX_Controller
                 </a>
                 <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
                     <li>
-                        <a href='javascript:void(0)' onclick='editVendor($id, false);' title ='View Vendor Detail'>
+                        <a href='javascript:void(0)' onclick='editTransactee($id, false);' title ='View Transactee Detail'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
                                 View
@@ -192,7 +192,7 @@ class PayOff extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='$editOrderUrl' title ='Edit Vendor Detail'>
+                        <a href='$editOrderUrl' title ='Edit Transactee Detail'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-edit' aria-hidden='true' style='margin-right:5px;'></i>
                                 Edit
@@ -200,7 +200,7 @@ class PayOff extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='#' onclick='deleteVendor($id);' title ='Delete Vendor'>
+                        <a href='#' onclick='deleteTransactee($id);' title ='Delete Transactee'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-fw fa-trash' aria-hidden='true' style='margin-right:5px;'></i>
                                 Delete
@@ -228,7 +228,7 @@ class PayOff extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function update_vendor_status()
+    public function update_transactee_status()
     {
         $id = $this->input->post('id');
         $status = $this->input->post('status');
@@ -252,26 +252,26 @@ class PayOff extends MX_Controller
         /** End Save user activity */
         $res = $this->db->update('pct_vendors', $data, $condition);
         // print_r($res);die;
-        $data = array('status' => 'success', 'msg' => 'Vendor status updated successfully.');
+        $data = array('status' => 'success', 'msg' => 'Transactee status updated successfully.');
         echo json_encode($data);
     }
 
-    public function uploadVendorDocuments()
+    public function uploadTransacteeDocuments()
     {
-        $vendorId = $_POST['vendor_id'];
+        $transacteeId = $_POST['transactee_id'];
 
-        $this->load->model('order/vendor_model');
-        $config['upload_path'] = './uploads/vendor-upload-doc/';
+        $this->load->model('order/transactee_model');
+        $config['upload_path'] = './uploads/transactee-upload-doc/';
         $config['allowed_types'] = 'pdf';
         $config['max_size'] = 12000;
         $this->load->library('upload', $config);
 
-        if (!is_dir('/uploads/vendor-upload-doc')) {
-            mkdir('./uploads/vendor-upload-doc', 0777, true);
+        if (!is_dir('/uploads/transactee-upload-doc')) {
+            mkdir('./uploads/transactee-upload-doc', 0777, true);
         }
 
-        if (!empty($_FILES['vendor_documents']['name'])) {
-            if (!$this->upload->do_upload('vendor_documents')) {
+        if (!empty($_FILES['transactee_documents']['name'])) {
+            if (!$this->upload->do_upload('transactee_documents')) {
                 $errorMsg = $this->upload->display_errors();
                 $data = array(
                     "error" => $errorMsg,
@@ -283,22 +283,22 @@ class PayOff extends MX_Controller
                 $data = $this->upload->data();
                 $contents = file_get_contents($data['full_path']);
                 $document_name = date('YmdHis') . "_" . $data['file_name'];
-                rename(FCPATH . "/uploads/vendor-upload-doc/" . $data['file_name'], FCPATH . "/uploads/vendor-upload-doc/" . $document_name);
+                rename(FCPATH . "/uploads/transactee-upload-doc/" . $data['file_name'], FCPATH . "/uploads/transactee-upload-doc/" . $document_name);
 
-                $this->order->uploadDocumentOnAwsS3($document_name, 'vendor-upload-doc');
+                $this->order->uploadDocumentOnAwsS3($document_name, 'transactee-upload-doc');
 
-                $this->load->model('order/vendor_model');
+                $this->load->model('order/transactee_model');
 
-                $getVendorDetails = $this->vendor_model->getDetails($vendorId);
-                $originalDocumentNameList = !empty($getVendorDetails['document_original_names']) ? json_decode($getVendorDetails['document_original_names'], true) : [];
-                $documentNameList = !empty($getVendorDetails['document_names']) ? json_decode($getVendorDetails['document_names'], true) : [];
+                $getTransacteeDetails = $this->transactee_model->getDetails($transacteeId);
+                $originalDocumentNameList = !empty($getTransacteeDetails['document_original_names']) ? json_decode($getTransacteeDetails['document_original_names'], true) : [];
+                $documentNameList = !empty($getTransacteeDetails['document_names']) ? json_decode($getTransacteeDetails['document_names'], true) : [];
                 array_push($originalDocumentNameList, $data['file_name']);
                 array_push($documentNameList, $document_name);
-                $condition['id'] = $vendorId;
-                $vendorData['document_original_names'] = json_encode($originalDocumentNameList);
-                $vendorData['document_names'] = json_encode($documentNameList);
-                // print_r($vendorData);die;
-                $res = $this->vendor_model->update($vendorData, $condition);
+                $condition['id'] = $transacteeId;
+                $transacteeData['document_original_names'] = json_encode($originalDocumentNameList);
+                $transacteeData['document_names'] = json_encode($documentNameList);
+                // print_r($transacteeData);die;
+                $res = $this->transactee_model->update($transacteeData, $condition);
                 // $documentId = $this->document->insert($documentData);
 
                 if ($res) {
@@ -319,11 +319,11 @@ class PayOff extends MX_Controller
         echo json_encode($data);exit;
     }
 
-    public function edit_vendor_details($id)
+    public function edit_transactee_details($id)
     {
         $data = array();
-        $data['title'] = 'PCT Order: Edit Admin Vendor';
-        $data['pageTitle'] = 'Vendor';
+        $data['title'] = 'PCT Order: Edit Admin Transactee';
+        $data['pageTitle'] = 'Transactee';
         $id = $this->uri->segment('4');
 
         if (isset($id) && !empty($id)) {
@@ -337,7 +337,7 @@ class PayOff extends MX_Controller
                 // $this->form_validation->set_rules('notes', 'Notes', 'required', array('required' => 'Please Enter Notes'));
 
                 if ($this->form_validation->run() == true) {
-                    $vendorData = array(
+                    $transacteeData = array(
                         'transctee_name' => $_POST['transctee_name'],
                         'file_number' => $_POST['file_number'],
                         'account_number' => $_POST['account_number'],
@@ -350,13 +350,13 @@ class PayOff extends MX_Controller
                         'is_approved' => 1,
                     );
                     $condition = array('id' => $id);
-                    $update = $this->vendor_model->update($vendorData, $condition);
+                    $update = $this->transactee_model->update($transacteeData, $condition);
                     /** Save user Activity */
-                    $activity = 'vendor updated :- ' . $_POST['email_address'];
+                    $activity = 'transactee updated :- ' . $_POST['email_address'];
                     $this->common->logAdminActivity($activity);
                     /** End save user activity */
                     if ($update) {
-                        $data['success_msg'] = 'Vendor updated successfully.';
+                        $data['success_msg'] = 'Transactee updated successfully.';
                     } else {
                         $data['error_msg'] = 'Error occurred while updating Title Officer';
                     }
@@ -370,19 +370,19 @@ class PayOff extends MX_Controller
                 }
             }
 
-            $vendor_info = $this->vendor_model->getDetails($id);
+            $transactee_info = $this->transactee_model->getDetails($id);
         } else {
-            redirect('order/admin/vendors-list');
+            redirect('order/admin/transactees-list');
         }
-        $data['vendor_info'] = $vendor_info;
+        $data['transactee_info'] = $transactee_info;
         // print_r($data);die;
-        $this->admintemplate->show("order/vendor", "edit_vendor", $data);
+        $this->admintemplate->show("order/transactee", "edit_transactee", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/title/edit_title_officer', $data);
         // $this->load->view('order/layout/footer', $data);
     }
 
-    public function delete_vendor_details()
+    public function delete_transactee_details()
     {
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
@@ -391,33 +391,33 @@ class PayOff extends MX_Controller
             $payoffUserData = array('status' => 0);
             $condition = array('id' => $id);
             // $payoffUser = $this->payoff_model->getPayoffUsers($condition);
-            $deleted = $this->vendor_model->delete($condition);
+            $deleted = $this->transactee_model->delete($condition);
             if ($deleted) {
                 /** Save user Activity */
-                $activity = 'Vendor user deleted :- ' . $payoffUser['email_address'];
+                $activity = 'Transactee user deleted :- ' . $payoffUser['email_address'];
                 $this->common->logAdminActivity($activity);
                 /** End save user activity */
-                $successMsg = 'Vendor user deleted successfully.';
+                $successMsg = 'Transactee user deleted successfully.';
                 $response = array('status' => 'success', 'message' => $successMsg);
             }
         } else {
-            $msg = 'Vendor ID is required.';
+            $msg = 'Transactee ID is required.';
             $response = array('status' => 'error', 'message' => $msg);
         }
         echo json_encode($response);
     }
 
-    public function get_vendor_details()
+    public function get_transactee_details()
     {
-        $vendorId = $this->input->post('vendor_id');
-        if ($vendorId) {
-            $getVendorDetails = $this->vendor_model->getDetails($vendorId);
+        $transacteeId = $this->input->post('transactee_id');
+        if ($transacteeId) {
+            $getTransacteeDetails = $this->transactee_model->getDetails($transacteeId);
 
             // $return_data = array('status' => false, 'data' => []);
-            if (!empty($getVendorDetails)) {
+            if (!empty($getTransacteeDetails)) {
                 $return_data['status'] = true;
                 $return_data['message'] = 'Data Fetched successfully.';
-                $return_data['data'] = $getVendorDetails;
+                $return_data['data'] = $getTransacteeDetails;
             }
         } else {
             $return_data['status'] = false;
@@ -426,21 +426,21 @@ class PayOff extends MX_Controller
         }
         echo json_encode($return_data);
     }
-    public function getVendorDocumentList()
+    public function getTransacteeDocumentList()
     {
         $params = array();
         $data = array();
         if (isset($_POST['id']) && !empty($_POST['id'])) {
-            $vendorId = $_POST['id'];
-            $this->load->model('order/vendor_model');
-            $getVendorDetails = $this->vendor_model->getDetails($vendorId);
+            $transacteeId = $_POST['id'];
+            $this->load->model('order/transactee_model');
+            $getTransacteeDetails = $this->transactee_model->getDetails($transacteeId);
         } else {
             $json_data['status'] = 'error';
             $json_data['message'] = 'Invalid request!';
             echo json_encode($json_data);exit;
         }
-        $originalDocumentNameList = !empty($getVendorDetails['document_original_names']) ? json_decode($getVendorDetails['document_original_names'], true) : [];
-        $documentNameList = !empty($getVendorDetails['document_names']) ? json_decode($getVendorDetails['document_names'], true) : [];
+        $originalDocumentNameList = !empty($getTransacteeDetails['document_original_names']) ? json_decode($getTransacteeDetails['document_original_names'], true) : [];
+        $documentNameList = !empty($getTransacteeDetails['document_names']) ? json_decode($getTransacteeDetails['document_names'], true) : [];
         if (isset($originalDocumentNameList) && !empty($originalDocumentNameList)) {
             // $i = $params['start'] + 1;
             foreach ($originalDocumentNameList as $key => $value) {
@@ -450,14 +450,14 @@ class PayOff extends MX_Controller
 
                 $documentName = $documentNameList[$key];
                 if (env('AWS_ENABLE_FLAG') == 1) {
-                    $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download target='_blank'><i class='fas fa-fw fa-download'></i></a>
-                        <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
+                    $documentUrl = env('AWS_PATH') . "transactee-upload-doc/" . $documentName;
+                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='javascript:void(0);' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"transactee"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a>
                         </div>";
                 } else {
-                    $documentUrl = env('AWS_PATH') . "vendor-upload-doc/" . $documentName;
-                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='$documentUrl' download target='_blank'><i class='fas fa-fw fa-download'></i></a>
-                        <!-- <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a> -->
+                    $documentUrl = env('AWS_PATH') . "vendo-doc/" . $documentName;
+                    $nestedData[] = "<div style='display:flex;justify-content: center;'><a href='javascript:void(0);' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"transactee"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a>
                         </div>";
                 }
 
@@ -473,9 +473,9 @@ class PayOff extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function add_vendor()
+    public function add_transactee()
     {
-        $data['title'] = 'Add Vendor | Pacific Coast Title Company';
+        $data['title'] = 'Add Transactee | Pacific Coast Title Company';
         $data['pageTitle'] = 'Add Transactee';
         $userdata = $this->session->userdata('admin');
 
@@ -488,44 +488,85 @@ class PayOff extends MX_Controller
             $this->form_validation->set_rules('admin_notes', 'Admin Notes', 'required', array('required' => 'Please Enter Admin Notes'));
 
             if ($this->form_validation->run() == true) {
-                $vendorData = array(
-                    'transctee_name' => $_POST['transctee_name'],
-                    'file_number' => $_POST['file_number'],
-                    'account_number' => $_POST['account_number'],
-                    'aba' => $_POST['aba'],
-                    'bank_name' => $_POST['bank_name'],
-                    'admin_notes' => $_POST['admin_notes'],
-                    'submitted' => date('Y-m-d H:i:s'),
-                    'created_by' => 'admin',
-                    'created_by_id' => $userdata['id'],
-                    'approved_date' => date('Y-m-d H:i:s'),
-                    'approved_by' => $userdata['id'],
-                    'is_approved' => 1,
-                );
-                // $this->load->model('order/vendor_model');
-                $insert = $this->vendor_model->insert($vendorData);
-                /** Save user Activity */
-                $activity = 'Transctee created :- ' . $_POST['transctee_name'] . 'By ' . $userdata['name'];
-                $this->common->logAdminActivity($activity);
-                /** End save user activity */
-                if ($insert) {
-                    $data['success_msg'] = 'Transctee created successfully.';
+                $config['upload_path'] = './uploads/transactee-upload-doc/';
+                $config['allowed_types'] = 'pdf';
+                $config['max_size'] = 12000;
+                $this->load->library('upload', $config);
+
+                if (!is_dir('/uploads/transactee-upload-doc')) {
+                    mkdir('./uploads/transactee-upload-doc', 0777, true);
+                }
+
+                // echo "<pre>";
+                // print_r($_FILES);die;
+                if (!empty($_FILES['transactee_documents']['name'])) {
+                    if (!$this->upload->do_upload('transactee_documents')) {
+                        $errorMsg = $this->upload->display_errors();
+                        $data = array(
+                            "error" => $errorMsg,
+                            "success" => '',
+                        );
+                        echo json_encode($data);exit;
+                    } else {
+                        $data = $this->upload->data();
+                        $contents = file_get_contents($data['full_path']);
+                        $document_name = date('YmdHis') . "_" . $data['file_name'];
+                        rename(FCPATH . "/uploads/transactee-upload-doc/" . $data['file_name'], FCPATH . "/uploads/transactee-upload-doc/" . $document_name);
+
+                        $this->order->uploadDocumentOnAwsS3($document_name, 'transactee-upload-doc');
+
+                        $this->load->model('order/transactee_model');
+
+                        $getTransacteeDetails = $this->transactee_model->getDetails($transacteeId);
+                        $originalDocumentNameList = !empty($getTransacteeDetails['document_original_names']) ? json_decode($getTransacteeDetails['document_original_names'], true) : [];
+                        $documentNameList = !empty($getTransacteeDetails['document_names']) ? json_decode($getTransacteeDetails['document_names'], true) : [];
+                        array_push($originalDocumentNameList, $data['file_name']);
+                        array_push($documentNameList, $document_name);
+                        $transacteeData = array(
+                            'transctee_name' => $_POST['transctee_name'],
+                            'file_number' => $_POST['file_number'],
+                            'account_number' => $_POST['account_number'],
+                            'aba' => $_POST['aba'],
+                            'bank_name' => $_POST['bank_name'],
+                            'admin_notes' => $_POST['admin_notes'],
+                            'document_original_names' => json_encode($originalDocumentNameList),
+                            'document_names' => json_encode($documentNameList),
+                            'submitted' => date('Y-m-d H:i:s'),
+                            'created_by' => 'admin',
+                            'created_by_id' => $userdata['id'],
+                            'approved_date' => date('Y-m-d H:i:s'),
+                            'approved_by' => $userdata['id'],
+                            'is_approved' => 1,
+                        );
+                        // $this->load->model('order/transactee_model');
+                        $insert = $this->transactee_model->insert($transacteeData);
+                        /** Save user Activity */
+                        $activity = 'Transctee created :- ' . $_POST['transctee_name'] . 'By ' . $userdata['name'];
+                        $this->common->logAdminActivity($activity);
+                        /** End save user activity */
+                        if ($insert) {
+                            $data['success_msg'] = 'Transctee created successfully.';
+                        } else {
+                            $data['error_msg'] = 'Transctee not created.';
+                        }
+                    }
+
                 } else {
-                    $data['error_msg'] = 'Transctee not created.';
+                    $data['transactee_documents_error_msg'] = 'Please upload document';
                 }
 
             } else {
                 $data['transctee_name_error_msg'] = form_error('transctee_name');
                 $data['file_number_error_msg'] = form_error('file_number');
-                $data['account_number_error_msg'] = form_error('account_number_address');
-                $data['aba_error_msg'] = form_error('teleaba');
+                $data['account_number_error_msg'] = form_error('account_number');
+                $data['aba_error_msg'] = form_error('aba');
                 $data['bank_name_error_msg'] = form_error('bank_name');
                 $data['admin_notes_error_msg'] = form_error('admin_notes');
             }
         }
-        // $this->admintemplate->addCSS(base_url('assets/backend/css/vendor.css?v=payoff_' . $this->payoff_js_version));
-        $this->admintemplate->show("order/vendor", "add_vendor", $data);
-        // $this->load->view('order/vendor/add_vendor', $data);
+        // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        $this->admintemplate->show("order/transactee", "add_transactee", $data);
+        // $this->load->view('order/transactee/add_transactee', $data);
     }
 
 }

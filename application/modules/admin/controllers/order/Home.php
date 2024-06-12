@@ -3373,9 +3373,10 @@ class Home extends MX_Controller
 
             $payoffUserData = array('status' => 0);
             $condition = array('id' => $id);
-            $payoffUser = $this->payoff_model->getPayoffUsers($condition);
-            $update = $this->payoff_model->update($payoffUserData, $condition);
-            if ($update) {
+            $delete = $this->payoff_model->delete($condition);
+
+            if ($delete) {
+                $payoffUser = $this->payoff_model->getPayoffUsers($condition);
                 /** Save user Activity */
                 $activity = 'Payoff user deleted :- ' . $payoffUser['email_address'];
                 $this->common->logAdminActivity($activity);
@@ -3479,18 +3480,18 @@ class Home extends MX_Controller
         echo json_encode($data);
     }
 
-    public function vendors_list()
+    public function transactees_list()
     {
         $data = array();
-        $data['title'] = 'PCT Order: Vendors List';
+        $data['title'] = 'PCT Order: Transactees List';
         $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
-        $this->admintemplate->show("order/payoff", "vendors_list", $data);
+        $this->admintemplate->show("order/payoff", "transactees_list", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/escrow_officers', $data);
         // $this->load->view('order/layout/footer', $data);
     }
 
-    public function get_vendors_list()
+    public function get_transactees_list()
     {
         $params = array();
         $this->load->model('order/home_model');
@@ -3531,10 +3532,10 @@ class Home extends MX_Controller
                 // $nestedData[] = "<input $checked onclick='enablePayoffUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
 
                 $action = "";
-                $editUrl = base_url() . 'order/admin/edit-vendor-user/' . $value['id'];
-                $action = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Vendor Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                $editUrl = base_url() . 'order/admin/edit-transactee-user/' . $value['id'];
+                $action = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Transactee Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
 
-                $action .= "<a href='javascript:void(0);' onclick='deleteVendor(" . $value['id'] . ")' title='Delete Vendor'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                $action .= "<a href='javascript:void(0);' onclick='deleteTransactee(" . $value['id'] . ")' title='Delete Transactee'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
                 $nestedData[] = $action;
 
                 $data[] = $nestedData;

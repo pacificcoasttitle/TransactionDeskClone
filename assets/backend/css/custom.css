@@ -125,6 +125,15 @@
     width: 70px !important;
 }
 
+.d-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.d-space-between {
+    display: flex;
+    justify-content: space-between;
+}
 /* .smart-forms input:checked + .checkbox {
     border: 3px solid #1fe61a !important;
 }
