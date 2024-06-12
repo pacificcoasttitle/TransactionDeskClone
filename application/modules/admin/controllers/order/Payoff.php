@@ -538,8 +538,9 @@ class PayOff extends MX_Controller
                             'approved_by' => $userdata['id'],
                             'is_approved' => 1,
                         );
-                        // $this->load->model('order/transactee_model');
+
                         $insert = $this->transactee_model->insert($transacteeData);
+
                         /** Save user Activity */
                         $activity = 'Transctee created :- ' . $_POST['transctee_name'] . 'By ' . $userdata['name'];
                         $this->common->logAdminActivity($activity);
