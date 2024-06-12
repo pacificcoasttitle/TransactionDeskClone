@@ -26,7 +26,7 @@ final class CreateVendorTable extends AbstractMigration
             ->addColumn('bank_name', 'string', ['null' => true])
             ->addColumn('submitted', 'string', ['null' => true])
             ->addColumn('document_original_names', 'json', ['null' => true])
-            ->addColumn('documents', 'json', ['null' => true])
+            ->addColumn('document_names', 'json', ['null' => true])
             ->addColumn('notes', 'string', ['null' => true])
             ->addColumn('admin_notes', 'string', ['null' => true])
             ->addColumn('approved_by', 'string', ['null' => true])

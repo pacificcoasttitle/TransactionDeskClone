@@ -228,7 +228,7 @@ if (!empty($errors)) {?>
 	</div>
 </div>
 
-<div class="modal fade vendor-modal" id="openUploadModel" tabindex="-1" role="dialog" aria-labelledby="openUploadModel" aria-hidden="true">
+<div class="modal fade transactee-modal" id="openUploadModel" tabindex="-1" role="dialog" aria-labelledby="openUploadModel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<form  method="post" id="notes-form">
@@ -251,13 +251,13 @@ if (!empty($errors)) {?>
 											<form action="">
 												<div class="row">
 													<div class="col-sm-6">
-														<input type="hidden" name="vendor_id" id="vendor_id">
-														<input name="vendor_documents" type="file" id="vendor_documents" class="form-control" accept="application/pdf">
+														<input type="hidden" name="transactee_id" id="transactee_id">
+														<input name="transactee_documents" type="file" id="transactee_documents" class="form-control" accept="application/pdf">
 														<span class="error d-none" id="file_upload_err"></span>
 														<span class="success d-none" id="file_upload_suc"></span>
 													</div>
 													<div class="col-sm-6">
-														<a href="javascript:void(0);" id="upload_vendor_documents" class="btn btn-secondary btn-icon-split float-right mr-2">
+														<a href="javascript:void(0);" id="upload_transactee_documents" class="btn btn-secondary btn-icon-split float-right mr-2">
 															<span class="icon text-white-50"><i class="fas fa-file-import"></i></span><span class="text">Upload Document</span>
 														</a>
 													</div>
@@ -265,7 +265,7 @@ if (!empty($errors)) {?>
 											</form>
                                         </div>
 
-										<table class="table" id="vendor_documents_list" width="100%" >
+										<table class="table" id="transactee_documents_list" width="100%" >
 											<thead>
 												<tr>
 													<th scope="col">#</th>
@@ -306,27 +306,27 @@ if (!empty($errors)) {?>
 <script>
 
 $(document).ready(function () {
-    $('#upload_vendor_documents').click(function () {
+    $('#upload_transactee_documents').click(function () {
 		$('#file_upload_suc, #file_upload_err').addClass('d-none');
-		var fileInput = $('#vendor_documents')[0];
-		var vendor_id = $('#vendor_id').val();
+		var fileInput = $('#transactee_documents')[0];
+		var transactee_id = $('#transactee_id').val();
 		if (fileInput.files.length === 0) {
 			alert('Please select a file to upload.');
             return;
         }
 
-		if (!vendor_id) {
-			alert('Invalid vendor, Please try again.');
+		if (!transactee_id) {
+			alert('Invalid transactee, Please try again.');
             return;
 		}
 
-		$('#upload_vendor_documents').addClass('disabled');
+		$('#upload_transactee_documents').addClass('disabled');
         var formData = new FormData();
-        formData.append('vendor_documents', fileInput.files[0]);
-        formData.append('vendor_id', vendor_id);
+        formData.append('transactee_documents', fileInput.files[0]);
+        formData.append('transactee_id', transactee_id);
 
         $.ajax({
-            url: 'upload-vendor-documents', // URL to your CodeIgniter controller method
+            url: 'upload-transactee-documents', // URL to your CodeIgniter controller method
             type: 'POST',
             data: formData,
             contentType: false,
@@ -336,21 +336,21 @@ $(document).ready(function () {
 				if (res.success != null) {
 					$('#file_upload_suc').text(res.success);
 					$('#file_upload_suc').removeClass('d-none');
-					vendor_list.ajax.reload();
+					transactee_list.ajax.reload();
 				} else if (res.error != null) {
 					$('#file_upload_err').text(res.error);
 					$('#file_upload_err').removeClass('d-none');
 				}
-				// $('#vendor_id').val('');
-				$('#vendor_documents').val('');
-				$('#upload_vendor_documents').removeClass('disabled');
+				// $('#transactee_id').val('');
+				$('#transactee_documents').val('');
+				$('#upload_transactee_documents').removeClass('disabled');
             },
             error: function (xhr, status, error) {
                 alert('An error occurred while uploading the file');
                 console.log(xhr, status, error);
 				$('#file_upload_err').text(error);
 				$('#file_upload_err').removeClass('d-none');
-				$('#upload_vendor_documents').removeClass('disabled');
+				$('#upload_transactee_documents').removeClass('disabled');
             }
         });
     });
@@ -363,10 +363,10 @@ function openNotes(id, notes, admin_notes) {
 }
 
 function getDocuments(id) {
-	$('#vendor_id').val(id);
+	$('#transactee_id').val(id);
 	$('#openUploadModel').modal('show');
-	if ($('#vendor_documents_list').length) {
-        vendor_list = $('#vendor_documents_list').DataTable({
+	if ($('#transactee_documents_list').length) {
+        transactee_list = $('#transactee_documents_list').DataTable({
             "paging": false,
             // "lengthChange": false,
             "language": {
@@ -387,7 +387,7 @@ function getDocuments(id) {
             // "ordering": false,
             // "serverSide": true,
             "ajax": {
-                url: base_url + "get-vendor-document-list", // json datasource
+                url: base_url + "get-transactee-document-list", // json datasource
                 type: "post", // method  , by default get
 				data: {id: id},
                 beforeSend: function () {
@@ -403,9 +403,9 @@ function getDocuments(id) {
                             location.reload();
                         }, 1000);
                     }
-                    $("#vendor_documents_list tbody").append(
+                    $("#transactee_documents_list tbody").append(
                         '<tr><td colspan="4" class="text-center">No records found</td></tr>');
-                    $("#vendor_documents_list_processing").css("display", "none");
+                    $("#transactee_documents_list_processing").css("display", "none");
                 },
                 complete: function () {
                     $("#page-list-loader").hide();
@@ -414,6 +414,47 @@ function getDocuments(id) {
             }
         });
     }
+}
+
+function downloadDocumentFromAws(url, documentType)
+{
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    var fileNameIndex = url.lastIndexOf("/") + 1;
+    var filename = url.substr(fileNameIndex);
+    $.ajax({
+        url: base_url + "download-aws-document-admin",
+        type: "post",
+        data: {
+            url : url
+        },
+        async: false,
+        success: function (response) {
+            if (response) {
+                if (navigator.msSaveBlob) {
+                    var csvData = base64toBlob(response, 'application/octet-stream');
+                    var csvURL = navigator.msSaveBlob(csvData, filename);
+                    var element = document.createElement('a');
+                    element.setAttribute('href', csvURL);
+                    element.setAttribute('download', documentType+"_"+filename);
+                    element.style.display = 'none';
+                    document.body.appendChild(element);
+                    document.body.removeChild(element);
+                } else {
+                    console.log(response);
+                    var csvURL = 'data:application/octet-stream;base64,' + response;
+                    var element = document.createElement('a');
+                    element.setAttribute('href', csvURL);
+                    element.setAttribute('download', documentType+"_"+filename);
+                    element.style.display = 'none';
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                }
+            }
+            $('#page-preloader').css('display', 'none');
+        }
+    });
 }
 </script>
 

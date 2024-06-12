@@ -10,7 +10,6 @@ class Payoff_model extends CI_Model
     public function get_payoff_users($params)
     {
         $this->db->where('is_payoff_user', 1);
-        // $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -96,6 +95,17 @@ class Payoff_model extends CI_Model
         return $result;
     }
 
+    public function insert($data = array())
+    {
+        $table = $this->table;
+        if (!empty($data)) {
+            $data['created_at'] = date("Y-m-d H:i:s");
+            $insert = $this->db->insert($table, $data);
+            return $insert ? $this->db->insert_id() : false;
+        }
+        return false;
+    }
+
     public function update($data, $condition = array())
     {
         $table = $this->table;
@@ -107,14 +117,11 @@ class Payoff_model extends CI_Model
         return false;
     }
 
-    public function insert($data = array())
+    public function delete($condition = array())
     {
         $table = $this->table;
-        if (!empty($data)) {
-            $data['created_at'] = date("Y-m-d H:i:s");
-            $insert = $this->db->insert($table, $data);
-            return $insert ? $this->db->insert_id() : false;
-        }
-        return false;
+        $update = $this->db->delete($table, $condition);
+        return $update ? true : false;
     }
+
 }

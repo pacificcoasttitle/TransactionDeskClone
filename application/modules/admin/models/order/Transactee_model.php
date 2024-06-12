@@ -1,5 +1,5 @@
 <?php
-class Vendor_model extends CI_Model
+class Transactee_model extends CI_Model
 {
 
     public function __construct()
@@ -7,10 +7,32 @@ class Vendor_model extends CI_Model
         $this->table = 'pct_vendors';
     }
 
-    public function get_vendors($params)
+    public function get_transactees($params)
     {
+        $venders_lists = array();
+        $payoffUserId = isset($params['user_id']) && !empty($params['user_id']) ? $params['user_id'] : '';
+
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = trim($params['searchvalue']);
+
+            if (isset($payoffUserId) && !empty($payoffUserId)) {
+                $this->db->where('pct_vendors.created_by', 'user');
+                $this->db->where('pct_vendors.created_by_id', $payoffUserId);
+            }
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like("pct_vendors.transctee_name", $keyword)
+                    ->or_like('pct_vendors.file_number', $keyword)
+                    ->or_like('pct_vendors.account_number', $keyword)
+                    ->or_like('pct_vendors.aba', $keyword)
+                    ->or_like('pct_vendors.bank_name', $keyword)
+                    ->or_like('pct_vendors.notes', $keyword)
+                    ->or_like('pct_vendors.admin_notes', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->from('pct_vendors');
+            $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
@@ -23,9 +45,14 @@ class Vendor_model extends CI_Model
                     ->or_like('pct_vendors.admin_notes', $keyword)
                     ->group_end();
             }
+
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-            $venders_lists = array();
+
+            if (isset($payoffUserId) && !empty($payoffUserId)) {
+                $this->db->where('pct_vendors.created_by', 'user');
+                $this->db->where('pct_vendors.created_by_id', $payoffUserId);
+            }
 
             $this->db->select('
                     pct_vendors.id,
@@ -67,13 +94,20 @@ class Vendor_model extends CI_Model
 
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
             $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-            $venders_lists = array();
-            $payoffUserId = isset($params['user_id']) && !empty($params['user_id']) ? $params['user_id'] : '';
 
             if (isset($payoffUserId) && !empty($payoffUserId)) {
                 $this->db->where('pct_vendors.created_by', 'user');
                 $this->db->where('pct_vendors.created_by_id', $payoffUserId);
             }
+
+            $this->db->from('pct_vendors');
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($payoffUserId) && !empty($payoffUserId)) {
+                $this->db->where('pct_vendors.created_by', 'user');
+                $this->db->where('pct_vendors.created_by_id', $payoffUserId);
+            }
+
             $this->db->select('
                     pct_vendors.id,
                     pct_vendors.transctee_name,
@@ -113,8 +147,8 @@ class Vendor_model extends CI_Model
         }
         // print_r($this->db->last_query());die;
         return array(
-            'recordsTotal' => count($venders_lists),
-            'recordsFiltered' => count($venders_lists),
+            'recordsTotal' => $filter_total_records,
+            'recordsFiltered' => $filter_total_records,
             'data' => $venders_lists,
         );
     }

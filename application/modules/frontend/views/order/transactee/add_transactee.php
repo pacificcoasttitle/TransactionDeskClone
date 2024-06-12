@@ -14,10 +14,10 @@
                             </div>
                         <?php }?>
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Add vendor</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Add Transactee</h6>
                         </div>
                         <div class="card-body">
-                            <form id="frm-add-title-officer-rep" method="POST">
+                            <form id="frm-add-transactee" method="POST" enctype="multipart/form-data" >
 
                                 <div class="form-group">
                                     <label for="transctee_name" class="col-sm-2 col-form-label">Transactee Name<span class="required"> *</span></label>
@@ -79,8 +79,26 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="transactee_documents" class="col-sm-2 col-form-label">Upload Document<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <button type="submit" id="add-vendor" name="add-vendor" class="btn btn-info btn-icon-split">
+                                        <input type="file" class="form-control" name="transactee_documents" id="transactee_documents" class="form-control" accept="application/pdf">
+                                        <!-- <textarea type="text" class="form-control" name="transactee_documents" id="transactee_documents" class="form-control" placeholder="Upload Document"></textarea> -->
+                                        <?php if (!empty($transactee_documents_error_msg)) {?>
+                                            <span class="error"><?php echo $transactee_documents_error_msg; ?></span>
+                                        <?php }?>
+                                    </div>
+                                </div>
+                                <!-- <div class="row">
+                                    <div class="col-sm-6">
+                                        <input type="hidden" name="transactee_id" id="transactee_id">
+                                        <input name="transactee_documents" type="file" id="transactee_documents" class="form-control" accept="application/pdf">
+                                        <span class="error d-none" id="file_upload_err"></span>
+                                        <span class="success d-none" id="file_upload_suc"></span>
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <button type="submit" id="add-transactee" name="add-transactee" class="btn btn-info btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-save"></i>
                                             </span>

@@ -1,5 +1,16 @@
 <div class="content">
     <div class="container-fluid pc__top-element">
+        <div class="row mb-4">
+            <div class="col-md-12 d-right">
+                <a href="<?php echo site_url('order/admin/transactees-list'); ?>" class="btn btn-info btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span class="text">Back</span>
+                </a>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow mb-4">
@@ -17,7 +28,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Add Transctee</h6>
                         </div>
                         <div class="card-body">
-                            <form id="frm-add-title-officer-rep" method="POST">
+                            <form id="frm-add-transactee" method="POST" enctype="multipart/form-data" >
 
                                 <div class="form-group">
                                     <label for="transctee_name" class="col-sm-2 col-form-label">Transactee Name<span class="required"> *</span></label>
@@ -78,15 +89,27 @@
                                         <?php }?>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="transactee_documents" class="col-sm-2 col-form-label">Upload Document<span class="required"> *</span></label>
+                                    <div class="col-sm-6">
+                                        <input type="file" class="form-control" name="transactee_documents" id="transactee_documents" class="form-control" accept="application/pdf">
+                                        <!-- <textarea type="text" class="form-control" name="transactee_documents" id="transactee_documents" class="form-control" placeholder="Upload Document"></textarea> -->
+                                        <?php if (!empty($transactee_documents_error_msg)) {?>
+                                            <span class="error"><?php echo $transactee_documents_error_msg; ?></span>
+                                        <?php }?>
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <div class="col-sm-6">
-                                        <button type="submit" id="add-vendor" name="add-vendor" class="btn btn-info btn-icon-split">
+                                        <button type="submit" id="add-transactee" name="add-transactee" class="btn btn-info btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-save"></i>
                                             </span>
                                             <span class="text">Add</span>
                                         </button>
-                                        <a href="<?php echo site_url('order/admin/vendors-list'); ?>" class="btn btn-secondary btn-icon-split">
+                                        <a href="<?php echo site_url('order/admin/transactees-list'); ?>" class="btn btn-secondary btn-icon-split">
                                             <span class="icon text-white-50">
                                                 <i class="fas fa-arrow-left"></i>
                                             </span>

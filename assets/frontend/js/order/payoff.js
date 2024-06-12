@@ -5,7 +5,7 @@ $(document).ready(function () {
             "paging": true,
             "lengthChange": false,
             "language": {
-                searchPlaceholder: "Search File# or Address",
+                searchPlaceholder: "Search",
                 paginate: {
                     next: '<span class="fa fa-angle-right"></span>',
                     previous: '<span class="fa fa-angle-left"></span>',
@@ -33,7 +33,7 @@ $(document).ready(function () {
             "ordering": false,
             "serverSide": true,
             "ajax": {
-                url: base_url + "get-vendors", // json datasource
+                url: base_url + "get-transactees", // json datasource
                 type: "post", // method  , by default get
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {

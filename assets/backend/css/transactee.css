@@ -28,11 +28,11 @@
     /* color: #223D7F; */
 }
 
-.vendor-modal .modal-body {
+.transactee-modal .modal-body {
     height: auto !important;
 }
 
-.vendor-modal .modal-dialog {
+.transactee-modal .modal-dialog {
     max-width: 700px;
 }
 
