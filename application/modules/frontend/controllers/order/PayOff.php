@@ -473,7 +473,7 @@ class PayOff extends MX_Controller
                             'bheethuis@pct.com',
                             'htrinh@pct.com',
                         ];
-                        $cc = array('piyush-crest@yopmail.com');
+                        // $cc = array('piyush-crest@yopmail.com');
                         $this->order->sendEmail($to, $cc, $subject, $transacteeData, $message, 'create_transactee');
                         if ($insert) {
                             $data['success_msg'] = 'Transactee added successfully.';
