@@ -53,9 +53,9 @@ class PayOff extends MX_Controller
         // print_r($data);die;
         // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
         // $this->template->show("order/pay_off", "pay_off_dashboard", $data);
-        $this->admintemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
-
+        // $this->admintemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
         // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        $this->admintemplate->addJS(base_url('assets/backend/js/transactee.js'));
         $this->admintemplate->show("order/transactee", "transactee_list", $data);
     }
 
@@ -152,6 +152,7 @@ class PayOff extends MX_Controller
                 if ($order['created_by'] == 'user') {
                     $createdBy = $order['c_first_name'] . ' ' . $order['c_last_name'];
                 }
+
                 $nestedData = array();
                 $nestedData[] = $i;
                 $id = $order['id'];
@@ -164,7 +165,7 @@ class PayOff extends MX_Controller
                 $nestedData[] = $order['aba'];
                 $nestedData[] = $order['bank_name'];
                 $nestedData[] = $createdBy . ' ' . date("m/d/Y", strtotime($order['submitted']));
-                $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . date("m/d/Y @ g:i a", strtotime($order['approved_date'])) : '';
+                $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . $this->common->convertTimezone($order['approved_date'], 'm/d/Y @ g:i a', 'America/Los_Angeles') : '';
                 // $nestedData[] = $order['first_name'] . ' ' . $order['last_name'];
                 $isApproved = $order['is_approved'];
                 if ($isApproved == 1) {
@@ -172,7 +173,7 @@ class PayOff extends MX_Controller
                 } else {
                     $checked = '';
                 }
-                $nestedData[] = "<input $checked class='$isApproved' onclick='activateTransactee();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                $nestedData[] = "<input $checked  onclick='activateTransactee();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
 
                 // $editOrderUrl = 'test';
                 $editOrderUrl = base_url() . 'order/admin/edit-transactee-details/' . $id;
