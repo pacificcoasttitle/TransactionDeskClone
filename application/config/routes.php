@@ -218,6 +218,11 @@ $route['upload-document'] = 'frontend/order/common/upload_document';
 $route['add-partner-for-orders'] = 'frontend/order/cron/addPartnerForOrders';
 $route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
 $route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
+$route['get-transactees'] = 'frontend/order/payOff/get_transactees';
+$route['add-transactee'] = 'frontend/order/payOff/addTransactee';
+$route['upload-transactee-documents'] = 'frontend/order/payOff/uploadTransacteeDocuments';
+$route['get-transactee-document-list'] = 'frontend/order/payOff/getTransacteeDocumentList';
+
 $route['download-pay-off-document'] = 'frontend/order/payOff/downloadPayOffDocument';
 $route['update-pay-off-action'] = 'frontend/order/payOff/updatePayOffAction';
 $route['create-payoff/:num'] = 'frontend/order/payOff/createPayoff';
@@ -389,6 +394,23 @@ $route['order/admin/get-realtors-list'] = 'admin/order/home/get_realtors_list';
 $route['order/admin/escrow-officers'] = 'admin/order/home/escrow_officers';
 $route['order/admin/add-escrow-officer'] = 'admin/order/home/add_escrow_officer';
 $route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_officer';
+
+$route['order/admin/payoff-users'] = 'admin/order/home/payoff_users';
+$route['order/admin/add-payoff-user'] = 'admin/order/home/add_payoff_user';
+$route['order/admin/edit-payoff-user/:num'] = 'admin/order/home/edit_payoff_user';
+$route['order/admin/update-user-status'] = 'admin/order/home/updateUserStatus';
+$route['order/admin/delete-payoff-user'] = 'admin/order/home/delete_payoff_user';
+
+$route['order/admin/transactees-list'] = 'admin/order/payoff/transactees_list';
+$route['order/admin/add-transactee'] = 'admin/order/payoff/add_transactee';
+$route['order/admin/get-transactee-list'] = 'admin/order/payoff/get_transactees_list';
+$route['order/admin/update-transactee-status'] = 'admin/order/payoff/update_transactee_status';
+$route['order/admin/get-transactee-details'] = 'admin/order/payoff/get_transactee_details';
+$route['order/admin/edit-transactee-details/(:num)'] = 'admin/order/payoff/edit_transactee_details/$1';
+$route['order/admin/delete-transactee-details'] = 'admin/order/payoff/delete_transactee_details';
+
+$route['order/admin/upload-transactee-documents'] = 'admin/order/payoff/uploadTransacteeDocuments';
+$route['order/admin/get-transactee-document-list'] = 'admin/order/payoff/getTransacteeDocumentList';
 
 $route['order/admin/admin_users'] = 'admin/order/adminUsers/index';
 $route['order/admin/admin_users_email'] = 'admin/order/adminUsers/email_check';

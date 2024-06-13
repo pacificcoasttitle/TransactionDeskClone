@@ -4314,4 +4314,143 @@ class Order
         $result = $query->result_array();
         return $result;
     }
+
+    public function get_transactees($params)
+    {
+        // $userdata = $this->CI->session->userdata('user');
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = trim($params['searchvalue']);
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like("pct_vendors.transctee_name", $keyword)
+                    ->or_like('pct_vendors.file_number', $keyword)
+                    ->or_like('pct_vendors.account_number', $keyword)
+                    ->or_like('pct_vendors.aba', $keyword)
+                    ->or_like('pct_vendors.bank_name', $keyword)
+                    ->or_like('pct_vendors.notes', $keyword)
+                    ->or_like('pct_vendors.admin_notes', $keyword)
+                    ->group_end();
+            }
+
+            $this->CI->db->from('pct_vendors');
+            $this->CI->db->where('is_approved', 1);
+            $filter_total_records = $this->CI->db->count_all_results();
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->CI->db->group_start()
+                    ->like("pct_vendors.transctee_name", $keyword)
+                    ->or_like('pct_vendors.file_number', $keyword)
+                    ->or_like('pct_vendors.account_number', $keyword)
+                    ->or_like('pct_vendors.aba', $keyword)
+                    ->or_like('pct_vendors.bank_name', $keyword)
+                    ->or_like('pct_vendors.notes', $keyword)
+                    ->or_like('pct_vendors.admin_notes', $keyword)
+                    ->group_end();
+            }
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $venders_lists = array();
+
+            $this->CI->db->select('
+                    pct_vendors.id,
+                    pct_vendors.transctee_name,
+                    pct_vendors.file_number,
+                    pct_vendors.account_number,
+                    pct_vendors.aba,
+                    pct_vendors.bank_name,
+                    pct_vendors.submitted,
+                    pct_vendors.notes,
+                    pct_vendors.admin_notes,
+                    pct_vendors.approved_by,
+                    pct_vendors.created_by,
+                    pct_vendors.is_approved,
+                    pct_vendors.approved_date,
+                    admin.first_name,
+                    admin.last_name,
+                ')
+                ->from('pct_vendors')
+                ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
+                ->where('is_approved', 1)
+                ->order_by('pct_vendors.transctee_name', 'asc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+
+            if ($query->num_rows() > 0) {
+                $venders_lists = $query->result_array();
+            }
+        } else {
+
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+
+            $this->CI->db->from('pct_vendors');
+            $this->CI->db->where('is_approved', 1);
+            $filter_total_records = $this->CI->db->count_all_results();
+
+            $venders_lists = array();
+
+            $this->CI->db->select('
+                    pct_vendors.id,
+                    pct_vendors.transctee_name,
+                    pct_vendors.file_number,
+                    pct_vendors.account_number,
+                    pct_vendors.aba,
+                    pct_vendors.bank_name,
+                    pct_vendors.submitted,
+                    pct_vendors.notes,
+                    pct_vendors.admin_notes,
+                    pct_vendors.created_by,
+                    pct_vendors.approved_by,
+                    pct_vendors.is_approved,
+                    pct_vendors.approved_date,
+                    admin.first_name,
+                    admin.last_name,
+                ')
+                ->from('pct_vendors')
+                ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
+                ->where('is_approved', 1)
+                ->order_by('pct_vendors.transctee_name', 'asc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+
+            if ($query->num_rows() > 0) {
+                $venders_lists = $query->result_array();
+            }
+        }
+        // print_r($this->CI->db->last_query());die;
+        return array(
+            'recordsTotal' => $filter_total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $venders_lists,
+        );
+    }
+
+    public function sendEmail($to, $cc, $subject, $data, $message, $logName)
+    {
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+
+        $this->CI->load->helper('sendemail');
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', $logName, '', $mailParams, array(), 0, 0);
+        $email_send_status = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', $logName, '', $mailParams, array('status' => $email_send_status), 0, $logid);
+    }
 }

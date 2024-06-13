@@ -53,7 +53,8 @@ $roleName = $roleList[$role_id];
     preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
     preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string())
 
-) {echo 'show';}?>" aria-labelledby="li_settings" id="li_settings_list">
+) {echo 'show';}?>" aria-labelledby="li_settings" id="li_settings_list"
+>
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/credentials-check') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/credentials-check'; ?>">
 						Credentials Check
@@ -73,8 +74,6 @@ $roleName = $roleList[$role_id];
 	<!-- End of Sidebar -->
 
 <?php } else {?>
-
-
 	<!-- Sidebar -->
 	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -86,9 +85,7 @@ $roleName = $roleList[$role_id];
 
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
-		<?php
-if ($role_id != 3):
-    ?>
+		<?php if ($role_id != 3 && $role_id != 5): ?>
 		<li class="nav-item <?php if ($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->segment(3) == 'order-details') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url() . 'order/admin/dashboard'; ?>">
 				<i class="fas fa fa-dashboard"></i>
@@ -96,6 +93,8 @@ if ($role_id != 3):
 			</a>
 		</li>
 		<?php endif;?>
+
+		<?php if ($role_id != 5): ?>
 
 		<li class="nav-item <?php if ($this->uri->uri_string() == 'order/admin/orders' || $this->uri->uri_string() == 'order/admin/lp-orders' || $this->uri->segment(3) == 'order-details') {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="ordersDropdown" role="button" data-toggle="collapse" data-target="#ordersDropdown_list" aria-haspopup="true" aria-expanded="false">
@@ -107,27 +106,23 @@ if ($role_id != 3):
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details' || $this->uri->segment(4) == 'loan' || $this->uri->segment(4) == 'sale') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/orders'; ?>">
 						Orders
 					</a>
-					<?php
-if ($role_id != 3):
-    ?>
+					<?php if ($role_id != 3): ?>
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lp-orders') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lp-orders'; ?>">
 						LP Orders
 					</a>
-
 					<?php endif;?>
 				</div>
 			</div>
 		</li>
+		<?php endif;?>
 
-		<?php
-if ($role_id != 3):
-    ?>
+		<?php if ($role_id != 3 && $role_id != 5): ?>
 		<li class="nav-item <?php if ($this->uri->uri_string() == 'order/admin/admin_users' || $this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent' || $this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender' || $this->uri->uri_string() == 'order/admin/mortgage-brokers' || $this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer' || $this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user' || $this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user' || $this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company' || $this->uri->uri_string() == 'order/admin/incorrect-users' || $this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user' || $this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="usersDropdown" role="button" data-toggle="collapse" data-target="#users" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-fw fa-users"></i>
 				<span>Users</span>
 			</a>
-			<div class="collapse <?php if ($this->uri->uri_string() == 'order/admin/admin_users' || $this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent' || $this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender' || $this->uri->uri_string() == 'order/admin/mortgage-brokers' || $this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer' || $this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user' || $this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user' || $this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company' || $this->uri->uri_string() == 'order/admin/incorrect-users' || $this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user' || $this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') {echo 'show';}?>" aria-labelledby="usersDropdown" id="users">
+			<div class="collapse <?php if ($this->uri->uri_string() == 'order/admin/admin_users' || $this->uri->uri_string() == 'order/admin/payoff-users' || $this->uri->uri_string() == 'order/admin/add-payoff-user' || $this->uri->uri_string(3) == 'order/admin/edit-payoff-user' || $this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent' || $this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender' || $this->uri->uri_string() == 'order/admin/mortgage-brokers' || $this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer' || $this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user' || $this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user' || $this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company' || $this->uri->uri_string() == 'order/admin/incorrect-users' || $this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user' || $this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') {echo 'show';}?>" aria-labelledby="usersDropdown" id="users">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<?php if ($role_id == 1): ?>
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin_users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin_users'; ?>">Admin</a>
@@ -148,36 +143,37 @@ if ($role_id != 3):
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/incorrect-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/incorrect-users'; ?>">Incorrect Users</a>
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-proposed-users'; ?>">CPL/Proposed Users</a>
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow-officers'; ?>">Escrow Officers</a>
+					<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/payoff-users' || $this->uri->segment(3) == 'payoff-users' || $this->uri->uri_string() == 'order/admin/add-payoff-user' || $this->uri->uri_string(3) == 'order/admin/edit-payoff-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/payoff-users'; ?>">Payoff Team</a> -->
 				</div>
 			</div>
 		</li>
 
 		<li class="nav-item <?php if (
-        $this->uri->uri_string() == 'order/admin/lv-log' ||
-        $this->uri->uri_string() == 'order/admin/pre-listing' ||
-        $this->uri->uri_string() == 'order/admin/grant-deed-log' ||
-        $this->uri->uri_string() == 'order/admin/tax-log' ||
-        $this->uri->uri_string() == 'order/admin/partner-api-log' ||
-        $this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
-        $this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
-        $this->uri->uri_string() == 'order/admin/admin-user-logs'
-    ) {echo 'active';}?>">
+    $this->uri->uri_string() == 'order/admin/lv-log' ||
+    $this->uri->uri_string() == 'order/admin/pre-listing' ||
+    $this->uri->uri_string() == 'order/admin/grant-deed-log' ||
+    $this->uri->uri_string() == 'order/admin/tax-log' ||
+    $this->uri->uri_string() == 'order/admin/partner-api-log' ||
+    $this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
+    $this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
+    $this->uri->uri_string() == 'order/admin/admin-user-logs'
+) {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="logsDropDown" role="button" data-toggle="collapse" data-target="#logs" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-fw fa-book"></i>
 				<span>Logs</span>
 			</a>
 			<div class="collapse <?php if (
-        $this->uri->uri_string() == 'order/admin/lv-log' ||
-        $this->uri->uri_string() == 'order/admin/pre-listing' ||
-        $this->uri->uri_string() == 'order/admin/grant-deed-log' ||
-        $this->uri->uri_string() == 'order/admin/tax-data' ||
-        $this->uri->uri_string() == 'order/admin/tax-log' ||
-        $this->uri->uri_string() == 'order/admin/partner-api-log' ||
-        $this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
-        $this->uri->uri_string() == 'order/admin/resware-logs' ||
-        $this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
-        $this->uri->uri_string() == 'order/admin/admin-user-logs'
-    ) {echo 'show';}?>" aria-labelledby="logsDropDown" id="logs">
+    $this->uri->uri_string() == 'order/admin/lv-log' ||
+    $this->uri->uri_string() == 'order/admin/pre-listing' ||
+    $this->uri->uri_string() == 'order/admin/grant-deed-log' ||
+    $this->uri->uri_string() == 'order/admin/tax-data' ||
+    $this->uri->uri_string() == 'order/admin/tax-log' ||
+    $this->uri->uri_string() == 'order/admin/partner-api-log' ||
+    $this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
+    $this->uri->uri_string() == 'order/admin/resware-logs' ||
+    $this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
+    $this->uri->uri_string() == 'order/admin/admin-user-logs'
+) {echo 'show';}?>" aria-labelledby="logsDropDown" id="logs">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lv-log') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lv-log'; ?>">Legal Vesting</a>
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/pre-listing') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/pre-listing'; ?>">Pre Listing</a>
@@ -196,29 +192,29 @@ if ($role_id != 3):
 		</li>
 
 		<li class="nav-item <?php if (
-        $this->uri->uri_string() == 'order/admin/cpl-documents' ||
-        $this->uri->uri_string() == 'order/admin/grant-deed-documents' ||
-        $this->uri->uri_string() == 'order/admin/lv-documents' ||
-        $this->uri->uri_string() == 'order/admin/tax-documents' ||
-        $this->uri->uri_string() == 'order/admin/curative-documents' ||
-        $this->uri->uri_string() == 'order/admin/file-documents' ||
-        $this->uri->uri_string() == 'order/admin/pre-listing-documents' ||
-        $this->uri->uri_string() == 'order/admin/lp-listing-documents'
-    ) {echo 'active';}?>">
+    $this->uri->uri_string() == 'order/admin/cpl-documents' ||
+    $this->uri->uri_string() == 'order/admin/grant-deed-documents' ||
+    $this->uri->uri_string() == 'order/admin/lv-documents' ||
+    $this->uri->uri_string() == 'order/admin/tax-documents' ||
+    $this->uri->uri_string() == 'order/admin/curative-documents' ||
+    $this->uri->uri_string() == 'order/admin/file-documents' ||
+    $this->uri->uri_string() == 'order/admin/pre-listing-documents' ||
+    $this->uri->uri_string() == 'order/admin/lp-listing-documents'
+) {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="documentDropDown" role="button" data-toggle="collapse" data-target="#documents" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-fw fa-file"></i>
 				<span>Documents</span>
 			</a>
 			<div class="collapse <?php if (
-        $this->uri->uri_string() == 'order/admin/cpl-documents' ||
-        $this->uri->uri_string() == 'order/admin/grant-deed-documents' ||
-        $this->uri->uri_string() == 'order/admin/lv-documents' ||
-        $this->uri->uri_string() == 'order/admin/tax-documents' ||
-        $this->uri->uri_string() == 'order/admin/curative-documents' ||
-        $this->uri->uri_string() == 'order/admin/file-documents' ||
-        $this->uri->uri_string() == 'order/admin/pre-listing-documents' ||
-        $this->uri->uri_string() == 'order/admin/lp-listing-documents'
-    ) {echo 'show';}?>" aria-labelledby="documentDropDown" id="documents">
+    $this->uri->uri_string() == 'order/admin/cpl-documents' ||
+    $this->uri->uri_string() == 'order/admin/grant-deed-documents' ||
+    $this->uri->uri_string() == 'order/admin/lv-documents' ||
+    $this->uri->uri_string() == 'order/admin/tax-documents' ||
+    $this->uri->uri_string() == 'order/admin/curative-documents' ||
+    $this->uri->uri_string() == 'order/admin/file-documents' ||
+    $this->uri->uri_string() == 'order/admin/pre-listing-documents' ||
+    $this->uri->uri_string() == 'order/admin/lp-listing-documents'
+) {echo 'show';}?>" aria-labelledby="documentDropDown" id="documents">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-documents'; ?>">CPL</a>
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/grant-deed-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/grant-deed-documents'; ?>">Grant Deed</a>
@@ -233,23 +229,23 @@ if ($role_id != 3):
 		</li>
 
 		<li class="nav-item <?php if (
-        $this->uri->uri_string() == 'order/admin/doma-branches' ||
-        $this->uri->uri_string() == 'order/admin/north-american-branches' ||
-        $this->uri->uri_string() == 'order/admin/westcor-branches' ||
-        $this->uri->uri_string() == 'order/admin/commonwealth-branches' ||
-        $this->uri->uri_string() == 'order/admin/proposed-branches'
-    ) {echo 'active';}?>">
+    $this->uri->uri_string() == 'order/admin/doma-branches' ||
+    $this->uri->uri_string() == 'order/admin/north-american-branches' ||
+    $this->uri->uri_string() == 'order/admin/westcor-branches' ||
+    $this->uri->uri_string() == 'order/admin/commonwealth-branches' ||
+    $this->uri->uri_string() == 'order/admin/proposed-branches'
+) {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="cpl_branches" role="button" data-toggle="collapse" data-target="#cpl_branches_section" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-fw fa-sitemap"></i>
 				<span>Branches</span>
 			</a>
 			<div class="collapse <?php if (
-        $this->uri->uri_string() == 'order/admin/doma-branches' ||
-        $this->uri->uri_string() == 'order/admin/north-american-branches' ||
-        $this->uri->uri_string() == 'order/admin/westcor-branches' ||
-        $this->uri->uri_string() == 'order/admin/commonwealth-branches' ||
-        $this->uri->uri_string() == 'order/admin/proposed-branches'
-    ) {echo 'show';}?>" aria-labelledby="cpl_branches" id="cpl_branches_section">
+    $this->uri->uri_string() == 'order/admin/doma-branches' ||
+    $this->uri->uri_string() == 'order/admin/north-american-branches' ||
+    $this->uri->uri_string() == 'order/admin/westcor-branches' ||
+    $this->uri->uri_string() == 'order/admin/commonwealth-branches' ||
+    $this->uri->uri_string() == 'order/admin/proposed-branches'
+) {echo 'show';}?>" aria-labelledby="cpl_branches" id="cpl_branches_section">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/north-american-branches') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/north-american-branches'; ?>">CPL - North American</a>
 					<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/north-american-branches') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/north-american-branches'; ?>">CPL - North American</a> -->
@@ -261,43 +257,43 @@ if ($role_id != 3):
 		</li>
 
 		<li class="nav-item <?php if (
-        $this->uri->uri_string() == 'order/admin/roles' ||
-        $this->uri->uri_string() == 'order/admin/credentials-check' ||
-        $this->uri->uri_string() == 'order/admin/resware-admin-credential' ||
-        $this->uri->uri_string() == 'order/admin/send-password' ||
-        $this->uri->uri_string() == 'order/admin/primary-check' ||
-        $this->uri->uri_string() == 'order/admin/fees-types' ||
-        $this->uri->uri_string() == 'order/admin/fees' ||
-        $this->uri->uri_string() == 'order/admin/code-book' ||
-        $this->uri->uri_string() == 'order/admin/rules-manager' ||
-        $this->uri->uri_string() == 'order/admin/notifications' ||
-        $this->uri->uri_string() == 'order/admin/holidays' ||
-        preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string())
+    $this->uri->uri_string() == 'order/admin/roles' ||
+    $this->uri->uri_string() == 'order/admin/credentials-check' ||
+    $this->uri->uri_string() == 'order/admin/resware-admin-credential' ||
+    $this->uri->uri_string() == 'order/admin/send-password' ||
+    $this->uri->uri_string() == 'order/admin/primary-check' ||
+    $this->uri->uri_string() == 'order/admin/fees-types' ||
+    $this->uri->uri_string() == 'order/admin/fees' ||
+    $this->uri->uri_string() == 'order/admin/code-book' ||
+    $this->uri->uri_string() == 'order/admin/rules-manager' ||
+    $this->uri->uri_string() == 'order/admin/notifications' ||
+    $this->uri->uri_string() == 'order/admin/holidays' ||
+    preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string())
 
-    ) {echo 'active';}?>">
+) {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="li_settings" role="button" data-toggle="collapse" aria-haspopup="true" data-target="#li_settings_list" aria-expanded="false">
 				<i class="fas fa-fw fa-gear"></i>
 				<span>Settings</span>
 			</a>
 			<div class="collapse <?php if (
-        $this->uri->uri_string() == 'order/admin/roles' ||
-        $this->uri->uri_string() == 'order/admin/credentials-check' ||
-        $this->uri->uri_string() == 'order/admin/resware-admin-credential' ||
-        $this->uri->uri_string() == 'order/admin/send-password' ||
-        $this->uri->uri_string() == 'order/admin/primary-check' ||
-        $this->uri->uri_string() == 'order/admin/fees-types' ||
-        $this->uri->uri_string() == 'order/admin/fees' ||
-        $this->uri->uri_string() == 'order/admin/code-book' ||
-        $this->uri->uri_string() == 'order/admin/rules-manager' ||
-        $this->uri->uri_string() == 'order/admin/notifications' ||
-        $this->uri->uri_string() == 'order/admin/holidays' ||
-        $this->uri->uri_string() == 'order/admin/settings' ||
-        preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*daily-email*/', $this->uri->uri_string())
+    $this->uri->uri_string() == 'order/admin/roles' ||
+    $this->uri->uri_string() == 'order/admin/credentials-check' ||
+    $this->uri->uri_string() == 'order/admin/resware-admin-credential' ||
+    $this->uri->uri_string() == 'order/admin/send-password' ||
+    $this->uri->uri_string() == 'order/admin/primary-check' ||
+    $this->uri->uri_string() == 'order/admin/fees-types' ||
+    $this->uri->uri_string() == 'order/admin/fees' ||
+    $this->uri->uri_string() == 'order/admin/code-book' ||
+    $this->uri->uri_string() == 'order/admin/rules-manager' ||
+    $this->uri->uri_string() == 'order/admin/notifications' ||
+    $this->uri->uri_string() == 'order/admin/holidays' ||
+    $this->uri->uri_string() == 'order/admin/settings' ||
+    preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*daily-email*/', $this->uri->uri_string())
 
-    ) {echo 'show';}?>" aria-labelledby="li_settings" id="li_settings_list">
+) {echo 'show';}?>" aria-labelledby="li_settings" id="li_settings_list">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<?php if ($role_id == 1): ?>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/roles') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/roles'; ?>">
@@ -374,27 +370,26 @@ if ($role_id != 3):
 				</div>
 			</div>
 		</li>
-		<?php
-if ($role_id == 1): ?>
+		<?php if ($role_id == 1): ?>
 		<li class="nav-item <?php if (
-        preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-range*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-file*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-config*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-bonus*/', $this->uri->uri_string())
-    ) {echo 'active';}?>">
+    preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-range*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-file*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-config*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-bonus*/', $this->uri->uri_string())
+) {echo 'active';}?>">
 			<a class="nav-link collapsed" href="#" id="li_commissions" role="button" data-toggle="collapse" data-target="#li_commissons_list"  aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-fw fa-gear"></i>
 				<span>Commissions</span>
 			</a>
 			<div class="collapse <?php if (
-        preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-range*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-file*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-config*/', $this->uri->uri_string()) ||
-        preg_match('/order\/admin\/([a-z\-])*commission-bonus*/', $this->uri->uri_string())
+    preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-range*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-file*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-config*/', $this->uri->uri_string()) ||
+    preg_match('/order\/admin\/([a-z\-])*commission-bonus*/', $this->uri->uri_string())
 
-    ) {echo 'show';}?>" aria-labelledby="li_commissions" id="li_commissons_list">
+) {echo 'show';}?>" aria-labelledby="li_commissions" id="li_commissons_list">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/underwriter-tier'; ?>">
 						Underwriter Tier
@@ -416,6 +411,35 @@ if ($role_id == 1): ?>
 		</li>
 		<?php endif;?>
 		<?php endif;?>
+
+		<?php if ($role_id == 1 || $role_id == 5) {
+    $payoffSectionLink = false;
+    if ($this->uri->uri_string() == 'order/admin/transactees-list' ||
+        $this->uri->uri_string() == 'order/admin/payoff-users' ||
+        $this->uri->segment(3) == 'payoff-users' ||
+        $this->uri->uri_string() == 'order/admin/add-payoff-user' ||
+        $this->uri->uri_string(3) == 'order/admin/edit-payoff-user'
+    ) {$payoffSectionLink = true;}
+    ?>
+		<li class="nav-item <?php if ($payoffSectionLink) {echo 'active';}?>">
+			<a class="nav-link <?php if (!$payoffSectionLink) {echo 'collapsed';}?>" href="#" id="li_transactees" role="button" data-toggle="collapse" data-target="#li_transactees_list"  aria-haspopup="true" aria-expanded="false">
+				<i class="fas fa-fw fa-gear"></i>
+				<span>Payoffs</span>
+			</a>
+			<div class="collapse <?php if ($payoffSectionLink) {echo 'show';}?>" aria-labelledby="li_transactees" id="li_transactees_list">
+				<div class="bg-white py-2 collapse-inner rounded">
+					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/payoff-users' || $this->uri->segment(3) == 'payoff-users' || $this->uri->uri_string() == 'order/admin/add-payoff-user' || $this->uri->uri_string(3) == 'order/admin/edit-payoff-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/payoff-users'; ?>">Payoff Team</a>
+
+					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/transactees-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/transactees-list'; ?>">
+						Transactee List
+					</a>
+
+				</div>
+			</div>
+		</li>
+
+		<?php
+}?>
 
 
 		<!-- Divider -->

@@ -35,6 +35,7 @@
         type="text/css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <script src="<?php echo base_url(); ?>assets/backend/hr/vendor/jquery/jquery.min.js"></script>
 
     <?php echo $css_files; ?>
     <script>
@@ -58,7 +59,7 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="<?php echo base_url(); ?>assets/backend/hr/vendor/jquery/jquery.min.js"></script>
+    <!-- <script src="<?php echo base_url(); ?>assets/backend/hr/vendor/jquery/jquery.min.js"></script> -->
     <script src="<?php echo base_url(); ?>assets/backend/js/jquery.validate.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/backend/js/jquery-ui.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/backend/js/moment.js"></script>
@@ -82,7 +83,7 @@
     <?php echo $js_files; ?>
 
     <?php $userdata = $this->session->userdata('hr_admin');
-    if (!empty($userdata)) { ?>
+if (!empty($userdata)) {?>
         <script type="text/javascript">
             $(document).ready(function () {
                 "use strict";
@@ -180,10 +181,10 @@
                     notificationsCount = 0;
                     notificationsWrapper.find('.badge-counter').addClass('d-none').text(0);
                 }
-            }); 
+            });
         </script>
     <?php }
-    ?>
+?>
 </body>
 
 </html>

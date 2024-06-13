@@ -5,7 +5,7 @@ $(document).ready(function () {
             "paging": true,
             "lengthChange": false,
             "language": {
-                searchPlaceholder: "Search File# or Address",
+                searchPlaceholder: "Search",
                 paginate: {
                     next: '<span class="fa fa-angle-right"></span>',
                     previous: '<span class="fa fa-angle-left"></span>',
@@ -33,7 +33,7 @@ $(document).ready(function () {
             "ordering": false,
             "serverSide": true,
             "ajax": {
-                url: base_url + "get-pay-off-orders", // json datasource
+                url: base_url + "get-transactees", // json datasource
                 type: "post", // method  , by default get
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -53,16 +53,15 @@ $(document).ready(function () {
     }
 });
 
-function downloadPayOffDocument(file_id)
-{
+function downloadPayOffDocument(file_id) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
-    var filename = 'Pay_off_'+file_id+'.pdf';
+    var filename = 'Pay_off_' + file_id + '.pdf';
     $.ajax({
         url: base_url + "download-pay-off-document",
         type: "post",
         data: {
-            file_id : file_id
+            file_id: file_id
         },
         dataType: "html",
         success: function (response) {
@@ -93,25 +92,24 @@ function downloadPayOffDocument(file_id)
     });
 }
 
-function updatePayOffAction(file_id)
-{
+function updatePayOffAction(file_id) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
-    var filename = 'Pay_off_'+file_id+'.pdf';
+    var filename = 'Pay_off_' + file_id + '.pdf';
     $.ajax({
         url: base_url + "update-pay-off-action",
         type: "post",
         data: {
-            file_id : file_id
+            file_id: file_id
         },
         dataType: "html",
         success: function (response) {
             var results = JSON.parse(response);
             $('#page-preloader').css('display', 'none');
-            if(results.status == 'success') {
+            if (results.status == 'success') {
                 alert(results.msg);
             }
-            else if(results.status == 'error') {
+            else if (results.status == 'error') {
                 alert(results.msg);
             }
         }

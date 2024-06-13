@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class EscrowDashboardTemplate
+class TransacteeTemplate
 {
     private $data;
     private $js_file;
@@ -26,11 +26,14 @@ class EscrowDashboardTemplate
             $data['notifications'] = $this->getNotifications(5);
             $data['unreadNotificationCount'] = $this->getUnreadNotificationCount(5);
             $data['sidebar'] = true;
-            $this->data['header'] = $this->CI->load->view('order/admin-layout/header.php', $data, true);
-            $this->data['sidebar'] = $this->CI->load->view('order/admin-layout/sidebar.php', $data, true);
+            $this->data['header'] = $this->CI->load->view('order/transactee-layout/header.php', $data, true);
+            if (isset($data['displaySidebar']) && !$data['displaySidebar']) {
+                $data['sidebar'] = false;
+            }
+            $this->data['sidebar'] = $this->CI->load->view('order/transactee-layout/sidebar.php', $data, true);
             $this->data['content'] = $this->CI->load->view($folder . '/' . $page . '.php', $data, true);
-            $this->data['footer'] = $this->CI->load->view('order/admin-layout/footer.php', $data, true);
-            $this->CI->load->view('order/escrow/escrow_dashboard_template.php', $this->data);
+            $this->data['footer'] = $this->CI->load->view('order/transactee-layout/footer.php', $data, true);
+            $this->CI->load->view('order/payoff_dashboard_template.php', $this->data);
         }
     }
 
