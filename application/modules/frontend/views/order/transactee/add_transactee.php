@@ -13,8 +13,17 @@
                                 <div class="alert alert-danger"><?php echo $error_msg; ?></div>
                             </div>
                         <?php }?>
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Add Transactee</h6>
+                        <div class="card-header">
+                            <div class="col-md-12 d-space-between" >
+                                <h6 class="font-weight-bold text-primary vertical-center">Add Transactee</h6>
+                                <a href="<?php echo site_url('pay-off-dashboard'); ?>" class="btn btn-info btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-arrow-left"></i>
+                                    </span>
+                                    <span class="text">Back</span>
+                                </a>
+                            </div>
+                            <!-- <h6 class="m-0 font-weight-bold text-primary">Add Transactee</h6> -->
                         </div>
                         <div class="card-body">
                             <form id="frm-add-transactee" method="POST" enctype="multipart/form-data" >
@@ -22,7 +31,7 @@
                                 <div class="form-group">
                                     <label for="transctee_name" class="col-sm-2 col-form-label">Transactee Name<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="transctee_name" id="transctee_name" class="form-control" placeholder="Transactee Name">
+                                        <input type="text" class="form-control" name="transctee_name" id="transctee_name" class="form-control" value="<?php echo set_value('transctee_name'); ?>" placeholder="Transactee Name">
                                         <?php if (!empty($transctee_name_error_msg)) {?>
                                             <span class="error"><?php echo $transctee_name_error_msg; ?></span>
                                         <?php }?>
@@ -32,7 +41,7 @@
                                 <div class="form-group">
                                     <label for="file_number" class="col-sm-2 col-form-label">File Number<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="file_number" id="file_number" class="form-control" placeholder="File Number">
+                                        <input type="text" class="form-control" name="file_number" id="file_number" value="<?php echo set_value('file_number'); ?>" class="form-control" placeholder="File Number">
                                         <?php if (!empty($file_number_error_msg)) {?>
                                             <span class="error"><?php echo $file_number_error_msg; ?></span>
                                         <?php }?>
@@ -42,7 +51,7 @@
                                 <div class="form-group">
                                     <label for="account_number" class="col-sm-2 col-form-label">Account Number<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="account_number" id="account_number" class="form-control" placeholder="Account Number">
+                                        <input type="text" class="form-control" name="account_number" id="account_number" value="<?php echo set_value('account_number'); ?>" class="form-control" placeholder="Account Number">
                                         <?php if (!empty($account_number_error_msg)) {?>
                                             <span class="error"><?php echo $account_number_error_msg; ?></span>
                                         <?php }?>
@@ -52,7 +61,7 @@
                                 <div class="form-group">
                                     <label for="aba" class="col-sm-2 col-form-label">ABA/Routing #<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="aba" id="aba" class="form-control" placeholder="ABA/Routing">
+                                        <input type="text" class="form-control" name="aba" id="aba" class="form-control" value="<?php echo set_value('aba'); ?>" placeholder="ABA/Routing">
                                         <?php if (!empty($aba_error_msg)) {?>
                                             <span class="error"><?php echo $aba_error_msg; ?></span>
                                         <?php }?>
@@ -62,7 +71,7 @@
                                 <div class="form-group">
                                     <label for="bank_name" class="col-sm-2 col-form-label">Bank Name<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="bank_name" id="bank_name" class="form-control" placeholder="Bank Name">
+                                        <input type="text" class="form-control" name="bank_name" id="bank_name" class="form-control" value="<?php echo set_value('bank_name'); ?>" placeholder="Bank Name">
                                         <?php if (!empty($bank_name_error_msg)) {?>
                                             <span class="error"><?php echo $bank_name_error_msg; ?></span>
                                         <?php }?>
@@ -72,7 +81,7 @@
                                 <div class="form-group">
                                     <label for="notes" class="col-sm-2 col-form-label">Add Notes<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <textarea type="text" class="form-control" name="notes" id="notes" class="form-control" placeholder="Add Notes"></textarea>
+                                        <textarea type="text" class="form-control" name="notes" id="notes" class="form-control"  placeholder="Add Notes"><?php echo set_value('notes'); ?></textarea>
                                         <?php if (!empty($notes_error_msg)) {?>
                                             <span class="error"><?php echo $notes_error_msg; ?></span>
                                         <?php }?>

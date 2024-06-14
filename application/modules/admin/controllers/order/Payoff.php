@@ -332,42 +332,56 @@ class PayOff extends MX_Controller
                 // print_r($_POST);die;
                 $this->form_validation->set_rules('transctee_name', 'Transctee Name', 'required', array('required' => 'Please Enter Transctee Name'));
                 $this->form_validation->set_rules('file_number', 'File Number', 'required', array('required' => 'Please Enter File Number'));
-                $this->form_validation->set_rules('account_number', 'Email', 'required', array('required' => 'Please Enter Account Number'));
+                $this->form_validation->set_rules('account_number', 'Account Number', 'required', array('required' => 'Please Enter Account Number'));
+                // $this->form_validation->set_rules('account_number', 'Account Number', 'required|callback_check_unique_account_number[' . $id . ']', array('required' => 'Please Enter Account Number'));
+                // $this->form_validation->set_rules(
+                //     'account_number',
+                //     'Account Number',
+                //     'required|callback_check_unique_account_number[' . $id . ']',
+                //     array('required' => 'Please Enter Account Number', 'check_unique_account_number' => 'The Account Number is already in use.')
+                // );
                 $this->form_validation->set_rules('aba', 'ABA/Routing', 'required', array('required' => 'Please Enter ABA/Routing'));
                 $this->form_validation->set_rules('bank_name', 'Bank Name', 'required', array('required' => 'Please Enter Bank Name'));
                 // $this->form_validation->set_rules('notes', 'Notes', 'required', array('required' => 'Please Enter Notes'));
 
                 if ($this->form_validation->run() == true) {
-                    $transacteeData = array(
-                        'transctee_name' => $_POST['transctee_name'],
-                        'file_number' => $_POST['file_number'],
-                        'account_number' => $_POST['account_number'],
-                        'aba' => $_POST['aba'],
-                        'bank_name' => $_POST['bank_name'],
-                        'admin_notes' => $_POST['admin_notes'],
-                        // 'submitted' => date('Y-m-d'),
-                        'approved_date' => date('Y-m-d H:i:s'),
-                        'approved_by' => $userdata['id'],
-                        'is_approved' => 1,
-                    );
-                    $condition = array('id' => $id);
-                    $update = $this->transactee_model->update($transacteeData, $condition);
-                    /** Save user Activity */
-                    $activity = 'transactee updated :- ' . $_POST['email_address'];
-                    $this->common->logAdminActivity($activity);
-                    /** End save user activity */
-                    if ($update) {
-                        $data['success_msg'] = 'Transactee updated successfully.';
+                    $accountNumber = $_POST['account_number'];
+                    $bool = $this->check_unique_account_number($accountNumber, $id);
+                    if (!$bool) {
+                        $data['account_number_error_msg'] = 'The Account Number is already in use';
                     } else {
-                        $data['error_msg'] = 'Error occurred while updating Title Officer';
+                        $transacteeData = array(
+                            'transctee_name' => $_POST['transctee_name'],
+                            'file_number' => $_POST['file_number'],
+                            'account_number' => $_POST['account_number'],
+                            'aba' => $_POST['aba'],
+                            'bank_name' => $_POST['bank_name'],
+                            'admin_notes' => $_POST['admin_notes'],
+                            'updated_at' => date("Y-m-d H:i:s"),
+                            // 'approved_date' => date('Y-m-d H:i:s'),
+                            // 'approved_by' => $userdata['id'],
+                            // 'is_approved' => 1,
+                        );
+                        $condition = array('id' => $id);
+                        $update = $this->transactee_model->update($transacteeData, $condition);
+                        /** Save user Activity */
+                        $activity = 'transactee updated :- ' . $_POST['transctee_name'];
+                        $this->common->logAdminActivity($activity);
+                        /** End save user activity */
+                        if ($update) {
+                            $data['success_msg'] = 'Transactee updated successfully.';
+                        } else {
+                            $data['error_msg'] = 'Error occurred while updating Title Officer';
+                        }
                     }
                 } else {
                     $data['transctee_name_error_msg'] = form_error('transctee_name');
                     $data['file_number_error_msg'] = form_error('file_number');
-                    $data['account_number_error_msg'] = form_error('account_number_address');
-                    $data['aba_error_msg'] = form_error('teleaba');
+                    $data['account_number_error_msg'] = form_error('account_number');
+                    $data['aba_error_msg'] = form_error('aba');
                     $data['bank_name_error_msg'] = form_error('bank_name');
                     // $data['notes_error_msg'] = form_error('notes');
+                    // print_r($data);die;
                 }
             }
 
@@ -376,6 +390,7 @@ class PayOff extends MX_Controller
             redirect('order/admin/transactees-list');
         }
         $data['transactee_info'] = $transactee_info;
+        // echo "<pre>";
         // print_r($data);die;
         $this->admintemplate->show("order/transactee", "edit_transactee", $data);
         // $this->load->view('order/layout/header', $data);
@@ -427,6 +442,7 @@ class PayOff extends MX_Controller
         }
         echo json_encode($return_data);
     }
+
     public function getTransacteeDocumentList()
     {
         $params = array();
@@ -483,7 +499,7 @@ class PayOff extends MX_Controller
         if ($this->input->post()) {
             $this->form_validation->set_rules('transctee_name', 'Transctee Name', 'required', array('required' => 'Please Enter Transctee Name'));
             $this->form_validation->set_rules('file_number', 'File Number', 'required', array('required' => 'Please Enter File Number'));
-            $this->form_validation->set_rules('account_number', 'Email', 'required', array('required' => 'Please Enter Account Number'));
+            $this->form_validation->set_rules('account_number', 'Account Number', 'required|is_unique[pct_vendors.account_number]', array('required' => 'Please Enter Account Number', 'is_unique' => 'The Account Number is already exist'));
             $this->form_validation->set_rules('aba', 'ABA/Routing', 'required', array('required' => 'Please Enter ABA/Routing'));
             $this->form_validation->set_rules('bank_name', 'Bank Name', 'required', array('required' => 'Please Enter Bank Name'));
             $this->form_validation->set_rules('admin_notes', 'Admin Notes', 'required', array('required' => 'Please Enter Admin Notes'));
@@ -569,6 +585,20 @@ class PayOff extends MX_Controller
         // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
         $this->admintemplate->show("order/transactee", "add_transactee", $data);
         // $this->load->view('order/transactee/add_transactee', $data);
+    }
+
+    public function check_unique_account_number($account_number, $id)
+    {
+        log_message('debug', "check_unique_account_number called with account_number: $account_number and id: $id");
+
+        $data = $this->transactee_model->getDetails($account_number, 'account_number');
+        log_message('debug', "Data retrieved: " . print_r($data, true));
+        if ($data && $data['id'] != $id) {
+            $this->form_validation->set_message('check_unique_account_number', 'The Account Number is already in use.');
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

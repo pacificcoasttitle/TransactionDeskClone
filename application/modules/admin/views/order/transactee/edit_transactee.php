@@ -55,8 +55,8 @@
                                 <label for="account_number" class="col-sm-2 col-form-label">Account Number<span class="required"> *</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="account_number" id="account_number" class="form-control" placeholder="Email Address" value="<?php echo isset($transactee_info['account_number']) && !empty($transactee_info['account_number']) ? $transactee_info['account_number'] : '' ?>">
-                                    <?php if (!empty($email_error_msg)) {?>
-                                        <span class="error"><?php echo $email_error_msg; ?></span>
+                                    <?php if (!empty($account_number_error_msg)) {?>
+                                        <span class="error"><?php echo $account_number_error_msg; ?></span>
                                     <?php }?>
                                 </div>
                             </div>
