@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label for="transctee_name" class="col-sm-2 col-form-label">Transactee Name<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="transctee_name" id="transctee_name" class="form-control" placeholder="Transactee Name">
+                                        <input type="text" class="form-control" name="transctee_name" id="transctee_name" value="<?php echo set_value('transctee_name'); ?>"  placeholder="Transactee Name">
                                         <?php if (!empty($transctee_name_error_msg)) {?>
                                             <span class="error"><?php echo $transctee_name_error_msg; ?></span>
                                         <?php }?>
@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label for="file_number" class="col-sm-2 col-form-label">File Number<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="file_number" id="file_number" class="form-control" placeholder="File Number">
+                                        <input type="text" class="form-control" name="file_number" id="file_number" value="<?php echo set_value('file_number'); ?>" placeholder="File Number">
                                         <?php if (!empty($file_number_error_msg)) {?>
                                             <span class="error"><?php echo $file_number_error_msg; ?></span>
                                         <?php }?>
@@ -53,7 +53,7 @@
                                 <div class="form-group">
                                     <label for="account_number" class="col-sm-2 col-form-label">Account Number<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="account_number" id="account_number" class="form-control" placeholder="Account Number">
+                                        <input type="text" class="form-control" name="account_number" id="account_number" value="<?php echo set_value('account_number'); ?>" placeholder="Account Number">
                                         <?php if (!empty($account_number_error_msg)) {?>
                                             <span class="error"><?php echo $account_number_error_msg; ?></span>
                                         <?php }?>
@@ -63,7 +63,7 @@
                                 <div class="form-group">
                                     <label for="aba" class="col-sm-2 col-form-label">ABA/Routing #<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="aba" id="aba" class="form-control" placeholder="ABA/Routing">
+                                        <input type="text" class="form-control" name="aba" id="aba" value="<?php echo set_value('aba'); ?>" placeholder="ABA/Routing">
                                         <?php if (!empty($aba_error_msg)) {?>
                                             <span class="error"><?php echo $aba_error_msg; ?></span>
                                         <?php }?>
@@ -73,7 +73,7 @@
                                 <div class="form-group">
                                     <label for="bank_name" class="col-sm-2 col-form-label">Bank Name<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="bank_name" id="bank_name" class="form-control" placeholder="Bank Name">
+                                        <input type="text" class="form-control" name="bank_name" id="bank_name" value="<?php echo set_value('bank_name'); ?>" placeholder="Bank Name">
                                         <?php if (!empty($bank_name_error_msg)) {?>
                                             <span class="error"><?php echo $bank_name_error_msg; ?></span>
                                         <?php }?>
@@ -81,9 +81,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="admin_notes" class="col-sm-2 col-form-label">Add Admin Notes<span class="required"> *</span></label>
+                                    <label for="admin_notes" class="col-sm-2 col-form-label">Add Admin Notes</label>
                                     <div class="col-sm-6">
-                                        <textarea type="text" class="form-control" name="admin_notes" id="admin_notes" class="form-control" placeholder="Add Admin Notes"></textarea>
+                                        <textarea type="text" class="form-control" name="admin_notes" id="admin_notes" placeholder="Add Admin Notes"> <?php echo set_value('admin_notes'); ?> </textarea>
                                         <?php if (!empty($admin_notes_error_msg)) {?>
                                             <span class="error"><?php echo $admin_notes_error_msg; ?></span>
                                         <?php }?>
@@ -93,7 +93,7 @@
                                 <div class="form-group">
                                     <label for="transactee_documents" class="col-sm-2 col-form-label">Upload Document<span class="required"> *</span></label>
                                     <div class="col-sm-6">
-                                        <input type="file" class="form-control" name="transactee_documents" id="transactee_documents" class="form-control" accept="application/pdf">
+                                        <input type="file" class="form-control" name="transactee_documents" id="transactee_documents" accept="application/pdf">
                                         <!-- <textarea type="text" class="form-control" name="transactee_documents" id="transactee_documents" class="form-control" placeholder="Upload Document"></textarea> -->
                                         <?php if (!empty($transactee_documents_error_msg)) {?>
                                             <span class="error"><?php echo $transactee_documents_error_msg; ?></span>

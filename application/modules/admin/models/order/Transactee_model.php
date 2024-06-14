@@ -186,13 +186,17 @@ class Transactee_model extends CI_Model
         return false;
     }
 
-    public function getDetails($id)
+    public function getDetails($val, $params = '')
     {
         $table = $this->table;
-        if (!empty($id)) {
+        if (!empty($val)) {
             $this->db->select('*');
             $this->db->from($table);
-            $this->db->where('id', $id);
+            if (!empty($params)) {
+                $this->db->where($params, $val);
+            } else {
+                $this->db->where('id', $val);
+            }
             $query = $this->db->get();
             return $query->row_array();
         }
