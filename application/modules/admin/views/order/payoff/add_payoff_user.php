@@ -14,6 +14,14 @@
             <div class="col-sm-6">
                 <h1 class="h3 text-gray-800"><?=$pageTitle?></h1>
             </div>
+            <div class="col-sm-6">
+                <a href="<?php echo site_url('order/admin/payoff-users'); ?>" class="btn btn-info btn-icon-split float-right mr-2">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span class="text"> Back </span>
+                </a>
+            </div>
         </div>
         <div class="row">
                 <div class="col-md-12">
