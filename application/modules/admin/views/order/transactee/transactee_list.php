@@ -111,49 +111,6 @@ $payoff_user = json_encode($payoff_user);
 		</div>
 	</div>
 </section>
-<div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModal" aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<form  method="post" id="notes-form">
-			    <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card shadow">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Review Notes</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="smart-forms smart-container">
-                                    <div class="modal-body search-result">
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <label for="email_id" class="col-form-label">Notes</label>
-													<textarea class="form-control" name="notes" id="notes" readonly></textarea>
-                                                    <!-- <input name="email_id" required="" type="email" class="form-control" id="email_id"> -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <label for="admin_notes" class="col-form-label">Admin Notes</label>
-													<textarea class="form-control" name="admin_notes" id="admin_notes" readonly></textarea>
-                                                    <!-- <input name="email_id" required="" type="email" class="form-control" id="email_id"> -->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-			</form>
-		</div>
-	</div>
-</div>
 
 <div class="modal fade transactee-modal" id="openUploadModel" tabindex="-1" role="dialog" aria-labelledby="openUploadModel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
@@ -164,8 +121,8 @@ $payoff_user = json_encode($payoff_user);
                         <div class="card shadow">
                             <div class="card-header py-3">
 								<div class="row">
-									<div class="col-sm-6">
-										<!-- <h1 class="h3 text-gray-800">CPL Documents</h1> -->
+                                    <div class="col-sm-12">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 										<h6 class="m-0 font-weight-bold text-primary" >Document List</h6>
 									</div>
 								</div>
@@ -239,6 +196,7 @@ $payoff_user = json_encode($payoff_user);
                     <div class="col-lg-12">
                         <div class="card shadow">
                             <div class="card-header py-3">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h6 class="m-0 font-weight-bold text-primary" > View / Edit Transactee </h6>
                             </div>
                             <div class="card-body">

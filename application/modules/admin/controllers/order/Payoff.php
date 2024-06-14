@@ -345,15 +345,15 @@ class PayOff extends MX_Controller
                         'aba' => $_POST['aba'],
                         'bank_name' => $_POST['bank_name'],
                         'admin_notes' => $_POST['admin_notes'],
-                        // 'submitted' => date('Y-m-d'),
-                        'approved_date' => date('Y-m-d H:i:s'),
-                        'approved_by' => $userdata['id'],
-                        'is_approved' => 1,
+                        'updated_at' => date("Y-m-d H:i:s"),
+                        // 'approved_date' => date('Y-m-d H:i:s'),
+                        // 'approved_by' => $userdata['id'],
+                        // 'is_approved' => 1,
                     );
                     $condition = array('id' => $id);
                     $update = $this->transactee_model->update($transacteeData, $condition);
                     /** Save user Activity */
-                    $activity = 'transactee updated :- ' . $_POST['email_address'];
+                    $activity = 'transactee updated :- ' . $_POST['transctee_name'];
                     $this->common->logAdminActivity($activity);
                     /** End save user activity */
                     if ($update) {

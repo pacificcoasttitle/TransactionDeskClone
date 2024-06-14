@@ -189,7 +189,7 @@ function editTransactee(id, editFlag) {
                 $('#bank_name').val(res_data.bank_name);
                 $('#note').val(res_data.notes);
                 $('#admin_note').val(res_data.admin_notes);
-                $('input, textarea').attr('disabled', true);
+                $('#add-edit-transactee-form input.form-control, #add-edit-transactee-form textarea.form-control').attr('disabled', true);
                 $('.form-footer').addClass('d-none');
                 if (editFlag) {
                     $('input, textarea').attr('disabled', false);

@@ -1,16 +1,16 @@
 
 <div class="content">
-    <?php if(!empty($success_msg)){ ?>
+    <?php if (!empty($success_msg)) {?>
         <div class="col-xs-12">
             <div class="alert alert-success"><?php echo $success_msg; ?></div>
         </div>
-    <?php } ?>
+    <?php }?>
 
-    <?php if(!empty($error_msg)){ ?>
+    <?php if (!empty($error_msg)) {?>
         <div class="col-xs-12">
             <div class="alert alert-danger"><?php echo $error_msg; ?></div>
         </div>
-    <?php } ?>
+    <?php }?>
 
     <div class="container-fluid">
         <div class="row mb-3">
@@ -24,30 +24,30 @@
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Resware Admin Credential</h6>
                     </div>
-                    <div class="card-body">        
+                    <div class="card-body">
                         <form id="resware-admin-credential" method="POST">
 
                             <div class="form-group">
                                 <label for="resware_username" class="col-sm-2 col-form-label">Username<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="resware_username" id="resware_username" value="<?php echo  set_value('username') ?  set_value('username') : $credResult['username'];?>" class="form-control" placeholder="Resware Admin Username" required>
-                                
-                                    <?php if(!empty($resware_username_error_msg)){ ?>                     
+                                    <input type="text" class="form-control" name="resware_username" id="resware_username" value="<?php echo set_value('username') ? set_value('username') : $credResult['username']; ?>" class="form-control" placeholder="Resware Admin Username" required>
+
+                                    <?php if (!empty($resware_username_error_msg)) {?>
                                         <span class="error"><?php echo $resware_username_error_msg; ?></span>
-                                    <?php } ?>
+                                    <?php }?>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="resware_password" class="col-sm-2 col-form-label">Password<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="resware_password" id="resware_password" value="<?php echo set_value('password') ?  set_value('password') : $credResult['password'];?>" class="form-control" placeholder="Resware Admin Password" required>
-                                    <?php if(!empty($resware_password_error_msg)){ ?>                     
+                                    <input type="text" class="form-control" name="resware_password" id="resware_password" value="<?php echo set_value('password') ? set_value('password') : $credResult['password']; ?>" class="form-control" placeholder="Resware Admin Password" required>
+                                    <?php if (!empty($resware_password_error_msg)) {?>
                                         <span class="error"><?php echo $resware_password_error_msg; ?></span>
-                                    <?php } ?>
+                                    <?php }?>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">

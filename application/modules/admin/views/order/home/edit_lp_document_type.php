@@ -21,24 +21,32 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
     integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 <div class="content">
-    <?php if (!empty($success_msg)) { ?>
+    <?php if (!empty($success_msg)) {?>
         <div class="col-xs-12">
             <div class="alert alert-success">
                 <?php echo $success_msg; ?>
             </div>
         </div>
-    <?php } ?>
-    <?php if (!empty($error_msg)) { ?>
+    <?php }?>
+    <?php if (!empty($error_msg)) {?>
         <div class="col-xs-12">
             <div class="alert alert-danger">
                 <?php echo $error_msg; ?>
             </div>
         </div>
-    <?php } ?>
+    <?php }?>
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-sm-6">
                 <h1 class="h3 text-gray-800">LP Document type</h1>
+            </div>
+            <div class="col-sm-6">
+                <a href="<?php echo base_url() . 'order/admin/lp-document-types'; ?>" class="btn btn-info btn-icon-split float-right mr-2">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-arrow-left"></i>
+                    </span>
+                    <span class="text"> Back </span>
+                </a>
             </div>
         </div>
         <div class="row">
@@ -56,11 +64,11 @@
                                     <input type="text" class="form-control" name="doc_type" id="doc_type"
                                         class="form-control" placeholder="Doc Type"
                                         value="<?php echo isset($lp_document_info['doc_type']) && !empty($lp_document_info['doc_type']) ? $lp_document_info['doc_type'] : ''; ?>">
-                                    <?php if (!empty($doc_type_error_msg)) { ?>
+                                    <?php if (!empty($doc_type_error_msg)) {?>
                                         <span class="error">
                                             <?php echo $doc_type_error_msg; ?>
                                         </span>
-                                    <?php } ?>
+                                    <?php }?>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -71,29 +79,29 @@
                                         id="doc_type_description" class="form-control"
                                         placeholder="Doc Type Description"
                                         value="<?php echo isset($lp_document_info['doc_type_description']) && !empty($lp_document_info['doc_type_description']) ? $lp_document_info['doc_type_description'] : ''; ?>">
-                                    <?php if (!empty($doc_type_description_error_msg)) { ?>
+                                    <?php if (!empty($doc_type_description_error_msg)) {?>
                                         <span class="error">
                                             <?php echo $doc_type_description_error_msg; ?>
                                         </span>
-                                    <?php } ?>
+                                    <?php }?>
                                 </div>
                             </div>
                             <!-- <div class="form-group">
                                 <label for="doc_sub_type" class="col-sm-2 col-form-label">Doc Sub Type<span class="required"> *</span></label>
                                 <div class="col-sm-10">
                                     <input type="text"  class="form-control" name="doc_sub_type" id="doc_sub_type" class="form-control" placeholder="Doc Sub Type" value="<?php echo isset($lp_document_info['doc_sub_type']) && !empty($lp_document_info['doc_sub_type']) ? $lp_document_info['doc_sub_type'] : ''; ?>">
-                                    <?php if (!empty($doc_sub_type_error_msg)) { ?>                     
+                                    <?php if (!empty($doc_sub_type_error_msg)) {?>
                                         <span class="error"><?php echo $doc_sub_type_error_msg; ?></span>
-                                    <?php } ?>
+                                    <?php }?>
                                 </div>
-                            </div>      
+                            </div>
                             <div class="form-group">
                                 <label for="doc_sub_type_description" class="col-sm-2 col-form-label">Doc Sub Type Description<span class="required"> *</span></label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" name="doc_sub_type_description" id="doc_sub_type_description" class="form-control" placeholder="Doc Sub Type Description" value="<?php echo isset($lp_document_info['doc_sub_type_description']) && !empty($lp_document_info['doc_sub_type_description']) ? $lp_document_info['doc_sub_type_description'] : ''; ?>">
-                                    <?php if (!empty($doc_sub_type_description_error_msg)) { ?>                     
+                                    <?php if (!empty($doc_sub_type_description_error_msg)) {?>
                                         <span class="error"><?php echo $doc_sub_type_description_error_msg; ?></span>
-                                    <?php } ?>
+                                    <?php }?>
                                 </div>
                             </div> -->
 
@@ -105,7 +113,7 @@
                                         placeholder="Is Notice" <?php echo isset($lp_document_info['subtype_flag']) && !empty($lp_document_info['subtype_flag']) ? 'Checked' : ''; ?>>
                                 </div>
                             </div>
-                            <?php if (empty($lp_document_info['subtype_flag'])) { ?>
+                            <?php if (empty($lp_document_info['subtype_flag'])) {?>
                                 <div class="form-group ">
                                     <div class="subtype-wrapper display-flex" data-count="1">
                                         <div class="col-sm-4">
@@ -121,9 +129,9 @@
 
                                     <?php
 
-                                    if (!empty($mapped_sub_type)) {
-                                        foreach ($mapped_sub_type as $key => $val) {
-                                            ?>
+    if (!empty($mapped_sub_type)) {
+        foreach ($mapped_sub_type as $key => $val) {
+            ?>
                                             <div class="subtype-wrapper display-flex toclone clone-widget mb-2" data-count="1">
                                                 <div class="col-sm-4">
                                                     <div class="selectSubtype">
@@ -131,15 +139,16 @@
                                                             <option value=""> Select Sub type </option>
                                                             <?php foreach ($subtypeList as $list) {
 
-                                                                $selected = '';
-                                                                if ($list['doc_type'] == $val['doc_type']) {
-                                                                    $selected = 'selected';
-                                                                }
-                                                                ?>
+                $selected = '';
+                if ($list['doc_type'] == $val['doc_type']) {
+                    $selected = 'selected';
+                }
+                ?>
                                                                 <option <?php echo $selected; ?>
                                                                     value="<?php echo $list['doc_type']; ?>">
                                                                     <?php echo $list['doc_type']; ?></option>
-                                                            <?php } ?>
+                                                            <?php
+}?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -158,16 +167,17 @@
                                                     onClick="addSubtypeInput(<?php echo $key + 1; ?>)">
                                                     <span class="icon"> <i class="fas fa-plus"></i> </span></a>
                                             </div>
-                                        <?php }
-                                    } else { ?>
+                                        <?php
+}
+    } else {?>
                                     <div class="subtype-wrapper display-flex toclone clone-widget mb-2" data-count="1">
                                         <div class="col-sm-4">
                                             <div class="selectSubtype">
                                                 <select name="subtype[]" id="subtype" class="form-control sectionSelect">
                                                     <option value=""> Select Sub type </option>
-                                                    <?php foreach ($subtypeList as $list) { ?>
+                                                    <?php foreach ($subtypeList as $list) {?>
                                                         <option value="<?php echo $list['doc_type']; ?>"> <?php echo $list['doc_type']; ?></option>
-                                                    <?php } ?>
+                                                    <?php }?>
                                                 </select>
                                             </div>
                                         </div>
@@ -185,9 +195,9 @@
                                             onClick="addSubtypeInput(1)">
                                             <span class="icon"> <i class="fas fa-plus"></i> </span></a>
                                     </div>
-                                <?php } ?>
+                                <?php }?>
                                 </div>
-                            <?php } ?>
+                            <?php }?>
                             <!-- <div
                                 class="form-group selectsubtype <?php echo isset($lp_document_info['subtype_flag']) && !empty($lp_document_info['subtype_flag']) ? 'hide' : '' ?> ">
                                 <label for="subtype" class="col-sm-4 col-form-label">Select Sub types.</label>
@@ -195,16 +205,16 @@
                                     <select name="subtype[]" class="selectpicker" multiple data-live-search="true"
                                         data-actions-box="true">
                                         <?php
-                                        // print_r($lp_document_info);die;
-                                        foreach ($subtypeList as $list) { ?>
+// print_r($lp_document_info);die;
+foreach ($subtypeList as $list) {?>
                                             <?php
-                                            $selected = '';
-                                            if (in_array($list['doc_type'], $selectedList)) {
-                                                $selected = 'selected';
-                                            }
-                                            ?>
+$selected = '';
+    if (in_array($list['doc_type'], $selectedList)) {
+        $selected = 'selected';
+    }
+    ?>
                                             <option <?php echo $selected; ?> value="<?php echo $list['doc_type']; ?>"><?php echo $list['doc_type']; ?></option>
-                                        <?php } ?>
+                                        <?php }?>
                                     </select>
                                 </div>
                             </div> -->

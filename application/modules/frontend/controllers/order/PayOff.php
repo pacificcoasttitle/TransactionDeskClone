@@ -408,13 +408,13 @@ class PayOff extends MX_Controller
         if ($this->input->post()) {
             $this->form_validation->set_rules('transctee_name', 'Transctee Name', 'required', array('required' => 'Please Enter Transctee Name'));
             $this->form_validation->set_rules('file_number', 'File Number', 'required', array('required' => 'Please Enter File Number'));
-            $this->form_validation->set_rules('account_number', 'Account Number', 'required', array('required' => 'Please Enter Account Number'));
+            $this->form_validation->set_rules('account_number', 'Account Number', 'required|is_unique[pct_vendors.account_number]', array('required' => 'Please Enter Account Number', 'is_unique' => 'The Account Number is already exist'));
             $this->form_validation->set_rules('aba', 'ABA/Routing', 'required', array('required' => 'Please Enter ABA/Routing'));
             $this->form_validation->set_rules('bank_name', 'Bank Name', 'required', array('required' => 'Please Enter Bank Name'));
             $this->form_validation->set_rules('notes', 'Notes', 'required', array('required' => 'Please Enter Notes'));
+            // $this->form_validation->set_message('is_unique', 'The %s is already exist');
 
             if ($this->form_validation->run() == true) {
-
                 $config['upload_path'] = './uploads/transactee-upload-doc/';
                 $config['allowed_types'] = 'pdf';
                 $config['max_size'] = 12000;
