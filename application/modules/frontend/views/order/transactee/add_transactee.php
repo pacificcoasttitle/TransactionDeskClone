@@ -16,7 +16,7 @@
                         <div class="card-header">
                             <div class="col-md-12 d-space-between" >
                                 <h6 class="font-weight-bold text-primary vertical-center">Add Transactee</h6>
-                                <a href="http://localhost.pct.io/order/admin/transactees-list" class="btn btn-info btn-icon-split">
+                                <a href="<?php echo site_url('pay-off-dashboard'); ?>" class="btn btn-info btn-icon-split">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-arrow-left"></i>
                                     </span>
