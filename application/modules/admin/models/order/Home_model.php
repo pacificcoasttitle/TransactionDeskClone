@@ -9,12 +9,14 @@ class Home_model extends CI_Model
     }
     public function get_admin_user($email, $password)
     {
-        $this->db->select('*');
-        $this->db->where('email_id', $email);
-        // $this->db->where('password', md5($password));
-        $this->db->where('status', 1);
-        $query = $this->db->get('admin');
+        $this->db->select('admin.email_id, admin.password, admin.role_id, admin.status, admin.created_at, admin.updated_at, admin.first_name, admin.last_name, admin.id, pct_users_role.access');
+        $this->db->from('admin');
+        $this->db->join('pct_users_role', 'admin.role_id = pct_users_role.id');
 
+        $this->db->where('admin.email_id', $email);
+        // $this->db->where('password', md5($password));
+        $this->db->where('admin.status', 1);
+        $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $admin_record = $query->row_array();
             //Check password

@@ -238,4 +238,19 @@ class Common
         }
         return $date->format($format);
     }
+
+    public function checkAccess($access)
+    {
+        $userdata = $this->CI->session->userdata('admin');
+        $accessArray = isset($userdata['access']) ? $userdata['access'] : [];
+
+        $roleList = $this->getRoleList();
+        $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+        $roleName = $roleList[$role_id];
+        if (in_array($roleName, ['Super Admin']) || in_array($access, $accessArray)) {
+            return true;
+        } else {
+            redirect(base_url() . 'order/admin');
+        }
+    }
 }

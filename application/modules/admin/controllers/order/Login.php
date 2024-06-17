@@ -38,7 +38,6 @@ class Login extends MX_Controller
             $email_address = $this->input->post('email_address');
             $password = $this->input->post('password');
             $admin = $this->home_model->get_admin_user($email_address, $password);
-
             if ($admin) {
                 $session_data = array(
                     "id" => isset($admin['id']) && !empty($admin['id']) ? $admin['id'] : '',
@@ -46,6 +45,7 @@ class Login extends MX_Controller
                     "email_address" => isset($admin['email_id']) && !empty($admin['email_id']) ? $admin['email_id'] : '',
                     "is_admin" => 1,
                     "role_id" => isset($admin['role_id']) && !empty($admin['role_id']) ? $admin['role_id'] : '',
+                    "access" => isset($admin['access']) && !empty($admin['access']) ? json_decode($admin['access']) : '',
                 );
 
                 $this->session->set_userdata('admin', $session_data);

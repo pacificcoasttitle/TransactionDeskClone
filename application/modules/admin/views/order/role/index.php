@@ -14,29 +14,29 @@
 			<h1 class="h3 text-gray-800">Roles Listing</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="javascript:void(0);" data-toggle="modal" data-target="#addRoleModal"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#addRoleModal"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
-                <span class="text"> Add Role </span> 
+                <span class="text"> Add Role </span>
             </a>
 		</div>
 	</div>
 	<div class="card shadow mb-4">
-        <?php if($this->session->flashdata('error')) : ?>
-            <div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error');?></div>
-        <?php elseif($this->session->flashdata('success')): ?>
-            <div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success');?></div>
-        <?php endif; ?>
+        <?php if ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
+        <?php elseif ($this->session->flashdata('success')): ?>
+            <div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
+        <?php endif;?>
         <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
+            <div class="datatable-header-titles" >
                 <span>
                     <i class="fas fa-users"></i>
                 </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Roles</h6> 
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Roles</h6>
             </div>
         </div>
-                
+
         <div class="card-body">
             <div id="forms_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
             <div id="forms_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
@@ -46,29 +46,39 @@
                         <tr>
 							<th>Sr No</th>
 							<th>Title</th>
+							<th>Access</th>
 							<th>Created At</th>
 							<th>Action</th>
                         </tr>
-                    </thead>                
+                    </thead>
                     <tbody>
-						<?php
-						foreach($users_roles as $role_key=>$role) :
-						?>
+						<?php foreach ($users_roles as $role_key => $role): ?>
+<?php
+$accessAssigned = '';
+if (!empty($role->access)) {
+    $accessData = json_decode($role->access);
+    $last_key = end(array_keys($accessData));
+    foreach ($accessData as $k => $acc) {
+        $accessAssigned .= $access_list[$acc];
+        if ($last_key !== $k) {
+            $accessAssigned .= ', ';
+        }
+    }
+}
+?>
 						<tr>
-							<td><?=($role_key+1)?></td>
+							<td><?=($role_key + 1)?></td>
 							<td><?=$role->title;?></td>
-							
-							<td><?=date('d F y',strtotime($role->created_at));?></td>
+							<td><?=$accessAssigned;?></td>
+							<td><?=date('d F y', strtotime($role->created_at));?></td>
 							<td><div style='display:flex;'> <a href='javascript::void();' onclick='editRoleInfo("<?=$role->id?>","<?=$role->title?>");'><i class='fas fa-fw fa-edit'></i></a>
-								<?php if($role->id != 1 && $role->id != 2) : ?>
-								<a href='javascript::void();'  class='delete-record-custom' data-url="<?php echo base_url('order/admin/delete-role-record/'.$role->id)?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></a>
-								<?php endif; ?>
+								<?php if ($role->id != 1 && $role->id != 2): ?>
+								<a href='javascript::void();'  class='delete-record-custom' data-url="<?php echo base_url('order/admin/delete-role-record/' . $role->id) ?>" title ='Delete This User'><span class='fas fa-fw fa-trash' aria-hidden='true'></span></a>
+								<?php endif;?>
 								</div>
 							</td>
 						</tr>
-						<?php
-						endforeach;
-						?>
+						<?php endforeach;?>
 					</tbody>
                 </table>
             </div>
@@ -88,15 +98,26 @@
 							<div class="card-header py-3">
 								<h6 class="m-0 font-weight-bold text-primary" >Add / Edit Role</h6>
 							</div>
-							<div class="card-body"> 
+							<div class="card-body">
 								<div class="smart-forms smart-container">
 									<div class="modal-body search-result">
-									
+
 										<div class="form-group">
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="role-title" class="col-form-label">Title</label>
 													<input name="title" required="" type="text" class="form-control" id="role-title">
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-6">
+													<label for="role-title" class="col-form-label">Access Assigned</label>
+													<select class="form-control" name="access_list[]" id="access_list" required multiple>
+														<?php foreach ($access_list as $key => $access): ?>
+															<option value="<?php echo $key; ?>"><?php echo $access; ?></option>
+														<?php endforeach;?>
+													</select>
+													<!-- <input name="title" required="" type="text" class="form-control" id="role-title"> -->
 												</div>
 											</div>
 										</div>
@@ -120,7 +141,7 @@
 						</div>
 					</div>
 				</div>
-				
+
                 <input type="hidden" name="role_id" id="formId" value="">
 			</form>
 		</div>
@@ -129,7 +150,7 @@
 
 <script>
 
-    function editRoleInfo(formId,title) 
+    function editRoleInfo(formId,title)
     {
 		$('#formId').val(formId);
         $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
@@ -137,8 +158,8 @@
 		$('#role-title').val(title);
 		$('#page-preloader').css('display', 'none');
         $('#addRoleModal').modal('show');
-		
-       
+
+
         return false;
 	}
 </script>

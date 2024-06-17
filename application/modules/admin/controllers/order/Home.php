@@ -3234,6 +3234,7 @@ class Home extends MX_Controller
 
     public function payoff_users()
     {
+        $this->common->checkAccess('payoff_team');
         $data = array();
         $data['title'] = 'PCT Order: Payoff Users';
         $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
@@ -3245,6 +3246,7 @@ class Home extends MX_Controller
 
     public function get_payoff_users_list()
     {
+        $this->common->checkAccess('payoff_team');
         $params = array();
         $this->load->model('order/payoff_model');
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -3305,6 +3307,7 @@ class Home extends MX_Controller
 
     public function add_payoff_user()
     {
+        $this->common->checkAccess('payoff_team');
         $data = array();
         $data['title'] = 'PCT Order: Add Payoff User.';
         $data['pageTitle'] = 'Payoff User.';
@@ -3367,6 +3370,7 @@ class Home extends MX_Controller
 
     public function delete_payoff_user()
     {
+        $this->common->checkAccess('payoff_team');
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             $this->load->model('order/payoff_model');
@@ -3393,6 +3397,7 @@ class Home extends MX_Controller
 
     public function edit_payoff_user()
     {
+        $this->common->checkAccess('payoff_team');
         $data = array();
         $data['title'] = 'PCT Order: Edit Payoff User';
         $data['pageTitle'] = 'Payoff User.';
@@ -3482,10 +3487,10 @@ class Home extends MX_Controller
 
     public function transactees_list()
     {
-        $data = array();
-        $data['title'] = 'PCT Order: Transactees List';
-        $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
-        $this->admintemplate->show("order/payoff", "transactees_list", $data);
+        // $data = array();
+        // $data['title'] = 'PCT Order: Transactees List';
+        // $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
+        // $this->admintemplate->show("order/payoff", "transactees_list", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/escrow_officers', $data);
         // $this->load->view('order/layout/footer', $data);
@@ -3493,59 +3498,59 @@ class Home extends MX_Controller
 
     public function get_transactees_list()
     {
-        $params = array();
-        $this->load->model('order/home_model');
-        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
-            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
-            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
-            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
-            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+        // $params = array();
+        // $this->load->model('order/home_model');
+        // if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+        //     $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+        //     $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+        //     $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+        //     $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+        //     $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
-            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            $params['where']['status'] = 1;
+        //     $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+        //     $params['where']['status'] = 1;
 
-            $pageno = ($params['start'] / $params['length']) + 1;
+        //     $pageno = ($params['start'] / $params['length']) + 1;
 
-            $payoff_users_list = $this->home_model->get_payoff_users($params);
+        //     $payoff_users_list = $this->home_model->get_payoff_users($params);
 
-            $json_data['draw'] = intval($params['draw']);
-        } else {
-            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $payoff_users_list = $this->home_model->get_payoff_users($params);
-        }
+        //     $json_data['draw'] = intval($params['draw']);
+        // } else {
+        //     $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+        //     $payoff_users_list = $this->home_model->get_payoff_users($params);
+        // }
 
-        $data = array();
-        if (isset($payoff_users_list['data']) && !empty($payoff_users_list['data'])) {
-            foreach ($payoff_users_list['data'] as $key => $value) {
-                $nestedData = array();
-                $user_id = $value['id'];
-                $nestedData[] = $value['first_name'] . ' ' . $value['last_name'];
-                $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['company_name'];
-                $status = $value['status'];
-                if ($status == 1) {
-                    $checked = 'checked';
-                } else {
-                    $checked = '';
-                }
-                // $nestedData[] = "<input $checked onclick='enablePayoffUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+        // $data = array();
+        // if (isset($payoff_users_list['data']) && !empty($payoff_users_list['data'])) {
+        //     foreach ($payoff_users_list['data'] as $key => $value) {
+        //         $nestedData = array();
+        //         $user_id = $value['id'];
+        //         $nestedData[] = $value['first_name'] . ' ' . $value['last_name'];
+        //         $nestedData[] = $value['email_address'];
+        //         $nestedData[] = $value['company_name'];
+        //         $status = $value['status'];
+        //         if ($status == 1) {
+        //             $checked = 'checked';
+        //         } else {
+        //             $checked = '';
+        //         }
+        //         // $nestedData[] = "<input $checked onclick='enablePayoffUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
 
-                $action = "";
-                $editUrl = base_url() . 'order/admin/edit-transactee-user/' . $value['id'];
-                $action = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Transactee Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+        //         $action = "";
+        //         $editUrl = base_url() . 'order/admin/edit-transactee-user/' . $value['id'];
+        //         $action = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Transactee Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
 
-                $action .= "<a href='javascript:void(0);' onclick='deleteTransactee(" . $value['id'] . ")' title='Delete Transactee'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
-                $nestedData[] = $action;
+        //         $action .= "<a href='javascript:void(0);' onclick='deleteTransactee(" . $value['id'] . ")' title='Delete Transactee'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+        //         $nestedData[] = $action;
 
-                $data[] = $nestedData;
-                // $cnt++;
-            }
-        }
-        $json_data['recordsTotal'] = intval($payoff_users_list['recordsTotal']);
-        $json_data['recordsFiltered'] = intval($payoff_users_list['recordsFiltered']);
-        $json_data['data'] = $data;
-        echo json_encode($json_data);
+        //         $data[] = $nestedData;
+        //         // $cnt++;
+        //     }
+        // }
+        // $json_data['recordsTotal'] = intval($payoff_users_list['recordsTotal']);
+        // $json_data['recordsFiltered'] = intval($payoff_users_list['recordsFiltered']);
+        // $json_data['data'] = $data;
+        // echo json_encode($json_data);
     }
 
     public function downloadAwsDocument()

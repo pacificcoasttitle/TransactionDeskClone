@@ -24,6 +24,7 @@ class PayOff extends MX_Controller
 
     public function transactees_list()
     {
+        $this->common->checkAccess('transactee_list');
         $data['errors'] = array();
         $data['success'] = array();
         if ($this->session->userdata('errors')) {
@@ -123,6 +124,7 @@ class PayOff extends MX_Controller
 
     public function get_transactees_list()
     {
+        $this->common->checkAccess('transactee_list');
         $params = array();
         $data = array();
         $params['is_pay_off'] = 1;
@@ -231,6 +233,7 @@ class PayOff extends MX_Controller
 
     public function update_transactee_status()
     {
+        $this->common->checkAccess('transactee_list');
         $id = $this->input->post('id');
         $status = $this->input->post('status');
         $userdata = $this->session->userdata('admin');
@@ -259,6 +262,7 @@ class PayOff extends MX_Controller
 
     public function uploadTransacteeDocuments()
     {
+        $this->common->checkAccess('transactee_list');
         $transacteeId = $_POST['transactee_id'];
 
         $this->load->model('order/transactee_model');
@@ -322,6 +326,7 @@ class PayOff extends MX_Controller
 
     public function edit_transactee_details($id)
     {
+        $this->common->checkAccess('transactee_list');
         $data = array();
         $data['title'] = 'PCT Order: Edit Admin Transactee';
         $data['pageTitle'] = 'Transactee';
@@ -400,6 +405,7 @@ class PayOff extends MX_Controller
 
     public function delete_transactee_details()
     {
+        $this->common->checkAccess('transactee_list');
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             // $this->load->model('order/payoff_model');
@@ -425,6 +431,7 @@ class PayOff extends MX_Controller
 
     public function get_transactee_details()
     {
+        $this->common->checkAccess('transactee_list');
         $transacteeId = $this->input->post('transactee_id');
         if ($transacteeId) {
             $getTransacteeDetails = $this->transactee_model->getDetails($transacteeId);
@@ -445,6 +452,7 @@ class PayOff extends MX_Controller
 
     public function getTransacteeDocumentList()
     {
+        $this->common->checkAccess('transactee_list');
         $params = array();
         $data = array();
         if (isset($_POST['id']) && !empty($_POST['id'])) {
@@ -492,6 +500,7 @@ class PayOff extends MX_Controller
 
     public function add_transactee()
     {
+        $this->common->checkAccess('transactee_list');
         $data['title'] = 'Add Transactee | Pacific Coast Title Company';
         $data['pageTitle'] = 'Add Transactee';
         $userdata = $this->session->userdata('admin');
