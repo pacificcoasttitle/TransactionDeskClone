@@ -871,21 +871,20 @@ class Home_model extends CI_Model
 
     public function get_incorrect_customers($params)
     {
-        $query = $this->db->query('SELECT *
+        $query = $this->db->query('SELECT email_address
                                 FROM
-                                  customer_basic_details
-                                WHERE email_address IN
+                                  customer_basic_details as c
+                                WHERE c.email_address IN
                                   (SELECT
                                     email_address
                                   FROM
                                     customer_basic_details
                                   WHERE random_password != ""
                                     AND is_password_updated = 0 AND email_address != "")
-                                GROUP BY email_address
-                                HAVING COUNT(email_address) = 1');
+                                GROUP BY c.email_address
+                                HAVING COUNT(c.email_address) = 1');
 
         $total_records = $query->num_rows();
-
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
 
@@ -899,7 +898,7 @@ class Home_model extends CI_Model
                 $where .= ' OR email_address LIKE "%' . $keyword . '%"';
             }
 
-            $query = $this->db->query('SELECT *
+            $query = $this->db->query('SELECT email_address
                                 FROM
                                   customer_basic_details
                                 WHERE email_address IN
@@ -928,8 +927,7 @@ class Home_model extends CI_Model
             if ((isset($offset) && !empty($offset))) {
                 $offset = ' OFFSET ' . $offset;
             }
-
-            $query = $this->db->query('SELECT *
+            $query = $this->db->query('SELECT first_name, last_name, email_address, company_name, random_password, is_escrow, resware_error_msg, id
                                 FROM
                                   customer_basic_details
                                 WHERE email_address IN
@@ -939,14 +937,14 @@ class Home_model extends CI_Model
                                     customer_basic_details
                                   WHERE random_password != ""
                                     AND is_password_updated = 0 AND email_address != "")' . $where . '
-                                GROUP BY email_address
+                                GROUP BY email_address, first_name, last_name, company_name, random_password, is_escrow, resware_error_msg, id
                                 HAVING COUNT(email_address) = 1' . $limit . $offset);
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
         } else {
 
-            $query = $this->db->query('SELECT *
+            $query = $this->db->query('SELECT email_address
                                 FROM
                                   customer_basic_details
                                 WHERE email_address IN
@@ -967,7 +965,7 @@ class Home_model extends CI_Model
                 $offset = ' OFFSET ' . $offset;
             }
 
-            $query = $this->db->query('SELECT *
+            $query = $this->db->query('SELECT first_name, last_name, email_address, company_name, random_password, is_escrow, resware_error_msg, id
                                 FROM
                                   customer_basic_details
                                 WHERE email_address IN
@@ -977,7 +975,7 @@ class Home_model extends CI_Model
                                     customer_basic_details
                                   WHERE random_password != ""
                                     AND is_password_updated = 0 AND email_address != "")
-                                GROUP BY email_address
+                                GROUP BY email_address, first_name, last_name, company_name, random_password, is_escrow, resware_error_msg, id
                                 HAVING COUNT(email_address) = 1' . $limit . $offset);
 
             if ($query->num_rows() > 0) {
