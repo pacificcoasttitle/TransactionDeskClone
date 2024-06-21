@@ -5329,7 +5329,7 @@ class Cron extends MX_Controller
         return $result;
     }
 
-    public function delete_old_logs()
+    public function deleteOldLogs()
     {
         // Define the path to the logs directory
         $log_path = APPPATH . 'logs/';
