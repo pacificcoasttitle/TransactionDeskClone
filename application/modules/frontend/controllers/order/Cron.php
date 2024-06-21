@@ -5328,4 +5328,37 @@ class Cron extends MX_Controller
         $result = $query->result_array();
         return $result;
     }
+
+    public function delete_old_logs()
+    {
+        // Define the path to the logs directory
+        $log_path = APPPATH . 'logs/';
+
+        // Define the retention period (30 days)
+        $retention_period = 5 * 24 * 60 * 60; // 30 days in seconds
+
+        // Get the current time
+        $current_time = time();
+
+        // Open the logs directory
+        if ($handle = opendir($log_path)) {
+            while (false !== ($file = readdir($handle))) {
+                // Skip current and parent directory links
+                if ($file != "." && $file != "..") {
+                    $file_path = $log_path . $file;
+
+                    // Ensure it is a file and ends with .php
+                    if (is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION) == 'php') {
+                        // Check if the file is older than the retention period
+                        if (($current_time - filemtime($file_path)) > $retention_period) {
+                            // Delete the file
+                            unlink($file_path);
+                            echo "Deleted old log file: $file\n";
+                        }
+                    }
+                }
+            }
+            closedir($handle);
+        }
+    }
 }
