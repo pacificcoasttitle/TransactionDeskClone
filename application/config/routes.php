@@ -217,6 +217,7 @@ $route['send-summary-mail-sales'] = 'frontend/order/cron/sendSummaryMailSalesRep
 $route['upload-document'] = 'frontend/order/common/upload_document';
 $route['add-partner-for-orders'] = 'frontend/order/cron/addPartnerForOrders';
 $route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
+$route['delete-old-logs'] = 'frontend/order/cron/delete_old_logs';
 $route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
 $route['get-transactees'] = 'frontend/order/payOff/get_transactees';
 $route['add-transactee'] = 'frontend/order/payOff/addTransactee';
