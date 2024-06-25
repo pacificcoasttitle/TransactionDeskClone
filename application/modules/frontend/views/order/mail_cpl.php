@@ -934,7 +934,8 @@ if (!empty($errors)) {
 				url: base_url + "get-order-details-cpl",
 				type: "post",
 				data: {
-					fileId: fileId
+					fileId: fileId,
+					requestFrom: 'generic-form',
 				},
 				success: function (response) {
 					var res = jQuery.parseJSON(response);

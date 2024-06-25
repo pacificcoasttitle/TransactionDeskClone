@@ -1405,6 +1405,7 @@ class Common extends MX_Controller
         $this->load->model('order/home_model');
         $this->load->library('order/resware');
         $fileId = $this->input->post('fileId');
+        $requestFrom = $this->input->post('requestFrom');
         $userdata = $this->session->userdata('user');
         if (empty($userdata)) {
             $userdata['id'] = 0;
@@ -1516,8 +1517,7 @@ class Common extends MX_Controller
 
         $endPoint = 'files/' . $fileId . '/partners';
         $user_data = array();
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $orderDetails['order_id'], 0);
-        if (!empty($userdata['id'])) {
+        if (!empty($userdata['id']) && (empty($requestFrom) || $requestFrom != 'generic-form')) {
             if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
                 $user_data['admin_api'] = 1;
             } else {
@@ -1527,6 +1527,7 @@ class Common extends MX_Controller
             $user_data['admin_api'] = 1;
         }
 
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, $user_data, array(), $orderDetails['order_id'], 0);
         $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
         $resPartners = json_decode($resultPartners, true);
