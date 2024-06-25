@@ -30,11 +30,12 @@ class Order_model extends CI_Model
 
         if (isset($order_type) && !empty($order_type)) {
             if ($order_type == 'resware_orders') {
-                $this->db->where('order_details.lp_file_number is null');
+                // $this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null');
+                $this->db->where('order_details.file_number !=', 0);
             } else if ($order_type == 'lp_orders') {
                 $this->db->where('order_details.lp_file_number is not null');
-                $this->db->where('order_details.file_number', 0);
+                // $this->db->where('order_details.file_number', 0);
             }
 
         }
@@ -74,11 +75,12 @@ class Order_model extends CI_Model
 
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->db->where('order_details.lp_file_number is null');
+                    // $this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
+                    $this->db->where('order_details.file_number !=', 0);
                 } else if ($order_type == 'lp_orders') {
                     $this->db->where('order_details.lp_file_number is not null');
-                    $this->db->where('order_details.file_number', 0);
+                    // $this->db->where('order_details.file_number', 0);
                 }
 
             }
@@ -143,11 +145,12 @@ class Order_model extends CI_Model
 
             if (isset($order_type) && !empty($order_type)) {
                 if ($order_type == 'resware_orders') {
-                    $this->db->where('order_details.lp_file_number is null');
+                    // $this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
+                    $this->db->where('order_details.file_number !=', 0);
                 } else if ($order_type == 'lp_orders') {
                     $this->db->where('order_details.lp_file_number is not null');
-                    $this->db->where('order_details.file_number', 0);
+                    // $this->db->where('order_details.file_number', 0);
                 }
 
             }
@@ -569,7 +572,7 @@ class Order_model extends CI_Model
             $keyword = $params['searchValue'];
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.file_number LIKE '%" . $keyword . "%')");
+                $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.lp_file_number LIKE '%" . $keyword . "%')");
             }
 
             $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
@@ -613,7 +616,7 @@ class Order_model extends CI_Model
             }
 
             if (isset($keyword) && !empty($keyword)) {
-                $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.file_number LIKE '%" . $keyword . "%')");
+                $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.lp_file_number LIKE '%" . $keyword . "%')");
             }
 
             $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -705,7 +708,7 @@ class Order_model extends CI_Model
                 $orders_lists = $query->result_array();
             }
         }
-
+        // echo $this->db->last_query();exit;
         return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $total_records,
