@@ -62,7 +62,7 @@
 				<img src="<?php echo base_url(); ?>assets/buyer-seller-packets/images/logo.png" style="width:300px;">
 				<h1>NATIONAL TITLE ORDER FORM </h1>
 				<h3><?php echo $orderDetails['full_address']; ?></h3>
-				<h4 >How to order: complete the form & Email: orders@cetitle.com </h4>
+				<h4 >How to order: complete the form & Email: national@pct.com </h4>
 				<h4 style="margin-bottom:40px;">For assistance call 877.536.3390 </h4>
 
 			</div>
