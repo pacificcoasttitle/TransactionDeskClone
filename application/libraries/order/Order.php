@@ -63,7 +63,7 @@ class Order
 
             if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'open') {
                     $this->CI->db->or_like('order_details.file_number', $keyword);
                 } else {
                     $this->CI->db->or_like('order_details.lp_file_number', $keyword);
@@ -183,7 +183,7 @@ class Order
 
             if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'open') {
                     $this->CI->db->or_like('order_details.file_number', $keyword);
                 } else {
                     $this->CI->db->or_like('order_details.lp_file_number', $keyword);
