@@ -67,7 +67,7 @@
         </div>
         <div class="row ">
             <div class="col-md-11 center-wrapper">
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 smart-forms">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Helping Get Your Transaction Started.</h6>
                     </div>
