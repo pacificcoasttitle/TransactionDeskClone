@@ -329,7 +329,7 @@ jQuery(document).ready(function ($) {
 					$('#page-preloader').hide();
 				},
 				success: function (data) {
-					var res = jQuery.parseJSON(res);
+					var res = jQuery.parseJSON(data);
 					console.log('data success ==', data);
 					if (res.status == 'error') {
 						$('.result').html('<div class="alert notification state-error alert-error">' + res.message + '</div>');
