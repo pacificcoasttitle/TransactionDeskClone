@@ -58,7 +58,7 @@
         </div>
         <div class="row ">
             <div class="col-md-10 center-wrapper">
-                <div class="card shadow mb-4">
+                <div class="card shadow mb-4 smart-forms">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Add your details below.</h6>
                     </div>
@@ -314,7 +314,8 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 
 											</div>
 
-										<?php $i++;}} else {?>
+										<?php $i++;}
+} else {?>
 									<div class="row form-group toclone clone-widget cloneya">
 										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
@@ -500,7 +501,8 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
     foreach ($escrowOfficers as $escrowOfficer) {
         ?>
 													<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-											<?php }
+											<?php
+}
 }
 ?>
 										</select>
@@ -1217,7 +1219,8 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
     foreach ($escrowOfficers as $escrowOfficer) {
         ?>
 															<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-													<?php }
+													<?php
+}
 }
 ?>
 												</select>
