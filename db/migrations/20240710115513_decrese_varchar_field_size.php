@@ -19,18 +19,18 @@ final class DecreseVarcharFieldSize extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('property_details');
-        $table->changeColumn('city', 'string', ['limit' => 50])
-            ->changeColumn('state', 'string', ['limit' => 20])
-            ->changeColumn('zip', 'string', ['limit' => 50])
-            ->changeColumn('property_type', 'string', ['limit' => 100])
-            ->changeColumn('apn', 'string', ['limit' => 50])
-            ->changeColumn('county', 'string', ['limit' => 50])
-            ->changeColumn('primary_owner', 'string', ['limit' => 100])
-            ->changeColumn('secondary_owner', 'string', ['limit' => 100])
-            ->changeColumn('cpl_proposed_property_city', 'string', ['limit' => 100])
-            ->changeColumn('cpl_proposed_property_state', 'string', ['limit' => 20])
-            ->changeColumn('cpl_proposed_property_zip', 'string', ['limit' => 50])
-            ->changeColumn('unit_number', 'string', ['limit' => 20])
+        $table->changeColumn('city', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('state', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('zip', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('property_type', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('apn', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('county', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('primary_owner', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('secondary_owner', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('cpl_proposed_property_city', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('cpl_proposed_property_state', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('cpl_proposed_property_zip', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('unit_number', 'string', ['limit' => 20, 'null' => true])
             ->update();
 
     }

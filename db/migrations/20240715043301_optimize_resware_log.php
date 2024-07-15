@@ -20,8 +20,8 @@ final class OptimizeReswareLog extends AbstractMigration
     {
         $table = $this->table('pct_resware_log');
         $table->changeColumn('request_type', 'string', ['limit' => 100])
-            ->changeColumn('file_id', 'string', ['limit' => 50])
-            ->changeColumn('file_number', 'string', ['limit' => 50])
+            ->changeColumn('file_id', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('file_number', 'string', ['limit' => 50, 'null' => true])
             ->update();
     }
 }
