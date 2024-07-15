@@ -19,13 +19,13 @@ final class OptimizeOrderPartnerCompanyInfo extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_partner_company_info');
-        $table->changeColumn('partner_name', 'string', ['limit' => 150])
-            ->changeColumn('email', 'string', ['limit' => 50])
-            ->changeColumn('city', 'string', ['limit' => 100])
-            ->changeColumn('state', 'string', ['limit' => 20])
-            ->changeColumn('zip', 'string', ['limit' => 50])
-            ->changeColumn('sales_underwriter', 'string', ['limit' => 100])
-            ->changeColumn('loan_underwriter', 'string', ['limit' => 100])
+        $table->changeColumn('partner_name', 'string', ['limit' => 150, 'null' => true])
+            ->changeColumn('email', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('city', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('state', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('zip', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('sales_underwriter', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('loan_underwriter', 'string', ['limit' => 100, 'null' => true])
             ->update();
     }
 }

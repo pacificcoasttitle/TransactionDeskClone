@@ -19,11 +19,11 @@ final class OptimizeRealtorData extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_realtor_data');
-        $table->changeColumn('agent', 'string', ['limit' => 100])
-            ->changeColumn('company', 'string', ['limit' => 100])
-            ->changeColumn('city', 'string', ['limit' => 100])
-            ->changeColumn('state', 'string', ['limit' => 20])
-            ->changeColumn('zip', 'string', ['limit' => 50])
+        $table->changeColumn('agent', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('company', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('city', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('state', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('zip', 'string', ['limit' => 50, 'null' => true])
             ->update();
     }
 }

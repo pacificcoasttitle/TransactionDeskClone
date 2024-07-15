@@ -19,11 +19,11 @@ final class OptimizeOrderTwilioMessageRecords extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_twilio_message_records');
-        $table->changeColumn('sent_from', 'string', ['limit' => 20])
-            ->changeColumn('sent_to', 'string', ['limit' => 20])
-            ->changeColumn('status', 'string', ['limit' => 20])
-            ->changeColumn('message_sid', 'string', ['limit' => 50])
-            ->changeColumn('error_code', 'string', ['limit' => 50])
+        $table->changeColumn('sent_from', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('sent_to', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('status', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('message_sid', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('error_code', 'string', ['limit' => 50, 'null' => true])
             ->update();
     }
 }

@@ -19,19 +19,19 @@ final class OptimizeOrderNationalFromData extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_national_form_data');
-        $table->changeColumn('buyer_name', 'string', ['limit' => 50])
-            ->changeColumn('buyer_email', 'string', ['limit' => 50])
-            ->changeColumn('buyer_mobile', 'string', ['limit' => 20])
-            ->changeColumn('title_hold_reason', 'string', ['limit' => 20])
-            ->changeColumn('ssn', 'string', ['limit' => 20])
-            ->changeColumn('estimated_closing_date', 'string', ['limit' => 20])
-            ->changeColumn('lender', 'string', ['limit' => 50])
-            ->changeColumn('loan_amount', 'string', ['limit' => 20])
-            ->changeColumn('loan_number', 'string', ['limit' => 100])
-            ->changeColumn('title_items_required_by', 'string', ['limit' => 150])
-            ->changeColumn('lender_clause', 'string', ['limit' => 150])
-            ->changeColumn('return_document_to', 'string', ['limit' => 150])
-            ->changeColumn('loan_officer', 'string', ['limit' => 150])
+        $table->changeColumn('buyer_name', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('buyer_email', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('buyer_mobile', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('title_hold_reason', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('ssn', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('estimated_closing_date', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('lender', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('loan_amount', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('loan_number', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('title_items_required_by', 'string', ['limit' => 150, 'null' => true])
+            ->changeColumn('lender_clause', 'string', ['limit' => 150, 'null' => true])
+            ->changeColumn('return_document_to', 'string', ['limit' => 150, 'null' => true])
+            ->changeColumn('loan_officer', 'string', ['limit' => 150, 'null' => true])
             ->update();
     }
 }

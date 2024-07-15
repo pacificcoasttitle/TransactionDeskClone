@@ -19,12 +19,12 @@ final class OptimizeTransactionDetails extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('transaction_details');
-        $table->changeColumn('sales_amount', 'string', ['limit' => 30])
-            ->changeColumn('escrow_number', 'string', ['limit' => 50])
-            ->changeColumn('additional_email_1', 'string', ['limit' => 50])
-            ->changeColumn('additional_email_2', 'string', ['limit' => 50])
-            ->changeColumn('borrower', 'string', ['limit' => 150])
-            ->changeColumn('secondary_borrower', 'string', ['limit' => 150])
+        $table->changeColumn('sales_amount', 'string', ['limit' => 30, 'null' => true])
+            ->changeColumn('escrow_number', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('additional_email_1', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('additional_email_2', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('borrower', 'string', ['limit' => 150, 'null' => true])
+            ->changeColumn('secondary_borrower', 'string', ['limit' => 150, 'null' => true])
             ->update();
     }
 }

@@ -19,15 +19,15 @@ final class OptimizeLpOrderFnfAgents extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_fnf_agents');
-        $table->changeColumn('agent_number', 'string', ['limit' => 50])
-            ->changeColumn('agent_status', 'string', ['limit' => 20])
-            ->changeColumn('agent_account_type', 'string', ['limit' => 50])
-            ->changeColumn('location_city', 'string', ['limit' => 100])
-            ->changeColumn('state', 'string', ['limit' => 20])
-            ->changeColumn('zip', 'string', ['limit' => 50])
-            ->changeColumn('phone_number', 'string', ['limit' => 20])
-            ->changeColumn('underwriter_code', 'string', ['limit' => 50])
-            ->changeColumn('underwriter', 'string', ['limit' => 100])
+        $table->changeColumn('agent_number', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('agent_status', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('agent_account_type', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('location_city', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('state', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('zip', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('phone_number', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('underwriter_code', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('underwriter', 'string', ['limit' => 100, 'null' => true])
             ->update();
     }
 }

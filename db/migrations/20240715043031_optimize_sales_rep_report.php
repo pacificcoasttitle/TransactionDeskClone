@@ -19,10 +19,10 @@ final class OptimizeSalesRepReport extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_sales_rep_report');
-        $table->changeColumn('zip_code', 'string', ['limit' => 50])
-            ->changeColumn('sort_by', 'string', ['limit' => 50])
-            ->changeColumn('area_name', 'string', ['limit' => 100])
-            ->changeColumn('report_url', 'string', ['limit' => 100])
+        $table->changeColumn('zip_code', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('sort_by', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('area_name', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('report_url', 'string', ['limit' => 100, 'null' => true])
             ->update();
     }
 }
