@@ -19,9 +19,9 @@ final class OptimizeSalesActivityReport extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_sales_activity_report');
-        $table->changeColumn('month', 'string', ['limit' => 10])
-            ->changeColumn('county', 'string', ['limit' => 50])
-            ->changeColumn('report_url', 'string', ['limit' => 100])
+        $table->changeColumn('month', 'string', ['limit' => 10, 'null' => true])
+            ->changeColumn('county', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('report_url', 'string', ['limit' => 100, 'null' => true])
             ->update();
     }
 }

@@ -19,15 +19,15 @@ final class OptimizeSalesRepTitleOfficer extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_sales_rep');
-        $table->changeColumn('name', 'string', ['limit' => 100])
-            ->changeColumn('email_address', 'string', ['limit' => 50])
-            ->changeColumn('telephone', 'string', ['limit' => 20])
+        $table->changeColumn('name', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('email_address', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('telephone', 'string', ['limit' => 20, 'null' => true])
             ->update();
 
         $table = $this->table('pct_order_title_officer');
-        $table->changeColumn('email_address', 'string', ['limit' => 50])
-            ->changeColumn('name', 'string', ['limit' => 100])
-            ->changeColumn('phone', 'string', ['limit' => 20])
+        $table->changeColumn('email_address', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('name', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('phone', 'string', ['limit' => 20, 'null' => true])
             ->update();
     }
 }

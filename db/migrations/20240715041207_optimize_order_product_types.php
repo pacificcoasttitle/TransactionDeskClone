@@ -19,11 +19,11 @@ final class OptimizeOrderProductTypes extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_order_product_types');
-        $table->changeColumn('transaction_type', 'string', ['limit' => 30])
-            ->changeColumn('product_type', 'string', ['limit' => 100])
-            ->changeColumn('county', 'string', ['limit' => 50])
-            ->changeColumn('state', 'string', ['limit' => 20])
-            ->changeColumn('display_name', 'string', ['limit' => 50])
+        $table->changeColumn('transaction_type', 'string', ['limit' => 30, 'null' => true])
+            ->changeColumn('product_type', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('county', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('state', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('display_name', 'string', ['limit' => 50, 'null' => true])
             ->update();
     }
 }

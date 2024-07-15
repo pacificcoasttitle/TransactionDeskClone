@@ -19,14 +19,14 @@ final class OptimizeVendors extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_vendors');
-        $table->changeColumn('transctee_name', 'string', ['limit' => 100])
-            ->changeColumn('file_number', 'string', ['limit' => 50])
-            ->changeColumn('account_number', 'string', ['limit' => 20])
-            ->changeColumn('aba', 'string', ['limit' => 100])
-            ->changeColumn('bank_name', 'string', ['limit' => 20])
-            ->changeColumn('submitted', 'string', ['limit' => 20])
-            ->changeColumn('approved_date', 'string', ['limit' => 20])
-            ->changeColumn('created_by', 'string', ['limit' => 20])
+        $table->changeColumn('transctee_name', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('file_number', 'string', ['limit' => 50, 'null' => true])
+            ->changeColumn('account_number', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('aba', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('bank_name', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('submitted', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('approved_date', 'string', ['limit' => 20, 'null' => true])
+            ->changeColumn('created_by', 'string', ['limit' => 20, 'null' => true])
             ->update();
     }
 }
