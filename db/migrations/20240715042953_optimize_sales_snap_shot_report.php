@@ -19,10 +19,10 @@ final class OptimizeSalesSnapShotReport extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('pct_sales_snap_shot_report');
-        $table->changeColumn('area_name', 'string', ['limit' => 100])
-            ->changeColumn('report_url', 'string', ['limit' => 100])
-            ->changeColumn('month_option', 'string', ['limit' => 10])
-            ->changeColumn('property_type', 'string', ['limit' => 100])
+        $table->changeColumn('area_name', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('report_url', 'string', ['limit' => 100, 'null' => true])
+            ->changeColumn('month_option', 'string', ['limit' => 10, 'null' => true])
+            ->changeColumn('property_type', 'string', ['limit' => 100, 'null' => true])
             ->update();
     }
 }
