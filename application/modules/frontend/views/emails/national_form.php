@@ -551,6 +551,22 @@
                                 <?php echo $loan_officer; ?>
                             </td>
                         </tr>
+                        <tr>
+                            <td style="width:282.465px;text-align:left;">
+                                <strong>Marrital Status:</strong>
+                            </td>
+                            <td style="width:283.576px;text-align:left;">
+                                <?php echo ucwords($marital_status); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:282.465px;text-align:left;">
+                                <strong>Sales Representative:</strong>
+                            </td>
+                            <td style="width:283.576px;text-align:left;">
+                                <?php echo $sales_rep_name; ?>
+                            </td>
+                        </tr>
 
                       </table>
                       <p></p>
