@@ -891,12 +891,12 @@ class DashboardMail extends MX_Controller
                                 'listing_agent_id' => 0,
                                 'escrow_lender_id' => 0,
                                 'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                'address' => $address,
+                                'address' => removeMultipleSpace($address),
                                 'city' => $res['Properties'][0]['City'],
                                 'state' => $res['Properties'][0]['State'],
                                 'zip' => $res['Properties'][0]['Zip'],
                                 'property_type' => $property_type,
-                                'full_address' => $FullProperty,
+                                'full_address' => removeMultipleSpace($FullProperty),
                                 'apn' => $apn,
                                 'county' => $res['Properties'][0]['County'],
                                 'legal_description' => $LegalDescription,
@@ -4757,8 +4757,11 @@ class DashboardMail extends MX_Controller
             $this->form_validation->set_rules('return_document_to', 'Return documents to', 'required', array('required' => 'Please enter Return documents to'));
             $this->form_validation->set_rules('main_lender_contact', 'Main Lender contact', 'required', array('required' => 'Please enter Main Lender contact'));
             $this->form_validation->set_rules('loan_officer', 'Loan officer', 'required', array('required' => 'Please enter Loan officer'));
+            $this->form_validation->set_rules('sales_rep', 'Sales Rep', 'required', array('required' => 'Please select Sales Rep'));
+            $this->form_validation->set_rules('marital_status', 'Marital Status', 'required', array('required' => 'Please select Marital Status'));
 
             if ($this->form_validation->run($this) == true) {
+                $salesRepId = $input['sales_rep'];
                 $inputData = [
                     "buyer_name" => isset($input['buyer_name']) && !empty($input['buyer_name']) ? $input['buyer_name'] : null,
                     "buyer_current_address" => isset($input['buyer_current_address']) && !empty($input['buyer_current_address']) ? $input['buyer_current_address'] : null,
@@ -4777,10 +4780,21 @@ class DashboardMail extends MX_Controller
                     "return_document_to" => isset($input['return_document_to']) && !empty($input['return_document_to']) ? $input['return_document_to'] : null,
                     "main_lender_contact" => isset($input['main_lender_contact']) && !empty($input['main_lender_contact']) ? $input['main_lender_contact'] : null,
                     "loan_officer" => isset($input['loan_officer']) && !empty($input['loan_officer']) ? $input['loan_officer'] : null,
+                    "marital_status" => isset($input['marital_status']) && !empty($input['marital_status']) ? $input['marital_status'] : null,
+                    "sales_rep" => isset($input['sales_rep']) && !empty($input['sales_rep']) ? $salesRepId : null,
 
                 ];
 
+                if ($inputData['sales_rep']) {
+                    $condition = array(
+                        'where' => array(
+                            'id' => $inputData['sales_rep'],
+                        ),
+                    );
+                    $salesRepDetails = $this->home_model->getSalesRepDetails($condition)[0];
+                }
                 $this->home_model->insert($inputData, 'pct_order_national_form_data');
+                $inputData['sales_rep_name'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
 
                 $borrower_message_body = $this->load->view('emails/national_form.php', $inputData, true);
                 $message_body = $borrower_message_body;
@@ -4830,9 +4844,18 @@ class DashboardMail extends MX_Controller
                 $data['return_document_to_error_msg'] = form_error('return_document_to');
                 $data['main_lender_contact_error_msg'] = form_error('main_lender_contact');
                 $data['loan_officer_error_msg'] = form_error('loan_officer');
+                $data['marital_status_error_msg'] = form_error('marital_status');
+                $data['sales_rep_error_msg'] = form_error('sales_rep');
             }
 
         }
+        $condition = array(
+            'where' => array(
+                'is_sales_rep' => 1,
+                'status' => 1,
+            ),
+        );
+        $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
         $this->load->view('order/national_form', $data);
     }
 }

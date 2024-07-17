@@ -50,6 +50,9 @@
     .error {
         color: #f63726;
     }
+    .form-row select {
+        color: #797575
+    }
 
 </style>
 
@@ -183,6 +186,44 @@
                             <div class="form-row">
 								<div class="form-flex">
                                     <div class="form-group">
+										<label for="marital_status" class="form-label">Marital Status</label>
+                                        <select name="marital_status" id="marital_status">
+                                            <option value="">Select Marrital Status</option>
+                                            <option value="married">Married</option>
+                                            <option value="unmarried">Unmarried</option>
+                                        </select>
+										<!-- <input type="number" name="marital_status" required="required" value="" placeholder="Loan amount" /> -->
+                                        <?php if (!empty($marital_status_error_msg)) {?>
+                                            <span class="error"><?php echo $marital_status_error_msg; ?></span>
+                                        <?php }?>
+									</div>
+
+                                    <div class="form-group">
+										<label for="sales_rep" class="form-label">Sales Rep</label>
+										<select name="sales_rep" id="sales_rep">
+                                        <option value="">Select Sales rep</option>
+                                            <?php
+if (isset($salesRep) && !empty($salesRep)) {
+    foreach ($salesRep as $k => $v) {
+        $name = array($v['first_name'], $v['last_name']);
+        $full_name = implode(' ', $name);
+        ?>
+        <option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+<?php
+}
+}
+?>
+                                        </select>
+                                        <?php if (!empty($sales_rep_error_msg)) {?>
+                                            <span class="error"><?php echo $sales_rep_error_msg; ?></span>
+                                        <?php }?>
+									</div>
+								</div>
+							</div>
+
+                            <div class="form-row">
+								<div class="form-flex">
+                                    <div class="form-group">
 										<label for="loan_amount" class="form-label">Loan amount</label>
 										<input type="number" name="loan_amount" required="required" value="" placeholder="Loan amount" />
                                         <?php if (!empty($loan_amount_error_msg)) {?>
@@ -293,6 +334,8 @@
                 rules: {
                     buyer_name: "required",
                     buyer_current_address: "required",
+                    sales_rep: "required",
+                    marital_status: "required",
                     buyer_email: {
                         required: true,
                         email: true
@@ -324,6 +367,8 @@
                     return_document_to: "Please enter return documents to",
                     main_lender_contact: "Please enter main lender contact",
                     loan_officer: "Please enter Loan officer",
+                    marital_status: "Please Select Marital Status",
+                    sales_rep: "Please Select Sales Rep",
                 },
                 submitHandler: function(form) {
                     form.submit();
