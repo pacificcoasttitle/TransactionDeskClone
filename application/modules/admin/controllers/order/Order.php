@@ -67,7 +67,7 @@ class Order extends MX_Controller
             $nestedData = array();
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
-            $nestedData[] = $value['full_address'];
+            $nestedData[] = removeMultipleSpace($value['full_address']);
             $nestedData[] = $value['product_type'];
             $nestedData[] = $value['sales_rep_name'];
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];

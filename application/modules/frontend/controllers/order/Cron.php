@@ -135,12 +135,12 @@ class Cron extends MX_Controller
                                     'listing_agent_id' => 0,
                                     'escrow_lender_id' => 0,
                                     'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                    'address' => $address,
+                                    'address' => removeMultipleSpace($address),
                                     'city' => $res['Properties'][0]['City'],
                                     'state' => $res['Properties'][0]['State'],
                                     'zip' => $res['Properties'][0]['Zip'],
                                     'property_type' => $property_type,
-                                    'full_address' => $FullProperty,
+                                    'full_address' => removeMultipleSpace($FullProperty),
                                     'apn' => $apn,
                                     'county' => $res['Properties'][0]['County'],
                                     'legal_description' => $LegalDescription,
@@ -1156,12 +1156,12 @@ class Cron extends MX_Controller
                                 'listing_agent_id' => 0,
                                 'escrow_lender_id' => 0,
                                 'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                'address' => $address,
+                                'address' => removeMultipleSpace($address),
                                 'city' => $res['Properties'][0]['City'],
                                 'state' => $res['Properties'][0]['State'],
                                 'zip' => $res['Properties'][0]['Zip'],
                                 'property_type' => $property_type,
-                                'full_address' => $FullProperty,
+                                'full_address' => removeMultipleSpace($FullProperty),
                                 'apn' => $apn,
                                 'county' => $res['Properties'][0]['County'],
                                 'legal_description' => $LegalDescription,
@@ -2707,12 +2707,12 @@ class Cron extends MX_Controller
                                                 'listing_agent_id' => 0,
                                                 'escrow_lender_id' => 0,
                                                 'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                                'address' => $address,
+                                                'address' => removeMultipleSpace($address),
                                                 'city' => $res['Properties'][0]['City'],
                                                 'state' => $res['Properties'][0]['State'],
                                                 'zip' => $res['Properties'][0]['Zip'],
                                                 'property_type' => $property_type,
-                                                'full_address' => $FullProperty,
+                                                'full_address' => removeMultipleSpace($FullProperty),
                                                 'apn' => $apn,
                                                 'county' => $res['Properties'][0]['County'],
                                                 'legal_description' => $LegalDescription,
@@ -3063,12 +3063,12 @@ class Cron extends MX_Controller
                             'listing_agent_id' => 0,
                             'escrow_lender_id' => 0,
                             'parcel_id' => $res['Properties'][0]['ParcelID'],
-                            'address' => $address,
+                            'address' => removeMultipleSpace($address),
                             'city' => $res['Properties'][0]['City'],
                             'state' => $res['Properties'][0]['State'],
                             'zip' => $res['Properties'][0]['Zip'],
                             'property_type' => $property_type,
-                            'full_address' => $FullProperty,
+                            'full_address' => removeMultipleSpace($FullProperty),
                             'apn' => $apn,
                             'county' => $res['Properties'][0]['County'],
                             'legal_description' => $LegalDescription,
@@ -3380,7 +3380,6 @@ class Cron extends MX_Controller
         }
 
         $files = glob("uploads/order-status/*csv", GLOB_NOSORT);
-
         $closedFileNumbers = array();
         if (is_array($files) && count($files) > 0) {
             foreach ($files as $filePath) {
@@ -3443,8 +3442,10 @@ class Cron extends MX_Controller
                                 }
                                 if (strtolower($fileStatus) == 'closed') {
                                     if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
-                                        if (strtolower($prodType) == 'sale') {
-                                            $closedFileNumbers[] = (int) $file_number;
+                                        if (strtolower($prodType) == 'sale' || strtolower($prodType) == 'loan') {
+                                            if (!in_array($file_number, $closedFileNumbers)) {
+                                                $closedFileNumbers[] = (int) $file_number;
+                                            }
                                         }
                                     }
                                 }
@@ -3457,7 +3458,6 @@ class Cron extends MX_Controller
                                     'sales_amount' => (int) $sales_amount,
                                     'updated_at' => date('Y-m-d H:i:s'),
                                 );
-
                             }
                         }
                         $row++;
@@ -3482,7 +3482,7 @@ class Cron extends MX_Controller
                 $fileName = date('YmdHis') . "_" . $documentName['basename'];
                 rename(FCPATH . "/uploads/order-status/" . $documentName['basename'], FCPATH . "/uploads/order-status/" . $fileName);
                 $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);
-                echo "All orders status updated successfully" . "<br>";
+
                 if (!empty($closedFileNumbers)) {
                     // $param = $closedFileNumbers;
                     // $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
@@ -3495,7 +3495,11 @@ class Cron extends MX_Controller
 
                     /** Commented this function to avoid duplicate email suggested by Jerry on 10/05/2024 */
                     // $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
+
+                    $this->sendEmailForClosedOrder($closedFileNumbers);
+
                 }
+                echo "All orders status updated successfully" . "<br>";
                 $this->updateAllowDuplicationFlag();
                 echo date('Y-m-d H:i:s');exit;
             }
@@ -3747,12 +3751,12 @@ class Cron extends MX_Controller
                                             'listing_agent_id' => 0,
                                             'escrow_lender_id' => 0,
                                             'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                            'address' => $address,
+                                            'address' => removeMultipleSpace($address),
                                             'city' => $res['Properties'][0]['City'],
                                             'state' => $res['Properties'][0]['State'],
                                             'zip' => $res['Properties'][0]['Zip'],
                                             'property_type' => $property_type,
-                                            'full_address' => $FullProperty,
+                                            'full_address' => removeMultipleSpace($FullProperty),
                                             'apn' => $apn,
                                             'county' => $res['Properties'][0]['County'],
                                             'legal_description' => $LegalDescription,
@@ -4215,12 +4219,12 @@ class Cron extends MX_Controller
                                             'listing_agent_id' => 0,
                                             'escrow_lender_id' => 0,
                                             'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                            'address' => $address,
+                                            'address' => removeMultipleSpace($address),
                                             'city' => $res['Properties'][0]['City'],
                                             'state' => $res['Properties'][0]['State'],
                                             'zip' => $res['Properties'][0]['Zip'],
                                             'property_type' => $property_type,
-                                            'full_address' => $FullProperty,
+                                            'full_address' => removeMultipleSpace($FullProperty),
                                             'apn' => $apn,
                                             'county' => $res['Properties'][0]['County'],
                                             'legal_description' => $LegalDescription,
@@ -4598,12 +4602,12 @@ class Cron extends MX_Controller
                                                 'listing_agent_id' => 0,
                                                 'escrow_lender_id' => 0,
                                                 'parcel_id' => $res['Properties'][0]['ParcelID'],
-                                                'address' => $address,
+                                                'address' => removeMultipleSpace($address),
                                                 'city' => $res['Properties'][0]['City'],
                                                 'state' => $res['Properties'][0]['State'],
                                                 'zip' => $res['Properties'][0]['Zip'],
                                                 'property_type' => $property_type,
-                                                'full_address' => $FullProperty,
+                                                'full_address' => removeMultipleSpace($FullProperty),
                                                 'apn' => $apn,
                                                 'county' => $res['Properties'][0]['County'],
                                                 'legal_description' => $LegalDescription,
@@ -4772,6 +4776,111 @@ class Cron extends MX_Controller
                 'file_id' => $file_id,
             ];
             $this->db->update($table, $order_details, $condition);
+
+        }
+    }
+
+    public function sendEmailForClosedOrder($fileNumbers)
+    {
+        $this->db->select('order_details.file_id,
+            order_details.file_number,
+            order_details.id as order_id,
+            order_details.resware_status,
+            order_details.resware_closed_status_date,
+            order_details.prod_type,
+            client.first_name,
+            client.last_name,
+            client.email_address as sales_email,
+            client.sales_rep_profile_thank_you_img,
+            property_details.full_address,
+            property_details.escrow_lender_id,
+            escrow_details.email_address as escrow_email,
+            listing_agent.email_address as listing_agent_email,
+            buyer_agent.email_address as buyer_agent_email,
+            sales_details.email_address as sales_rep_email,
+            transaction_details.sales_representative');
+        $this->db->from('order_details');
+        $this->db->where_in('order_details.file_number', $fileNumbers);
+        //$this->db->where('order_details.is_thank_you_email_sent', 0);
+        $this->db->where('order_details.customer_id > 0');
+        // $this->db->where('property_details.escrow_lender_id != ""');
+        // $this->db->where('transaction_details.sales_representative != ""');
+        $this->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
+        $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
+        $this->db->join('customer_basic_details as client ', 'client.id = order_details.customer_id', 'inner');
+        $this->db->join('customer_basic_details as sales_details ', 'sales_details.id = transaction_details.sales_representative', 'inner');
+        $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id', 'left');
+        $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id', 'left');
+        $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id', 'left');
+        // $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc');
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        $configData = $this->order->getConfigData();
+        $loanOrderEmailSendStatus = $configData['loan_order_closed_email_send_off']['is_enable'];
+        $saleOrderEmailSendStatus = $configData['sale_order_closed_email_send_off']['is_enable'];
+
+        if (!empty($result)) {
+            $checkFlag = 0;
+            $data = array();
+            $i = 0;
+            foreach ($result as $res) {
+                // echo 'res ===';
+                // print_r($res);
+                if (((empty($loanOrderEmailSendStatus) || $loanOrderEmailSendStatus == 0) && $res['prod_type'] === 'loan') || ((empty($saleOrderEmailSendStatus) || $saleOrderEmailSendStatus == 0) && $res['prod_type'] === 'sale')) {
+                    continue;
+                } else {
+
+                    $sales_email = !empty($res['sales_rep_email']) ? $res['sales_rep_email'] : '';
+
+                    $to = [];
+                    if (!empty($res['escrow_email'])) {
+                        array_push($to, $res['escrow_email']);
+                    }
+                    if (!empty($res['listing_agent_email'])) {
+                        array_push($to, $res['listing_agent_email']);
+                    }
+                    if (!empty($res['buyer_agent_email'])) {
+                        array_push($to, $res['buyer_agent_email']);
+                    }
+                    if (!empty($res['sales_email'])) {
+                        array_push($to, $res['sales_email']);
+                    }
+
+                    // echo 'after if ===';
+                    // print_r($res);
+                    $message = $this->load->view('emails/close_order_email.php', $data, true);
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    // $subject = 'Thank You!';
+                    // $to = $escrow_email_address;
+
+                    $cc = array('ghernandez@pct.com', $sales_email);
+
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Your Order ' . $res['file_number'] . ' has been closed';
+                    // $to = $escrow_email_address;
+                    // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+                    $cc = array('piyush.j@crestinfosystems.com');
+                    $mailParams = array(
+                        'from_mail' => $from_mail,
+                        'from_name' => $from_name,
+                        'to' => $to,
+                        'subject' => $subject,
+                        'message' => json_encode($data),
+                        'cc' => $cc,
+                    );
+                    $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+                    // $cc = array();
+                    $this->load->helper('sendemail');
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, array(), $res['order_id'], 0);
+                    $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, array('status' => $escrow_mail_result), $res['orderId'], $logid);
+                    echo "Mails sent successfully for Order Number : " . $res['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
+                }
+
+            }
 
         }
     }
