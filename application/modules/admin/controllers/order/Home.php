@@ -5268,6 +5268,18 @@ class Home extends MX_Controller
                 'is_enable' => $title_point_shut_off,
             );
             $this->db->update('pct_configs', $lpDocData, array('slug' => 'title_point_shut_off'));
+
+            $loan_order_closed_email_send_off = isset($input['loan_order_closed_email_send_off']) && !empty($input['loan_order_closed_email_send_off']) ? 1 : 0;
+            $lpDocData = array(
+                'is_enable' => $loan_order_closed_email_send_off,
+            );
+            $this->db->update('pct_configs', $lpDocData, array('slug' => 'loan_order_closed_email_send_off'));
+
+            $sale_order_closed_email_send_off = isset($input['sale_order_closed_email_send_off']) && !empty($input['sale_order_closed_email_send_off']) ? 1 : 0;
+            $lpDocData = array(
+                'is_enable' => $sale_order_closed_email_send_off,
+            );
+            $this->db->update('pct_configs', $lpDocData, array('slug' => 'sale_order_closed_email_send_off'));
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -5290,6 +5302,8 @@ class Home extends MX_Controller
 
         $res['escrow_commission'] = $data['escrow_commission']['is_enable'];
         $res['title_point_shut_off'] = $data['title_point_shut_off']['is_enable'];
+        $res['sale_order_closed_email_send_off'] = $data['sale_order_closed_email_send_off']['is_enable'];
+        $res['loan_order_closed_email_send_off'] = $data['loan_order_closed_email_send_off']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);

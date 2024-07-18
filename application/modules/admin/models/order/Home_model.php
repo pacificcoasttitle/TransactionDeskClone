@@ -1147,6 +1147,7 @@ class Home_model extends CI_Model
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
+                    ->or_like('company_name', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
@@ -1180,6 +1181,7 @@ class Home_model extends CI_Model
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
+                    ->or_like('company_name', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
@@ -1417,15 +1419,17 @@ class Home_model extends CI_Model
                 $this->db->group_start()
                     ->like('request', $keyword)
                     ->or_like('response', $keyword)
+                    ->or_like('request_type', $keyword)
                     ->or_like('request_url', $keyword)
                     ->group_end();
-            }
+            }https: //clients.pacificcoasttitle.com/api/files/300165/documents
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('request', $keyword)
                     ->or_like('response', $keyword)
+                    ->or_like('request_type', $keyword)
                     ->or_like('request_url', $keyword)
                     ->group_end();
             }
@@ -1544,6 +1548,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
+                    ->or_like('partner_id', $keyword)
                     ->or_like('email', $keyword)
                     ->group_end();
             }
@@ -1556,6 +1561,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
+                    ->or_like('partner_id', $keyword)
                     ->or_like('email', $keyword)
                     ->group_end();
             }
