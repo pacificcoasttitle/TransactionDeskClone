@@ -4096,7 +4096,8 @@ class Home extends MX_Controller
             //$parties_email[] = 'hitesh.p@crestinfosystems.com';
             $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
             $this->load->helper('sendemail');
-            //$cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+            // $cc = array('piyush.j@crestinfosystems.net');
+            // $to = 'piyush-crest@yopmail.com';
 
             $mailParams = array(
                 'from_mail' => $from_mail,
@@ -4831,49 +4832,51 @@ class Home extends MX_Controller
                     /** End upload document to resware */
 
                     /** Send email to sales rep */
+                    // Comment from Jerry on 25th July, 2024. : For LP, Confirmation email should only be sent once its approved. Those are PCT wishes
+                    /*
                     $timezone = -8;
                     $data = array(
-                        'orderNumber' => $orderNumber,
-                        'orderId' => $file_id,
-                        'OpenName' => $order_details['cust_first_name'] . ' ' . $order_details['cust_last_name'],
-                        'Opentelephone' => $order_details['cust_telephone_no'],
-                        'OpenEmail' => $order_details['cust_email_address'],
-                        'CompanyName' => $order_details['cust_company_name'],
-                        'StreetAddress' => $order_details['cust_street_address'],
-                        'City' => $order_details['cust_city'],
-                        'Zipcode' => $order_details['cust_zip_code'],
-                        'openAt' => gmdate("m-d-Y h:i A", strtotime($order_details['opened_date']) + 3600 * ($timezone + date("I"))),
-                        'PropertyAddress' => $order_details['address'],
-                        'FullProperty' => $order_details['full_address'],
-                        'APN' => $order_details['apn'],
-                        'County' => $order_details['county'],
-                        'LegalDescription' => $order_details['legal_description'],
-                        'PrimaryOwner' => $order_details['primary_owner'],
-                        'SecondaryOwner' => $order_details['secondary_owner'],
-                        'SalesRep' => $order_details['salerep_first_name'] . ' ' . $order_details['salerep_last_name'],
-                        'TitleOfficer' => $order_details['titleofficer_first_name'] . ' ' . $order_details['titleofficer_last_name'],
-                        'ProductType' => $order_details['product_type'],
-                        'SalesAmount' => $order_details['sales_amount'],
-                        'LoanAmount' => $order_details['loan_amount'],
-                        'LoanNumber' => $order_details['loan_number'],
-                        'EscrowNumber' => $order_details['escrow_officer_id'],
-                        'randomString' => $this->order->randomPassword(),
+                    'orderNumber' => $orderNumber,
+                    'orderId' => $file_id,
+                    'OpenName' => $order_details['cust_first_name'] . ' ' . $order_details['cust_last_name'],
+                    'Opentelephone' => $order_details['cust_telephone_no'],
+                    'OpenEmail' => $order_details['cust_email_address'],
+                    'CompanyName' => $order_details['cust_company_name'],
+                    'StreetAddress' => $order_details['cust_street_address'],
+                    'City' => $order_details['cust_city'],
+                    'Zipcode' => $order_details['cust_zip_code'],
+                    'openAt' => gmdate("m-d-Y h:i A", strtotime($order_details['opened_date']) + 3600 * ($timezone + date("I"))),
+                    'PropertyAddress' => $order_details['address'],
+                    'FullProperty' => $order_details['full_address'],
+                    'APN' => $order_details['apn'],
+                    'County' => $order_details['county'],
+                    'LegalDescription' => $order_details['legal_description'],
+                    'PrimaryOwner' => $order_details['primary_owner'],
+                    'SecondaryOwner' => $order_details['secondary_owner'],
+                    'SalesRep' => $order_details['salerep_first_name'] . ' ' . $order_details['salerep_last_name'],
+                    'TitleOfficer' => $order_details['titleofficer_first_name'] . ' ' . $order_details['titleofficer_last_name'],
+                    'ProductType' => $order_details['product_type'],
+                    'SalesAmount' => $order_details['sales_amount'],
+                    'LoanAmount' => $order_details['loan_amount'],
+                    'LoanNumber' => $order_details['loan_number'],
+                    'EscrowNumber' => $order_details['escrow_officer_id'],
+                    'randomString' => $this->order->randomPassword(),
                     );
                     if (isset($order_details['lender_id']) && !empty($order_details['lender_id'])) {
-                        $data['lender_details'] = $lender_details;
+                    $data['lender_details'] = $lender_details;
                     }
 
                     if (isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id'])) {
-                        $data['buyers_agent'] = $buyers_agent_details;
+                    $data['buyers_agent'] = $buyers_agent_details;
                     }
 
                     if (isset($order_details['listing_agent_id']) && !empty($order_details['listing_agent_id'])) {
-                        $data['listing_agent'] = array(
-                            'name' => $listingDetails['listing_agent_name'],
-                            'email' => $listingDetails['listing_agent_email_address'],
-                            'telephone' => $listingDetails['listing_agent_telephone_no'],
-                            'company' => $listingDetails['listing_agent_company'],
-                        );
+                    $data['listing_agent'] = array(
+                    'name' => $listingDetails['listing_agent_name'],
+                    'email' => $listingDetails['listing_agent_email_address'],
+                    'telephone' => $listingDetails['listing_agent_telephone_no'],
+                    'company' => $listingDetails['listing_agent_company'],
+                    );
                     }
 
                     $from_name = 'Pacific Coast Title Company';
@@ -4882,25 +4885,27 @@ class Home extends MX_Controller
                     $message = $order_message_body;
                     $addInSubject = '';
                     if (str_contains(strtolower($order_details['property_type']), 'vacant land')) {
-                        $addInSubject = ' - APN: ' . $order_details['apn'];
+                    $addInSubject = ' - APN: ' . $order_details['apn'];
                     }
 
                     $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
                     $to = $order_details['salerep_email_address'];
                     $mailParams = array(
-                        'from_mail' => $from_mail,
-                        'from_name' => $from_name,
-                        'to' => $to,
-                        'subject' => $subject,
-                        'message' => json_encode($data),
+                    'from_mail' => $from_mail,
+                    'from_name' => $from_name,
+                    'to' => $to,
+                    'subject' => $subject,
+                    'message' => json_encode($data),
                     );
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail_from_admin', '', $mailParams, array(), $order_details['order_id'], 0);
                     try {
-                        $this->load->helper('sendemail');
-                        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], [], array());
+                    $this->load->helper('sendemail');
+                    $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], [], array());
                     } catch (Exception $e) {
                     }
                     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail_from_admin', '', $mailParams, array('status' => $mail_result), $order_details['order_id'], $logid);
+                     */
+
                     /** End send email to sales rep */
                 }
 
