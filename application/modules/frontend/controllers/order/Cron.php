@@ -4826,11 +4826,7 @@ class Cron extends MX_Controller
             $i = 0;
             foreach ($result as $res) {
                 // echo 'res ===';
-                // print_r($res);
                 if (((empty($loanOrderEmailSendStatus) || $loanOrderEmailSendStatus == 0) && $res['prod_type'] === 'loan') || ((empty($saleOrderEmailSendStatus) || $saleOrderEmailSendStatus == 0) && $res['prod_type'] === 'sale')) {
-                    continue;
-                } else {
-
                     $sales_email = !empty($res['sales_rep_email']) ? $res['sales_rep_email'] : '';
 
                     $to = [];
@@ -4862,7 +4858,7 @@ class Cron extends MX_Controller
                     $subject = 'Your Order ' . $res['file_number'] . ' has been closed';
                     // $to = $escrow_email_address;
                     // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
-                    $cc = array('piyush.j@crestinfosystems.com');
+                    // $cc = array('piyush.j@crestinfosystems.com');
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,

@@ -39,7 +39,6 @@ $(document).ready(function () {
     //     // $('#'+name).multiselect({
     //     //     includeSelectAllOption: true
     //     //   });
-    //     console.log(name);
     // }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
     //     $(clone).slideToggle('slow', function () {
     //         $(clone).remove();
@@ -104,6 +103,7 @@ $(document).ready(function () {
                             keyword: $('#tbl-customers-listing_filter input').val(),
                         },
                         success: function (result) {
+
                         },
                         async: false
                     });
@@ -178,6 +178,7 @@ $(document).ready(function () {
                             keyword: $('#tbl-credentials-customers-listing_filter input').val(),
                         },
                         success: function (result) {
+
                         },
                         async: false
                     });
@@ -439,7 +440,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "#Name, Email, Company Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -486,7 +487,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_customer_list", // json datasource
                 type: "post", // method  , by default get
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -502,7 +503,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -657,6 +658,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0,1] }
             ],*/
             "language": {
+                searchPlaceholder: "#Name, Email, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -703,7 +705,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/agent/get_agent_list", // json datasource
                 type: "post", // method  , by default get
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -719,7 +721,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -767,7 +769,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "#Name, Email, Company Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -814,7 +816,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_lender_list", // json datasource
                 type: "post", // method  , by default get
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -830,7 +832,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -845,6 +847,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
+                searchPlaceholder: "#Name, Email, Company Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -890,7 +893,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_mortgage_brokers_list",
                 type: "post",
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -906,7 +909,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -920,7 +923,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "#Name, Email, Telephone",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -966,7 +969,7 @@ $(document).ready(function () {
                 url: base_url + "order/admin/get-sales-rep-list",
                 type: "post",
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 data: function (d) {
                     d.sales_rep_enable = $('#enable_sales_rep').is(":checked") || $('#sales_rep_status_flag').val() == '1' ? 1 : 0;
@@ -985,7 +988,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -1016,7 +1019,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1141,6 +1144,9 @@ $(document).ready(function () {
                 data: function (d) {
                     d.credentials_check = $('#FilterCredentialListing').val();
                 }, // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1153,6 +1159,9 @@ $(document).ready(function () {
                     $("#tbl-credentials-customers-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-credentials-customers-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
             "createdRow": function (row, data, index) {
@@ -1181,7 +1190,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "#Order No, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1226,6 +1235,9 @@ $(document).ready(function () {
                     d.dateRange = $('#lvDateRange').val();
                     d.lvLog = $('#lvLog').val();
                 },
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1238,51 +1250,55 @@ $(document).ready(function () {
                     $("#tbl-lv-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-lv-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+
+                    setTimeout(function () {
+                        var start = moment().startOf('month')
+                        var end = moment();
+                        function cb(start, end) {
+                            $('#lvDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                            $('#lvDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                        }
+
+                        var dateRange = $('#lvDateRangeControl').daterangepicker({
+                            autoUpdateInput: false,
+                            locale: {
+                                cancelLabel: 'Clear'
+                            },
+                            opens: 'right',
+                            startDate: start,
+                            endDate: end,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            }
+                        }, cb);
+
+                        dateRange.on('apply.daterangepicker', function (ev, picker) {
+                            $('#lvDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                            $('#lvDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                        });
+
+                        dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                            $('#lvDateRangeControl span').html('');
+                            $('#lvDateRange').val('');
+                        });
+
+                        //cb(start, end);
+
+                    }, 100);
                 }
             },
 
         });
 
-        setTimeout(function () {
-            var start = moment().startOf('month')
-            var end = moment();
 
-            function cb(start, end) {
-                $('#lvDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-                $('#lvDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-            }
-
-            var dateRange = $('#lvDateRangeControl').daterangepicker({
-                autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                },
-                opens: 'right',
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            dateRange.on('apply.daterangepicker', function (ev, picker) {
-                $('#lvDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                $('#lvDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-            });
-
-            dateRange.on('cancel.daterangepicker', function (ev, picker) {
-                $('#lvDateRangeControl span').html('');
-                $('#lvDateRange').val('');
-            });
-
-            //cb(start, end);
-
-        }, 1000);
     }
 
     if ($('#tbl-pre-listing-log-listing').length) {
@@ -1293,7 +1309,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "#Order No, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1335,6 +1351,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/titlePoint/get_pre_listing_logs", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 "data": function (d) {
                     d.dateRange = $('#preListingDateRange').val();
                     d.preListingLog = $('#preListingLog').val();
@@ -1351,51 +1370,55 @@ $(document).ready(function () {
                     $("#tbl-pre-listing-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-pre-listing-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+
+                    setTimeout(function () {
+                        var start = moment().startOf('month')
+                        var end = moment();
+
+                        function cb(start, end) {
+                            $('#preListingDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                            $('#preListingDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                        }
+
+                        var dateRange = $('#preListingDateRangeControl').daterangepicker({
+                            autoUpdateInput: false,
+                            locale: {
+                                cancelLabel: 'Clear'
+                            },
+                            opens: 'right',
+                            startDate: start,
+                            endDate: end,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            }
+                        }, cb);
+
+                        dateRange.on('apply.daterangepicker', function (ev, picker) {
+                            $('#preListingDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                            $('#preListingDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                        });
+
+                        dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                            $('#preListingDateRangeControl span').html('');
+                            $('#preListingDateRange').val('');
+                        });
+
+                        //cb(start, end);
+
+                    }, 100);
                 }
             },
 
         });
 
-        setTimeout(function () {
-            var start = moment().startOf('month')
-            var end = moment();
-
-            function cb(start, end) {
-                $('#preListingDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-                $('#preListingDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-            }
-
-            var dateRange = $('#preListingDateRangeControl').daterangepicker({
-                autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                },
-                opens: 'right',
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            dateRange.on('apply.daterangepicker', function (ev, picker) {
-                $('#preListingDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                $('#preListingDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-            });
-
-            dateRange.on('cancel.daterangepicker', function (ev, picker) {
-                $('#preListingDateRangeControl span').html('');
-                $('#preListingDateRange').val('');
-            });
-
-            //cb(start, end);
-
-        }, 1000);
     }
 
     if ($('#refresh-data').length) {
@@ -1586,6 +1609,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0,1] }
             ],*/
             "language": {
+                searchPlaceholder: "#Order No, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1678,6 +1702,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0,1] }
             ],*/
             "language": {
+                searchPlaceholder: "#Order No, Property Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1770,7 +1795,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "#FileNumber, DocumentName",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1815,6 +1840,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_cpl_document_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1827,6 +1855,9 @@ $(document).ready(function () {
                     $("#tbl-cpl-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-cpl-documents-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -1840,7 +1871,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "#FileNumber, DocumentName",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1885,6 +1916,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_grant_deed_document_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1897,6 +1931,9 @@ $(document).ready(function () {
                     $("#tbl-grant-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-grant-documents-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -1910,7 +1947,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "#FileName, DocumentName",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -1937,8 +1974,6 @@ $(document).ready(function () {
                         columns: [0, 1, 2],
                         format: {
                             body: function (data, row, column, node) {
-                                console.log('data =======', data);
-                                console.log('column =======', column);
                                 return (column === 1 || column === 2) ?
                                     data.replace(/[$,]/g, '') :
                                     data;
@@ -1957,6 +1992,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_lv_document_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -1969,6 +2007,9 @@ $(document).ready(function () {
                     $("#tbl-lv-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lv-documents-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -1983,7 +2024,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2029,7 +2070,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_new_users_list",
                 type: "post",
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -2045,7 +2086,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -2059,6 +2100,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2158,7 +2200,7 @@ $(document).ready(function () {
                 },
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "#Order No, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2205,6 +2247,9 @@ $(document).ready(function () {
                     d.dateRange = $('#taxDateRange').val();
                     d.taxLog = $('#taxLog').val();
                 },
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2217,51 +2262,55 @@ $(document).ready(function () {
                     $("#tbl-tax-data-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-tax-data-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+
+                    setTimeout(function () {
+                        var start = moment().startOf('month')
+                        var end = moment();
+
+                        function cb(start, end) {
+                            $('#taxDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                            $('#taxDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                        }
+
+                        var dateRange = $('#taxDateRangeControl').daterangepicker({
+                            autoUpdateInput: false,
+                            locale: {
+                                cancelLabel: 'Clear'
+                            },
+                            opens: 'right',
+                            startDate: start,
+                            endDate: end,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            }
+                        }, cb);
+
+                        dateRange.on('apply.daterangepicker', function (ev, picker) {
+                            $('#taxDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                            $('#taxDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                        });
+
+                        dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                            $('#taxDateRangeControl span').html('');
+                            $('#taxDateRange').val('');
+                        });
+
+                        //cb(start, end);
+
+                    }, 100);
                 }
             },
 
         });
 
-        setTimeout(function () {
-            var start = moment().startOf('month')
-            var end = moment();
-
-            function cb(start, end) {
-                $('#taxDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-                $('#taxDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-            }
-
-            var dateRange = $('#taxDateRangeControl').daterangepicker({
-                autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                },
-                opens: 'right',
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            dateRange.on('apply.daterangepicker', function (ev, picker) {
-                $('#taxDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                $('#taxDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-            });
-
-            dateRange.on('cancel.daterangepicker', function (ev, picker) {
-                $('#taxDateRangeControl span').html('');
-                $('#taxDateRange').val('');
-            });
-
-            //cb(start, end);
-
-        }, 1000);
     }
     /* Tax data */
 
@@ -2297,7 +2346,7 @@ $(document).ready(function () {
                 },
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "#Order No, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2344,6 +2393,9 @@ $(document).ready(function () {
                     d.dateRange = $('#taxDateRange').val();
                     d.taxLog = $('#taxLog').val();
                 },
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2356,51 +2408,55 @@ $(document).ready(function () {
                     $("#tbl-tax-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-tax-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+
+                    setTimeout(function () {
+                        var start = moment().startOf('month')
+                        var end = moment();
+
+                        function cb(start, end) {
+                            $('#taxDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                            $('#taxDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                        }
+
+                        var dateRange = $('#taxDateRangeControl').daterangepicker({
+                            autoUpdateInput: false,
+                            locale: {
+                                cancelLabel: 'Clear'
+                            },
+                            opens: 'right',
+                            startDate: start,
+                            endDate: end,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            }
+                        }, cb);
+
+                        dateRange.on('apply.daterangepicker', function (ev, picker) {
+                            $('#taxDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                            $('#taxDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                        });
+
+                        dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                            $('#taxDateRangeControl span').html('');
+                            $('#taxDateRange').val('');
+                        });
+
+                        //cb(start, end);
+
+                    }, 100);
                 }
             },
 
         });
 
-        setTimeout(function () {
-            var start = moment().startOf('month')
-            var end = moment();
-
-            function cb(start, end) {
-                $('#taxDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-                $('#taxDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-            }
-
-            var dateRange = $('#taxDateRangeControl').daterangepicker({
-                autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                },
-                opens: 'right',
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            dateRange.on('apply.daterangepicker', function (ev, picker) {
-                $('#taxDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                $('#taxDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-            });
-
-            dateRange.on('cancel.daterangepicker', function (ev, picker) {
-                $('#taxDateRangeControl span').html('');
-                $('#taxDateRange').val('');
-            });
-
-            //cb(start, end);
-
-        }, 1000);
     }
     /* Tax logs */
 
@@ -2412,7 +2468,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "#FileNamber, DocumentName",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2457,6 +2513,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_tax_document_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2469,6 +2528,9 @@ $(document).ready(function () {
                     $("#tbl-tax-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-tax-documents-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -2575,7 +2637,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #File Number",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2597,6 +2659,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "order/admin/get-lp-xml-logs",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2609,6 +2674,9 @@ $(document).ready(function () {
                     $("#tbl-lp-xml-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-xml-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -2622,7 +2690,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2644,6 +2712,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_admin_user_logs",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2656,6 +2727,9 @@ $(document).ready(function () {
                     $("#tbl-lp-listing-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-listing-documents-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -2672,7 +2746,7 @@ $(document).ready(function () {
                 { "targets": [0, 7], "orderable": false }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #Code, Type",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2698,6 +2772,9 @@ $(document).ready(function () {
                 data: function (d) {
                     d.is_display = $('#isDisplayFilter').val();
                 },
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2710,6 +2787,9 @@ $(document).ready(function () {
                     $("#tbl-lp-document-types-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-lp-document-types-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -2730,7 +2810,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #Days, Color, Code",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2802,7 +2882,7 @@ $(document).ready(function () {
                 },
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "#Order No, Address",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2845,6 +2925,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/titlePoint/get_grant_deed_logs", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 "data": function (d) {
                     d.dateRange = $('#grantDateRange').val();
                     d.grantLog = $('#grantLog').val();
@@ -2861,51 +2944,55 @@ $(document).ready(function () {
                     $("#tbl-grant-deed-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-grant-deed-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+
+                    setTimeout(function () {
+                        var start = moment().startOf('month')
+                        var end = moment();
+
+                        function cb(start, end) {
+                            $('#grantDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                            $('#grantDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
+                        }
+
+                        var dateRange = $('#grantDateRangeControl').daterangepicker({
+                            autoUpdateInput: false,
+                            locale: {
+                                cancelLabel: 'Clear'
+                            },
+                            opens: 'right',
+                            startDate: start,
+                            endDate: end,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            }
+                        }, cb);
+
+                        dateRange.on('apply.daterangepicker', function (ev, picker) {
+                            $('#grantDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                            $('#grantDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+                        });
+
+                        dateRange.on('cancel.daterangepicker', function (ev, picker) {
+                            $('#grantDateRangeControl span').html('');
+                            $('#grantDateRange').val('');
+                        });
+
+                        //cb(start, end);
+
+                    }, 100);
                 }
             },
 
         });
 
-        setTimeout(function () {
-            var start = moment().startOf('month')
-            var end = moment();
-
-            function cb(start, end) {
-                $('#grantDateRangeControl span').html(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-                $('#grantDateRange').val(start.format('MM/DD/YYYY') + ' - ' + end.format('MM/DD/YYYY'));
-            }
-
-            var dateRange = $('#grantDateRangeControl').daterangepicker({
-                autoUpdateInput: false,
-                locale: {
-                    cancelLabel: 'Clear'
-                },
-                opens: 'right',
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            dateRange.on('apply.daterangepicker', function (ev, picker) {
-                $('#grantDateRange').val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                $('#grantDateRangeControl span').html(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-            });
-
-            dateRange.on('cancel.daterangepicker', function (ev, picker) {
-                $('#grantDateRangeControl span').html('');
-                $('#grantDateRange').val('');
-            });
-
-            //cb(start, end);
-
-        }, 1000);
     }
     /* Grant deed logs */
 
@@ -2917,7 +3004,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "#FileNumber, DocumentName",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -2962,6 +3049,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_curative_document_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -2973,6 +3063,9 @@ $(document).ready(function () {
                     }
                     $("#tbl-curative-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-curative-documents-listing_processing").css("display", "none");
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -3034,6 +3127,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_file_document_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3045,6 +3141,9 @@ $(document).ready(function () {
                     }
                     $("#tbl-file-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-file-documents-listing_processing").css("display", "none");
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -3058,7 +3157,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3104,7 +3203,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_companies_list",
                 type: "post",
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -3119,7 +3218,7 @@ $(document).ready(function () {
                     $("#tbl-companies-listing_processing").css("display", "none");
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -3134,7 +3233,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1, 2] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "#Name, Email, Company Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3242,7 +3341,7 @@ $(document).ready(function () {
                 },
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "#Order No",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3266,6 +3365,9 @@ $(document).ready(function () {
                     d.sales_rep = $('#log_sales_rep').val();
                     d.title_officer = $('#log_title_officer').val();
                 },
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3278,6 +3380,9 @@ $(document).ready(function () {
                     $("#tbl-partner-api-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-partner-api-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
 
@@ -3319,7 +3424,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Name",
+                searchPlaceholder: "#Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3366,7 +3471,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Name",
+                searchPlaceholder: "#Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3413,7 +3518,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Name",
+                searchPlaceholder: "#Email",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3500,7 +3605,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Name",
+                searchPlaceholder: "#Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3563,7 +3668,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                // searchPlaceholder: "Code#",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3582,6 +3687,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/codeBook/get_code_book", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3594,6 +3702,9 @@ $(document).ready(function () {
                     $("#tbl-code-book tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-code-book_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
 
@@ -3641,6 +3752,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3686,7 +3798,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_cpl_proposed_users_list",
                 type: "post",
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -3701,7 +3813,7 @@ $(document).ready(function () {
                     $("#tbl-cpl-proposed-users-listing_processing").css("display", "none");
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -3736,6 +3848,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_password_list",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 data: function (d) {
                     d.user_type = $('#user_filter').val();
                 },
@@ -3750,6 +3865,9 @@ $(document).ready(function () {
                     }
                     $("#tbl-password-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-password-listing_processing").css("display", "none");
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             }
         });
@@ -3844,7 +3962,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "Order #Order No",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3867,6 +3985,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/order/getCplErrorLogs",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3879,6 +4000,9 @@ $(document).ready(function () {
                     $("#tbl-cpl-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-cpl-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
 
@@ -3893,7 +4017,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1] }
             ],
             "language": {
-                searchPlaceholder: "Order #",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -3916,6 +4040,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/order/getReswareLogs",
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -3928,6 +4055,9 @@ $(document).ready(function () {
                     $("#tbl-resware-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-resware-log-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
 
@@ -4080,7 +4210,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1, 2] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Search #Name",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -4151,7 +4281,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1, 2] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -4197,7 +4327,7 @@ $(document).ready(function () {
                 url: base_url + "admin/order/home/get_escrow_officers_list", // json datasource
                 type: "post",
                 beforeSend: function () {
-                    // $("#page-preloader").show();
+                    $("#page-preloader").show();
                 },
                 /*data   : function( d ) {
                     d.credentials_check = $('#FilterCredentialListing').val();
@@ -4216,7 +4346,7 @@ $(document).ready(function () {
 
                 },
                 complete: function () {
-                    // $("#page-preloader").hide();
+                    $("#page-preloader").hide();
                 }
             },
         });
@@ -4231,7 +4361,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1, 2] }
             ],
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -4260,6 +4390,9 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/home/get_payoff_users_list", // json datasource
                 type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
@@ -4272,6 +4405,9 @@ $(document).ready(function () {
                     $("#tbl-payoff-users-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-payoff-users-listing-listing_processing").css("display", "none");
 
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 }
             },
         });
@@ -4286,7 +4422,7 @@ $(document).ready(function () {
                 { "searchable": false, "targets": [0, 1, 2] }
             ],
             "language": {
-                searchPlaceholder: "Search",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -4361,7 +4497,7 @@ $(document).ready(function () {
     if ($('.cusom__common__datatable').length) {
         $('.cusom__common__datatable').DataTable({
             "language": {
-                // searchPlaceholder: "Customer Number",
+                searchPlaceholder: "Search #",
                 paginate: {
                     next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
                     previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
@@ -4401,8 +4537,7 @@ $(document).ready(function () {
         $('.threshold-add-btn').click(function () {
             var clone_div = $(this).parents('.threshold__amounts').find('.clone-main-div').clone();
             clone_div.find('input').val("");
-            clone_div.removeClass('clone-main-div')
-            console.log(clone_div);
+            clone_div.removeClass('clone-main-div');
             $(this).parents('.threshold__amounts').find('.clone-to-threshold').append(clone_div);
 
         })
@@ -4620,7 +4755,6 @@ function deleteCustomer(id) {
             data: { id: id },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
-                console.log(result);
                 if (result.status == 'success') {
                     $('#customer_success_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
@@ -4992,13 +5126,11 @@ function exportLPOrders() {
     d.seachValue = seachValue;
     d.start_date = $('#FilterLpStartDate').val();
     d.end_date = $('#FilterLpEndDate').val();
-    console.log('data ==', d);
     $.ajax({
         url: base_url + "order/admin/export_lp_orders",
         method: "POST",
         data: d,
         success: function (data) {
-            console.log('rsponse data =', data);
             if (data.status == 'success') {
                 download('lp-orders.csv', data.data);
             }
@@ -5042,7 +5174,6 @@ function deleteMasterUser(id) {
             data: { id: id },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
-                console.log(result);
                 if (result.status == 'success') {
                     $('#master_users_success_msg').html('Master User deleted successfully').show();
                     $([document.documentElement, document.body]).animate({
@@ -5094,7 +5225,6 @@ function deleteDailyReceiver(id) {
             data: { id: id },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
-                console.log(result);
                 if (result.status == 'success') {
                     $('#tbl-daily-email-control_success_msg').html('Dailt email receiver deleted successfully').show();
                     $([document.documentElement, document.body]).animate({
@@ -5152,7 +5282,6 @@ function makePrimary(i) {
             },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
-                console.log(data);
                 if (result.status == 'success') {
                     $('#customer_success_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
@@ -5580,7 +5709,6 @@ function importOrders(id) {
             success: function (response) {
 
                 var results = JSON.parse(response);
-                console.log(results);
                 if (results.status == 'success') {
                     $('body').animate({ opacity: 1.0 }, "slow");
                     $('#customer_success_msg').html(results.msg).show();
@@ -6104,7 +6232,6 @@ function deleteDocumentType(id) {
             data: { id: id },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
-                console.log(result);
                 if (result.status == 'success') {
                     $('#lp_document_types_success_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
@@ -6156,7 +6283,6 @@ function deleteAlert(id) {
             data: { id: id },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
-                console.log(result);
                 if (result.status == 'success') {
                     $('#lp_alert_success_msg').html(result.message).show();
                     $([document.documentElement, document.body]).animate({
