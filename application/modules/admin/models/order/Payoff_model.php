@@ -24,6 +24,7 @@ class Payoff_model extends CI_Model
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('company_name', $keyword);
                 $this->db->group_end();
             }
 

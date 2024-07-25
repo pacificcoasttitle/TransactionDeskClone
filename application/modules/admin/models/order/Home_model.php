@@ -68,6 +68,7 @@ class Home_model extends CI_Model
                     ->like('first_name', $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
+                    ->or_like('company_name', $keyword)
                     ->group_end();
             }
 
@@ -81,6 +82,7 @@ class Home_model extends CI_Model
                     ->like('first_name', $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
+                    ->or_like('company_name', $keyword)
                     ->group_end();
             }
 
@@ -225,7 +227,7 @@ class Home_model extends CI_Model
 
             /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
             $where .= ' OR last_name LIKE "%'.$keyword.'%"';*/
-            $innerCause .= ' AND email_address LIKE "%' . $keyword . '%"';
+            $innerCause .= ' AND (email_address LIKE "%' . $keyword . '%" OR company_name LIKE "%' . $keyword . '%" OR first_name LIKE "%' . $keyword . '%" OR last_name LIKE "%' . $keyword . '%")';
         }
         $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
         SELECT email_address FROM customer_basic_details' . $innerCause . '
@@ -895,6 +897,7 @@ class Home_model extends CI_Model
                 $where = ' AND first_name LIKE "%' . $keyword . '%"';
                 $where .= ' OR last_name LIKE "%' . $keyword . '%"';
                 $where .= ' OR email_address LIKE "%' . $keyword . '%"';
+                $where .= ' OR company_name LIKE "%' . $keyword . '%"';
             }
 
             $query = $this->db->query('SELECT *
@@ -917,6 +920,7 @@ class Home_model extends CI_Model
                     $where = ' AND first_name LIKE "%' . $keyword . '%"';
                     $where .= ' OR last_name LIKE "%' . $keyword . '%"';
                     $where .= ' OR email_address LIKE "%' . $keyword . '%"';
+                    $where .= ' OR company_name LIKE "%' . $keyword . '%"';
                 }
             }
 
@@ -1147,6 +1151,7 @@ class Home_model extends CI_Model
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
+                    ->or_like('company_name', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
@@ -1180,6 +1185,7 @@ class Home_model extends CI_Model
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
                     ->or_like('street_address', $keyword)
+                    ->or_like('company_name', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
                     ->or_like('zip_code', $keyword)
@@ -1417,15 +1423,18 @@ class Home_model extends CI_Model
                 $this->db->group_start()
                     ->like('request', $keyword)
                     ->or_like('response', $keyword)
+                    ->or_like('request_type', $keyword)
                     ->or_like('request_url', $keyword)
                     ->group_end();
             }
+
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like('request', $keyword)
                     ->or_like('response', $keyword)
+                    ->or_like('request_type', $keyword)
                     ->or_like('request_url', $keyword)
                     ->group_end();
             }
@@ -1469,8 +1478,7 @@ class Home_model extends CI_Model
         $this->db->from('pct_notifications');
         $this->db->order_by('name', 'asc');
         $query = $this->db->get();
-        $notifications = $query->result_array();
-        return $notifications;
+        return $query->result_array();
     }
 
     public function get_notifications_list($params)
@@ -1544,6 +1552,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
+                    ->or_like('partner_id', $keyword)
                     ->or_like('email', $keyword)
                     ->group_end();
             }
@@ -1556,6 +1565,7 @@ class Home_model extends CI_Model
             if (isset($keyword) && !empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
+                    ->or_like('partner_id', $keyword)
                     ->or_like('email', $keyword)
                     ->group_end();
             }
@@ -1646,6 +1656,7 @@ class Home_model extends CI_Model
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('company_name', $keyword);
                 $this->db->group_end();
             }
 
@@ -1657,6 +1668,7 @@ class Home_model extends CI_Model
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('company_name', $keyword);
                 $this->db->group_end();
             }
 
@@ -2082,6 +2094,8 @@ class Home_model extends CI_Model
                 $this->db->group_start()
                     ->like("days", $keyword)
                     ->or_like('color_code', $keyword)
+                    ->or_like('text_color', $keyword)
+                    ->or_like('regular_order_color_code', $keyword)
                     ->group_end();
             }
             $this->db->from('pct_lp_alert');
@@ -2091,6 +2105,8 @@ class Home_model extends CI_Model
                 $this->db->group_start()
                     ->like("days", $keyword)
                     ->or_like('color_code', $keyword)
+                    ->or_like('text_color', $keyword)
+                    ->or_like('regular_order_color_code', $keyword)
                     ->group_end();
             }
 

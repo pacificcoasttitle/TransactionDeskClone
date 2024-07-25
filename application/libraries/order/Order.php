@@ -550,7 +550,7 @@ class Order
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_documents_types');
         $query = $this->CI->db->get();
-        return $rs = $query->result_array();
+        return $query->result_array();
     }
 
     public function getUserFromPartners()
@@ -560,8 +560,7 @@ class Order
         $this->CI->db->from('customer_basic_details');
         $this->CI->db->where_in('partner_id', explode(',', $userdata['partner_companies']));
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function get_order_details($fileId, $from_mail = 0)
@@ -1242,7 +1241,7 @@ class Order
         $this->CI->db->select('*');
         $this->CI->db->from('pct_resware_admin_credential');
         $query = $this->CI->db->get();
-        return $result = $query->row_array();
+        return $query->row_array();
     }
 
     public function get_order($params)
@@ -1381,8 +1380,7 @@ class Order
         $this->CI->db->select('*');
         $this->CI->db->from('pct_order_proposed_branches');
         $query = $this->CI->db->get();
-        $result = $query->result_array();
-        return $result;
+        return $query->result_array();
     }
 
     public function getProposedBranchDetail($branchId)
@@ -1391,8 +1389,7 @@ class Order
         $this->CI->db->from('pct_order_proposed_branches');
         $this->CI->db->where('id', $branchId);
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function syncSafewireDocuments($orderUrl, $wireUrl, $orderDetails)
@@ -1446,8 +1443,7 @@ class Order
         $this->sendSafewireDocumentToResware($orderDetails['file_id'] . '.pdf', $orderDetails, $binaryWireOrderData, 0);
         $this->uploadDocumentOnAwsS3($orderDetails['file_id'] . '.pdf', 'wire_safewire_documents');
         $this->CI->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $wireUrl, array(), $resultWire, $orderDetails['order_id'], $logid);
-        $res = json_decode($result, true);
-        return $res;
+        return json_decode($result, true);
     }
 
     public function sendSafewireDocumentToResware($document_name, $orderDetails, $binaryData, $orderFlag = 0)
@@ -1615,8 +1611,7 @@ class Order
         $this->CI->db->where('order_details.underwriter != ', null);
 
         $query = $this->CI->db->get();
-        $result = $query->result_array();
-        return $result;
+        return $query->result_array();
 
     }
     public function getOpenOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
@@ -1661,8 +1656,7 @@ class Order
         }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getOpenOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
@@ -1706,8 +1700,7 @@ class Order
         }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
@@ -1751,8 +1744,7 @@ class Order
         }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
@@ -1798,8 +1790,7 @@ class Order
         }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getOpenLPOrdersCountForRefiProducts($startDate, $endDate, $userId, $escrow_flag = 0)
@@ -1837,8 +1828,7 @@ class Order
         // }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getOpenLPOrdersCountForSaleProducts($startDate, $endDate, $userId, $escrow_flag = 0)
@@ -1877,8 +1867,7 @@ class Order
         // }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getClosedLPOrdersCountForRefiProducts($startDate, $endDate, $userId, $escrow_flag = 0)
@@ -1919,8 +1908,7 @@ class Order
         // }
 
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getClosedLPOrdersCountForSaleProducts($startDate, $endDate, $userId, $escrow_flag = 0)
@@ -2320,8 +2308,7 @@ class Order
         }
         $this->CI->db->order_by('first_name', 'asc');
         $query = $this->CI->db->get();
-        $result = $query->result_array();
-        return $result;
+        return $query->result_array();
     }
 
     public function getOpenOrdersCountForLastMonthOfPreviousYear($userId)
@@ -2338,8 +2325,7 @@ class Order
             $this->CI->db->where('transaction_details.sales_representative is not null');
         }
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId)
@@ -2356,8 +2342,7 @@ class Order
             $this->CI->db->where('transaction_details.sales_representative is not null');
         }
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getCountBasedOnCurrentDayForPreviousMonth($userId)
@@ -2374,8 +2359,7 @@ class Order
             $this->CI->db->where('transaction_details.sales_representative is not null');
         }
         $query = $this->CI->db->get();
-        $result = $query->row_array();
-        return $result;
+        return $query->row_array();
     }
 
     public function getUsersInfo($emailAddresses)
@@ -2732,12 +2716,12 @@ class Order
                     'listing_agent_id' => 0,
                     'escrow_lender_id' => 0,
                     'parcel_id' => $res['Properties'][0]['ParcelID'],
-                    'address' => $address,
+                    'address' => removeMultipleSpace($address),
                     'city' => $res['Properties'][0]['City'],
                     'state' => $res['Properties'][0]['State'],
                     'zip' => $res['Properties'][0]['Zip'],
                     'property_type' => $property_type,
-                    'full_address' => $FullProperty,
+                    'full_address' => removeMultipleSpace($FullProperty),
                     'apn' => $apn,
                     'county' => $res['Properties'][0]['County'],
                     'legal_description' => $LegalDescription,
@@ -2800,8 +2784,7 @@ class Order
                     'sent_to_accounting_date' => $completed_date,
                 );
                 $this->CI->home_model->insert($orderData, 'order_details');
-                $orderId = $this->CI->db->insert_id();
-                return $orderId;
+                return $this->CI->db->insert_id();
             }
         }
     }
@@ -4209,8 +4192,7 @@ class Order
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
         $this->CI->db->where_in('transaction_details.sales_representative', $userId);
         $query = $this->CI->db->get();
-        $result = $query->result_array();
-        return $result;
+        return $query->result_array();
     }
 
     public function sendNonOpenersEmail($sales_rep_id)
@@ -4329,8 +4311,7 @@ class Order
 
         $this->CI->db->where('transaction_details.sales_representative', $userId);
         $query = $this->CI->db->get();
-        $result = $query->result_array();
-        return $result;
+        return $query->result_array();
     }
 
     public function get_transactees($params)

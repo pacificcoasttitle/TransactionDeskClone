@@ -28,7 +28,7 @@
                         <form id="setting_form" method="POST">
 
                             <div class="form-group row ml-1">
-                                <label for="resware_username" class="col-sm-2 col-form-label">Is LP Enable<span class="required"> *</span></label>
+                                <label for="escrow_commission" class="col-sm-3 col-form-label">Is LP Enable<span class="required"> *</span></label>
                                 <div class="col-sm-2">
                                     <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="escrow_commission" id="escrow_commission" <?php echo isset($escrow_commission) && !empty($escrow_commission) ? 'Checked' : ''; ?>>
                                     <input type="hidden" value="" name="lp_enable" >
@@ -36,10 +36,26 @@
                             </div>
 
                             <div class="form-group row ml-1">
-                                <label for="resware_username" class="col-sm-2 col-form-label">Title Point Shut Off<span class="required"> *</span></label>
+                                <label for="title_point_shut_off" class="col-sm-3 col-form-label">Title Point Shut Off<span class="required"> *</span></label>
                                 <div class="col-sm-2">
                                     <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="title_point_shut_off" id="title_point_shut_off" <?php echo isset($title_point_shut_off) && !empty($title_point_shut_off) ? 'Checked' : ''; ?>>
                                     <!-- <input type="hidden" value="" name="title_point_shut_off" > -->
+                                </div>
+                            </div>
+
+                            <div class="form-group row ml-1">
+                                <label for="loan_order_closed_email_send_off" class="col-sm-3 col-form-label">Loan Order Closed Email Send Off<span class="required"> *</span></label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="loan_order_closed_email_send_off" id="loan_order_closed_email_send_off" <?php echo isset($loan_order_closed_email_send_off) && !empty($loan_order_closed_email_send_off) ? 'Checked' : ''; ?>>
+                                    <!-- <input type="hidden" value="" name="loan_order_closed_email_send_off" > -->
+                                </div>
+                            </div>
+
+                            <div class="form-group row ml-1">
+                                <label for="sale_order_closed_email_send_off" class="col-sm-3 col-form-label">Sale Order Closed Email Send Off<span class="required"> *</span></label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="sale_order_closed_email_send_off" id="sale_order_closed_email_send_off" <?php echo isset($sale_order_closed_email_send_off) && !empty($sale_order_closed_email_send_off) ? 'Checked' : ''; ?>>
+                                    <!-- <input type="hidden" value="" name="sale_order_closed_email_send_off" > -->
                                 </div>
                             </div>
 
