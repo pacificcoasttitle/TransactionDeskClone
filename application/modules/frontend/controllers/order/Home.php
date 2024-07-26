@@ -1765,8 +1765,7 @@ class Home extends MX_Controller
 
             $this->order->createLpReport($fileNumber, false, true);
 
-            // Comment from Jerry on 25th July, 2024. : For LP, Confirmation email should only be sent once its approved. Those are PCT wishes
-            // $this->order->sendOrderEmail($fileNumber);
+            $this->order->sendOrderEmail($fileNumber);
 
             /** Start Execute all document creation in background */
             try {
