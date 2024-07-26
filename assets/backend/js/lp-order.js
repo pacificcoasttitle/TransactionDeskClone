@@ -259,7 +259,7 @@ function updateLpReportStatus(file_id, status) {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#lp_order_success_msg").offset().top
                 }, 1000);
-                companies_list.ajax.reload(null, false);
+                lp_order_list.ajax.reload(null, false);
                 setTimeout(function () {
                     $('#lp_order_success_msg').html('').hide();
                 }, 4000);

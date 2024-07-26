@@ -3719,7 +3719,13 @@ class Order
         $configData = $this->getConfigData();
         $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
         $timezone = -8;
-        $orderNumber = $orderDetails['file_number'] ? $orderDetails['file_number'] : $orderDetails['lp_file_number'];
+        $isLpOrder = false;
+        $orderNumber = $orderDetails['file_number'];
+        if (empty($orderDetails['file_number']) && !empty($orderDetails['lp_file_number'])) {
+            $isLpOrder = true;
+            $orderNumber = $orderDetails['lp_file_number'];
+        }
+        // $orderNumber = $orderDetails['file_number'] ? $orderDetails['file_number'] : $orderDetails['lp_file_number'];
 
         $data = array(
             'orderNumber' => $orderNumber,
@@ -3818,7 +3824,12 @@ class Order
         $parties_email[] = 'openorders@pct.com';
         $file = array();
         $lvfilename = $deedfilename = $taxfilename = '';
-        if ((empty($titlePointShutOff) || $titlePointShutOff == 0)) {
+
+        /**
+         * Comment From Jerry on 26th July, 2024:
+         * When the LP is created we can send out a confirmation email to all parties but it should not include any attachments.
+         * */
+        if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && !$isLpOrder) {
             $lvfilename = $orderNumber . '.pdf';
             $deedfilename = $orderNumber . '.pdf';
             $taxfilename = $orderNumber . '.pdf';
