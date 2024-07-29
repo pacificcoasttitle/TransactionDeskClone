@@ -1,14 +1,35 @@
 $(document).ready(function () {
+    console.log('order.js loaded')
+    let notifyAdminFlag = false;
+    let notificationSubject = '';
+
     if ($(".grant-deed-no-data").length) {
-        notifyAdmin('Grant Deed Not Found');
+        notifyAdminFlag = true;
+        notificationSubject += 'Grant Deed';
+        // notifyAdmin('Grant Deed Not Found');
     }
 
     if ($(".tax-no-data").length) {
-        notifyAdmin('Tax Document Not Found');
+        if (notifyAdminFlag) {
+            notificationSubject += ',';
+        }
+        notificationSubject += ' Tax Document';
+        notifyAdminFlag = true;
+        // notifyAdmin('Tax Document Not Found');
     }
 
     if ($(".legal-vesting-no-data").length) {
-        notifyAdmin('Legal Vesting Document Not Found');
+        if (notifyAdminFlag) {
+            notificationSubject += ',';
+        }
+        notificationSubject += ' Legal Vesting';
+        notifyAdminFlag = true;
+        // notifyAdmin('Legal Vesting Document Not Found');
+    }
+
+    if (notifyAdminFlag) {
+        notificationSubject = notificationSubject + ' Documents Not Found';
+        notifyAdmin(notificationSubject);
     }
 
     if ($('#clone-email-address').length) {
@@ -429,7 +450,7 @@ function getResultById(resultId, methodId, random_number) {
                                     $('#secondInstallment').html(secondIntdata);
                                 }
                             });
-                        }             
+                        }
                         else
                         {
                             $('#firstInstallment').css('border','1px solid #000000');
@@ -952,7 +973,9 @@ function getDeliverables(partner_id) {
                         if (i == 0) {
                             $('#AdditionalEmail').val(res.deliverables[i]);
                         } else {
-                            $("#clonea")[0].click();
+                            if ($("#clonea").length > 0) {
+                                $("#clonea")[0].click();
+                            }
                         }
                     }
                     for (i = 0; i < res.deliverables.length; i++) {
