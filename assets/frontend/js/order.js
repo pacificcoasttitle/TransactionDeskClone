@@ -4,14 +4,12 @@ $(document).ready(function () {
     let notificationSubject = '';
 
     if ($(".grant-deed-no-data").length) {
-        console.log('grabd deed failed');
         notifyAdminFlag = true;
         notificationSubject += 'Grant Deed';
         // notifyAdmin('Grant Deed Not Found');
     }
 
     if ($(".tax-no-data").length) {
-        console.log('Tax failed');
         if (notifyAdminFlag) {
             notificationSubject += ',';
         }
@@ -21,7 +19,6 @@ $(document).ready(function () {
     }
 
     if ($(".legal-vesting-no-data").length) {
-        console.log('LV failed');
         if (notifyAdminFlag) {
             notificationSubject += ',';
         }
