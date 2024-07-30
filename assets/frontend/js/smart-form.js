@@ -298,10 +298,7 @@ jQuery(document).ready(function ($) {
 
 				},
 				uploadProgress: function (event, position, total, percentComplete) {
-					console.log(event);
-					console.log(position);
-					console.log(total);
-					console.log(percentComplete);
+
 					/*var percentVal = percentComplete + '%';
 					bar.width(percentVal);
 					percent.html(percentVal);*/
@@ -330,7 +327,6 @@ jQuery(document).ready(function ($) {
 				},
 				success: function (data) {
 					var res = jQuery.parseJSON(data);
-					console.log('data success ==', data);
 					if (res.status == 'error') {
 						$('.result').html('<div class="alert notification state-error alert-error">' + res.message + '</div>');
 					}

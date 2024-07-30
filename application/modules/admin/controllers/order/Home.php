@@ -4092,11 +4092,22 @@ class Home extends MX_Controller
             $parties_email[] = $order_details['salerep_email_address'];
             $file = array();
             $lpReportName = 'pre_listing_report_' . $orderNumber . '.pdf';
+            /**
+             * Comment From Jerry on 26th July, 2024
+             * Once the LP is approved we can send the Email with the LP and documents attached.
+             */
+            $lvfilename = $orderNumber . '.pdf';
+            $deedfilename = $orderNumber . '.pdf';
+            $taxfilename = $orderNumber . '.pdf';
+            $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
+            $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
+            $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
             $file[] = env('AWS_PATH') . "pre-listing-doc/" . $lpReportName;
-            //$parties_email[] = 'hitesh.p@crestinfosystems.com';
+
             $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
             $this->load->helper('sendemail');
-            //$cc = array('piyush.j@crestinfosystems.net');$to='hitesh.p@crestinfosystems.com';
+            // $cc = array('piyush.j@crestinfosystems.net');
+            // $to = 'piyush-crest@yopmail.com';
 
             $mailParams = array(
                 'from_mail' => $from_mail,
@@ -4831,6 +4842,7 @@ class Home extends MX_Controller
                     /** End upload document to resware */
 
                     /** Send email to sales rep */
+
                     $timezone = -8;
                     $data = array(
                         'orderNumber' => $orderNumber,
@@ -4887,6 +4899,7 @@ class Home extends MX_Controller
 
                     $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
                     $to = $order_details['salerep_email_address'];
+                    // $to = 'piyush-crest@yopmail.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -4901,6 +4914,7 @@ class Home extends MX_Controller
                     } catch (Exception $e) {
                     }
                     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_mail_from_admin', '', $mailParams, array('status' => $mail_result), $order_details['order_id'], $logid);
+
                     /** End send email to sales rep */
                 }
 

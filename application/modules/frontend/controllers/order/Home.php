@@ -1764,6 +1764,7 @@ class Home extends MX_Controller
             $fileNumber = $_POST['file_number'];
 
             $this->order->createLpReport($fileNumber, false, true);
+
             $this->order->sendOrderEmail($fileNumber);
 
             /** Start Execute all document creation in background */
