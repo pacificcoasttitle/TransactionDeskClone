@@ -38,7 +38,11 @@ class Home_model extends CI_Model
             $this->db->select('pc.title_officer_id, pc.sales_rep_id');
             $this->db->join('pct_order_partner_company_info as pc', 'customer_basic_details.partner_id = pc.partner_id', 'left');
             foreach ($params['where'] as $key => $val) {
-                $this->db->where($key, $val);
+                if ($key == 'status') {
+                    $this->db->where('customer_basic_details.status', $val);
+                } else {
+                    $this->db->where($key, $val);
+                }
             }
         }
 
