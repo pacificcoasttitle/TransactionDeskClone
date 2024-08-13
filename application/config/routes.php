@@ -363,6 +363,8 @@ $route['get-commonwealth-branches'] = 'admin/order/cpl/getCommonwealthBranches';
 $route['update-mortgage-user'] = 'admin/order/home/updateMortgageUser';
 $route['order/admin/mortgage-brokers'] = 'admin/order/home/mortgageBrokers';
 $route['is-mortgage-primary-user'] = 'admin/order/home/isMortgagePrimaryUser';
+$route['order/admin/client-users-list'] = 'admin/order/home/clientList';
+$route['update-client-type'] = 'admin/order/home/updateClientType';
 $route['is-password-required'] = 'admin/order/home/isPasswordRequired';
 $route['order/admin/commission-range(/:any)?(/:num)?'] = 'admin/order/commissionRange/index$1$2';
 $route['order/admin/add-commission-range'] = 'admin/order/commissionRange/add_commission_range';
@@ -464,6 +466,7 @@ $route['order/admin/get-vesting-info'] = 'admin/order/home/getVestingInfo';
 $route['order/admin/add-instrument-info'] = 'admin/order/home/addInstrumentInfo';
 $route['order/admin/change-client'] = 'admin/order/home/changeClient';
 $route['order/admin/manual-report'] = 'admin/order/home/manualReport';
+$route['order/admin/delete-unaproved-customer'] = 'admin/order/customer/delete_unapproved_user';
 $route['send-summary-mail-sales-rep'] = 'admin/order/home/sendSummaryMailSalesRep';
 $route['send-non-openers-email'] = 'admin/order/home/sendNonOpenersEmail';
 

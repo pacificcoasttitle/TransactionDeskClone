@@ -3655,6 +3655,117 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
+    public function clientList()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Client lists';
+        $this->admintemplate->show("order/home", "client_list", $data);
+    }
+
+    public function get_active_client_users()
+    {
+        $params = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            // $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $mortgage_lists = $this->home_model->get_active_client_users($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $mortgage_lists = $this->home_model->get_active_client_users($params);
+        }
+
+        $data = array();
+        if (isset($mortgage_lists['data']) && !empty($mortgage_lists['data'])) {
+            foreach ($mortgage_lists['data'] as $key => $value) {
+                $nestedData = array();
+                $user_id = $value['id'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $is_escrow = $is_lender = $is_mortgage = false;
+                if ($value['is_escrow'] == 1) {
+                    $is_escrow = true;
+                }
+
+                if ($value['is_mortgage_user'] == 1) {
+                    $is_mortgage = true;
+                }
+
+                if ($value['is_mortgage_user'] == 0 && $value['is_escrow'] == 0) {
+                    $is_lender = true;
+                }
+
+                $salesRepList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateClientType(' . $user_id . ', this.value);" id="clientlist">
+                                    <option value="">Select Client Type</option>
+                                    <option ' . (($is_escrow) ? "selected" : "") . ' value="escrow">Escrow</option>
+                                    <option ' . (($is_mortgage) ? "selected" : "") . ' value="mortgage">Mortgage Broker</option>
+                                    <option ' . (($is_lender) ? "selected" : "") . ' value="lender">Lender</option>
+                                </select>';
+                $nestedData[] = $salesRepList;
+
+                $data[] = $nestedData;
+            }
+        }
+        $json_data['recordsTotal'] = intval($mortgage_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($mortgage_lists['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function updateClientType()
+    {
+        $user_id = $this->input->post('user_id');
+        $type = $this->input->post('type');
+        if (empty($user_id) || empty($type)) {
+            $data = array('status' => 'success', 'msg' => 'Invalide request !.');
+            echo json_encode($data);exit();
+        }
+
+        $data = [
+            'is_escrow' => 1,
+            'is_mortgage_user' => 0,
+        ];
+
+        if ($type == 'escrow') {
+            $data['is_escrow'] = 1;
+            $data['is_mortgage_user'] = 0;
+        }
+
+        if (($type == 'lender')) {
+            $data['is_escrow'] = 0;
+            $data['is_mortgage_user'] = 0;
+        }
+
+        if (($type == 'mortgage')) {
+            $data['is_escrow'] = 0;
+            $data['is_mortgage_user'] = 1;
+        }
+
+        $data['updated_at'] = date("Y-m-d H:i:s");
+
+        $condition = array(
+            'id' => $user_id,
+        );
+        $this->db->update('customer_basic_details', $data, $condition);
+
+        /** Save user Activity */
+        $orderUser = $this->home_model->get_user($condition);
+        $activity = 'Client Type for user :- ' . $orderUser['email_address'] . 'updated';
+        $this->order->logAdminActivity($activity);
+        /** End save user activity */
+
+        $data = array('status' => 'success', 'msg' => 'Client type updated successfully.');
+        echo json_encode($data);
+    }
+
     public function isMortgagePrimaryUser()
     {
         $user_id = $this->input->post('user_id');
