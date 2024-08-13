@@ -915,6 +915,59 @@ $(document).ready(function () {
         });
     }
 
+    /* Client users listing table */
+    if ($('#tbl-client-user-listing').length) {
+        client_users = $('#tbl-client-user-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#Name, Email, Company Name",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                console.log('hsfksdhf');
+            },
+            "dom": '<"row"<"col-sm-12"<"text-left"f>>><"row"<"col-sm-12"rt>><"row"<"col-sm-12"l><"col-sm-5"i><"col-sm-7"p>><"clear">',
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_active_client_users",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-client-user-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-client-user-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
     if ($('#tbl-sales-rep-listing').length) {
         sales_rep_list = $('#tbl-sales-rep-listing').DataTable({
             "paging": true,
