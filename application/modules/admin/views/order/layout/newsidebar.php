@@ -211,11 +211,11 @@ if (
 
 		<?php if ($role_id != 3 && $role_id != 5): ?>
 			<li class="nav-item <?php if ($clientTabLinks) {echo 'active';}?>">
-				<a class="nav-link <?php if (!$clientTabLinks) {echo 'collapsed';}?>" href="#" id="usersDropdown" role="button" data-toggle="collapse" data-target="#users" aria-haspopup="true" aria-expanded="false">
+				<a class="nav-link <?php if (!$clientTabLinks) {echo 'collapsed';}?>" href="#" id="clientsDropdown" role="button" data-toggle="collapse" data-target="#clients" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-users"></i>
 					<span>Clients</span>
 				</a>
-				<div class="collapse <?php if ($clientTabLinks) {echo 'show';}?>" aria-labelledby="usersDropdown" id="users">
+				<div class="collapse <?php if ($clientTabLinks) {echo 'show';}?>" aria-labelledby="clientsDropdown" id="clients">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<?php if ($role_id == 1): ?>
 						<?php endif;?>
