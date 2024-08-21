@@ -58,6 +58,13 @@
                                     <!-- <input type="hidden" value="" name="sale_order_closed_email_send_off" > -->
                                 </div>
                             </div>
+                            <div class="form-group row ml-1">
+                                <label for="enable_lv_with_address_apn" class="col-sm-3 col-form-label">Enable LV with Address + APN </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_lv_with_address_apn" id="enable_lv_with_address_apn" <?php echo isset($enable_lv_with_address_apn) && !empty($enable_lv_with_address_apn) ? 'Checked' : ''; ?>>
+                                    <!-- <input type="hidden" value="" name="sale_order_closed_email_send_off" > -->
+                                </div>
+                            </div>
 
                             <div class="form-group">
                                 <div class="col-sm-6">
