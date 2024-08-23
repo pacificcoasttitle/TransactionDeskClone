@@ -894,10 +894,10 @@ class Home_model extends CI_Model
             $keyword = $params['searchvalue'];
 
             if (isset($keyword) && !empty($keyword)) {
-                $where = ' AND first_name LIKE "%' . $keyword . '%"';
+                $where = ' AND (first_name LIKE "%' . $keyword . '%"';
                 $where .= ' OR last_name LIKE "%' . $keyword . '%"';
                 $where .= ' OR email_address LIKE "%' . $keyword . '%"';
-                $where .= ' OR company_name LIKE "%' . $keyword . '%"';
+                $where .= ' OR company_name LIKE "%' . $keyword . '%")';
             }
 
             $query = $this->db->query('SELECT *
@@ -917,10 +917,10 @@ class Home_model extends CI_Model
 
             if (isset($keyword) && !empty($keyword)) {
                 if (isset($keyword) && !empty($keyword)) {
-                    $where = ' AND first_name LIKE "%' . $keyword . '%"';
+                    $where = ' AND (first_name LIKE "%' . $keyword . '%"';
                     $where .= ' OR last_name LIKE "%' . $keyword . '%"';
                     $where .= ' OR email_address LIKE "%' . $keyword . '%"';
-                    $where .= ' OR company_name LIKE "%' . $keyword . '%"';
+                    $where .= ' OR company_name LIKE "%' . $keyword . '%")';
                 }
             }
 

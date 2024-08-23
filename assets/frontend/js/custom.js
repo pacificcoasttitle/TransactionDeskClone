@@ -684,6 +684,7 @@ function fetchReports(repNum, request, dataObj, neighbourhood, retry) {
                             $('#random_number').val(random_number);
                         }
                         var unit_no = 1;
+                        console.log('service called');
                         createService4(fipCode, address, city, unit_no, apn, random_number);
                         createService3(apn, state, county, random_number);
                     }

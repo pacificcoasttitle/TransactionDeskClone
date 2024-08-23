@@ -167,6 +167,8 @@ $(document).ready(function () {
 
 
 function createService4(fipCode, address, city, unit_no, apn, random_number, properyData = '') {
+    console.log('order js createService4 ');
+
     let bedrooms = baths = lotSize = zoning = buildingArea = '';
     if (!$.isEmptyObject(properyData)) {
         bedrooms = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics").find("Bedrooms").text();
@@ -207,7 +209,7 @@ function createService4(fipCode, address, city, unit_no, apn, random_number, pro
                 $('#grantDeedInfoFile').css('border', '1px solid #000000');
                 $('#grantDeedInfoFile').css('padding', '15px');
                 $('#grantDeedInfoFile').html('<span class="orderinfo1">No data found.</span>');
-
+                lvServiceExecuted = true;
             }
             else if (responseStatus == 'Success') {
                 $requestId = $(response).find('RequestID').text();
@@ -215,7 +217,7 @@ function createService4(fipCode, address, city, unit_no, apn, random_number, pro
             }
         })
         .fail(function (err) {
-
+            lvServiceExecuted = true;
             $('#legalDescription, #vestingInformation').prev('.loader').hide();
             $('#legalDescription').html('No data found.');
             $('#vestingInformation').html('No data found.');
@@ -228,6 +230,7 @@ function createService4(fipCode, address, city, unit_no, apn, random_number, pro
 }
 
 function createService3(apn, state, county, random_number) {
+    console.log('order js createService3 ');
     $.ajax({
         // url: 'php/createservice.php',
         url: base_url + 'createService',
@@ -253,6 +256,7 @@ function createService3(apn, state, county, random_number) {
                 $('#secondInstallment').css('border', '1px solid #000000');
                 $('#secondInstallment').css('padding', '15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
+                taxServiceExecuted = true;
             }
             else if (responseStatus == 'Success') {
                 $requestId = $(response).find('RequestID').text();
@@ -272,6 +276,7 @@ function createService3(apn, state, county, random_number) {
 }
 
 function getRequestSummaries(requestId, methodId, random_number) {
+    console.log('getRequestSummaries ===', methodId);
     var apn = $("#apn").val();
     $.ajax({
         url: base_url + 'getRequestSummaries',
@@ -305,7 +310,11 @@ function getRequestSummaries(requestId, methodId, random_number) {
                 $('#secondInstallment').css('border', '1px solid #000000');
                 $('#secondInstallment').css('padding', '15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-
+                if (methodId === 3) {
+                    taxServiceExecuted = true;
+                } else {
+                    lvServiceExecuted = true;
+                }
             }
             else if (responseStatus == 'Success') {
                 $resultId = $(response).find("ResultThumbNail:first").find("ID").text();
@@ -340,6 +349,7 @@ function getRequestSummaries(requestId, methodId, random_number) {
 }
 
 function getResultById(resultId, methodId, random_number) {
+    console.log('getResultById ===', methodId);
     var apn = $("#apn").val();
     $.ajax({
         url: base_url + 'getResultById',
@@ -353,7 +363,11 @@ function getResultById(resultId, methodId, random_number) {
         type: "POST"
     })
         .done(function (response, textStatus, jqXHR) {
-
+            if (methodId === 3) {
+                taxServiceExecuted = true;
+            } else {
+                lvServiceExecuted = true;
+            }
             var responseStatus = $(response).find('ReturnStatus').text();
 
             if (responseStatus == 'Failed') {
@@ -465,7 +479,14 @@ function getResultById(resultId, methodId, random_number) {
             }
         })
         .fail(function (err) {
-
+            if (methodId === 3) {
+                taxServiceExecuted = true;
+            } else {
+                lvServiceExecuted = true;
+            }
+            if (lvServiceExecuted && taxServiceExecuted) {
+                $('.home-submit').prop('disabled', false);
+            }
             /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
             $('#legalDescription').html('No data found.');
             $('#vestingInformation').html('No data found.');
