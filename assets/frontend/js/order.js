@@ -368,6 +368,14 @@ function getResultById(resultId, methodId, random_number) {
             } else {
                 lvServiceExecuted = true;
             }
+            setTimeout(function () {
+                console.log('lvServiceExecuted done ===', lvServiceExecuted);
+                console.log('taxServiceExecuted done ===', taxServiceExecuted);
+                if (lvServiceExecuted && taxServiceExecuted) {
+                    console.log('inside if');
+                    $('.home-submit').prop('disabled', false);
+                }
+            }, 1000);
             var responseStatus = $(response).find('ReturnStatus').text();
 
             if (responseStatus == 'Failed') {
