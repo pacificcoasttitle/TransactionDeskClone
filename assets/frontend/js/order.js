@@ -363,6 +363,7 @@ function getResultById(resultId, methodId, random_number) {
         type: "POST"
     })
         .done(function (response, textStatus, jqXHR) {
+            console.log('getResultById done', methodId);
             if (methodId === 3) {
                 taxServiceExecuted = true;
             } else {
