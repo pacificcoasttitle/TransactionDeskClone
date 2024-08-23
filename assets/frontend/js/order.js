@@ -313,7 +313,7 @@ function getRequestSummaries(requestId, methodId, random_number) {
                 $('#secondInstallment').css('border', '1px solid #000000');
                 $('#secondInstallment').css('padding', '15px');
                 $('#secondInstallment').html('<span class="orderinfo1">No data found.</span>');
-                if (methodId == 3) {
+                if (methodId == '3') {
                     taxServiceExecuted = true;
                 } else {
                     lvServiceExecuted = true;
@@ -367,7 +367,7 @@ function getResultById(resultId, methodId, random_number) {
     })
         .done(function (response, textStatus, jqXHR) {
             console.log('getResultById done', methodId);
-            if (methodId == 3) {
+            if (methodId == '3') {
                 taxServiceExecuted = true;
             } else {
                 lvServiceExecuted = true;
@@ -491,7 +491,7 @@ function getResultById(resultId, methodId, random_number) {
             }
         })
         .fail(function (err) {
-            if (methodId == 3) {
+            if (methodId == '3') {
                 taxServiceExecuted = true;
             } else {
                 lvServiceExecuted = true;
