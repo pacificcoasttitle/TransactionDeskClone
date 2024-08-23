@@ -2,8 +2,7 @@ $(document).ready(function () {
 
     reportData = {};
     apnInfo = {};
-    var taxServiceExecuted = false;
-    var lvServiceExecuted = false;
+
     var isNewSearch = false;
     var request = '';
 
