@@ -1,3 +1,6 @@
+var taxServiceExecuted = false;
+var lvServiceExecuted = false;
+
 $(document).ready(function () {
     console.log('order.js loaded')
     let notifyAdminFlag = false;
