@@ -815,16 +815,25 @@ class Home extends MX_Controller
                                     'resware_user_id' => $this->input->post('resware_client_id'),
                                 );
                                 $update = $this->home_model->update($customerData, $updateCondition);
+                                /** Save user Activity */
+                                $activity = 'New user updated :- ' . $this->input->post('email_address');
+                                $this->order->logAdminActivity($activity);
+                                /** End Save user activity */
                             } else {
                                 $insert = $this->home_model->insert($customerData);
+                                /** Save user Activity */
+                                $activity = 'New user created :- ' . $this->input->post('email_address');
+                                $this->order->logAdminActivity($activity);
+                                /** End Save user activity */
                             }
                         } else {
                             $insert = $this->home_model->insert($customerData);
+                            /** Save user Activity */
+                            $activity = 'New user created :- ' . $this->input->post('email_address');
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
                         }
-                        /** Save user Activity */
-                        $activity = 'New user created :- ' . $this->input->post('email_address');
-                        $this->order->logAdminActivity($activity);
-                        /** End Save user activity */
+
                     } else {
                         $data['error_msg'] = $response['msg'];
                     }
