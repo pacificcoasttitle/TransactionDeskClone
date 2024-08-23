@@ -484,9 +484,14 @@ function getResultById(resultId, methodId, random_number) {
             } else {
                 lvServiceExecuted = true;
             }
-            if (lvServiceExecuted && taxServiceExecuted) {
-                $('.home-submit').prop('disabled', false);
-            }
+            setTimeout(function () {
+                console.log('lvServiceExecuted ===', lvServiceExecuted);
+                console.log('taxServiceExecuted ===', taxServiceExecuted);
+                if (lvServiceExecuted && taxServiceExecuted) {
+                    console.log('inside if');
+                    $('.home-submit').prop('disabled', false);
+                }
+            }, 1000);
             /*$('#legalDescription, #vestingInformation').prev('.loader').hide();
             $('#legalDescription').html('No data found.');
             $('#vestingInformation').html('No data found.');
