@@ -1,10 +1,10 @@
 <html>
 <body>
 <form action="" method="post">
-  APN:  &nbsp;&nbsp;&nbsp;&nbsp;        <input type="text" name="apn" value="7012-017-018" /><br/><br/>
-  City:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="city" value="Cerritos" /><br/><br/>
-  County:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="county" value="Los Angeles" /><br/><br/>
-  fips:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="fips" value="06037" /><br/><br/>
+  APN:  &nbsp;&nbsp;&nbsp;&nbsp;        <input type="text" name="apn" placeholder="7012-017-018" /><br/><br/>
+  City:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="city" placeholder="Cerritos" /><br/><br/>
+  County:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="county" placeholder="Los Angeles" /><br/><br/>
+  fips:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="fips" placeholder="06037" /><br/><br/>
 
   <input type="submit" name="SubmitButton"/><br/>
 </form>
@@ -90,8 +90,10 @@ function generateLVImage($resultId)
     echo "<b>Executed 1 Times</b> -> ";
     echo date('Y-m-d H:i:s') . ' <br/><b>Generate LV Request Url: </b><br/>' . $requestUrl . '<br/><br/>';
     $res = curlPost($requestUrl, $requestParams);
-    echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/>' . $res . '<br/><br/><br/>';
     $result = json_decode($res, true);
+    echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/><pre>';
+    print_r($result);
+    echo '<br/><br/><br/>';
 
     $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : array();
 

@@ -3,6 +3,7 @@
 <form action="" method="post">
   APN:  &nbsp;&nbsp;&nbsp;&nbsp;        <input type="text" name="apn"/><br/><br/>
   County:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="county"/><br/><br/>
+  Fips:  &nbsp;&nbsp;&nbsp;&nbsp;     <input type="text" name="fips"/><br/><br/>
   <input type="submit" name="SubmitButton"/><br/>
 </form>
 </body>
@@ -33,7 +34,7 @@ if (isset($_POST['SubmitButton'])) {
         echo "Created service response failed";die;
     }
     $requestId = $result['RequestID'];
-
+    $fips = $_POST['fips'];
     // Get Summary
     $result = getSummury($requestId);
     echo '------------------------getSummury-----------------------------------------------';
@@ -84,38 +85,13 @@ if (isset($_POST['SubmitButton'])) {
     print_r($resultId);
     echo 'serviceId --------';
     print_r($serviceId);
-    generateGeoDocument($resultId);
-    // // Create tax image request
-    // $requestParams = array(
-    //     'username' => "PCTXML01",
-    //     'password' => "AlphaOmega637#",
-    //     'serviceId1' => $serviceId,
-    //     'serviceId2' => '',
-    //     'source' => '',
-    //     'clientKey1' => '',
-    //     'clientKey2' => '',
-    //     'sortOrder' => '',
-    //     'fileType' => 'tiff',
-    // );
-    // $requestUrl = 'https://www.titlepoint.com/TitlePointServices/tpsgenerateimage.asmx/CreateRequest3?';
-    // $requestUrl = $requestUrl . http_build_query($requestParams);
-    // echo date('Y-m-d H:i:s') . ' <br/><b>Image Create Service Request Url: </b><br/>' . $requestUrl . '<br/><br/>';
+    generateGeoDocument($resultId, $fips);
 
-    // $response = curlPost($requestUrl, $requestParams);
-    // $result = json_decode($response, true);
-    // echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/>' . $response . '<br/><br/><br/>';
-    // if (isset($result['RequestID']) && !empty($result['RequestID'])) {
-    //     sleep(8);
-    //     generateTaxImage($result['RequestID']);
-    // } else {
-    //     echo ' Create tax image request failed';die;
-    // }
 }
 // Create Service
 
-function generateGeoDocument($resultId)
+function generateGeoDocument($resultId, $fips)
 {
-    // $userdata = $this->CI->session->userdata('user');
     $requestParams = array(
         'userID' => 'PCTXML01',
         'password' => "AlphaOmega637#",
@@ -132,26 +108,9 @@ function generateGeoDocument($resultId)
     echo date('Y-m-d H:i:s') . ' <br/><b>GenerateGeoDocument Url: </b><br/>' . $requestUrl . '<br/><br/>';
     $res = curlPost($requestUrl, $requestParams);
     $result = json_decode($res, true);
-    // echo date('Y-m-d H:i:s') . ' <br/><b> generateGeoDocument Response: </b>' . $res . '<br/><br/><br/>';
-    // return $response;
 
     echo "<pre>";
-    // print_r($result);
-    // env('TP_SERVICE_ENDPOINT') . TP_GEO_GET_RESULT_URL;
-    // $requestUrl = $requestUrl . http_build_query($requestParams);
-
-    // $file = file_get_contents($request, false, $context);
     echo '<br/><br/><br/>';
-    // print_r($requestUrl);
-    // $response = curlPost($requestUrl, $requestParams);
-    // $xmlData = simplexml_load_string($file);
-    // $response = json_encode($xmlData);
-    // $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $response, $orderId, $logid);
-    // $result = json_decode($response, true);
-    // print_r($result);exit;
-
-    // $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
-    // $titlePointId = $titlePointDetails[0]['id'];
 
     /** Save document records here Start*/
     $recordArray = [];
@@ -159,7 +118,6 @@ function generateGeoDocument($resultId)
     $j = 0;
     $k = 0;
     if ((strtolower($result['ReturnStatus']) == 'success')) {
-        // $resultForProperty = $result['Result']['PickList']['PickListItems'];
         $result = $result['Result']['DocumentList'];
         $addressIds = isset($result['Addresses']['Address']) ? array_column($result['Addresses']['Address'], 'Id') : [];
         $documentIdentifications = $result['DocumentIdentifications']['DocumentIdentification'];
@@ -198,13 +156,86 @@ function generateGeoDocument($resultId)
             usort($recordArray, 'compareDates');
             echo "<pre>";
             // print_r($recordArray[0]);die;
-            print_r($recordArray);die;
+            // print_r($recordArray);die;
         }
     }
     /** Save document records here end*/
     // $this->CI->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_geo_document', $request, $requestParams, $result, $orderId, $logid);
 
-    return $response;
+    // return $response;
+    echo 'Latest Instrument and recorded date: ' . $recordArray[0]['instrument'] . ' ----- Date: ' . $recordArray[0]['recorded_date'];
+    echo '<br/> Document Name: ' . $recordArray[0]['document_name'] . ' ------------ Document type: ' . $recordArray[0]['document_type'];
+    generateGrantDeed($recordArray[1]['instrument'], $recordArray[1]['recorded_date'], $fips);
+    print_r($recordArray);die;
+
+}
+
+function generateGrantDeed($docId, $recordedDate, $fips)
+{
+    if (isset($recordedDate) && !empty($recordedDate)) {
+        $time = strtotime($recordedDate);
+        $year = date('Y', $time);
+    }
+    // if (isset($instrumentNumber) && !empty($instrumentNumber)) {
+    //     if (isset($recordedDate) && !empty($recordedDate)) {
+    //         $time = strtotime($recordedDate);
+    //         $year = date('Y', $time);
+    //     }
+    //     $count = substr_count($instrumentNumber, '-');
+
+    //     if (isset($count) && !empty($count)) {
+    //         $detailDocInfo = explode('-', $instrumentNumber);
+
+    //         $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';
+    //     } else {
+    //         $docId = str_replace($year, '', $instrumentNumber);
+    //     }
+
+    //     $docId = (string) ((int) ($docId));
+    // }
+
+    $requestParams = array(
+        'parameters' => 'FIPS=' . $fips . ',TYPE=REC,SUBTYPE=ALL,YEAR=' . $year . ',INST=' . $docId . '',
+        'username' => 'PCTXML01',
+        'password' => "AlphaOmega637#",
+        'company' => '',
+        'department' => '',
+        'titleOfficer' => '',
+        'pages' => '',
+        'propertyOnly' => 'FALSE',
+        'maxPageCount' => 0,
+        'maxSizeInKB' => 0,
+        'additionalInfo' => '',
+        'customerRef' => '',
+        'fileType' => 'PDF',
+    );
+
+    $requestUrl = 'https://www.titlepoint.com/titlepointservices/TpsImage.asmx/GetDocumentsByParameters3?' . http_build_query($requestParams);
+
+    // $opts = array(
+    //     "ssl" => array(
+    //         "verify_peer" => false,
+    //         "verify_peer_name" => false,
+    //     ),
+    // );
+
+    // $context = stream_context_create($opts);
+
+    // $requestUrl = env('GRANT_DEED_ENDPOINT');
+    $response = curlPost($requestUrl, $requestParams);
+    $result = json_decode($response, true);
+    echo "<br/> <pre>";
+    print_r($result);
+    // die;
+    $responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+
+    $docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+    $docStatus = strtolower($docStatus);
+    if (isset($docStatus) && !empty($docStatus) && $docStatus == 'ok') {
+        $base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
+
+    }
+
 }
 
 // Generate tax image request (Final response)
@@ -280,7 +311,6 @@ function createService($post)
 
 function curlPost($end_point, $requestParams)
 {
-    echo 'Hello post';
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
