@@ -25,6 +25,7 @@ if (isset($_POST['SubmitButton'])) {
         'fips' => $_POST['fips'], //Orange
         'county' => $_POST['county'], //Orange
     ];
+    $fips = $_POST['fips'];
     $result = createService($post);
     $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
     if ($responseStatus != 'Success') {
@@ -45,7 +46,7 @@ if (isset($_POST['SubmitButton'])) {
     $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
     echo '------------- result id :' . $resultId[0];
     echo '<br/>';
-    generateLVImage($resultId);
+    generateLVImage($resultId, $fips);
     // Create tax image request
     // $requestParams = array(
     //     'username' => "PCTXML01",
@@ -74,7 +75,7 @@ if (isset($_POST['SubmitButton'])) {
 // Create Service
 
 // Generate tax image request (Final response)
-function generateLVImage($resultId)
+function generateLVImage($resultId, $fips)
 {
     $requestParams = array(
         'userID' => 'PCTXML01',
@@ -91,7 +92,8 @@ function generateLVImage($resultId)
     echo date('Y-m-d H:i:s') . ' <br/><b>Generate LV Request Url: </b><br/>' . $requestUrl . '<br/><br/>';
     $res = curlPost($requestUrl, $requestParams);
     $result = json_decode($res, true);
-    echo date('Y-m-d H:i:s') . ' <br/><b>Response: </b><br/><pre>';
+    echo date('Y-m-d H:i:s') . ' <br/><b>Get Result By id Response: </b><br/><pre>';
+    print_r($res);
     print_r($result);
     echo '<br/><br/><br/>';
 
@@ -120,6 +122,65 @@ function generateLVImage($resultId)
     }
     echo ' <br/><b>Recorded Date: </b><br/>' . $recordedDate . '<br/><br/><br/>';
     echo ' <br/><b>Instrument: </b><br/>' . $instrumentNumber . '<br/><br/><br/>';
+    generateGrantDeed($instrumentNumber, $recordedDate, $fips);
+}
+
+function generateGrantDeed($instrumentNumber, $recordedDate, $fips)
+{
+    // if (isset($recordedDate) && !empty($recordedDate)) {
+    //     $time = strtotime($recordedDate);
+    //     $year = date('Y', $time);
+    // }
+    if (isset($instrumentNumber) && !empty($instrumentNumber)) {
+        if (isset($recordedDate) && !empty($recordedDate)) {
+            $time = strtotime($recordedDate);
+            $year = date('Y', $time);
+        }
+        $count = substr_count($instrumentNumber, '-');
+
+        if (isset($count) && !empty($count)) {
+            $detailDocInfo = explode('-', $instrumentNumber);
+
+            $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';
+        } else {
+            $docId = str_replace($year, '', $instrumentNumber);
+        }
+
+        $docId = (string) ((int) ($docId));
+    }
+
+    echo '<br /> Instrument number: ' . $docId . ' Year: ' . $year;
+    $requestParams = array(
+        'parameters' => 'FIPS=' . $fips . ',TYPE=REC,SUBTYPE=ALL,YEAR=' . $year . ',INST=' . $docId . '',
+        'username' => 'PCTXML01',
+        'password' => "AlphaOmega637#",
+        'company' => '',
+        'department' => '',
+        'titleOfficer' => '',
+        'pages' => '',
+        'propertyOnly' => 'FALSE',
+        'maxPageCount' => 0,
+        'maxSizeInKB' => 0,
+        'additionalInfo' => '',
+        'customerRef' => '',
+        'fileType' => 'PDF',
+    );
+
+    $requestUrl = 'https://www.titlepoint.com/titlepointservices/TpsImage.asmx/GetDocumentsByParameters3?' . http_build_query($requestParams);
+
+    $response = curlPost($requestUrl, $requestParams);
+    $result = json_decode($response, true);
+    echo "<br/> <pre>";
+    print_r($result);
+    // die;
+    $responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+
+    $docStatus = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+    $docStatus = strtolower($docStatus);
+    if (isset($docStatus) && !empty($docStatus) && $docStatus == 'ok') {
+        $base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
+
+    }
 
 }
 
