@@ -1161,7 +1161,7 @@ class Home extends MX_Controller
                         $postData['apn'] = $apn;
                         $postData['unit_number'] = $this->input->post('unit_number');
                         $this->titlepoint->generateGeoDoc($postData, 1);
-                        $this->order->checkGrantDoc($orderNumber, false);
+                        // $this->order->checkGrantDoc($orderNumber, false);
                     }
 
                     // $tax_file_path = FCPATH . 'uploads/tax/' . $session_id . '.pdf';

@@ -1,96 +1,91 @@
-$(document).ready(function() {
-    
-	reportData = {};
-	apnInfo = {};
-	var isNewSearch=false;
-	var request = '';
+$(document).ready(function () {
 
-	autoComplete();
-	$(document).on('click', '.search-property', getAddress);
+    reportData = {};
+    apnInfo = {};
+
+    var isNewSearch = false;
+    var request = '';
+
+    autoComplete();
+    $(document).on('click', '.search-property', getAddress);
 
 
     //customer no
-    $('#getCustomerInfo').click(function(e){
+    $('#getCustomerInfo').click(function (e) {
         var customer_no = $('#CustomerNumber').val();
 
-        if(!customer_no)
-        {
+        if (!customer_no) {
             $('#CustomerNumber-error').html('Enter your customer number');
             $('#CustomerNumber-error').show();
             $("#CustomerNumber").parent().addClass('state-error');
         }
-        else
-        {
+        else {
             $.ajax({
-               url: "php/search.php",
-               type: "POST",//type of posting the data
-               data: {
+                url: "php/search.php",
+                type: "POST",//type of posting the data
+                data: {
                     customer_no: customer_no
-               },
-               success: function (data) {
+                },
+                success: function (data) {
 
                     var res = jQuery.parseJSON(data);
-                    if(jQuery.isEmptyObject(res))
-                    {
+                    if (jQuery.isEmptyObject(res)) {
                         $("#CustomerNumber").removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                         $("#CustomerId").val('');
                         $('#CustomerNumber-error').html('Invalid customer number');
                         $('#CustomerNumber-error').show();
                     }
-                    else
-                    {
+                    else {
                         $('#CustomerNumber-error').html('');
                         $('#CustomerNumber-error').hide();
-                        $("#OpenName").val(res.first_name).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#OpenLastName").val(res.last_name).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#Opentelephone").val(res.telephone_no).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#OpenEmail").val(res.email_address).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#CompanyName").val(res.company_name).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#StreetAddress").val(res.street_address).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#City").val(res.city).attr('readonly','readonly').parent().addClass('state-success');
-                        $("#Zipcode").val(res.zip_code).attr('readonly','readonly').parent().addClass('state-success');
+                        $("#OpenName").val(res.first_name).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#OpenLastName").val(res.last_name).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#Opentelephone").val(res.telephone_no).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#OpenEmail").val(res.email_address).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#CompanyName").val(res.company_name).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#StreetAddress").val(res.street_address).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#City").val(res.city).attr('readonly', 'readonly').parent().addClass('state-success');
+                        $("#Zipcode").val(res.zip_code).attr('readonly', 'readonly').parent().addClass('state-success');
                         $("#CustomerId").val(res.id);
 
-                        if(res.is_escrow == 1)
-                        {
+                        if (res.is_escrow == 1) {
                             $('#add-lender-section').show();
                             $('#add-escrow-section').hide();
                             $('#escrow-details-fields').hide();
                             $('#add-lender-details').trigger('change');
                         }
-                        else
-                        {
+                        else {
                             $('#add-lender-section').hide();
                             $('#add-escrow-section').show();
                             $('#lender-details-fields').hide();
                             $('#add-escrow-details').trigger('change');
                         }
                     }
-               },
-               error: function(xhr, ajaxOptions, thrownError){
-                  
-               },
-          });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                },
+            });
         }
     });
 
-    jQuery('#CustomerNumber').change(function(){
+    jQuery('#CustomerNumber').change(function () {
         $('#getCustomerInfo').trigger('click');
     });
 
     $("#find-customer-form").validate({
-                
+
         /* @validation states + elements 
         ------------------------------------------- */
         errorClass: "state-error",
         validClass: "state-success",
         errorElement: "em",
         onkeyup: false,
-        onclick: false,                     
-        
+        onclick: false,
+
         /* @validation rules 
         ------------------------------------------ */
-        rules: {                 
+        rules: {
             CustomerEmail: {
                 required: true,
                 email: true,
@@ -98,59 +93,57 @@ $(document).ready(function() {
                     url: 'php/checkemail.php',
                     type: "get",
                     data: {
-                        title: function() {
+                        title: function () {
                             return $("#CustomerEmail").val();
                         }
                     },
                 },
             }
         },
-        
+
         /* @validation error messages 
         ---------------------------------------------- */
-        messages:{              
+        messages: {
             CustomerEmail: {
                 required: 'Enter your email address',
                 email: 'Enter a valid email address',
-                remote:"Email address not exist"
+                remote: "Email address not exist"
             }
         },
 
         /* @validation highlighting + error placement  
-        ---------------------------------------------------- */ 
-        highlight: function(element, errorClass, validClass) {
-                $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+        ---------------------------------------------------- */
+        highlight: function (element, errorClass, validClass) {
+            $(element).closest('.field').addClass(errorClass).removeClass(validClass);
         },
-        unhighlight: function(element, errorClass, validClass) {
-                $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).closest('.field').removeClass(errorClass).addClass(validClass);
         },
-        errorPlacement: function(error, element) {
-           if (element.is(":radio") || element.is(":checkbox")) {
-                    element.closest('.option-group').after(error);
-           } else {
-                    error.insertAfter(element.parent());
-           }
+        errorPlacement: function (error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+                element.closest('.option-group').after(error);
+            } else {
+                error.insertAfter(element.parent());
+            }
         },
-        
+
         /* @ajax form submition 
         ---------------------------------------------------- */
-        submitHandler:function(form) {
+        submitHandler: function (form) {
             $(form).ajaxSubmit({
-                /*target:'#showCustomerNumber',*/       
-                error:function(){
+                /*target:'#showCustomerNumber',*/
+                error: function () {
                     // $('.form-footer').removeClass('progress');
                 },
-                success:function(data){
+                success: function (data) {
                     var res = jQuery.parseJSON(data);
-                    
+
                     $('#findCustomerModal').modal('hide');
-                    if(res.customer_number)
-                    {
-                        var content = "<h3>Your Customer Number is:"+res.customer_number+"</h3>";
+                    if (res.customer_number) {
+                        var content = "<h3>Your Customer Number is:" + res.customer_number + "</h3>";
 
                     }
-                    else
-                    {
+                    else {
                         var content = '<h3> No data found</h3>';
                     }
                     $("#showCustomerNumber").html(content);
@@ -164,17 +157,15 @@ $(document).ready(function() {
         $(this).find('form#find-customer-form').trigger('reset');
     });
 
-    $('#findCustomerNumber').click(function(e){        
+    $('#findCustomerNumber').click(function (e) {
         $('#findCustomerModal').modal('show');
     });
 
-    $('#add-agent-details').change(function() {
-        if(this.checked) 
-        {
+    $('#add-agent-details').change(function () {
+        if (this.checked) {
             $('#agent-details-fields').show();
         }
-        else
-        {
+        else {
             $("#BuyerAgentName").val('').parent().removeClass('state-success');
             $("#BuyerAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#BuyerAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
@@ -186,56 +177,51 @@ $(document).ready(function() {
             $("#ListingAgentCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#ListingAgentId").val('');
             $('#agent-details-fields').hide();
-        }        
+        }
     });
 
-    $('#add-lender-details').change(function() {
-        if(this.checked) 
-        {
+    $('#add-lender-details').change(function () {
+        if (this.checked) {
             $('#lender-details-fields').show();
         }
-        else
-        {
+        else {
             $("#LenderName").val('').parent().removeClass('state-success');
             $("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#LenderId").val('');
             $('#lender-details-fields').hide();
-        }        
+        }
     });
 
-    $('#add-escrow-details').change(function() {
-        if(this.checked) 
-        {
+    $('#add-escrow-details').change(function () {
+        if (this.checked) {
             $('#escrow-details-fields').show();
         }
-        else
-        {
+        else {
             $("#EscrowName").val('').parent().removeClass('state-success');
             $("#EscrowEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#EscrowTelephone").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#EscrowCompany").val('').removeAttr('readonly').parent().removeClass('state-success');
             $("#EscrowId").val('');
             $('#escrow-details-fields').hide();
-        }        
+        }
     });
 
     $("#BuyerAgentName").autocomplete({
         source: "php/agentsearch.php",
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#BuyerAgentName").val(ui.item.name);
             /*$("#AgentFirstName").val(ui.item.first_name);
             $("#AgentLastName").val(ui.item.last_name).attr('readonly','readonly').parent().addClass('state-success');*/
-            $("#BuyerAgentEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#BuyerAgentTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#BuyerAgentCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#BuyerAgentEmailAddress").val(ui.item.email_address).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#BuyerAgentTelephone").val(ui.item.telephone_no).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#BuyerAgentCompany").val(ui.item.company).attr('readonly', 'readonly').parent().addClass('state-success');
             $("#BuyerAgentId").val(ui.item.id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 // $("#AgentLastName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#BuyerAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#BuyerAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
@@ -248,19 +234,18 @@ $(document).ready(function() {
     /* Listing Agent autocomplete */
     $("#ListingAgentName").autocomplete({
         source: "php/agentsearch.php",
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#ListingAgentName").val(ui.item.name);
             /*$("#AgentFirstName").val(ui.item.first_name);
             $("#AgentLastName").val(ui.item.last_name).attr('readonly','readonly').parent().addClass('state-success');*/
-            $("#ListingAgentEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#ListingAgentTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#ListingAgentCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#ListingAgentEmailAddress").val(ui.item.email_address).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#ListingAgentTelephone").val(ui.item.telephone_no).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#ListingAgentCompany").val(ui.item.company).attr('readonly', 'readonly').parent().addClass('state-success');
             $("#ListingAgentId").val(ui.item.id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 // $("#AgentLastName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#ListingAgentEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#ListingAgentTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
@@ -274,17 +259,16 @@ $(document).ready(function() {
     /* Lender autocomplete */
     $("#LenderName").autocomplete({
         source: "php/usersearch.php",
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#LenderName").val(ui.item.name);
-            $("#LenderEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#LenderTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#LenderCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#LenderEmailAddress").val(ui.item.email_address).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#LenderTelephone").val(ui.item.telephone_no).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#LenderCompany").val(ui.item.company).attr('readonly', 'readonly').parent().addClass('state-success');
             $("#LenderId").val(ui.item.id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 $("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#LenderTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#LenderCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
@@ -292,22 +276,21 @@ $(document).ready(function() {
             }
         }
     });
-    /* Lender autocomplete */ 
+    /* Lender autocomplete */
 
     /* Escrow autocomplete */
     $("#EscrowName").autocomplete({
         source: "php/escrowusersearch.php",
-        select: function( event, ui ) {
+        select: function (event, ui) {
             event.preventDefault();
             $("#EscrowName").val(ui.item.name);
-            $("#EscrowEmailAddress").val(ui.item.email_address).attr('readonly','readonly').parent().addClass('state-success');
-            $("#EscrowTelephone").val(ui.item.telephone_no).attr('readonly','readonly').parent().addClass('state-success');           
-            $("#EscrowCompany").val(ui.item.company).attr('readonly','readonly').parent().addClass('state-success');
+            $("#EscrowEmailAddress").val(ui.item.email_address).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#EscrowTelephone").val(ui.item.telephone_no).attr('readonly', 'readonly').parent().addClass('state-success');
+            $("#EscrowCompany").val(ui.item.company).attr('readonly', 'readonly').parent().addClass('state-success');
             $("#EscrowId").val(ui.item.id);
         },
-        change: function( event, ui ) {
-            if (ui.item == null)
-            {
+        change: function (event, ui) {
+            if (ui.item == null) {
                 $("#EscrowEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#EscrowTelephone").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
                 $("#EscrowCompany").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
@@ -317,18 +300,15 @@ $(document).ready(function() {
     });
     /* Escrow autocomplete */
 
-    $('#ProductTypeID').change(function() {
+    $('#ProductTypeID').change(function () {
         $('#sales-loan-amount-fields').show();
-        if($(this).val() == 19 || $(this).val() == 33)
-        {
+        if ($(this).val() == 19 || $(this).val() == 33) {
             $('#sales-loan-amount-fields #salesAmount').hide();
         }
-        else if($(this).val() == 20 || $(this).val() == 32)
-        {
+        else if ($(this).val() == 20 || $(this).val() == 32) {
             $('#sales-loan-amount-fields #salesAmount').show();
         }
-        else
-        {
+        else {
             $('#sales-loan-amount-fields').hide();
         }
     });
@@ -347,10 +327,10 @@ function autoComplete() {
         bounds: defaultBounds
     };
     autocomplete = new google.maps.places.Autocomplete(input, options);
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace(); // get address, without city and state
         $('#property-full-address').val(place.formatted_address);
-        setTimeout(function() {
+        setTimeout(function () {
             $('#property-search').val(place.name);
         }, 25); // just display street address
         for (var i = 0; i < place.address_components.length; i++) {
@@ -359,7 +339,7 @@ function autoComplete() {
                     var city = place.address_components[i].long_name;
                     $('#property-city').val(city);
                 }
-                else if (place.address_components[i].types[0] === ("administrative_area_level_1") && place.address_components[i].types.length>1 && place.address_components[i].types[1] === ("political")) { //administrative_area_level_1
+                else if (place.address_components[i].types[0] === ("administrative_area_level_1") && place.address_components[i].types.length > 1 && place.address_components[i].types[1] === ("political")) { //administrative_area_level_1
                     var state = place.address_components[i].short_name;
                     $('#property-state').val(state);
                 }
@@ -372,14 +352,13 @@ function autoComplete() {
 function getAddress() {
 
     $('.pma-error').hide();
-	isNewSearch=true;
+    isNewSearch = true;
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
 
     address = $('#property-search').val();
     address = $.trim(address);
 
-    if (address == '') 
-    {
+    if (address == '') {
         $('.pma-error').html('Please search any address.');
         $('.pma-error').show();
         $('#property-search').parent().addClass('state-error');
@@ -391,15 +370,15 @@ function getAddress() {
 
     $("#search-btn").parents("form").find(".search-loader").removeClass("hidden");
     var locale = $('#property-city').val();
-    locale = $.trim(locale);    
+    locale = $.trim(locale);
 
     state = $('#property-state').val();
     state = $.trim(state);
 
     if (isNaN(locale[0])) {
-       // locale += ', CA' // if locale is city rather than zip, add in state
-       if(state!==''){
-            locale += ', '+state;
+        // locale += ', CA' // if locale is city rather than zip, add in state
+        if (state !== '') {
+            locale += ', ' + state;
         } else {
             locale += ', CA' // if locale is city rather than zip, add in state
         }
@@ -408,8 +387,7 @@ function getAddress() {
 }
 
 // creates data object for AJAX call to API
-function data(address, locale) 
-{
+function data(address, locale) {
     dataObj = {};
     dataObj.Address = address;
     dataObj.LastLine = locale.toString();
@@ -421,8 +399,7 @@ function data(address, locale)
 }
 
 
-function fetchReports(repNum) 
-{
+function fetchReports(repNum) {
     reportNum = repNum;
     $.ajax({
         url: 'php/getsearchresults.php',
@@ -431,39 +408,34 @@ function fetchReports(repNum)
         },
         dataType: 'xml'
     })
-    	.done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
 
             var responseStatus = $(response).find('StatusCode').text();
             $("#search-btn").parents("form").find(".search-loader").addClass("hidden");
-            
-            if (responseStatus == 'MM') 
-            {
+
+            if (responseStatus == 'MM') {
                 multipleResults(response);
                 $("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");
-            } 
-            else if (responseStatus != 'OK') 
-            {
+            }
+            else if (responseStatus != 'OK') {
                 console.log(response);
                 displayError(responseStatus);
-            } 
-            else 
-            {
+            }
+            else {
                 compileXmlUrls(response, '187');
-                
-                if(isNewSearch)
-                {
+
+                if (isNewSearch) {
                     multipleResults(response);
                 }
-                else
-                {
+                else {
                     get187();
                 }
                 /*$("#search-btn").parents("form").find("table").removeClass("hidden");
                 $(".buttonNext").removeClass("buttonDisabled");*/
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             $('.pma-error').text('Unsuccessful Request');
             $(".buttonNext").addClass("buttonDisabled");
         });
@@ -484,27 +456,25 @@ function get187() {
             requrl: reportData.report187,
         },
         dataType: "xml",
-        success: function(xml) {
+        success: function (xml) {
             reportXML = xml;
             parse187();
         },
-        error: function() {
+        error: function () {
             console.log("An error occurred while processing XML file.");
         }
     });
 }
 
 
-function parse187() 
-{
+function parse187() {
     var ownerNamePrimary = $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text();
     var ownerNameSecondary = $(reportXML).find("PropertyProfile").find("SecondaryOwnerName").text();
-    
-    if(ownerNamePrimary.indexOf(';') !== -1)
-  	{
-  		ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(";") + 1)
-  		ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf(";"));
-  	}
+
+    if (ownerNamePrimary.indexOf(';') !== -1) {
+        ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(";") + 1)
+        ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf(";"));
+    }
     ownerNamePrimary = $.trim(ownerNamePrimary);
     ownerNameSecondary = $.trim(ownerNameSecondary);
     ownerNamePrimary = toTitleCase(ownerNamePrimary);
@@ -521,35 +491,30 @@ function parse187()
     var full_address = [];
 
     var unit_no = $(reportXML).find("PropertyProfile").find("SiteUnit").text();
-    if(unit_no)
-    {
+    if (unit_no) {
         full_address.push(unit_no);
     }
 
     var address = $(reportXML).find("PropertyProfile").find("SiteAddress").text();
-    if(address)
-    {
+    if (address) {
         full_address.push(address);
     }
-    
+
     var city = $(reportXML).find("PropertyProfile").find("SiteCity").text();
-    
-    if(city)
-    {
+
+    if (city) {
         full_address.push(city);
     }
 
     var state = $(reportXML).find("PropertyProfile").find("SiteState").text();
-    
-    if(state)
-    {
+
+    if (state) {
         full_address.push(state);
     }
 
     var zip = $(reportXML).find("PropertyProfile").find("SiteZip").text();
-    
-    if(zip)
-    {
+
+    if (zip) {
         full_address.push(zip);
     }
 
@@ -557,7 +522,7 @@ function parse187()
     var county = $(reportXML).find("SubjectValueInfo").find("CountyName").text();
     var legalDescription = $(reportXML).find("PropertyProfile").find("LegalBriefDescription").text();
     legalDescription = legalDescription.replace(/\s\s+/g, ' ');
-    
+
     $('#FullProperty').val(full_address.join(', ')).prop('readonly', true);
     $('#apn').val(apn).prop('readonly', true);
     $('#County').val(county).prop('readonly', true);
@@ -578,30 +543,28 @@ function parse187()
 }
 
 
-function multipleResults(response) 
-{ 
-	$('#searchResultModal').modal('show');
+function multipleResults(response) {
+    $('#searchResultModal').modal('show');
     $('.search-result table > tbody').html('');
-    $(response).find('Locations').children('Location').each(function(i) {
+    $(response).find('Locations').children('Location').each(function (i) {
 
-        var address = $(this).find('Address').text();       
+        var address = $(this).find('Address').text();
         apn = $(this).find('APN').text();
         apnInfo[apn] = {}
         var city = $(this).find('City').text();
 
         apnInfo[apn]['fips'] = $(this).find('FIPS').text();
-        
+
         $('.search-result table > tbody').append('<tr><td><span class="result-apn"></span></td><td><span class="result-address"></span></td><td><span class="result-city"></span></td><td><a href="javascript:void(0);" class="btn btn-sm btn-default" onclick="apnData(this)">Choose</a></td></tr>');
 
-        $('.search-result table > tbody').find('tr').eq(i).find('.result-apn').text(apn);       
+        $('.search-result table > tbody').find('tr').eq(i).find('.result-apn').text(apn);
         $('.search-result table > tbody').find('tr').eq(i).find('.result-address').text(address);
         $('.search-result table > tbody').find('tr').eq(i).find('.result-city').text(city);
     });
 }
 
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
 }
 
 // display error returned in API query
@@ -644,14 +607,13 @@ function displayError(responseStatus) {
 function apnData(e) {
 
     $("#searchResultModal").find(".apn-search-loader").removeClass("hidden");
-    
-    isNewSearch=false;
+
+    isNewSearch = false;
 
     var apn = $(e).closest('tr').find('.result-apn').text();
     var fips = apnInfo[apn]['fips'];
     // console.log('fips2= ' + fips);
-    if ($('#property-fips').length) 
-    {
+    if ($('#property-fips').length) {
         $('#property-fips').val(fips);
     }
 
@@ -671,17 +633,15 @@ function compileAPNRequest(dataobj) {
     fetchReports('187');
 }
 
-function notifyAdmin()
-{
+function notifyAdmin() {
     var customer_no = $("#CustomerNumber").val();
     var first_name = $("#OpenName").val();
 
-    if(customer_no || first_name)
-    {
+    if (customer_no || first_name) {
         $.ajax({
-           url: "php/notifyadmin.php",
-           type: "POST",//type of posting the data
-           data: {
+            url: "php/notifyadmin.php",
+            type: "POST",//type of posting the data
+            data: {
                 customer_no: customer_no,
                 first_name: first_name,
                 last_name: $("#OpenLastName").val(),
@@ -689,16 +649,16 @@ function notifyAdmin()
                 email_address: $("#OpenEmail").val(),
                 company_name: $("#CompanyName").val(),
                 street_address: $("#StreetAddress").val(),
-                city:$("#City").val(),
+                city: $("#City").val(),
                 zipcode: $("#Zipcode").val(),
                 property: $('#property-full-address').val()
-           },
-           success: function (data) {
+            },
+            success: function (data) {
                 console.log(data);
-           },
-           error: function(xhr, ajaxOptions, thrownError){
-              
-           },
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+
+            },
         });
-    }    
+    }
 }

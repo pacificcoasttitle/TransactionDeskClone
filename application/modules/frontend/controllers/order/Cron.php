@@ -530,7 +530,7 @@ class Cron extends MX_Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
         $userdata = $this->session->userdata('admin');
-
+        $this->load->library('order/order');
         if ($this->input->post('new_users') == 1) {
             $condition = array(
                 'where' => array(
@@ -578,7 +578,10 @@ class Cron extends MX_Controller
                                         'resware_error_msg' => null,
                                     );
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-
+                                    /** Save user Activity */
+                                    $activity = 'From Cron - check_update_password : Password updated status 1 for :- ' . $v['email_address'];
+                                    $this->order->logAdminActivity($activity);
+                                    /** End Save user activity */
                                     if ($update) {
                                         $updateCount++;
                                     }
@@ -588,6 +591,10 @@ class Cron extends MX_Controller
                                             'is_password_updated' => 0,
                                         );
                                         $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                        /** Save user Activity */
+                                        $activity = 'From Cron - check_update_password : Password updated status 0 for :- ' . $v['email_address'];
+                                        $this->order->logAdminActivity($activity);
+                                        /** End Save user activity */
                                         $notUpdatePasswordCount++;
                                     }
                                 }
@@ -597,6 +604,10 @@ class Cron extends MX_Controller
                                         'is_password_updated' => 0,
                                     );
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                    /** Save user Activity */
+                                    $activity = 'From Cron - check_update_password : Password updated status 0 for :- ' . $v['email_address'];
+                                    $this->order->logAdminActivity($activity);
+                                    /** End Save user activity */
                                     $notUpdatePasswordCount++;
                                 }
                             }
@@ -606,6 +617,10 @@ class Cron extends MX_Controller
                                     'is_password_updated' => 0,
                                 );
                                 $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
+                                /** Save user Activity */
+                                $activity = 'From Cron - check_update_password : Password updated status 0 for :- ' . $v['email_address'];
+                                $this->order->logAdminActivity($activity);
+                                /** End Save user activity */
                                 $notUpdatePasswordCount++;
                             }
                         }
