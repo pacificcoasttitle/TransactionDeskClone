@@ -5421,6 +5421,12 @@ class Home extends MX_Controller
             );
             $this->db->update('pct_configs', $lpDocData, array('slug' => 'enable_lv_with_address_apn'));
 
+            $enable_vesting_document_type_filter = isset($input['enable_vesting_document_type_filter']) && !empty($input['enable_vesting_document_type_filter']) ? 1 : 0;
+            $vestingFlag = array(
+                'is_enable' => $enable_vesting_document_type_filter,
+            );
+            $this->db->update('pct_configs', $vestingFlag, array('slug' => 'enable_vesting_document_type_filter'));
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -5446,6 +5452,7 @@ class Home extends MX_Controller
         $res['sale_order_closed_email_send_off'] = $data['sale_order_closed_email_send_off']['is_enable'];
         $res['loan_order_closed_email_send_off'] = $data['loan_order_closed_email_send_off']['is_enable'];
         $res['enable_lv_with_address_apn'] = $data['enable_lv_with_address_apn']['is_enable'];
+        $res['enable_vesting_document_type_filter'] = $data['enable_vesting_document_type_filter']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
