@@ -66,6 +66,13 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row ml-1">
+                                <label for="enable_vesting_document_type_filter" class="col-sm-3 col-form-label">Enable Vesting Document Type Filter </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_vesting_document_type_filter" id="enable_vesting_document_type_filter" <?php echo isset($enable_vesting_document_type_filter) && !empty($enable_vesting_document_type_filter) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">
