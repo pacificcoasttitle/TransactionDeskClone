@@ -320,6 +320,7 @@ $route['order/admin/edit-fee/:num'] = 'admin/order/fees/edit_fee';
 $route['order/admin/import-underwriters'] = 'admin/order/home/import_underwriters';
 $route['order/admin/update-underwriter'] = 'admin/order/home/updateUnderwriter';
 $route['order/admin/update-title-sales-company'] = 'admin/order/home/updateTitleSalesCompany';
+$route['order/admin/update-sales-rep-order'] = 'admin/order/home/updateSalesUserForOrder';
 $route['order/admin/fees-types'] = 'admin/order/FeesTypes/index';
 $route['order/admin/add-fee-type'] = 'admin/order/FeesTypes/add_fee_type';
 $route['order/admin/edit-fee-type/:num'] = 'admin/order/FeesTypes/edit_fee_type';
