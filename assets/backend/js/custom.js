@@ -5601,6 +5601,52 @@ function updateTitleSalesUser(partner_id, id, user_type) {
     });
 }
 
+function updateSalesUserForOrder(transaction_id, id) {
+
+    $('body').animate({ opacity: 0.5 }, "slow");
+    $.ajax({
+        url: base_url + "order/admin/update-sales-rep-order",
+        method: "POST",
+        data: {
+            transaction_id: transaction_id,
+            user_id: id
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            if (result.status == 'success') {
+                $('body').animate({ opacity: 1.0 }, "slow");
+                $('#order_success_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_success_msg").offset().top
+                }, 1000);
+                order_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#order_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#order_error_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_error_msg").offset().top
+                }, 1000);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                setTimeout(function () {
+                    $('#order_error_msg').html('').hide();
+                }, 4000);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#order_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#order_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#order_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
+}
+
 function deleteFeesType(id) {
     if (id == '') {
         alert('Fee type ID is required.');
