@@ -87,6 +87,8 @@
 	}
 	.ui-autocomplete {
 		max-height: 200px;
+		overflow-y: hidden;
+		z-index: 1050;
 	}
 	.ui-autocomplete .ui-menu-item {
 		background: none;
@@ -526,10 +528,10 @@ endif;
 		<div class="modal-content">
 			<form id="run-pma-form">
 				<div class="modal-header" style="padding: 25px;">
+					<h2 class="modal-title">Profile Details</h2>
 					<button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h2 class="modal-title">Profile Details</h2>
 				</div>
 				<div class="modal-body search-result">
 					<fieldset>

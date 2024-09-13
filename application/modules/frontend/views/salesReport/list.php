@@ -509,6 +509,7 @@ if ($this->session->flashdata('error')): ?>
 										<th>Date</th>
 										<th>Sales Rep</th>
 										<th>Month</th>
+										<th>Country</th>
 										<th>Download</th>
 									</tr>
 								</thead>
@@ -524,6 +525,7 @@ if (!empty($reports_data)) {
 										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('m/d/Y', strtotime($report['created_at'])); ?></td>
 										<td><?php echo $report['first_name'] . ' ' . $report['last_name']; ?></td>
 										<td><?php echo $monthNameList[$report['month']]; ?></td>
+										<td><?php echo $report['county']; ?></td>
 										<td class="align-btn" >
 										<?php
 if (!empty($report['report_url'])): ?>

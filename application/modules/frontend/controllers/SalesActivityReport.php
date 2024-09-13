@@ -49,6 +49,7 @@ class SalesActivityReport extends MX_Controller
         );
         $data['monthNameList'] = $this->monthArr;
         $data['reports_data'] = $this->salesReport_model->getData($report_condition);
+
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_' . $this->js_version));
         $this->salesdashboardtemplate->show("salesReport", "list", $data);
     }
@@ -62,7 +63,7 @@ class SalesActivityReport extends MX_Controller
             $this->session->set_flashdata('error', 'Please select Sales Representative');
         } else if (empty($this->input->post('month'))) {
             $valid = false;
-            $this->session->set_flashdata('error', 'Please Select Motth');
+            $this->session->set_flashdata('error', 'Please Select Month');
         } else if (empty($this->input->post('county'))) {
             $valid = false;
             $this->session->set_flashdata('error', 'Please Select County');
@@ -138,7 +139,7 @@ class SalesActivityReport extends MX_Controller
                 $monthNumber = $this->input->post('month');
                 $report_data['monthNumber'] = $monthNumber;
                 $report_data['monthName'] = $this->monthArr[$monthNumber];
-                $report_data['country'] = $this->input->post('county');
+                $report_data['country'] = $countryName = $this->input->post('county');
                 $condition = array(
                     'is_sales_rep' => 1,
                     'status' => 1,
@@ -148,8 +149,8 @@ class SalesActivityReport extends MX_Controller
                 $html = $this->load->view('salesReport/sales_activity_report', $report_data, true);
                 // print_r($html);die;
                 $this->load->library('snappy_pdf');
-
-                $document_name = $report_data['salesRep']['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . date('Y') . '_' . $last_id . '.pdf';
+                $countyCode = COUNTRY_CODE;
+                $document_name = $countyCode[strtolower($countryName)] . '_' . $report_data['salesRep']['first_name'] . '_' . $this->monthArr[$monthNumber] . '_' . date('Y') . '_' . $last_id . '.pdf';
                 if (!is_dir(FCPATH . 'uploads/sales-activity')) {
                     mkdir(FCPATH . 'uploads/sales-activity', 0777, true);
                 }
