@@ -3950,7 +3950,7 @@ class Order
     {
         $userdata = $this->CI->session->userdata('admin');
         $data = array(
-            'user_id' => $userdata['id'],
+            'user_id' => $userdata['id'] ?? 1,
             'message' => $activity,
             'created_at' => date("Y-m-d H:i:s"),
         );
