@@ -59,17 +59,35 @@ class Order extends MX_Controller
 
         $pageno = ($params['start'] / $params['length']) + 1;
         $ordersList = $this->order_model->get_orders($params);
-
+        // echo "<pre>";
+        // print_r($ordersList);die;
         $data = array();
         $cnt = ($pageno == 1) ? ($params['start'] + 1) : (($pageno - 1) * $params['length']) + 1;
         $count = $params['start'] + 1;
+        $this->load->model('order/sales_model');
+        $sales_rep_lists = $this->sales_model->get_sales_reps(['sales_rep_enable' => 1]);
+        $salesRepList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateSalesUserForOrder(transaction_id, this.value);" id="sales_rep" name="sales_rep">
+        <option value="">Select Sales Rep</option>';
+        if (isset($sales_rep_lists['data']) && !empty($sales_rep_lists['data'])) {
+            foreach ($sales_rep_lists['data'] as $key => $sales_rep) {
+                $salesRepList .= '<option value="' . $sales_rep['id'] . '">' . $sales_rep['first_name'] . ' ' . $sales_rep['last_name'] . '</option>';
+            }
+        }
+        $salesRepList .= '</select>';
         foreach ($ordersList['data'] as $key => $value) {
             $nestedData = array();
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = removeMultipleSpace($value['full_address']);
             $nestedData[] = $value['product_type'];
-            $nestedData[] = $value['sales_rep_name'];
+            if (empty($value['sales_rep_name'])) {
+                $salesRepSelection = $salesRepList;
+                $salesRepSelection = str_replace('transaction_id', $value['transaction_id'], $salesRepSelection);
+                // $salesRepSelection = str_replace('value="' . $value['sales_rep_id'] . '"', 'value="' . $value['sales_rep_id'] . '" selected', $salesRepSelection);
+                $nestedData[] = $salesRepSelection;
+            } else {
+                $nestedData[] = $value['sales_rep_name'];
+            }
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
             $property_id = $value['property_id'];

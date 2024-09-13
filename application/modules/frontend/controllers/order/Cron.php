@@ -3394,7 +3394,15 @@ class Cron extends MX_Controller
             }
         }
 
+        /** get all sales reps */
+        $this->db->select("id, LOWER(CONCAT_WS(' ', first_name, last_name)) AS sales_name, LOWER(email_address) as email");
+        $this->db->from('customer_basic_details');
+        $this->db->where('is_sales_rep', 1);
+        $query = $this->db->get();
+        $salesUsers = $query->result_array();
+        /** End get all sales reps */
         $files = glob("uploads/order-status/*csv", GLOB_NOSORT);
+
         $closedFileNumbers = array();
         if (is_array($files) && count($files) > 0) {
             foreach ($files as $filePath) {
@@ -3417,6 +3425,7 @@ class Cron extends MX_Controller
                         $loan_amount = '';
                         $sales_amount = '';
                         $prodType = '';
+                        $salesRepId = 0;
 
                         if (in_array('File Number', $headerColumns)) {
                             $fileKey = array_search("File Number", $headerColumns);
@@ -3448,6 +3457,35 @@ class Cron extends MX_Controller
                             $prodType = $data[$prodkey];
                         }
 
+                        /** Check and update sales rep logic */
+                        if (in_array('Email', $headerColumns)) {
+                            $emailkey = array_search("Email", $headerColumns);
+                            $sales_email = strtolower(trim($data[$emailkey]));
+                            if (!empty($sales_email)) {
+                                $saleUserKey = array_search($sales_email, array_column($salesUsers, 'email'));
+                                if (isset($saleUserKey) && !empty($saleUserKey)) {
+                                    $salesRepId = $salesUsers[$saleUserKey]['id'];
+                                }
+                            }
+                        }
+
+                        if ($salesRepId == 0) {
+                            $salesRepName = '';
+                            if (in_array('Sales Rep', $headerColumns)) {
+                                $saleskey = array_search("Sales Rep", $headerColumns);
+
+                                $salesRepName = strtolower(trim($data[$saleskey]));
+                                if (!empty($salesRepName)) {
+                                    $saleUserKey = array_search($salesRepName, array_column($salesUsers, 'sales_name'));
+                                    if (isset($saleUserKey) && !empty($saleUserKey)) {
+                                        $salesRepId = $salesUsers[$saleUserKey]['id'];
+                                    }
+                                }
+                            }
+                        }
+
+                        /** End Check and update sales rep logic */
+
                         if ($row != 1) {
                             if (1 === preg_match('~[0-9]~', $file_number)) {
                                 $completed_date = null;
@@ -3473,6 +3511,24 @@ class Cron extends MX_Controller
                                     'sales_amount' => (int) $sales_amount,
                                     'updated_at' => date('Y-m-d H:i:s'),
                                 );
+
+                                $this->db->from('order_details as o');
+                                $this->db->select('o.file_number, o.transaction_id, transaction_details.sales_representative');
+                                $this->db->join('transaction_details', 'o.transaction_id = transaction_details.id', 'inner');
+                                $this->db->where('o.file_number', $file_number);
+                                $query = $this->db->get();
+                                $salesDetails = $query->row_array();
+                                if ($salesDetails['sales_representative'] != $salesRepId) {
+                                    $updateData = array('sales_representative' => $salesRepId);
+
+                                    $this->db->set($updateData);
+                                    $this->db->where('id', $salesDetails['transaction_id']);
+                                    $this->db->update('transaction_details');
+                                    /** Save user Activity */
+                                    $activity = 'Sales rep changed from update order status cron from :- ' . $salesDetails['sales_representative'] . ' to :- ' . $salesRepId . ' For order number: ' . $file_number;
+                                    $this->order->logAdminActivity($activity);
+                                    /** End Save user activity */
+                                }
                             }
                         }
                         $row++;

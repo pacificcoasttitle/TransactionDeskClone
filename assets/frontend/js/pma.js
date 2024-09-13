@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     firstModal = true;
     // create dialog for manual comps selection
     // compsDialog = $('#comps-dialog').dialog({
@@ -13,7 +13,7 @@ $(document).ready(function() {
     // IE compatability
     if (!window.console) {
         console = {
-            log: function() {}
+            log: function () { }
         };
     }
     $.ajaxSetup({
@@ -54,14 +54,14 @@ $(document).ready(function() {
     // });
 
     // when user runs PMA, open custom info dialog and create unique ID for the CPP that will be generated
-    $(document).on('click', '.js-run-pma-button', function() {
+    $(document).on('click', '.js-run-pma-button', function () {
         $('#run-pma-dialog').modal('show');
     });
 
     // when user selects "Submit" on custom info dialog, close dialog, show progressbar, and extract info from form 
-    $('.pma-modal-submit').on('click', function() {
+    $('.pma-modal-submit').on('click', function () {
         $(".pma-alert").hide();
-        if($("#rep-name").val() == '') {
+        if ($("#rep-name").val() == '') {
             $(".pma-alert .error_msg").html("Please select Rep");
             $(".pma-alert").show();
             return false;
@@ -78,17 +78,17 @@ $(document).ready(function() {
     $(document).on('click', '.js-find-property', getAddress);
 
     report_table = $('#cpl_listing').DataTable({
-             "aaSorting": [],
-            "language": {
-                // searchPlaceholder: "Search File# or Address",
-                paginate: {
-                    next: '<span class="fa fa-angle-right"></span>',
-                    previous: '<span class="fa fa-angle-left"></span>',
-                },
-                "emptyTable": "Record(s) not found.",
-                // "search": "",
+        "aaSorting": [],
+        "language": {
+            // searchPlaceholder: "Search File# or Address",
+            paginate: {
+                next: '<span class="fa fa-angle-right"></span>',
+                previous: '<span class="fa fa-angle-left"></span>',
             },
-        });
+            "emptyTable": "Record(s) not found.",
+            // "search": "",
+        },
+    });
     autoComplete();
 });
 
@@ -116,16 +116,16 @@ function textDropdown(dropArray, id) {
     var $input = $(id).autocomplete({
         source: dropArray,
         minLength: 0,
-        select: function(e, ui) {
+        select: function (e, ui) {
             retrieveFormData(id, e, ui);
         }
     }).addClass("");
 
     if (firstModal) {
         if ($input.autocomplete("widget").is(":visible")) {
-                    $input.autocomplete("close");
-                    return;
-                }
+            $input.autocomplete("close");
+            return;
+        }
     }
 }
 
@@ -148,16 +148,16 @@ function retrieveFormData(id, e, ui) {
         }
     }
     $.ajax({
-        url: base_url+'pmas/task/populate',
+        url: base_url + 'pmas/task/populate',
         type: 'GET',
         data: data
     })
-        .done(function(response) {
+        .done(function (response) {
             //console.log(response)
             populateData(response);
 
         })
-        .fail(function() {})
+        .fail(function () { })
 }
 
 
@@ -175,16 +175,16 @@ function populateData(response) {
 // get list of all previous agents and companies for modal dropdown
 function getDropItems() {
     $.ajax({
-        url: base_url+'pmas/task/fetchItems',
+        url: base_url + 'pmas/task/fetchItems',
         type: 'GET',
         // data: {
         //     task: 'fetchItems'
         // }
     })
-        .done(function(response) {
+        .done(function (response) {
             var dropData = $.parseJSON(response);
-            //console.log(dropData[0]);
-            //console.log(dropData[1]);
+            // console.log(dropData[0]);
+            // console.log(dropData[1]);
             var realtors = dropData['realtor_name'];
             var companies = dropData['realtor_company'];
             realtors = realtors.sort();
@@ -192,7 +192,7 @@ function getDropItems() {
             textDropdown(realtors, '#realtor-name');
             textDropdown(companies, '#realtor-company');
         })
-        .fail(function() {})
+        .fail(function () { })
 }
 
 // compiles data from customized info form to send to database for future reports that use same company or agent 
@@ -203,10 +203,10 @@ function recordFormData(query) {
         type: 'POST',
         data: query
     })
-        .done(function(response) {
+        .done(function (response) {
             //console.log(response);
         })
-        .fail(function() {})
+        .fail(function () { })
 }
 
 
@@ -234,7 +234,7 @@ function switchSearch() {
         $('.js-search-label1').text('APN');
         $('.js-search-label2').text('County');
         $('.js-pma-city').attr("placeholder", "County");
-        
+
         $('.js-search-button').text('Search APN');
     }
 }
@@ -242,10 +242,10 @@ function switchSearch() {
 // pulls names of all PCT reps for 1) rep dropdown list on custom info dialog and 2) table that tallies # of reports run for each rep
 function listReps() {
     $.ajax({
-        url: base_url+'pmas/rep_list',
+        url: base_url + 'pmas/rep_list',
         type: 'GET'
     })
-        .done(function(response) {
+        .done(function (response) {
             // var repsResponse = $.parseJSON(response);
             // var repsDropdown = repsResponse[0];
             // var repsTable = repsResponse[1];
@@ -257,7 +257,7 @@ function listReps() {
 // extracts data from custom info form. 
 function getCustomInfo() {
     event.preventDefault ? event.preventDefault() : event.returnValue = false;
-    
+
     reportData.rep = $('#rep-name option:selected').text();
     reportData.repId = $('#rep-name option:selected').val();
     var formData = $('#run-pma-form').serialize();
@@ -295,17 +295,17 @@ function get187() {
     $('body').addClass('loading-screen');
     $.ajax({
         type: "GET",
-        url: base_url+"pmas/proxy",
+        url: base_url + "pmas/proxy",
         data: {
             requrl: reportData.report187
         },
         dataType: "xml",
-        success: function(xml) {
+        success: function (xml) {
             compsXML = xml;
             $('body').removeClass('loading-screen');
             parse187(xml)
         },
-        error: function() {
+        error: function () {
             alert("An error occurred while processing XML file.");
             $('body').removeClass('loading-screen');
         }
@@ -329,10 +329,10 @@ function parse187() {
 // walks through all prior transfers; if one of designated doc types is found, it calls parseDocsVals
 function parseDocs() {
     var docTypes = ['Grant Deed', 'Open Deed', 'Notice of Sale', 'Notice of Default', 'Lien', 'Intrafamily Transfer or Dissolution']
-    $(compsXML).find("TransferHistory").find("TransferWithDefault").each(function(i, element) {
+    $(compsXML).find("TransferHistory").find("TransferWithDefault").each(function (i, element) {
         var docType = $(this).find('DocumentType').text();
         docType = docType.toString();
-        console.log('docType=' + docType);
+        // console.log('docType=' + docType);
         if (docTypes.indexOf(docType) > -1) {
             parseDocsVals(element);
             return false;
@@ -374,7 +374,7 @@ function parseComps() {
     currentDate = currentDate.replace(/-/g, '');
     compsSoldWithinYear = 0;
     compsDataRaw = [];
-    compsArray.each(function() {
+    compsArray.each(function () {
         var compsAPN = $(this).find("APN").text();
         var compsAddress = $(this).find("SiteAddress").text();
         var compsBuildingArea = $(this).find("BuildingArea").text();
@@ -434,11 +434,11 @@ function appendComps(compsData) {
     $('#comps-table').addClass('tablesorter');
     jQuery.tablesorter.addParser({
         id: 'thousands',
-        is: function(s) {
+        is: function (s) {
             // return false so this parser is not auto detected 
             return false;
         },
-        format: function(s) {
+        format: function (s) {
             // format your data for normalization 
             return s.replace('$', '').replace(/,/g, '');
         },
@@ -474,12 +474,12 @@ function displayComps() {
     $('#comps-form').show();
     $('#comps-table').show();
     $('.comps-submit').show();
-    $('#comps-table tbody tr').hover(function() {
+    $('#comps-table tbody tr').hover(function () {
         $(this).find($('.x-checkbox')).show();
-    }, function() {
+    }, function () {
         $(this).find($('.x-checkbox')).hide();
     }),
-    $('.x-checkbox').on('click', deleteBox)
+        $('.x-checkbox').on('click', deleteBox)
 
 }
 
@@ -503,14 +503,14 @@ function validateComps() {
         $('.comps-error').text('');
         compsDialog.modal('hide');
         var j = 1;
-        $('input[name="apn"]').each(function(i, el) {
+        $('input[name="apn"]').each(function (i, el) {
             if ($(el).is(':checked')) {
                 query += '&apn' + j + '=' + el.value;
                 j++;
             }
         });
         var j = 1;
-        $('input[name="apndelete"]').each(function(i, el) {
+        $('input[name="apndelete"]').each(function (i, el) {
             if ($(el).is(':checked')) {
                 query += '&apndelete' + j + '=' + el.value;
                 j++;
@@ -550,16 +550,16 @@ function runPMA() {
     $('body').addClass('loading-screen');
     $.ajax({
         crossDomain: true,
-        url: base_url+'pmas/pma',
+        url: base_url + 'pmas/pma',
         type: 'POST',
         data: query
     })
-        .done(function(response) {
+        .done(function (response) {
             //console.log('success');
             returnReport(response);
             $('body').removeClass('loading-screen');
         })
-        .fail(function(response) {
+        .fail(function (response) {
             $('.pma-error').text('Unsuccessful PDF Generation');
             $('body').removeClass('loading-screen');
         })
@@ -576,7 +576,7 @@ function returnReport(response) {
     // var res = reportData.address;
     // res = res.replace(" ", "_")
     // var pdfLink = 'http://pct.com/pma/profiles/profileTemps/' + res + ' ' + pdfID + '.pdf';
-    response= $.parseJSON(response);
+    response = $.parseJSON(response);
     var pdfLink = response.pdfLink;
     reportData.link = pdfLink;
     $('.progress-bar').hide();
@@ -598,19 +598,19 @@ function dataTransfer(status) {
     $('body').addClass('loading-screen');
     //console.log(dataQuery);
     $.ajax({
-        url: base_url+'pmas/pma_data',
+        url: base_url + 'pmas/pma_data',
         type: 'POST',
         data: dataQuery
     })
-        .done(function(response) {
+        .done(function (response) {
             //console.log(response)
             updateTally(response);
         })
-        .fail(function() {
+        .fail(function () {
             $('.pma-error').text('Problem updating database');
         })
-        .always(function() {
-            if(status == 'yes') {
+        .always(function () {
+            if (status == 'yes') {
                 // location.reload();
                 $("#smart-form").trigger("reset");
                 $("#run-pma-form").trigger("reset");
@@ -635,42 +635,42 @@ function updateTally(tallies) {
     $('.accrued-cost').text(tallyData.cost);
     var rep_data = tallyData.sales_reps;
     list_emement = '';
-    if($('#rep-list-data li').length > 1) {
-        $.each( rep_data, function( key, value ) {
-            var dynamic_li_class = '.rep_list_'+value.rep_id;
-            $(dynamic_li_class+' .report_total').html(value.report_total);
-            $(dynamic_li_class+' .report_cost').html('$'+value.report_cost);
+    if ($('#rep-list-data li').length > 1) {
+        $.each(rep_data, function (key, value) {
+            var dynamic_li_class = '.rep_list_' + value.rep_id;
+            $(dynamic_li_class + ' .report_total').html(value.report_total);
+            $(dynamic_li_class + ' .report_cost').html('$' + value.report_cost);
         });
     }
     else {
 
-        $.each( rep_data, function( key, value ) {
+        $.each(rep_data, function (key, value) {
             var img_div = '';
-            if(value.image == '') {
-                img_div = '<div class="no-report-image"><span>'+value.image_alt+'</span></div>';
+            if (value.image == '') {
+                img_div = '<div class="no-report-image"><span>' + value.image_alt + '</span></div>';
             }
             else {
-                img_div = '<img src="'+value.image+'" alt="'+value.image_alt+'" class="retina">';
+                img_div = '<img src="' + value.image + '" alt="' + value.image_alt + '" class="retina">';
             }
 
-                list_emement += '<li class="rep_list_'+value.rep_id+'"><div class="u-pic">'+img_div+'</div>';
-                list_emement += '<div class="u-info">';
-                list_emement += '<div class="u-name">'+value.name+'</div>';
-                list_emement += '<div>'+value.email+'</div>';
-                list_emement += '<div>'+value.phone+'</div></div>';
-                list_emement += '<div class="u-count">';
-                list_emement += '<div class="report_total pma_val">'+value.report_total+'</div>';
-                list_emement += '<div class="report_cost pma_val">$'+value.report_cost+'</div></div></li>';
+            list_emement += '<li class="rep_list_' + value.rep_id + '"><div class="u-pic">' + img_div + '</div>';
+            list_emement += '<div class="u-info">';
+            list_emement += '<div class="u-name">' + value.name + '</div>';
+            list_emement += '<div>' + value.email + '</div>';
+            list_emement += '<div>' + value.phone + '</div></div>';
+            list_emement += '<div class="u-count">';
+            list_emement += '<div class="report_total pma_val">' + value.report_total + '</div>';
+            list_emement += '<div class="report_cost pma_val">$' + value.report_cost + '</div></div></li>';
         });
         $('#rep-list-data').html(list_emement);
         $("#show_all_rep").removeClass('hide');
-        
+
     }
-    
+
     //console.log(tallyData);
 
-    
-    $('.rep-table tr').each(function() {
+
+    $('.rep-table tr').each(function () {
         var pctRep = $(this).find('td:nth-child(1)').text();
         if (tallyData[pctRep]) {
             var repTotal = tallyData[pctRep][0];
@@ -688,11 +688,11 @@ function updateRecents(tallyData) {
     $('.recent-reports tbody').html('');
     var recentReports = tallyData.reports;
     report_table.clear().draw();
-    $.each( recentReports, function( key, value ) {
+    $.each(recentReports, function (key, value) {
         var address = value.address;
         var city = value.city;
         var rep = value.sales_rep;
-        var  link = value.link;
+        var link = value.link;
         var date = value.runDate;
         // $('.recent-reports tbody').append('<tr><td>' + date + '</td><td>' + rep + '</td><td></br>' + address + '<p>' + city + '</p></td><td><a class="button blueButton" href="' + link + '" target="_blank">Download</a></td></tr>')
         //         .show();
@@ -700,8 +700,8 @@ function updateRecents(tallyData) {
             date,
             rep,
             address,
-            '<a href="'+link+'" class="btn btn-success btn-icon-split" target="_blank"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>'
-            ]).draw(false);
+            '<a href="' + link + '" class="btn btn-success btn-icon-split" target="_blank"><span class="icon text-white-50"><i class="fas fa-download"></i></span><span class="text">Download</span></a>'
+        ]).draw(false);
     });
     // report_table.draw();
 }
@@ -718,7 +718,7 @@ function getAPN() {
     county = county.toUpperCase();
     county = county.replace('COUNTY', '');
     county = county.trim();
-    county = county.replace(/\w\S*/g, function(txt) {
+    county = county.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
     //console.log(county)
@@ -820,13 +820,13 @@ function fetchReports(repNum) {
     $('body').addClass('loading-screen');
     //console.log(request);
     $.ajax({
-        url: base_url+'pmas/proxy',
+        url: base_url + 'pmas/proxy',
         data: {
             requrl: request + '&reportType=' + reportNum
         },
         dataType: 'xml'
     })
-        .done(function(response, textStatus, jqXHR) {
+        .done(function (response, textStatus, jqXHR) {
             //console.log(response)
             var responseStatus = $(response).find('StatusCode').text();
             //console.log(responseStatus);
@@ -849,7 +849,7 @@ function fetchReports(repNum) {
                 fetchReports('111')
             }
         })
-        .fail(function(err) {
+        .fail(function (err) {
             if (reportNum === '187') {
                 $('.pma-error').text('Unsuccessful Request');
             }
@@ -857,7 +857,7 @@ function fetchReports(repNum) {
                 compsRoute();
             }
         })
-        .always(function() {
+        .always(function () {
             $('.search-result-div').removeClass('hide');
             $('body').removeClass('loading-screen');
             if (reportNum !== '110') {
@@ -898,7 +898,7 @@ function compileXmlUrls(response, report) {
     // get the url for each report
     reportUrl = $(response).find('ReportURL').text();
     if (report === 'report111') {
-       // console.log(reportUrl);
+        // console.log(reportUrl);
         var reportUrl = reportUrl.split("<CustCompFilter>")[0];
         //console.log(reportUrl);
     }
@@ -947,7 +947,7 @@ function displayError(responseStatus) {
 // handles API response that has multiple addresses 
 function multipleResults(response) {
     $('.result-table > tbody').html('');
-    $(response).find('Locations').children('Location').each(function(i) {
+    $(response).find('Locations').children('Location').each(function (i) {
         var address = $(this).find('Address').text();
         apn = $(this).find('APN').text();
         apnInfo[apn] = {}
@@ -1008,9 +1008,9 @@ function autoComplete() {
         bounds: defaultBounds
     };
     autocomplete = new google.maps.places.Autocomplete(input, options);
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
         var place = autocomplete.getPlace(); // get address, without city and state
-        setTimeout(function() {
+        setTimeout(function () {
             $('.js-pma-address').val(place.name);
         }, 25); // just display street address
         for (var i = 0; i < place.address_components.length; i++) {
@@ -1053,7 +1053,7 @@ function testComps() {
     //console.log('compsSkip= ' + compsSkip);
     if (compsSkip === true) {
         runPMA()
-    //console.log('compsXML ' + compsXML);
+        //console.log('compsXML ' + compsXML);
     } else if (compsXML === '') {
         testGet187();
     } else {
@@ -1067,16 +1067,16 @@ function testGet187() {
     query = $.param(reportData);
     $.ajax({
         type: "GET",
-        url: base_url+"pmas/xmlproxy",
+        url: base_url + "pmas/xmlproxy",
         data: {
             requrl: 'test187.xml'
         },
         dataType: "xml",
-        success: function(xml) {
+        success: function (xml) {
             compsXML = xml;
             parse187();
         },
-        error: function() {
+        error: function () {
             alert("An error occurred while processing XML file.");
         }
     });
