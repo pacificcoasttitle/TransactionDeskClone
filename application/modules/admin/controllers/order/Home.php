@@ -5450,6 +5450,12 @@ class Home extends MX_Controller
             );
             $this->db->update('pct_configs', $vestingFlag, array('slug' => 'enable_vesting_document_type_filter'));
 
+            $enable_create_order_submit_button = isset($input['enable_create_order_submit_button']) && !empty($input['enable_create_order_submit_button']) ? 1 : 0;
+            $vestingFlag = array(
+                'is_enable' => $enable_create_order_submit_button,
+            );
+            $this->db->update('pct_configs', $vestingFlag, array('slug' => 'enable_create_order_submit_button'));
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -5476,6 +5482,7 @@ class Home extends MX_Controller
         $res['loan_order_closed_email_send_off'] = $data['loan_order_closed_email_send_off']['is_enable'];
         $res['enable_lv_with_address_apn'] = $data['enable_lv_with_address_apn']['is_enable'];
         $res['enable_vesting_document_type_filter'] = $data['enable_vesting_document_type_filter']['is_enable'];
+        $res['enable_create_order_submit_button'] = $data['enable_create_order_submit_button']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
