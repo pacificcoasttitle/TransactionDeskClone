@@ -572,7 +572,7 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 							</div>
                             <div class="form-group">
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-success btn-icon-split home-submit" disabled>
+                                    <button type="submit" class="btn btn-success btn-icon-split home-submit" <?php echo ($submitButtonFlag == 0) ? "disabled" : ""; ?>>
                                         <span class="icon text-white-50">
                                             <i class="fas fa-save"></i>
                                         </span>
