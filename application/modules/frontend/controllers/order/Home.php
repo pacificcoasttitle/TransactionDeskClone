@@ -19,6 +19,7 @@ class Home extends MX_Controller
         $this->load->model('order/agent_model');
         $this->load->library('form_validation');
         $this->load->library('order/order');
+        $this->load->library('order/ionFraud');
         $this->load->model('order/titlePointData');
         $this->load->model('order/productType');
         $this->order->is_user();
@@ -117,6 +118,7 @@ class Home extends MX_Controller
                 $PrimaryName = array_slice($SplitName, 0, -1);
                 $OwnerFirstName = implode(" ", $PrimaryName);
                 $SecondaryOwner = $this->input->post('SecondaryOwner');
+                $ionReportStatusRequired = $this->input->post('ion-report-status');
 
                 $SalesRep = $this->input->post('SalesRep');
                 $condition = array(
@@ -304,6 +306,20 @@ class Home extends MX_Controller
                         $parties_email[] = $AdditionalEmail;
                     }
                 }
+                /** Start: Get ION Fraud api response to compare Owner name */
+                $ionFraudRes = [];
+                if ($ionReportStatusRequired) {
+                    $ionFraudStatus = false;
+                    $ionFraudRes = $this->ionfraud->getIONFraudPropertyDetails($PropertyAddress, $PropertyState);
+                    if (!empty($ionFraudRes) && !empty($ionFraudRes['Property_Profile'])) {
+                        $ionProfileData = $ionFraudRes['Property_Profile'];
+                        // $ionOwnerName = $ionProfileData['Ownername'];
+                        // if (!$this->ionfraud->getIONFraudPropertyDetails($ionOwnerName, $PrimaryOwner)) {
+                        $ionFraudStatus = true;
+                        // }
+                    }
+                }
+                /** End: Get ION Fraud api response to compare Owner name */
 
                 /** Start Get config value to check Lp Enable or not */
                 $configData = $this->order->getConfigData();
@@ -312,7 +328,8 @@ class Home extends MX_Controller
 
                 /** End Get config value to check Lp Enable or not */
                 $underWriter = '';
-                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') {
+                // print_r($ionReportStatusRequired);
+                if ((empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') || ($ionReportStatusRequired == 'true')) {
                     $lpOrderFlag = 1;
                     $loanFlag = 1;
                     if (strpos($ProductTypeTxt, 'Sale') !== false) {
@@ -1025,6 +1042,7 @@ class Home extends MX_Controller
                     'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
                     'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
                     'status' => 1,
+                    'ion_fraud_status' => ($ionReportStatusRequired) ? 'successful' : 'unsuccessful',
                 );
 
                 $orderId = $this->home_model->insert($orderData, 'order_details');
@@ -1195,6 +1213,16 @@ class Home extends MX_Controller
                 }
 
                 $orderDetails = $this->order->get_order_details($file_id);
+                /** Start Generate ION Fraud document */
+                $ionFile = [];
+                if (!empty($ionFraudRes) && !empty($ionFraudRes['Property_Profile'])) {
+                    $ionProfileData['black_knight_owner_name'] = $PrimaryOwner;
+                    $this->ionfraud->generateIONReport($orderNumber, $ionProfileData);
+                    $ionfilename = $orderNumber . '.pdf';
+                    $this->uploadIONFraudDocsToResware($ionfilename, $file_id, $orderDetails);
+                    $ionFile[] = env('AWS_PATH') . "ion-fraud/" . $ionfilename;
+                }
+                /** End Generate ION Fraud document */
 
                 // Convert to PST
 
@@ -1303,6 +1331,24 @@ class Home extends MX_Controller
                 $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : array();
                 $this->load->helper('sendemail');
 
+                /** Start Send email for ION fraud document to all parties */
+                $ionEmailTemplate = $this->load->view('emails/ion_report.php', $data, true);
+                $cc = ['piyush-crest@yopmail.com'];
+                $ionMailParams = [
+                    'from_mail' => $from_mail,
+                    'from_name' => $from_name,
+                    'to' => 'piyush.j@crestinfosystems.com',
+                    'subject' => 'ION Fraud report for order number: ' . $order_number,
+                    'message' => json_encode($data),
+                    'file' => json_encode($ionFile),
+                    'cc' => json_encode($cc),
+                ];
+                if (!empty($ionFile)) {
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'ion_fraud_email_to_all_parties_' . $orderNumber, '', $ionMailParams, array(), $orderId, 0);
+                    $ion_mail_result = send_email($ionMailParams['from_mail'], $ionMailParams['from_name'], $ionMailParams['to'], $ionMailParams['subject'], $ionEmailTemplate, $ionFile, $cc, array());
+                    $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'ion_fraud_email_to_all_parties_' . $orderNumber, '', $ionMailParams, array('status' => $ion_mail_result), $orderId, $logid);
+                }
+                /** End Send email for ION fraud document to all parties */
                 $mailParams = array(
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,
@@ -1335,11 +1381,11 @@ class Home extends MX_Controller
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
+                    // $to = ['piyush.j@crestinfosystems.com'];
+                    // $cc[] = 'piyush.j@crestinfosystems.com';
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array(), $orderId, 0);
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, array());
                     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, array('status' => $mail_result), $orderId, $logid);
-                    // $to = ['piyush.j@crestinfosystems.net'];
-                    // $cc[] = 'piyush.j@crestinfosystems.net';
                     // $taxDataStatus = 'falied';
                     if ($taxDataStatus != 'success') {
                         // $subject = $orderNumber . ' - PCT Title Order Placed But Tax details not found';
@@ -1513,6 +1559,7 @@ class Home extends MX_Controller
             $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
             $configData = $this->order->getConfigData();
             $data['submitButtonFlag'] = $configData['enable_create_order_submit_button']['is_enable'];
+            $data['ionFraudFlag'] = $configData['enable_ion_fraud_checking']['is_enable'];
             // $this->template->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
             // $this->template->addJS(base_url('assets/frontend/js/additional-methods.min.js'));
             // $this->template->addJS(base_url('assets/frontend/js/smart-form.js'));
@@ -1854,7 +1901,7 @@ class Home extends MX_Controller
         $endPoint = 'types/products?ClientsClientID=' . $resware_user_id;
         $logid = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, $data, array(), 0, 0);
         $this->load->library('order/resware');
-        $result = $this->resware->make_request('GET', $endPoint, array(), $data);
+        $result = $this->resware->make_request('GET', $endPoint, '', $data);
         $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, $data, $result, 0, $logid);
         $response = json_decode($result, true);
         $product_types = array();
@@ -1956,6 +2003,74 @@ class Home extends MX_Controller
             /* End add resware api logs */
             $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
         }
+    }
+
+    public function uploadIONFraudDocsToResware($document_name, $fileId, $orderDetails)
+    {
+        $this->load->model('order/document');
+        $this->load->library('order/resware');
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('user');
+        if (env('AWS_ENABLE_FLAG') == 1) {
+            $fileSize = filesize(env('AWS_PATH') . "ion-fraud/" . $document_name);
+            $contents = file_get_contents(env('AWS_PATH') . "ion-fraud/" . $document_name);
+        } else {
+            $fileSize = filesize(FCPATH . 'uploads/ion-fraud/' . $document_name);
+            $contents = file_get_contents(base_url() . 'uploads/ion-fraud/' . $document_name);
+        }
+
+        $binaryData = base64_encode($contents);
+
+        $documentData = array(
+            'document_name' => $document_name,
+            'original_document_name' => $document_name,
+            'document_type_id' => 1037,
+            'document_size' => $fileSize,
+            'user_id' => $userdata['id'],
+            'order_id' => $orderDetails['order_id'],
+            'description' => 'ION Fraud Document',
+            'is_sync' => 1,
+            'is_ion_fraud_doc' => 1,
+        );
+        $documentId = $this->document->insert($documentData);
+
+        $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
+        $documentApiData = array(
+            'DocumentName' => $document_name,
+            'DocumentType' => array(
+                'DocumentTypeID' => 1037,
+            ),
+            'Description' => 'ION Fraud Document',
+            'InternalOnly' => false,
+            'DocumentBody' => $binaryData,
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        if ($userdata['is_master'] == 1) {
+            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $user_data['email'] = $orderUser['email_address'];
+            $user_data['password'] = $orderUser['random_password'];
+        } else {
+            $user_data = array();
+        }
+
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        $res = json_decode($result);
+        /* Start add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'upload_ion_fraud_document_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $document_api_data,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+        $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+
     }
 
     public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
@@ -2165,6 +2280,21 @@ class Home extends MX_Controller
             echo json_encode(array('success' => true));
         } else {
             echo json_encode(array('success' => false));
+        }
+    }
+
+    public function getIonReport()
+    {
+        $property = $this->input->post('address');
+        $state = $this->input->post('state');
+        $ionFraudRes = $this->ionfraud->getIONFraudPropertyDetails($property, $state);
+        if (!empty($ionFraudRes) && !empty($ionFraudRes['Property_Profile'])) {
+            $ionProfileData = $ionFraudRes['Property_Profile'];
+            $ionOwnerName = $ionProfileData['Ownername'];
+            echo json_encode(array('status' => true, 'data' => $ionProfileData));
+
+        } else {
+            echo json_encode(array('status' => false, 'data' => []));
         }
     }
 

@@ -43,6 +43,7 @@ if (
 
 if (
     $this->uri->uri_string() == 'order/admin/cpl-documents' ||
+    $this->uri->uri_string() == 'order/admin/ion-fraud-documents' ||
     $this->uri->uri_string() == 'order/admin/grant-deed-documents' ||
     $this->uri->uri_string() == 'order/admin/lv-documents' ||
     $this->uri->uri_string() == 'order/admin/tax-documents' ||
@@ -286,6 +287,7 @@ if (
 				<div class="collapse <?php if ($documentTabLinks) {echo 'show';}?>" aria-labelledby="documentDropDown" id="documents">
 					<div class="bg-white py-2 collapse-inner rounded">
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-documents'; ?>">CPL</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/ion-fraud-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/ion-fraud-documents'; ?>">ION Fraud</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/grant-deed-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/grant-deed-documents'; ?>">Grant Deed</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lv-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lv-documents'; ?>">Legal & Vesting</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/tax-documents') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/tax-documents'; ?>">Tax</a>

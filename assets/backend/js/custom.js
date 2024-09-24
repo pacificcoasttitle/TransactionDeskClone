@@ -91,7 +91,7 @@ $(document).ready(function () {
         $('select').not(".sectionSelect").selectpicker();
     }
 
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length) {
+    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-ion-fraud-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length) {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
 
             if (this.context.length) {
@@ -200,6 +200,22 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-cpl-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+
+                else if (this.context[0].sTableId == 'tbl-ion-fraud-documents-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/home/get_ion_fraud_document_list",
+                        data: {
+                            keyword: $('#tbl-ion-fraud-documents-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-ion-fraud-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else if (this.context[0].sTableId == 'tbl-grant-documents-listing') {
                     var jsonResult = $.ajax({
@@ -1907,6 +1923,82 @@ $(document).ready(function () {
                     }
                     $("#tbl-cpl-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-cpl-documents-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-ion-fraud-documents-listing').length) {
+        ion_fraud_document_list = $('#tbl-ion-fraud-documents-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#FileNumber, DocumentName",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_ion_fraud_documents').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'ION Fraud Documents',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 0 || column === 1 || column === 2) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_ion_fraud_document_list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-ion-fraud-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-ion-fraud-documents-listing_processing").css("display", "none");
 
                 },
                 complete: function () {

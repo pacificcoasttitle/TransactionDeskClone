@@ -534,8 +534,6 @@ class Titlepoint
                         $resultId = $thumbnail['ID'];
                     } else {
                         $count = 0;
-                        //echo "<pre>";
-                        //print_r($requestSummary);
                         if (count($requestSummary) == 2) {
                             foreach ($requestSummary as $service) {
                                 //echo "here";

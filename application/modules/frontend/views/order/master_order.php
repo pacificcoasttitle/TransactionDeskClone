@@ -139,6 +139,8 @@
 									<input type="hidden" name="property-type" id="property-type" value="">
 									<input type="hidden" name="property-zip" id="property-zip" value="">
 									<input type="hidden" name="random_number" id="random_number" value="">
+									<input type="hidden" name="ion-report-status" id="ion-report-status" value="false">
+									<input type="hidden" name="ion-report-flag" id="ion-report-flag" value="<?php echo $ionFraudFlag; ?>">
 
 									<div class="col-sm-12">
 										<input type="text" name="Property" id="property-search" class="form-control gui-input pac-target-input" placeholder="Property Address">
@@ -1362,6 +1364,45 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 </div>
 <!-- End Property search result Modal -->
 
+<!-- Start Fraud confirmation popup -->
+<div class="modal fade" id="searchFraudResultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card shadow mb-4">
+						<div class="card-header py-3">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h6 class="m-0 font-weight-bold text-primary">Fraud Report Results For Property: <span class="ion-search-propery" ></span></h6>
+						</div>
+						<div class="card-body">
+							<div class="smart-forms smart-container">
+								<div class="modal-body ion-result">
+									<table class="table table-bordered" width="100%">
+										<thead>
+											<tr>
+												<th width="40%">Black Knight Owner Name</th>
+												<th width="40%">ION Report Owner Name</th>
+											</tr>
+										</thead>
+										<tbody></tbody>
+									</table>
+								</div>
+								<div class="modal-footer" style="justify-content: flex-start">
+									<button type="submit" class="button btn-primary ion-proceed">Proceed</button>
+									<button type="button" class="button btn-primary ion-review-fraud" >Review Fraud</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Fraud confirmation popup -->
 <!-- Start Find Customer Number Modal -->
 <div class="modal fade smart-forms" id="findCustomerModal" tabindex="-1" role="dialog"
 	aria-labelledby="customerModalLabel" aria-hidden="true">
