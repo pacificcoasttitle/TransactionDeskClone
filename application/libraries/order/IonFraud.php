@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class IONFraud
+class IonFraud
 {
     public static $CI;
 
@@ -99,7 +99,7 @@ class IONFraud
         if (!is_dir(FCPATH . 'uploads/ion-fraud')) {
             mkdir(FCPATH . 'uploads/ion-fraud', 0777, true);
         }
-        // if (!(is_writable(FCPATH.'uploads/sales-rep/pdf'))) {
+        // if (!(is_writable(FCPATH.'uploads/sales-rep/pdf'))) { tst
         chmod(FCPATH . 'uploads/ion-fraud', 0777);
         // }
         $dir_name = FCPATH . 'uploads/ion-fraud/';
