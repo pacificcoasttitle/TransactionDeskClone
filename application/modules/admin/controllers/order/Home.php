@@ -560,6 +560,82 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
+    public function ion_fraud_document()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: ION Fraud Documents';
+        $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "ion_fraud_document", $data);
+    }
+
+    public function get_ion_fraud_document_list()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow'] = 0;
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $ion_fraud_document_list = $this->home_model->get_ion_fraud_document_list($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $ion_fraud_document_list = $this->home_model->get_ion_fraud_document_list($params);
+        }
+
+        $data = array();
+        // echo "<pre>";
+        // print_r($ion_fraud_document_list);die;
+        if (isset($ion_fraud_document_list['data']) && !empty($ion_fraud_document_list['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($ion_fraud_document_list['data'] as $key => $value) {
+                $nestedData = array();
+                $nestedData[] = $i;
+                $nestedData[] = $value['lp_file_number'];
+                $nestedData[] = $value['document_name'];
+                $documentName = $value['document_name'];
+                if ($value['api_document_id'] > 0) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+
+                $nestedData[] = convertTimezone($value['created']);
+
+                if (env('AWS_ENABLE_FLAG') == 1) {
+
+                    $documentUrl = env('AWS_PATH') . "ion-fraud/" . $documentName;
+
+                    if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"ion-fraud"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
+                } else {
+                    $documentUrl = base_url() . "uploads/ion-fraud/" . $documentName;
+                    if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
+                }
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                }
+                $data[] = $nestedData;
+                $i++;
+            }
+        }
+        $json_data['recordsTotal'] = intval($ion_fraud_document_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($ion_fraud_document_list['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
     public function cpl_document()
     {
         $data = array();
@@ -5421,28 +5497,28 @@ class Home extends MX_Controller
             $this->db->update('pct_configs', $lpDocData, array('slug' => 'escrow_commission'));
 
             $title_point_shut_off = isset($input['title_point_shut_off']) && !empty($input['title_point_shut_off']) ? 1 : 0;
-            $lpDocData = array(
+            $titlePointShutOffFlag = array(
                 'is_enable' => $title_point_shut_off,
             );
-            $this->db->update('pct_configs', $lpDocData, array('slug' => 'title_point_shut_off'));
+            $this->db->update('pct_configs', $titlePointShutOffFlag, array('slug' => 'title_point_shut_off'));
 
             $loan_order_closed_email_send_off = isset($input['loan_order_closed_email_send_off']) && !empty($input['loan_order_closed_email_send_off']) ? 1 : 0;
-            $lpDocData = array(
+            $loanOrderClosedEmailFlag = array(
                 'is_enable' => $loan_order_closed_email_send_off,
             );
-            $this->db->update('pct_configs', $lpDocData, array('slug' => 'loan_order_closed_email_send_off'));
+            $this->db->update('pct_configs', $loanOrderClosedEmailFlag, array('slug' => 'loan_order_closed_email_send_off'));
 
             $sale_order_closed_email_send_off = isset($input['sale_order_closed_email_send_off']) && !empty($input['sale_order_closed_email_send_off']) ? 1 : 0;
-            $lpDocData = array(
+            $saleOrderClosedEmailFlag = array(
                 'is_enable' => $sale_order_closed_email_send_off,
             );
-            $this->db->update('pct_configs', $lpDocData, array('slug' => 'sale_order_closed_email_send_off'));
+            $this->db->update('pct_configs', $saleOrderClosedEmailFlag, array('slug' => 'sale_order_closed_email_send_off'));
 
             $enable_lv_with_address_apn = isset($input['enable_lv_with_address_apn']) && !empty($input['enable_lv_with_address_apn']) ? 1 : 0;
-            $lpDocData = array(
+            $lvWithAddressApn = array(
                 'is_enable' => $enable_lv_with_address_apn,
             );
-            $this->db->update('pct_configs', $lpDocData, array('slug' => 'enable_lv_with_address_apn'));
+            $this->db->update('pct_configs', $lvWithAddressApn, array('slug' => 'enable_lv_with_address_apn'));
 
             $enable_vesting_document_type_filter = isset($input['enable_vesting_document_type_filter']) && !empty($input['enable_vesting_document_type_filter']) ? 1 : 0;
             $vestingFlag = array(
@@ -5451,10 +5527,16 @@ class Home extends MX_Controller
             $this->db->update('pct_configs', $vestingFlag, array('slug' => 'enable_vesting_document_type_filter'));
 
             $enable_create_order_submit_button = isset($input['enable_create_order_submit_button']) && !empty($input['enable_create_order_submit_button']) ? 1 : 0;
-            $vestingFlag = array(
+            $submitButtonFlag = array(
                 'is_enable' => $enable_create_order_submit_button,
             );
-            $this->db->update('pct_configs', $vestingFlag, array('slug' => 'enable_create_order_submit_button'));
+            $this->db->update('pct_configs', $submitButtonFlag, array('slug' => 'enable_create_order_submit_button'));
+
+            $enable_ion_fraud_checking = isset($input['enable_ion_fraud_checking']) && !empty($input['enable_ion_fraud_checking']) ? 1 : 0;
+            $ionFraudFlag = array(
+                'is_enable' => $enable_ion_fraud_checking,
+            );
+            $this->db->update('pct_configs', $ionFraudFlag, array('slug' => 'enable_ion_fraud_checking'));
 
             $msg = 'Setting updated';
             /** Save user Activity */
@@ -5483,6 +5565,7 @@ class Home extends MX_Controller
         $res['enable_lv_with_address_apn'] = $data['enable_lv_with_address_apn']['is_enable'];
         $res['enable_vesting_document_type_filter'] = $data['enable_vesting_document_type_filter']['is_enable'];
         $res['enable_create_order_submit_button'] = $data['enable_create_order_submit_button']['is_enable'];
+        $res['enable_ion_fraud_checking'] = $data['enable_ion_fraud_checking']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);

@@ -3166,7 +3166,7 @@ class Order
                     $to = $salesManger['email_address'];
                     $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
                     $to = 'ghernandez@pct.com';
-                    $cc = array('piyush.j@crestinfosystems.net');
+                    //$cc = array('piyush.j@crestinfosystems.com');
                     //$to = 'hitesh.p@crestinfosystems.com';
                     $mailParams = array(
                         'from_mail' => $from_mail,

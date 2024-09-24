@@ -80,6 +80,13 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row ml-1">
+                                <label for="enable_ion_fraud_checking" class="col-sm-4 col-form-label">Enable ION Fraud Checking </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_ion_fraud_checking" id="enable_ion_fraud_checking" <?php echo isset($enable_ion_fraud_checking) && !empty($enable_ion_fraud_checking) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">

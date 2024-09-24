@@ -316,6 +316,83 @@ class Home_model extends CI_Model
         );
     }
 
+    public function get_ion_fraud_document_list($params)
+    {
+        $this->db->from('order_details')
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+        $this->db->where('pct_order_documents.is_ion_fraud_doc', 1);
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $ion_fraud_document_lists = array();
+
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+
+            }
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_ion_fraud_doc', 1);
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->select('order_details.file_number, order_details.lp_file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_ion_fraud_doc', 1);
+            $this->db->order_by('pct_order_documents.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $ion_fraud_document_lists = $query->result_array();
+            }
+        } else {
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_ion_fraud_doc', 1);
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->select('order_details.file_number, order_details.lp_file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('pct_order_documents.is_ion_fraud_doc', 1);
+            $this->db->order_by('pct_order_documents.id', 'desc');
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $ion_fraud_document_lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $ion_fraud_document_lists,
+        );
+    }
+
     public function get_new_users_list($params)
     {
         $this->db->where('is_new_user', 1);

@@ -530,6 +530,20 @@ $(document).ready(function () {
         }
         $('#ProductType').val(selectedText);
     });
+
+    /** ION Report requirement status */
+    $('.ion-proceed').click(function () {
+        $('#ion-report-status').val(false);
+        $('.ion-result table > tbody').html('');
+        $('#searchFraudResultModal').modal('hide');
+    });
+
+    $('.ion-review-fraud').click(function () {
+        $('#ion-report-status').val(true);
+        $('.ion-result table > tbody').html('');
+        $('#searchFraudResultModal').modal('hide');
+    });
+    /** ION Report requirement status */
 });
 
 function autoComplete() {
@@ -720,10 +734,13 @@ function compileXmlUrls(response, report) {
 
 
 function get187() {
+    address = $('#property-search').val();
+    address = $.trim(address);
     $.ajax({
         url: base_url + 'home/getSearchResults?',
         data: {
-            requrl: reportData.report187
+            requrl: reportData.report187,
+            address: address
         },
         dataType: "xml",
         success: function (xml) {
@@ -735,7 +752,33 @@ function get187() {
         }
     });
 }
-
+var ionReportData = null;
+function getIonReport(address, state) {
+    ionReportData = null;
+    address = $('#property-search').val();
+    address = $.trim(address);
+    $.ajax({
+        url: base_url + 'getIonReport',
+        data: {
+            address: address,
+            state: state
+        },
+        type: "POST",
+        async: false,
+        success: function (data) {
+            let ionData = jQuery.parseJSON(data);
+            if (ionData.status) {
+                ionReportData = ionData.data;
+                displayIonReport();
+            }
+            console.log('getIonReport ==', ionReportData);
+            // parse187();
+        },
+        error: function () {
+            console.log("An error occurred while processing XML file.");
+        }
+    });
+}
 
 function parse187() {
     let propertyCharacteristics = $(reportXML).find("PropertyProfile").find("PropertyCharacteristics");
@@ -827,7 +870,11 @@ function parse187() {
     $("#searchResultModal").find(".apn-search-loader").addClass("hidden");
     $('#searchResultModal').modal('hide');
     var fipCode = $('#property-fips').val();
-
+    var ionReportFlag = $('#ion-report-flag').val();
+    if (ionReportFlag) {
+        console.log('in if ionReportFlag');
+        getIonReport(address, state);
+    }
     $.ajax({
         url: base_url + 'home/checkDuplicateOrder',
         type: "POST",
@@ -855,6 +902,40 @@ function parse187() {
 
 }
 
+function displayIonReport() {
+    $('#searchFraudResultModal').modal('show');
+    $('.ion-result table > tbody').html('');
+    var ownerNamePrimary = $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text();
+    var ownerNameSecondary = $(reportXML).find("PropertyProfile").find("SecondaryOwnerName").text();
+
+    if (ownerNamePrimary.indexOf(';') !== -1) {
+        ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf(";") + 1)
+        ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf(";"));
+    } else if (ownerNamePrimary.indexOf('&') !== -1) {
+        ownerNameSecondary = ownerNamePrimary.substr(ownerNamePrimary.indexOf("&") + 1)
+        ownerNamePrimary = ownerNamePrimary.slice(0, ownerNamePrimary.indexOf("&"));
+    }
+    ownerNamePrimary = $.trim(ownerNamePrimary);
+    ownerNameSecondary = $.trim(ownerNameSecondary);
+
+    if (ownerNamePrimary.toLowerCase() === ionReportData.Ownername.toLowerCase()) {
+        $('#ion-report-status').val(false);
+    } else {
+        $('.ion-search-propery').text(address);
+        // $(response).find('Locations').children('Location').each(function (i) {
+
+        $('.ion-result table > tbody').append('<tr><td><span class="black-primary-owner"></span></td><td><span class="ion-primary-owner"></span></td></tr>');
+
+        $('.ion-result table > tbody').find('tr').find('.black-primary-owner').text(ownerNamePrimary);
+        $('.ion-result table > tbody').find('tr').find('.ion-primary-owner').text(ionReportData.Ownername);
+
+        $('.ion-result table > tbody').append('<tr><td><span class="black-secondary-owner"></span></td><td><span class="ion-secondary-owner"></span></td></tr>');
+
+        $('.ion-result table > tbody').find('tr').find('.black-secondary-owner').text(ownerNameSecondary);
+        $('.ion-result table > tbody').find('tr').find('.ion-secondary-owner').text(ionReportData.Ownername2);
+        // $('.ion-result table > tbody').find('tr').eq(i).find('.result-address').text(address + ', ' + city);
+    }
+}
 
 function multipleResults(response) {
     $('#searchResultModal').modal('show');
