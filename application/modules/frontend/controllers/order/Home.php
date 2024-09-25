@@ -1220,7 +1220,8 @@ class Home extends MX_Controller
                     $this->ionfraud->generateIONReport($orderNumber, $ionProfileData);
                     $ionfilename = $orderNumber . '.pdf';
                     $this->uploadIONFraudDocsToResware($ionfilename, $file_id, $orderDetails);
-                    $ionFile[] = env('AWS_PATH') . "ion-fraud/" . $ionfilename;
+                    $ionFile[] = env('AWS_PATH') . "ion-fraud/report/" . $ionfilename;
+                    $ionFile[] = env('AWS_PATH') . "ion-fraud/letter/" . $ionfilename;
                 }
                 /** End Generate ION Fraud document */
 
@@ -1267,6 +1268,7 @@ class Home extends MX_Controller
                     'randomString' => $randomString,
                     'titlePointDetails' => $titlePointDetails,
                     'titlePointShutOff' => $titlePointShutOff,
+                    'IONFraudOwnerName' => $ionProfileData['Ownername'] ?? '',
                 );
 
                 $from_name = 'Pacific Coast Title Company';
@@ -1338,7 +1340,7 @@ class Home extends MX_Controller
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,
                     'to' => 'piyush.j@crestinfosystems.com',
-                    'subject' => 'ION Fraud report for order number: ' . $order_number,
+                    'subject' => 'ION Fraud report for order number: ' . $orderNumber,
                     'message' => json_encode($data),
                     'file' => json_encode($ionFile),
                     'cc' => json_encode($cc),
@@ -2012,8 +2014,8 @@ class Home extends MX_Controller
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
         if (env('AWS_ENABLE_FLAG') == 1) {
-            $fileSize = filesize(env('AWS_PATH') . "ion-fraud/" . $document_name);
-            $contents = file_get_contents(env('AWS_PATH') . "ion-fraud/" . $document_name);
+            $fileSize = filesize(env('AWS_PATH') . "ion-fraud/report/" . $document_name);
+            $contents = file_get_contents(env('AWS_PATH') . "ion-fraud/report/" . $document_name);
         } else {
             $fileSize = filesize(FCPATH . 'uploads/ion-fraud/' . $document_name);
             $contents = file_get_contents(base_url() . 'uploads/ion-fraud/' . $document_name);

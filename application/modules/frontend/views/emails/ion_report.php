@@ -1,203 +1,249 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,700&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
-    <style>
-        body{
-            font-family: 'Montserrat', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        *{
-            box-sizing: border-box;
-        }
-        .size_a4 { width: 8.3in; height: 11.7in; }
-        .size_letter { width: 8.5in; height: 11in; }
-        .size_executive { width: 7.25in; height: 10.5in; }
-        .pdf_page {
-            margin: 0 auto;
-            box-sizing: border-box;
-            background-color: #fff;
-            color: #333;
-            position: relative;
-        }
-        .pdf_header {
-            position: absolute;
-            top: 0;
-            height: .8in;
-            left: 0;
-            right: 0;
-            background:url(img/GenericBG.jpg) no-repeat;
-            height: 80px;
-            background-size: cover;
-        }
-        .logo_container{
-            float: left;
-            padding: 25px;
-        }
-        .logo_container img{
-            width: 240px;
-        }
-        .header_address {
-            float: right;
-            text-align: right;
-            color: #fff;
-            font-size: 14px;
-            padding: 23px 25px 14px 14px;
-        }
-        .pdf_footer {
-            position: absolute;
-            bottom: 0;
-            height: .5in;
-            left: 0;
-            right: 0;
-            padding-top: 10px;
-            border-top: 4px solid #333;
-            text-align: left;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .pdf_footer p{
-            margin: 0;
-        }
-        .page_text{
-            float: right;
-        }
-        .page_title{
-            float: left;
-        }
-        .pdf_body {
-            position: absolute;
-            top: 1in;
-            bottom: 1.2in;
-            left: 0;
-            right: 0;
-        }
-        .mb-10{
-            margin-bottom: 15px;
-        }
-        .title_divider{
-            height: 5px;
-            width: 120px;
-            background-color: #d35626;
-            margin: 25px 0;
-        }
-        .f20{
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        .body_text {
-            font-family: 'Lato', sans-serif;
-            line-height: 20px;
-            font-size: 14px;
-			padding-top:30px;
-        }
-        .sign_img{
-            max-width: 280px;
-        }
-        .h150{
-            height: 100px;
-        }
-        .red_text{
-            color: #d3353e;
-        }
-		.para {
-		padding-bottom:8px;
-		}
-		.para2 {
-		padding-bottom:8px;
-		font-weight:bold;
-		}
-		.para3 {
-		padding-bottom:8px;
-		}
-    </style>
+<!--[if (gte mso 9)|(IE)]>
+  <xml>
+    <o:OfficeDocumentSettings>
+    <o:AllowPNG/>
+    <o:PixelsPerInch>96</o:PixelsPerInch>
+  </o:OfficeDocumentSettings>
+</xml>
+<![endif]-->
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> <!-- So that mobile will display zoomed in -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- enable media queries for windows phone 8 -->
+<meta name="format-detection" content="telephone=no"> <!-- disable auto telephone linking in iOS -->
+<meta name="format-detection" content="date=no"> <!-- disable auto date linking in iOS -->
+<meta name="format-detection" content="address=no"> <!-- disable auto address linking in iOS -->
+<meta name="format-detection" content="email=no"> <!-- disable auto email linking in iOS -->
+<meta name="color-scheme" content="only">
+<title></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&amp;family=Rubik:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style type="text/css">
+/*Basics*/
+body {margin:0px!important;padding:0px!important;display:block!important;min-width:100%!important;width:100%!important;-webkit-text-size-adjust:none;}
+table {border-spacing:0;mso-table-lspace:0pt;mso-table-rspace:0pt;}
+table td {border-collapse:collapse;mso-line-height-rule:exactly;}
+td img {-ms-interpolation-mode:bicubic;width:auto;max-width:auto;height:auto;margin:auto;display:block!important;border:0px;}
+td p {margin:0;padding:0;}
+td div {margin:0;padding:0;}
+td a {text-decoration:none;color:inherit;}
+.client {color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:bold;}
+/*Outlook*/
+.ExternalClass {width:100%;}
+.ExternalClass,.ExternalClass p,.ExternalClass span,.ExternalClass font,.ExternalClass td,.ExternalClass div {line-height:inherit;}
+.ReadMsgBody {width:100%;background-color:#ffffff;}
+/* iOS BLUE LINKS */
+a[x-apple-data-detectors] {color:inherit!important;text-decoration:none!important;font-size:inherit!important;font-family:inherit!important;font-weight:inherit!important;line-height:inherit!important;}
+/*Gmail blue links*/
+u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:inherit;font-weight:inherit;line-height:inherit;}
+/*Buttons fix*/
+.undoreset a, .undoreset a:hover {text-decoration:none!important;}
+.yshortcuts a {border-bottom:none!important;}
+.ios-footer a {color:#aaaaaa!important;text-decoration:none;}
+/*Responsive-Tablet*/
+@media only screen and (max-width:799px) and (min-width:601px) {
+  .outer-table.row {width:640px!important;max-width:640px!important;}
+  .inner-table.row {width:580px!important;max-width:580px!important;}
+.client {color:#f26a2a; margin-top:10px; margin-bottom:10px;font-weight:bold;}
+}
+/*Responsive-Mobile*/
+@media only screen and (max-width:600px) and (min-width:320px) {
+  table.row {width:100%!important;max-width:100%!important;}
+  td.row {width:100%!important;max-width:100%!important;}
+  .img-responsive img {width:100%!important;max-width:100%!important;height:auto!important;margin:auto;}
+  .center-float {float:none!important;margin:auto!important;}
+  .center-text{text-align:center!important;}
+  .left-text{text-align:left!important;}
+  .container-padding {width:100%!important;padding-left:15px!important;padding-right:15px!important;}
+  .container-padding10 {width:100%!important;padding-left:10px!important;padding-right:10px!important;}
+  .hide-mobile {display:none!important;}
+  .menu-container {text-align:center!important;}
+  .autoheight {height:auto!important;}
+  .m-padding-10 {margin:10px 0!important;}
+  .m-padding-15 {margin:15px 0!important;}
+  .m-padding-20 {margin:20px 0!important;}
+  .m-padding-30 {margin:30px 0!important;}
+  .m-padding-40 {margin:40px 0!important;}
+  .m-padding-50 {margin:50px 0!important;}
+  .m-padding-60 {margin:60px 0!important;}
+  .m-padding-top10 {margin:30px 0 0 0!important;}
+  .m-padding-top15 {margin:15px 0 0 0!important;}
+  .m-padding-top20 {margin:20px 0 0 0!important;}
+  .m-padding-top30 {margin:30px 0 0 0!important;}
+  .m-padding-top40 {margin:40px 0 0 0!important;}
+  .m-padding-top50 {margin:50px 0 0 0!important;}
+  .m-padding-top60 {margin:60px 0 0 0!important;}
+  .m-height10 {font-size:10px!important;line-height:10px!important;height:10px!important;}
+  .m-height15 {font-size:15px!important;line-height:15px!important;height:15px!important;}
+  .m-height20 {font-size:20px!important;line-height:20px!important;height:20px!important;}
+  .m-height25 {font-size:25px!important;line-height:25px!important;height:25px!important;}
+  .m-height30 {font-size:30px!important;line-height:30px!important;height:30px!important;}
+  .radius6 {border-radius:6px!important;}
+  .fade-white {background-color:rgba(255, 255, 255, 0.8)!important;}
+  .rwd-on-mobile {display:inline-block!important;padding:5px!important;}
+  .center-on-mobile {text-align:center!important;}
+  .rwd-col {width:100%!important;max-width:100%!important;display:inline-block!important;}
+.client {color:#f26a2a; margin-top:10px; margin-bottom:10px;font-weight:bold;}
+}
+</style>
+
 </head>
-<body>
-    <div class="page_container">
-        <div class="pdf_page size_letter">
-            <div class="pdf_header">
-                <div class="logo_container">
-                    <img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/3107dbdd-031c-af29-e364-b5c1baf4c82c.png" alt="">
-                </div>
-                <div class="header_address">
-                    Pacific Coast Title Company<br>
-                    (866) 724-1050 || www.pct.com
-                </div>
-            </div>
-            <div class="pdf_body">
-                <div class="body_text">
-                    <p class="para"><?php echo date('Y-m-d'); ?></p>
+<body style="margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;width:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;" bgcolor="#f2f2f2">
+<span class="preheader-text" style="color:transparent;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;visibility:hidden;width:0;display:none;mso-hide:all;"></span>
+<!-- Preheader white space hack -->
+<div style="display:none;max-height:0px;overflow:hidden;">
+‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;
+</div>
 
-                    <p class="para2">Re: <?php echo $PropertyAddress; ?></p>
-                    <div class="mb-10"></div>
-					<p class="para">Dear, <?php echo $PrimaryOwner; ?>,</p>
-					<div class="mb-10"></div>
-                   <div class="mb-10"></div>
-					 <p class="para">
-						We recently received a title order for the property located at
-						<b><?php echo $PropertyAddress; ?></b> The title order was
-						opened under the name of John Doe, but upon running our PCT
-						Protect search, our databases reflect that the registered owner
-						of the property is Jane Smith.
-					</p>
+<table border="0" align="center" cellpadding="0" cellspacing="0" width="100%" style="width:100%;max-width:100%;">
+  <tbody><tr><!-- Outer Table -->
+    <td align="center" bgcolor="#f2f2f2">
+                        <table data-outer-table="" border="0" align="center" cellpadding="0" cellspacing="0" class="outer-table row" role="presentation" width="640" style="width:640px;max-width:640px;">
+  <!-- blue-logo -->
+  <tbody><tr>
+    <td align="center" bgcolor="#f2f2f2" class="container-padding">
+<!-- Content -->
+<table border="0" align="center" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="width:100%;max-width:100%;">
+  <tbody><tr>
+    <td height="20" style="font-size:20px;line-height:20px;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" class="center-text">
+      <img style="width:340px;border:0px;display:inline!important;" src="https://gallery.mailchimp.com/3f123598483b787fa180fff0f/images/8cee9f1d-8c9f-4e75-b5b2-f1356f42fff8.png" width="340" border="0" alt="logo">
+    </td>
+  </tr>
+  <tr>
+    <td height="20" style="font-size:20px;line-height:20px;">&nbsp;</td>
+  </tr>
+</tbody></table>
+<!-- Content -->
+    </td>
+  </tr>
+  <!-- blue-logo -->
+</tbody></table><table data-outer-table="" border="0" align="center" cellpadding="0" cellspacing="0" class="outer-table row" width="640" style="width:640px;max-width:640px;">
+  <!-- blue-header -->
+  <tbody><tr>
+    <td align="center" class="img-responsive container-padding">
+      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/7169fa45-bd5d-9bd3-4140-c12adfa34cfb.jpg" border="0" alt="picture">
+    </td>
+  </tr>
+  <!-- blue-header -->
+</tbody></table><table data-outer-table="" border="0" align="center" cellpadding="0" cellspacing="0" class="outer-table row" role="presentation" width="640" style="width:640px;max-width:640px;">
+  <!-- blue-preface-7 -->
+  <tbody><tr>
+    <td align="center" bgcolor="#FFFFFF" class="container-padding">
+<table data-inner-table="" border="0" align="center" cellpadding="0" cellspacing="0" role="presentation" class="inner-table row" width="580" style="width:580px;max-width:580px;">
+  <tbody><tr>
+    <td height="40" style="font-size:40px;line-height:40px;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" bgcolor="#FFFFFF">
+      <!-- content -->
+      <table border="0" align="center" cellpadding="0" cellspacing="0" role="presentation" width="100%" style="width:100%;max-width:100%;">
+        <tbody>
+		<tr>
+          <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:24px;line-height:36px;font-weight:400;font-style:normal;color:#f26a2a;text-decoration:none;letter-spacing:1px;">
 
-					<p>
-						We are committed to ensuring the safety and security of property
-						transactions. As part of our dedication to protecting homeowners
-						from potential fraud, we have implemented an enhanced security
-						measure known as PCT Protect. This system is designed to verify
-						the identity of sellers involved in any real estate transaction.
-					</p>
+                <div mc:edit="mcrvl959r6t" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">Action Required</p></div>
 
-					<p class="para">
-						When a title order is opened, PCT Protect uses data from a variety
-						of trusted industry sources to verify that the name of the proposed
-						seller matches the name listed in public and proprietary databases.
-						This process allows us to ensure that the person initiating the sale
-						has the legal authority to do so.
-					</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:48px;line-height:54px;font-weight:900;font-style:normal;color:#222222;text-decoration:none;letter-spacing:0px;">
+                <div mc:edit="mczyhxraxal" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">PCT Fraud Detect</p></div>
+          </td>
+        </tr>
+		<tr>
+          <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:24px;padding-top:10px;line-height:25px;font-weight:400;font-style:normal;color:#222222;text-decoration:none;letter-spacing:0px;">
 
-					<p class="para">
-						We found a discrepancy regarding your property located at
-						<b><?php echo $PropertyAddress; ?></b>, and we are requesting that you,
-						Jane Smith, contact us directly to confirm whether you are, in fact,
-						attempting to sell this property. If you are not currently selling your
-						property, this could indicate an unauthorized attempt to sell or transfer
-						ownership of your home, which requires immediate attention to ensure
-						your security.
-					</p>
+                <div mc:edit="mcrvl954f9r6t" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">We need your help to clarify a descrepency<br>  that has been found.</p></div>
 
-					<p class="para">
-						Please reach out to our team at [Contact Information] at your earliest
-						convenience to verify the situation. We will not proceed with the
-						transaction until we have confirmed the details with you directly.
-					</p>
+          </td>
+        </tr>
+		  <tr>
+		  <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;font-weight:400;font-style:normal;color:#000000;text-decoration:none;letter-spacing:0.5px;">
+                <div mc:edit="mcrvl959r6tju" style="margin: 0px; padding: 0px;"><p style="margin-top:10px; padding:0px;"><br>We recently received a title order for the property located at</p>
+				<p class="client"><?php echo $FullProperty; ?></p>
 
-					<p class="para">
-						Thank you for choosing Pacific Coast Title. We are proud to be your
-						partner in protecting your property and ensuring a smooth, secure
-						transaction.
-					</p>
+				<p style="margin:0px; padding:0px;">The title order was opened under the name of</p><p class="client"><?php echo $PrimaryOwner; ?></p>
+				<p style="margin:0px; padding:0px;">but upon running our PCT Protect search, our databases reflect that the registered owner of the property is</p>
+				<p class="client"><?php echo $Ownername; ?></p>
+				<p style="margin:0px; padding:0px;">We will be sending the attached letter via certified mail to the situs address. If you have the contact information of the proposed seller please email that to us so we can verify their idenitify. The issuance of a title policy will not be done until the sellers identity has been verified.<br><br>We are committed to ensuring the safety and security of property transactions. As part of our dedication to protecting homeowners from potential fraud, we have implemented an enhanced security measure known as PCT Protect.<br><br>
+
+</p></div>
+          </td>
+        </tr>
+
+		<tr>
+		<td>
+		<p style="margin: 0px; padding: 0px;"><br></p><p style="margin: 0px; padding: 0px;"><br></p>
+		</td>
+		</tr>
+
+		 <tr>
+
+    <td align="center">
+      <!-- Button -->
+      <table border="0" cellspacing="0" cellpadding="0" role="presentation" align="center" class="center-float">
+        <tbody><tr>
+          <td align="center" bgcolor="#ffffff" style="border-radius:0px;">
+      <!--[if (gte mso 9)|(IE)]>
+        <table border="0" cellpadding="0" cellspacing="0" align="center">
+          <tr>
+            <td align="center" width="35"></td>
+            <td align="center" height="50" style="height:50px;">
+            <![endif]-->
+
+                <a href="#" mc:edit="mct3nxlesjf" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;font-weight:700;font-style:normal;color:#FFFFFF;text-decoration:none;letter-spacing:0px;padding:15px 35px 15px 35px;display:inline-block; background:#ffffff; border: 2px solid #03374f; color:#03374f;"><span>VIEW LETTER</span></a>
+				 <a href="#" mc:edit="mct3nxlesjf" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;font-weight:700;font-style:normal;color:#FFFFFF;text-decoration:none;letter-spacing:0px;padding:15px 35px 15px 35px;display:inline-block; background:#ffffff; border: 2px solid #03374f; color:#03374f;"><span>VIEW FRAUD REPORT</span></a>
+
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            <td align="center" width="35"></td>
+          </tr>
+        </table>
+      <![endif]-->
+          </td>
+        </tr>
+      </tbody></table>
+      <!-- Buttons -->
+    </td>
+  </tr>
 
 
-                    At Pacific Coast Title, your security is our priority. We are committed to upholding the highest standards of accuracy and diligence throughout the title process. Should you have any questions or require further information, please don’t hesitate to contact our team at <b>(866) 724-1050</b>.<div class="mb-10"></div>
 
-                    Thank you for choosing Pacific Coast Title. We are proud to be your partner in protecting your property and ensuring a smooth, secure transaction.<div class="mb-10"></div>
+      </tbody></table>
+      <!-- content -->
+    </td>
+  </tr>
+  <tr>
+    <td height="20" style="font-size:20px;line-height:40px;">&nbsp;</td>
+  </tr>
+</tbody></table>
+    </td>
+  </tr>
+  <!-- blue-preface-7 -->
+</tbody></table><table data-outer-table="" border="0" align="center" cellpadding="0" cellspacing="0" class="outer-table row" role="presentation" width="640" style="width:640px;max-width:640px;">
+  <!-- blue-cta -->
+  <tbody><tr>
+    <td height="40" style="font-size:20px;line-height:40px;">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center">
+      <!-- Button -->
 
-                    Sincerely,<div class="mb-10"></div>
-
-                    [Your Name]  <br>
-                    [Your Title]  <br>
-                    Pacific Coast Title Company  <br>
-                    [Contact Information]
-                </div>
-            </div>
-            <!-- <div class="pdf_footer">
-                <p class="page_title">Listing Prelim Report</p>
-                <p class="page_text">Welcome</p>
-            </div> -->
-        </div>
-    </div>
+      <!-- Buttons -->
+    </td>
+  </tr>
+  <tr>
+    <td height="40" style="font-size:40px;line-height:40px;">&nbsp;</td>
+  </tr>
+  <!-- blue-cta -->
+</tbody></table></td>
+  </tr><!-- Outer-Table -->
+</tbody></table>
 </body>
+</html>

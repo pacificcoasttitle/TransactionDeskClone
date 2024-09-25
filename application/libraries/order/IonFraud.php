@@ -93,28 +93,34 @@ class IonFraud
     {
         $this->CI->load->library('snappy_pdf');
         $this->CI->snappy_pdf->pdf->setOption('zoom', '1');
-        $html = $this->CI->load->view('report/ion_fraud', $ionProfileData, true);
+        $html = $this->CI->load->view('report/ion_fraud_report', $ionProfileData, true);
 
         $document_name = $orderNumber . '.pdf';
-        if (!is_dir(FCPATH . 'uploads/ion-fraud')) {
-            mkdir(FCPATH . 'uploads/ion-fraud', 0777, true);
+        if (!is_dir(FCPATH . 'uploads/ion-fraud/report')) {
+            mkdir(FCPATH . 'uploads/ion-fraud/report', 0777, true);
         }
-        // if (!(is_writable(FCPATH.'uploads/sales-rep/pdf'))) { tst
-        chmod(FCPATH . 'uploads/ion-fraud', 0777);
-        // }
-        $dir_name = FCPATH . 'uploads/ion-fraud/';
+
+        chmod(FCPATH . 'uploads/ion-fraud/report', 0777);
+
+        $dir_name = FCPATH . 'uploads/ion-fraud/report/';
         $dir_name = str_replace('\\', '/', $dir_name);
-        // echo $dir_name.$document_name;die;
+        $this->CI->snappy_pdf->pdf->generateFromHtml($html, $dir_name . $document_name);
+        $response = $this->CI->order->uploadDocumentOnAwsS3($document_name, 'ion-fraud/report');
+
+        if (!is_dir(FCPATH . 'uploads/ion-fraud/letter')) {
+            mkdir(FCPATH . 'uploads/ion-fraud/letter', 0777, true);
+        }
+
+        $html = $this->CI->load->view('report/ion_fraud_letter', $ionProfileData, true);
+        chmod(FCPATH . 'uploads/ion-fraud-report', 0777);
+
+        $dir_name = FCPATH . 'uploads/ion-fraud/letter/';
+        $dir_name = str_replace('\\', '/', $dir_name);
         $this->CI->snappy_pdf->pdf->generateFromHtml($html, $dir_name . $document_name);
 
-        $response = $this->CI->order->uploadDocumentOnAwsS3($document_name, 'ion-fraud');
-        if ($response) {
-            //report_url
-            // if (is_file($dir_name . $document_name)) {
-            //     unlink($dir_name . $document_name);
-            // }
+        $response = $this->CI->order->uploadDocumentOnAwsS3($document_name, 'ion-fraud/letter');
+        // echo "leter hello";die;
 
-        }
     }
 
     public function xml2array($contents, $get_attributes = 1, $priority = 'tag')
