@@ -92,7 +92,7 @@ class IonFraud
     public function generateIONReport($orderNumber, $ionProfileData)
     {
         $this->CI->load->library('snappy_pdf');
-        $this->CI->snappy_pdf->pdf->setOption('zoom', '1');
+        // $this->CI->snappy_pdf->pdf->setOption('zoom', '1');
         $html = $this->CI->load->view('report/ion_fraud_report', $ionProfileData, true);
 
         $document_name = $orderNumber . '.pdf';
