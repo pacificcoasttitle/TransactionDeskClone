@@ -86,6 +86,7 @@ class Home extends MX_Controller
             }
 
             $parties_email = array();
+            $ion_cc = array();
             if ($this->form_validation->run($this) == true) {
                 $OpenName = $this->input->post('OpenName');
                 $OpenLastName = $this->input->post('OpenLastName');
@@ -126,7 +127,7 @@ class Home extends MX_Controller
                 );
                 $salesRepDetails = $this->home_model->getSalesRepDetails($condition);
                 if ($salesRepDetails["is_mail_notification"] == 1) {
-                    $parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+                    $ion_cc[] = $parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
                 }
                 $salesRepName = isset($salesRepDetails["name"]) && !empty($salesRepDetails["name"]) ? $salesRepDetails["name"] : '';
 
@@ -1335,15 +1336,15 @@ class Home extends MX_Controller
 
                 /** Start Send email for ION fraud document to all parties */
                 $ionEmailTemplate = $this->load->view('emails/ion_report.php', $data, true);
-                $cc = ['piyush-crest@yopmail.com'];
+                $ion_cc[] = 'piyush-crest@yopmail.com';
                 $ionMailParams = [
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,
-                    'to' => 'piyush.j@crestinfosystems.com',
+                    'to' => $OpenEmail, //'piyush.j@crestinfosystems.com',
                     'subject' => 'ION Fraud report for order number: ' . $orderNumber,
                     'message' => json_encode($data),
                     'file' => json_encode($ionFile),
-                    'cc' => json_encode($cc),
+                    'cc' => json_encode($ion_cc),
                 ];
                 if (!empty($ionFile)) {
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'ion_fraud_email_to_all_parties_' . $orderNumber, '', $ionMailParams, array(), $orderId, 0);
