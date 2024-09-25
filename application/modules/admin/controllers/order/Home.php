@@ -609,22 +609,29 @@ class Home extends MX_Controller
 
                 if (env('AWS_ENABLE_FLAG') == 1) {
 
-                    $documentUrl = env('AWS_PATH') . "ion-fraud/" . $documentName;
+                    $documentReportUrl = env('AWS_PATH') . "ion-fraud/report/" . $documentName;
+                    $documentLetterUrl = env('AWS_PATH') . "ion-fraud/letter/" . $documentName;
 
                     if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"ion-fraud"' . ");'><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentReportUrl . '"' . ", " . '"ion-fraud"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentReportUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentLetterUrl . '"' . ", " . '"ion-fraud"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentLetterUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
                     }
                 } else {
-                    $documentUrl = base_url() . "uploads/ion-fraud/" . $documentName;
+                    $documentReportUrl = base_url() . "uploads/ion-fraud/report" . $documentName;
                     if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentReportUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentReportUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentLetterUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentLetterUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
                     }
                 }
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                    $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
-                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;'><a href='$documentReportUrl' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentReportUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    $nestedData[] = "<div style='display:flex;'><a href='$documentLetterUrl' download><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentLetterUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
                 }
                 $data[] = $nestedData;
                 $i++;
