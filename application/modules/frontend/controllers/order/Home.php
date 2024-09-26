@@ -1219,10 +1219,11 @@ class Home extends MX_Controller
                 if (!empty($ionFraudRes) && !empty($ionFraudRes['Property_Profile'])) {
                     $ionProfileData['black_knight_owner_name'] = $PrimaryOwner;
                     $this->ionfraud->generateIONReport($orderNumber, $ionProfileData);
-                    $ionfilename = $orderNumber . '.pdf';
-                    $this->uploadIONFraudDocsToResware($ionfilename, $file_id, $orderDetails);
-                    $ionFile[] = env('AWS_PATH') . "ion-fraud/report/" . $ionfilename;
-                    $ionFile[] = env('AWS_PATH') . "ion-fraud/letter/" . $ionfilename;
+                    $ionfraudfilename = $orderNumber . '-Fraud.pdf';
+                    $ionletterfilename = $orderNumber . '-Letter.pdf';
+                    $this->uploadIONFraudDocsToResware($ionfraudfilename, $file_id, $orderDetails);
+                    $ionFile[] = env('AWS_PATH') . "ion-fraud/report/" . $ionfraudfilename;
+                    $ionFile[] = env('AWS_PATH') . "ion-fraud/letter/" . $ionletterfilename;
                 }
                 /** End Generate ION Fraud document */
 
@@ -1340,8 +1341,7 @@ class Home extends MX_Controller
                 $ionMailParams = [
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,
-                    'to' => $OpenEmail, //'piyush.j@crestinfosystems.com',
-                    'subject' => 'ION Fraud report for order number: ' . $orderNumber,
+                    'subject' => 'PCT-Fraud Review',
                     'message' => json_encode($data),
                     'file' => json_encode($ionFile),
                     'cc' => json_encode($ion_cc),

@@ -95,7 +95,7 @@ class IonFraud
         // $this->CI->snappy_pdf->pdf->setOption('zoom', '1');
         $html = $this->CI->load->view('report/ion_fraud_report', $ionProfileData, true);
 
-        $document_name = $orderNumber . '.pdf';
+        $document_name = $orderNumber . '-Fraud.pdf';
         if (!is_dir(FCPATH . 'uploads/ion-fraud/report')) {
             mkdir(FCPATH . 'uploads/ion-fraud/report', 0777, true);
         }
@@ -107,6 +107,7 @@ class IonFraud
         $this->CI->snappy_pdf->pdf->generateFromHtml($html, $dir_name . $document_name);
         $response = $this->CI->order->uploadDocumentOnAwsS3($document_name, 'ion-fraud/report');
 
+        $document_name = $orderNumber . '-Letter.pdf';
         if (!is_dir(FCPATH . 'uploads/ion-fraud/letter')) {
             mkdir(FCPATH . 'uploads/ion-fraud/letter', 0777, true);
         }
