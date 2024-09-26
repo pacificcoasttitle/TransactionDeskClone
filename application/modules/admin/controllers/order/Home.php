@@ -610,7 +610,7 @@ class Home extends MX_Controller
                 if (env('AWS_ENABLE_FLAG') == 1) {
 
                     $documentReportUrl = env('AWS_PATH') . "ion-fraud/report/" . $documentName;
-                    $documentLetterUrl = env('AWS_PATH') . "ion-fraud/letter/" . $documentName;
+                    $documentLetterUrl = env('AWS_PATH') . "ion-fraud/letter/" . $value['lp_file_number'] . '-Letter.pdf';
 
                     if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                         $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentReportUrl . '"' . ", " . '"ion-fraud"' . ");'><i class='fas fa-fw fa-download'></i></a>
