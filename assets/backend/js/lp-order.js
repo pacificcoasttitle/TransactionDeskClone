@@ -126,14 +126,12 @@ jQuery(document).ready(function ($) {
             data: formData,
             success: function (response) {
                 // Handle success (response from server)
-                alert('Form submitted successfully!');
                 let file_id = $('#ion_fraud_note_form #file_id').val();
                 sendOrderToResware(file_id)
                 console.log(response);
             },
             error: function (xhr, status, error) {
                 // Handle error
-                alert('Form submission failed.');
                 console.log(error);
             }
         });
