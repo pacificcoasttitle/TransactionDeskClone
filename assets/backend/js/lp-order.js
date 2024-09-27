@@ -116,7 +116,6 @@ jQuery(document).ready(function ($) {
     $('#ion_fraud_note_form').on('submit', function (e) {
         e.preventDefault(); // Prevent the default form submission
         $('#ionFraudSubmit').prop('disabled', true);
-        // return false;
 
         var formData = $(this).serialize();
 
@@ -127,7 +126,10 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 // Handle success (response from server)
                 let file_id = $('#ion_fraud_note_form #file_id').val();
-                sendOrderToResware(file_id)
+                sendOrderToResware(file_id);
+                $('#ion_fraud_note').modal('hide');
+                $("#note").val(null);
+                $("#note_subject").val(null);
                 console.log(response);
             },
             error: function (xhr, status, error) {
