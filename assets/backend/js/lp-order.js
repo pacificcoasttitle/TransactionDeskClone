@@ -130,7 +130,6 @@ jQuery(document).ready(function ($) {
                 $('#ion_fraud_note').modal('hide');
                 $("#note").val(null);
                 $("#note_subject").val(null);
-                console.log(response);
             },
             error: function (xhr, status, error) {
                 // Handle error
