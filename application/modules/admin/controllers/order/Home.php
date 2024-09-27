@@ -4591,7 +4591,7 @@ class Home extends MX_Controller
         );
         $companyData = $this->home_model->get_company_rows($con);
         // echo "<pre>";
-        // print_r($place_order);die;
+        // print_r($companyData);die;
         $order_data = json_encode($place_order);
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
@@ -4601,7 +4601,6 @@ class Home extends MX_Controller
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order_from_admin', env('RESWARE_ORDER_API') . 'orders', $order_data, $result, 0, $logid);
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, true);
-
             if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
                 $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
                 $response = array('status' => 'error', 'message' => $message);
@@ -4631,7 +4630,7 @@ class Home extends MX_Controller
                     'request' => $order_data,
                     'response' => $result,
                     'file_id' => $file_id,
-                    'file_number' => $file_number,
+                    'file_number' => $fileNumber,
                     'status' => $response['ResponseStatus'],
                     'created_at' => date("Y-m-d H:i:s"),
                 );
@@ -7238,7 +7237,7 @@ class Home extends MX_Controller
 
             $pageno = ($params['start'] / $params['length']) + 1;
             $logs_list = $this->home_model->getIonFraudListingLogs($params);
-            
+
             $json_data['draw'] = intval($params['draw']);
         } else {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
