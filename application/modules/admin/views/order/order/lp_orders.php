@@ -1,13 +1,13 @@
 <?php
-    $salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
-    $product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
-    $sales_rep = json_encode($salesRep);
-    $master_users = json_encode($master_users);
+$salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
+$product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
+$sales_rep = json_encode($salesRep);
+$master_users = json_encode($master_users);
 
-    $userdata = $this->session->userdata('admin');
-	$roleList = $this->common->getRoleList();
-	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
-	$roleName = $roleList[$role_id];
+$userdata = $this->session->userdata('admin');
+$roleList = $this->common->getRoleList();
+$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+$roleName = $roleList[$role_id];
 ?>
 <script type="text/javascript">
     var lp_sales_rep = '<?php echo $sales_rep; ?>';
@@ -48,15 +48,15 @@
             <h1 class="h3 text-gray-800">Lp Orders</h1>
         </div>
         <div class="col-sm-6">
-            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+            <?php if (!in_array($roleName, ['CS Admin'])): ?>
                 <a href="javascript:void(0);" data-export-type="csv" onclick="exportLPOrders();" id="export-orders-data"
                     class="btn btn-success btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
-                    <span class="text"> Export </span> 
+                    <span class="text"> Export </span>
                 </a>
-            <?php endif; ?>
+            <?php endif;?>
         </div>
     </div>
     <div class="card shadow mb-4">
@@ -71,16 +71,16 @@
 
 
         <div class="card-body">
-            <?php if (!empty($success)) { ?>
+            <?php if (!empty($success)) {?>
                 <div id="" class="w-100 alert alert-success alert-dismissible">
                     <?php echo $success; ?>
                 </div>
             <?php }
-            if (!empty($errors)) { ?>
+if (!empty($errors)) {?>
                 <div id="" class="w-100 alert alert-danger alert-dismissible">
                     <?php echo $errors; ?>
                 </div>
-            <?php } ?>
+            <?php }?>
             <div id="lp_order_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;">
             </div>
             <div id="lp_order_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
@@ -174,7 +174,7 @@
                                     <div class="toclone">
                                         <div class="spacer-b10">
                                             <label class="field" id="instrument_number_container">
-                                                
+
                                             </label>
                                         </div>
                                     </div>
@@ -392,7 +392,7 @@
                                             </div>
                                         </div>
 
-                                        
+
                                         <input type="hidden" name="client_id" id="client_id" value="">
                                         <input type="hidden" name="client_file_id" id="client_file_id" value="">
 
@@ -423,4 +423,71 @@
             </form>
         </div>
     </div>
+</div>
+
+<div class="modal fade" width="500px" id="ion_fraud_note" tabindex="-1" role="dialog"
+	aria-labelledby="Create a Note" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="<?php echo base_url(); ?>order/admin/add-ion-fraud-notes" enctype="multipart/form-data" id="ion_fraud_note_form">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card shadow">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary" >Add a Note</h6>
+							</div>
+							<div class="card-body">
+								<div class="smart-forms smart-container">
+									<div class="modal-body search-result">
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-12">
+													<label for="note_subject" class="col-form-label">Subject</label>
+													<input type="text" name="note_subject" id="note_subject" class="form-control gui-input ui-autocomplete-input" placeholder="Subject" required="">
+													<input type="hidden" name="file_id" id="file_id" class="form-control gui-input ui-autocomplete-input" required="">
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-12">
+													<label for="note" class="col-form-label">Note</label>
+													<textarea name="note" id="note" class="gui-input form-control" rows="4" placeholder="Note" autocomplete="off" required=""></textarea>
+												</div>
+											</div>
+										</div>
+
+										<!-- <div class="form-group">
+                                            <label for="recorded_date" class="col-form-label">Upload File</label>
+                                            <input required="" name="file_upload" type="file" id="file_upload" class="form-control" accept="application/pdf">
+                                        </div>
+                                        <input type="hidden" name="upload_file_id" id="upload_file_id" value="">
+                                        <input type="hidden" name="document_name" id="document_name" value=""> -->
+									</div>
+
+									<div class="form-footer" style="padding: 0px 1rem !important;">
+										<button type="submit" id="ionFraudSubmit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+											<span class="icon text-white-50">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text">Submit</span>
+										</button>
+
+										<button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+											<span class="icon text-white-50">
+												<i class="fas fa-ban"></i>
+											</span>
+											<span class="text">Cancel</span>
+										</button>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

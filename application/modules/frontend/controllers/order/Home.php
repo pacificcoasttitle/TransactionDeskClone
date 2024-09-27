@@ -119,7 +119,8 @@ class Home extends MX_Controller
                 $PrimaryName = array_slice($SplitName, 0, -1);
                 $OwnerFirstName = implode(" ", $PrimaryName);
                 $SecondaryOwner = $this->input->post('SecondaryOwner');
-                $ionReportStatusRequired = $this->input->post('ion-report-status');
+                $ionReportStatusRequired = $this->input->post('ion-report-status'); // Button Proceed or Report Fraud Status
+                $ionFraudFoundStatus = $this->input->post('ion-fraud-status'); // ION Fraud found status
 
                 $SalesRep = $this->input->post('SalesRep');
                 $condition = array(
@@ -1043,7 +1044,8 @@ class Home extends MX_Controller
                     'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
                     'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
                     'status' => 1,
-                    'ion_fraud_status' => ($ionReportStatusRequired) ? 'successful' : 'unsuccessful',
+                    'ion_fraud_proceed_status' => ($ionReportStatusRequired == 'true') ? 'review fraud' : 'proceed',
+                    'ion_fraud_required_status' => ($ionFraudFoundStatus == 'true') ? 'yes' : 'no',
                 );
 
                 $orderId = $this->home_model->insert($orderData, 'order_details');
@@ -1341,6 +1343,8 @@ class Home extends MX_Controller
                 $ionMailParams = [
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,
+                    'to' => $OpenEmail,
+                    //'to' => 'piyush.j@crestinfosystems.com',
                     'subject' => 'PCT-Fraud Review',
                     'message' => json_encode($data),
                     'file' => json_encode($ionFile),

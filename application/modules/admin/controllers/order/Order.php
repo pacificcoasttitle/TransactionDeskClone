@@ -652,15 +652,26 @@ class Order extends MX_Controller
                                 Change Client
                             </button>
                         </a>
-                    </li>
-                    <li>
-                        <a href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'>
-                            <button class='btn btn-grad-2a button-color' type='button'>
-                                <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
-                                Send Order Resware
-                            </button>
-                        </a>
                     </li>";
+                if (!empty($value['ion_fraud_proceed_status']) && $value['ion_fraud_proceed_status'] == 'review fraud') {
+                    $action .= "<li>
+                            <a href='#' onclick='addIonFraudNotes($file_id);' title ='Resware Sync'>
+                                <button class='btn btn-grad-2a button-color' type='button'>
+                                    <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
+                                    Send Order Resware
+                                </button>
+                            </a>
+                        </li>";
+                } else {
+                    $action .= "<li>
+                            <a href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'>
+                                <button class='btn btn-grad-2a button-color' type='button'>
+                                    <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
+                                    Send Order Resware
+                                </button>
+                            </a>
+                        </li>";
+                }
             }
 
             $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $value['document_name'];

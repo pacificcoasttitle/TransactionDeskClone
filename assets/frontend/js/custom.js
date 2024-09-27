@@ -539,7 +539,7 @@ $(document).ready(function () {
     });
 
     $('.ion-review-fraud').click(function () {
-        $('#ion-report-status').val(true);
+        $('#ion-report-status').val(true); // ION Fraud report 
         $('.ion-result table > tbody').html('');
         $('#searchFraudResultModal').modal('hide');
     });
@@ -698,7 +698,6 @@ function fetchReports(repNum, request, dataObj, neighbourhood, retry) {
                             $('#random_number').val(random_number);
                         }
                         var unit_no = 1;
-                        console.log('service called');
                         createService4(fipCode, address, city, unit_no, apn, random_number);
                         createService3(apn, state, county, random_number);
                     }
@@ -771,7 +770,6 @@ function getIonReport(address, state) {
                 ionReportData = ionData.data;
                 displayIonReport();
             }
-            console.log('getIonReport ==', ionReportData);
             // parse187();
         },
         error: function () {
@@ -872,7 +870,6 @@ function parse187() {
     var fipCode = $('#property-fips').val();
     var ionReportFlag = $('#ion-report-flag').val();
     if (ionReportFlag) {
-        console.log('in if ionReportFlag');
         getIonReport(address, state);
     }
     $.ajax({
@@ -919,8 +916,10 @@ function displayIonReport() {
     ownerNameSecondary = $.trim(ownerNameSecondary);
 
     if (ownerNamePrimary.toLowerCase() === ionReportData.Ownername.toLowerCase()) {
-        $('#ion-report-status').val(false);
+        $('#ion-report-status').val(false); // button proceed
+        $('#ion-fraud-status').val(false);
     } else {
+        $('#ion-fraud-status').val(true); // ION Fraud found
         $('.ion-search-propery').text(address);
         // $(response).find('Locations').children('Location').each(function (i) {
 

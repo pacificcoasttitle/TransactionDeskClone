@@ -3,7 +3,7 @@ declare (strict_types = 1);
 
 use Phinx\Migration\AbstractMigration;
 
-final class AddIonFraudStatusForOrderDetails extends AbstractMigration
+final class AddChangeFieldForIonFraudProcessStatus extends AbstractMigration
 {
     /**
      * Change Method.
@@ -19,7 +19,7 @@ final class AddIonFraudStatusForOrderDetails extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('order_details')
-            ->addColumn('ion_fraud_status', 'enum', ['values' => ['successful', 'unsuccessful'], 'after' => 'lp_report_status', 'default' => 'successful'])
+            ->addColumn('ion_fraud_proceed_status', 'enum', ['null' => true, 'values' => ['proceed', 'review fraud'], 'after' => 'lp_report_status'])
             ->update();
     }
 }

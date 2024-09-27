@@ -112,6 +112,32 @@ jQuery(document).ready(function ($) {
             }
         }
     });
+
+    $('#ion_fraud_note_form').on('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+        $('#ionFraudSubmit').prop('disabled', true);
+        // return false;
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: base_url + 'order/admin/add-ion-fraud-notes', // Replace with your form action URL
+            data: formData,
+            success: function (response) {
+                // Handle success (response from server)
+                alert('Form submitted successfully!');
+                let file_id = $('#ion_fraud_note_form #file_id').val();
+                sendOrderToResware(file_id)
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+                alert('Form submission failed.');
+                console.log(error);
+            }
+        });
+    });
 });
 
 function getInstrumentData(file_id) {
@@ -186,6 +212,11 @@ function regenerateReport(file_id) {
             }, 5000);
         }
     });
+}
+
+function addIonFraudNotes(file_id) {
+    $('#ion_fraud_note').modal('show');
+    $('#ion_fraud_note_form #file_id').val(file_id);
 }
 
 function sendOrderToResware(file_id) {
