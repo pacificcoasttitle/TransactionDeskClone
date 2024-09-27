@@ -19,7 +19,7 @@ final class AddIonFraudButtonStatus extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('order_details')
-            ->addColumn('ion_fraud_required_status', 'enum', ['values' => ['yes', 'no'], 'after' => 'lp_report_status'])
+            ->addColumn('ion_fraud_required_status', 'enum', ['null' => true, 'values' => ['yes', 'no'], 'after' => 'lp_report_status'])
             ->update();
     }
 }
