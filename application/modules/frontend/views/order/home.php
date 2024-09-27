@@ -129,6 +129,7 @@
 									<input type="hidden" name="property-zip" id="property-zip" value="">
 									<input type="hidden" name="random_number" id="random_number" value="">
 									<input type="hidden" name="ion-report-status" id="ion-report-status" value="false">
+									<input type="hidden" name="ion-fraud-status" id="ion-fraud-status" value="false">
 									<input type="hidden" name="ion-report-flag" id="ion-report-flag" value="<?php echo $ionFraudFlag; ?>">
 
 

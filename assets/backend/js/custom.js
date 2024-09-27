@@ -1490,6 +1490,85 @@ $(document).ready(function () {
 
     }
 
+    if ($('#tbl-ion-fraud-log-listing').length) {
+        log_list = $('#tbl-ion-fraud-log-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#Order No",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            "dom": '<"row"<"col-sm-12"<"text-left"f>>><"row"<"col-sm-12"rt>><"row"<"col-sm-12"l><"col-sm-5"i><"col-sm-7"p>><"clear">',
+            initComplete: function () {
+                var input = $('.dataTables_filter input').unbind(),
+                    self = this.api(),
+                    $ionFraudStatusDropDown = $('<span style="margin-left:20px;">ION Fraud Status: </span><select style="width:auto;" id="ionFraudStatusDropDown" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="yes">Yes</option><option value="no">No</option></select>'),
+                    $userProceedStatusDropDown = $('<span style="margin-left:20px;">User Proceed Status: </span><select style="width:auto;" id="userProceedStatusDropDown" class="custom-select custom-select-sm form-control form-control-sm"><option value="">All</option><option value="proceed">Proceed</option><option value="review fraud">Review Fraud</option></select>'),
+
+                    $searchButton = $('<button style="margin-left:20px;" class="btn btn-success btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-search"></i></span><span class="text">Search</span></button>')
+                        // .text('Search')
+                        .click(function () {
+                            self.search(input.val(), $('#customerDateRange').val()).draw();
+                        }),
+                    // $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary">')
+                    // .text('Clear')
+                    $clearButton = $('<button style="margin-left:20px;" class="btn btn-secondary btn-icon-split float-right mr-2"><span class="icon text-white-50"><i class="fa fa-eraser"></i></span><span class="text">Clear</span></button>')
+                        .click(function () {
+                            input.val('');
+                            $("#ionFraudStatusDropDown").val('');
+                            $("#userProceedStatusDropDown").val('');
+                            $searchButton.click();
+                        })
+
+                $('.dataTables_filter').append($ionFraudStatusDropDown, $userProceedStatusDropDown, $clearButton, $searchButton);
+
+            },
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_ion_fraud_listing_logs", // json datasource
+                type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                "data": function (d) {
+                    d.ionFraudStatus = $('#ionFraudStatusDropDown').val();
+                    d.ionFraudProceedStatus = $('#userProceedStatusDropDown').val();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-ion-fraud-log-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-ion-fraud-log-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            },
+
+        });
+
+    }
+
     if ($('#refresh-data').length) {
         $('#refresh-data').click(function (e) {
             $('body').animate({ opacity: 0.5 }, "slow");

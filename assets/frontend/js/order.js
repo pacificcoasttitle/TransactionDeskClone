@@ -2,7 +2,6 @@ var taxServiceExecuted = false;
 var lvServiceExecuted = false;
 
 $(document).ready(function () {
-    console.log('order.js loaded')
     let notifyAdminFlag = false;
     let notificationSubject = '';
 
@@ -170,7 +169,6 @@ $(document).ready(function () {
 
 
 function createService4(fipCode, address, city, unit_no, apn, random_number, properyData = '') {
-    console.log('order js createService4 ');
 
     let bedrooms = baths = lotSize = zoning = buildingArea = '';
     if (!$.isEmptyObject(properyData)) {
@@ -233,7 +231,6 @@ function createService4(fipCode, address, city, unit_no, apn, random_number, pro
 }
 
 function createService3(apn, state, county, random_number) {
-    console.log('order js createService3 ');
     $.ajax({
         // url: 'php/createservice.php',
         url: base_url + 'createService',
@@ -279,7 +276,6 @@ function createService3(apn, state, county, random_number) {
 }
 
 function getRequestSummaries(requestId, methodId, random_number) {
-    console.log('getRequestSummaries ===', methodId);
     var apn = $("#apn").val();
     $.ajax({
         url: base_url + 'getRequestSummaries',
@@ -352,7 +348,6 @@ function getRequestSummaries(requestId, methodId, random_number) {
 }
 
 function getResultById(resultId, methodId, random_number) {
-    console.log('getResultById ===', methodId);
     var apn = $("#apn").val();
     $.ajax({
         url: base_url + 'getResultById',
@@ -366,17 +361,13 @@ function getResultById(resultId, methodId, random_number) {
         type: "POST"
     })
         .done(function (response, textStatus, jqXHR) {
-            console.log('getResultById done', methodId);
             if (methodId == '3') {
                 taxServiceExecuted = true;
             } else {
                 lvServiceExecuted = true;
             }
             setTimeout(function () {
-                console.log('lvServiceExecuted done ===', lvServiceExecuted);
-                console.log('taxServiceExecuted done ===', taxServiceExecuted);
                 if (lvServiceExecuted && taxServiceExecuted) {
-                    console.log('inside if');
                     $('.home-submit').prop('disabled', false);
                 }
             }, 1000);
@@ -497,10 +488,7 @@ function getResultById(resultId, methodId, random_number) {
                 lvServiceExecuted = true;
             }
             setTimeout(function () {
-                console.log('lvServiceExecuted ===', lvServiceExecuted);
-                console.log('taxServiceExecuted ===', taxServiceExecuted);
                 if (lvServiceExecuted && taxServiceExecuted) {
-                    console.log('inside if');
                     $('.home-submit').prop('disabled', false);
                 }
             }, 1000);

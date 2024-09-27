@@ -287,6 +287,7 @@ $route['order/admin/edit-title-officer/:num'] = 'admin/order/title/edit_title_of
 $route['order/admin/credentials-check'] = 'admin/order/customer/index';
 $route['order/admin/lv-log'] = 'admin/order/TitlePoint/index';
 $route['order/admin/pre-listing'] = 'admin/order/TitlePoint/preListing';
+$route['order/admin/ion-fraud'] = 'admin/order/home/ionFraud';
 $route['order/admin/primary-check'] = 'admin/order/home/primaryCheck';
 $route['order/admin/get-user-check-list'] = 'admin/order/home/get_user_check_list';
 $route['order/admin/orders(/:any)?'] = 'admin/order/order/orders';
@@ -437,6 +438,7 @@ $route['order/admin/search-document-sub-type'] = 'admin/order/order/searchDocume
 $route['order/admin/lp-xml-logs'] = 'admin/order/titlePoint/lpXmlLogs';
 $route['order/admin/get-lp-xml-logs'] = 'admin/order/titlePoint/getLpXmlLogs';
 
+$route['order/admin/add-ion-fraud-notes'] = 'admin/order/home/addIonFraudNotes';
 $route['order/admin/send-order-to-resware'] = 'admin/order/home/sendOrderToResware';
 $route['order/admin/update-lp-report-status'] = 'admin/order/home/updateLpReportStatus';
 $route['order/admin/update-doc-section'] = 'admin/order/home/updateDocumentSection';

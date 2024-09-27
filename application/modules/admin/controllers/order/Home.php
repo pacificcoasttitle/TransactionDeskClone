@@ -4364,11 +4364,85 @@ class Home extends MX_Controller
         exit;
     }
 
+    public function addIonFraudNotes()
+    {
+
+        // echo "<pre>";
+        // print_r($_POST);die;
+        $this->load->model('order/apiLogs');
+        $this->load->library('order/resware');
+        $userdata = $this->session->userdata('admin');
+        $fileId = isset($_POST['file_id']) && !empty($_POST['file_id']) ? $_POST['file_id'] : '';
+        $subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
+        $body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
+        $orderDetails = $this->order->get_order_details($fileId);
+        $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+
+        $request = array();
+        $endPoint = 'files/' . $fileId . '/notes';
+        $request['Subject'] = $subject;
+        $request['Body'] = $body;
+        $request['FileID'] = $fileId;
+        $request['Expedite'] = true;
+        $notes_data = json_encode($request);
+
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_ion_fraud_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
+        $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_ion_fraud_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
+        // print_r($result);die;
+
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result, true);
+
+            if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+                $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                $errors[] = $message;
+            } else {
+                $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+                $notesData = array(
+                    'resware_note_id' => $noteId,
+                    'subject' => $subject,
+                    'note' => $body,
+                    'user_id' => $userdata['id'],
+                    'order_id' => $orderId,
+                    'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
+                );
+                $id = $this->home_model->insert($notesData, 'pct_order_notes');
+
+                if ($noteId && $id) {
+                    $success .= 'Note created successfully.';
+                    // $syncStatus = $this->sendOrderToResware('notes');
+                    // if ($syncStatus['status' == 'success']) {
+                    //     $success .= $syncStatus['message'];
+                    // } else {
+                    //     $errors .= $syncStatus['message'];
+                    // }
+                    // $data = array(
+                    //     "error" => $errors,
+                    //     "success" => $success,
+                    // );
+                    // $this->session->set_userdata($data);
+
+                    $data = array('status' => 'success', 'message' => $success);
+                    // redirect(base_url() . 'order/admin/lp-orders');
+                } else {
+                    $errors .= 'Something went wrong. Please try again.';
+                    $data = array('status' => 'error', 'message' => $errors);
+                }
+            }
+        }
+
+        echo json_encode($data);
+        exit;
+
+    }
+
     public function sendOrderToResware()
     {
         $this->load->model('order/partnerApiLogs');
 
         $file_id = $this->input->post('file_id');
+        // print_r($file_id);die;
         $order_details = $this->order_model->get_order_details($file_id);
         $lpFileNumber = $order_details['lp_file_number'];
         $splitName = explode(' ', $order_details['primary_owner']);
@@ -7138,5 +7212,65 @@ class Home extends MX_Controller
 
         echo json_encode($res);
         exit;
+    }
+
+    public function ionFraud()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: ION Fraud Log';
+        $this->admintemplate->show("order/home", "ion_fraud_log", $data);
+    }
+
+    public function get_ion_fraud_listing_logs()
+    {
+        $params = array();
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['ionFraudStatus'] = isset($_POST['ionFraudStatus']) && !empty($_POST['ionFraudStatus']) ? $_POST['ionFraudStatus'] : '';
+            $params['ionFraudProceedStatus'] = isset($_POST['ionFraudProceedStatus']) && !empty($_POST['ionFraudProceedStatus']) ? $_POST['ionFraudProceedStatus'] : '';
+
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $logs_list = $this->home_model->getIonFraudListingLogs($params);
+            
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $params['ionFraudStatus'] = isset($_POST['ionFraudStatus']) && !empty($_POST['ionFraudStatus']) ? $_POST['ionFraudStatus'] : '';
+            $params['ionFraudProceedStatus'] = isset($_POST['ionFraudProceedStatus']) && !empty($_POST['ionFraudProceedStatus']) ? $_POST['ionFraudProceedStatus'] : '';
+
+            $logs_list = $this->home_model->getIonFraudListingLogs($params);
+        }
+        $data = array();
+
+        if (isset($logs_list['data']) && !empty($logs_list['data'])) {
+            $count = $params['start'] + 1;
+            foreach ($logs_list['data'] as $key => $value) {
+
+                $nestedData = array();
+
+                $nestedData[] = $count;
+                $nestedData[] = $value['lp_file_number'];
+                $nestedData[] = ucwords($value['ion_fraud_required_status']);
+                $nestedData[] = ucwords($value['ion_fraud_proceed_status']);
+
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $nestedData[] = convertTimezone($value['created_at']);
+
+                $data[] = $nestedData;
+                $count++;
+
+            }
+        }
+        $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($logs_list['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 }

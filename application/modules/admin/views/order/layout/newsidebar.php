@@ -36,6 +36,7 @@ if (
     $this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
     $this->uri->uri_string() == 'order/admin/resware-logs' ||
     $this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
+    $this->uri->uri_string() == 'order/admin/ion-fraud' ||
     $this->uri->uri_string() == 'order/admin/admin-user-logs'
 ) {
     $logTabLinks = true;
@@ -272,6 +273,7 @@ if (
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-error-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-error-logs'; ?>">CPL Error</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/resware-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/resware-logs'; ?>">ResWare Log</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lp-xml-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lp-xml-logs'; ?>">LP Xml</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/ion-fraud') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/ion-fraud'; ?>">ION Fraud</a>
 						<?php if ($role_id == 1): ?>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin-user-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin-user-logs'; ?>">Admin Activity</a>
 						<?php endif;?>

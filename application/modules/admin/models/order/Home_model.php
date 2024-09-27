@@ -2783,4 +2783,91 @@ class Home_model extends CI_Model
 
         return $query->result_array();
     }
+
+    public function getIonFraudListingLogs($params)
+    {
+        $this->db->where('lp_file_number IS NOT NULL')
+            ->where('ion_fraud_required_status IS NOT NULL');
+        $this->db->from('order_details');
+        $total_records = $this->db->count_all_results();
+
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $logs_lists = array();
+
+        if ((isset($params['searchvalue']) && !empty($params['searchvalue'])) || (isset($params['ionFraudStatus']) && !empty($params['ionFraudStatus'])) || (isset($params['ionFraudProceedStatus']) && !empty($params['ionFraudProceedStatus']))) {
+            $keyword = $params['searchvalue'];
+            $ionFraudStatus = $params['ionFraudStatus'];
+            $ionFraudProceedStatus = $params['ionFraudProceedStatus'];
+
+            $this->db->from('order_details');
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('lp_file_number', $keyword)
+                    ->group_end();
+            }
+            if (!empty($ionFraudStatus)) {
+                $this->db->where('ion_fraud_required_status', $ionFraudStatus);
+            } else if (!empty($ionFraudProceedStatus)) {
+                $this->db->where('ion_fraud_proceed_status', $ionFraudProceedStatus);
+            }
+
+            // $this->db->from($this->table);
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->select('lp_file_number,ion_fraud_required_status, ion_fraud_proceed_status, created_at')
+                ->from('order_details');
+            $this->db->where('lp_file_number IS NOT NULL')
+                ->where('ion_fraud_required_status IS NOT NULL');
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start()
+                    ->like('lp_file_number', $keyword)
+                    ->group_end();
+            }
+            if (!empty($ionFraudStatus)) {
+                $this->db->where('ion_fraud_required_status', $ionFraudStatus);
+            } else if (!empty($ionFraudProceedStatus)) {
+                $this->db->where('ion_fraud_proceed_status', $ionFraudProceedStatus);
+            }
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                $logs_lists = $query->result_array();
+            }
+        } else {
+            $this->db->select('lp_file_number,ion_fraud_required_status, ion_fraud_proceed_status, created_at')
+                ->from('order_details');
+            $this->db->where('lp_file_number IS NOT NULL');
+            $this->db->where('ion_fraud_required_status IS NOT NULL');
+
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->select('lp_file_number,ion_fraud_required_status, ion_fraud_proceed_status, created_at')
+                ->from('order_details');
+            $this->db->where('lp_file_number IS NOT NULL');
+            $this->db->where('ion_fraud_required_status IS NOT NULL');
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $logs_lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $logs_lists,
+        );
+    }
 }
