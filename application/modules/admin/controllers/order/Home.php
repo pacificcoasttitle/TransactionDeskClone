@@ -4364,15 +4364,13 @@ class Home extends MX_Controller
         exit;
     }
 
-    public function addIonFraudNotes()
+    public function addNotesToResware($fileId)
     {
 
-        // echo "<pre>";
-        // print_r($_POST);die;
         $this->load->model('order/apiLogs');
         $this->load->library('order/resware');
         $userdata = $this->session->userdata('admin');
-        $fileId = isset($_POST['file_id']) && !empty($_POST['file_id']) ? $_POST['file_id'] : '';
+        // $fileId = isset($_POST['file_id']) && !empty($_POST['file_id']) ? $_POST['file_id'] : '';
         $subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
         $body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
         $orderDetails = $this->order->get_order_details($fileId);
@@ -4385,7 +4383,7 @@ class Home extends MX_Controller
         $request['FileID'] = $fileId;
         $request['Expedite'] = true;
         $notes_data = json_encode($request);
-
+        $user_data['admin_api'] = 1;
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_ion_fraud_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
         $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_ion_fraud_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
@@ -4395,8 +4393,7 @@ class Home extends MX_Controller
             $response = json_decode($result, true);
 
             if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-                $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-                $errors[] = $message;
+                $msg = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
             } else {
                 $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
                 $notesData = array(
@@ -4410,7 +4407,7 @@ class Home extends MX_Controller
                 $id = $this->home_model->insert($notesData, 'pct_order_notes');
 
                 if ($noteId && $id) {
-                    $success .= 'Note created successfully.';
+                    $msg .= 'Note created successfully.';
                     // $syncStatus = $this->sendOrderToResware('notes');
                     // if ($syncStatus['status' == 'success']) {
                     //     $success .= $syncStatus['message'];
@@ -4423,17 +4420,21 @@ class Home extends MX_Controller
                     // );
                     // $this->session->set_userdata($data);
 
-                    $data = array('status' => 'success', 'message' => $success);
+                    $data = array('status' => 'success', 'message' => $msg);
                     // redirect(base_url() . 'order/admin/lp-orders');
                 } else {
-                    $errors .= 'Something went wrong. Please try again.';
-                    $data = array('status' => 'error', 'message' => $errors);
+                    $msg .= 'Something went wrong while syncing notes to resware.';
+                    $data = array('status' => 'error', 'message' => $msg);
                 }
             }
+            /** Save user Activity */
+            $activity = $msg . ' Sync to resware order number: ' . $orderDetails['file_number'];
+            $this->order->logAdminActivity($activity);
+            /** End Save user activity */
         }
-
-        echo json_encode($data);
-        exit;
+        return $data;
+        // echo json_encode($data);
+        // exit;
 
     }
 
@@ -4442,7 +4443,8 @@ class Home extends MX_Controller
         $this->load->model('order/partnerApiLogs');
 
         $file_id = $this->input->post('file_id');
-        // print_r($file_id);die;
+        // echo "<pre>";
+        // print_r($this->input->post());die;
         $order_details = $this->order_model->get_order_details($file_id);
         $lpFileNumber = $order_details['lp_file_number'];
         $splitName = explode(' ', $order_details['primary_owner']);
@@ -4654,6 +4656,7 @@ class Home extends MX_Controller
 
                 /** Party details */
                 if ($orderNumber) {
+                    $this->load->library('order/order');
                     $partners = array();
                     $partners[] = array(
                         'PartnerTypeID' => 10049,
@@ -5111,7 +5114,17 @@ class Home extends MX_Controller
                     );
                     $this->db->insert('pct_resware_log', $reswareLogData);
                     /* End add resware api logs */
-
+                    $resMessage = $errorMsg = '';
+                    /** Add Notes to ResWare */
+                    if (!empty($_POST['add_notes']) && $_POST['add_notes'] == "true") {
+                        $addNotesRes = $this->addNotesToResware($file_id);
+                        $resMessage = $addNotesRes['message'];
+                        $letterDocName = $lpFileNumber . '-Letter.pdf';
+                        if ($this->order->fileExistOrNotOnS3('ion-fraud/letter/' . $letterDocName)) {
+                            $this->uploadIONFraudLetterDocToResware($letterDocName, $file_id, $order_details);
+                        }
+                    }
+                    /** End Add Notes to ResWare */
                     /* Add partner api logs */
                     $partnerApiData = array(
                         'request_url' => env('RESWARE_ORDER_API') . $endPoint,
@@ -5126,7 +5139,7 @@ class Home extends MX_Controller
                     $lvfilename = $lpFileNumber . '.pdf';
                     $deedfilename = $lpFileNumber . '.pdf';
                     $taxfilename = $lpFileNumber . '.pdf';
-                    $this->load->library('order/order');
+
                     if ($this->order->fileExistOrNotOnS3('legal-vesting/' . $lvfilename)) {
                         $this->uploadLvDocsToResware($lvfilename, $file_id, $order_details);
                     }
@@ -5223,11 +5236,75 @@ class Home extends MX_Controller
                 /** End Save user activity */
 
                 /** End party details */
-                $data = array('status' => 'success', 'message' => 'Order synced successfully on Resware side with file number ' . $fileNumber);
+                $resMessage .= 'Order synced successfully on Resware side with file number ' . $fileNumber;
+                $data = array('status' => 'success', 'message' => $resMessage);
                 echo json_encode($data);
                 exit;
             }
         }
+    }
+
+    public function uploadIONFraudLetterDocToResware($document_name, $fileId, $orderDetails)
+    {
+        $this->load->model('order/document');
+        $this->load->library('order/resware');
+        $this->load->model('order/apiLogs');
+        $userdata = $this->session->userdata('admin');
+        if (env('AWS_ENABLE_FLAG') == 1) {
+            $fileSize = filesize(env('AWS_PATH') . "ion-fraud/letter/" . $document_name);
+            $contents = file_get_contents(env('AWS_PATH') . "ion-fraud/letter/" . $document_name);
+        } else {
+            $fileSize = filesize(FCPATH . 'uploads/ion-fraud/' . $document_name);
+            $contents = file_get_contents(base_url() . 'uploads/ion-fraud/' . $document_name);
+        }
+
+        $binaryData = base64_encode($contents);
+
+        // $documentData = array(
+        //     'document_name' => $document_name,
+        //     'original_document_name' => $document_name,
+        //     'document_type_id' => 1037,
+        //     'document_size' => $fileSize,
+        //     'user_id' => $userdata['id'],
+        //     'order_id' => $orderDetails['order_id'],
+        //     'description' => 'ION Fraud Letter Document',
+        //     'is_sync' => 1,
+        //     'is_ion_fraud_doc' => 1,
+        // );
+        // $documentId = $this->document->insert($documentData);
+
+        $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
+        $documentApiData = array(
+            'DocumentName' => $document_name,
+            'DocumentType' => array(
+                'DocumentTypeID' => 1037,
+            ),
+            'Description' => 'ION Fraud Document',
+            'InternalOnly' => false,
+            'DocumentBody' => $binaryData,
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        $user_data = array();
+        $user_data['admin_api'] = 1;
+
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        $res = json_decode($result);
+        /* Start add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'upload_ion_fraud_letter_document_to_resware',
+            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+            'request' => $document_api_data,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+        // $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+
     }
 
     public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
