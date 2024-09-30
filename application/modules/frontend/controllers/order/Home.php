@@ -1340,11 +1340,11 @@ class Home extends MX_Controller
                 /** Start Send email for ION fraud document to all parties */
                 $ionEmailTemplate = $this->load->view('emails/ion_report.php', $data, true);
                 $ion_cc[] = 'piyush-crest@yopmail.com';
+                //'to' => 'piyush.j@crestinfosystems.com',
                 $ionMailParams = [
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,
                     'to' => $OpenEmail,
-                    //'to' => 'piyush.j@crestinfosystems.com',
                     'subject' => 'PCT-Fraud Review',
                     'message' => json_encode($data),
                     'file' => json_encode($ionFile),

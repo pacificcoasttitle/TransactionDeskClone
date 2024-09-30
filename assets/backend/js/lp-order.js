@@ -118,18 +118,19 @@ jQuery(document).ready(function ($) {
         $('#ionFraudSubmit').prop('disabled', true);
 
         var formData = $(this).serialize();
-
+        formData += '&add_notes=true';
         $.ajax({
             type: 'POST',
-            url: base_url + 'order/admin/add-ion-fraud-notes', // Replace with your form action URL
+            url: base_url + "order/admin/send-order-to-resware", // Replace with your form action URL
             data: formData,
             success: function (response) {
                 // Handle success (response from server)
-                let file_id = $('#ion_fraud_note_form #file_id').val();
-                sendOrderToResware(file_id);
+                // let file_id = $('#ion_fraud_note_form #file_id').val();
+                // sendOrderToResware(file_id);
                 $('#ion_fraud_note').modal('hide');
                 $("#note").val(null);
                 $("#note_subject").val(null);
+                syncToReswareRes(response);
             },
             error: function (xhr, status, error) {
                 // Handle error
@@ -229,31 +230,7 @@ function sendOrderToResware(file_id) {
             file_id: file_id
         },
         success: function (data) {
-            if (data) {
-                var result = jQuery.parseJSON(data);
-                if (result.status == 'success') {
-                    $('#lp_order_success_msg').html(result.message).show();
-                    $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#lp_order_success_msg").offset().top
-                    }, 1000);
-                    lp_order_list.ajax.reload(null, false);
-                    setTimeout(function () {
-                        $('#lp_order_success_msg').html('').hide();
-                    }, 5000);
-                } else {
-
-                    $('#lp_order_error_msg').html(result.message).show();
-                    $([document.documentElement, document.body]).animate({
-                        scrollTop: $("#lp_order_error_msg").offset().top
-                    }, 1000);
-                    setTimeout(function () {
-                        $('#lp_order_error_msg').html('').hide();
-                    }, 5000);
-                }
-            }
-            $('body').animate({
-                opacity: 1.0
-            }, "slow");
+            syncToReswareRes(data);
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
@@ -266,6 +243,34 @@ function sendOrderToResware(file_id) {
             }, 5000);
         }
     });
+}
+
+function syncToReswareRes(data) {
+    if (data) {
+        var result = jQuery.parseJSON(data);
+        if (result.status == 'success') {
+            $('#lp_order_success_msg').html(result.message).show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#lp_order_success_msg").offset().top
+            }, 1000);
+            lp_order_list.ajax.reload(null, false);
+            setTimeout(function () {
+                $('#lp_order_success_msg').html('').hide();
+            }, 5000);
+        } else {
+
+            $('#lp_order_error_msg').html(result.message).show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#lp_order_error_msg").offset().top
+            }, 1000);
+            setTimeout(function () {
+                $('#lp_order_error_msg').html('').hide();
+            }, 5000);
+        }
+    }
+    $('body').animate({
+        opacity: 1.0
+    }, "slow");
 }
 
 function updateLpReportStatus(file_id, status) {

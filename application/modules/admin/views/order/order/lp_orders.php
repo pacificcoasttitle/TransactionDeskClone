@@ -40,6 +40,10 @@ $roleName = $roleList[$role_id];
     .ui-autocomplete {
         max-height: 300px !important;
     }
+
+    #note {
+        height: auto !important;
+    }
 </style>
 <div class="container-fluid">
     <!-- DataTables Example -->
