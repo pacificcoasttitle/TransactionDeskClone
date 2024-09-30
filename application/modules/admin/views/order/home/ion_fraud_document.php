@@ -45,7 +45,7 @@ $roleName = $roleList[$role_id];
                             <th>Sent To Resware</th>
                             <th>Created At</th>
                             <th>Report Action</th>
-                            <th>Letter Action</th>
+                            <!-- <th>Letter Action</th> -->
                         </tr>
                     </thead>
                     <tbody></tbody>

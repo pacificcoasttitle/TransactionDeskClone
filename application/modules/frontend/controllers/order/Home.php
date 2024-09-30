@@ -1223,7 +1223,7 @@ class Home extends MX_Controller
                     $this->ionfraud->generateIONReport($orderNumber, $ionProfileData);
                     $ionfraudfilename = $orderNumber . '-Fraud.pdf';
                     $ionletterfilename = $orderNumber . '-Letter.pdf';
-                    $this->uploadIONFraudDocsToResware($ionfraudfilename, $file_id, $orderDetails);
+                    // $this->uploadIONFraudDocsToResware($ionfraudfilename, $file_id, $orderDetails);
                     $ionFile[] = env('AWS_PATH') . "ion-fraud/report/" . $ionfraudfilename;
                     $ionFile[] = env('AWS_PATH') . "ion-fraud/letter/" . $ionletterfilename;
                 }
@@ -2012,73 +2012,73 @@ class Home extends MX_Controller
         }
     }
 
-    public function uploadIONFraudDocsToResware($document_name, $fileId, $orderDetails)
-    {
-        $this->load->model('order/document');
-        $this->load->library('order/resware');
-        $this->load->model('order/apiLogs');
-        $userdata = $this->session->userdata('user');
-        if (env('AWS_ENABLE_FLAG') == 1) {
-            $fileSize = filesize(env('AWS_PATH') . "ion-fraud/report/" . $document_name);
-            $contents = file_get_contents(env('AWS_PATH') . "ion-fraud/report/" . $document_name);
-        } else {
-            $fileSize = filesize(FCPATH . 'uploads/ion-fraud/' . $document_name);
-            $contents = file_get_contents(base_url() . 'uploads/ion-fraud/' . $document_name);
-        }
+    // public function uploadIONFraudDocsToResware($document_name, $fileId, $orderDetails)
+    // {
+    //     $this->load->model('order/document');
+    //     $this->load->library('order/resware');
+    //     $this->load->model('order/apiLogs');
+    //     $userdata = $this->session->userdata('user');
+    //     if (env('AWS_ENABLE_FLAG') == 1) {
+    //         $fileSize = filesize(env('AWS_PATH') . "ion-fraud/report/" . $document_name);
+    //         $contents = file_get_contents(env('AWS_PATH') . "ion-fraud/report/" . $document_name);
+    //     } else {
+    //         $fileSize = filesize(FCPATH . 'uploads/ion-fraud/' . $document_name);
+    //         $contents = file_get_contents(base_url() . 'uploads/ion-fraud/' . $document_name);
+    //     }
 
-        $binaryData = base64_encode($contents);
+    //     $binaryData = base64_encode($contents);
 
-        $documentData = array(
-            'document_name' => $document_name,
-            'original_document_name' => $document_name,
-            'document_type_id' => 1037,
-            'document_size' => $fileSize,
-            'user_id' => $userdata['id'],
-            'order_id' => $orderDetails['order_id'],
-            'description' => 'ION Fraud Document',
-            'is_sync' => 1,
-            'is_ion_fraud_doc' => 1,
-        );
-        $documentId = $this->document->insert($documentData);
+    //     $documentData = array(
+    //         'document_name' => $document_name,
+    //         'original_document_name' => $document_name,
+    //         'document_type_id' => 1037,
+    //         'document_size' => $fileSize,
+    //         'user_id' => $userdata['id'],
+    //         'order_id' => $orderDetails['order_id'],
+    //         'description' => 'ION Fraud Document',
+    //         'is_sync' => 1,
+    //         'is_ion_fraud_doc' => 1,
+    //     );
+    //     $documentId = $this->document->insert($documentData);
 
-        $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
-        $documentApiData = array(
-            'DocumentName' => $document_name,
-            'DocumentType' => array(
-                'DocumentTypeID' => 1037,
-            ),
-            'Description' => 'ION Fraud Document',
-            'InternalOnly' => false,
-            'DocumentBody' => $binaryData,
-        );
-        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+    //     $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
+    //     $documentApiData = array(
+    //         'DocumentName' => $document_name,
+    //         'DocumentType' => array(
+    //             'DocumentTypeID' => 1037,
+    //         ),
+    //         'Description' => 'ION Fraud Document',
+    //         'InternalOnly' => false,
+    //         'DocumentBody' => $binaryData,
+    //     );
+    //     $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-        if ($userdata['is_master'] == 1) {
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-            $user_data['email'] = $orderUser['email_address'];
-            $user_data['password'] = $orderUser['random_password'];
-        } else {
-            $user_data = array();
-        }
+    //     if ($userdata['is_master'] == 1) {
+    //         $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+    //         $user_data['email'] = $orderUser['email_address'];
+    //         $user_data['password'] = $orderUser['random_password'];
+    //     } else {
+    //         $user_data = array();
+    //     }
 
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-        $res = json_decode($result);
-        /* Start add resware api logs */
-        $reswareLogData = array(
-            'request_type' => 'upload_ion_fraud_document_to_resware',
-            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-            'request' => $document_api_data,
-            'response' => $result,
-            'status' => 'success',
-            'created_at' => date("Y-m-d H:i:s"),
-        );
-        $this->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
-        $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    //     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_ion_fraud_report_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+    //     $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+    //     $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_ion_fraud_report_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+    //     $res = json_decode($result);
+    //     /* Start add resware api logs */
+    //     $reswareLogData = array(
+    //         'request_type' => 'upload_ion_fraud_document_to_resware_' . $documentId,
+    //         'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+    //         'request' => $document_api_data,
+    //         'response' => $result,
+    //         'status' => 'success',
+    //         'created_at' => date("Y-m-d H:i:s"),
+    //     );
+    //     $this->db->insert('pct_resware_log', $reswareLogData);
+    //     /* End add resware api logs */
+    //     $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
-    }
+    // }
 
     public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
     {
