@@ -119,7 +119,7 @@
         <div class="pdf_page size_letter">
             <div class="pdf_header">
                 <div class="logo_container">
-                    <img src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/3107dbdd-031c-af29-e364-b5c1baf4c82c.png" alt="">
+                    <img src="https://gallery.mailchimp.com/3f123598483b787fa180fff0f/images/8cee9f1d-8c9f-4e75-b5b2-f1356f42fff8.png" alt="">
                 </div>
                 <div class="header_address">
                     Pacific Coast Title Company<br>
