@@ -5,14 +5,15 @@
 class Common extends MX_Controller
 {
 
-    private $cpl_js_version = '02';
-    private $proposed_js_version = '01';
-    private $prelim_orders_js_version = '01';
-    private $prelim_order_js_version = '02';
-    private $upload_doc_orders_js_version = '01';
-    private $upload_document_for_order = '01';
-    private $notes_order_js = '01';
-    private $policy_orders_js_version = '01';
+    // private $cpl_js_version = '02';
+    // private $proposed_js_version = '01';
+    // private $prelim_orders_js_version = '01';
+    // private $prelim_order_js_version = '02';
+    // private $upload_doc_orders_js_version = '01';
+    // private $upload_document_for_order = '01';
+    // private $notes_order_js = '01';
+    // private $policy_orders_js_version = '01';
+    private $version;
 
     public function __construct()
     {
@@ -20,6 +21,7 @@ class Common extends MX_Controller
         $this->load->helper(
             array('file', 'url', 'form')
         );
+        $this->version = strtotime(date('Y-m-d'));
         $this->load->library('order/EscrowDashboardTemplate');
         $this->load->library('order/salesDashboardTemplate');
         $this->load->library('session');
@@ -42,7 +44,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_' . $this->prelim_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_' . $this->version));
         $this->salesdashboardtemplate->show("order", "review_files", $data);
     }
 
@@ -92,11 +94,11 @@ class Common extends MX_Controller
         $data['prelimDocument'] = $prelimDocument;
         $data['orderDetails'] = $orderDetails;
         $data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_' . $this->prelim_order_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/css/theme.css?v=prelim_order_' . $this->prelim_order_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/view-review-file.css?v=' . $this->prelim_order_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_order.js?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/css/theme.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/view-review-file.css?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "view_review_file", $data);
-        // $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v='.$this->version));
         // $this->template->show("order", "view_review_file", $data);
     }
 
@@ -748,7 +750,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_' . $this->upload_doc_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order/common", "upload_doc_orders", $data);
     }
 
@@ -805,7 +807,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/policy.js?v=policy_orders_' . $this->policy_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/policy.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order/common", "policy_orders", $data);
     }
 
@@ -986,9 +988,9 @@ class Common extends MX_Controller
                 $data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
             }
         }
-        // $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+        // $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v='.$this->version));
         // $this->template->show("order/common", "upload_documents", $data);
-        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_' . $this->upload_document_for_order));
+        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "upload_documents", $data);
     }
 
@@ -1170,7 +1172,7 @@ class Common extends MX_Controller
             $this->session->unset_userdata('success');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/cpl.js?v=cpl_' . $this->cpl_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/cpl.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "cpl", $data);
         // $this->template->show("order", "cpl", $data);
     }
@@ -2575,9 +2577,9 @@ class Common extends MX_Controller
         $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
         $data['proposedBranches'] = $this->order->getProposedBranches();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        // $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v='.$this->version));
         // $this->template->show("order", "proposed_insured", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/proposed.js?v=cpl_' . $this->cpl_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/proposed.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "proposed_insured", $data);
     }
 
@@ -2751,8 +2753,8 @@ class Common extends MX_Controller
             $data['notes'] = $this->order->get_order_notes($orderId);
         }
 
-        // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
-        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->notes_order_js));
+        // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v='.$this->version) );
+        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "get_notes", $data);
         // $this->template->show("order/common", "get_notes", $data);
     }

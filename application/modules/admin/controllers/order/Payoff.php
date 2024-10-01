@@ -4,13 +4,15 @@
 
 class PayOff extends MX_Controller
 {
-    private $payoff_js_version = '01';
+    // private $payoff_js_version = '01';
+    private $version;
     public function __construct()
     {
         parent::__construct();
         $this->load->helper(
             array('file', 'url', 'form')
         );
+        $this->version = strtotime(date('Y-m-d'));
         $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->library('order/adminTemplate');
@@ -51,10 +53,10 @@ class PayOff extends MX_Controller
         $data['payoff_user'] = $this->home_model->get_rows($con);
         // echo "<pre>";
         // print_r($data);die;
-        // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v='.$this->version));
         // $this->template->show("order/pay_off", "pay_off_dashboard", $data);
-        // $this->admintemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
-        // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        // $this->admintemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=' . $this->version));
+        // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=' . $this->version));
         $this->admintemplate->addJS(base_url('assets/backend/js/transactee.js'));
         $this->admintemplate->show("order/transactee", "transactee_list", $data);
     }
@@ -582,7 +584,7 @@ class PayOff extends MX_Controller
                 $data['admin_notes_error_msg'] = form_error('admin_notes');
             }
         }
-        // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        // $this->admintemplate->addCSS(base_url('assets/backend/css/transactee.css?v=' . $this->version));
         $this->admintemplate->show("order/transactee", "add_transactee", $data);
         // $this->load->view('order/transactee/add_transactee', $data);
     }

@@ -20,12 +20,14 @@ class Home extends MX_Controller
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
 
+    private $version;
     public function __construct()
     {
         parent::__construct();
         $this->load->helper(
             array('file', 'url', 'form')
         );
+        $this->version = strtotime(date('Y-m-d'));
         $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/home_model');
@@ -119,7 +121,7 @@ class Home extends MX_Controller
 
         $this->admintemplate->addCSS(base_url('assets/libs/calendar/main.css'));
         $this->admintemplate->addJS(base_url('assets/libs/calendar/main.js'));
-        $this->admintemplate->addJS(base_url('assets/backend/js/dashboard.js?v=dashboard_1'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/dashboard.js?v=' . $this->version));
         $this->admintemplate->show("order/home", "index", $data);
     }
 
@@ -1802,7 +1804,7 @@ class Home extends MX_Controller
         // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
         // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
         $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
-        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js?v=1'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js?v=' . $this->version));
         $this->admintemplate->show("order/home", "companies", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/companies', $data);
