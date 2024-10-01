@@ -4,8 +4,8 @@ class SalesSnapShot extends MX_Controller
 {
 
     private $user;
-    private $sales_snap_shot_js_version = '01';
-
+    // private $sales_snap_shot_js_version = '01';
+    private $version;
     public function __construct()
     {
         parent::__construct();
@@ -13,6 +13,7 @@ class SalesSnapShot extends MX_Controller
         if (empty($userdata) || !isset($userdata['is_master']) || $userdata['is_master'] != 1) {
             redirect('dashboard');
         }
+        $this->version = strtotime(date('Y-m-d'));
         $this->user = $userdata;
         $this->load->library('order/template');
         $this->load->library('order/salesDashboardTemplate');
@@ -37,9 +38,9 @@ class SalesSnapShot extends MX_Controller
         $data['reports_data'] = $this->salesSnapShot_model->getData($report_condition);
         // echo "<pre>";
         // print_r($data);die;
-        // $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/report.js?v='.$this->version));
         // $this->template->show("report", "list", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=pma_' . $this->report_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("salesSnapShot", "list", $data);
     }
 

@@ -900,7 +900,6 @@ function parse187() {
 }
 
 function displayIonReport() {
-    $('#searchFraudResultModal').modal('show');
     $('.ion-result table > tbody').html('');
     var ownerNamePrimary = $(reportXML).find("PropertyProfile").find("PrimaryOwnerName").text();
     var ownerNameSecondary = $(reportXML).find("PropertyProfile").find("SecondaryOwnerName").text();
@@ -921,6 +920,7 @@ function displayIonReport() {
     } else {
         $('#ion-fraud-status').val(true); // ION Fraud found
         $('.ion-search-propery').text(address);
+        $('#searchFraudResultModal').modal('show');
         // $(response).find('Locations').children('Location').each(function (i) {
 
         $('.ion-result table > tbody').append('<tr><td><span class="black-primary-owner"></span></td><td><span class="ion-primary-owner"></span></td></tr>');

@@ -4,7 +4,8 @@ class SalesActivityReport extends MX_Controller
 {
 
     private $user;
-    private $js_version = '01';
+    // private $js_version = '01';
+    private $version;
     public $monthArr = [
         1 => "January",
         2 => "February",
@@ -26,6 +27,7 @@ class SalesActivityReport extends MX_Controller
         if (empty($userdata) || !isset($userdata['is_master']) || $userdata['is_master'] != 1) {
             redirect('dashboard');
         }
+        $this->version = strtotime(date('Y-m-d'));
         $this->user = $userdata;
         $this->load->library('order/template');
         $this->load->library('order/salesDashboardTemplate');
@@ -50,7 +52,7 @@ class SalesActivityReport extends MX_Controller
         $data['monthNameList'] = $this->monthArr;
         $data['reports_data'] = $this->salesReport_model->getData($report_condition);
 
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("salesReport", "list", $data);
     }
 

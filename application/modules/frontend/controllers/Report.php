@@ -6,7 +6,7 @@ class Report extends MX_Controller
     private $user;
     private $sorting_fields;
     private $report_js_version = '01';
-
+    private $version;
     public function __construct()
     {
         parent::__construct();
@@ -14,6 +14,7 @@ class Report extends MX_Controller
         if (empty($userdata) || !isset($userdata['is_master']) || $userdata['is_master'] != 1) {
             redirect('dashboard');
         }
+        $this->version = strtotime(date('Y-m-d'));
         $this->user = $userdata;
         $this->sorting_fields = [
             'carrier_route' => 'Route',
@@ -46,9 +47,9 @@ class Report extends MX_Controller
         );
         $data['reports_data'] = $this->report_model->getData($report_condition);
         $data['sorting_fields'] = $this->sorting_fields;
-        // $this->template->addJS( base_url('assets/frontend/js/report.js?v=pma_'.$this->report_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/report.js?v='.$this->version));
         // $this->template->show("report", "list", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=pma_' . $this->report_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("report", "list", $data);
     }
 

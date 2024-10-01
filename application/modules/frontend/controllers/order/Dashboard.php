@@ -5,16 +5,17 @@
 class Dashboard extends MX_Controller
 {
 
-    private $dashboard_js_version = '01';
-    private $fees_js_version = '01';
-    private $order_fee_js_version = '03';
-
+    // private $dashboard_js_version = '01';
+    // private $fees_js_version = '01';
+    // private $order_fee_js_version = '03';
+    private $version;
     public function __construct()
     {
         parent::__construct();
         $this->load->helper(
             array('file', 'url', 'form')
         );
+        $this->version = strtotime(date('Y-m-d'));
         $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->library('order/template');
@@ -43,9 +44,9 @@ class Dashboard extends MX_Controller
         $data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
         $data['order_lists'] = $this->order->get_recent_orders();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        // $this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
+        // $this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v='.$this->version) );
         // $this->template->show("order", "dashboard", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/dashboard.js?v=prelim_order_' . $this->dashboard_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "dashboard", $data);
     }
 
@@ -177,7 +178,7 @@ class Dashboard extends MX_Controller
     public function fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/fees.js?v=fees_' . $this->fees_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/fees.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "fees", $data);
     }
 
@@ -358,7 +359,7 @@ class Dashboard extends MX_Controller
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
 
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/order_fee.js?v=order_fee_' . $this->order_fee_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/order_fee.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "get_fees", $data);
     }
 
