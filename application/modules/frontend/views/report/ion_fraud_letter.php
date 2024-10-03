@@ -34,7 +34,7 @@
         }
         .logo_container{
             float: left;
-            padding: 25px;
+            padding: 25px 25px 25px 0px;
         }
         .logo_container img{
             width: 240px;
@@ -119,7 +119,8 @@
         <div class="pdf_page size_letter">
             <div class="pdf_header">
                 <div class="logo_container">
-                    <img src="https://gallery.mailchimp.com/3f123598483b787fa180fff0f/images/8cee9f1d-8c9f-4e75-b5b2-f1356f42fff8.png" alt="">
+                    <!-- <img src="https://gallery.mailchimp.com/3f123598483b787fa180fff0f/images/8cee9f1d-8c9f-4e75-b5b2-f1356f42fff8.png" alt=""> -->
+                    <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" alt="">
                 </div>
                 <div class="header_address">
                     Pacific Coast Title Company<br>
