@@ -3473,8 +3473,7 @@ class Cron extends MX_Controller
                             $salesRepName = '';
                             if (in_array('Sales Rep', $headerColumns)) {
                                 $saleskey = array_search("Sales Rep", $headerColumns);
-
-                                $salesRepName = strtolower(trim($data[$saleskey]));
+                                $salesRepName = strtolower(trim(preg_replace('/\s+/', ' ', $data[$saleskey])));
                                 if (!empty($salesRepName)) {
                                     $saleUserKey = array_search($salesRepName, array_column($salesUsers, 'sales_name'));
                                     if (isset($saleUserKey) && !empty($saleUserKey)) {
@@ -3483,7 +3482,6 @@ class Cron extends MX_Controller
                                 }
                             }
                         }
-
                         /** End Check and update sales rep logic */
 
                         if ($row != 1) {
