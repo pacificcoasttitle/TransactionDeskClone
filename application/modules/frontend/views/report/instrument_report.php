@@ -1151,7 +1151,7 @@
                         ?>
                         <tr style="text-align: center;" >
                             <td > </td>
-                            <td colspan="3" > There is No Foreclosure activity found.</td>
+                            <td colspan="3" > There are No Foreclosure activity found.</td>
                         </tr>
                     <?php } ?>
                 </table>
@@ -1182,7 +1182,7 @@
                         $noRecordI = true;?>
                         <tr style="text-align: center;" >
                             <td ></td>
-                            <td colspan="3" > There is No Liens, Notices, and Violations found.</td>
+                            <td colspan="3" > There are No Liens, Notices, and Violations found.</td>
                         </tr>
                     <?php } ?>
                     
