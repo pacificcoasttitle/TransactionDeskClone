@@ -58,6 +58,15 @@ class Order
         $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
             order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
+        if ($userdata['is_sales_rep_manager'] == 1) {
+            $salesUsers = $this->CI->home_model->get_user(array('id' => $salesUser));
+            if (!empty($salesUsers['sales_rep_users'])) {
+                $salesUser = explode(',', $salesUsers['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesUser)) {
+                    $salesUser[] = $userdata['id'];
+                }
+            }
+        }
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
@@ -157,7 +166,7 @@ class Order
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                     $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
-                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                        $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
                 } else {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
@@ -273,7 +282,7 @@ class Order
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                     $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
-                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                        $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
                 } else {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
@@ -393,7 +402,7 @@ class Order
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                     $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
-                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                        $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
                 } else {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
@@ -500,7 +509,7 @@ class Order
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                     $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
-                        $this->CI->db->where('transaction_details.sales_representative', $salesUser);
+                        $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
                 } else {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
