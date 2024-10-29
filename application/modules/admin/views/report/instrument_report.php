@@ -152,7 +152,7 @@
         }
         .header_address {
             float: right;
-            text-align: right; 
+            text-align: right;
             color: #121212;
         }
         .main_title{
@@ -307,7 +307,7 @@
         }
         .header_address {
             float: right;
-            text-align: right; 
+            text-align: right;
             color: #121212;
         }
         .main_title{
@@ -475,7 +475,7 @@
         }
         .header_address {
             float: right;
-            text-align: right; 
+            text-align: right;
             color: #121212;
             font-size: 16px;
             line-height: 19px
@@ -635,13 +635,11 @@
         .w-250 {
             width: 250px;
         }
-        
+
     </style>
 </head>
 <body>
-    <?php 
-        $awsPath = env('AWS_PATH');
-    ?>
+    <?php $awsPath = env('AWS_PATH');?>
     <!-- <div class="page_container">
         <div class="pdf_page size_letter">
             <div class="pdf_body">
@@ -657,12 +655,12 @@
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;">
-                                <span style="font-size: 30px;color: #FFF;text-transform: uppercase;font-weight: 800;font-family: 'Montserrat';">LISTING PRELIM</span> 
+                                <span style="font-size: 30px;color: #FFF;text-transform: uppercase;font-weight: 800;font-family: 'Montserrat';">LISTING PRELIM</span>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding-left: 70px; vertical-align: middle;padding-top:15px">
-                                <span style="font-size: 21px;color: #d35627; font-weight:bold;text-transform: uppercase;font-family: 'Montserrat';">Report</span>   
+                                <span style="font-size: 21px;color: #d35627; font-weight:bold;text-transform: uppercase;font-family: 'Montserrat';">Report</span>
                             </td>
                         </tr>
                         <tr>
@@ -692,9 +690,9 @@
                                 </table>
                             </td>
                         </tr>
-                    </tbody>        
+                    </tbody>
                 </table>
-            </div>    
+            </div>
         </div>
     </div>
     <div class="page-break" style="page-break-after: always;"></div> -->
@@ -739,8 +737,8 @@
                 <div class="clearfix"></div>
 				 <div class="listing_report-alt text_left mt-50"><b>Subject Property: <?php echo $orderDetails['full_address']; ?></b></div>
                 <div class="listing_report-alt-1 text_left mb-50"><b>On behalf of: <?php echo $orderDetails['salerep_first_name'] . ' ' . $orderDetails['salerep_last_name']; ?></b></div>
-                
-            </div>           
+
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text">Cover</p>
@@ -766,7 +764,7 @@
 					<strong>Section:&nbsp H</strong> - <span style="color:red;">Foreclosure Activity</span><br>
 					<strong>Section:&nbsp I</strong> - <span style="color:red;">Liens & Items for Review</span><br>
                 </div>
-               
+
                 <div class="h150"></div>
                 <div class="main_title">About This Report</div>
                 <div class="title_divider"></div>
@@ -779,7 +777,7 @@
                     information form to be fill out in order for us to conduct a more
                     thorough search. This docment is not a preliminary title report.
                 </div>
-            </div>           
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text">Welcome</p>
@@ -813,9 +811,9 @@
                     question. Items that are directly associated with the owner will require a statement of
                     information form to be fill out in order for us to conduct a more
                     thorough search. This docment is not a preliminary title report. <br>
-                    
+
                 </div>
-            </div>           
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text">Welcome</p>
@@ -915,19 +913,19 @@
                         <td></td>
                     </tr>
                 </table>
-            </div>           
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text">2</p>
             </div>
         </div>
     </div>
-    
+
     <div class="page-break" style="page-break-after: always;"></div>
-    <?php  
-        $firstInstallment = json_decode($titlePointDetails[0]['first_installment'], true);
-        $secondInstallment = json_decode($titlePointDetails[0]['second_installment'], true);
-    ?>
+    <?php
+$firstInstallment = json_decode($titlePointDetails[0]['first_installment'], true);
+$secondInstallment = json_decode($titlePointDetails[0]['second_installment'], true);
+?>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
@@ -962,7 +960,7 @@
                         <td></td>
                     </tr>
                 </table>
-                <div class="table_title"><em>Section D:</em> Property Taxes  <a href="<?php echo $taxFileUrl?>" target="_blank"><?php echo $orderDetails['apn']; ?></a></div>
+                <div class="table_title"><em>Section D:</em> Property Taxes  <a href="<?php echo $taxFileUrl ?>" target="_blank"><?php echo $orderDetails['apn']; ?></a></div>
                 <table class="table_b table">
                     <tr>
                         <td colspan="2" class="text_center f900">1st Installment </td>
@@ -1026,31 +1024,32 @@
                 <div class="table_title"><em>Section E:</em> Legal Description:</div>
                 <div class="legal_desc">
                     <?php echo $titlePointDetails[0]['legal_description']; ?><br>
-                    For the most up to date and accurate legal description please see grant deed below. 
+                    For the most up to date and accurate legal description please see grant deed below.
                 </div>
                 <div class="table_title"><em>Section F:</em> Property Vesting:</div>
                 <div class="legal_desc">
                     <?php echo $titlePointDetails[0]['vesting_information'] ? $titlePointDetails[0]['vesting_information'] : 'Refer to grant deed below' ?> <br><a target="_blank" href="<?php echo $awsPath . 'grant-deed/' . $titlePointDetails[0]['file_number'] ?>.pdf">
-                        <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>  
+                        <?php echo $titlePointDetails[0]['cs4_instrument_no'] ?>
                     </a> <br>
-                    <?php  
-                        foreach ($vestingInstrumentDetails as $key => $vesting) { 
-                            $count = substr_count($titlePointDetails[0]['cs4_instrument_no'], $vesting['instrument']);
-                            if(isset($count) && !empty($count)) {
-                                continue; 
-                            }
-                            // $arr = explode('-', $titlePointDetails[0]['cs4_instrument_no']);
-		                    // if (count($arr) > 1 && in_array($vesting['instrument'], $arr)) {
-                            // }
-                            ?>
+                    <?php
+foreach ($vestingInstrumentDetails as $key => $vesting) {
+    $count = substr_count($titlePointDetails[0]['cs4_instrument_no'], $vesting['instrument']);
+    if (isset($count) && !empty($count)) {
+        continue;
+    }
+    // $arr = explode('-', $titlePointDetails[0]['cs4_instrument_no']);
+    // if (count($arr) > 1 && in_array($vesting['instrument'], $arr)) {
+    // }
+    ?>
 
-                            <a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' .$vesting['id'] ?>.pdf">
-                            <?php echo  $vesting['instrument']; ?>
+                            <a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' . $vesting['id'] ?>.pdf">
+                            <?php echo $vesting['instrument']; ?>
                             </a> <br>
-                    <?php }
-                    ?>
+                    <?php
+}
+?>
                 </div>
-            </div>           
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text">3</p>
@@ -1059,27 +1058,27 @@
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
     <?php
-        $i = 0; 
-        $page = 4;
-        $allSectionRecordChunk = array_chunk($allSectionRecord, 7);
+$i = 0;
+$page = 4;
+$allSectionRecordChunk = array_chunk($allSectionRecord, 7);
 
-        $countG = count($sectionGRecord);
-        $countH = count($sectionHRecord);
-        $countI = count($sectionIRecord);
-        $countJ = count($sectionJRecord);
-        $noRecordG = $noRecordH = $noRecordI = $noRecordJ = false;
-        $sectionGRecordNumber = $sectionHRecordNumber = $sectionIRecordNumber = 0;
-        
-        foreach($allSectionRecordChunk as $recordKey => $chunk) {
-            $displaySectionG = ((array_search('G', array_column($chunk, 'section')) !== FALSE)) ? '' : 'hide';
-            $displaySectionH = (array_search('H', array_column($chunk, 'section')) !== FALSE) ? '' : 'hide';
-            $displaySectionI = (array_search('I', array_column($chunk, 'section')) !== FALSE) ? '' : 'hide';
-            // $displaySectionJ = (array_search('J', array_column($chunk, 'section')) !== FALSE) ? '' : 'hide';
-            $displayInG = array_filter($chunk, function($v) { return ($v['section'] == 'G');});
-            $displayInH = array_filter($chunk, function($v) { return ($v['section'] == 'H');});
-            $displayInI = array_filter($chunk, function($v) { return ($v['section'] == 'I');});
-            // $displayInJ = array_filter($chunk, function($v) { return ($v['section'] == 'J');});
-   ?>
+$countG = count($sectionGRecord);
+$countH = count($sectionHRecord);
+$countI = count($sectionIRecord);
+$countJ = count($sectionJRecord);
+$noRecordG = $noRecordH = $noRecordI = $noRecordJ = false;
+$sectionGRecordNumber = $sectionHRecordNumber = $sectionIRecordNumber = 0;
+
+foreach ($allSectionRecordChunk as $recordKey => $chunk) {
+    $displaySectionG = ((array_search('G', array_column($chunk, 'section')) !== false)) ? '' : 'hide';
+    $displaySectionH = (array_search('H', array_column($chunk, 'section')) !== false) ? '' : 'hide';
+    $displaySectionI = (array_search('I', array_column($chunk, 'section')) !== false) ? '' : 'hide';
+    // $displaySectionJ = (array_search('J', array_column($chunk, 'section')) !== FALSE) ? '' : 'hide';
+    $displayInG = array_filter($chunk, function ($v) {return ($v['section'] == 'G');});
+    $displayInH = array_filter($chunk, function ($v) {return ($v['section'] == 'H');});
+    $displayInI = array_filter($chunk, function ($v) {return ($v['section'] == 'I');});
+    // $displayInJ = array_filter($chunk, function($v) { return ($v['section'] == 'J');});
+    ?>
     <div class="page_container">
         <div style="height:50px"></div>
         <div class="pdf_page size_letter">
@@ -1105,28 +1104,30 @@
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
-                    <?php 
-                        $i = 0;
-                        if(!empty($displayInG) && !strpos(json_encode($displayInG), 'message') > 0) { 
-                            foreach($displayInG as $k => $val) {
-                        ?>
+                    <?php
+$i = 0;
+    if (!empty($displayInG) && !strpos(json_encode($displayInG), 'message') > 0) {
+        foreach ($displayInG as $k => $val) {
+            ?>
                     <tr>
                         <td><?php echo $sectionGRecordNumber + 1 . (($sectionGRecordNumber == 0) ? 'st' : (($sectionGRecordNumber == 1) ? 'nd' : (($sectionGRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
-                        <td><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  "$".number_format($val['loan_amount']); ?></td>
-                        <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
-                        <td><?php echo  date("m/d/Y", strtotime($val['recorded_date']));  ?></td>
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td><?php echo $val['document_name']; ?></td>
+                        <td><?php echo "$" . number_format($val['loan_amount']); ?></td>
+                        <td><?php echo ucwords(strtolower($val['parties'])); ?></td>
+                        <td><?php echo date("m/d/Y", strtotime($val['recorded_date'])); ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' . $val['id'] ?>.pdf"><?php echo $val['instrument']; ?></a></b></td>
                     </tr>
-                    <?php $sectionGRecordNumber++;} } else { $noRecordG = true;?>
+                    <?php $sectionGRecordNumber++;
+        }
+    } else { $noRecordG = true;?>
                     <tr>
                         <td></td>
-                        <td colspan="3">There is No Opens Deeds of Trust found.</td>
+                        <td colspan="3">There are No Opens Deeds of Trust found.</td>
                     </tr>
-                    <?php } ?>
+                    <?php }?>
                 </table>
                 <div class="table_title <?php echo (strpos(json_encode($displayInH), 'message') && !$noRecordH) ? '' : $displaySectionH; ?>"><em>Section H:</em> Foreclosure Activity</div>
-                <table class="table_g table <?php echo (strpos(json_encode($displayInH), 'message') && !$noRecordH) ? '' :  $displaySectionH; ?>">
+                <table class="table_g table <?php echo (strpos(json_encode($displayInH), 'message') && !$noRecordH) ? '' : $displaySectionH; ?>">
                     <tr>
                         <td></td>
                         <td>Document Name</td>
@@ -1136,27 +1137,29 @@
                         <td class="text_center">Instrument #</td>
                     </tr>
                     <?php
-                    if (!empty($displayInH) && !strpos(json_encode($displayInH), 'message') > 0) { 
-                    foreach ($displayInH as $key => $val) {  ?>
+if (!empty($displayInH) && !strpos(json_encode($displayInH), 'message') > 0) {
+        foreach ($displayInH as $key => $val) {?>
                     <tr>
                         <td><?php echo $sectionHRecordNumber + 1 . (($sectionHRecordNumber == 0) ? 'st' : (($sectionHRecordNumber == 1) ? 'nd' : (($sectionHRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
-                        <td><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  '$'.number_format($val['loan_amount']); ?></td>
-                        <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
-                        <td><?php echo  date("m/d/Y", strtotime($val['recorded_date']));  ?></td>                        
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td><?php echo $val['document_name']; ?></td>
+                        <td><?php echo '$' . number_format($val['loan_amount']); ?></td>
+                        <td><?php echo ucwords(strtolower($val['parties'])); ?></td>
+                        <td><?php echo date("m/d/Y", strtotime($val['recorded_date'])); ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' . $val['id'] ?>.pdf"><?php echo $val['instrument']; ?></a></b></td>
                     </tr>
-                    <?php $sectionHRecordNumber++; } } else {
-                        $noRecordH = true;
-                        ?>
+                    <?php $sectionHRecordNumber++;}
+    } else {
+        $noRecordH = true;
+        ?>
                         <tr style="text-align: center;" >
                             <td > </td>
                             <td colspan="3" > There is No Foreclosure activity found.</td>
                         </tr>
-                    <?php } ?>
+                    <?php
+}?>
                 </table>
                 <div class="table_title <?php echo (strpos(json_encode($displayInI), 'message') && !$noRecordI) ? '' : $displaySectionI; ?>"><em>Section I:</em> Liens, Notices, and Violations</div>
-                <table class="table_g table <?php echo (strpos(json_encode($displayInI), 'message') && !$noRecordI) ? '' :  $displaySectionI; ?>">
+                <table class="table_g table <?php echo (strpos(json_encode($displayInI), 'message') && !$noRecordI) ? '' : $displaySectionI; ?>">
                     <tr>
                         <td></td>
                         <td>Document Name</td>
@@ -1165,30 +1168,32 @@
                         <td>Recorded</td>
                         <td class="text_center">Instrument #</td>
                     </tr>
-                    <?php  
-                    
-                    if (!empty($displayInI && !strpos(json_encode($displayInI), 'message') > 0)) { 
-                    
-                    foreach ($displayInI as $key => $val) {  ?>
+                    <?php
+
+    if (!empty($displayInI && !strpos(json_encode($displayInI), 'message') > 0)) {
+
+        foreach ($displayInI as $key => $val) {?>
                     <tr>
                         <td ><?php echo $sectionIRecordNumber + 1 . (($sectionIRecordNumber == 0) ? 'st' : (($sectionIRecordNumber == 1) ? 'nd' : (($sectionIRecordNumber == 2) ? 'rd' : 'th'))); ?></td>
-                        <td ><?php echo  $val['document_name']; ?></td>
-                        <td><?php echo  '$'.number_format($val['loan_amount']); ?></td>
-                        <td><?php echo  ucwords(strtolower($val['parties'])); ?></td>
-                        <td ><?php echo  date("m/d/Y", strtotime($val['recorded_date']));  ?></td>
-                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/'.$val['id'] ?>.pdf"><?php echo  $val['instrument']; ?></a></b></td>
+                        <td ><?php echo $val['document_name']; ?></td>
+                        <td><?php echo '$' . number_format($val['loan_amount']); ?></td>
+                        <td><?php echo ucwords(strtolower($val['parties'])); ?></td>
+                        <td ><?php echo date("m/d/Y", strtotime($val['recorded_date'])); ?></td>
+                        <td class="text_center"><b class="orange_text"><a style="color: inherit;" target="_blank" href="<?php echo $awsPath . 'title-point/' . $val['id'] ?>.pdf"><?php echo $val['instrument']; ?></a></b></td>
                     </tr>
-                    <?php $sectionIRecordNumber++; } } else {
-                        $noRecordI = true;?>
+                    <?php $sectionIRecordNumber++;}
+    } else {
+        $noRecordI = true;?>
                         <tr style="text-align: center;" >
                             <td ></td>
-                            <td colspan="3" > There is No Liens, Notices, and Violations found.</td>
+                            <td colspan="3" > There are No Liens, Notices, and Violations found.</td>
                         </tr>
-                    <?php } ?>
-                    
+                    <?php
+}?>
+
                 </table>
                 <?php//}?>
-            </div>           
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text"><?php echo $page; ?></p>
@@ -1196,10 +1201,11 @@
         </div>
     </div>
     <div class="page-break" style="page-break-after: always;"></div>
-    <?php $page++;} ?>
+    <?php $page++;
+}?>
     <div class="page-break" style="page-break-after: always;"></div>
-    
-    <?php if($is_plat_map_exist == 1) { ?>
+
+    <?php if ($is_plat_map_exist == 1) {?>
     <div class="page-break" style="page-break-after: always;"></div>
     <div class="page_container">
         <div style="height:50px"></div>
@@ -1218,15 +1224,15 @@
             <div class="pdf_body">
                 <!-- <div class="table_title"><em>Section G:</em> Open Loans:</div> -->
                 <div style="height:20px"></div>
-                <img src="<?php echo $awsPath . 'plat-map/'.$orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center; max-height: 9in;" alt=""/>
-            </div>           
+                <img src="<?php echo $awsPath . 'plat-map/' . $orderDetails['lp_file_number'] ?>.png" style="max-width:800px;margin:0 auto;text-align:center; max-height: 9in;" alt=""/>
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text"><?php echo $page; ?></p>
             </div>
         </div>
     </div>
-    <?php } ?>
+    <?php }?>
     <div class="page-break" style="page-break-after: always;"></div>
 
     <div class="page_container">
@@ -1247,7 +1253,7 @@
             <div class="logo" style="position:relative;height:10in">
                 <img src="<?php echo base_url('assets/frontend/images/pacific.png') ?>" style="max-width:530px;position:absolute;top:35%;left:15%; " alt=""/>
             </div>
-            </div>           
+            </div>
             <div class="pdf_footer">
                 <p class="page_title">Listing Prelim Report</p>
                 <p class="page_text"><?php echo $page; ?></p>
