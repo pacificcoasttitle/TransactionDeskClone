@@ -312,7 +312,7 @@ class Home extends MX_Controller
 
                 /** End Get config value to check Lp Enable or not */
                 $underWriter = '';
-                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] == 0) && $ProductTypeID == '20') {
+                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && $ProductTypeID == '20') {
                     $lpOrderFlag = 1;
                     $loanFlag = 1;
                     if (strpos($ProductTypeTxt, 'Sale') !== false) {
