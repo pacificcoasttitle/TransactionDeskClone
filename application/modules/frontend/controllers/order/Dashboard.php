@@ -252,6 +252,7 @@ class Dashboard extends MX_Controller
 
         if (!empty($orderDetails)) {
             $post_data['seller'] = $orderDetails['primary_owner'];
+            $post_data['title_officer_email'] = $orderDetails['title_officer_email'];
         } else {
             $post_data['seller'] = '';
         }
@@ -293,12 +294,13 @@ class Dashboard extends MX_Controller
             $post_data['lenderInsurance'] = 1;
             $post_data['transactionType'] = 'Resale';
             $post_data['transferTaxesCheck'] = 1;
-
+            $transType = 'sale';
         } else {
             $post_data['netsheet_for'] = '';
             $post_data['lenderInsurance'] = 0;
             $post_data['transactionType'] = 'Re-Finance';
             $post_data['transferTaxesCheck'] = 0;
+            $transType = 'loan';
             $this->load->library('order/resware');
             $endPoint = 'files/' . $fileId . '/partners';
             $user_data['admin_api'] = 1;
@@ -325,7 +327,14 @@ class Dashboard extends MX_Controller
         if ($orderDetails['purchase_type'] == '40' || $orderDetails['purchase_type'] == '27' || $orderDetails['purchase_type'] == '24') {
             $post_data['underwriter'] = 5;
         }
-
+        $excludeType = ['Title Related Fees', 'Escrow'];
+        $otherFees = $this->fees_model->getFeesEstimation($transType, $excludeType);
+        $recordingRatesData = $this->fees_model->getRecordingFees($transType);
+        $otherFeesData = $this->fees_model->getOtherAdditionalFees($transType);
+        // $data['recordingRates'] = $this->fees_model->getRecordingFees($transType);
+        // $data['additional_fees'] = $this->fees_model->getOtherAdditionalFees($transType);
+        // echo "<pre>";
+        // print_r($data);die;
         $ch = curl_init(env('CALC_API_URL') . 'index.php?welcome/createNetsheetDoc');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
@@ -336,7 +345,9 @@ class Dashboard extends MX_Controller
             'Content-Length: ' . strlen(json_encode($post_data)))
         );
         $error_msg = curl_error($ch);
+        // print_r(curl_exec($ch));die;
         $calcResult = json_decode(curl_exec($ch), true);
+        // print_r($calcResult);die;
         $calcResult['transactionType'] = $post_data['transactionType'];
         $data['is_escrow_flag'] = 0;
         if (str_contains(strtolower($orderDetails['product_type']), 'title and escrow')) {
@@ -347,8 +358,13 @@ class Dashboard extends MX_Controller
         // } else {
         //     $data['is_escrow_flag'] = 0;
         // }
-
+        $calcResult['other_additional_fees_total'] = $otherFeesData['otherFeesTotal'];
+        $calcResult['other_additional_fees'] = $otherFeesData['otherFees'];
+        $calcResult['recordingTotal'] = $recordingRatesData['recordingFeesTotal'];
+        $calcResult['recordingAdditionalFees'] = $recordingRatesData['recordingFees'];
         $data['calcResult'] = $calcResult;
+        // echo "<pre>";
+        // print_r($data);die;
         $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         $data['sales_amount'] = $salesAmount;
