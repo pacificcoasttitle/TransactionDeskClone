@@ -249,10 +249,11 @@ class Dashboard extends MX_Controller
         }
 
         $result_decoded = json_decode($result);
-
+        $titleOfficerId = null;
         if (!empty($orderDetails)) {
             $post_data['seller'] = $orderDetails['primary_owner'];
             $post_data['title_officer_email'] = $orderDetails['title_officer_email'];
+            $titleOfficerId = $orderDetails['title_officer_id'];
         } else {
             $post_data['seller'] = '';
         }
@@ -329,8 +330,8 @@ class Dashboard extends MX_Controller
         }
         $excludeType = ['Title Related Fees', 'Escrow'];
         $otherFees = $this->fees_model->getFeesEstimation($transType, $excludeType);
-        $recordingRatesData = $this->fees_model->getRecordingFees($transType);
-        $otherFeesData = $this->fees_model->getOtherAdditionalFees($transType);
+        $recordingRatesData = $this->fees_model->getRecordingFees($transType, $titleOfficerId);
+        $otherFeesData = $this->fees_model->getOtherAdditionalFees($transType, $titleOfficerId);
         // $data['recordingRates'] = $this->fees_model->getRecordingFees($transType);
         // $data['additional_fees'] = $this->fees_model->getOtherAdditionalFees($transType);
         // echo "<pre>";

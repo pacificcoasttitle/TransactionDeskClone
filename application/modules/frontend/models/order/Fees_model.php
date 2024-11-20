@@ -185,10 +185,10 @@ class Fees_model extends CI_Model
         return $resultArray;
     }
 
-    public function getRecordingFees($transactionType)
+    public function getRecordingFees($transactionType, $titleOfficerId)
     {
         $recordingAdditionalFeesTotal = 0;
-        $recordingAdditionalFees = $this->get_additional_fees($transactionType, 'recording');
+        $recordingAdditionalFees = $this->get_additional_fees($transactionType, 'recording', $titleOfficerId);
 
         if (isset($recordingAdditionalFees) && !empty($recordingAdditionalFees)) {
             foreach ($recordingAdditionalFees as $record_key => $record_value) {
@@ -198,34 +198,48 @@ class Fees_model extends CI_Model
         return array('recordingFeesTotal' => $recordingAdditionalFeesTotal, 'recordingFees' => $recordingAdditionalFees);
     }
 
-    public function get_additional_fees($txn_type, $rate_type)
+    public function get_additional_fees($txn_type, $rate_type, $titleOfficerId)
     {
+        $subquery = $this->db->select('pct_order_fees.name')
+            ->from('pct_order_fees')
+            ->join('pct_order_fees_types as ft', 'ft.id = pct_order_fees.fee_type_id')
+            ->where('ft.name =', $rate_type)
+            ->where('transaction_type', $txn_type)
+            ->where('title_officer', $titleOfficerId)
+            ->get_compiled_select();
+        // print_r($subquery);die;
         $this->db->from('pct_order_fees');
         $this->db->select('pct_order_fees.id, pct_order_fees.transaction_type, pct_order_fees.name, pct_order_fees.value, pct_order_fees.status as fees_status, ft.name as fees_type_name');
         $this->db->join('pct_order_fees_types as ft', 'ft.id = pct_order_fees.fee_type_id');
         $this->db->where('pct_order_fees.status', 1);
-        // $this->db->where_not_in('ft.name', $excludeType);
-        if (isset($txn_type) && !empty($txn_type)) {
-            // $this->db->where('transaction_type =', $txn_type);
-            $this->db->where('pct_order_fees.transaction_type', $txn_type);
-        }
+        $this->db->where('pct_order_fees.transaction_type', $txn_type);
+        $this->db->where('ft.name =', $rate_type);
 
-        if (isset($rate_type) && !empty($rate_type)) {
-            $this->db->where('ft.name =', $rate_type);
+        if ($titleOfficerId) {
+
+            $this->db->group_start()
+                ->where('title_officer', $titleOfficerId)
+                ->or_group_start() // Second condition starts
+                ->where('title_officer', 0)
+                ->where("pct_order_fees.name NOT IN ($subquery)")
+                ->group_end() // Close the second condition
+                ->group_end();
         }
+        // Close the entire OR group
         $query = $this->db->get();
         if ($rate_type == 'Others') {
+            // echo "<pre>";
             // print_r($query->result_array());
             // print_r($this->db->last_query());die;
         }
         return $query->result_array();
     }
 
-    public function getOtherAdditionalFees($transactionType)
+    public function getOtherAdditionalFees($transactionType, $titleOfficerId)
     {
         $otherFeesTotal = 0;
         $otherFees = array();
-        $otherFees = $this->get_additional_fees($transactionType, 'Others');
+        $otherFees = $this->get_additional_fees($transactionType, 'Others', $titleOfficerId);
         if (count($otherFees)) {
             $otherFeesVal = array_column($otherFees, 'value');
             $otherFeesTotal = array_sum($otherFeesVal);
