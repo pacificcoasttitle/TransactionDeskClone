@@ -676,6 +676,7 @@ class Order
             titleofficer.first_name as titleofficer_first_name,
             titleofficer.last_name as titleofficer_last_name,
             titleofficer.email_address as title_officer_email,
+            titleofficer.id as title_officer_id,
             agents.name as agent_name,
             agents.address as agent_address,
             agents.email_address as agent_email_address,

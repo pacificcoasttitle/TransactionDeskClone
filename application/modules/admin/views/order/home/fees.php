@@ -5,17 +5,17 @@
 			<h1 class="h3 text-gray-800">Fees</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="<?php echo base_url(); ?>order/admin/add-fee" class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="<?php echo base_url(); ?>order/admin/add-fee" class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">Add Fees</span> </a>
 		</div>
 	</div>
     <div class="card shadow mb-4">
         <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
+            <div class="datatable-header-titles" >
                 <span>
                     <i class="fas fa-table"></i>
                 </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Add Fees</h6> 
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Add Fees</h6>
             </div>
         </div>
         <div class="card-body">
@@ -26,8 +26,9 @@
                     <thead>
                         <tr>
                             <th width="10%">Sr No</th>
-                            <th width="30%">Transaction Type</th>
-                            <th width="33%">Name</th>
+                            <th width="10%">Transaction Type</th>
+                            <th width="20%">Fees Type</th>
+                            <th width="32%">Name</th>
                             <th width="18%">Value</th>
                             <th width="10%">Action</th>
                         </tr>

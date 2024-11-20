@@ -45,37 +45,41 @@
                                 </div>
                             </div>
 
-                            <?php
-if (isset($fee_types) && !empty($fee_types)) {
-    ?>
+                            <?php if (isset($fee_types) && !empty($fee_types)) {?>
                                     <div class="form-group">
                                         <label for="fee_type" class="col-sm-2 col-form-label">Fee Type<span class="required"> *</span></label>
                                         <div class="col-sm-6">
                                             <select name="fee_type" id="fee_type" class="form-control">
                                                 <option value="">Select</option>
-                                                <?php
-foreach ($fee_types as $key => $value) {
-        ?>
+                                                <?php foreach ($fee_types as $key => $value) {?>
                                                         <option value="<?php echo $value['id']; ?>" <?php if ($value['id'] == $fees_info['fee_type_id']) {echo "selected";}?>><?php echo $value['name']; ?></option>
-                                                <?php
-}
-    ?>
+                                                <?php }?>
                                             </select>
                                         <?php if (!empty($fee_type_id_error_msg)) {?>
                                             <span class="error"><?php echo $fee_type_id_error_msg; ?></span>
                                         <?php }?>
                                         </div>
                                     </div>
-                            <?php
-}
-?>
+                            <?php }?>
+
+                            <?php if (isset($titleOfficer) && !empty($titleOfficer)) {?>
+                            <div class="form-group">
+                                <label for="fee_type" class="col-sm-2 col-form-label">Title Officer<span class="required"> *</span></label>
+								<div class="col-sm-6">
+                                    <select id="title_officer" name="title_officer" class="form-control">
+                                        <option value="0">All</option>
+                                        <?php foreach ($titleOfficer as $key => $value) {?>
+                                            <option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] == $fees_info['title_officer']) ? "selected" : '' ?>><?php echo $value['name']; ?></option>
+                                        <?php }?>
+									</select>
+								</div>
+							</div>
+                            <?php }?>
 
                             <div class="form-group">
                                 <label for="fee_name" class="col-sm-2 col-form-label">Fee Name<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <?php
-$fee_name = isset($fees_info['name']) && !empty($fees_info['name']) ? $fees_info['name'] : '';
-?>
+                                    <?php $fee_name = isset($fees_info['name']) && !empty($fees_info['name']) ? $fees_info['name'] : '';?>
                                     <input type="text" class="form-control" name="fee_name" id="fee_name" class="form-control" value="<?php echo $fee_name; ?>" placeholder="Fee Name">
 
                                     <?php if (!empty($name_error_msg)) {?>
@@ -87,9 +91,7 @@ $fee_name = isset($fees_info['name']) && !empty($fees_info['name']) ? $fees_info
                             <div class="form-group">
                                 <label for="fee_value" class="col-sm-2 col-form-label">Fee Value<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <?php
-$fee_value = isset($fees_info['value']) && !empty($fees_info['value']) ? $fees_info['value'] : '';
-?>
+                                    <?php $fee_value = isset($fees_info['value']) && !empty($fees_info['value']) ? $fees_info['value'] : '';?>
 
                                     <input type="text" class="form-control" name="fee_value" id="fee_value" value="<?php echo $fee_value; ?>" class="form-control" placeholder="Fee Value">
                                     <?php if (!empty($value_error_msg)) {?>

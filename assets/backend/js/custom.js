@@ -3643,6 +3643,7 @@ $(document).ready(function () {
     if ($('#tbl-fees').length) {
         fees_list = $('#tbl-fees').DataTable({
             "paging": true,
+            "pageLength": 50,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0, 1] }
