@@ -302,6 +302,8 @@ class Order extends MX_Controller
                         $nestedData[] = 'Commonwealth Land Title Insurance Company';
                     } else if ($value['underwriter'] == 'westcor') {
                         $nestedData[] = 'Westcor Land Title Insurance Company';
+                    } else {
+                        $nestedData[] = '';
                     }
                 } else {
                     if (strpos($value['cpl_document_name'], 'natic') !== false) {
