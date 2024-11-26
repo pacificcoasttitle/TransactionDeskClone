@@ -56,12 +56,12 @@ class Title extends MX_Controller
                 $nestedData[] = $value['partner_id'];
                 $nestedData[] = $value['partner_type_id'];
                 $id = $value['id'];
-                if ($value['email_receive_flag'] == 1) {
-                    $checked = 'checked';
+                /*if ($value['email_receive_flag'] == 1) {
+                $checked = 'checked';
                 } else {
-                    $checked = '';
-                }
-                $nestedData[] = "<input $checked onclick='updateTitleOfficerEmailReceiveFlag();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                $checked = '';
+                }*/
+                // $nestedData[] = "<input $checked onclick='updateTitleOfficerEmailReceiveFlag();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url() . 'order/admin/edit-title-officer/' . $value['id'];

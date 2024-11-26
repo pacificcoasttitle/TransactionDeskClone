@@ -55,7 +55,7 @@ $roleName = $roleList[$role_id];
                             <th>Telephone</th>
                             <th>Partner Id</th>
                             <th>Partner Type Id</th>
-                            <th>Email Receive Flag</th>
+                            <!-- <th>Email Receive Flag</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>
