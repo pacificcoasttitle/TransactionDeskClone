@@ -2822,3 +2822,32 @@ html, body{
 	display: none!important;
   }
 
+/*You can use [title] selector as well*/
+[data-title] {
+	position: relative;
+	cursor: help;
+}
+  
+[data-title]:hover::before {
+	content: attr(data-title);
+	position: absolute;
+	bottom: -30px;
+	display: inline-block;
+	padding: 1px 6px;
+	border-radius: 2px;
+	background: #000;
+	color: #fff;
+	font-size: 14px;
+	font-family: sans-serif;
+	white-space: nowrap;
+}
+[data-title]:hover::after {
+	content: '';
+	position: absolute;
+	bottom: -8px;
+	left: 10px;
+	display: inline-block;
+	color: #fff;
+	border: 8px solid transparent;	
+	border-bottom: 8px solid #000;
+}

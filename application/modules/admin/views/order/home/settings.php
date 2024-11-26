@@ -80,6 +80,13 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row ml-1">
+                                <label for="add_underwriten_partner_via_api" class="col-sm-4 col-form-label">Add Underwritten Partner Via API </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="add_underwriten_partner_via_api" id="add_underwriten_partner_via_api" <?php echo isset($add_underwriten_partner_via_api) && !empty($add_underwriten_partner_via_api) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">
