@@ -222,9 +222,9 @@ class Westcor
             $purchase_price = $orderDetails['sales_amount'];
             $buyers = array();
 
-            if (!empty($orderDetails['borrower'])) {
+            if (!empty($orderDetails['borrowers_vesting'])) {
 
-                $buyerBorrowerName = $orderDetails['borrower'];
+                $buyerBorrowerName = $orderDetails['borrowers_vesting'];
 
                 if (!empty($orderDetails['secondary_borrower'])) {
                     $buyerBorrowerName .= " and " . $orderDetails['secondary_borrower'];
@@ -246,7 +246,7 @@ class Westcor
             }
         } else {
             $buyers = array();
-            $buyerBorrowerName = $orderDetails['borrower'];
+            $buyerBorrowerName = $orderDetails['borrowers_vesting'];
             $buyers[] = array(
                 'NameID' => $orderDetails['westcor_buyer_id'] ? $orderDetails['westcor_buyer_id'] : 0,
                 'Last' => '-',
