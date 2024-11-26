@@ -323,6 +323,8 @@ class Home extends MX_Controller
 
                 /** Start Get config value to check Lp Enable or not */
                 $configData = $this->order->getConfigData();
+                $addUnderwritenPartnerViaApi = $configData['add_underwriten_partner_via_api']['is_enable'];
+
                 $isEnable = $configData['escrow_commission']['is_enable'];
                 $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
 
@@ -493,134 +495,136 @@ class Home extends MX_Controller
                                             }
                                         }
                                     }
-                                    if ($loanFlag == 1) {
-                                        if (!empty($underWriter)) {
-                                            if ($companyData[0]['loan_underwriter'] == 'north_american') {
-                                                if ($underWriter != 'north_american') {
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 39919,
-                                                        'PartnerType' => array(
+                                    if ($addUnderwritenPartnerViaApi == 1) {
+                                        if ($loanFlag == 1) {
+                                            if (!empty($underWriter)) {
+                                                if ($companyData[0]['loan_underwriter'] == 'north_american') {
+                                                    if ($underWriter != 'north_american') {
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $removePartnerFlag = 1;
+                                                            'PartnerID' => 39919,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $removePartnerFlag = 1;
+                                                    } else {
+                                                        $removePartnerFlag = 0;
+                                                    }
+                                                } else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+                                                    if ($underWriter != 'commonwealth') {
+                                                        $partners[] = array(
+                                                            'PartnerTypeID' => 7,
+                                                            'PartnerID' => 6,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $removePartnerFlag = 1;
+                                                    } else {
+                                                        $removePartnerFlag = 0;
+                                                    }
+                                                } else if ($companyData[0]['loan_underwriter'] == 'westcor') {
+                                                    if ($underWriter != 'westcor') {
+                                                        $partners[] = array(
+                                                            'PartnerTypeID' => 7,
+                                                            'PartnerID' => 201324,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $removePartnerFlag = 1;
+                                                    } else {
+                                                        $removePartnerFlag = 0;
+                                                    }
                                                 } else {
-                                                    $removePartnerFlag = 0;
-                                                }
-                                            } else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
-                                                if ($underWriter != 'commonwealth') {
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 6,
-                                                        'PartnerType' => array(
+                                                    if ($underWriter == 'other') {
+                                                        $removePartnerFlag = 1;
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $removePartnerFlag = 1;
-                                                } else {
-                                                    $removePartnerFlag = 0;
-                                                }
-                                            } else if ($companyData[0]['loan_underwriter'] == 'westcor') {
-                                                if ($underWriter != 'westcor') {
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 201324,
-                                                        'PartnerType' => array(
+                                                            'PartnerID' => 201324,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $underWriter = 'westcor';
+                                                    } else if ($underWriter == 'not_set') {
+                                                        $removePartnerFlag = 0;
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $removePartnerFlag = 1;
-                                                } else {
-                                                    $removePartnerFlag = 0;
-                                                }
-                                            } else {
-                                                if ($underWriter == 'other') {
-                                                    $removePartnerFlag = 1;
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 201324,
-                                                        'PartnerType' => array(
-                                                            'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $underWriter = 'westcor';
-                                                } else if ($underWriter == 'not_set') {
-                                                    $removePartnerFlag = 0;
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 201324,
-                                                        'PartnerType' => array(
-                                                            'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $underWriter = 'westcor';
+                                                            'PartnerID' => 201324,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $underWriter = 'westcor';
+                                                    }
                                                 }
                                             }
-                                        }
-                                    } else {
-                                        if (!empty($underWriter)) {
-                                            if ($companyData[0]['sales_underwriter'] == 'north_american') {
-                                                if ($underWriter != 'north_american') {
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 39919,
-                                                        'PartnerType' => array(
+                                        } else {
+                                            if (!empty($underWriter)) {
+                                                if ($companyData[0]['sales_underwriter'] == 'north_american') {
+                                                    if ($underWriter != 'north_american') {
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $removePartnerFlag = 1;
-                                                } else {
-                                                    $removePartnerFlag = 0;
-                                                }
+                                                            'PartnerID' => 39919,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $removePartnerFlag = 1;
+                                                    } else {
+                                                        $removePartnerFlag = 0;
+                                                    }
 
-                                            } else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
-                                                if ($underWriter != 'commonwealth') {
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 6,
-                                                        'PartnerType' => array(
+                                                } else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
+                                                    if ($underWriter != 'commonwealth') {
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $removePartnerFlag = 1;
+                                                            'PartnerID' => 6,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $removePartnerFlag = 1;
+                                                    } else {
+                                                        $removePartnerFlag = 0;
+                                                    }
+                                                } else if ($companyData[0]['sales_underwriter'] == 'westcor') {
+                                                    if ($underWriter != 'westcor') {
+                                                        $partners[] = array(
+                                                            'PartnerTypeID' => 7,
+                                                            'PartnerID' => 201324,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $removePartnerFlag = 1;
+                                                    } else {
+                                                        $removePartnerFlag = 0;
+                                                    }
                                                 } else {
-                                                    $removePartnerFlag = 0;
-                                                }
-                                            } else if ($companyData[0]['sales_underwriter'] == 'westcor') {
-                                                if ($underWriter != 'westcor') {
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 201324,
-                                                        'PartnerType' => array(
+                                                    if ($underWriter == 'other') {
+                                                        $removePartnerFlag = 1;
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $removePartnerFlag = 1;
-                                                } else {
-                                                    $removePartnerFlag = 0;
-                                                }
-                                            } else {
-                                                if ($underWriter == 'other') {
-                                                    $removePartnerFlag = 1;
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 201324,
-                                                        'PartnerType' => array(
+                                                            'PartnerID' => 201324,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $underWriter = 'westcor';
+                                                    } else if ($underWriter == 'not_set') {
+                                                        $removePartnerFlag = 0;
+                                                        $partners[] = array(
                                                             'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $underWriter = 'westcor';
-                                                } else if ($underWriter == 'not_set') {
-                                                    $removePartnerFlag = 0;
-                                                    $partners[] = array(
-                                                        'PartnerTypeID' => 7,
-                                                        'PartnerID' => 201324,
-                                                        'PartnerType' => array(
-                                                            'PartnerTypeID' => 7,
-                                                        ),
-                                                    );
-                                                    $underWriter = 'westcor';
+                                                            'PartnerID' => 201324,
+                                                            'PartnerType' => array(
+                                                                'PartnerTypeID' => 7,
+                                                            ),
+                                                        );
+                                                        $underWriter = 'westcor';
+                                                    }
                                                 }
                                             }
                                         }

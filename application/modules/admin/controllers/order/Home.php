@@ -5770,6 +5770,12 @@ class Home extends MX_Controller
             );
             $this->db->update('pct_configs', $ionFraudFlag, array('slug' => 'enable_ion_fraud_checking'));
 
+            $add_underwriten_partner_via_api = isset($input['add_underwriten_partner_via_api']) && !empty($input['add_underwriten_partner_via_api']) ? 1 : 0;
+            $underwrittenParnerAddFlag = array(
+                'is_enable' => $add_underwriten_partner_via_api,
+            );
+            $this->db->update('pct_configs', $underwrittenParnerAddFlag, array('slug' => 'add_underwriten_partner_via_api'));
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -5798,6 +5804,7 @@ class Home extends MX_Controller
         $res['enable_vesting_document_type_filter'] = $data['enable_vesting_document_type_filter']['is_enable'];
         $res['enable_create_order_submit_button'] = $data['enable_create_order_submit_button']['is_enable'];
         $res['enable_ion_fraud_checking'] = $data['enable_ion_fraud_checking']['is_enable'];
+        $res['add_underwriten_partner_via_api'] = $data['add_underwriten_partner_via_api']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);

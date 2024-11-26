@@ -463,6 +463,7 @@ $route['order/admin/delete-daily-emailer'] = 'admin/order/home/deleteDailyEmaile
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
 $route['order/admin/settings'] = 'admin/order/home/settings';
 
+$route['update-title-officer-email-receive-flag'] = 'admin/order/title/updateTitleOfficerEmailFlag';
 $route['update-lp-document-type-flag'] = 'admin/order/home/updateLpDocumentTypeFlag';
 $route['update-lp-document-is-ves-type-flag'] = 'admin/order/home/updateLpDocumentTypeIsVesFlag';
 $route['order/admin/regenerate-report'] = 'admin/order/home/regenerateReport';

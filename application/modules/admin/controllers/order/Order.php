@@ -528,7 +528,7 @@ class Order extends MX_Controller
         $master_users = $this->home_model->get_rows($con);
         $data['master_users'] = $master_users;
         $data['product_type'] = $product_type;
-        $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=' . $this->version));
         $this->admintemplate->addJS(base_url('assets/backend/js/lp-order.js?v=' . $this->version));
         $this->admintemplate->show("order/order", "lp_orders", $data);
         // $this->load->view('order/layout/header', $data);
@@ -581,9 +581,14 @@ class Order extends MX_Controller
         $cnt = ($pageno == 1) ? ($params['start'] + 1) : (($pageno - 1) * $params['length']) + 1;
         $count = $params['start'] + 1;
         foreach ($ordersList['data'] as $key => $value) {
+            $fileNumber = $value['lp_file_number'];
+            if (!empty($value['file_number'])) {
+                $number = $value['file_number'];
+                $fileNumber = '<span data-title="' . $number . '">' . $value['lp_file_number'] . '</span>';
+            }
             $nestedData = array();
             $nestedData[] = $count;
-            $nestedData[] = $value['lp_file_number'];
+            $nestedData[] = $fileNumber; //$value['lp_file_number'] . '(' .')';
             $nestedData[] = $value['full_address'];
             $nestedData[] = $value['product_type'];
             $nestedData[] = $value['sales_rep_name'];
