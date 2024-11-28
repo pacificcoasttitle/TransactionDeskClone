@@ -4476,6 +4476,11 @@ class Home extends MX_Controller
         $order_details = $this->order_model->get_order_details($order_id);
         // echo "<pre>";
         // print_r($order_details);die;
+        $configData = $this->order->getConfigData();
+        $addUnderwritenPartnerViaApi = $configData['add_underwriten_partner_via_api']['is_enable'];
+
+        // $file_id = $this->input->post('file_id');
+        // $order_details = $this->order_model->get_order_details($file_id);
         $lpFileNumber = $order_details['lp_file_number'];
         $splitName = explode(' ', $order_details['primary_owner']);
         $ownerLastName = end($splitName);
@@ -4805,10 +4810,154 @@ class Home extends MX_Controller
                     /*$removePartnerFlag = 0;
                     $key = '';
                     if (!empty($companyData)) {
-                    <<<<<<< HEAD
-                    =======
-                    <<<<<<< HEAD
-                    >>>>>>> eb588ab1 (Create order softpro api and LP order changes)
+                    if (!empty($resPartners)) {
+                    $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                    if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                    $underWriter = 'north_american';
+                    } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+                    $underWriter = 'westcor';
+                    } else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+                    $underWriter = 'commonwealth';
+                    } else {
+                    if ($key) {
+                    $underWriter = 'other';
+                    } else {
+                    $underWriter = 'not_set';
+                    }
+                    }
+                    }
+                    if ($loanFlag == 1) {
+                    if (!empty($underWriter)) {
+                    if ($companyData[0]['loan_underwriter'] == 'north_american') {
+                    if ($underWriter != 'north_american') {
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 39919,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $removePartnerFlag = 1;
+                    } else {
+                    $removePartnerFlag = 0;
+                    }
+                    } else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+                    if ($underWriter != 'commonwealth') {
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 6,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $removePartnerFlag = 1;
+                    } else {
+                    $removePartnerFlag = 0;
+                    }
+                    } else if ($companyData[0]['loan_underwriter'] == 'westcor') {
+                    if ($underWriter != 'westcor') {
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 201324,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $removePartnerFlag = 1;
+                    } else {
+                    $removePartnerFlag = 0;
+                    }
+                    } else {
+                    if ($underWriter == 'other') {
+                    $removePartnerFlag = 1;
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 201324,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $underWriter = 'westcor';
+                    } else if ($underWriter == 'not_set') {
+                    $removePartnerFlag = 0;
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 201324,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $underWriter = 'westcor';
+                    }
+                    }
+                    }
+                    } else {
+                    if (!empty($underWriter)) {
+                    if ($companyData[0]['sales_underwriter'] == 'north_american') {
+                    if ($underWriter != 'north_american') {
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 39919,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $removePartnerFlag = 1;
+                    } else {
+                    $removePartnerFlag = 0;
+                    }
+
+                    } else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
+                    if ($underWriter != 'commonwealth') {
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 6,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $removePartnerFlag = 1;
+                    } else {
+                    $removePartnerFlag = 0;
+                    }
+                    } else if ($companyData[0]['sales_underwriter'] == 'westcor') {
+                    if ($underWriter != 'westcor') {
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 201324,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $removePartnerFlag = 1;
+                    } else {
+                    $removePartnerFlag = 0;
+                    }
+                    } else {
+                    if ($underWriter == 'other') {
+                    $removePartnerFlag = 1;
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 201324,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $underWriter = 'westcor';
+                    } else if ($underWriter == 'not_set') {
+                    $removePartnerFlag = 0;
+                    $partners[] = array(
+                    'PartnerTypeID' => 7,
+                    'PartnerID' => 201324,
+                    'PartnerType' => array(
+                    'PartnerTypeID' => 7,
+                    ),
+                    );
+                    $underWriter = 'westcor';
+                    }
+                    }
+                    }
+                    }
                     if (!empty($resPartners)) {
                     $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
                     if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
@@ -4964,6 +5113,7 @@ class Home extends MX_Controller
                     <<<<<<< HEAD
                     =======
                     }
+                    <<<<<<< HEAD
                     =======
                     if (!empty($resPartners)) {
                     $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
@@ -5113,8 +5263,6 @@ class Home extends MX_Controller
                     }
                     }
                     }
-                    >>>>>>> fc76d9cf (Create order softpro api and LP order changes)
-                    >>>>>>> eb588ab1 (Create order softpro api and LP order changes)
                     }
 
                     if ($removePartnerFlag == 1 && isset($key) && strlen($key) > 0) {
