@@ -5111,8 +5111,17 @@ class Home extends MX_Controller
                     }
                     }
                     }
+                    <<<<<<< HEAD
                     >>>>>>> fc76d9cf (Create order softpro api and LP order changes)
                     >>>>>>> eb588ab1 (Create order softpro api and LP order changes)
+                    =======
+                    }
+                    <<<<<<< HEAD
+                    =======
+                    >>>>>>> fc76d9cf (Create order softpro api and LP order changes)
+                    =======
+                    >>>>>>> 6be259f8 (Stop partner data to ResWare from LP to ResWare order based on admin flag)
+                    >>>>>>> 5f063957 (Stop partner data to ResWare from LP to ResWare order based on admin flag)
                     }
 
                     if ($removePartnerFlag == 1 && isset($key) && strlen($key) > 0) {
