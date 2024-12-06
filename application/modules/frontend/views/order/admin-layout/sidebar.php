@@ -1,7 +1,7 @@
 <?php $userdata = $this->session->userdata('hr_admin');?>
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-    <?php
+<?php
 $userdata = $this->session->userdata('user');
 // echo "<pre>";
 // print_r($userdata);die;
@@ -65,12 +65,6 @@ if ($userdata['is_sales_rep'] == 1) {
 			<a class="nav-link" href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id']; ?>">
 				<i class="fa fa-list-alt"></i>
 				<span>Summary</span>
-			</a>
-		</li>
-		<li class="nav-item <?php if ($this->uri->segment(1) == 'logout') {echo 'active';}?>">
-			<a class="nav-link" href="<?php echo base_url() . 'logout'; ?>">
-				<i class="fa fa-sign-out"></i>
-				<span>Logout</span>
 			</a>
 		</li>
 
@@ -140,13 +134,20 @@ if ($userdata['is_sales_rep'] == 1) {
 			</a>
 		</li>
 		<?php }?>
+
+	<?php }?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'file-upload') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url() . 'file-upload'; ?>">
+				<i class="fa  fa-file-pdf-o"></i>
+				<span>File Upload</span>
+			</a>
+		</li>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'logout') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url() . 'logout'; ?>">
 				<i class="fa fa-sign-out"></i>
 				<span>Logout</span>
 			</a>
 		</li>
-	<?php }?>
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 

@@ -663,6 +663,9 @@ $route['calculator/admin/add_fees'] = 'admin/calc/admin/add_fees';
 $route['calculator/admin/edit_fees/:num'] = 'admin/calc/admin/edit_fees';
 $route['calculator/admin_logout'] = 'admin/calc/admin/admin_logout';
 
+$route['file-upload'] = "frontend/fileUpload";
+$route['get-uploaded-desk-doc'] = "frontend/fileUpload/getUploadedDeskDoc";
+
 $route['reports'] = "frontend/report";
 $route['reports/(.+)'] = "frontend/report/$1";
 $route['pmas'] = "frontend/pma";
