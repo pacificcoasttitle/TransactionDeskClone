@@ -335,14 +335,7 @@ if ($userdata['is_sales_rep'] == 1) {
 		<div class="card shadow p-5">
 			<div class="row">
 				<div class="col-sm-12">
-					<h2 class="ui-title-block ui-title-block_light">Upload Document
-						<a href="<?php echo base_url('sales-snap-shot'); ?>" class="btn btn-primary btn-icon-split pull-right mr-1">
-							<span class="icon text-white-50">
-								<i class="fa fa-camera"></i>
-							</span>
-							<span class="text">Sales Snap Shot</span>
-						</a>
-					</h2>
+					<h2 class="ui-title-block ui-title-block_light">Upload Document</h2>
 					<div class="ui-decor-1a bg-accent"></div>
 				</div>
 			</div>
