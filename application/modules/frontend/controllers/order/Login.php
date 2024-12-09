@@ -13,7 +13,7 @@ class Login extends MX_Controller
         );
         $this->load->library('form_validation');
         $this->load->model('order/home_model');
-        $this->load->library('order/softpro');
+        // $this->load->library('order/softpro');
     }
 
     public function index()
