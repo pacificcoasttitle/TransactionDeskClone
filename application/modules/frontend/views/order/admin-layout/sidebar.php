@@ -4,6 +4,7 @@
 <?php
 $userdata = $this->session->userdata('user');
 // echo "<pre>";
+// print_r($sidebar);
 // print_r($userdata);die;
 if ($userdata['is_sales_rep'] == 1) {
     $dashboardUrl = base_url() . 'sales-dashboard/' . $userdata['id'];
@@ -13,6 +14,8 @@ if ($userdata['is_sales_rep'] == 1) {
     $dashboardUrl = base_url() . 'escrow-dashboard';
 } else if ($userdata['is_payoff_user'] == 1) {
     $dashboardUrl = base_url() . 'pay-off-dashboard';
+} else if ($userdata['is_title_production'] == 1) {
+    $dashboardUrl = base_url() . 'file-upload';
 } else if ($userdata['is_special_lender'] == 1) {
     $dashboardUrl = base_url() . 'special-lender-dashboard';
 } else {
@@ -83,6 +86,13 @@ if ($userdata['is_sales_rep'] == 1) {
 			</a>
 		</li>
 		<?php }?>
+	<?php } else if (($userdata['is_title_production'] == 1) && ($sidebar)) {?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'file-upload') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url() . 'file-upload'; ?>">
+				<i class="fa  fa-file-pdf-o"></i>
+				<span>File Upload</span>
+			</a>
+		</li>
 	<?php } else if ($sidebar) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == 'title-officer-dashboard') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
@@ -136,12 +146,6 @@ if ($userdata['is_sales_rep'] == 1) {
 		<?php }?>
 
 	<?php }?>
-		<li class="nav-item <?php if ($this->uri->segment(1) == 'file-upload') {echo 'active';}?>">
-			<a class="nav-link" href="<?php echo base_url() . 'file-upload'; ?>">
-				<i class="fa  fa-file-pdf-o"></i>
-				<span>File Upload</span>
-			</a>
-		</li>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'logout') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url() . 'logout'; ?>">
 				<i class="fa fa-sign-out"></i>

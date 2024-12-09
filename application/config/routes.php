@@ -399,6 +399,11 @@ $route['order/admin/escrow-officers'] = 'admin/order/home/escrow_officers';
 $route['order/admin/add-escrow-officer'] = 'admin/order/home/add_escrow_officer';
 $route['order/admin/edit-escrow-officer/:num'] = 'admin/order/home/edit_escrow_officer';
 
+$route['order/admin/title-production'] = 'admin/order/home/title_production';
+$route['order/admin/add-title-production'] = 'admin/order/home/add_title_productions';
+$route['order/admin/edit-title-production/:num'] = 'admin/order/home/edit_title_production';
+$route['order/admin/delete-title-production'] = 'admin/order/home/delete_title_production';
+
 $route['order/admin/payoff-users'] = 'admin/order/home/payoff_users';
 $route['order/admin/add-payoff-user'] = 'admin/order/home/add_payoff_user';
 $route['order/admin/edit-payoff-user/:num'] = 'admin/order/home/edit_payoff_user';

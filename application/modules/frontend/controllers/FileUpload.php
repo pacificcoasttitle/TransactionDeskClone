@@ -11,8 +11,8 @@ class FileUpload extends MX_Controller
         parent::__construct();
         $userdata = $this->session->userdata('user');
         // print_r($userdata);die;
-        if (empty($userdata) || !isset($userdata['is_master']) || $userdata['is_master'] != 1) {
-            redirect('dashboard');
+        if (empty($userdata) || !isset($userdata['is_title_production']) || $userdata['is_title_production'] != 1) {
+            redirect('file-upload');
         }
         $this->user = $userdata;
 
