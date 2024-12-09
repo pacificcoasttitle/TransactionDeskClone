@@ -183,7 +183,7 @@ form {
     width: 100%;
 }
 
-.smart-forms label, .smart-forms input, .smart-forms button, .smart-forms select, .smart-forms textarea {
+.smart-forms label, .smart-forms input, .smart-forms button {
     margin: 0;
     font-size: 14px;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
@@ -195,14 +195,14 @@ form {
 .smart-forms .button {
     border: 0;
     height: 42px;
-    color: #243140;
+    color: #fff;
     line-height: 1;
     font-size: 15px;
     cursor: pointer;
     padding: 0 18px;
     text-align: center;
     vertical-align: top;
-    background: #bdc3c7;
+    background: #33C3F0;
     display: inline-block;
     -webkit-user-drag: none;
     text-shadow: 0 1px rgba(255, 255, 255, 0.2);
@@ -238,7 +238,7 @@ form {
     right: 0;
 }
 
-.smart-forms .select, .smart-forms .gui-input, .smart-forms .gui-textarea, .smart-forms .select > select, .smart-forms .select-multiple select {
+.smart-forms .gui-input, .smart-forms .gui-textarea {
     background: #fff;
     position: relative;
     vertical-align: top;
@@ -253,11 +253,11 @@ form {
     *zoom: 1;
 }
 
-.smart-forms .prepend-icon > input, .smart-forms .prepend-icon > textarea, .smart-forms .prepend-icon > select {
+.smart-forms .prepend-icon > input {
     padding-left: 36px;
 }
 
-.smart-forms label, .smart-forms input, .smart-forms button, .smart-forms select, .smart-forms textarea {
+.smart-forms label, .smart-forms input, .smart-forms button {
     margin: 0;
     font-size: 14px;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
@@ -270,13 +270,6 @@ form {
 	color: #fff;
 }
 
-.smart-forms .prepend-icon > input, .smart-forms .prepend-icon > textarea, .smart-forms .prepend-icon > select {
-    padding-left: 36px;
-}
-
-.smart-forms .gui-input, .smart-forms .gui-textarea {
-    padding: 10px;
-}
 
 .smart-forms .prepend-icon .field-icon {
     left: 0;
@@ -312,6 +305,66 @@ form {
 .text-center {
 	text-align: center;
 }
+
+.ms-20 {
+    margin: 0px 20px;
+}
+
+
+.upload-container {
+      border: 2px dashed #33C3F0;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      width: 100%;
+      margin: 0 20px;
+      font-family: Arial, sans-serif;
+      color: #888;
+      position: relative;
+    }
+    .upload-container.dragover {
+      border-color: #007bff;
+      color: #007bff;
+    }
+    .button {
+      margin: 10px 0;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .file-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .file-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100px;
+      text-align: center;
+    }
+    .file-icon {
+      font-size: 40px;
+      color: #007bff;
+    }
+    .file-name {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100px;
+    }
 </style>
 <?php
 $userdata = $this->session->userdata('user');
@@ -333,62 +386,78 @@ if ($userdata['is_sales_rep'] == 1) {
 <section class="section-sm section-defaulta" >
 	<div class="container-fluid padding-l-r">
 		<div class="card shadow p-5">
-			<div class="row">
+			<!-- <div class="row">
 				<div class="col-sm-12">
 					<h2 class="ui-title-block ui-title-block_light">Upload Document</h2>
 					<div class="ui-decor-1a bg-accent"></div>
 				</div>
-			</div>
+			</div> -->
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-12">
 					<!-- <h5 class="text-center" ><span>Create New Report</span></h5> -->
 					<div class="smart-forms smart-container">
 						<form method="POST" id="smart-form" enctype="multipart/form-data" novalidate="novalidate">
-							<div class="">
-								<?php $prev_data = $this->session->flashdata('_previous_data');?>
-                                <?php if ($this->session->flashdata('error')): ?>
-								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
-								<?php elseif ($this->session->flashdata('success')): ?>
-								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
-								<?php endif;?>
-								<div >
-									<div class="row">
-										<div class="section colm colm6 col-md-12">
-											<label class="field">
-												<input type="text" class="form-control" name="order_number" value="" placeholder="Emter Order Number">
-											</label>
-										</div>
-									</div>
-
+                            <?php $prev_data = $this->session->flashdata('_previous_data');?>
+                            <?php if ($this->session->flashdata('error')): ?>
+                            <div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
+                            <?php elseif ($this->session->flashdata('success')): ?>
+                            <div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
+                            <?php endif;?>
+							<div class="row">
+								<div class="col-md-6">
                                     <div class="row">
-										<div class="section colm colm6 col-md-12">
-											<label class="field">
-												<input type="text" class="form-control" name="document_name" value="" placeholder="Emter Document Name">
+                                        <div class="col-sm-12">
+                                            <h2 class="ui-title-block ui-title-block_light">Upload Document</h2>
+                                            <div class="ui-decor-1a bg-accent"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="section colm colm6 col-md-12">
+                                            <label class="field">
+                                                <input type="text" class="form-control" name="order_number" value="" placeholder="Emter Order Number">
 											</label>
 										</div>
 									</div>
 
                                     <div class="row">
                                         <div class="section colm colm6 col-md-12">
+                                            <label class="field">
+                                                <input type="text" class="form-control" name="document_name" value="" placeholder="Emter Document Name">
+											</label>
+										</div>
+									</div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <!-- <div class="section colm colm6 col-md-12">
 											<label class="field prepend-icon file">
 												<span class="button"> Choose File </span>
 												<input type="file" class="gui-file form-control" name="file_upload" id="file_upload" onChange="document.getElementById('uploader1').value = this.value;" accept=".pdf">
 												<input type="text" class="gui-input form-control" id="uploader1" placeholder="no file selected" readonly>
 												<span class="field-icon"><i class="fa fa-upload"></i></span>
 											</label>
-										</div>
+										</div> -->
+                                        <div class="section colm colm6 col-md-12">
+                                            <div class="upload-container" id="upload-container">
+                                                <p>Drop files to upload, or</p>
+                                                <a type="button" class="button" id="browse-button">BROWSE</a>
+                                                <input type="file" id="file-input" name="file-input" style="display: none;">
+                                                <div class="file-list" id="file-list"></div>
+                                            </div>
+                                        </div>
 									</div>
 
 
 									<div class="row">
-										<div class="section colm colm4 col-md-9">
+										<div class="section colm colm4 col-md-9 ms-20">
 											<a type="button" class="btn btn-secondary btn-icon-split" href="<?php echo $dashboardUrl; ?>">
 												<span class="icon text-white-50">
                                                     <i class="fas fa-arrow-left"></i>
                                                 </span>
                                                 <span class="text">Cancel</span>
                                             </a>
-											<button type="submit" class="btn btn-success btn-icon-split">
+											<button type="submit" id="submit-button" class="btn btn-info btn-icon-split" style="background-color: #33C3F0; border-color: #33C3F0;">
 												<span class="icon text-white-50">
                                                     <i class="fas fa-save"></i>
                                                 </span>
