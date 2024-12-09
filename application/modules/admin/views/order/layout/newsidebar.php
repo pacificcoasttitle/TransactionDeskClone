@@ -102,7 +102,10 @@ if (
     $this->uri->segment(3) == 'edit-cpl-proposed-user' ||
     $this->uri->uri_string() == 'order/admin/escrow-officers' ||
     $this->uri->segment(3) == 'edit-escrow-officer' ||
-    $this->uri->segment(3) == 'add-escrow-officer'
+    $this->uri->segment(3) == 'add-escrow-officer' ||
+    $this->uri->segment(3) == 'title-production' ||
+    $this->uri->segment(3) == 'add-title-production' ||
+    $this->uri->segment(3) == 'edit-title-production'
 ) {
     $usersTabLinks = true;
 }
@@ -251,6 +254,7 @@ if (
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/master-users'; ?>">Master Users</a>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-proposed-users'; ?>">CPL/Proposed Users</a>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow-officers'; ?>">Escrow Officers</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/title-production' || $this->uri->segment(3) == 'edit-title-production' || $this->uri->segment(3) == 'add-title-production') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/title-production'; ?>">Title Production</a>
 					</div>
 				</div>
 			</li>

@@ -11,8 +11,8 @@ class FileUpload extends MX_Controller
         parent::__construct();
         $userdata = $this->session->userdata('user');
         // print_r($userdata);die;
-        if (empty($userdata) || !isset($userdata['is_master']) || $userdata['is_master'] != 1) {
-            redirect('dashboard');
+        if (empty($userdata) || !isset($userdata['is_title_production']) || $userdata['is_title_production'] != 1) {
+            redirect('file-upload');
         }
         $this->user = $userdata;
 
@@ -32,7 +32,6 @@ class FileUpload extends MX_Controller
         // $data['sorting_fields'] = $this->sorting_fields;
 
         if (isset($_POST) && !empty($_POST)) {
-
             $config['upload_path'] = './uploads/desk-file-upload/';
             $config['allowed_types'] = 'pdf';
             $config['max_size'] = 12000;
@@ -40,10 +39,10 @@ class FileUpload extends MX_Controller
             if (!is_dir('/uploads/desk-file-upload')) {
                 mkdir('./uploads/desk-file-upload', 0777, true);
             }
-            if (!empty($_FILES['file_upload']['name'])) {
-                if (!$this->upload->do_upload('file_upload')) {
+            if (!empty($_FILES['file-input']['name'])) {
+                if (!$this->upload->do_upload('file-input')) {
                     $errorMsg = $this->upload->display_errors();
-                    $this->session->set_userdata('error', $errorMsg);
+                    $this->session->set_flashdata('error', $errorMsg);
                     $file_upload_error_msg = 1;
                 } else {
                     $data = $this->upload->data();
@@ -69,6 +68,9 @@ class FileUpload extends MX_Controller
                     $successMsg = 'Document info saved successfully.';
                     $this->session->set_flashdata('success', $successMsg);
                 }
+            } else {
+                $errMsg = 'Please upload file.';
+                $this->session->set_flashdata('error', $errMsg);
             }
         }
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=pma_' . $this->version));

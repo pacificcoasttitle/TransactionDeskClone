@@ -1604,6 +1604,73 @@ class Home_model extends CI_Model
         );
     }
 
+    public function get_title_production($params)
+    {
+        $this->db->where('is_title_production', 1);
+        $this->db->where('status', 1);
+        $this->db->from('customer_basic_details');
+        $total_records = $this->db->count_all_results();
+        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+
+        $customer_lists = array();
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
+                $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('company_name', $keyword);
+                $this->db->group_end();
+            }
+
+            $this->db->where('status', 1);
+            $this->db->where('is_title_production', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
+            if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
+                $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
+                $this->db->or_like('email_address', $keyword);
+                $this->db->or_like('company_name', $keyword);
+                $this->db->group_end();
+            }
+
+            $this->db->where('status', 1);
+            $this->db->where('is_title_production', 1);
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $query = $this->db->get('customer_basic_details');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->where('status', 1);
+            $this->db->where('is_title_production', 1);
+            $this->db->from('customer_basic_details');
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->where('is_title_production', 1);
+            $this->db->where('status', 1);
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('customer_basic_details');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $customer_lists,
+        );
+    }
+
     public function get_escrow_officer($params = array())
     {
         $this->db->select('*');
@@ -2503,6 +2570,42 @@ class Home_model extends CI_Model
         $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
         $this->db->from($table);
         $this->db->where('is_title_officer', 1);
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                $this->db->where($key, $val);
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->db->order_by('id', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit']);
+                }
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+        // Return fetched data
+        return $result;
+    }
+
+    public function getTitleProductionUser($params)
+    {
+        $table = $this->table;
+
+        $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
+        $this->db->from($table);
+        $this->db->where('is_title_production', 1);
 
         if (array_key_exists("where", $params)) {
             foreach ($params['where'] as $key => $val) {
