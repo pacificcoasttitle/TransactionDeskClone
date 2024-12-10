@@ -143,8 +143,13 @@ $(document).ready(function () {
         uploadContainer.classList.remove('dragover');
 
         const droppedFiles = Array.from(e.dataTransfer.files);
+        console.log('droppedFiles ===', droppedFiles);
         files = [...files, ...droppedFiles];
         updateFileList();
+        // Create a DataTransfer object to simulate file input change
+        const dataTransfer = new DataTransfer();
+        files.forEach((file) => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files; // Update the file input
     });
 
     // Handle file input click
@@ -154,10 +159,8 @@ $(document).ready(function () {
     });
 
     fileInput.addEventListener('change', (e) => {
-        // console.log('change event detected');
-        // const selectedFiles = Array.from(e.target.files);
-        // console.log('selectedFiles ===', selectedFiles);
-        // files = [...files, ...selectedFiles];
+        const selectedFiles = Array.from(e.target.files);
+        files = [...files, ...selectedFiles];
         updateFileList();
     });
 
@@ -192,3 +195,26 @@ $(document).ready(function () {
 
 
 });
+
+function copyLink(copyText, buttonElement) {
+    const $tempInput = $('<input>'); // Create a temporary input element
+    $('body').append($tempInput); // Append it to the body
+    $tempInput.val(copyText).select(); // Set its value and select it
+    document.execCommand('copy'); // Copy the selected value
+    $tempInput.remove(); // Remove the temporary input
+    $(this).attr('title', 'Copied!');
+
+    // Change the button text to "Copied!"
+    const originalTextElement = buttonElement.querySelector('.text');
+    const originalText = originalTextElement.innerText; // Store original text
+    originalTextElement.innerText = 'Copied!';
+    buttonElement.classList.remove('btn-success');
+    buttonElement.classList.add('btn-info');
+
+    // Restore the original text after 2 seconds
+    setTimeout(() => {
+        originalTextElement.innerText = originalText;
+        buttonElement.classList.remove('btn-info');
+        buttonElement.classList.add('btn-success');
+    }, 1000);
+}

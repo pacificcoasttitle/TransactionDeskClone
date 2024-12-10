@@ -442,7 +442,7 @@ if ($userdata['is_sales_rep'] == 1) {
                                             <div class="upload-container" id="upload-container">
                                                 <p>Drop files to upload, or</p>
                                                 <a type="button" class="button" id="browse-button">BROWSE</a>
-                                                <input type="file" id="file-input" name="file-input" style="display: none;">
+                                                <input type="file" id="file-input" name="multiFiles[]" multiple style="display: none;">
                                                 <div class="file-list" id="file-list"></div>
                                             </div>
                                         </div>
@@ -497,6 +497,7 @@ if ($userdata['is_sales_rep'] == 1) {
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>File Number</th>
+                                <th>Created At</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
