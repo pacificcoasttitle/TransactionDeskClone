@@ -159,7 +159,7 @@ class FileUpload extends MX_Controller
 										<span class='icon text-white-50'>
 											<i class='fas fa-file'></i>
 										</span>
-										<span class='text'>View Files</span>
+										<span class='text'>View Document</span>
 									</button>
 								</a>
                                 <button type='submit' onclick='copyLink(" . '"' . $documentUrl . '"' . ", this)' class='btn btn-success btn-icon-split'>
