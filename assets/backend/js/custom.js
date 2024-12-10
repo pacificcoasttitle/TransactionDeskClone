@@ -5138,6 +5138,29 @@ function deletePayoffUser(id) {
     }
 }
 
+function copyLink(link) {
+    const $tempInput = $('<input>'); // Create a temporary input element
+    $('body').append($tempInput); // Append it to the body
+    $tempInput.val(copyText).select(); // Set its value and select it
+    document.execCommand('copy'); // Copy the selected value
+    $tempInput.remove(); // Remove the temporary input
+    $(this).attr('title', 'Copied!');
+
+    // Change the button text to "Copied!"
+    const originalTextElement = buttonElement.querySelector('.text');
+    const originalText = originalTextElement.innerText; // Store original text
+    originalTextElement.innerText = 'Copied!';
+    buttonElement.classList.remove('btn-success');
+    buttonElement.classList.add('btn-info');
+
+    // Restore the original text after 2 seconds
+    setTimeout(() => {
+        originalTextElement.innerText = originalText;
+        buttonElement.classList.remove('btn-info');
+        buttonElement.classList.add('btn-success');
+    }, 1000);
+}
+
 function deleteTitleProductionUser(id) {
     if (id == '') {
         alert('Payoff User ID is required.');
