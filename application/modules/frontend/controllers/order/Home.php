@@ -126,7 +126,7 @@ class Home extends MX_Controller
                 if ($salesRepDetails["is_mail_notification"] == 1) {
                     $parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
                 }
-                $salesRepName = isset($salesRepDetails["name"]) && !empty($salesRepDetails["name"]) ? $salesRepDetails["name"] : '';
+                $salesRepName = isset($salesRepDetails["first_name"]) && !empty($salesRepDetails["first_name"]) ? $salesRepDetails["first_name"] . ' ' . $salesRepDetails["last_name"] : '';
 
                 $TitleOfficer = $this->input->post('TitleOfficer');
                 $condition = array(
@@ -156,7 +156,7 @@ class Home extends MX_Controller
                 $BuyerAgentId = $this->input->post('BuyerAgentId');
                 $agentDetailFlag = $this->input->post('add-agent-details');
                 $user_data = array();
-
+                $orderReq = [];
                 $buyers_agent_details = $listing_agent_details = array();
                 if ((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag)) {
                     $BuyerAgentName = $this->input->post('BuyerAgentName');
@@ -165,6 +165,12 @@ class Home extends MX_Controller
                     $BuyerAgentCompany = $this->input->post('BuyerAgentCompany');
                     $parties_email[] = $BuyerAgentEmailAddress;
                     $buyers_agent_details = array('name' => $BuyerAgentName, 'email' => $BuyerAgentEmailAddress, 'telephone' => $BuyerAgentTelephone, 'company' => $BuyerAgentCompany);
+                    $orderReq['buyersAgentDetails'] = [
+                        'Name' => $BuyerAgentName,
+                        'Email' => $BuyerAgentEmailAddress,
+                        'Telephone' => $BuyerAgentTelephone,
+                        'CompanyName' => $BuyerAgentCompany,
+                    ];
                 }
 
                 $ListingAgentId = $this->input->post('ListingAgentId');
@@ -175,6 +181,12 @@ class Home extends MX_Controller
                     $ListingAgentCompany = $this->input->post('ListingAgentCompany');
                     $parties_email[] = $ListingAgentEmailAddress;
                     $listing_agent_details = array('name' => $ListingAgentName, 'email' => $ListingAgentEmailAddress, 'telephone' => $ListingAgentTelephone, 'company' => $ListingAgentCompany);
+                    $orderReq['listingAgentDetails'] = [
+                        'Name' => $ListingAgentName,
+                        'Email' => $ListingAgentEmailAddress,
+                        'Telephone' => $ListingAgentTelephone,
+                        'CompanyName' => $ListingAgentCompany,
+                    ];
                 }
 
                 $escrowId = $lenderId = $lenderPartnerTypeID = $escrowPartnerTypeID = '';
@@ -219,6 +231,12 @@ class Home extends MX_Controller
                     $escrowTelephone = $this->input->post('EscrowTelephone');
                     $escrowCompany = $this->input->post('EscrowCompany');
                     $escrow_details = array('name' => $escrowName, 'email' => $escrowEmail, 'telephone' => $escrowName, 'company' => $escrowCompany);
+                    $orderReq['escrowDetails'] = [
+                        'Name' => $escrowName,
+                        'Email' => $escrowEmail,
+                        'Telephone' => $escrowTelephone,
+                        'CompanyName' => $escrowCompany,
+                    ];
                     $escrow_details_api = array('name' => $escrowName, 'email' => $escrowEmail, 'phone' => $escrowTelephone, 'company' => $escrowCompany);
                     $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
 
@@ -256,22 +274,30 @@ class Home extends MX_Controller
                 }
                 /* Partners API */
 
-                if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
-                    $lenderId = $_POST['LenderId'];
-                    $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
-                    $lenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
-                    $lenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
-                    $lenderTelephone = $this->input->post('LenderTelephone');
-                    $lenderCompany = $this->input->post('LenderCompany');
-                    $lender_details = array('name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany);
-                    $lender_details_api = array('name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany);
-                    $lenderPartnerTypeID = '3';
-                    if ($orderUser['is_primary_mortgage_user'] == 1) {
-                        $cplLenderId = $lenderId;
-                    } else {
-                        $EscrowLenderId = $lenderId;
-                    }
+                // if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
+                // $lenderId = $_POST['LenderId'];
+                $lenderId = 7948;
+                $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
+                // print_r($lender_user_details);die;
+                $lenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
+                $lenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
+                $lenderTelephone = $this->input->post('LenderTelephone');
+                $lenderCompany = $this->input->post('LenderCompany');
+                $lender_details = array('name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany);
+                $orderReq['lenderDetails'] = [
+                    'Name' => "Randolph R Brusca", //$lenderName,
+                    'Email' => "assured@assuredhomeloan.com", //$lenderEmail,
+                    'Telephone' => "", //$lenderTelephone,
+                    'CompanyName' => "Assured Home Loans", //$lenderCompany,
+                ];
+                $lender_details_api = array('name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany);
+                $lenderPartnerTypeID = '3';
+                if ($orderUser['is_primary_mortgage_user'] == 1) {
+                    $cplLenderId = $lenderId;
+                } else {
+                    $EscrowLenderId = $lenderId;
                 }
+                // }
 
                 /* Partners API */
                 $secondaryLenderPartners = array();
@@ -322,23 +348,61 @@ class Home extends MX_Controller
                     }
                 } else {
                     $place_order = array();
+                    $orderReq['personalDetails'] = [
+                        "CompanyName" => $CompanyName,
+                        "Email" => $OpenEmail,
+                        "FirstName" => $OpenName,
+                        "LastName" => $OpenLastName,
+                        "Telephone" => $Opentelephone,
+                        "Address" => $StreetAddress,
+                        "City" => $City,
+                        "ZipCode" => $Zipcode,
+                    ];
+                    $orderReq['propertyDetails'] = [
+                        "Address" => $PropertyAddress,
+                        "APNNumberParcelID" => $apn,
+                        "Country" => $County,
+                        "Description" => $LegalDescription,
+                        "City" => $PropertyCity,
+                        "State" => $PropertyState,
+                        "Zip" => $PropertyZip,
+                        "EscrowBriefLegal" => $LegalDescription,
+                    ];
+                    $orderReq['sellerDetails'] = [
+                        "PrimaryOwner" => $PrimaryOwner,
+                        "SecondaryOwner" => $SecondaryOwner,
+                    ];
+                    $transactionDetailsReq = [
+                        "SalesRep" => $salesRepName,
+                        "TitleOfficer" => $titleOfficerName,
+                        // "Product" => "Prelim",
+                        "EscrowNumber" => $EscrowNumber,
+                        "PrimaryBorrower" => $primaryBorrower,
+                        "SecondaryBorrower" => $secondaryBorrower,
+                    ];
                     $loanFlag = 1;
                     $legalEntity = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $OwnerFirstName, 'Last' => $OwnerLastName), 'Address' => array('Address1' => $PropertyAddress, 'City' => $PropertyCity, 'State' => $PropertyState, 'Zip' => $PropertyZip));
 
                     if (strpos($ProductTypeTxt, 'Loan') !== false) {
-                        $place_order['Buyers'][] = $legalEntity;
+                        $orderReq['orderType'] = "Refinance";
+                        $transactionDetailsReq['TransactionType'] = "Refinance";
+                        $place_order['Buyers'][] = $legalEntity; //
+                        $transactionDetailsReq['PrimaryBorrower'] = $OwnerFirstName . ' ' . $OwnerLastName;
                     } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                         $borrowerName = explode(' ', $primaryBorrower);
                         $borrowerLastName = end($borrowerName);
                         $borrowerPrimaryName = array_slice($borrowerName, 0, -1);
                         $borrowerFirstName = implode(" ", $borrowerPrimaryName);
                         $borrowers = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $borrowerFirstName, 'Last' => $borrowerLastName));
-                        $place_order['Sellers'][] = $legalEntity;
-                        $place_order['Buyers'][] = $borrowers;
-                        $place_order['SalesPrice'] = $SalesAmount;
+                        $place_order['Sellers'][] = $legalEntity; //
+                        $place_order['Buyers'][] = $borrowers; //
+                        $place_order['SalesPrice'] = $SalesAmount; //
+                        $transactionDetailsReq['SalesAmount'] = $SalesAmount;
+                        $orderReq['orderType'] = "Purchase";
+                        $transactionDetailsReq['TransactionType'] = "Purchase";
                         $loanFlag = 0;
                     }
-
+                    $orderReq['transactionDetails'] = $transactionDetailsReq;
                     $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = array();
                     if (isset($LoanAmount) && !empty($LoanAmount)) {
@@ -354,47 +418,60 @@ class Home extends MX_Controller
                         $loan['LoanType'] = 'ConvIns';
                         $place_order['SettlementStatementVersion'] = 'HUD';
                     }
-
-                    $place_order['Loans'][] = $loan;
+                    $orderReq['Loans'] = $loan;
+                    $place_order['Loans'][] = $loan; //
                     $place_order['Properties'][] = array('IsPrimary' => 'true', 'StreetNumber' => $StreetNumber, 'StreetName' => $StreetName, 'City' => $PropertyCity, 'State' => $PropertyState, 'County' => $County, 'Zip' => $PropertyZip);
-                    $place_order['Note']['APN'] = $apn;
-                    $place_order['Note']['parcel_id'] = $apn;
-                    $place_order['Note']['legal_description'] = $LegalDescription;
+                    $place_order['Note']['APN'] = $apn; //
+                    $place_order['Note']['parcel_id'] = $apn; //
+                    $place_order['Note']['legal_description'] = $LegalDescription; //
 
                     if (!empty($TitleOfficer)) {
-                        $place_order['Note']['title_Officer'] = $titleOfficerName;
+                        $place_order['Note']['title_Officer'] = $titleOfficerName; //
                     }
 
                     if (!empty($SalesRep)) {
-                        $place_order['Note']['sales_rep'] = $salesRepName;
+                        $place_order['Note']['sales_rep'] = $salesRepName; //
                     }
 
                     if (!empty($buyers_agent_details)) {
-                        $place_order['Note']['buyers_agent'] = $buyers_agent_details;
+                        $place_order['Note']['buyers_agent'] = $buyers_agent_details; //
                     }
 
                     if (!empty($listing_agent_details)) {
-                        $place_order['Note']['listing_agent'] = $listing_agent_details;
+                        $place_order['Note']['listing_agent'] = $listing_agent_details; //
                     }
 
                     if (!empty($lender_details)) {
-                        $place_order['Note']['lender_details'] = $lender_details;
+                        $place_order['Note']['lender_details'] = $lender_details; //
                     }
 
                     if (!empty($escrow_details)) {
-                        $place_order['Note']['escrow_details'] = $escrow_details;
+                        $place_order['Note']['escrow_details'] = $escrow_details; //
                     }
 
                     if (!empty($EscrowNumber)) {
-                        $place_order['Note']['EscrowNumber'] = $EscrowNumber;
-                        $place_order['ClientFileNumber'] = $EscrowNumber;
+                        $place_order['Note']['EscrowNumber'] = $EscrowNumber; //
+                        $place_order['ClientFileNumber'] = $EscrowNumber; //
                     }
 
                     if (!empty($Notes)) {
-                        $place_order['Note']['Notes'] = $Notes;
+                        $place_order['Note']['Notes'] = $Notes; // Not Needed
                     }
+                    $orderReq['baseDetails'] = [
+                        "IsRushOrder" => true,
+                        "ProjectName" => "PCT",
+                        "OrderType" => "Title only",
+                    ];
 
-                    $order_data = json_encode($place_order);
+                    // $order_data = json_encode($place_order);
+                    echo "<pre>";
+                    print_r($orderReq);
+                    die;
+                    $order_data = json_encode($orderReq);
+                    $this->load->library('order/softpro');
+                    print_r($order_data);
+                    $result = $this->softpro->make_request('POST', 'ordercreation/create', $order_data, $user_data);
+                    print_r($result);die;
                     $this->load->library('order/resware');
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, array(), 0, 0);
                     $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
