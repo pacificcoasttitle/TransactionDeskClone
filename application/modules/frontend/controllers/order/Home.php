@@ -155,6 +155,9 @@ class Home extends MX_Controller
                 $sendermessage = $this->input->post('sendermessage');
                 $BuyerAgentId = $this->input->post('BuyerAgentId');
                 $agentDetailFlag = $this->input->post('add-agent-details');
+                $escrowOfficerFlag = $this->input->post('add-escrow-officer-details');
+                $escrowOfficer = $this->input->post('escrow_officer');
+                $escrowOfficerKey = '';
                 $user_data = array();
                 $orderReq = [];
                 $buyers_agent_details = $listing_agent_details = array();
@@ -168,7 +171,7 @@ class Home extends MX_Controller
                     $orderReq['buyersAgentDetails'] = [
                         'Name' => $BuyerAgentName,
                         'Email' => $BuyerAgentEmailAddress,
-                        'Telephone' => $BuyerAgentTelephone,
+                        'Telephone' => "321-654-0987", //$BuyerAgentTelephone,
                         'CompanyName' => $BuyerAgentCompany,
                     ];
                 }
@@ -184,7 +187,7 @@ class Home extends MX_Controller
                     $orderReq['listingAgentDetails'] = [
                         'Name' => $ListingAgentName,
                         'Email' => $ListingAgentEmailAddress,
-                        'Telephone' => $ListingAgentTelephone,
+                        'Telephone' => "987-654-3210", //$ListingAgentTelephone,
                         'CompanyName' => $ListingAgentCompany,
                     ];
                 }
@@ -234,8 +237,9 @@ class Home extends MX_Controller
                     $orderReq['escrowDetails'] = [
                         'Name' => $escrowName,
                         'Email' => $escrowEmail,
-                        'Telephone' => $escrowTelephone,
+                        'Telephone' => "555-123-4567", $escrowTelephone,
                         'CompanyName' => $escrowCompany,
+                        'EscrowOfficerName' => $escrowOfficer,
                     ];
                     $escrow_details_api = array('name' => $escrowName, 'email' => $escrowEmail, 'phone' => $escrowTelephone, 'company' => $escrowCompany);
                     $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
@@ -287,7 +291,7 @@ class Home extends MX_Controller
                 $orderReq['lenderDetails'] = [
                     'Name' => "Randolph R Brusca", //$lenderName,
                     'Email' => "assured@assuredhomeloan.com", //$lenderEmail,
-                    'Telephone' => "", //$lenderTelephone,
+                    'Telephone' => "321-654-0987", //$lenderTelephone,
                     'CompanyName' => "Assured Home Loans", //$lenderCompany,
                 ];
                 $lender_details_api = array('name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany);
@@ -357,9 +361,12 @@ class Home extends MX_Controller
                         "Address" => $StreetAddress,
                         "City" => $City,
                         "ZipCode" => $Zipcode,
+                        "EmailNotifications" => true,
+                        "State" => "",
                     ];
                     $orderReq['propertyDetails'] = [
-                        "Address" => $PropertyAddress,
+                        "Address1" => $PropertyAddress,
+                        "Address2" => "",
                         "APNNumberParcelID" => $apn,
                         "Country" => $County,
                         "Description" => $LegalDescription,
@@ -367,18 +374,41 @@ class Home extends MX_Controller
                         "State" => $PropertyState,
                         "Zip" => $PropertyZip,
                         "EscrowBriefLegal" => $LegalDescription,
+                        "IsPrimaryResidence" => true,
+                        // "State" => "California"
                     ];
                     $orderReq['sellerDetails'] = [
                         "PrimaryOwner" => $PrimaryOwner,
                         "SecondaryOwner" => $SecondaryOwner,
                     ];
+                    $orderReq["buyersAgentDetails"] = [
+                        "Name" => "Agent Doe",
+                        "Email" => "agent.john@example.com",
+                        "Telephone" => "321-654-0987",
+                        "CompanyName" => "Realty Experts",
+                    ];
+                    $orderReq["listingAgentDetails"] = [
+                        "Name" => "Agent Jane",
+                        "Email" => "agent.jane@example.com",
+                        "Telephone" => "987-654-3210",
+                        "CompanyName" => "Prime Properties",
+                    ];
+                    $orderReq["escrowDetails"] = [
+                        "Name" => "Sarah Carter",
+                        "Email" => "escrow.sarah@example.com",
+                        "Telephone" => "555-123-4567",
+                        "CompanyName" => "Escrow Secure LLC",
+                        "EscrowOfficerName" => "Mark Lee",
+                    ];
                     $transactionDetailsReq = [
                         "SalesRep" => $salesRepName,
                         "TitleOfficer" => $titleOfficerName,
-                        // "Product" => "Prelim",
+                        "Product" => "Prelim",
                         "EscrowNumber" => $EscrowNumber,
                         "PrimaryBorrower" => $primaryBorrower,
                         "SecondaryBorrower" => $secondaryBorrower,
+                        "LoanAmount" => "90000",
+                        "SalesAmount" => "250000.0",
                     ];
                     $loanFlag = 1;
                     $legalEntity = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $OwnerFirstName, 'Last' => $OwnerLastName), 'Address' => array('Address1' => $PropertyAddress, 'City' => $PropertyCity, 'State' => $PropertyState, 'Zip' => $PropertyZip));
@@ -418,7 +448,7 @@ class Home extends MX_Controller
                         $loan['LoanType'] = 'ConvIns';
                         $place_order['SettlementStatementVersion'] = 'HUD';
                     }
-                    $orderReq['Loans'] = $loan;
+                    // $orderReq['Loans'] = $loan;
                     $place_order['Loans'][] = $loan; //
                     $place_order['Properties'][] = array('IsPrimary' => 'true', 'StreetNumber' => $StreetNumber, 'StreetName' => $StreetName, 'City' => $PropertyCity, 'State' => $PropertyState, 'County' => $County, 'Zip' => $PropertyZip);
                     $place_order['Note']['APN'] = $apn; //
@@ -464,13 +494,15 @@ class Home extends MX_Controller
                     ];
 
                     // $order_data = json_encode($place_order);
-                    echo "<pre>";
-                    print_r($orderReq);
-                    die;
-                    $order_data = json_encode($orderReq);
+                    // echo "<pre>";
+                    // print_r($orderReq);
+
+                    // print_r($orderReq);
+                    // die;
+                    // $order_data = json_encode($orderReq);
                     $this->load->library('order/softpro');
-                    print_r($order_data);
-                    $result = $this->softpro->make_request('POST', 'ordercreation/create', $order_data, $user_data);
+                    // print_r($order_data);
+                    $result = $this->softpro->make_request('POST', 'ordercreation/create', $orderReq, $user_data);
                     print_r($result);die;
                     $this->load->library('order/resware');
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, array(), 0, 0);
@@ -756,9 +788,9 @@ class Home extends MX_Controller
                                     $partners[] = $secondaryLenderPartners;
                                 }
 
-                                $escrowOfficerFlag = $this->input->post('add-escrow-officer-details');
-                                $escrowOfficer = $this->input->post('escrow_officer');
-                                $escrowOfficerKey = '';
+                                // $escrowOfficerFlag = $this->input->post('add-escrow-officer-details');
+                                // $escrowOfficer = $this->input->post('escrow_officer');
+                                // $escrowOfficerKey = '';
                                 if (!empty($escrowOfficerFlag)) {
                                     if (!empty($escrowOfficer)) {
                                         $escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));

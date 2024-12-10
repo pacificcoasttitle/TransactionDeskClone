@@ -21,13 +21,13 @@ class SoftPro
         $url = getenv("SOFT_PRO_API") . $endpoint;
         $header = [
             'Content-Type: application/json', // Set JSON content type
-            'Content-Length: ' . strlen($postData),
+            'Content-Length: ' . strlen(json_encode($postData)),
         ];
         if (false) {
             $header = [
                 'Content-Type: application/json', // Set JSON content type
                 'X-API-KEY: YOUR_TOKEN_HERE', // Add Authorization header if needed
-                'Content-Length: ' . strlen($postData),
+                'Content-Length: ' . strlen(json_encode($postData)),
             ];
         }
         // Initialize cURL
@@ -41,7 +41,7 @@ class SoftPro
 
         // Execute the request
         $response = curl_exec($ch);
-
+        print_r($response);die;
         // Check for errors
         if (curl_error($ch)) {
             return ['status' => 'error', 'message' => curl_error($ch)];
