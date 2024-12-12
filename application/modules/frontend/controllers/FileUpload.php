@@ -12,7 +12,7 @@ class FileUpload extends MX_Controller
         $userdata = $this->session->userdata('user');
         // print_r($userdata);die;
         if (empty($userdata) || !isset($userdata['is_title_production']) || $userdata['is_title_production'] != 1) {
-            redirect('file-upload');
+            redirect('/dashboard');
         }
         $this->user = $userdata;
 
