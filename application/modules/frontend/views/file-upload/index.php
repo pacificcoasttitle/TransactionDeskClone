@@ -414,7 +414,7 @@ if ($userdata['is_sales_rep'] == 1) {
                                     <div class="row">
                                         <div class="section colm colm6 col-md-12">
                                             <label class="field">
-                                                <input type="text" class="form-control" name="order_number" value="" placeholder="Emter Order Number">
+                                                <input type="text" class="form-control" name="order_number" value="" placeholder="Enter Order Number">
 											</label>
 										</div>
 									</div>
@@ -422,7 +422,7 @@ if ($userdata['is_sales_rep'] == 1) {
                                     <div class="row">
                                         <div class="section colm colm6 col-md-12">
                                             <label class="field">
-                                                <input type="text" class="form-control" name="document_name" value="" placeholder="Emter Document Name">
+                                                <input type="text" class="form-control" name="document_name" value="" placeholder="Enter Document Name">
 											</label>
 										</div>
 									</div>
