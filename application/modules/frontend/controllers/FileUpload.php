@@ -28,8 +28,6 @@ class FileUpload extends MX_Controller
         $condition = array(
             'added_by' => $this->user['id'],
         );
-        // $data['reports_data'] = $this->report_model->getData($condition);
-        // $data['sorting_fields'] = $this->sorting_fields;
 
         if (isset($_POST) && !empty($_POST)) {
             $config['upload_path'] = './uploads/desk-file-upload/';
@@ -40,10 +38,7 @@ class FileUpload extends MX_Controller
             if (!is_dir('/uploads/desk-file-upload')) {
                 mkdir('./uploads/desk-file-upload', 0777, true);
             }
-            // echo "<pre>";
-            // print_r($_FILES);die;
             if (!empty($_FILES['multiFiles']['name'])) {
-                // $files = $_FILES;
                 $files = $_FILES['multiFiles'];
                 $cpt = count($files['name']);
 
@@ -54,12 +49,9 @@ class FileUpload extends MX_Controller
                     $_FILES['multiFiles_single']['tmp_name'] = $files['tmp_name'][$i];
                     $_FILES['multiFiles_single']['error'] = $files['error'][$i];
                     $_FILES['multiFiles_single']['size'] = $files['size'][$i];
-                    // echo "<pre>";
-                    // print_r($_FILES['multiFiles_single']); //die;
                     $this->upload->initialize($config);
                     if (!($this->upload->do_upload('multiFiles_single'))) {
                         $errorMsg = $this->upload->display_errors();
-                        // print_r($errorMsg);die;
                         $this->session->set_flashdata('error', $errorMsg);
                         $file_upload_error_msg = 1;
                     } else {
@@ -82,8 +74,6 @@ class FileUpload extends MX_Controller
                     }
                 }
 
-                // echo "<pre>";
-                // print_r($_FILES);die;
                 // if (!empty($_FILES['file-input']['name'])) {
                 // if (!$this->upload->do_upload('file-input')) {
                 //     $errorMsg = $this->upload->display_errors();
@@ -159,7 +149,7 @@ class FileUpload extends MX_Controller
 										<span class='icon text-white-50'>
 											<i class='fas fa-file'></i>
 										</span>
-										<span class='text'>View Files</span>
+										<span class='text'>View Document</span>
 									</button>
 								</a>
                                 <button type='submit' onclick='copyLink(" . '"' . $documentUrl . '"' . ", this)' class='btn btn-success btn-icon-split'>
