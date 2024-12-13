@@ -175,7 +175,7 @@ class Home extends MX_Controller
                     $orderReq['buyersAgentDetails'] = [
                         'Name' => $BuyerAgentName,
                         'Email' => $BuyerAgentEmailAddress,
-                        'Telephone' => "321-654-0987", //$BuyerAgentTelephone,
+                        'Telephone' => $BuyerAgentTelephone,
                         'CompanyName' => $BuyerAgentCompany,
                     ];
                 }
@@ -191,7 +191,7 @@ class Home extends MX_Controller
                     $orderReq['listingAgentDetails'] = [
                         'Name' => $ListingAgentName,
                         'Email' => $ListingAgentEmailAddress,
-                        'Telephone' => "987-654-3210", //$ListingAgentTelephone,
+                        'Telephone' => $ListingAgentTelephone,
                         'CompanyName' => $ListingAgentCompany,
                     ];
                 }
@@ -241,7 +241,7 @@ class Home extends MX_Controller
                     $orderReq['escrowDetails'] = [
                         'Name' => $escrowName,
                         'Email' => $escrowEmail,
-                        'Telephone' => "555-123-4567", $escrowTelephone,
+                        'Telephone' => $escrowTelephone,
                         'CompanyName' => $escrowCompany,
                         'EscrowOfficerName' => $escrowOfficer,
                     ];
@@ -290,12 +290,14 @@ class Home extends MX_Controller
                 $lenderTelephone = $this->input->post('LenderTelephone');
                 $lenderCompany = $this->input->post('LenderCompany');
                 $lender_details = array('name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany);
-                $orderReq['lenderDetails'] = [
-                    'Name' => "Randolph R Brusca", //$lenderName,
-                    'Email' => "assured@assuredhomeloan.com", //$lenderEmail,
-                    'Telephone' => "321-654-0987", //$lenderTelephone,
-                    'CompanyName' => "Assured Home Loans", //$lenderCompany,
-                ];
+                if (!empty($lenderEmail)) {
+                    $orderReq['lenderDetails'] = [
+                        'Name' => $lenderName,
+                        'Email' => $lenderEmail,
+                        'Telephone' => $lenderTelephone,
+                        'CompanyName' => $lenderCompany,
+                    ];
+                }
                 $lender_details_api = array('name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany);
                 $lenderPartnerTypeID = '3';
                 if ($orderUser['is_primary_mortgage_user'] == 1) {
@@ -393,25 +395,25 @@ class Home extends MX_Controller
                         "LoanAmount" => $LoanAmount,
                         "SalesAmount" => $SalesAmount,
                     ];
-                    $orderReq["buyersAgentDetails"] = [
-                        "Name" => "Agent Doe",
-                        "Email" => "agent.john@example.com",
-                        "Telephone" => "321-654-0987",
-                        "CompanyName" => "Realty Experts",
-                    ];
-                    $orderReq["listingAgentDetails"] = [
-                        "Name" => "Agent Jane",
-                        "Email" => "agent.jane@example.com",
-                        "Telephone" => "987-654-3210",
-                        "CompanyName" => "Prime Properties",
-                    ];
-                    $orderReq["escrowDetails"] = [
-                        "Name" => "Sarah Carter",
-                        "Email" => "escrow.sarah@example.com",
-                        "Telephone" => "555-123-4567",
-                        "CompanyName" => "Escrow Secure LLC",
-                        "EscrowOfficerName" => "Mark Lee",
-                    ];
+                    // $orderReq["buyersAgentDetails"] = [
+                    //     "Name" => "Agent Doe",
+                    //     "Email" => "agent.john@example.com",
+                    //     "Telephone" => "321-654-0987",
+                    //     "CompanyName" => "Realty Experts",
+                    // ];
+                    // $orderReq["listingAgentDetails"] = [
+                    //     "Name" => "Agent Jane",
+                    //     "Email" => "agent.jane@example.com",
+                    //     "Telephone" => "987-654-3210",
+                    //     "CompanyName" => "Prime Properties",
+                    // ];
+                    // $orderReq["escrowDetails"] = [
+                    //     "Name" => "Sarah Carter",
+                    //     "Email" => "escrow.sarah@example.com",
+                    //     "Telephone" => "555-123-4567",
+                    //     "CompanyName" => "Escrow Secure LLC",
+                    //     "EscrowOfficerName" => "Mark Lee",
+                    // ];
                     $loanFlag = 1;
                     // $legalEntity = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $OwnerFirstName, 'Last' => $OwnerLastName), 'Address' => array('Address1' => $PropertyAddress, 'City' => $PropertyCity, 'State' => $PropertyState, 'Zip' => $PropertyZip));
 
@@ -498,8 +500,8 @@ class Home extends MX_Controller
                     ];
 
                     // $order_data = json_encode($place_order);
-                    echo "<pre>";
-                    print_r($orderReq);
+                    // echo "<pre>";
+                    // print_r($orderReq);
 
                     // print_r($orderReq);
                     // die;
@@ -519,7 +521,7 @@ class Home extends MX_Controller
 
                         if (isset($response['status']) && $response['status'] == 'error') {
                             // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
-                            /* Start add resware api logs */
+                            /* Start add softpro api logs */
                             $reswareData = array(
                                 'request_type' => 'create_order_in_softpro',
                                 'request_url' => 'create_order',
@@ -528,12 +530,10 @@ class Home extends MX_Controller
                                 'status' => 'error',
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
-                            // print_r($reswareData);die;
 
                             $this->db->insert('pct_resware_log', $reswareData);
-                            /* End add resware api logs */
+                            /* End add softpro api logs */
 
-                            // $response = array('status' => 'error', 'message' => $message);
                             echo json_encode($response);
                             exit;
                         } else {
@@ -543,22 +543,21 @@ class Home extends MX_Controller
                                 $orderNumber = isset($response['OrderNumber']) && !empty($response['OrderNumber']) ? $response['OrderNumber'] : '';
                                 // $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
                             }
-                            /* Start add resware api logs */
+                            /* Start add softpro api logs */
                             $reswareData = array(
                                 'request_type' => 'create_order_in_softpro',
                                 'request_url' => 'create_order',
                                 'request' => $order_data,
                                 'response' => json_encode($response),
                                 'status' => 'success',
-                                'file_id' => $file_id,
+                                // 'file_id' => $file_id,
                                 'file_number' => $orderNumber,
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
                             // print_r($reswareData);die;
                             $this->db->insert('pct_resware_log', $reswareData);
-                            // print_r($orderNumber);
-                            // print_r($response);die;
-                            /* End add resware api logs */
+
+                            /* End add softpro api logs */
                             /*if ($orderNumber) {
 
                         $partners = array();
@@ -1128,18 +1127,18 @@ class Home extends MX_Controller
                 $randomString = md5($orderUser['id'] . $orderUser['email_address'] . $randomString);
                 $orderData = array(
                     'customer_id' => $customer_id,
-                    'file_id' => $file_id,
+                    // 'file_id' => $file_id,
                     'file_number' => isset($orderNumber) && !empty($orderNumber) ? $orderNumber : 0,
                     'lp_file_number' => $lp_file_number,
                     'property_id' => $propertyId,
                     'transaction_id' => $transactionId,
-                    'partner_api_log_id' => $partnerApiId,
+                    // 'partner_api_log_id' => $partnerApiId,
                     'created_by' => $userdata['id'],
                     'random_number' => $randomString,
-                    'underwriter' => $underWriter,
+                    // 'underwriter' => $underWriter,
                     'escrow_officer_id' => $this->input->post('escrow_officer'),
                     'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
-                    'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
+                    // 'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
                     'status' => 1,
                 );
 
@@ -1261,7 +1260,7 @@ class Home extends MX_Controller
                         'session_id' => $session_id,
                     );
                     $tpData = array(
-                        'file_id' => $file_id,
+                        // 'file_id' => $file_id,
                         'file_number' => $orderNumber,
                     );
                     $this->titlePointData->update($tpData, $condition);
@@ -1310,7 +1309,7 @@ class Home extends MX_Controller
 
                 }
 
-                $orderDetails = $this->order->get_order_details($file_id);
+                $orderDetails = $this->order->get_order_details($orderNumber);
 
                 // Convert to PST
 
@@ -1322,7 +1321,7 @@ class Home extends MX_Controller
 
                 $data = array(
                     'orderNumber' => $orderNumber,
-                    'orderId' => $file_id,
+                    // 'orderId' => $file_id,
                     'OpenName' => $OpenName . ' ' . $OpenLastName,
                     'Opentelephone' => $Opentelephone,
                     'OpenEmail' => $OpenEmail,
@@ -1380,24 +1379,62 @@ class Home extends MX_Controller
                 $lvfilename = $orderNumber . '.pdf';
                 $deedfilename = $orderNumber . '.pdf';
                 $taxfilename = $orderNumber . '.pdf';
-
+                $uploadFileToSoftPro = [];
                 if (!empty($_FILES['upload_curative']['name'])) {
-                    $this->uploadCurativeDocsToResware($orderDetails);
+                    // $this->uploadCurativeDocsToResware($orderDetails);
+                    $uploadFileToSoftPro[] = [
+                        "FolderName" => 'curative',
+                        "FileURL" => env('AWS_PATH') . "curative/" . $fileName,
+                    ];
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('legal-vesting/' . $lvfilename)) {
                     $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
-                    $this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails, $lpOrderFlag);
+                    // $this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails, $lpOrderFlag);
+                    $uploadFileToSoftPro[] = [
+                        "FolderName" => 'legal-vesting',
+                        "FileURL" => env('AWS_PATH') . "legal-vesting/" . $lvfilename,
+                    ];
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('grant-deed/' . $deedfilename)) {
                     $file[] = env('AWS_PATH') . "grant-deed/" . $deedfilename;
-                    $this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails, $lpOrderFlag);
+                    // $this->uploadGrantDeedDocsToResware($deedfilename, $file_id, $orderDetails, $lpOrderFlag);
+                    $uploadFileToSoftPro[] = [
+                        "FolderName" => 'grant-deed',
+                        "FileURL" => env('AWS_PATH') . "grant-deed/" . $deedfilename,
+                    ];
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
                     $file[] = env('AWS_PATH') . "tax/" . $taxfilename;
-                    $this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
+                    // $this->uploadTaxDocsToResware($taxfilename, $file_id, $orderDetails, $lpOrderFlag);
+                    $uploadFileToSoftPro[] = [
+                        "FolderName" => 'tax',
+                        "FileURL" => env('AWS_PATH') . "tax/" . $taxfilename,
+                    ];
+                }
+
+                if (!empty($uploadFileToSoftPro)) {
+                    $fileData = [
+                        "OrderNumber" => $orderNumber,
+                        "FileList" => $uploadFileToSoftPro,
+                    ];
+                    $reqData = json_encode($fileData);
+                    // print_r($reqData);
+                    $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                    /* Start upload softpro api logs */
+                    $reswareData = array(
+                        'request_type' => 'upload_file_in_softpro',
+                        'request_url' => 'upload_file',
+                        'request' => $reqData,
+                        'response' => json_encode($response),
+                        'status' => $response['status'],
+                        'file_number' => $orderNumber,
+                        'created_at' => date("Y-m-d H:i:s"),
+                    );
+                    $this->db->insert('pct_resware_log', $reswareData);
+                    /* End upload softpro api logs */
                 }
 
                 $escrow_officer_email = '';
@@ -1591,7 +1628,7 @@ class Home extends MX_Controller
                 }
                 /* Call HomeDocs API  */
 
-                $response = array('status' => 'success', 'message' => 'Data saved successfully.', 'file_id' => $file_id);
+                $response = array('status' => 'success', 'message' => 'Data saved successfully.', 'file_id' => $orderNumber);
                 echo json_encode($response);
                 exit;
             } else {
@@ -1742,13 +1779,14 @@ class Home extends MX_Controller
 
     public function orderSubmit()
     {
-        $fileId = $this->uri->segment(2);
+        $fileNum = $this->uri->segment(2);
+        // print_r($fileNum);die;
         $this->load->library('order/order');
         $data = array();
-        if ($fileId) {
+        if ($fileNum) {
             $condition = array(
                 'where' => array(
-                    'file_id' => $fileId,
+                    'file_id' => $fileNum,
                 ),
             );
             $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
@@ -1756,9 +1794,7 @@ class Home extends MX_Controller
             $session_id = isset($titlePointDetails[0]['session_id']) && !empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
 
             $this->session->unset_userdata($session_id);
-
-            $orderDetails = $this->order->get_order_details($fileId);
-
+            $orderDetails = $this->order->get_order_details($fileNum);
             $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
 
             $property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
