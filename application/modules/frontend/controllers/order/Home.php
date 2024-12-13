@@ -21,6 +21,7 @@ class Home extends MX_Controller
         $this->load->library('order/order');
         $this->load->model('order/titlePointData');
         $this->load->model('order/productType');
+        $this->load->library('order/softPro');
         $this->order->is_user();
 
         // $this->load->model('order/apiLogs');
@@ -506,7 +507,7 @@ class Home extends MX_Controller
                     // print_r($orderReq);
                     // die;
                     $order_data = json_encode($orderReq);
-                    $this->load->library('order/softpro');
+
                     // print_r($order_data);
                     $response = $this->softpro->make_request('POST', 'create_order', $order_data, $user_data);
                     // print_r($result);die;

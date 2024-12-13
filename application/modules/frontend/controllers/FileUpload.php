@@ -32,112 +32,118 @@ class FileUpload extends MX_Controller
         );
 
         if (isset($_POST) && !empty($_POST)) {
-            $this->form_validation->set_rules('OpenName', 'First Name', 'required', array('required' => 'Enter your first name'));
-            $this->form_validation->set_rules('OpenLastName', 'Last Name', 'required', array('required' => 'Enter your last name'));
-            $config['upload_path'] = './uploads/desk-file-upload/';
-            $config['allowed_types'] = 'pdf';
-            $config['max_size'] = 12000;
-            $this->load->library('upload', $config);
-            $file_path = './uploads/desk-file-upload/';
-            if (!is_dir('/uploads/desk-file-upload')) {
-                mkdir('./uploads/desk-file-upload', 0777, true);
-            }
-            $orderNumber = $this->input->post('order_number');
-            $documentName = $this->input->post('document_name');
+            $this->form_validation->set_rules('order_number', 'Order Number', 'required', array('required' => 'Enter your order number'));
+            $this->form_validation->set_rules('document_name', 'Last Document Name', 'required', array('required' => 'Enter your document name'));
+            if ($this->form_validation->run($this) == true) {
+                $config['upload_path'] = './uploads/desk-file-upload/';
+                $config['allowed_types'] = 'pdf';
+                $config['max_size'] = 12000;
+                $this->load->library('upload', $config);
+                $file_path = './uploads/desk-file-upload/';
+                if (!is_dir('/uploads/desk-file-upload')) {
+                    mkdir('./uploads/desk-file-upload', 0777, true);
+                }
+                $orderNumber = $this->input->post('order_number');
+                $documentName = $this->input->post('document_name');
+                if (!empty($_FILES['multiFiles']['name'])) {
+                    $files = $_FILES['multiFiles'];
+                    $cpt = count($files['name']);
+                    $fileList = [];
+                    for ($i = 0; $i < $cpt; $i++) {
+                        $name = time() . $files['name'][$i];
+                        $_FILES['multiFiles_single']['name'] = $name;
+                        $_FILES['multiFiles_single']['type'] = $files['type'][$i];
+                        $_FILES['multiFiles_single']['tmp_name'] = $files['tmp_name'][$i];
+                        $_FILES['multiFiles_single']['error'] = $files['error'][$i];
+                        $_FILES['multiFiles_single']['size'] = $files['size'][$i];
+                        $this->upload->initialize($config);
+                        if (!($this->upload->do_upload('multiFiles_single'))) {
+                            $errorMsg = $this->upload->display_errors();
+                            $this->session->set_flashdata('error', $errorMsg);
+                            $file_upload_error_msg = 1;
+                        } else {
+                            $data = $this->upload->data();
+                            $fileName = $orderNumber . '_' . time() . '.pdf';
 
-            if (!empty($_FILES['multiFiles']['name'])) {
-                $files = $_FILES['multiFiles'];
-                $cpt = count($files['name']);
-                $fileList = [];
-                for ($i = 0; $i < $cpt; $i++) {
-                    $name = time() . $files['name'][$i];
-                    $_FILES['multiFiles_single']['name'] = $name;
-                    $_FILES['multiFiles_single']['type'] = $files['type'][$i];
-                    $_FILES['multiFiles_single']['tmp_name'] = $files['tmp_name'][$i];
-                    $_FILES['multiFiles_single']['error'] = $files['error'][$i];
-                    $_FILES['multiFiles_single']['size'] = $files['size'][$i];
-                    $this->upload->initialize($config);
-                    if (!($this->upload->do_upload('multiFiles_single'))) {
-                        $errorMsg = $this->upload->display_errors();
-                        $this->session->set_flashdata('error', $errorMsg);
-                        $file_upload_error_msg = 1;
-                    } else {
-                        $data = $this->upload->data();
-                        $fileName = $orderNumber . '_' . time() . '.pdf';
+                            $saveData = array(
+                                'name' => $documentName,
+                                'order_number' => $orderNumber,
+                                'file_path' => $fileName,
+                                'added_by' => $this->user['id'],
+                                'is_desk_file' => 1,
+                                'created_at' => date('Y-m-d H:i:s'),
+                            );
+                            // $id = $this->fileDocument_model->insert($saveData);
+                            rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
+                            $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
+                            $fileList[] = [
+                                "FolderName" => 'desk-file-upload',
+                                "FileURL" => env('AWS_PATH') . "desk-file-upload/" . $fileName,
+                            ];
+                        }
 
-                        $saveData = array(
-                            'name' => $documentName,
-                            'order_number' => $orderNumber,
-                            'file_path' => $fileName,
-                            'added_by' => $this->user['id'],
-                            'is_desk_file' => 1,
-                            'created_at' => date('Y-m-d H:i:s'),
-                        );
-                        // $id = $this->fileDocument_model->insert($saveData);
-                        rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
-                        $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
-                        $fileList[] = [
-                            "FolderName" => 'desk-file-upload',
-                            "FileURL" => env('AWS_PATH') . "desk-file-upload/" . $fileName,
+                        $fileData = [
+                            "OrderNumber" => $orderNumber,
+                            "FileList" => $fileList,
                         ];
+                        $reqData = json_encode($fileData);
+                        // print_r($reqData);
+                        $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        /* Start add softpro api logs */
+                        $reswareData = array(
+                            'request_type' => 'upload_file_in_softpro',
+                            'request_url' => 'upload_file',
+                            'request' => $reqData,
+                            'response' => json_encode($response),
+                            'status' => $response['status'],
+                            'file_number' => $orderNumber,
+                            'created_at' => date("Y-m-d H:i:s"),
+                        );
+                        $this->db->insert('pct_resware_log', $reswareData);
+                        // echo "<pre>";
+                        // print_r($response);die;
+                        /* End add softpro api logs */
                     }
 
-                    $fileData = [
-                        "OrderNumber" => $orderNumber,
-                        "FileList" => $fileList,
-                    ];
-                    $reqData = json_encode($fileData);
-                    // print_r($reqData);
-                    $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
-                    /* Start add softpro api logs */
-                    $reswareData = array(
-                        'request_type' => 'upload_file_in_softpro',
-                        'request_url' => 'upload_file',
-                        'request' => $reqData,
-                        'response' => json_encode($response),
-                        'status' => $response['status'],
-                        'file_number' => $orderNumber,
-                        'created_at' => date("Y-m-d H:i:s"),
-                    );
-                    $this->db->insert('pct_resware_log', $reswareData);
-                    // echo "<pre>";
-                    // print_r($response);die;
-                    /* End add softpro api logs */
+                    // if (!empty($_FILES['file-input']['name'])) {
+                    // if (!$this->upload->do_upload('file-input')) {
+                    //     $errorMsg = $this->upload->display_errors();
+                    //     $this->session->set_flashdata('error', $errorMsg);
+                    //     $file_upload_error_msg = 1;
+                    // } else {
+                    //     $data = $this->upload->data();
+                    //     $orderNumber = $this->input->post('order_number');
+                    //     $documentName = $this->input->post('document_name');
+                    //     $fileName = $orderNumber . '_' . time() . '.pdf';
+
+                    //     $saveData = array(
+                    //         'name' => $documentName,
+                    //         'order_number' => $orderNumber,
+                    //         'file_path' => $fileName,
+                    //         'added_by' => $this->user['id'],
+                    //         'is_desk_file' => 1,
+                    //     );
+                    // $id = $this->fileDocument_model->insert($saveData);
+                    // rename(FCPATH . "/uploads/desk-file-upload/" . $data['file_name'], FCPATH . "/uploads/desk-file-upload/" . $fileName);
+                    // $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
+
+                    // /** Save user Activity */
+                    // $activity = 'New document uploaded for order : ' . $orderNumber . ' Name :' . $documentName;
+                    // $this->order->logAdminActivity($activity);
+                    // /** End Save user activity */
+                    // $successMsg = 'Document info saved successfully.';
+                    // $this->session->set_flashdata('success', $successMsg);
+                    // }
+                } else {
+                    $errMsg = 'Please upload file.';
+                    $this->session->set_flashdata('error', $errMsg);
                 }
 
-                // if (!empty($_FILES['file-input']['name'])) {
-                // if (!$this->upload->do_upload('file-input')) {
-                //     $errorMsg = $this->upload->display_errors();
-                //     $this->session->set_flashdata('error', $errorMsg);
-                //     $file_upload_error_msg = 1;
-                // } else {
-                //     $data = $this->upload->data();
-                //     $orderNumber = $this->input->post('order_number');
-                //     $documentName = $this->input->post('document_name');
-                //     $fileName = $orderNumber . '_' . time() . '.pdf';
-
-                //     $saveData = array(
-                //         'name' => $documentName,
-                //         'order_number' => $orderNumber,
-                //         'file_path' => $fileName,
-                //         'added_by' => $this->user['id'],
-                //         'is_desk_file' => 1,
-                //     );
-                // $id = $this->fileDocument_model->insert($saveData);
-                // rename(FCPATH . "/uploads/desk-file-upload/" . $data['file_name'], FCPATH . "/uploads/desk-file-upload/" . $fileName);
-                // $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
-
-                // /** Save user Activity */
-                // $activity = 'New document uploaded for order : ' . $orderNumber . ' Name :' . $documentName;
-                // $this->order->logAdminActivity($activity);
-                // /** End Save user activity */
-                // $successMsg = 'Document info saved successfully.';
-                // $this->session->set_flashdata('success', $successMsg);
-                // }
             } else {
-                $errMsg = 'Please upload file.';
+                $errMsg = validation_errors();
                 $this->session->set_flashdata('error', $errMsg);
             }
+
         }
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=pma_' . $this->version));
         $this->salesdashboardtemplate->show("file-upload", "index", $data);
