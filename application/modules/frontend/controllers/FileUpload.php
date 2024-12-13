@@ -73,7 +73,7 @@ class FileUpload extends MX_Controller
                                 'is_desk_file' => 1,
                                 'created_at' => date('Y-m-d H:i:s'),
                             );
-                            // $id = $this->fileDocument_model->insert($saveData);
+                            $id = $this->fileDocument_model->insert($saveData);
                             rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
                             $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
                             $fileList[] = [
@@ -100,6 +100,8 @@ class FileUpload extends MX_Controller
                             'created_at' => date("Y-m-d H:i:s"),
                         );
                         $this->db->insert('pct_resware_log', $reswareData);
+                        $successMsg = 'Document info saved successfully.';
+                        $this->session->set_flashdata('success', $successMsg);
                         // echo "<pre>";
                         // print_r($response);die;
                         /* End add softpro api logs */
@@ -131,8 +133,7 @@ class FileUpload extends MX_Controller
                     // $activity = 'New document uploaded for order : ' . $orderNumber . ' Name :' . $documentName;
                     // $this->order->logAdminActivity($activity);
                     // /** End Save user activity */
-                    // $successMsg = 'Document info saved successfully.';
-                    // $this->session->set_flashdata('success', $successMsg);
+
                     // }
                 } else {
                     $errMsg = 'Please upload file.';
