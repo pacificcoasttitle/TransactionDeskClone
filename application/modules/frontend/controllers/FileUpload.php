@@ -19,7 +19,7 @@ class FileUpload extends MX_Controller
         $this->load->library('order/salesDashboardTemplate');
         $this->load->model('order/fileDocument_model');
         $this->load->library('order/order');
-        $this->load->library('order/softpro');
+        $this->load->library('order/softPro');
         $this->load->library('form_validation');
     }
 
