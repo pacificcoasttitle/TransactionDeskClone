@@ -16,7 +16,7 @@ class SoftPro
         self::$CI = $this->CI;
     }
 
-    public function make_request($http_method, $endpoint, $postData = '', $data = array())
+    public function make_request($http_method, $endpoint, $postData = '', $userData = array())
     {
         $apiEndPoints = SOFTPRO_API_END;
         $url = getenv("SOFT_PRO_API") . $apiEndPoints[$endpoint];
@@ -50,9 +50,9 @@ class SoftPro
         } else {
             $res = json_decode($response, true);
             if ($res['Status'] == 200) {
-                return ['status' => 'success', 'message' => curl_error($ch), 'data' => $res];
+                return ['status' => 'success', 'message' => $res['Message'], 'data' => $res];
             } else {
-                return ['status' => 'error', 'message' => $data['Message'], 'data' => $res];
+                return ['status' => 'error', 'message' => $res['Message'], 'data' => $res];
             }
         }
 

@@ -4,7 +4,7 @@ class FileUpload extends MX_Controller
 {
     private $user;
     private $sorting_fields;
-    private $version = '01';
+    private $version = '02';
 
     public function __construct()
     {
@@ -19,6 +19,8 @@ class FileUpload extends MX_Controller
         $this->load->library('order/salesDashboardTemplate');
         $this->load->model('order/fileDocument_model');
         $this->load->library('order/order');
+        $this->load->library('order/softpro');
+        $this->load->library('form_validation');
     }
 
     public function index()
@@ -30,6 +32,8 @@ class FileUpload extends MX_Controller
         );
 
         if (isset($_POST) && !empty($_POST)) {
+            $this->form_validation->set_rules('OpenName', 'First Name', 'required', array('required' => 'Enter your first name'));
+            $this->form_validation->set_rules('OpenLastName', 'Last Name', 'required', array('required' => 'Enter your last name'));
             $config['upload_path'] = './uploads/desk-file-upload/';
             $config['allowed_types'] = 'pdf';
             $config['max_size'] = 12000;
@@ -38,10 +42,13 @@ class FileUpload extends MX_Controller
             if (!is_dir('/uploads/desk-file-upload')) {
                 mkdir('./uploads/desk-file-upload', 0777, true);
             }
+            $orderNumber = $this->input->post('order_number');
+            $documentName = $this->input->post('document_name');
+
             if (!empty($_FILES['multiFiles']['name'])) {
                 $files = $_FILES['multiFiles'];
                 $cpt = count($files['name']);
-
+                $fileList = [];
                 for ($i = 0; $i < $cpt; $i++) {
                     $name = time() . $files['name'][$i];
                     $_FILES['multiFiles_single']['name'] = $name;
@@ -56,8 +63,6 @@ class FileUpload extends MX_Controller
                         $file_upload_error_msg = 1;
                     } else {
                         $data = $this->upload->data();
-                        $orderNumber = $this->input->post('order_number');
-                        $documentName = $this->input->post('document_name');
                         $fileName = $orderNumber . '_' . time() . '.pdf';
 
                         $saveData = array(
@@ -68,10 +73,36 @@ class FileUpload extends MX_Controller
                             'is_desk_file' => 1,
                             'created_at' => date('Y-m-d H:i:s'),
                         );
-                        $id = $this->fileDocument_model->insert($saveData);
+                        // $id = $this->fileDocument_model->insert($saveData);
                         rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
                         $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
+                        $fileList[] = [
+                            "FolderName" => 'desk-file-upload',
+                            "FileURL" => env('AWS_PATH') . "desk-file-upload/" . $fileName,
+                        ];
                     }
+
+                    $fileData = [
+                        "OrderNumber" => $orderNumber,
+                        "FileList" => $fileList,
+                    ];
+                    $reqData = json_encode($fileData);
+                    // print_r($reqData);
+                    $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                    /* Start add softpro api logs */
+                    $reswareData = array(
+                        'request_type' => 'upload_file_in_softpro',
+                        'request_url' => 'upload_file',
+                        'request' => $reqData,
+                        'response' => json_encode($response),
+                        'status' => $response['status'],
+                        'file_number' => $orderNumber,
+                        'created_at' => date("Y-m-d H:i:s"),
+                    );
+                    $this->db->insert('pct_resware_log', $reswareData);
+                    // echo "<pre>";
+                    // print_r($response);die;
+                    /* End add softpro api logs */
                 }
 
                 // if (!empty($_FILES['file-input']['name'])) {

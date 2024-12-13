@@ -572,7 +572,7 @@ class Order
         return $query->row_array();
     }
 
-    public function get_order_details($fileId, $from_mail = 0)
+    public function get_order_details($file_number, $from_mail = 0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('
@@ -686,8 +686,8 @@ class Order
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
-            pct_order_product_types.product_type,
-            pct_order_product_types.transaction_type,
+            pct_softpro_product_type.product_type,
+            pct_softpro_order_type.order_type,
             pct_order_documents.created,
             p.created as proposed_document_created_date')
             ->from('order_details')
@@ -701,8 +701,10 @@ class Order
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-        $this->CI->db->where('file_id', $fileId);
+            ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1')
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1');
+        // $this->CI->db->where('file_id', $fileId);
+        $this->CI->db->where('file_number', $file_number);
 
         if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0 && $userdata['is_escrow_officer'] == 0 && $userdata['is_escrow_assistant'] == 0) {
             $this->CI->db->group_start()
@@ -711,6 +713,7 @@ class Order
                 ->group_end();
         }
         $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
         return $query->row_array();
     }
 
