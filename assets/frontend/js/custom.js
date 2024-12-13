@@ -505,30 +505,40 @@ $(document).ready(function () {
     });
     /* Escrow autocomplete */
 
+    // $('#ProductTypeID').change(function () {
+    //     var selectedText = $(this).find('option:selected').text();
+    //     $('#sales-loan-amount-fields').show();
+
+    //     if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '36' || $(this).val() == '22' || $(this).val() == '26' || $(this).val() == '24' || $(this).val() == '27' || $(this).val() == '40') {
+    //         $('#add-escrow-officer-section').show();
+    //     } else {
+    //         $('#add-escrow-officer-section').hide();
+    //         $('#escrow-officer-field').hide();
+    //         $('#add-escrow-officer-details').prop('checked', false);
+    //     }
+
+    //     if (selectedText.includes("Loan")) {
+    //         $('#sales-loan-amount-fields #salesAmount').hide();
+    //         $('#sales-loan-amount-fields #primaryBorrower').hide();
+    //         $('#sales-loan-amount-fields #secondaryBorrower').hide();
+    //     } else if (selectedText.includes("Sale")) {
+    //         $('#sales-loan-amount-fields #salesAmount').show();
+    //         $('#sales-loan-amount-fields #primaryBorrower').show();
+    //         $('#sales-loan-amount-fields #secondaryBorrower').show();
+    //     } else {
+    //         $('#sales-loan-amount-fields').hide();
+    //     }
+    //     $('#ProductType').val(selectedText);
+    // });
+
     $('#ProductTypeID').change(function () {
         var selectedText = $(this).find('option:selected').text();
-        $('#sales-loan-amount-fields').show();
-
-        if ($(this).val() == '4' || $(this).val() == '5' || $(this).val() == '36' || $(this).val() == '22' || $(this).val() == '26' || $(this).val() == '24' || $(this).val() == '27' || $(this).val() == '40') {
-            $('#add-escrow-officer-section').show();
-        } else {
-            $('#add-escrow-officer-section').hide();
-            $('#escrow-officer-field').hide();
-            $('#add-escrow-officer-details').prop('checked', false);
-        }
-
-        if (selectedText.includes("Loan")) {
-            $('#sales-loan-amount-fields #salesAmount').hide();
-            $('#sales-loan-amount-fields #primaryBorrower').hide();
-            $('#sales-loan-amount-fields #secondaryBorrower').hide();
-        } else if (selectedText.includes("Sale")) {
-            $('#sales-loan-amount-fields #salesAmount').show();
-            $('#sales-loan-amount-fields #primaryBorrower').show();
-            $('#sales-loan-amount-fields #secondaryBorrower').show();
-        } else {
-            $('#sales-loan-amount-fields').hide();
-        }
         $('#ProductType').val(selectedText);
+    });
+
+    $('#OrderTypeID').change(function () {
+        var selectedText = $(this).find('option:selected').text();
+        $('#OrderType').val(selectedText);
     });
 });
 

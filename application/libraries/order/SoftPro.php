@@ -18,16 +18,18 @@ class SoftPro
 
     public function make_request($http_method, $endpoint, $postData = '', $data = array())
     {
-        $url = getenv("SOFT_PRO_API") . $endpoint;
+        $apiEndPoints = SOFTPRO_API_END;
+        $url = getenv("SOFT_PRO_API") . $apiEndPoints[$endpoint];
+        // print_r($url);die;
         $header = [
             'Content-Type: application/json', // Set JSON content type
-            'Content-Length: ' . strlen(json_encode($postData)),
+            'Content-Length: ' . strlen($postData),
         ];
         if (false) {
             $header = [
                 'Content-Type: application/json', // Set JSON content type
                 'X-API-KEY: YOUR_TOKEN_HERE', // Add Authorization header if needed
-                'Content-Length: ' . strlen(json_encode($postData)),
+                'Content-Length: ' . strlen($postData),
             ];
         }
         // Initialize cURL
@@ -35,19 +37,23 @@ class SoftPro
         // Set cURL options
         curl_setopt($ch, CURLOPT_URL, $url); // Set the URL
         curl_setopt($ch, CURLOPT_POST, true); // Enable POST request
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData)); // Add JSON data to the request
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData); // Add JSON data to the request
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the response as a string
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
         // Execute the request
         $response = curl_exec($ch);
-        print_r($response);die;
+        // print_r($response);die;
         // Check for errors
         if (curl_error($ch)) {
             return ['status' => 'error', 'message' => curl_error($ch)];
         } else {
-            // Decode the response if it's JSON
-            return ['status' => 'success', 'message' => curl_error($ch), 'data' => json_decode($response, true)];
+            $res = json_decode($response, true);
+            if ($res['Status'] == 200) {
+                return ['status' => 'success', 'message' => curl_error($ch), 'data' => $res];
+            } else {
+                return ['status' => 'error', 'message' => $data['Message'], 'data' => $res];
+            }
         }
 
         // Close cURL

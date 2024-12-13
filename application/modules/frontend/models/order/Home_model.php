@@ -172,9 +172,83 @@ class Home_model extends CI_Model
 
     }
 
+    // public function get_product_types($params = array())
+    // {
+    //     $table = 'pct_order_product_types';
+
+    //     $this->db->select('*');
+    //     $this->db->from($table);
+
+    //     if (array_key_exists("where", $params)) {
+    //         foreach ($params['where'] as $key => $val) {
+    //             $this->db->where($key, $val);
+    //         }
+    //     }
+
+    //     if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+    //         $result = $this->db->count_all_results();
+    //     } else {
+    //         if (array_key_exists("id", $params)) {
+    //             $this->db->where('id', $params['id']);
+    //             $query = $this->db->get();
+    //             $result = $query->row_array();
+    //         } else {
+    //             $this->db->order_by('id', 'asc');
+    //             if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+    //                 $this->db->limit($params['limit'], $params['start']);
+    //             } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+    //                 $this->db->limit($params['limit']);
+    //             }
+
+    //             $query = $this->db->get();
+    //             $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+    //         }
+    //     }
+    //     // Return fetched data
+    //     return $result;
+    // }
+
     public function get_product_types($params = array())
     {
-        $table = 'pct_order_product_types';
+        $table = 'pct_softpro_product_type';
+
+        $this->db->select('*');
+        $this->db->from($table);
+        $this->db->where('status', 1);
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                $this->db->where($key, $val);
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->db->where('id', $params['id']);
+                $this->db->where('status', 1);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->db->where('status', 1);
+                $this->db->order_by('id', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit']);
+                }
+
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+        // Return fetched data
+        return $result;
+    }
+
+    public function get_order_types($params = array())
+    {
+        $table = 'pct_softpro_order_type';
 
         $this->db->select('*');
         $this->db->from($table);
@@ -190,9 +264,11 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
+                $this->db->where('status', 1);
                 $query = $this->db->get();
                 $result = $query->row_array();
             } else {
+                $this->db->where('status', 1);
                 $this->db->order_by('id', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
