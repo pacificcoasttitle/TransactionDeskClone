@@ -83,7 +83,6 @@ class Home extends MX_Controller
                 echo json_encode($response);
                 exit;
             }
-
             $parties_email = array();
             if ($this->form_validation->run($this) == true) {
                 $OpenName = $this->input->post('OpenName');
@@ -142,12 +141,17 @@ class Home extends MX_Controller
                 $SalesAmount = $this->input->post('salesAmount');
                 $SalesAmount = str_replace(',', '', $SalesAmount);
                 $LoanAmount = str_replace(',', '', $LoanAmount);
-                // print_r($LoanAmount);die;
+                $LoanAmount = 25000;
+                // $SalesAmount = 11000;
                 $ProductTypeTxt = $this->input->post('ProductType');
                 $primaryBorrower = $this->input->post('primaryBorrower');
                 $secondaryBorrower = $this->input->post('secondaryBorrower');
                 $TransactionTypeID = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
                 $ProductTypeID = $this->input->post('ProductTypeID');
+                $softproProductType = $this->input->post('ProductType');
+                $softproProductTypeId = $this->input->post('ProductTypeID');
+                $softproOrderType = $this->input->post('OrderType');
+                $softproOrderTypeId = $this->input->post('OrderTypeID');
                 $CCR = isset($_POST["CCR"]) && !empty($_POST["CCR"]) ? 1 : 0;
                 $Docs = isset($_POST["Docs"]) && !empty($_POST["Docs"]) ? 1 : 0;
                 $Ease = isset($_POST["Ease"]) && !empty($_POST["Ease"]) ? 1 : 0;
@@ -155,6 +159,9 @@ class Home extends MX_Controller
                 $sendermessage = $this->input->post('sendermessage');
                 $BuyerAgentId = $this->input->post('BuyerAgentId');
                 $agentDetailFlag = $this->input->post('add-agent-details');
+                $escrowOfficerFlag = $this->input->post('add-escrow-officer-details');
+                $escrowOfficer = $this->input->post('escrow_officer');
+                $escrowOfficerKey = '';
                 $user_data = array();
                 $orderReq = [];
                 $buyers_agent_details = $listing_agent_details = array();
@@ -168,7 +175,7 @@ class Home extends MX_Controller
                     $orderReq['buyersAgentDetails'] = [
                         'Name' => $BuyerAgentName,
                         'Email' => $BuyerAgentEmailAddress,
-                        'Telephone' => $BuyerAgentTelephone,
+                        'Telephone' => "321-654-0987", //$BuyerAgentTelephone,
                         'CompanyName' => $BuyerAgentCompany,
                     ];
                 }
@@ -184,7 +191,7 @@ class Home extends MX_Controller
                     $orderReq['listingAgentDetails'] = [
                         'Name' => $ListingAgentName,
                         'Email' => $ListingAgentEmailAddress,
-                        'Telephone' => $ListingAgentTelephone,
+                        'Telephone' => "987-654-3210", //$ListingAgentTelephone,
                         'CompanyName' => $ListingAgentCompany,
                     ];
                 }
@@ -234,8 +241,9 @@ class Home extends MX_Controller
                     $orderReq['escrowDetails'] = [
                         'Name' => $escrowName,
                         'Email' => $escrowEmail,
-                        'Telephone' => $escrowTelephone,
+                        'Telephone' => "555-123-4567", $escrowTelephone,
                         'CompanyName' => $escrowCompany,
+                        'EscrowOfficerName' => $escrowOfficer,
                     ];
                     $escrow_details_api = array('name' => $escrowName, 'email' => $escrowEmail, 'phone' => $escrowTelephone, 'company' => $escrowCompany);
                     $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
@@ -257,22 +265,20 @@ class Home extends MX_Controller
                     }
                 }
 
-                /* Partners API */
-                $secondaryEscrowPartners = array();
+                /*$secondaryEscrowPartners = array();
                 if (isset($escrowId) && !empty($escrowId)) {
-                    $escrow_resware_user_id = isset($escrow_user_details['resware_user_id']) && !empty($escrow_user_details['resware_user_id']) ? $escrow_user_details['resware_user_id'] : '';
-                    $escrow_partner_id = isset($escrow_user_details['partner_id']) && !empty($escrow_user_details['partner_id']) ? $escrow_user_details['partner_id'] : '';
-                    $secondaryEmp[] = array('UserID' => $escrow_resware_user_id);
-                    $secondaryEscrowPartners = array(
-                        'SecondaryEmployees' => $secondaryEmp,
-                        'PartnerTypeID' => (int) $escrowPartnerTypeID,
-                        'PartnerID' => (int) $escrow_partner_id,
-                        'PartnerType' => array(
-                            'PartnerTypeID' => (int) $escrowPartnerTypeID,
-                        ),
-                    );
-                }
-                /* Partners API */
+                $escrow_resware_user_id = isset($escrow_user_details['resware_user_id']) && !empty($escrow_user_details['resware_user_id']) ? $escrow_user_details['resware_user_id'] : '';
+                $escrow_partner_id = isset($escrow_user_details['partner_id']) && !empty($escrow_user_details['partner_id']) ? $escrow_user_details['partner_id'] : '';
+                $secondaryEmp[] = array('UserID' => $escrow_resware_user_id);
+                $secondaryEscrowPartners = array(
+                'SecondaryEmployees' => $secondaryEmp,
+                'PartnerTypeID' => (int) $escrowPartnerTypeID,
+                'PartnerID' => (int) $escrow_partner_id,
+                'PartnerType' => array(
+                'PartnerTypeID' => (int) $escrowPartnerTypeID,
+                ),
+                );
+                }*/
 
                 // if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
                 // $lenderId = $_POST['LenderId'];
@@ -287,7 +293,7 @@ class Home extends MX_Controller
                 $orderReq['lenderDetails'] = [
                     'Name' => "Randolph R Brusca", //$lenderName,
                     'Email' => "assured@assuredhomeloan.com", //$lenderEmail,
-                    'Telephone' => "", //$lenderTelephone,
+                    'Telephone' => "321-654-0987", //$lenderTelephone,
                     'CompanyName' => "Assured Home Loans", //$lenderCompany,
                 ];
                 $lender_details_api = array('name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany);
@@ -299,22 +305,20 @@ class Home extends MX_Controller
                 }
                 // }
 
-                /* Partners API */
-                $secondaryLenderPartners = array();
+                /*$secondaryLenderPartners = array();
                 if (isset($lenderId) && !empty($lenderId)) {
-                    $lender_resware_user_id = isset($lender_user_details['resware_user_id']) && !empty($lender_user_details['resware_user_id']) ? $lender_user_details['resware_user_id'] : '';
-                    $lender_partner_id = isset($lender_user_details['partner_id']) && !empty($lender_user_details['partner_id']) ? $lender_user_details['partner_id'] : '';
-                    $secondaryEmp[] = array('UserID' => $lender_resware_user_id);
-                    $secondaryLenderPartners = array(
-                        'SecondaryEmployees' => $secondaryEmp,
-                        'PartnerTypeID' => (int) $lenderPartnerTypeID,
-                        'PartnerID' => (int) $lender_partner_id,
-                        'PartnerType' => array(
-                            'PartnerTypeID' => (int) $lenderPartnerTypeID,
-                        ),
-                    );
-                }
-                /* Partners API */
+                $lender_resware_user_id = isset($lender_user_details['resware_user_id']) && !empty($lender_user_details['resware_user_id']) ? $lender_user_details['resware_user_id'] : '';
+                $lender_partner_id = isset($lender_user_details['partner_id']) && !empty($lender_user_details['partner_id']) ? $lender_user_details['partner_id'] : '';
+                $secondaryEmp[] = array('UserID' => $lender_resware_user_id);
+                $secondaryLenderPartners = array(
+                'SecondaryEmployees' => $secondaryEmp,
+                'PartnerTypeID' => (int) $lenderPartnerTypeID,
+                'PartnerID' => (int) $lender_partner_id,
+                'PartnerType' => array(
+                'PartnerTypeID' => (int) $lenderPartnerTypeID,
+                ),
+                );
+                }*/
 
                 if (isset($escrowEmail) && !empty($escrowEmail)) {
                     $parties_email[] = $escrowEmail;
@@ -340,7 +344,9 @@ class Home extends MX_Controller
 
                 /** End Get config value to check Lp Enable or not */
                 $underWriter = '';
-                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && $ProductTypeID == '20') {
+
+                // if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && $ProductTypeID == '20') {
+                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
                     $lpOrderFlag = 1;
                     $loanFlag = 1;
                     if (strpos($ProductTypeTxt, 'Sale') !== false) {
@@ -357,9 +363,13 @@ class Home extends MX_Controller
                         "Address" => $StreetAddress,
                         "City" => $City,
                         "ZipCode" => $Zipcode,
+                        "EmailNotifications" => true,
+                        "State" => "",
+                        "SalesRep" => $salesRepName,
                     ];
                     $orderReq['propertyDetails'] = [
-                        "Address" => $PropertyAddress,
+                        "Address1" => $PropertyAddress,
+                        "Address2" => "",
                         "APNNumberParcelID" => $apn,
                         "Country" => $County,
                         "Description" => $LegalDescription,
@@ -367,43 +377,65 @@ class Home extends MX_Controller
                         "State" => $PropertyState,
                         "Zip" => $PropertyZip,
                         "EscrowBriefLegal" => $LegalDescription,
+                        "IsPrimaryResidence" => true,
+                        "State" => "CA",
                     ];
                     $orderReq['sellerDetails'] = [
                         "PrimaryOwner" => $PrimaryOwner,
                         "SecondaryOwner" => $SecondaryOwner,
                     ];
                     $transactionDetailsReq = [
-                        "SalesRep" => $salesRepName,
                         "TitleOfficer" => $titleOfficerName,
-                        // "Product" => "Prelim",
+                        "Product" => $softproProductType,
                         "EscrowNumber" => $EscrowNumber,
                         "PrimaryBorrower" => $primaryBorrower,
                         "SecondaryBorrower" => $secondaryBorrower,
+                        "LoanAmount" => $LoanAmount,
+                        "SalesAmount" => $SalesAmount,
+                    ];
+                    $orderReq["buyersAgentDetails"] = [
+                        "Name" => "Agent Doe",
+                        "Email" => "agent.john@example.com",
+                        "Telephone" => "321-654-0987",
+                        "CompanyName" => "Realty Experts",
+                    ];
+                    $orderReq["listingAgentDetails"] = [
+                        "Name" => "Agent Jane",
+                        "Email" => "agent.jane@example.com",
+                        "Telephone" => "987-654-3210",
+                        "CompanyName" => "Prime Properties",
+                    ];
+                    $orderReq["escrowDetails"] = [
+                        "Name" => "Sarah Carter",
+                        "Email" => "escrow.sarah@example.com",
+                        "Telephone" => "555-123-4567",
+                        "CompanyName" => "Escrow Secure LLC",
+                        "EscrowOfficerName" => "Mark Lee",
                     ];
                     $loanFlag = 1;
-                    $legalEntity = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $OwnerFirstName, 'Last' => $OwnerLastName), 'Address' => array('Address1' => $PropertyAddress, 'City' => $PropertyCity, 'State' => $PropertyState, 'Zip' => $PropertyZip));
+                    // $legalEntity = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $OwnerFirstName, 'Last' => $OwnerLastName), 'Address' => array('Address1' => $PropertyAddress, 'City' => $PropertyCity, 'State' => $PropertyState, 'Zip' => $PropertyZip));
 
                     if (strpos($ProductTypeTxt, 'Loan') !== false) {
                         $orderReq['orderType'] = "Refinance";
                         $transactionDetailsReq['TransactionType'] = "Refinance";
-                        $place_order['Buyers'][] = $legalEntity; //
                         $transactionDetailsReq['PrimaryBorrower'] = $OwnerFirstName . ' ' . $OwnerLastName;
+                        // $place_order['Buyers'][] = $legalEntity; //
                     } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                         $borrowerName = explode(' ', $primaryBorrower);
                         $borrowerLastName = end($borrowerName);
                         $borrowerPrimaryName = array_slice($borrowerName, 0, -1);
                         $borrowerFirstName = implode(" ", $borrowerPrimaryName);
                         $borrowers = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $borrowerFirstName, 'Last' => $borrowerLastName));
-                        $place_order['Sellers'][] = $legalEntity; //
-                        $place_order['Buyers'][] = $borrowers; //
-                        $place_order['SalesPrice'] = $SalesAmount; //
                         $transactionDetailsReq['SalesAmount'] = $SalesAmount;
                         $orderReq['orderType'] = "Purchase";
                         $transactionDetailsReq['TransactionType'] = "Purchase";
                         $loanFlag = 0;
+                        // $place_order['Sellers'][] = $legalEntity; //
+                        // $place_order['Buyers'][] = $borrowers; //
+                        // $place_order['SalesPrice'] = $SalesAmount; //
                     }
                     $orderReq['transactionDetails'] = $transactionDetailsReq;
-                    $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
+                    // $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = array();
                     if (isset($LoanAmount) && !empty($LoanAmount)) {
                         $loan['LoanAmount'] = $LoanAmount;
@@ -411,561 +443,562 @@ class Home extends MX_Controller
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
                         $loan['LoanNumber'] = $LoanNumber;
+                        $transactionDetailsReq['LoanNumber'] = $LoanNumber;
                     }
 
-                    if ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36') {
+                    // if ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36') {
+                    if ($softproOrderType == 'Title & Escrow') {
                         $loan['LienPosition'] = 0;
                         $loan['LoanType'] = 'ConvIns';
-                        $place_order['SettlementStatementVersion'] = 'HUD';
+                        // $place_order['SettlementStatementVersion'] = 'HUD';
                     }
                     $orderReq['Loans'] = $loan;
-                    $place_order['Loans'][] = $loan; //
+                    /*$place_order['Loans'][] = $loan; //
                     $place_order['Properties'][] = array('IsPrimary' => 'true', 'StreetNumber' => $StreetNumber, 'StreetName' => $StreetName, 'City' => $PropertyCity, 'State' => $PropertyState, 'County' => $County, 'Zip' => $PropertyZip);
                     $place_order['Note']['APN'] = $apn; //
                     $place_order['Note']['parcel_id'] = $apn; //
                     $place_order['Note']['legal_description'] = $LegalDescription; //
 
                     if (!empty($TitleOfficer)) {
-                        $place_order['Note']['title_Officer'] = $titleOfficerName; //
+                    $place_order['Note']['title_Officer'] = $titleOfficerName; //
                     }
 
                     if (!empty($SalesRep)) {
-                        $place_order['Note']['sales_rep'] = $salesRepName; //
+                    $place_order['Note']['sales_rep'] = $salesRepName; //
                     }
 
                     if (!empty($buyers_agent_details)) {
-                        $place_order['Note']['buyers_agent'] = $buyers_agent_details; //
+                    $place_order['Note']['buyers_agent'] = $buyers_agent_details; //
                     }
 
                     if (!empty($listing_agent_details)) {
-                        $place_order['Note']['listing_agent'] = $listing_agent_details; //
+                    $place_order['Note']['listing_agent'] = $listing_agent_details; //
                     }
 
                     if (!empty($lender_details)) {
-                        $place_order['Note']['lender_details'] = $lender_details; //
+                    $place_order['Note']['lender_details'] = $lender_details; //
                     }
 
                     if (!empty($escrow_details)) {
-                        $place_order['Note']['escrow_details'] = $escrow_details; //
+                    $place_order['Note']['escrow_details'] = $escrow_details; //
                     }
 
                     if (!empty($EscrowNumber)) {
-                        $place_order['Note']['EscrowNumber'] = $EscrowNumber; //
-                        $place_order['ClientFileNumber'] = $EscrowNumber; //
+                    $place_order['Note']['EscrowNumber'] = $EscrowNumber; //
+                    $place_order['ClientFileNumber'] = $EscrowNumber; //
                     }
 
                     if (!empty($Notes)) {
-                        $place_order['Note']['Notes'] = $Notes; // Not Needed
-                    }
+                    $place_order['Note']['Notes'] = $Notes; // Not Needed
+                    } */
                     $orderReq['baseDetails'] = [
                         "IsRushOrder" => true,
                         "ProjectName" => "PCT",
-                        "OrderType" => "Title only",
+                        "OrderType" => $softproOrderType,
                     ];
 
                     // $order_data = json_encode($place_order);
                     echo "<pre>";
                     print_r($orderReq);
-                    die;
+
+                    // print_r($orderReq);
+                    // die;
                     $order_data = json_encode($orderReq);
                     $this->load->library('order/softpro');
-                    print_r($order_data);
-                    $result = $this->softpro->make_request('POST', 'ordercreation/create', $order_data, $user_data);
-                    print_r($result);die;
-                    $this->load->library('order/resware');
-                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, array(), 0, 0);
-                    $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
-                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, $result, 0, $logid);
+                    // print_r($order_data);
+                    $response = $this->softpro->make_request('POST', 'create_order', $order_data, $user_data);
+                    // print_r($result);die;
+                    // $this->load->library('order/resware');
+                    // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, array(), 0, 0);
+                    // $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
+                    // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, $result, 0, $logid);
                     $lpOrderFlag = 0;
 
-                    if (isset($result) && !empty($result)) {
-                        $response = json_decode($result, true);
+                    if (isset($response) && !empty($response)) {
+                        // $response = $result, true);
 
-                        if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-                            $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                        if (isset($response['status']) && $response['status'] == 'error') {
+                            // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                             /* Start add resware api logs */
                             $reswareData = array(
-                                'request_type' => 'create_order_in_resware',
-                                'request_url' => env('RESWARE_ORDER_API') . 'orders',
+                                'request_type' => 'create_order_in_softpro',
+                                'request_url' => 'create_order',
                                 'request' => $order_data,
-                                'response' => $result,
-                                'status' => $message,
+                                'response' => json_encode($response),
+                                'status' => 'error',
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
+                            // print_r($reswareData);die;
 
                             $this->db->insert('pct_resware_log', $reswareData);
                             /* End add resware api logs */
 
-                            $response = array('status' => 'error', 'message' => $message);
+                            // $response = array('status' => 'error', 'message' => $message);
                             echo json_encode($response);
                             exit;
                         } else {
+                            $response = $response['data'];
                             $orderNumber = $file_id = '';
-                            if (isset($response['FileID']) && !empty($response['FileID'])) {
-                                $orderNumber = isset($response['FileNumber']) && !empty($response['FileNumber']) ? $response['FileNumber'] : '';
-                                $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
+                            if (isset($response['OrderNumber']) && !empty($response['OrderNumber'])) {
+                                $orderNumber = isset($response['OrderNumber']) && !empty($response['OrderNumber']) ? $response['OrderNumber'] : '';
+                                // $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
                             }
                             /* Start add resware api logs */
                             $reswareData = array(
-                                'request_type' => 'create_order_in_resware',
-                                'request_url' => env('RESWARE_ORDER_API') . 'orders',
+                                'request_type' => 'create_order_in_softpro',
+                                'request_url' => 'create_order',
                                 'request' => $order_data,
-                                'response' => $result,
-                                'status' => $response['ResponseStatus'],
+                                'response' => json_encode($response),
+                                'status' => 'success',
                                 'file_id' => $file_id,
                                 'file_number' => $orderNumber,
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
-
+                            // print_r($reswareData);die;
                             $this->db->insert('pct_resware_log', $reswareData);
+                            // print_r($orderNumber);
+                            // print_r($response);die;
                             /* End add resware api logs */
-                            if ($orderNumber) {
-                                $partners = array();
-                                $partners[] = array(
-                                    'PartnerTypeID' => 10049,
-                                    'PartnerID' => 400023,
-                                    'PartnerType' => array(
-                                        'PartnerTypeID' => 10049,
-                                    ),
-                                );
-                                $endPoint = 'files/' . $file_id . '/partners';
-                                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $file_id, 0);
-                                $user_data['admin_api'] = 1;
+                            /*if ($orderNumber) {
 
-                                $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
-                                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $file_id, $logid);
-                                $resPartners = json_decode($resultPartners, true);
+                        $partners = array();
+                        $partners[] = array(
+                        'PartnerTypeID' => 10049,
+                        'PartnerID' => 400023,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 10049,
+                        ),
+                        );
+                        $endPoint = 'files/' . $file_id . '/partners';
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $file_id, 0);
+                        $user_data['admin_api'] = 1;
 
-                                $removePartnerFlag = 0;
-                                $key = '';
-                                if (!empty($companyData)) {
-                                    if (!empty($resPartners)) {
-                                        $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                        if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
-                                            $underWriter = 'north_american';
-                                        } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
-                                            $underWriter = 'westcor';
-                                        } else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
-                                            $underWriter = 'commonwealth';
-                                        } else {
-                                            if ($key) {
-                                                $underWriter = 'other';
-                                            } else {
-                                                $underWriter = 'not_set';
-                                            }
-                                        }
-                                    }
-                                    if ($addUnderwritenPartnerViaApi == 1) {
-                                        if ($loanFlag == 1) {
-                                            if (!empty($underWriter)) {
-                                                if ($companyData[0]['loan_underwriter'] == 'north_american') {
-                                                    if ($underWriter != 'north_american') {
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 39919,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $removePartnerFlag = 1;
-                                                    } else {
-                                                        $removePartnerFlag = 0;
-                                                    }
-                                                } else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
-                                                    if ($underWriter != 'commonwealth') {
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 6,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $removePartnerFlag = 1;
-                                                    } else {
-                                                        $removePartnerFlag = 0;
-                                                    }
-                                                } else if ($companyData[0]['loan_underwriter'] == 'westcor') {
-                                                    if ($underWriter != 'westcor') {
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 201324,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $removePartnerFlag = 1;
-                                                    } else {
-                                                        $removePartnerFlag = 0;
-                                                    }
-                                                } else {
-                                                    if ($underWriter == 'other') {
-                                                        $removePartnerFlag = 1;
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 201324,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $underWriter = 'westcor';
-                                                    } else if ($underWriter == 'not_set') {
-                                                        $removePartnerFlag = 0;
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 201324,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $underWriter = 'westcor';
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            if (!empty($underWriter)) {
-                                                if ($companyData[0]['sales_underwriter'] == 'north_american') {
-                                                    if ($underWriter != 'north_american') {
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 39919,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $removePartnerFlag = 1;
-                                                    } else {
-                                                        $removePartnerFlag = 0;
-                                                    }
+                        $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $file_id, $logid);
+                        $resPartners = json_decode($resultPartners, true);
 
-                                                } else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
-                                                    if ($underWriter != 'commonwealth') {
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 6,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $removePartnerFlag = 1;
-                                                    } else {
-                                                        $removePartnerFlag = 0;
-                                                    }
-                                                } else if ($companyData[0]['sales_underwriter'] == 'westcor') {
-                                                    if ($underWriter != 'westcor') {
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 201324,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $removePartnerFlag = 1;
-                                                    } else {
-                                                        $removePartnerFlag = 0;
-                                                    }
-                                                } else {
-                                                    if ($underWriter == 'other') {
-                                                        $removePartnerFlag = 1;
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 201324,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $underWriter = 'westcor';
-                                                    } else if ($underWriter == 'not_set') {
-                                                        $removePartnerFlag = 0;
-                                                        $partners[] = array(
-                                                            'PartnerTypeID' => 7,
-                                                            'PartnerID' => 201324,
-                                                            'PartnerType' => array(
-                                                                'PartnerTypeID' => 7,
-                                                            ),
-                                                        );
-                                                        $underWriter = 'westcor';
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                        $removePartnerFlag = 0;
+                        $key = '';
+                        if (!empty($companyData)) {
+                        if (!empty($resPartners)) {
+                        $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
+                        $underWriter = 'north_american';
+                        } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+                        $underWriter = 'westcor';
+                        } else if ($resPartners['Partners'][$key]['PartnerName'] == 'Commonwealth Land Title Insurance Company') {
+                        $underWriter = 'commonwealth';
+                        } else {
+                        if ($key) {
+                        $underWriter = 'other';
+                        } else {
+                        $underWriter = 'not_set';
+                        }
+                        }
+                        }
+                        if ($addUnderwritenPartnerViaApi == 1) {
+                        if ($loanFlag == 1) {
+                        if (!empty($underWriter)) {
+                        if ($companyData[0]['loan_underwriter'] == 'north_american') {
+                        if ($underWriter != 'north_american') {
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 39919,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartnerFlag = 1;
+                        } else {
+                        $removePartnerFlag = 0;
+                        }
+                        } else if ($companyData[0]['loan_underwriter'] == 'commonwealth') {
+                        if ($underWriter != 'commonwealth') {
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 6,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartnerFlag = 1;
+                        } else {
+                        $removePartnerFlag = 0;
+                        }
+                        } else if ($companyData[0]['loan_underwriter'] == 'westcor') {
+                        if ($underWriter != 'westcor') {
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 201324,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartnerFlag = 1;
+                        } else {
+                        $removePartnerFlag = 0;
+                        }
+                        } else {
+                        if ($underWriter == 'other') {
+                        $removePartnerFlag = 1;
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 201324,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $underWriter = 'westcor';
+                        } else if ($underWriter == 'not_set') {
+                        $removePartnerFlag = 0;
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 201324,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $underWriter = 'westcor';
+                        }
+                        }
+                        }
+                        } else {
+                        if (!empty($underWriter)) {
+                        if ($companyData[0]['sales_underwriter'] == 'north_american') {
+                        if ($underWriter != 'north_american') {
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 39919,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartnerFlag = 1;
+                        } else {
+                        $removePartnerFlag = 0;
+                        }
 
-                                if ($removePartnerFlag == 1 && isset($key) && strlen($key) > 0) {
-                                    $removeExistingPartner = array(
-                                        'PartnerTypeID' => 7,
-                                        'PartnerID' => $resPartners['Partners'][$key]['PartnerID'],
-                                        'PartnerType' => array(
-                                            'PartnerTypeID' => 7,
-                                        ),
-                                    );
-                                    $removePartners[] = $removeExistingPartner;
-                                }
+                        } else if ($companyData[0]['sales_underwriter'] == 'commonwealth') {
+                        if ($underWriter != 'commonwealth') {
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 6,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartnerFlag = 1;
+                        } else {
+                        $removePartnerFlag = 0;
+                        }
+                        } else if ($companyData[0]['sales_underwriter'] == 'westcor') {
+                        if ($underWriter != 'westcor') {
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 201324,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartnerFlag = 1;
+                        } else {
+                        $removePartnerFlag = 0;
+                        }
+                        } else {
+                        if ($underWriter == 'other') {
+                        $removePartnerFlag = 1;
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 201324,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $underWriter = 'westcor';
+                        } else if ($underWriter == 'not_set') {
+                        $removePartnerFlag = 0;
+                        $partners[] = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => 201324,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $underWriter = 'westcor';
+                        }
+                        }
+                        }
+                        }
+                        }
+                        }
 
-                                $escrowKey = $escrowKey1 = $escrowKey2 = '';
-                                if (isset($secondaryEscrowPartners) && !empty($secondaryEscrowPartners)) {
-                                    $escrowKey = array_search(9997, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                    $escrowKey1 = array_search(10006, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                    $escrowKey2 = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                    if (isset($escrowKey) && strlen($escrowKey) > 0) {
-                                        $removeEscrowExistingPartner = array(
-                                            'PartnerTypeID' => 9997,
-                                            'PartnerID' => $resPartners['Partners'][$escrowKey]['PartnerID'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 9997,
-                                            ),
-                                        );
-                                        $removePartners[] = $removeEscrowExistingPartner;
-                                    }
-                                    if (isset($escrowKey1) && strlen($escrowKey1) > 0) {
-                                        $removeEscrowExistingPartner = array(
-                                            'PartnerTypeID' => 10006,
-                                            'PartnerID' => $resPartners['Partners'][$escrowKey1]['PartnerID'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 10006,
-                                            ),
-                                        );
-                                        $removePartners[] = $removeEscrowExistingPartner;
-                                    }
-                                    if (isset($escrowKey2) && strlen($escrowKey2) > 0) {
-                                        $removeEscrowExistingPartner = array(
-                                            'PartnerTypeID' => 10010,
-                                            'PartnerID' => $resPartners['Partners'][$escrowKey2]['PartnerID'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 10010,
-                                            ),
-                                        );
-                                        $removePartners[] = $removeEscrowExistingPartner;
-                                    }
-                                    $partners[] = $secondaryEscrowPartners;
-                                }
+                        if ($removePartnerFlag == 1 && isset($key) && strlen($key) > 0) {
+                        $removeExistingPartner = array(
+                        'PartnerTypeID' => 7,
+                        'PartnerID' => $resPartners['Partners'][$key]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 7,
+                        ),
+                        );
+                        $removePartners[] = $removeExistingPartner;
+                        }
 
-                                $lenderKey = '';
-                                if (isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
-                                    $lenderKey = array_search(3, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                    if (isset($lenderKey) && strlen($lenderKey) > 0) {
-                                        $removeLenderExistingPartner = array(
-                                            'PartnerTypeID' => 3,
-                                            'PartnerID' => $resPartners['Partners'][$lenderKey]['PartnerID'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 3,
-                                            ),
-                                        );
-                                        $removePartners[] = $removeLenderExistingPartner;
-                                    }
-                                    $partners[] = $secondaryLenderPartners;
-                                }
+                        $escrowKey = $escrowKey1 = $escrowKey2 = '';
+                        if (isset($secondaryEscrowPartners) && !empty($secondaryEscrowPartners)) {
+                        $escrowKey = array_search(9997, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        $escrowKey1 = array_search(10006, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        $escrowKey2 = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($escrowKey) && strlen($escrowKey) > 0) {
+                        $removeEscrowExistingPartner = array(
+                        'PartnerTypeID' => 9997,
+                        'PartnerID' => $resPartners['Partners'][$escrowKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 9997,
+                        ),
+                        );
+                        $removePartners[] = $removeEscrowExistingPartner;
+                        }
+                        if (isset($escrowKey1) && strlen($escrowKey1) > 0) {
+                        $removeEscrowExistingPartner = array(
+                        'PartnerTypeID' => 10006,
+                        'PartnerID' => $resPartners['Partners'][$escrowKey1]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 10006,
+                        ),
+                        );
+                        $removePartners[] = $removeEscrowExistingPartner;
+                        }
+                        if (isset($escrowKey2) && strlen($escrowKey2) > 0) {
+                        $removeEscrowExistingPartner = array(
+                        'PartnerTypeID' => 10010,
+                        'PartnerID' => $resPartners['Partners'][$escrowKey2]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 10010,
+                        ),
+                        );
+                        $removePartners[] = $removeEscrowExistingPartner;
+                        }
+                        $partners[] = $secondaryEscrowPartners;
+                        }
 
-                                $escrowOfficerFlag = $this->input->post('add-escrow-officer-details');
-                                $escrowOfficer = $this->input->post('escrow_officer');
-                                $escrowOfficerKey = '';
-                                if (!empty($escrowOfficerFlag)) {
-                                    if (!empty($escrowOfficer)) {
-                                        $escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                        if (isset($escrowOfficerKey) && strlen($escrowOfficerKey) > 0) {
-                                            $removeEscrowOfcExistingPartner = array(
-                                                'PartnerTypeID' => 10010,
-                                                'PartnerID' => $resPartners['Partners'][$escrowOfficerKey]['PartnerID'],
-                                                'PartnerType' => array(
-                                                    'PartnerTypeID' => 10010,
-                                                ),
-                                            );
-                                            $removePartners[] = $removeEscrowOfcExistingPartner;
-                                        }
-                                        $partners[] = array(
-                                            'PartnerTypeID' => 10010,
-                                            'PartnerID' => (int) $escrowOfficer,
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 10010,
-                                            ),
-                                        );
-                                    }
-                                }
+                        $lenderKey = '';
+                        if (isset($secondaryLenderPartners) && !empty($secondaryLenderPartners)) {
+                        $lenderKey = array_search(3, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($lenderKey) && strlen($lenderKey) > 0) {
+                        $removeLenderExistingPartner = array(
+                        'PartnerTypeID' => 3,
+                        'PartnerID' => $resPartners['Partners'][$lenderKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 3,
+                        ),
+                        );
+                        $removePartners[] = $removeLenderExistingPartner;
+                        }
+                        $partners[] = $secondaryLenderPartners;
+                        }
 
-                                $buyerAgentKey = '';
-                                if (isset($BuyerAgentId) && !empty($BuyerAgentId)) {
-                                    $buyerAgentKey = array_search(14, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                    if (isset($buyerAgentKey) && strlen($buyerAgentKey) > 0) {
-                                        $removeBuyerAgentExistingPartner = array(
-                                            'PartnerTypeID' => 14,
-                                            'PartnerID' => $resPartners['Partners'][$buyerAgentKey]['PartnerID'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 14,
-                                            ),
-                                        );
-                                        $removePartners[] = $removeBuyerAgentExistingPartner;
-                                    }
-                                    $partners[] = array(
-                                        'PartnerTypeID' => 14,
-                                        'PartnerID' => (int) $this->input->post('buyer_agent_partner_id'),
-                                        'PartnerType' => array(
-                                            'PartnerTypeID' => 14,
-                                        ),
-                                    );
-                                }
+                        // $escrowOfficerFlag = $this->input->post('add-escrow-officer-details');
+                        // $escrowOfficer = $this->input->post('escrow_officer');
+                        // $escrowOfficerKey = '';
+                        if (!empty($escrowOfficerFlag)) {
+                        if (!empty($escrowOfficer)) {
+                        $escrowOfficerKey = array_search(10010, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($escrowOfficerKey) && strlen($escrowOfficerKey) > 0) {
+                        $removeEscrowOfcExistingPartner = array(
+                        'PartnerTypeID' => 10010,
+                        'PartnerID' => $resPartners['Partners'][$escrowOfficerKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 10010,
+                        ),
+                        );
+                        $removePartners[] = $removeEscrowOfcExistingPartner;
+                        }
+                        $partners[] = array(
+                        'PartnerTypeID' => 10010,
+                        'PartnerID' => (int) $escrowOfficer,
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 10010,
+                        ),
+                        );
+                        }
+                        }
 
-                                $listingAgentKey = '';
-                                if (isset($ListingAgentId) && !empty($ListingAgentId)) {
-                                    $listingAgentKey = array_search(15, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                    if (isset($listingAgentKey) && strlen($listingAgentKey) > 0) {
-                                        $removelistingAgentExistingPartner = array(
-                                            'PartnerTypeID' => 15,
-                                            'PartnerID' => $resPartners['Partners'][$listingAgentKey]['PartnerID'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => 15,
-                                            ),
-                                        );
-                                        $removePartners[] = $removelistingAgentExistingPartner;
-                                    }
-                                    $partners[] = array(
-                                        'PartnerTypeID' => 15,
-                                        'PartnerID' => (int) $this->input->post('listing_agent_partner_id'),
-                                        'PartnerType' => array(
-                                            'PartnerTypeID' => 15,
-                                        ),
-                                    );
-                                }
+                        $buyerAgentKey = '';
+                        if (isset($BuyerAgentId) && !empty($BuyerAgentId)) {
+                        $buyerAgentKey = array_search(14, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($buyerAgentKey) && strlen($buyerAgentKey) > 0) {
+                        $removeBuyerAgentExistingPartner = array(
+                        'PartnerTypeID' => 14,
+                        'PartnerID' => $resPartners['Partners'][$buyerAgentKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 14,
+                        ),
+                        );
+                        $removePartners[] = $removeBuyerAgentExistingPartner;
+                        }
+                        $partners[] = array(
+                        'PartnerTypeID' => 14,
+                        'PartnerID' => (int) $this->input->post('buyer_agent_partner_id'),
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 14,
+                        ),
+                        );
+                        }
 
-                                $salesRepKey = '';
-                                if (!empty($salesRepDetails)) {
-                                    if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
-                                        $salesRepKey = array_search((int) $salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                        if (isset($salesRepKey) && strlen($salesRepKey) > 0) {
-                                            $removeSalesRepExistingPartner = array(
-                                                'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
-                                                'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
-                                                'PartnerType' => array(
-                                                    'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
-                                                ),
-                                            );
-                                            $removePartners[] = $removeSalesRepExistingPartner;
-                                        }
-                                        $partners[] = array(
-                                            'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
-                                            'PartnerID' => (int) $salesRepDetails['partner_id'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
-                                            ),
-                                        );
-                                    }
-                                }
+                        $listingAgentKey = '';
+                        if (isset($ListingAgentId) && !empty($ListingAgentId)) {
+                        $listingAgentKey = array_search(15, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($listingAgentKey) && strlen($listingAgentKey) > 0) {
+                        $removelistingAgentExistingPartner = array(
+                        'PartnerTypeID' => 15,
+                        'PartnerID' => $resPartners['Partners'][$listingAgentKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 15,
+                        ),
+                        );
+                        $removePartners[] = $removelistingAgentExistingPartner;
+                        }
+                        $partners[] = array(
+                        'PartnerTypeID' => 15,
+                        'PartnerID' => (int) $this->input->post('listing_agent_partner_id'),
+                        'PartnerType' => array(
+                        'PartnerTypeID' => 15,
+                        ),
+                        );
+                        }
 
-                                $titleOfficerKey = '';
-                                if (!empty($titleOfficerDetails)) {
-                                    if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
-                                        $titleOfficerKey = array_search((int) $titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
-                                        if (isset($titleOfficerKey) && strlen($titleOfficerKey) > 0) {
-                                            $removeTitleOfficerExistingPartner = array(
-                                                'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
-                                                'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
-                                                'PartnerType' => array(
-                                                    'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
-                                                ),
-                                            );
-                                            $removePartners[] = $removeTitleOfficerExistingPartner;
-                                        }
-                                        $partners[] = array(
-                                            'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
-                                            'PartnerID' => (int) $titleOfficerDetails['partner_id'],
-                                            'PartnerType' => array(
-                                                'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
-                                            ),
-                                        );
-                                    }
-                                }
+                        $salesRepKey = '';
+                        if (!empty($salesRepDetails)) {
+                        if (!empty($salesRepDetails['partner_id']) && !empty($salesRepDetails['partner_type_id'])) {
+                        $salesRepKey = array_search((int) $salesRepDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($salesRepKey) && strlen($salesRepKey) > 0) {
+                        $removeSalesRepExistingPartner = array(
+                        'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
+                        'PartnerID' => $resPartners['Partners'][$salesRepKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
+                        ),
+                        );
+                        $removePartners[] = $removeSalesRepExistingPartner;
+                        }
+                        $partners[] = array(
+                        'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
+                        'PartnerID' => (int) $salesRepDetails['partner_id'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => (int) $salesRepDetails['partner_type_id'],
+                        ),
+                        );
+                        }
+                        }
 
-                                $partnerUserData = array(
-                                    'admin_api' => 1,
-                                );
+                        $titleOfficerKey = '';
+                        if (!empty($titleOfficerDetails)) {
+                        if (!empty($titleOfficerDetails['partner_id']) && !empty($titleOfficerDetails['partner_type_id'])) {
+                        $titleOfficerKey = array_search((int) $titleOfficerDetails['partner_type_id'], array_column($resPartners['Partners'], 'PartnerTypeID'));
+                        if (isset($titleOfficerKey) && strlen($titleOfficerKey) > 0) {
+                        $removeTitleOfficerExistingPartner = array(
+                        'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
+                        'PartnerID' => $resPartners['Partners'][$titleOfficerKey]['PartnerID'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
+                        ),
+                        );
+                        $removePartners[] = $removeTitleOfficerExistingPartner;
+                        }
+                        $partners[] = array(
+                        'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
+                        'PartnerID' => (int) $titleOfficerDetails['partner_id'],
+                        'PartnerType' => array(
+                        'PartnerTypeID' => (int) $titleOfficerDetails['partner_type_id'],
+                        ),
+                        );
+                        }
+                        }
 
-                                if (!empty($removePartners)) {
-                                    $removePartnerData = json_encode(array('Partners' => $removePartners));
-                                    $endPoint = 'files/' . $file_id . '/partners';
-                                    $removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, array(), 0, 0);
-                                    $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-                                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+                        $partnerUserData = array(
+                        'admin_api' => 1,
+                        );
 
-                                    /* Start add resware api logs */
-                                    $reswareData = array(
-                                        'request_type' => 'delete_partner_in_resware',
-                                        'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-                                        'request' => $removePartnerData,
-                                        'response' => $resultRemovePartner,
-                                        'status' => 'success',
-                                        'created_at' => date("Y-m-d H:i:s"),
-                                    );
+                        if (!empty($removePartners)) {
+                        $removePartnerData = json_encode(array('Partners' => $removePartners));
+                        $endPoint = 'files/' . $file_id . '/partners';
+                        $removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, array(), 0, 0);
+                        $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
 
-                                    $this->db->insert('pct_resware_log', $reswareData);
-                                    /* End add resware api logs */
+                        $reswareData = array(
+                        'request_type' => 'delete_partner_in_resware',
+                        'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+                        'request' => $removePartnerData,
+                        'response' => $resultRemovePartner,
+                        'status' => 'success',
+                        'created_at' => date("Y-m-d H:i:s"),
+                        );
 
-                                    $resultRemovePartnerRes = json_decode($resultRemovePartner, true);
-                                    $partnerKey = '';
-                                    if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
-                                        if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Doma Title Insurance') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
-                                            $partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
-                                            if (strlen($partnerKey) > 0) {
-                                                array_splice($partners, $partnerKey, 1);
-                                                $removeParentKey = array_search(7, array_column($removePartners, 'PartnerTypeID'));
-                                                if (strlen($removeParentKey) > 0) {
-                                                    array_splice($removePartners, $removeParentKey, 1);
-                                                    $removePartnerData = json_encode(array('Partners' => $removePartners));
-                                                    $endPoint = 'files/' . $file_id . '/partners';
-                                                    $removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, array(), 0, 0);
-                                                    $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-                                                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                        $this->db->insert('pct_resware_log', $reswareData);
 
-                                $partnerData = json_encode(array('Partners' => $partners));
-                                $endPoint = 'files/' . $file_id . '/partners';
-                                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API') . $endPoint, $partnerData, array(), 0, 0);
-                                $resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
-                                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API') . $endPoint, $partnerData, $resultPartner, 0, $logid);
+                        $resultRemovePartnerRes = json_decode($resultRemovePartner, true);
+                        $partnerKey = '';
+                        if (isset($resultRemovePartnerRes['ResponseStatus']['Message']) && !empty($resultRemovePartnerRes['ResponseStatus']['Message'])) {
+                        if (str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Doma Title Insurance') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'North American Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Westcor Land Title Insurance Company') || str_contains($resultRemovePartnerRes['ResponseStatus']['Message'], 'Commonwealth Land Title Insurance Company')) {
+                        $partnerKey = array_search(7, array_column($partners, 'PartnerTypeID'));
+                        if (strlen($partnerKey) > 0) {
+                        array_splice($partners, $partnerKey, 1);
+                        $removeParentKey = array_search(7, array_column($removePartners, 'PartnerTypeID'));
+                        if (strlen($removeParentKey) > 0) {
+                        array_splice($removePartners, $removeParentKey, 1);
+                        $removePartnerData = json_encode(array('Partners' => $removePartners));
+                        $endPoint = 'files/' . $file_id . '/partners';
+                        $removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, array(), 0, 0);
+                        $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API') . $endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
+                        }
+                        }
+                        }
+                        }
+                        }
 
-                                /* Start add resware api logs */
-                                $reswareData = array(
-                                    'request_type' => 'add_partner_in_resware',
-                                    'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-                                    'request' => $partnerData,
-                                    'response' => $resultPartner,
-                                    'status' => 'success',
-                                    'created_at' => date("Y-m-d H:i:s"),
-                                );
-                                $this->db->insert('pct_resware_log', $reswareData);
-                                /* End add resware api logs */
+                        $partnerData = json_encode(array('Partners' => $partners));
+                        $endPoint = 'files/' . $file_id . '/partners';
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API') . $endPoint, $partnerData, array(), 0, 0);
+                        $resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API') . $endPoint, $partnerData, $resultPartner, 0, $logid);
 
-                                $remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
-                                $remoteFileEndPoint = 'files/' . $file_id . '/partners/' . $orderUser['partner_id'];
+                        $reswareData = array(
+                        'request_type' => 'add_partner_in_resware',
+                        'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+                        'request' => $partnerData,
+                        'response' => $resultPartner,
+                        'status' => 'success',
+                        'created_at' => date("Y-m-d H:i:s"),
+                        );
+                        $this->db->insert('pct_resware_log', $reswareData);
 
-                                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API') . $remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
-                                $resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
-                                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API') . $remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
+                        $remoteFileNumberData = json_encode(array('RemoteFileNumber' => $orderNumber));
+                        $remoteFileEndPoint = 'files/' . $file_id . '/partners/' . $orderUser['partner_id'];
 
-                                /* Start add resware api logs */
-                                $reswareData = array(
-                                    'request_type' => 'remote_file_number_in_resware',
-                                    'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-                                    'request' => $remoteFileNumberData,
-                                    'response' => $resultRemotePartner,
-                                    'status' => 'success',
-                                    'created_at' => date("Y-m-d H:i:s"),
-                                );
-                                $this->db->insert('pct_resware_log', $reswareData);
-                                /* End add resware api logs */
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API') . $remoteFileEndPoint, $remoteFileNumberData, array(), 0, 0);
+                        $resultRemotePartner = $this->resware->make_request('PUT', $remoteFileEndPoint, $remoteFileNumberData, $partnerUserData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'remote_file_number', env('RESWARE_ORDER_API') . $remoteFileEndPoint, $remoteFileNumberData, $resultRemotePartner, 0, $logid);
 
-                                /* Add partner api logs */
-                                $partnerApiData = array(
-                                    'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-                                    'request_data' => $partnerData,
-                                    'response_data' => $resultPartner,
-                                );
+                        $reswareData = array(
+                        'request_type' => 'remote_file_number_in_resware',
+                        'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+                        'request' => $remoteFileNumberData,
+                        'response' => $resultRemotePartner,
+                        'status' => 'success',
+                        'created_at' => date("Y-m-d H:i:s"),
+                        );
+                        $this->db->insert('pct_resware_log', $reswareData);
 
-                                $partnerApiId = $this->partnerApiLogs->insert($partnerApiData);
-                                /* Add partner api logs */
-                            }
+                        $partnerApiData = array(
+                        'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+                        'request_data' => $partnerData,
+                        'response_data' => $resultPartner,
+                        );
+
+                        $partnerApiId = $this->partnerApiLogs->insert($partnerApiData);
+                        }*/
                         }
                     } else {
                         $response = array('status' => 'error', 'message' => 'Credentials error.');
@@ -980,14 +1013,14 @@ class Home extends MX_Controller
                     $orderInfo = $this->home_model->getLastFileNumberForLpOrders();
                     if (empty($orderInfo)) {
                         $lp_file_number = 'LP-00000001';
-                        $file_id = 90000001;
+                        // $file_id = 90000001;
                     } else {
                         $lp_file_number = ++$orderInfo['lp_file_number'];
-                        $file_id = ++$orderInfo['file_id'];
+                        // $file_id = ++$orderInfo['file_id'];
                         $splitNum = explode('-', $lp_file_number);
                         if (count($splitNum) > 1) {
                             $number = ltrim($splitNum[1], '0');
-                            $file_id = 90000000 + (int) $number;
+                            // $file_id = 90000000 + (int) $number;
                         }
                     }
 
@@ -1077,7 +1110,9 @@ class Home extends MX_Controller
                     'loan_amount' => $LoanAmount,
                     'loan_number' => $LoanNumber,
                     'transaction_type' => $TransactionTypeID,
-                    'purchase_type' => $ProductTypeID,
+                    // 'purchase_type' => $ProductTypeID,
+                    'product_type' => $softproProductTypeId,
+                    'order_type' => $softproOrderTypeId,
                     'is_ccr' => $CCR,
                     'is_underlying_docs' => $Docs,
                     'is_plotted_easements' => $Ease,
@@ -1366,7 +1401,9 @@ class Home extends MX_Controller
                 }
 
                 $escrow_officer_email = '';
-                if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36')) {
+
+                // if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36')) {
+                if (isset($escrowOfficer) && !empty($escrowOfficer) && ($softproOrderType == 'Title & Escrow')) {
                     $con = array(
                         'where' => array(
                             'partner_id' => $escrowOfficer,
@@ -1452,6 +1489,8 @@ class Home extends MX_Controller
                         'headerImg' => $sales_rep_img,
                         'currYear' => CURRENT_YEAR,
                         'productTypeID' => $ProductTypeID,
+                        'productType' => $softproProductType,
+                        'orderType' => $softproOrderType,
                         'OpenEmail' => $OpenEmail,
                     );
 
@@ -1592,6 +1631,10 @@ class Home extends MX_Controller
             );
             $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
             $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
+            $data['productType'] = $this->home_model->get_product_types();
+            // echo "<pre>";
+            $data['orderType'] = $this->home_model->get_order_types();
+            // print_r($data['orderType']);die;
             $configData = $this->order->getConfigData();
             $data['submitButtonFlag'] = $configData['enable_create_order_submit_button']['is_enable'];
             // $this->template->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');

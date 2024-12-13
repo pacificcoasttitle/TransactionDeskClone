@@ -110,3 +110,7 @@ define('TP_GEO_CREATE_SERVICE_URL', 'TpsService.asmx/CreateService3?');
 define('TP_GEO_SERVICE_TYPE', 'TitlePoint.Geo.Address');
 define('TP_GEO_REQUEST_SUMMARY_URL', 'TpsService.asmx/GetRequestSummaries?');
 define('TP_GEO_GET_RESULT_URL', 'TpsService.asmx/GetResultByID3?');
+defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
+    'create_order' => 'ordercreation/create',
+    'add_document' => 'ordercreation/AddDocuments',
+]);

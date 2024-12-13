@@ -48,7 +48,7 @@ $(document).ready(function () {
         });
     }
 
-    getProductTypes();
+    // getProductTypes();
 
     $('.search-file-btn').children("input").bind('change', function () {
         var fileName = '';
@@ -129,7 +129,7 @@ $(document).ready(function () {
                     }
                 }
 
-                getProductTypes();
+                // getProductTypes();
                 getDeliverables(ui.item.partner_id);
             },
             change: function (event, ui) {
