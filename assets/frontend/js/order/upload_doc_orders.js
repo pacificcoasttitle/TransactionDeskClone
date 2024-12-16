@@ -96,7 +96,7 @@ $(document).ready(function () {
     const uploadContainer = document.getElementById('upload-container');
     const fileInput = document.getElementById('file-input');
     const browseButton = document.getElementById('browse-button');
-    // const submitButton = document.getElementById('submit-button');
+    const submitButton = document.getElementById('submit-button');
     const fileList = document.getElementById('file-list');
 
     // Files array to store uploaded files
@@ -162,9 +162,17 @@ $(document).ready(function () {
         const selectedFiles = Array.from(e.target.files);
         files = [...files, ...selectedFiles];
         updateFileList();
+
+        // Create a new DataTransfer object to ensure files array consistency
+        const dataTransfer = new DataTransfer();
+        files.forEach((file) => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files; // Update the file input
     });
 
     // Handle submit button
+    submitButton.addEventListener('click', (e) => {
+        $('#page-list-loader').css('display', 'block');
+    });
     // submitButton.addEventListener('click', (e) => {
     //     e.preventDefault();
     //     e.stopPropagation();
