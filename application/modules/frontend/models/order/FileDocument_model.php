@@ -61,13 +61,13 @@ class FileDocument_model extends MY_Model
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->order_by('id', 'desc');
             $query = $this->db->get('pct_file_documents');
 
             if ($query->num_rows() > 0) {
                 $document_lists = $query->result_array();
             }
         } else {
-
             $this->db->where('added_by', $userdata['id']);
             $this->db->where('is_desk_file', 1);
             $this->db->from('pct_file_documents');
@@ -79,6 +79,7 @@ class FileDocument_model extends MY_Model
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
+            $this->db->order_by('id', 'desc');
             $query = $this->db->get('pct_file_documents');
 
             if ($query->num_rows() > 0) {
