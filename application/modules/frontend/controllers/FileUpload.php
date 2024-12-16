@@ -4,7 +4,7 @@ class FileUpload extends MX_Controller
 {
     private $user;
     private $sorting_fields;
-    private $version = '01';
+    private $version = '02';
 
     public function __construct()
     {
