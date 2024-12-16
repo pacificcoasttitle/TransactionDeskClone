@@ -4,7 +4,7 @@
 
 class SalesRep extends MX_Controller
 {
-    private $sales_dashboard_js_version = '08';
+    private $version = '09';
 
     public function __construct()
     {
@@ -211,8 +211,8 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->sales_dashboard_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->sales_dashboard_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
         // $this->salesdashboardtemplate->addCSS(base_url('assets/css/theme.css'));
@@ -252,11 +252,13 @@ class SalesRep extends MX_Controller
         $month = $this->input->post('month') ? $this->input->post('month') : '';
         $salesUser = $this->input->post('sales_user') ? $this->input->post('sales_user') : '';
         $order_type = $this->input->post('order_type');
+        $sales_rep_manager_flag = $this->input->post('sales_rep_manager_flag');
         $params['salesUser'] = $salesUser;
         $params['salesFlag'] = 1;
         //$params['status'] = isset($status) && !empty($status) ? $status : 'open';
         //$params['month'] = isset($month) && !empty($month) ? $month : date('m');
         $params['order_type'] = isset($order_type) && !empty($order_type) ? $order_type : '';
+        $params['sales_rep_manager_flag'] = isset($sales_rep_manager_flag) && !empty($sales_rep_manager_flag) ? $sales_rep_manager_flag : false;
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -445,8 +447,8 @@ class SalesRep extends MX_Controller
 
         }
         $data['salesHistory'] = $salesHistory;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->sales_dashboard_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->sales_dashboard_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->version));
         //$this->template->show("order", "sales_production_history", $data);
         $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
     }
@@ -511,8 +513,8 @@ class SalesRep extends MX_Controller
         }
         $data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS(base_url('assets/plugins/chart/Chart.min.js'));
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->sales_dashboard_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-trends.css?v=' . $this->sales_dashboard_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-trends.css?v=' . $this->version));
         //$this->template->show("order", "sales_trends", $data);
         $this->salesdashboardtemplate->show("order", "sales_trends", $data);
     }
@@ -590,7 +592,7 @@ class SalesRep extends MX_Controller
                 }
             }
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->sales_dashboard_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/escrow_tasks.css?v=05'));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-summary.css?v=05'));
         //$this->template->show("order", "sales_summary", $data);
@@ -650,7 +652,7 @@ class SalesRep extends MX_Controller
 
         }
         $data['commissionHistory'] = $commissionHistory;
-        $this->template->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->sales_dashboard_js_version));
+        $this->template->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
         $this->template->show("order", "sales_commission_history", $data);
     }
 
@@ -726,7 +728,7 @@ class SalesRep extends MX_Controller
 
             $data['reports_data'] = $this->salesReport_model->getSalesAllReportData($report_condition);
 
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_1' . $this->sales_dashboard_js_version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_1' . $this->version));
             $this->salesdashboardtemplate->show("order", "sales_report", $data);
         } else {
             redirect(base_url() . 'sales-dashboard/' . $userId);
