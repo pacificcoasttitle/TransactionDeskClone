@@ -50,6 +50,7 @@ class Order
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
         $salesFlag = isset($params['salesFlag']) && !empty($params['salesFlag']) ? $params['salesFlag'] : '';
         $salesUser = isset($params['salesUser']) && !empty($params['salesUser']) ? $params['salesUser'] : '';
+        $salesRepManagerFlag = isset($params['sales_rep_manager_flag']) && !empty($params['sales_rep_manager_flag']) ? $params['sales_rep_manager_flag'] : '';
         $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
         $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
@@ -64,6 +65,19 @@ class Order
                 $salesUser = explode(',', $salesUsers['sales_rep_users']);
                 if (!in_array($userdata['id'], $salesUser)) {
                     $salesUser[] = $userdata['id'];
+                }
+                if (!$salesRepManagerFlag) {
+                    $this->CI->db->select('id');
+                    $this->CI->db->from('customer_basic_details');
+                    $this->CI->db->where('is_sales_rep', 1);
+                    $this->CI->db->where('is_sales_rep_manager', 1);
+                    $this->CI->db->where('id !=', $userdata['id']);
+                    $this->CI->db->where('status', 1);
+                    $salesMangers = $this->CI->db->get()->result_array();
+                    if (!empty($salesMangers)) {
+                        $salesMangers = array_column($salesMangers, 'id');
+                        $salesUser = array_diff($salesUser, $salesMangers);
+                    }
                 }
             }
         }

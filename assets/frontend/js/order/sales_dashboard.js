@@ -1,6 +1,7 @@
 $(document).ready(function () {
-    var order_list='';
+    var order_list = '';
     if ($('#orders_listing').length) {
+        var flag_val = localStorage.getItem("sales_rep_manager_flag");
         order_list = $('#orders_listing').DataTable({
             // "pageLength": 2,
             "paging": true,
@@ -16,8 +17,8 @@ $(document).ready(function () {
             },
             /*"searching": false,*/
             initComplete: function () {
-                
-                
+
+
             },
             "fnRowCallback": function (nRow, aData, iDisplayIndex) {
                 let lastElement = aData.slice(-1)[0];
@@ -33,12 +34,12 @@ $(document).ready(function () {
             "dom": 'lf<"orders_listing_filter">rtip',
             buttons: [],
             "drawCallback": function () {
-                
+
             },
-            "fnInitComplete": function (oSettings, json) {               
-                $(".fa-info-circle").mouseenter(function() {
+            "fnInitComplete": function (oSettings, json) {
+                $(".fa-info-circle").mouseenter(function () {
                     $(this).closest('td').find('span.tooltiptext').css("visibility", "visible").css("border-radius", "3px");
-                }).mouseleave(function() {
+                }).mouseleave(function () {
                     $(this).closest('td').find('span.tooltiptext').css("visibility", "hidden").css("border-radius", "0px");
                 });
             },
@@ -47,15 +48,16 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "get-sales-orders", // json datasource
                 type: "post", // method  , by default get
-                data   : function( d ) {
-                   // d.status = $('#orders_filter').val();
+                data: function (d) {
+                    // d.status = $('#orders_filter').val();
                     d.order_type = $('#order_type_filter').val();
-                  //d.month = $('#month_filter').val();
+                    //d.month = $('#month_filter').val();
                     d.sales_user = $('#sales_user_filter').val();
+                    d.sales_rep_manager_flag = flag_val;
                 },
-                dataFilter: function(data){
-
-                    var json = jQuery.parseJSON( data );
+                dataFilter: function (data) {
+                    localStorage.removeItem("sales_rep_manager_flag");
+                    var json = jQuery.parseJSON(data);
                     var countingData = json.count_data;
                     // if (countingData) {
                     // 	console.log(countingData.refi_open_count);
@@ -74,14 +76,15 @@ $(document).ready(function () {
                     // 	$('#refi_close_order_percetage').html(countingData.refi_close_order_percetage);
                     // 	$('#sale_close_order_percetage').html(countingData.sale_close_order_percetage);
                     // 	$('#close_order_percetage').html(countingData.close_order_percetage);
-                        
+
                     // } 
                     json.recordsTotal = json.recordsTotal;
                     json.recordsFiltered = json.recordsFiltered;
                     json.data = json.data;
-                    return JSON.stringify( json );
+                    return JSON.stringify(json);
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    localStorage.removeItem("sales_rep_manager_flag");
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
                     }
@@ -97,7 +100,7 @@ $(document).ready(function () {
                 }
             }
         });
-        
+
         $("div#orders_listing_filter").append('<label><select style="width:auto;margin-left:10px;" name="order_type_filter" id="order_type_filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="open"> Select Order Type </option> <option value="resware_orders"> Resware Orders </option><option value="lp_orders">LP Orders</option></select></label>');
 
 
@@ -112,7 +115,12 @@ $(document).ready(function () {
         // $('#month_filter option:eq('+m+')').prop('selected', true);
     }
 
-    $("#order_type_filter").on("change", function(){
+    $("#order_type_filter").on("change", function () {
+        order_list.ajax.reload();
+    });
+
+    $("#order_type_filter").on("change", function () {
+        localStorage.setItem("sales_rep_manager_flag", true);
         order_list.ajax.reload();
     });
 
@@ -124,53 +132,54 @@ $(document).ready(function () {
     //     order_list.ajax.reload();
     // });
 
-    $("#sales_user_filter").on("change", function(){
+    $("#sales_user_filter").on("change", function () {
+        localStorage.setItem("sales_rep_manager_flag", true);
         var user_id = $(this).val();
-        window.location.replace(base_url+'sales-dashboard/'+user_id);
+        window.location.replace(base_url + 'sales-dashboard/' + user_id);
     });
 
-    $("#sales_user_production_filter").on("change", function(){
+    $("#sales_user_production_filter").on("change", function () {
         var user_id = $(this).val();
-        window.location.replace(base_url+'sales-production-history/'+user_id);
+        window.location.replace(base_url + 'sales-production-history/' + user_id);
     });
 
-    $("#sales_user_summary_filter").on("change", function(){
+    $("#sales_user_summary_filter").on("change", function () {
         var user_id = $(this).val();
-        window.location.replace(base_url+'sales-summary/'+user_id);
+        window.location.replace(base_url + 'sales-summary/' + user_id);
     });
 
-    $("#sales_user_trend_filter").on("change", function(){
+    $("#sales_user_trend_filter").on("change", function () {
         var user_id = $(this).val();
-        window.location.replace(base_url+'trends/'+user_id);
+        window.location.replace(base_url + 'trends/' + user_id);
     });
 
-	$("#sales_user_commission_filter").on("change", function(){
+    $("#sales_user_commission_filter").on("change", function () {
         var user_id = $(this).val();
-        window.location.replace(base_url+'sales-commission/'+user_id);
+        window.location.replace(base_url + 'sales-commission/' + user_id);
     });
 
-    if ($('.custom__task_button').length > 0){
-		$('.task_show_all').click(function(){
-			$(".custom__task_card .custom__task_collapse").collapse('show');
-		});
-		$('.task_hide_all').click(function(){
-			$(".custom__task_card .custom__task_collapse").collapse('hide');
-		});
-	}
+    if ($('.custom__task_button').length > 0) {
+        $('.task_show_all').click(function () {
+            $(".custom__task_card .custom__task_collapse").collapse('show');
+        });
+        $('.task_hide_all').click(function () {
+            $(".custom__task_card .custom__task_collapse").collapse('hide');
+        });
+    }
 });
 
-if (typeof(salesData) != "undefined" && salesData !== null)  {
-    var salesDataKeys =  Object.keys(salesData);
+if (typeof (salesData) != "undefined" && salesData !== null) {
+    var salesDataKeys = Object.keys(salesData);
     const openOrderDataset = [];
     const closedOrderDataset = [];
     const premiumTotalDataset = [];
 
-    for (let i= 0; i < salesDataKeys.length; i++) {
-        
+    for (let i = 0; i < salesDataKeys.length; i++) {
+
         const openOrdersCountForMonth = [];
         const closedOrdersCountForMonth = [];
         const premiumTotalForMonth = [];
-        
+
         for (let index = 0; index < salesData[salesDataKeys[i]].length; index++) {
             openOrdersCountForMonth.push(salesData[salesDataKeys[i]][index].total_open_count);
             closedOrdersCountForMonth.push(salesData[salesDataKeys[i]][index].total_close_count);
@@ -452,8 +461,7 @@ if (typeof(salesData) != "undefined" && salesData !== null)  {
     });
 }
 
-function number_format(number, decimals, dec_point, thousands_sep) 
-{
+function number_format(number, decimals, dec_point, thousands_sep) {
     // *     example: number_format(1234.56, 2, ',', ' ');
     // *     return: '1 234,56'
     number = (number + '').replace(',', '').replace(' ', '');
@@ -479,8 +487,7 @@ function number_format(number, decimals, dec_point, thousands_sep)
 }
 
 
-function getPartners(fileId) 
-{
+function getPartners(fileId) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
@@ -493,25 +500,21 @@ function getPartners(fileId)
         success: function (response) {
 
             var results = JSON.parse(response);
-            
+
             var table_data = '';
-            if(results.status == 'success')
-            {
-                if(!jQuery.isEmptyObject(results.partners))
-                {
-                    $.each(results.partners, function( key, value ) {
-                          table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>';
+            if (results.status == 'success') {
+                if (!jQuery.isEmptyObject(results.partners)) {
+                    $.each(results.partners, function (key, value) {
+                        table_data += '<tr><td>' + value.PartnerID + '</td><td>' + value.PartnerTypeID + '</td><td>' + value.PartnerType.PartnerTypeName + '</td><td>' + value.PartnerName + '</td></tr>';
                     });
                 }
-                else
-                {
+                else {
                     table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
                 }
                 $('#tbl-partners-data tbody').html(table_data);
                 $('#partnersModal').modal('show');
             }
-            else if(results.status == 'error')
-            {
+            else if (results.status == 'error') {
                 alert(results.msg);
             }
             $('#page-preloader').css('display', 'none');
@@ -519,8 +522,7 @@ function getPartners(fileId)
     });
 }
 
-function getRevenueData() 
-{
+function getRevenueData() {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var sales_rep_id = $('#sales_user_filter').val();
@@ -554,8 +556,7 @@ function getRevenueData()
     });
 }
 
-function getRevenueDataBasedOnMonth(month) 
-{
+function getRevenueDataBasedOnMonth(month) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var sales_rep_id = $('#sales_user_production_filter').val();
