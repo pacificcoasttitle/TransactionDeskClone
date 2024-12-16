@@ -4,8 +4,8 @@
 
 class SalesRep extends MX_Controller
 {
-    // private $sales_dashboard_js_version = '08';
-    private $version;
+    private $version = '09';
+
     public function __construct()
     {
         parent::__construct();
@@ -253,11 +253,13 @@ class SalesRep extends MX_Controller
         $month = $this->input->post('month') ? $this->input->post('month') : '';
         $salesUser = $this->input->post('sales_user') ? $this->input->post('sales_user') : '';
         $order_type = $this->input->post('order_type');
+        $sales_rep_manager_flag = $this->input->post('sales_rep_manager_flag');
         $params['salesUser'] = $salesUser;
         $params['salesFlag'] = 1;
         //$params['status'] = isset($status) && !empty($status) ? $status : 'open';
         //$params['month'] = isset($month) && !empty($month) ? $month : date('m');
         $params['order_type'] = isset($order_type) && !empty($order_type) ? $order_type : '';
+        $params['sales_rep_manager_flag'] = isset($sales_rep_manager_flag) && !empty($sales_rep_manager_flag) ? $sales_rep_manager_flag : false;
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
