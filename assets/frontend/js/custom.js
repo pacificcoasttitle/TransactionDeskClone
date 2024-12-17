@@ -536,8 +536,31 @@ $(document).ready(function () {
         $('#ProductType').val(selectedText);
     });
 
+    $('#TransactionType').change(function () {
+        var selectedText = $(this).find('option:selected').text();
+        console.log('selectedText ==', selectedText);
+        if (selectedText != 'Purchase') {
+            $('#sales-loan-amount-fields').hide();
+            $('#sales-loan-amount-fields #salesAmount').hide();
+            $('#sales-loan-amount-fields #primaryBorrower').hide();
+            $('#sales-loan-amount-fields #secondaryBorrower').hide();
+        } else {
+            $('#sales-loan-amount-fields').show();
+            $('#sales-loan-amount-fields #salesAmount').show();
+            $('#sales-loan-amount-fields #primaryBorrower').show();
+            $('#sales-loan-amount-fields #secondaryBorrower').show();
+        }
+    });
+
     $('#OrderTypeID').change(function () {
         var selectedText = $(this).find('option:selected').text();
+        if ($(this).val() == '2' || $(this).val() == '3') {
+            $('#add-escrow-officer-section').show();
+        } else {
+            $('#add-escrow-officer-section').hide();
+            $('#escrow-officer-field').hide();
+            $('#add-escrow-officer-details').prop('checked', false);
+        }
         $('#OrderType').val(selectedText);
     });
 });

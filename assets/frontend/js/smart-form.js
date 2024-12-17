@@ -43,6 +43,16 @@ jQuery(document).ready(function ($) {
 				required: true
 			},
 
+			OrderTypeID: {
+				required: true
+			},
+			ProductType: {
+				required: true
+			},
+			TransactionType: {
+				required: true
+			},
+
 			emailaddress: {
 				required: true,
 				email: true
@@ -179,6 +189,15 @@ jQuery(document).ready(function ($) {
 			OpenEmail: {
 				required: 'Enter your email address',
 			},
+			ProductType: {
+				required: 'Please select Product Type',
+			},
+			OrderTypeID: {
+				required: 'Please select Order Type',
+			},
+			TransactionType: {
+				required: 'Please select Transaction Type',
+			},
 			sendername: {
 				required: 'Enter your name',
 				minlength: 'Name must be at least 2 characters'
@@ -245,7 +264,7 @@ jQuery(document).ready(function ($) {
 				required: 'Enter agent\'s company',
 			},
 			ProductTypeID: {
-				required: 'Select Product',
+				required: 'Select Product Product Type',
 			},
 			salesAmount: {
 				required: 'Enter sales amount',

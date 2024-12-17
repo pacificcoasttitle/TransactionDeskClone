@@ -18,6 +18,10 @@
     padding-top: 10px!important;
 }
 
+.state-error {
+    margin-left: 15px;
+}
+
 .datatable-header {
     display: flex;
     justify-content: space-between;
