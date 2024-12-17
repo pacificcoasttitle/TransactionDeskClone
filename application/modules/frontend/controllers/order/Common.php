@@ -1275,7 +1275,14 @@ class Common extends MX_Controller
         $editFlag = $this->input->post('editFlag');
         $orderDetails = $this->order->get_order_details($file_id);
         $cplApi = $this->input->post('cpl_api');
-
+        if ($cplApi == 'doma') {
+            $errors[] = "Please contact your title team in order to get your CPL processed.";
+            $data = array(
+                "errors" => $errors,
+            );
+            $this->session->set_flashdata($data);
+            redirect(base_url() . 'cpl-dashboard');
+        }
         $lender_details = array(
             'first_name' => $name[0],
             'last_name' => !empty($name[1]) ? $name[1] : '',
