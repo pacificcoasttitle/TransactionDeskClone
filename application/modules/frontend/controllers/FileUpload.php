@@ -84,6 +84,7 @@ class FileUpload extends MX_Controller
 
                         $fileData = [
                             "OrderNumber" => $orderNumber,
+                            "DocumentName" => $documentName,
                             "FileList" => $fileList,
                         ];
                         $reqData = json_encode($fileData);
