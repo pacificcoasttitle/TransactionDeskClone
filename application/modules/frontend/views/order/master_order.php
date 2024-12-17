@@ -282,6 +282,19 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 								</div>
 							</div>
 
+							<div class="row form-group">
+								<div class="col-sm-12">
+									<select id="TransactionType" name="TransactionType" class="form-control">
+										<option value="">Select Transaction Type</option>
+										<option value="Purchase">Purchase</option>
+										<option value="Refinance">Refinance</option>
+										<option value="Equity">Equity</option>
+										<option value="Other">Other</option>
+
+									</select>
+								</div>
+							</div>
+
 
 							<div id="sales-loan-amount-fields" style="display:none;">
 								<div class="row form-group">
@@ -367,17 +380,18 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 								</div>
 
 								<?php
-
 $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
 $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
+if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
+    ?>
 										<div class="col-sm-3 align-display">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>
 										</div>
 
-									<?php }if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
+									<?php
+}if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
 										<div class="col-sm-3 align-display">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
 											<span >Add Escrow</span>

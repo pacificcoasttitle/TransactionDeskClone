@@ -60,6 +60,9 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('OpenName', 'First Name', 'required', array('required' => 'Enter your first name'));
             $this->form_validation->set_rules('OpenLastName', 'Last Name', 'required', array('required' => 'Enter your last name'));
             $this->form_validation->set_rules('OpenEmail', 'Email Address', 'required', array('required' => 'Enter your email address'));
+            $this->form_validation->set_rules('TransactionType', 'Transaction Type', 'required', array('required' => 'Please select Transaction Type'));
+            $this->form_validation->set_rules('OrderTypeID', 'Order Type', 'required', array('required' => 'Please select Order Type'));
+            $this->form_validation->set_rules('ProductType', 'Product Type', 'required', array('required' => 'Please select Product Type'));
 
             if (!is_dir('uploads/curative')) {
                 mkdir('./uploads/curative', 0777, true);
@@ -142,12 +145,13 @@ class Home extends MX_Controller
                 $SalesAmount = $this->input->post('salesAmount');
                 $SalesAmount = str_replace(',', '', $SalesAmount);
                 $LoanAmount = str_replace(',', '', $LoanAmount);
-                $LoanAmount = 25000;
+                // $LoanAmount = 25000;
                 // $SalesAmount = 11000;
                 $ProductTypeTxt = $this->input->post('ProductType');
                 $primaryBorrower = $this->input->post('primaryBorrower');
                 $secondaryBorrower = $this->input->post('secondaryBorrower');
                 $TransactionTypeID = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
+                $TransactionType = $this->input->post('TransactionType');
                 $ProductTypeID = $this->input->post('ProductTypeID');
                 $softproProductType = $this->input->post('ProductType');
                 $softproProductTypeId = $this->input->post('ProductTypeID');
@@ -240,11 +244,13 @@ class Home extends MX_Controller
                     $escrowCompany = $this->input->post('EscrowCompany');
                     $escrow_details = array('name' => $escrowName, 'email' => $escrowEmail, 'telephone' => $escrowName, 'company' => $escrowCompany);
                     $orderReq['escrowDetails'] = [
+                        'LookUpCode' => "Closi914",
                         'Name' => $escrowName,
                         'Email' => $escrowEmail,
                         'Telephone' => $escrowTelephone,
                         'CompanyName' => $escrowCompany,
                         'EscrowOfficerName' => $escrowOfficer,
+                        "LookUpCodeEscrowOfficer" => "MarAdaClos",
                     ];
                     $escrow_details_api = array('name' => $escrowName, 'email' => $escrowEmail, 'phone' => $escrowTelephone, 'company' => $escrowCompany);
                     $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
@@ -293,6 +299,7 @@ class Home extends MX_Controller
                 $lender_details = array('name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany);
                 if (!empty($lenderEmail)) {
                     $orderReq['lenderDetails'] = [
+                        'LookUpCode' => "Advan7755",
                         'Name' => $lenderName,
                         'Email' => $lenderEmail,
                         'Telephone' => $lenderTelephone,
@@ -351,10 +358,6 @@ class Home extends MX_Controller
                 // if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && $ProductTypeID == '20') {
                 if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
                     $lpOrderFlag = 1;
-                    $loanFlag = 1;
-                    if (strpos($ProductTypeTxt, 'Sale') !== false) {
-                        $loanFlag = 0;
-                    }
                 } else {
                     $place_order = array();
                     $orderReq['personalDetails'] = [
@@ -388,6 +391,7 @@ class Home extends MX_Controller
                         "SecondaryOwner" => $SecondaryOwner,
                     ];
                     $transactionDetailsReq = [
+                        "LookUpCodeTitleOfficer" => "GLT",
                         "TitleOfficer" => $titleOfficerName,
                         "Product" => $softproProductType,
                         "EscrowNumber" => $EscrowNumber,
@@ -418,30 +422,33 @@ class Home extends MX_Controller
                     $loanFlag = 1;
                     // $legalEntity = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $OwnerFirstName, 'Last' => $OwnerLastName), 'Address' => array('Address1' => $PropertyAddress, 'City' => $PropertyCity, 'State' => $PropertyState, 'Zip' => $PropertyZip));
 
-                    if (strpos($ProductTypeTxt, 'Loan') !== false) {
-                        $orderReq['orderType'] = "Refinance";
-                        $transactionDetailsReq['TransactionType'] = "Refinance";
+                    // if (strpos($ProductTypeTxt, 'Loan') !== false) {
+                    $transactionDetailsReq['TransactionType'] = $TransactionType;
+                    $orderReq['orderType'] = $TransactionType;
+                    if ($TransactionType != 'Purchase') {
+                        // $orderReq['orderType'] = "Refinance";
                         $transactionDetailsReq['PrimaryBorrower'] = $OwnerFirstName . ' ' . $OwnerLastName;
                         // $place_order['Buyers'][] = $legalEntity; //
-                    } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
+                    } else {
                         $borrowerName = explode(' ', $primaryBorrower);
                         $borrowerLastName = end($borrowerName);
                         $borrowerPrimaryName = array_slice($borrowerName, 0, -1);
                         $borrowerFirstName = implode(" ", $borrowerPrimaryName);
                         $borrowers = array('EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => array('First' => $borrowerFirstName, 'Last' => $borrowerLastName));
-                        $transactionDetailsReq['SalesAmount'] = $SalesAmount;
-                        $orderReq['orderType'] = "Purchase";
-                        $transactionDetailsReq['TransactionType'] = "Purchase";
+                        if (isset($SalesAmount) && !empty($SalesAmount)) {
+                            $transactionDetailsReq['SalesAmount'] = $SalesAmount;
+                        }
+                        // $transactionDetailsReq['TransactionType'] = "Purchase";
                         $loanFlag = 0;
                         // $place_order['Sellers'][] = $legalEntity; //
                         // $place_order['Buyers'][] = $borrowers; //
                         // $place_order['SalesPrice'] = $SalesAmount; //
                     }
-                    $orderReq['transactionDetails'] = $transactionDetailsReq;
                     // $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = array();
                     if (isset($LoanAmount) && !empty($LoanAmount)) {
                         $loan['LoanAmount'] = $LoanAmount;
+                        $transactionDetailsReq['LoanAmount'] = $LoanAmount;
                     }
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
@@ -456,6 +463,9 @@ class Home extends MX_Controller
                         // $place_order['SettlementStatementVersion'] = 'HUD';
                     }
                     $orderReq['Loans'] = $loan;
+                    $orderReq['transactionDetails'] = $transactionDetailsReq;
+                    // echo "<pre>";
+                    // print_r($orderReq);die;
                     /*$place_order['Loans'][] = $loan; //
                     $place_order['Properties'][] = array('IsPrimary' => 'true', 'StreetNumber' => $StreetNumber, 'StreetName' => $StreetName, 'City' => $PropertyCity, 'State' => $PropertyState, 'County' => $County, 'Zip' => $PropertyZip);
                     $place_order['Note']['APN'] = $apn; //
@@ -509,12 +519,13 @@ class Home extends MX_Controller
                     $order_data = json_encode($orderReq);
 
                     // print_r($order_data);
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_order', 'create_order', $order_data, array(), 0, 0);
+                    // print_r($logid);die;
                     $response = $this->softpro->make_request('POST', 'create_order', $order_data, $user_data);
+                    $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_order', 'create_order', $order_data, json_encode($response), 0, $logid);
                     // print_r($result);die;
                     // $this->load->library('order/resware');
-                    // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, array(), 0, 0);
                     // $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
-                    // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_order', env('RESWARE_ORDER_API') . 'orders', $order_data, $result, 0, $logid);
                     $lpOrderFlag = 0;
 
                     if (isset($response) && !empty($response)) {
@@ -1138,8 +1149,9 @@ class Home extends MX_Controller
                     'random_number' => $randomString,
                     // 'underwriter' => $underWriter,
                     'escrow_officer_id' => $this->input->post('escrow_officer'),
-                    'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
-                    // 'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
+                    'prod_type' => $TransactionType,
+                    // 'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
+                    'resware_status' => ($lpOrderFlag == 1) ? 'open' : '',
                     'status' => 1,
                 );
 
@@ -1416,9 +1428,10 @@ class Home extends MX_Controller
                     ];
                 }
 
-                if (!empty($uploadFileToSoftPro)) {
+                if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
                     $fileData = [
                         "OrderNumber" => $orderNumber,
+                        "DocumentName" => $orderNumber,
                         "FileList" => $uploadFileToSoftPro,
                     ];
                     $reqData = json_encode($fileData);
@@ -1636,6 +1649,9 @@ class Home extends MX_Controller
                 $data['OpenName_error_msg'] = form_error('OpenName');
                 $data['OpenLastName_error_msg'] = form_error('OpenLastName');
                 $data['OpenEmail_error_msg'] = form_error('OpenEmail');
+                $data['ProductType_error_msg'] = form_error('ProductType');
+                $data['OrderType_error_msg'] = form_error('OrderType');
+                $data['TransactionType_error_msg'] = form_error('TransactionType');
                 $data['sendermessage_error_msg'] = form_error('sendermessage');
             }
         } else {
