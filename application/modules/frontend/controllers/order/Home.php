@@ -424,7 +424,7 @@ class Home extends MX_Controller
 
                     // if (strpos($ProductTypeTxt, 'Loan') !== false) {
                     $transactionDetailsReq['TransactionType'] = $TransactionType;
-                    $orderReq['orderType'] = $TransactionType;
+                    $orderReq['orderType'] = $softproOrderType;
                     if ($TransactionType != 'Purchase') {
                         // $orderReq['orderType'] = "Refinance";
                         $transactionDetailsReq['PrimaryBorrower'] = $OwnerFirstName . ' ' . $OwnerLastName;
