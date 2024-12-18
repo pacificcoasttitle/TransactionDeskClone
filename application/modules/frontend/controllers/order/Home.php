@@ -534,7 +534,7 @@ class Home extends MX_Controller
                         if (isset($response['status']) && $response['status'] == 'error') {
                             // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                             /* Start add softpro api logs */
-                            $reswareData = array(
+                            $softproLog = array(
                                 'request_type' => 'create_order_in_softpro',
                                 'request_url' => 'create_order',
                                 'request' => $order_data,
@@ -543,7 +543,7 @@ class Home extends MX_Controller
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
 
-                            $this->db->insert('pct_resware_log', $reswareData);
+                            $this->db->insert('pct_resware_log', $softproLog);
                             /* End add softpro api logs */
 
                             echo json_encode($response);
@@ -556,7 +556,7 @@ class Home extends MX_Controller
                                 // $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
                             }
                             /* Start add softpro api logs */
-                            $reswareData = array(
+                            $softproLog = array(
                                 'request_type' => 'create_order_in_softpro',
                                 'request_url' => 'create_order',
                                 'request' => $order_data,
@@ -566,8 +566,8 @@ class Home extends MX_Controller
                                 'file_number' => $orderNumber,
                                 'created_at' => date("Y-m-d H:i:s"),
                             );
-                            // print_r($reswareData);die;
-                            $this->db->insert('pct_resware_log', $reswareData);
+                            // print_r($softproLog);die;
+                            $this->db->insert('pct_resware_log', $softproLog);
 
                             /* End add softpro api logs */
                             /*if ($orderNumber) {
@@ -1438,7 +1438,7 @@ class Home extends MX_Controller
                     // print_r($reqData);
                     $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
                     /* Start upload softpro api logs */
-                    $reswareData = array(
+                    $softproLog = array(
                         'request_type' => 'upload_file_in_softpro',
                         'request_url' => 'upload_file',
                         'request' => $reqData,
@@ -1447,7 +1447,7 @@ class Home extends MX_Controller
                         'file_number' => $orderNumber,
                         'created_at' => date("Y-m-d H:i:s"),
                     );
-                    $this->db->insert('pct_resware_log', $reswareData);
+                    $this->db->insert('pct_resware_log', $softproLog);
                     /* End upload softpro api logs */
                 }
 
@@ -1803,11 +1803,10 @@ class Home extends MX_Controller
         if ($fileNum) {
             $condition = array(
                 'where' => array(
-                    'file_id' => $fileNum,
+                    'file_number' => $fileNum,
                 ),
             );
             $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-
             $session_id = isset($titlePointDetails[0]['session_id']) && !empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
 
             $this->session->unset_userdata($session_id);
@@ -1883,7 +1882,6 @@ class Home extends MX_Controller
         $data['lpFileNumber'] = $lpFileNumber;
         $data['lpFileStatus'] = $titlePointDetails[0]['lv_file_status'];
         $data['taxFileStatus'] = $titlePointDetails[0]['tax_file_status'];
-
         // $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-1.9.1.min.js?v=order_' . $this->order_js_version) );
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js?v=order_' . $this->order_js_version));
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order.js?v=order_' . $this->order_js_version));
@@ -1932,7 +1930,7 @@ class Home extends MX_Controller
         $userdata = $this->session->userdata('user');
         $this->load->library('order/titlepoint');
         $this->load->model('order/note');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $escrowId = (!empty($_POST['escrow_id'])) ? $_POST['escrow_id'] : '';
         if (!empty($escrowId)) {
             $orderUser = $this->home_model->get_user(array('id' => $escrowId));
