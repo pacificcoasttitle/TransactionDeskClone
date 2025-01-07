@@ -5903,9 +5903,9 @@ class Cron extends MX_Controller
         $queryParams = "userType=" . urlencode('Lender');
         $reqData = json_encode($req);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
-        echo "<pre>";
-        print_r($response);
-        echo "Hello";die;
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data = $response['data'];
@@ -6007,9 +6007,9 @@ class Cron extends MX_Controller
         $queryParams = "userType=" . urlencode('Mortgage Broker');
         $reqData = json_encode($req);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
-        echo "<pre>";
-        print_r($response);
-        echo "Hello";die;
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data = $response['data'];
