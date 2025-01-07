@@ -430,8 +430,9 @@ class Westcor
             $resCPL['CPL']['PolicyProducingAgentState'] = $branchData['state'];
             $resCPL['CPL']['PolicyProducingAgentZip'] = $branchData['zip'];
             $resCPL['CPL']['ProtectLender'] = true;
-            $resCPL['CPL']['ClosingAgentNumber'] = 'RI1026';
-            $resCPL['CPL']['IsDualCPL'] = true;
+            // $resCPL['CPL']['ClosingAgentNumber'] = 'RI1026';
+            $resCPL['CPL']['ClosingAgentNumber'] = 'CA1038';
+            $resCPL['CPL']['IsDualCPL'] = false;
 
             $res['cpl'][] = $resCPL['CPL'];
             $res['property'] = $propery;
