@@ -4821,10 +4821,6 @@ class Home extends MX_Controller
                     }
                     }
                     }
-                    <<<<<<< HEAD
-                    =======
-                    if ($addUnderwritenPartnerViaApi == 1) {
-                    >>>>>>> eb588ab1 (Create order softpro api and LP order changes)
                     if ($loanFlag == 1) {
                     if (!empty($underWriter)) {
                     if ($companyData[0]['loan_underwriter'] == 'north_american') {
