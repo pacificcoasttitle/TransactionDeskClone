@@ -572,8 +572,9 @@ class Order
         return $query->row_array();
     }
 
-    public function get_order_details($file_number, $from_mail = 0)
+    public function get_order_details($params, $from_mail = 0)
     {
+        // print_r($params);die;
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('
             order_details.lp_file_number,
@@ -704,7 +705,10 @@ class Order
             ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1')
             ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1');
         // $this->CI->db->where('file_id', $fileId);
-        $this->CI->db->where('file_number', $file_number);
+        foreach ($params as $key => $val) {
+            $this->CI->db->where($key, $val);
+        }
+        // $this->CI->db->where('file_number', $file_number);
 
         if (isset($userdata) && $userdata['is_master'] == 0 && $from_mail == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0 && $userdata['is_escrow_officer'] == 0 && $userdata['is_escrow_assistant'] == 0) {
             $this->CI->db->group_start()
@@ -3272,8 +3276,12 @@ class Order
             ),
         );
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
-        $file_id = $titlePointDetails[0]['file_id'];
-        $orderDetails = $this->get_order_details($file_id);
+        // $file_id = $titlePointDetails[0]['file_id'];
+        $order_id = $titlePointDetails[0]['order_id'];
+        $params = [
+            'order_details.id' => $order_id,
+        ];
+        $orderDetails = $this->get_order_details($params);
         // echo "<pre>";
         // print_r($orderDetails);die;
         $postData['file_number'] = $fileNumber;
@@ -3722,8 +3730,12 @@ class Order
             ),
         );
         $titlePointDetails = $this->CI->titlePointData->gettitlePointDetails($condition);
-        $file_id = $titlePointDetails[0]['file_id'];
-        $orderDetails = $this->CI->order->get_order_details($file_id);
+        // $file_id = $titlePointDetails[0]['file_id'];
+        $order_id = $titlePointDetails[0]['order_id'];
+        $params = [
+            'order_details.id' => $order_id,
+        ];
+        $orderDetails = $this->CI->order->get_order_details($params);
         $cond = array(
             'id' => $orderDetails['customer_id'],
         );
@@ -3741,7 +3753,7 @@ class Order
 
         $data = array(
             'orderNumber' => $orderNumber,
-            'orderId' => $file_id,
+            'orderId' => $order_id,
             'OpenName' => $customerDetails['first_name'] . ' ' . $customerDetails['last_name'],
             'Opentelephone' => $customerDetails['telephone_no'],
             'OpenEmail' => $customerDetails['email_address'],

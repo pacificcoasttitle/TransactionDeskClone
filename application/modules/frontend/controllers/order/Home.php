@@ -135,8 +135,12 @@ class Home extends MX_Controller
                 $condition = array(
                     'id' => $TitleOfficer,
                 );
-                $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+                // $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
+                $titleOfficerDetails = $this->titleOfficer->getTitleOfficerLookupDetails($condition);
+                // echo "<pre>";
+                // print_r($titleOfficerDetails);die;
                 $titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
+                $titleOfficerLookupCode = isset($titleOfficerDetails['lookup_code']) && !empty($titleOfficerDetails['lookup_code']) ? $titleOfficerDetails['lookup_code'] : '';
 
                 $LoanAmount = $this->input->post('loanAmount');
                 $LoanNumber = $this->input->post('loanNumber');
@@ -175,6 +179,7 @@ class Home extends MX_Controller
                     $BuyerAgentEmailAddress = $this->input->post('BuyerAgentEmailAddress');
                     $BuyerAgentTelephone = $this->input->post('BuyerAgentTelephone');
                     $BuyerAgentCompany = $this->input->post('BuyerAgentCompany');
+                    $BuyerAgentLookupCode = $this->input->post('BuyerAgentLookupCode');
                     $parties_email[] = $BuyerAgentEmailAddress;
                     $buyers_agent_details = array('name' => $BuyerAgentName, 'email' => $BuyerAgentEmailAddress, 'telephone' => $BuyerAgentTelephone, 'company' => $BuyerAgentCompany);
                     $orderReq['buyersAgentDetails'] = [
@@ -182,6 +187,7 @@ class Home extends MX_Controller
                         'Email' => $BuyerAgentEmailAddress,
                         'Telephone' => $BuyerAgentTelephone,
                         'CompanyName' => $BuyerAgentCompany,
+                        "LookUpCodeBuyerAgent" => $BuyerAgentLookupCode,
                     ];
                 }
 
@@ -191,6 +197,7 @@ class Home extends MX_Controller
                     $ListingAgentEmailAddress = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
                     $ListingAgentTelephone = $this->input->post('ListingAgentTelephone');
                     $ListingAgentCompany = $this->input->post('ListingAgentCompany');
+                    $ListingAgentLookupCode = $this->input->post('ListingAgentLookupCode');
                     $parties_email[] = $ListingAgentEmailAddress;
                     $listing_agent_details = array('name' => $ListingAgentName, 'email' => $ListingAgentEmailAddress, 'telephone' => $ListingAgentTelephone, 'company' => $ListingAgentCompany);
                     $orderReq['listingAgentDetails'] = [
@@ -198,6 +205,7 @@ class Home extends MX_Controller
                         'Email' => $ListingAgentEmailAddress,
                         'Telephone' => $ListingAgentTelephone,
                         'CompanyName' => $ListingAgentCompany,
+                        "LookUpCodeListingAgent" => $ListingAgentLookupCode,
                     ];
                 }
 
@@ -242,15 +250,16 @@ class Home extends MX_Controller
                     $escrowEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
                     $escrowTelephone = $this->input->post('EscrowTelephone');
                     $escrowCompany = $this->input->post('EscrowCompany');
+                    $escrowLookUpCode = $this->input->post('EscrowLookUpCode');
                     $escrow_details = array('name' => $escrowName, 'email' => $escrowEmail, 'telephone' => $escrowName, 'company' => $escrowCompany);
                     $orderReq['escrowDetails'] = [
-                        'LookUpCode' => "Closi914",
+                        'LookUpCode' => $escrowLookUpCode,
                         'Name' => $escrowName,
                         'Email' => $escrowEmail,
                         'Telephone' => $escrowTelephone,
                         'CompanyName' => $escrowCompany,
                         'EscrowOfficerName' => $escrowOfficer,
-                        "LookUpCodeEscrowOfficer" => "MarAdaClos",
+                        "LookUpCodeEscrowOfficer" => $escrowOfficer,
                     ];
                     $escrow_details_api = array('name' => $escrowName, 'email' => $escrowEmail, 'phone' => $escrowTelephone, 'company' => $escrowCompany);
                     $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
@@ -296,10 +305,11 @@ class Home extends MX_Controller
                 $lenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
                 $lenderTelephone = $this->input->post('LenderTelephone');
                 $lenderCompany = $this->input->post('LenderCompany');
+                $lenderLookUpCode = $this->input->post('LenderLookUpCode');
                 $lender_details = array('name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany);
                 if (!empty($lenderEmail)) {
                     $orderReq['lenderDetails'] = [
-                        'LookUpCode' => "Advan7755",
+                        'LookUpCode' => $lenderLookUpCode,
                         'Name' => $lenderName,
                         'Email' => $lenderEmail,
                         'Telephone' => $lenderTelephone,
@@ -356,7 +366,7 @@ class Home extends MX_Controller
                 $underWriter = '';
 
                 // if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && $ProductTypeID == '20') {
-                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
+                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '67082')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
                     $lpOrderFlag = 1;
                 } else {
                     $place_order = array();
@@ -391,7 +401,7 @@ class Home extends MX_Controller
                         "SecondaryOwner" => $SecondaryOwner,
                     ];
                     $transactionDetailsReq = [
-                        "LookUpCodeTitleOfficer" => "GLT",
+                        "LookUpCodeTitleOfficer" => $titleOfficerLookupCode,
                         "TitleOfficer" => $titleOfficerName,
                         "Product" => $softproProductType,
                         "EscrowNumber" => $EscrowNumber,
@@ -523,7 +533,7 @@ class Home extends MX_Controller
                     // print_r($logid);die;
                     $response = $this->softpro->make_request('POST', 'create_order', $order_data, $user_data);
                     $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_order', 'create_order', $order_data, json_encode($response), 0, $logid);
-                    // print_r($result);die;
+                    // print_r($response);die;
                     // $this->load->library('order/resware');
                     // $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
                     $lpOrderFlag = 0;
@@ -549,7 +559,7 @@ class Home extends MX_Controller
                             echo json_encode($response);
                             exit;
                         } else {
-                            $response = $response['data'];
+                            // $response = $response['data'];
                             $orderNumber = $file_id = '';
                             if (isset($response['OrderNumber']) && !empty($response['OrderNumber'])) {
                                 $orderNumber = isset($response['OrderNumber']) && !empty($response['OrderNumber']) ? $response['OrderNumber'] : '';
@@ -1120,8 +1130,8 @@ class Home extends MX_Controller
                     'sales_amount' => $SalesAmount,
                     'loan_amount' => $LoanAmount,
                     'loan_number' => $LoanNumber,
-                    'transaction_type' => $TransactionTypeID,
-                    // 'purchase_type' => $ProductTypeID,
+                    'transaction_type' => $TransactionType,
+                    'purchase_type' => $softproProductTypeId,
                     'product_type' => $softproProductTypeId,
                     'order_type' => $softproOrderTypeId,
                     'is_ccr' => $CCR,
@@ -1274,6 +1284,7 @@ class Home extends MX_Controller
                     );
                     $tpData = array(
                         // 'file_id' => $file_id,
+                        'order_id' => $orderId,
                         'file_number' => $orderNumber,
                     );
                     $this->titlePointData->update($tpData, $condition);
@@ -1674,8 +1685,10 @@ class Home extends MX_Controller
                 ),
             );
 
-            $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
-
+            // $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+            $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerLookupDetails($condition);
+            // echo "<pre>";
+            // print_r($data);die;
             // $data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
             $condition = array(
                 'where' => array(
@@ -1684,11 +1697,12 @@ class Home extends MX_Controller
                 ),
             );
             $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
-            $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
+            // $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
+            $data['escrowOfficers'] = $this->home_model->getEscrowOfficerLookupDetails();
             $data['productType'] = $this->home_model->get_product_types();
             // echo "<pre>";
+            // print_r($data);die;
             $data['orderType'] = $this->home_model->get_order_types();
-            // print_r($data['orderType']);die;
             $configData = $this->order->getConfigData();
             $data['submitButtonFlag'] = $configData['enable_create_order_submit_button']['is_enable'];
             // $this->template->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
@@ -1808,9 +1822,14 @@ class Home extends MX_Controller
             );
             $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
             $session_id = isset($titlePointDetails[0]['session_id']) && !empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
-
+            $order_id = $titlePointDetails[0]['order_id'];
+            $params = [
+                'order_details.id' => $order_id,
+            ];
             $this->session->unset_userdata($session_id);
-            $orderDetails = $this->order->get_order_details($fileNum);
+            $orderDetails = $this->order->get_order_details($params);
+            // echo "<pre>";
+            // print_r($orderDetails);die;
             $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
 
             $property_id = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';

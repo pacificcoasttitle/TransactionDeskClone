@@ -113,4 +113,13 @@ define('TP_GEO_GET_RESULT_URL', 'TpsService.asmx/GetResultByID3?');
 defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
     'create_order' => 'ordercreation/create',
     'upload_document' => 'ordercreation/AddDocuments',
+    'fetch_lookup_code' => 'lookup/GetLookuptable',
+    'get_all_order_status' => 'ordercreation/GetOrders',
+]);
+
+defined('TRANSACTION_TYPE') or define('TRANSACTION_TYPE', [
+    1 => 'Purchase',
+    2 => 'Refinance',
+    3 => 'Equity',
+    4 => 'Other',
 ]);

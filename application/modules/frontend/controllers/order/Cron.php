@@ -3577,6 +3577,80 @@ class Cron extends MX_Controller
         }
     }
 
+    public function updateAllSoftProOrderStatus()
+    {
+        $this->load->library('order/softPro');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+
+        $response = $this->softpro->make_request('GET', 'get_all_order_status', $reqData, $queryParams);
+        $closedFileNumbers = array();
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $orderData = $response['data'];
+            $updateArray = array();
+            foreach ($orderData as $key => $order) {
+                $file_number = '';
+                $fileStatus = '';
+                $closedDate = '';
+
+                $file_number = $order['OrderNumber'];
+                $fileStatus = $order['OrderStatus'];
+                $closedDate = $order['LastModifiedOn'];
+
+                // print_r($order);die;
+                $completed_date = null;
+                if (!empty($closedDate)) {
+                    $myDateTime = DateTime::createFromFormat('m/d/Y h:i:s A', $closedDate);
+                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                }
+                // echo "<pre>";
+                // print_r($completed_date);die;
+
+                if (strtolower($fileStatus) == 'closed') {
+                    if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
+                        if (!in_array($file_number, $closedFileNumbers)) {
+                            $closedFileNumbers[] = $file_number;
+                        }
+                    }
+                }
+
+                $updateArray[] = array(
+                    'file_number' => $file_number,
+                    'resware_status' => strtolower($fileStatus),
+                    'resware_closed_status_date' => $completed_date,
+                    // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                );
+            }
+
+            if (!empty($updateArray)) {
+                $chunk1 = array_chunk($updateArray, 100);
+                for ($i = 0; $i < count($chunk1); $i++) {
+                    $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
+                }
+            }
+
+            $updateData = array('resware_status' => 'open');
+            $this->db->set($updateData);
+            $this->db->where('lp_file_number IS NOT NULL');
+            $this->db->where('file_number', 0);
+            $this->db->update('order_details');
+
+            if (!empty($closedFileNumbers)) {
+                // $this->sendEmailForClosedOrder($closedFileNumbers);
+
+            }
+            echo "All orders status updated successfully" . "<br>";
+            $this->updateAllowDuplicationFlag();
+            echo date('Y-m-d H:i:s');exit;
+
+        }
+
+    }
+
     public function removeDocServer()
     {
         $this->load->library('order/order');
@@ -5533,6 +5607,718 @@ class Cron extends MX_Controller
                 }
             }
             closedir($handle);
+        }
+    }
+
+    public function softproOpenContactLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Order Contact - Person';
+        // $queryParams['userType'] = 'Order Contact - Person';
+        $queryParams = "userType=" . urlencode('Order Contact - Person');
+        $reqData = json_encode($req);
+
+        // echo "<pre>";
+        // print_r($existingAgent);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            // $existingUserEmail = $this->db->select('email_address')->from('customer_basic_details')->where('email_address !=', '')->get()->result_array();
+            $existingUserEmail = $this->db->select('email_address')
+                ->from('customer_basic_details')
+                ->where('email_address !=', '')
+                ->where('email_address IS NOT NULL', null, false)
+                ->get()->result_array();
+
+            $existingUserEmail = array_column($existingUserEmail, 'email_address');
+
+            $existingAgent = $this->db->select('email_address')
+                ->from('agents')
+                ->where('email_address !=', '')
+                ->where('email_address IS NOT NULL', null, false)
+                ->get()->result_array();
+            $existingAgent = array_column($existingAgent, 'email_address');
+            // $existing_lookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'open_contact')->get()->result_array();
+            // $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+            // Separate data into updates and inserts
+            $updateAgentData = [];
+            $update_data = [];
+            $insert_data = [];
+            $insertCustomerData = [];
+            foreach ($new_data as $key => $row) {
+                if (!empty($row['Email'])) {
+                    if (in_array(trim($row['Email']), $existingUserEmail)) {
+                        $update_data[$key]['lookup_code'] = $row['LookupCode'];
+                        $update_data[$key]['flookup_code'] = $row['Filter: LookupCode'];
+                        $update_data[$key]['courtesy_title'] = $row['CourtesyTitle'];
+                        // $update_data[$key]['first_name'] = $row['FirstName'];
+                        // $update_data[$key]['middle_name'] = $row['MiddleName'];
+                        // $update_data[$key]['last_name'] = $row['LastName'];
+                        $update_data[$key]['email_address'] = trim($row['Email']);
+                        // $update_data[$key]['phone'] = $row['Phone'];
+                        // $update_data[$key]['phone_ext'] = $row['PhoneExt'];
+                        // $update_data[$key]['suffix'] = $row['Suffix'];
+                        // $update_data[$key]['fax'] = $row['Fax'];
+                        // $update_data[$key]['cell'] = $row['Cell'];
+                        // $update_data[$key]['pager'] = $row['Pager'];
+                        // $update_data[$key]['gender_id'] = $row['GenderID'];
+                        // $update_data[$key]['address1'] = $row['Address1'];
+                        // $update_data[$key]['address2'] = $row['Address2'];
+                        // $update_data[$key]['city'] = $row['City'];
+                        // $update_data[$key]['state'] = $row['State'];
+                        // $update_data[$key]['zip'] = $row['Zip'];
+                        // $update_data[$key]['note'] = $row['Note'];
+                        $update_data[$key]['license_no'] = $row['License No'];
+                        // $update_data[$key]['user_type'] = 'open_contact';
+                    } else {
+                        if (in_array(trim($row['Email']), $existingAgent)) {
+                            $updateAgentData[$key]['lookup_code'] = $row['LookupCode'];
+                            $updateAgentData[$key]['flookup_code'] = $row['Filter: LookupCode'];
+                            $updateAgentData[$key]['email_address'] = trim($row['Email']);
+                        } else {
+                            $insert_data[$key]['lookup_code'] = $row['LookupCode'];
+                            $insert_data[$key]['flookup_code'] = $row['Filter: LookupCode'];
+                            $insert_data[$key]['courtesy_title'] = $row['CourtesyTitle'];
+                            $insert_data[$key]['first_name'] = $row['FirstName'];
+                            $insert_data[$key]['middle_name'] = $row['MiddleName'];
+                            $insert_data[$key]['last_name'] = $row['LastName'];
+                            $insert_data[$key]['email_address'] = trim($row['Email']);
+                            $insert_data[$key]['phone'] = $row['Phone'];
+                            $insert_data[$key]['phone_ext'] = $row['PhoneExt'];
+                            $insert_data[$key]['suffix'] = $row['Suffix'];
+                            $insert_data[$key]['fax'] = $row['Fax'];
+                            $insert_data[$key]['cell'] = $row['Cell'];
+                            $insert_data[$key]['pager'] = $row['Pager'];
+                            $insert_data[$key]['gender_id'] = $row['GenderID'];
+                            $insert_data[$key]['address1'] = $row['Address1'];
+                            $insert_data[$key]['address2'] = $row['Address2'];
+                            $insert_data[$key]['city'] = $row['City'];
+                            $insert_data[$key]['state'] = $row['State'];
+                            $insert_data[$key]['zip'] = $row['Zip'];
+                            $insert_data[$key]['note'] = $row['Note'];
+                            $insert_data[$key]['license_no'] = $row['License No'];
+                            $insert_data[$key]['status'] = 1;
+                            $insert_data[$key]['user_type'] = 'open_contact';
+
+                            $insertCustomerData[$key]['lookup_code'] = $row['LookupCode'];
+                            $insertCustomerData[$key]['flookup_code'] = $row['Filter: LookupCode'];
+                            $insertCustomerData[$key]['email_address'] = trim($row['Email']);
+                            $insertCustomerData[$key]['status'] = 1;
+                            $insertCustomerData[$key]['user_type'] = 'open_contact';
+                            $insertCustomerData[$key]['password'] = '';
+                            $insertCustomerData[$key]['company_name'] = '';
+                            $insertCustomerData[$key]['sales_rep_report_image'] = '';
+
+                        }
+                    }
+                }
+
+            }
+
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('email_address', $update_row['email_address']);
+                    $this->db->update('customer_basic_details', $update_row);
+                }
+            }
+
+            if (!empty($updateAgentData)) {
+                foreach ($updateAgentData as $update_row) {
+                    $this->db->where('email_address', $update_row['email_address']);
+                    $this->db->update('agents', $update_row);
+                }
+            }
+            // echo "<pre> updated";
+            // print_r($updateAgentData);
+            // die;
+            // echo "<pre> inserted";
+            // print_r(count($insert_data));die;
+            // Perform batch insert for lookup code
+            if (!empty($insert_data)) {
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            }
+
+            if (!empty($insertCustomerData)) {
+                $this->db->insert_batch('customer_basic_details', $insertCustomerData);
+            }
+
+            print_r(json_encode(['updated' => count($update_data), 'updated agent' => count($updateAgentData), 'inserted' => count($insert_data), 'new customer data' => count($insertCustomerData)]));
+        }
+    }
+
+    public function softproEscrowCompanyLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Escrow Company';
+        // $queryParams['userType'] = 'Escrow Company';
+        $queryParams = "userType=" . urlencode('Escrow Company');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            $existing_lookupcode = $this->db->select('flookup_code')
+                ->from('customer_basic_details')
+                ->where('flookup_code !=', '')
+                ->where('flookup_code IS NOT NULL', null, false)
+                ->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
+                    $update_data[$key]['flookup_code'] = $row['Lookup Code'];
+                    $update_data[$key]['softpro_company'] = $row['Name'];
+                    $update_data[$key]['user_type'] = 'escrow';
+                    // $update_data[$key]['payee_name'] = $row['Payee Name'];
+                    // $update_data[$key]['address1'] = $row['Address (line 1)'];
+                    // $update_data[$key]['address2'] = $row['Address (line 2)'];
+                    // $update_data[$key]['city'] = $row['City'];
+                    // $update_data[$key]['state'] = $row['State'];
+                    // $update_data[$key]['zip'] = $row['Zip'];
+                    // $update_data[$key]['phone'] = $row['Phone'];
+                    // $update_data[$key]['fax'] = $row['Fax'];
+                    // $update_data[$key]['email_address'] = $row['Email'];
+                    // $update_data[$key]['user_type'] = 'escrow_company';
+
+                    // $update_data[$key]['signature_line'] = $row['Signature Line'];
+                    // $update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    // $update_data[$key]['state_of_incorporation'] = $row['State Of Incorporation'];
+                    // $update_data[$key]['marketing_rep'] = $row['Marketing Rep'];
+                    // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
+                } else {
+                    // $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    // $insert_data[$key]['first_name'] = $row['Name'];
+                    // $insert_data[$key]['payee_name'] = $row['Payee Name'];
+                    // $insert_data[$key]['address1'] = $row['Address (line 1)'];
+                    // $insert_data[$key]['address2'] = $row['Address (line 2)'];
+                    // $insert_data[$key]['city'] = $row['City'];
+                    // $insert_data[$key]['state'] = $row['State'];
+                    // $insert_data[$key]['zip'] = $row['Zip'];
+                    // $insert_data[$key]['phone'] = $row['Phone'];
+                    // $insert_data[$key]['fax'] = $row['Fax'];
+                    // $insert_data[$key]['email_address'] = $row['Email'];
+                    // $insert_data[$key]['user_type'] = 'escrow_company';
+
+                    // $insert_data[$key]['signature_line'] = $row['Signature Line'];
+                    // $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    // $insert_data[$key]['state_of_incorporation'] = $row['State Of Incorporation'];
+                    // $insert_data[$key]['marketing_rep'] = $row['Marketing Rep'];
+                    // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
+                }
+            }
+
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('flookup_code', $update_row['flookup_code']);
+                    $this->db->update('customer_basic_details', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            // if (!empty($insert_data)) {
+            //     $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            // }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
+    public function softproEscrowOfficerLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Escrow Officer';
+        // $queryParams['userType'] = 'Escrow Officer';
+        $queryParams = "userType=" . urlencode('Escrow Officer');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            $existing_lookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'escrow_officer')->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                if (in_array($row['Office LookupCode'], $existing_lookupcode)) {
+                    $update_data[$key]['lookup_code'] = $row['Escrow officer/Closer'];
+                    $update_data[$key]['first_name'] = $row['Office LookupCode'];
+                    $update_data[$key]['user_type'] = 'escrow_officer';
+                } else {
+                    $insert_data[$key]['lookup_code'] = $row['Escrow officer/Closer'];
+                    $insert_data[$key]['first_name'] = $row['Office LookupCode'];
+                    $insert_data[$key]['user_type'] = 'escrow_officer';
+                }
+            }
+
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('lookup_code', $update_row['lookup_code']);
+                    $this->db->update('pct_softpro_lookup_table', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            if (!empty($insert_data)) {
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
+    public function softproLenderLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Lender';
+        // $queryParams['userType'] = 'Lender';
+        $queryParams = "userType=" . urlencode('Lender');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        echo "<pre>";
+        print_r($response);
+        echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            $existing_lookupcode = $this->db->select('flookup_code')
+                ->from('customer_basic_details')
+                ->where('flookup_code !=', '')
+                ->where('flookup_code IS NOT NULL', null, false)
+                ->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                if (in_array($row['LookupCode'], $existing_lookupcode)) {
+                    $update_data[$key]['flookup_code'] = $row['LookupCode'];
+                    $update_data[$key]['softpro_company'] = $row['Name'];
+                    $update_data[$key]['user_type'] = 'lender';
+
+                    // $update_data[$key]['lookup_code'] = $row['LookupCode'];
+                    // $update_data[$key]['first_name'] = $row['Name'];
+                    // $update_data[$key]['address1'] = $row['Address1'];
+                    // $update_data[$key]['address2'] = $row['Address2'];
+                    // $update_data[$key]['city'] = $row['City'];
+                    // $update_data[$key]['state'] = $row['State'];
+                    // $update_data[$key]['zip'] = $row['Zip'];
+                    // $update_data[$key]['phone'] = $row['Phone'];
+                    // $update_data[$key]['fax'] = $row['Fax'];
+                    // $update_data[$key]['email_address'] = $row['Email'];
+
+                    // $update_data[$key]['legal_name'] = $row['LegalName'];
+                    // $update_data[$key]['fee_transfer_ledger'] = $row['FeeTransferLedger'];
+                    // $update_data[$key]['state_of_incorporation'] = $row['StateOfIncorporation'];
+                    // $update_data[$key]['marketing_rep'] = $row['MarketingRep'];
+                    // $update_data[$key]['funding_address1'] = $row['FundingAddress1'];
+                    // $update_data[$key]['funding_address2'] = $row['FundingAddress2'];
+                    // $update_data[$key]['funding_city'] = $row['FundingCity'];
+                    // $update_data[$key]['funding_state'] = $row['FundingState'];
+                    // $update_data[$key]['funding_zip'] = $row['FundingZip'];
+                    // $update_data[$key]['funding_phone'] = $row['FundingPhone'];
+                    // $update_data[$key]['funding_fax'] = $row['FundingFax'];
+                    // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
+                    // $update_data[$key]['payee_name'] = $row['PayeeName'];
+                    // $update_data[$key]['user_type'] = 'lender';
+                } else {
+                    $insert_data[$key]['lookup_code'] = $row['LookupCode'];
+                    $insert_data[$key]['first_name'] = $row['Name'];
+                    $insert_data[$key]['address1'] = $row['Address1'];
+                    $insert_data[$key]['address2'] = $row['Address2'];
+                    $insert_data[$key]['city'] = $row['City'];
+                    $insert_data[$key]['state'] = $row['State'];
+                    $insert_data[$key]['zip'] = $row['Zip'];
+                    $insert_data[$key]['phone'] = $row['Phone'];
+                    $insert_data[$key]['fax'] = $row['Fax'];
+                    $insert_data[$key]['email_address'] = $row['Email'];
+
+                    $insert_data[$key]['legal_name'] = $row['LegalName'];
+                    $insert_data[$key]['fee_transfer_ledger'] = $row['FeeTransferLedger'];
+                    $insert_data[$key]['state_of_incorporation'] = $row['StateOfIncorporation'];
+                    $insert_data[$key]['marketing_rep'] = $row['MarketingRep'];
+                    $insert_data[$key]['funding_address1'] = $row['FundingAddress1'];
+                    $insert_data[$key]['funding_address2'] = $row['FundingAddress2'];
+                    $insert_data[$key]['funding_city'] = $row['FundingCity'];
+                    $insert_data[$key]['funding_state'] = $row['FundingState'];
+                    $insert_data[$key]['funding_zip'] = $row['FundingZip'];
+                    $insert_data[$key]['funding_phone'] = $row['FundingPhone'];
+                    $insert_data[$key]['funding_fax'] = $row['FundingFax'];
+                    $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
+                    $insert_data[$key]['payee_name'] = $row['PayeeName'];
+                    $insert_data[$key]['user_type'] = 'lender';
+                }
+            }
+
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('flookup_code', $update_row['flookup_code']);
+                    $this->db->update('customer_basic_details', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            if (!empty($insert_data)) {
+                // $this->db->insert_batch('customer_basic_details', $insert_data);
+            }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
+    public function softproMortgageBrokerLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Mortgage Broker';
+        // $queryParams['userType'] = 'Mortgage Broker';
+        $queryParams = "userType=" . urlencode('Mortgage Broker');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        echo "<pre>";
+        print_r($response);
+        echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            $existing_lookupcode = $this->db->select('flookup_code')
+                ->from('customer_basic_details')
+                ->where('flookup_code !=', '')
+                ->where('flookup_code IS NOT NULL', null, false)
+                ->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
+                    $update_data[$key]['flookup_code'] = $row['Lookup Code'];
+                    $update_data[$key]['softpro_company'] = $row['Name'];
+                    $update_data[$key]['is_mortgage_user'] = 1;
+                    // $update_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    // $update_data[$key]['first_name'] = $row['Name'];
+                    // $update_data[$key]['payee_name'] = $row['Payee Name'];
+                    // $update_data[$key]['address1'] = $row['Address (line 1)'];
+                    // $update_data[$key]['address2'] = $row['Address (line 2)'];
+                    // $update_data[$key]['city'] = $row['City'];
+                    // $update_data[$key]['state'] = $row['State'];
+                    // $update_data[$key]['zip'] = $row['Zip'];
+                    // $update_data[$key]['phone'] = $row['Phone'];
+                    // $update_data[$key]['fax'] = $row['Fax'];
+                    // $update_data[$key]['email_address'] = $row['Email'];
+
+                    // $update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    // $update_data[$key]['marketing_rep'] = $row['Marketing Rep'];
+                    // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
+                    // $update_data[$key]['user_type'] = 'mortgage_broker';
+                } else {
+                    // $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    // $insert_data[$key]['first_name'] = $row['Name'];
+                    // $insert_data[$key]['payee_name'] = $row['Payee Name'];
+                    // $insert_data[$key]['address1'] = $row['Address (line 1)'];
+                    // $insert_data[$key]['address2'] = $row['Address (line 2)'];
+                    // $insert_data[$key]['city'] = $row['City'];
+                    // $insert_data[$key]['state'] = $row['State'];
+                    // $insert_data[$key]['zip'] = $row['Zip'];
+                    // $insert_data[$key]['phone'] = $row['Phone'];
+                    // $insert_data[$key]['fax'] = $row['Fax'];
+                    // $insert_data[$key]['email_address'] = $row['Email'];
+
+                    // $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    // $insert_data[$key]['marketing_rep'] = $row['Marketing Rep'];
+                    // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
+                    // $insert_data[$key]['user_type'] = 'mortgage_broker';
+                }
+            }
+
+            // print_r($update_data);die;
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('flookup_code', $update_row['flookup_code']);
+                    $this->db->update('customer_basic_details', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            // if (!empty($insert_data)) {
+            // $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            // }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
+    public function softproSellingAgentLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Selling Agent/Broker';
+        // $queryParams['userType'] = 'Selling Agent/Broker';
+        $queryParams = "userType=" . urlencode('Selling Agent/Broker');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            // $existing_lookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'selling_agent')->get()->result_array();
+            // $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+
+            $existing_lookupcode = $this->db->select('flookup_code')
+                ->from('agents')
+                ->where('flookup_code !=', '')
+                ->where('flookup_code IS NOT NULL', null, false)
+                ->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
+
+            // Separate data into updates and inserts
+            $agentUserUpdate = [];
+            $agentUserInsert = [];
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
+                    $update_data[$key]['flookup_code'] = $row['Lookup Code'];
+                    $update_data[$key]['softpro_company'] = $row['Name'];
+                    // $update_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    // $update_data[$key]['first_name'] = $row['Name'];
+                    // $update_data[$key]['payee_name'] = $row['Payee Name'];
+                    // $update_data[$key]['address1'] = $row['Address (line 1)'];
+                    // $update_data[$key]['address2'] = $row['Address (line 2)'];
+                    // $update_data[$key]['city'] = $row['City'];
+                    // $update_data[$key]['state'] = $row['State'];
+                    // $update_data[$key]['zip'] = $row['Zip'];
+                    // $update_data[$key]['phone'] = $row['Phone'];
+                    // $update_data[$key]['fax'] = $row['Fax'];
+                    // $update_data[$key]['email_address'] = $row['Email'];
+
+                    // $update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    // $update_data[$key]['marketing_rep'] = $row['Marketing Rep'];
+                    // $update_data[$key]['license_no'] = $row['License No'];
+                    // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
+                    // $update_data[$key]['user_type'] = 'selling_agent';
+
+                    // $update_data[$key]['home_phone'] = $row['Home Phone'];
+                    // $update_data[$key]['represents'] = $row['Represents'];
+
+                } else {
+                    // $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    // $insert_data[$key]['first_name'] = $row['Name'];
+                    // $insert_data[$key]['payee_name'] = $row['Payee Name'];
+                    // $insert_data[$key]['address1'] = $row['Address (line 1)'];
+                    // $insert_data[$key]['address2'] = $row['Address (line 2)'];
+                    // $insert_data[$key]['city'] = $row['City'];
+                    // $insert_data[$key]['state'] = $row['State'];
+                    // $insert_data[$key]['zip'] = $row['Zip'];
+                    // $insert_data[$key]['phone'] = $row['Phone'];
+                    // $insert_data[$key]['fax'] = $row['Fax'];
+                    // $insert_data[$key]['email_address'] = $row['Email'];
+
+                    // $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    // $insert_data[$key]['marketing_rep'] = $row['Marketing Rep'];
+                    // $insert_data[$key]['license_no'] = $row['License No'];
+                    // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
+                    // $insert_data[$key]['user_type'] = 'selling_agent';
+
+                    // $insert_data[$key]['home_phone'] = $row['Home Phone'];
+                    // $insert_data[$key]['represents'] = $row['Represents'];
+                }
+            }
+
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('flookup_code', $update_row['flookup_code']);
+                    $this->db->update('agents', $update_row);
+                    // $this->db->where('lookup_code', $update_row['lookup_code']);
+                    // $this->db->update('pct_softpro_lookup_table', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            // if (!empty($insert_data)) {
+            //     $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            // }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
+    public function softproTitleOfficerLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Title Officer';
+        // $queryParams['userType'] = 'Title Officer';
+        $queryParams = "userType=" . urlencode('Title Officer');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            $existing_lookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'title_officer')->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                // print_r($row);
+                if (in_array($row['Office LookupCode'], $existing_lookupcode)) {
+                    $update_data[$key]['lookup_code'] = $row['Office LookupCode'];
+                    $update_data[$key]['first_name'] = $row['Title officer/Examiner'];
+                    $update_data[$key]['user_type'] = 'title_officer';
+                } else {
+                    $insert_data[$key]['lookup_code'] = $row['Office LookupCode'];
+                    $insert_data[$key]['first_name'] = $row['Title officer/Examiner'];
+                    $insert_data[$key]['user_type'] = 'title_officer';
+                }
+            }
+            // echo "<pre>";
+            // print_r($update_data);
+            // echo "Hello";die;
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('lookup_code', $update_row['lookup_code']);
+                    $this->db->update('pct_softpro_lookup_table', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            if (!empty($insert_data)) {
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
+    public function softproUnderwriterLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['userType'] = 'Underwriter';
+        // $queryParams['userType'] = 'Underwriter';
+        $queryParams = "userType=" . urlencode('Underwriter');
+        $reqData = json_encode($req);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        // echo "<pre>";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data = $response['data'];
+            $existing_lookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'underwriter')->get()->result_array();
+            $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
+                    $update_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    $update_data[$key]['first_name'] = $row['Name'];
+                    $update_data[$key]['address1'] = $row['Address (line 1)'];
+                    $update_data[$key]['city'] = $row['City'];
+                    $update_data[$key]['state'] = $row['State'];
+                    $update_data[$key]['zip'] = $row['Zip'];
+                    $update_data[$key]['phone'] = $row['Phone'];
+                    $update_data[$key]['fax'] = $row['Fax'];
+                    $update_data[$key]['email_address'] = $row['Email'] ?? '';
+
+                    $update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    $update_data[$key]['county'] = $row['County'];
+                    $update_data[$key]['splitTo_premiums'] = $row['SplitTo - Premiums'];
+                    $update_data[$key]['percent_premiums'] = $row['Percent - Premiums'];
+                    $update_data[$key]['billCode_premiums'] = $row['BillCode - Premiums'];
+                    $update_data[$key]['splitTo_endorsements'] = $row['SplitTo - Endorsements'];
+                    $update_data[$key]['percent_endorsements'] = $row['Percent - Endorsements'];
+                    $update_data[$key]['billCode_endorsements'] = $row['BillCode - Endorsements'];
+
+                    $update_data[$key]['user_type'] = 'underwriter';
+                } else {
+                    $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
+                    $insert_data[$key]['first_name'] = $row['Name'];
+                    $insert_data[$key]['address1'] = $row['Address (line 1)'];
+                    $insert_data[$key]['city'] = $row['City'];
+                    $insert_data[$key]['state'] = $row['State'];
+                    $insert_data[$key]['zip'] = $row['Zip'];
+                    $insert_data[$key]['phone'] = $row['Phone'];
+                    $insert_data[$key]['fax'] = $row['Fax'];
+                    $insert_data[$key]['email_address'] = $row['Email'] ?? '';
+
+                    $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
+                    $insert_data[$key]['county'] = $row['County'];
+                    $insert_data[$key]['splitTo_premiums'] = $row['SplitTo - Premiums'];
+                    $insert_data[$key]['percent_premiums'] = $row['Percent - Premiums'];
+                    $insert_data[$key]['billCode_premiums'] = $row['BillCode - Premiums'];
+                    $insert_data[$key]['splitTo_endorsements'] = $row['SplitTo - Endorsements'];
+                    $insert_data[$key]['percent_endorsements'] = $row['Percent - Endorsements'];
+                    $insert_data[$key]['billCode_endorsements'] = $row['BillCode - Endorsements'];
+                    $insert_data[$key]['user_type'] = 'underwriter';
+                }
+            }
+
+            // Perform batch update for existing emails
+            if (!empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('lookup_code', $update_row['lookup_code']);
+                    $this->db->update('pct_softpro_lookup_table', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            if (!empty($insert_data)) {
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
         }
     }
 }

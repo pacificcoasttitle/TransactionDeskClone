@@ -1,13 +1,13 @@
 <?php
-    $salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
-    $product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
-    $sales_rep = json_encode($salesRep);
-    $master_users = json_encode($master_users);
+$salesRep = isset($salesRep['data']) && !empty($salesRep['data']) ? $salesRep['data'] : array();
+$product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
+$sales_rep = json_encode($salesRep);
+$master_users = json_encode($master_users);
 
-    $userdata = $this->session->userdata('admin');
-	$roleList = $this->common->getRoleList();
-	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
-	$roleName = $roleList[$role_id];
+$userdata = $this->session->userdata('admin');
+$roleList = $this->common->getRoleList();
+$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+$roleName = $roleList[$role_id];
 ?>
 <script type="text/javascript">
     var lp_sales_rep = '<?php echo $sales_rep; ?>';
@@ -48,15 +48,15 @@
             <h1 class="h3 text-gray-800">Lp Orders</h1>
         </div>
         <div class="col-sm-6">
-            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+            <?php if (!in_array($roleName, ['CS Admin'])): ?>
                 <a href="javascript:void(0);" data-export-type="csv" onclick="exportLPOrders();" id="export-orders-data"
                     class="btn btn-success btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
-                    <span class="text"> Export </span> 
+                    <span class="text"> Export </span>
                 </a>
-            <?php endif; ?>
+            <?php endif;?>
         </div>
     </div>
     <div class="card shadow mb-4">
@@ -71,16 +71,16 @@
 
 
         <div class="card-body">
-            <?php if (!empty($success)) { ?>
+            <?php if (!empty($success)) {?>
                 <div id="" class="w-100 alert alert-success alert-dismissible">
                     <?php echo $success; ?>
                 </div>
             <?php }
-            if (!empty($errors)) { ?>
+if (!empty($errors)) {?>
                 <div id="" class="w-100 alert alert-danger alert-dismissible">
                     <?php echo $errors; ?>
                 </div>
-            <?php } ?>
+            <?php }?>
             <div id="lp_order_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;">
             </div>
             <div id="lp_order_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
@@ -174,7 +174,7 @@
                                     <div class="toclone">
                                         <div class="spacer-b10">
                                             <label class="field" id="instrument_number_container">
-                                                
+
                                             </label>
                                         </div>
                                     </div>
@@ -214,7 +214,7 @@
                                                 <textarea id="vesting_info" name="vesting_info" class="smart-forms"
                                                     rows="8" cols="60" required=""></textarea>
                                             </label>
-                                            <input type="hidden" name="file_id" id="file_id" value="">
+                                            <input type="hidden" name="order_id" id="order_id" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -308,7 +308,7 @@
                                             <input required="" name="file_upload" type="file" id="file_upload"
                                                 class="form-control" accept="application/pdf">
                                         </div>
-                                        <input type="hidden" name="upload_file_id" id="upload_file_id" value="">
+                                        <input type="hidden" name="upload_order_id" id="upload_order_id" value="">
                                         <input type="hidden" name="document_name" id="document_name" value="">
 
                                     </div>
@@ -392,7 +392,7 @@
                                             </div>
                                         </div>
 
-                                        
+
                                         <input type="hidden" name="client_id" id="client_id" value="">
                                         <input type="hidden" name="client_file_id" id="client_file_id" value="">
 

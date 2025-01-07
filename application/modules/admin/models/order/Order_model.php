@@ -217,7 +217,7 @@ class Order_model extends CI_Model
         return false;
     }
 
-    public function get_order_details($fileId)
+    public function get_order_details($orderId)
     {
         $this->db->select('
             order_details.file_number,
@@ -285,9 +285,12 @@ class Order_model extends CI_Model
             transaction_details.sales_amount,
             transaction_details.loan_amount,
             transaction_details.loan_number,
-            transaction_details.escrow_number,
             transaction_details.notes,
             transaction_details.transaction_type,
+            transaction_details.product_type,
+            transaction_details.order_type,
+            pct_softpro_order_type.order_type as order_type_name,
+            pct_softpro_product_type.product_type as product_type_name,
             transaction_details.purchase_type,
             pct_order_product_types.product_type,
             transaction_details.supplemental_report_date,
@@ -301,10 +304,12 @@ class Order_model extends CI_Model
             transaction_details.vesting,
             transaction_details.escrow_number,
             customer_basic_details.company_name as escrow_lender_company_name,
+            customer_basic_details.softpro_company as escrow_lender_softpro_company,
             customer_basic_details.first_name as escrow_lender_first_name,
             customer_basic_details.last_name as escrow_lender_last_name,
             customer_basic_details.email_address as escrow_lender_email,
             customer_basic_details.telephone_no as escrow_lender_telephone_no,
+            customer_basic_details.lookup_code as escrow_lender_lookup_code,
             customer_basic_details.id as lender_id,
             customer_basic_details.resware_user_id as lender_resware_user_id,
             customer_basic_details.partner_id as lender_partner_id,
@@ -323,16 +328,19 @@ class Order_model extends CI_Model
             cbd.last_name as cust_last_name,
             cbd.email_address as cust_email_address,
             cbd.company_name as cust_company_name,
+            cbd.softpro_company as cust_softpro_company,
             cbd.telephone_no as cust_telephone_no,
             cbd.street_address as cust_street_address,
             cbd.city as cust_city,
             cbd.zip_code as cust_zip_code,
+            cbd.lookup_code as cust_lookup_code,
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,
             salerep.email_address as salerep_email_address,
             titleofficer.first_name as titleofficer_first_name,
             titleofficer.last_name as titleofficer_last_name,
+            titleofficer.lookup_code as titleofficer_lookup_code,
             property_details.buyer_agent_id,
             agents.name as buyer_agent_name,
             agents.email_address as buyer_agent_email_address,
@@ -342,6 +350,7 @@ class Order_model extends CI_Model
             agents.telephone_no as buyer_buyer_agent_telephone_no,
             agents.address as buyer_agent_address,
             agents.partner_id as buyer_agent_partner_id,
+            agents.lookup_code as buyer_agent_lookup_code,
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
@@ -352,24 +361,29 @@ class Order_model extends CI_Model
             a.email_address as listing_agent_email_address,
             a.company as listing_agent_company,
             a.partner_id as listing_agent_partner_id,
+            a.lookup_code as listing_agent_lookup_code,
             a.telephone_no as listing_agent_telephone_no')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
-            ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id')
+            ->join('pct_softpro_lookup_table as titleofficer', 'transaction_details.title_officer = titleofficer.id AND titleofficer.user_type="title_officer"')
+        // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id')
             ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
             ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
             ->join('agents a', 'property_details.listing_agent_id = a.id', 'left')
+            ->join('pct_softpro_product_type', 'pct_softpro_product_type.id = transaction_details.purchase_type', 'left')
+            ->join('pct_softpro_order_type', 'pct_softpro_order_type.id = transaction_details.order_type', 'left')
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
             ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-        $this->db->where('file_id', $fileId);
+        $this->db->where('order_details.id', $orderId);
 
         $query = $this->db->get();
 
+        // echo $this->db->last_query();die;
         return $query->row_array();
     }
 
@@ -688,7 +702,7 @@ class Order_model extends CI_Model
                 $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s', strtotime($start_date)));
                 $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59', strtotime($end_date)));
             }
-            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
+            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
@@ -696,7 +710,8 @@ class Order_model extends CI_Model
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
-                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
             $this->db->order_by("order_details.id", "desc");
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {

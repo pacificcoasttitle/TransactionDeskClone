@@ -100,6 +100,148 @@ class Home_model extends CI_Model
         return $result;
     }
 
+    public function get_lookup_customers($params = array(), $is_master_search = 0)
+    {
+        $table = $this->table;
+
+        $this->db->select('customer_basic_details.*');
+        $this->db->from($table);
+
+        if (array_key_exists("where", $params)) {
+            $this->db->select('pc.title_officer_id, pc.sales_rep_id');
+            $this->db->join('pct_order_partner_company_info as pc', 'customer_basic_details.partner_id = pc.partner_id', 'left');
+            foreach ($params['where'] as $key => $val) {
+                if ($key == 'status') {
+                    $this->db->where('customer_basic_details.status', $val);
+                } else {
+                    $this->db->where($key, $val);
+                }
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->db->order_by('id', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit']);
+                } elseif (array_key_exists("name", $params) && array_key_exists("user_type", $params)) {
+                    $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    $this->db->where('user_type', $params['user_type']);
+                    // $this->db->where('is_escrow', $params['is_escrow']);
+                    $this->db->like('first_name', $params['name']);
+                    $this->db->where('is_password_updated', 1);
+                } elseif (array_key_exists("softpro_company", $params) && array_key_exists("user_type", $params)) {
+                    if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
+                        $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    } else {
+                        $this->db->select("CONCAT(softpro_company, ' - ',CONCAT_WS(',', street_address, customer_basic_details.city, customer_basic_details.state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                    }
+                    $this->db->where('user_type', $params['user_type']);
+                    // $this->db->where('is_escrow', $params['is_escrow']);
+                    $this->db->group_start()
+                        ->like('softpro_company', $params['company_name'])
+                        ->or_like("first_name", $params['company_name'])
+                        ->or_like("email_address", $params['company_name'])
+                        ->group_end();
+                    $this->db->where('is_password_updated', 1);
+                } elseif (array_key_exists("company_name", $params)) {
+                    $this->db->select("CONCAT(company_name, ' - ',email_address) AS value");
+                    if ($is_master_search == 1) {
+                        $this->db->group_start()
+                            ->like('softpro_company', $params['company_name'])
+                            ->or_like("email_address", $params['company_name'])
+                            ->group_end();
+                    } else {
+                        $this->db->like('softpro_company', $params['company_name']);
+                    }
+                    $this->db->where('is_password_updated', 1);
+
+                }
+
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+        // Return fetched data
+        return $result;
+        /*$table = 'pct_softpro_lookup_table';
+
+    $this->db->select('pct_softpro_lookup_table.*');
+    $this->db->from($table);
+
+    if (array_key_exists("where", $params)) {
+    $this->db->select('pc.title_officer_id, pc.sales_rep_id');
+    foreach ($params['where'] as $key => $val) {
+    if ($key == 'status') {
+    $this->db->where('status', $val);
+    } else {
+    $this->db->where($key, $val);
+    }
+    }
+    }
+
+    if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+    $result = $this->db->count_all_results();
+    } else {
+    if (array_key_exists("id", $params)) {
+    $this->db->where('id', $params['id']);
+    $query = $this->db->get();
+    $result = $query->row_array();
+    } else {
+    $this->db->order_by('id', 'asc');
+    if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+    $this->db->limit($params['limit'], $params['start']);
+    } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+    $this->db->limit($params['limit']);
+    } elseif (array_key_exists("name", $params) && array_key_exists("user_type", $params)) {
+    $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+    $this->db->where('user_type', $params['user_type']);
+    $this->db->like('first_name', $params['name']);
+    } elseif (array_key_exists("name", $params) && array_key_exists("user_type", $params)) {
+    if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
+    $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+    } else {
+    $this->db->select("CONCAT(CONCAT(first_name, ' ',last_name) AS full_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value");
+    }
+
+    $this->db->where('user_type', $params['user_type']);
+    $this->db->group_start()
+    ->like("first_name", $params['name'])
+    ->or_like("last_name", $params['name'])
+    ->or_like("email_address", $params['name'])
+    ->group_end();
+    $this->db->where('is_password_updated', 1);
+    } elseif (array_key_exists("name", $params)) {
+    $this->db->select("CONCAT(name, ' - ',email_address) AS value");
+    if ($is_master_search == 1) {
+    $this->db->group_start()
+    ->like("first_name", $params['name'])
+    ->or_like("last_name", $params['name'])
+    ->or_like("email_address", $params['name'])
+    ->group_end();
+    } else {
+    $this->db->like('name', $params['name']);
+    }
+    }
+    if (array_key_exists("status", $params)) {
+
+    }
+
+    $query = $this->db->get();
+    $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+    }
+    }
+    return $result; */
+    }
+
     public function get_customer_number()
     {
         $query = $this->db->query("SELECT random_num
@@ -449,6 +591,20 @@ class Home_model extends CI_Model
         $this->db->from('pct_order_partner_company_info');
         $this->db->like('partner_type_id', '10010');
         $this->db->where('status', 1);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
+
+    public function getEscrowOfficerLookupDetails()
+    {
+        $this->db->select('*');
+        $this->db->from('pct_softpro_lookup_table');
+        $this->db->where('status', 1);
+        $this->db->where('user_type', 'escrow_officer');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->result_array();

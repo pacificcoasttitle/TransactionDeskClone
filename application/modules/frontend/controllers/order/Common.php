@@ -2061,6 +2061,50 @@ class Common extends MX_Controller
         echo json_encode($userInfo);
     }
 
+    public function getDetailsFromLookup()
+    {
+        $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+        $is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
+        $condition = array(
+            'name' => $searchTerm,
+        );
+
+        if (isset($_POST['is_escrow']) && $_POST['is_escrow'] == 1) {
+            $condition['user_type'] = 'escrow';
+        }
+
+        // $condition['where']['is_sales_rep'] = 0;
+        $is_from_order_form = $this->input->post('is_from_order_form');
+        $condition['is_from_order_form'] = isset($is_from_order_form) && !empty($is_from_order_form) ? $is_from_order_form : 0;
+        $userDetails = $this->home_model->get_lookup_customers($condition, $is_master_search);
+        $userInfo = array();
+
+        if (isset($userDetails) && !empty($userDetails)) {
+            foreach ($userDetails as $key => $value) {
+                $data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+                $data['lookup_code'] = isset($value['lookup_code']) && !empty($value['lookup_code']) ? $value['lookup_code'] : '';
+                $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+                $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+                $data['name'] = $data['fname'] . ' ' . $data['lname'];
+                $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+                $data['value'] = $data['fname'] . ' ' . $data['lname'];
+                if (!empty($data['email_address'])) {
+                    $data['value'] = $data['value'] . '-' . $data['email_address'];
+                }
+                $data['telephone_no'] = isset($value['phone']) && !empty($value['phone']) ? $value['phone'] : '';
+                $data['address'] = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
+                $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+                $data['zip'] = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
+
+                // $data['sales_rep_id'] = isset($value['sales_rep_id']) && !empty($value['sales_rep_id']) ? $value['sales_rep_id'] : '';
+                // array_push($userInfo, $data);
+                $userInfo[] = $data;
+            }
+        }
+        echo json_encode($userInfo);
+    }
+
     public function downloadAwsDocument()
     {
         $userdata = $this->session->userdata('user');
