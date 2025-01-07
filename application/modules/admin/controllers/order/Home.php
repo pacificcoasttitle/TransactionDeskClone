@@ -4955,13 +4955,7 @@ class Home extends MX_Controller
                     }
                     }
                     }
-                    <<<<<<< HEAD
-                    =======
-                    <<<<<<< HEAD
-                    =======
                     }
-                    =======
-                    >>>>>>> 7e3a1c53 (Create order softpro api and LP order changes)
                     if (!empty($resPartners)) {
                     $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
                     if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
