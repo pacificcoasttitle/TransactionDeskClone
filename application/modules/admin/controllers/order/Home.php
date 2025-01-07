@@ -4474,6 +4474,13 @@ class Home extends MX_Controller
 
         $order_id = $this->input->post('order_id');
         $order_details = $this->order_model->get_order_details($order_id);
+        // echo "<pre>";
+        // print_r($order_details);die;
+        $configData = $this->order->getConfigData();
+        $addUnderwritenPartnerViaApi = $configData['add_underwriten_partner_via_api']['is_enable'];
+
+        // $file_id = $this->input->post('file_id');
+        // $order_details = $this->order_model->get_order_details($file_id);
         $lpFileNumber = $order_details['lp_file_number'];
         $splitName = explode(' ', $order_details['primary_owner']);
         $ownerLastName = end($splitName);
@@ -4951,10 +4958,6 @@ class Home extends MX_Controller
                     }
                     }
                     }
-                    <<<<<<< HEAD
-                    <<<<<<< HEAD
-                    =======
-                    >>>>>>> 6be259f8 (Stop partner data to ResWare from LP to ResWare order based on admin flag)
                     if (!empty($resPartners)) {
                     $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
                     if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
@@ -5260,11 +5263,6 @@ class Home extends MX_Controller
                     }
                     }
                     }
-                    <<<<<<< HEAD
-                    =======
-                    >>>>>>> fc76d9cf (Create order softpro api and LP order changes)
-                    =======
-                    >>>>>>> 6be259f8 (Stop partner data to ResWare from LP to ResWare order based on admin flag)
                     }
 
                     if ($removePartnerFlag == 1 && isset($key) && strlen($key) > 0) {
