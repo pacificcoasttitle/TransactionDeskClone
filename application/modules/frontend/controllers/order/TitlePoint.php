@@ -102,6 +102,7 @@ class TitlePoint extends MX_Controller
         );
         $context = stream_context_create($opts);
         $file = file_get_contents($request, false, $context);
+        // print_r($file);die;
 
         $xmlData = simplexml_load_string($file);
         $response = json_encode($xmlData);

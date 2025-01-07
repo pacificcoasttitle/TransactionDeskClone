@@ -114,7 +114,7 @@ jQuery(document).ready(function ($) {
     });
 });
 
-function getInstrumentData(file_id) {
+function getInstrumentData(order_id) {
     $('body').animate({
         opacity: 0.5
     }, "slow");
@@ -122,7 +122,7 @@ function getInstrumentData(file_id) {
         url: base_url + "order/admin/get-instrument-data",
         method: "POST",
         data: {
-            file_id: file_id
+            order_id: order_id
         },
         success: function (data) {
             var result = jQuery.parseJSON(data);
@@ -150,7 +150,7 @@ function getInstrumentData(file_id) {
     });
 }
 
-function regenerateReport(file_id) {
+function regenerateReport(order_id) {
     $('body').animate({
         opacity: 0.5
     }, "slow");
@@ -158,7 +158,7 @@ function regenerateReport(file_id) {
         url: base_url + "order/admin/regenerate-report",
         method: "POST",
         data: {
-            file_id: file_id
+            order_id: order_id
         },
         success: function (data) {
             var result = jQuery.parseJSON(data);
@@ -188,7 +188,8 @@ function regenerateReport(file_id) {
     });
 }
 
-function sendOrderToResware(file_id) {
+function sendOrderToResware(order_id) {
+    console.log('order_id ====', order_id);
     $('body').animate({
         opacity: 0.5
     }, "slow");
@@ -196,7 +197,7 @@ function sendOrderToResware(file_id) {
         url: base_url + "order/admin/send-order-to-resware",
         method: "POST",
         data: {
-            file_id: file_id
+            order_id: order_id
         },
         success: function (data) {
             if (data) {
@@ -238,7 +239,7 @@ function sendOrderToResware(file_id) {
     });
 }
 
-function updateLpReportStatus(file_id, status) {
+function updateLpReportStatus(order_id, status) {
     $('body').animate({
         opacity: 0.5
     }, "slow");
@@ -246,7 +247,7 @@ function updateLpReportStatus(file_id, status) {
         url: base_url + "order/admin/update-lp-report-status",
         method: "POST",
         data: {
-            file_id: file_id,
+            order_id: order_id,
             status: status
         },
         success: function (data) {
@@ -327,8 +328,8 @@ function downloadDocumentFromAws(url, documentType) {
     });
 }
 
-function addVesting(file_id) {
-    $('#file_id').val(file_id);
+function addVesting(order_id) {
+    $('#order_id').val(order_id);
     $('body').animate({
         opacity: 0.5
     }, "slow");
@@ -336,7 +337,7 @@ function addVesting(file_id) {
         url: base_url + "order/admin/get-vesting-info",
         method: "POST",
         data: {
-            file_id: file_id
+            order_id: order_id
         },
         success: function (data) {
             var result = jQuery.parseJSON(data);
@@ -361,13 +362,13 @@ function addVesting(file_id) {
     });
 }
 
-function fileUpload(file_id) {
-    $('#upload_file_id').val(file_id);
+function fileUpload(order_id) {
+    $('#upload_order_id').val(order_id);
     $('#fileUploadModel').modal('show');
 }
 
-function changeClient(file_id) {
-    $('#client_file_id').val(file_id);
+function changeClient(order_id) {
+    $('#client_file_id').val(order_id);
     $('#changeClientModel').modal('show');
 }
 

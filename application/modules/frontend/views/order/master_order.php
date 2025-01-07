@@ -426,12 +426,14 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 									<div class="col-sm-6">
 										<input type="text" name="BuyerAgentName" id="BuyerAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
+										<input type="hidden" name="BuyerAgentLookupCode" id="BuyerAgentLookupCode" value="">
 										<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
 									</div>
 
 									<div class="col-sm-6">
 										<input type="text" name="ListingAgentName" id="ListingAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="ListingAgentId" id="ListingAgentId" value="">
+										<input type="hidden" name="ListingAgentLookupCode" id="ListingAgentLookupCode" value="">
 										<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
 									</div>
 								</div>
@@ -487,6 +489,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 										<input type="text" name="LenderName" id="LenderName" class="form-control" placeholder="Lender Name">
 									</div>
 									<input type="hidden" name="LenderId" id="LenderId" value="">
+									<input type="hidden" name="LenderLookUpCode" id="LenderLookUpCode" value="">
 								</div>
 
 								<div class="row form-group">
@@ -514,6 +517,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 										<input type="text" name="EscrowName" id="EscrowName" class="form-control" placeholder="Escrow Name">
 									</div>
 									<input type="hidden" name="EscrowId" id="EscrowId" value="">
+									<input type="hidden" name="EscrowLookUpCode" id="EscrowLookUpCode" value="">
 								</div>
 
 								<div class="row form-group">
@@ -539,13 +543,11 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 											<option value="">----Select Escrow Officer----</option>
 											<?php
 if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-    foreach ($escrowOfficers as $escrowOfficer) {
-        ?>
-																										<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-																								<?php
+    foreach ($escrowOfficers as $escrowOfficer) {?>
+		<option value="<?php echo $escrowOfficer['lookup_code']; ?>"><?php echo $escrowOfficer['lookup_code']; ?></option>
+<?php
 }
-}
-?>
+}?>
 										</select>
 									</div>
 								</div>

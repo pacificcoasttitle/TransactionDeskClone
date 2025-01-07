@@ -277,11 +277,13 @@ $(document).ready(function () {
             $("#BuyerAgentTelephone").val('').parent().removeClass('state-success');
             $("#BuyerAgentCompany").val('').parent().removeClass('state-success');
             $("#BuyerAgentId").val('');
+            $("#BuyerAgentLookupCode").val('');
             $("#ListingAgentName").val('').parent().removeClass('state-success');
             $("#ListingAgentEmailAddress").val('').parent().removeClass('state-success');
             $("#ListingAgentTelephone").val('').parent().removeClass('state-success');
             $("#ListingAgentCompany").val('').parent().removeClass('state-success');
             $("#ListingAgentId").val('');
+            $("#ListingAgentLookupCode").val('');
             $('#agent-details-fields').hide();
             $('#required-agent-details').hide();
         }
@@ -357,6 +359,7 @@ $(document).ready(function () {
             $("#BuyerAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#BuyerAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#BuyerAgentId").val(ui.item.id);
+            $("#BuyerAgentLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
             $("#buyer_agent_partner_id").val(ui.item.partner_id);
         },
         change: function (event, ui) {
@@ -402,6 +405,7 @@ $(document).ready(function () {
             $("#ListingAgentTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#ListingAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#ListingAgentId").val(ui.item.id);
+            $("#ListingAgentLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
             $("#listing_agent_partner_id").val(ui.item.partner_id);
         },
         change: function (event, ui) {
@@ -465,7 +469,8 @@ $(document).ready(function () {
     $("#EscrowCompany, #EscrowName").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: base_url + 'home/getDetailsByName',
+                // url: base_url + 'home/getDetailsByName',
+                url: base_url + 'home/getDetailsFromLookup',
                 data: {
                     term: request.term,//the value of the input is here
                     is_escrow: 1,
@@ -474,6 +479,7 @@ $(document).ready(function () {
                 type: "POST",
                 dataType: "json",
                 success: function (data) {
+                    console.log('data ===', data);
                     if (data.length > 0) {
                         response($.map(data, function (item) {
                             return item;
@@ -491,8 +497,10 @@ $(document).ready(function () {
             $("#EscrowName").val(ui.item.name);
             $("#EscrowEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
             $("#EscrowTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
-            $("#EscrowCompany").val(ui.item.company).parent().addClass('state-success');
+            $("#EscrowCompany").val(ui.item.name).parent().addClass('state-success');
             $("#EscrowId").val(ui.item.id);
+            $("#EscrowLookUpCode").val(ui.item.lookup_code);
+
         },
         change: function (event, ui) {
             if (ui.item == null) {

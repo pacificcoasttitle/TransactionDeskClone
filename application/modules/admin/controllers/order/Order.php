@@ -117,12 +117,12 @@ class Order extends MX_Controller
 
     public function order_details()
     {
-        $file_id = $this->uri->segment(4);
+        $order_id = $this->uri->segment(4);
         $data = array();
         $data['title'] = 'PCT Order: Order Details';
 
-        if (isset($file_id) && !empty($file_id)) {
-            $order_details = $this->order_model->get_order_details($file_id);
+        if (isset($order_id) && !empty($order_id)) {
+            $order_details = $this->order_model->get_order_details($order_id);
             $customer_id = $order_details['customer_id'];
             $con = array('id' => $customer_id);
             $customer_details = $this->home_model->get_rows($con);
@@ -581,8 +581,10 @@ class Order extends MX_Controller
         $count = $params['start'] + 1;
         foreach ($ordersList['data'] as $key => $value) {
             $fileNumber = $value['lp_file_number'];
+            $orderNumber = $value['lp_file_number'];
             if (!empty($value['file_number'])) {
                 $number = $value['file_number'];
+                $orderNumber = $number;
                 $fileNumber = '<span data-title="' . $number . '">' . $value['lp_file_number'] . '</span>';
             }
             $nestedData = array();
@@ -596,10 +598,11 @@ class Order extends MX_Controller
             //$nestedData[] = $value['document_name'];
             $lp_report_status = $value['lp_report_status'];
             $disabled = '';
+            $orderId = $value['id'];
             if (empty($value['document_name'])) {
                 $disabled = "disabled";
             }
-            $lpReportStatusSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" ' . $disabled . ' onchange="updateLpReportStatus(' . $value['file_id'] . ',this.value);" id="lp_report_status" name="lp_report_status">
+            $lpReportStatusSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" ' . $disabled . ' onchange="updateLpReportStatus(' . $orderId . ',this.value);" id="lp_report_status" name="lp_report_status">
                                 <option value="">Select</option>
                                 <option value="pending">Pending</option>
                                 <option value="approved">Approved</option>
@@ -619,8 +622,7 @@ class Order extends MX_Controller
 
             $nestedData[] = !empty($value['file_number']) ? 'Yes' : 'No';
             $nestedData[] = convertTimezone($value['created_at']);
-            $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['file_id'];
-            $file_id = $value['file_id'];
+            $editOrderUrl = base_url() . 'order/admin/order-details/' . $orderId;
             $action = "<div class='dropdown'>
                 <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
                     <span class='caret'></span>
@@ -635,7 +637,7 @@ class Order extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='#' onclick='regenerateReport($file_id);' title ='Regenerate Report'>
+                        <a href='#' onclick='regenerateReport($orderId);' title ='Regenerate Report'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
                                 Regenerate Report
@@ -643,7 +645,7 @@ class Order extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='#' onclick='addVesting($file_id);' title ='Vesting'>
+                        <a href='#' onclick='addVesting($orderId);' title ='Vesting'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-institution' aria-hidden='true' style='margin-right:5px;'></i>
                                 Add Vesting
@@ -653,7 +655,7 @@ class Order extends MX_Controller
 
             if (empty($value['file_number'])) {
                 $action .= "<li>
-                        <a href='#' onclick='changeClient($file_id);' title ='Change Client'>
+                        <a href='#' onclick='changeClient($orderId);' title ='Change Client'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-edit' aria-hidden='true' style='margin-right:5px;'1></i>
                                 Change Client
@@ -661,7 +663,7 @@ class Order extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='#' onclick='sendOrderToResware($file_id);' title ='Resware Sync'>
+                        <a href='#' onclick='sendOrderToResware($orderId);' title ='Resware Sync'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
                                 Send Order Resware
@@ -681,7 +683,7 @@ class Order extends MX_Controller
                     </a>
                 </li>
                 <li>
-                    <a href='#' title ='Select Document' onclick='getInstrumentData($file_id);'>
+                    <a href='#' title ='Select Document' onclick='getInstrumentData($orderId);'>
                         <button class='btn btn-grad-2a button-color' type='button'>
                             <i class='fa fa-external-link' style='margin-right:5px;'></i>
                             Get Instrument Data
@@ -690,7 +692,7 @@ class Order extends MX_Controller
                 </li>";
             }
             $action .= "<li>
-                    <a href='#' title ='File Upload' onclick='fileUpload($file_id);'>
+                    <a href='#' title ='File Upload' onclick='fileUpload($orderId);'>
                         <button class='btn btn-grad-2a button-color' type='button'>
                             <i class='fa fa-upload' style='margin-right:5px;'></i>
                             Upload Doc

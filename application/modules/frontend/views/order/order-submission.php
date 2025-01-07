@@ -31,7 +31,7 @@ h3, .h3 {
     margin-bottom: -26px;
     margin-left: -40px;
 }
-    
+
 .b-advantages {
     position: relative;
 }
@@ -205,9 +205,9 @@ h3, .h3 {
 </style>
 <body>
     <?php
-       // $this->load->view('layout/header');
-        // $this->load->view('layout/header_dashboard');
-    ?>
+// $this->load->view('layout/header');
+// $this->load->view('layout/header_dashboard');
+?>
 
         <!-- end .b-title-page-->
         <article class="b-about section-default">
@@ -223,33 +223,29 @@ h3, .h3 {
                 <footer class="b-about__footer">
 				<ul class="list list-mark-2">
                     <?php
-                        if(isset($tp_data['file_number']) && !empty($tp_data['file_number']))
-                        {
-                    ?>
+if (isset($tp_data['file_number']) && !empty($tp_data['file_number'])) {
+    ?>
                             <li>
                                 <h3>Order Number:</h3><br>
                                 <span class="orderinfo1" id="orderNumber"><strong><?php echo $tp_data['file_number']; ?></strong></span>
                             </li><br>
-                            <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_id;?>">
-                            <input type="hidden" name="property-full-address" id="property-full-address" value="<?php echo $property;?>">
+                            <input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_id; ?>">
+                            <input type="hidden" name="property-full-address" id="property-full-address" value="<?php echo $property; ?>">
                     <?php
-                        }
-                    ?>
-                    
+}
+?>
+
                     <li>
                         <h3>Brief Legal Description:</h3><br>
                         <span class="orderinfo1">
                             <span id="legalDescription">
-                                <?php 
-                                    if(isset($tp_data['legal_description']) && !empty($tp_data['legal_description']))
-                                    {
-                                        echo $tp_data['legal_description'];
-                                    }
-                                    else
-                                    {
-                                        echo 'Refer to grant deed below.';
-                                    }
-                                ?>
+                                <?php
+if (isset($tp_data['legal_description']) && !empty($tp_data['legal_description'])) {
+    echo $tp_data['legal_description'];
+} else {
+    echo 'Refer to grant deed below.';
+}
+?>
                             </span>
                         </span>
                     </li><br>
@@ -257,20 +253,17 @@ h3, .h3 {
                         <h3>Vesting Information:</h3><br>
                         <span class="orderinfo1">
                             <span id="vestingInformation">
-                                <?php 
-                                    if(isset($tp_data['vesting_information']) && !empty($tp_data['vesting_information']))
-                                    {
-                                        echo $tp_data['vesting_information'];
-                                    }
-                                    else
-                                    {
-                                        echo 'Refer to grant deed below.';
-                                    }
-                                ?>
+                                <?php
+if (isset($tp_data['vesting_information']) && !empty($tp_data['vesting_information'])) {
+    echo $tp_data['vesting_information'];
+} else {
+    echo 'Refer to grant deed below.';
+}
+?>
                             </span>
-                                                     
+
                         </span>
-                    </li><br>                                         
+                    </li><br>
                 </ul>
 				</footer>
               </div>
@@ -281,59 +274,53 @@ h3, .h3 {
                         <h3>1st Installment</h3>
                                 <div id="firstInstallment" style="border:1px solid #000000;padding:15px;">
                                 <?php
-                                    if(isset($tp_data['first_installment']) && !empty($tp_data['first_installment']))
-                                    {
-                                        $firstInstallment = json_decode($tp_data['first_installment'],TRUE)
-                                ?>
-                                        <p>Balance: <?php echo isset($firstInstallment['Balance']) && !empty($firstInstallment['Balance']) ? $firstInstallment['Balance'] : '-'?></p>
-                                        <p>Amount: <?php echo isset($firstInstallment['Amount']) && !empty($firstInstallment['Amount']) ? $firstInstallment['Amount'] : '-'?></p>
-                                        <p>DueDate: <?php echo isset($firstInstallment['DueDate']) && !empty($firstInstallment['DueDate']) ? $firstInstallment['DueDate'] : '-'?></p>
-                                        <p>Number: <?php echo isset($firstInstallment['Number']) && !empty($firstInstallment['Number']) ? $firstInstallment['Number'] : '-'?></p>
-                                        <p>PaymentDate: <?php echo isset($firstInstallment['PaymentDate']) && !empty($firstInstallment['PaymentDate']) ? $firstInstallment['PaymentDate'] : '-'?></p>
-                                        <p>Penalty: <?php echo isset($firstInstallment['Penalty']) && !empty($firstInstallment['Penalty']) ? $firstInstallment['Penalty'] : '-'?></p>
-                                        <p>Status: <?php echo isset($firstInstallment['Status']) && !empty($firstInstallment['Status']) ? $firstInstallment['Status'] : '-'?></p>
-                                        <p>AmountPaid: <?php echo isset($firstInstallment['AmountPaid']) && !empty($firstInstallment['AmountPaid']) ? $firstInstallment['AmountPaid'] : '-'?></p>
-                                        <p>TaxYear: <?php echo isset($firstInstallment['TaxYear']) && !empty($firstInstallment['TaxYear']) ? $firstInstallment['TaxYear'] : '-'?></p>
+if (isset($tp_data['first_installment']) && !empty($tp_data['first_installment'])) {
+    $firstInstallment = json_decode($tp_data['first_installment'], true)
+    ?>
+                                        <p>Balance: <?php echo isset($firstInstallment['Balance']) && !empty($firstInstallment['Balance']) ? $firstInstallment['Balance'] : '-' ?></p>
+                                        <p>Amount: <?php echo isset($firstInstallment['Amount']) && !empty($firstInstallment['Amount']) ? $firstInstallment['Amount'] : '-' ?></p>
+                                        <p>DueDate: <?php echo isset($firstInstallment['DueDate']) && !empty($firstInstallment['DueDate']) ? $firstInstallment['DueDate'] : '-' ?></p>
+                                        <p>Number: <?php echo isset($firstInstallment['Number']) && !empty($firstInstallment['Number']) ? $firstInstallment['Number'] : '-' ?></p>
+                                        <p>PaymentDate: <?php echo isset($firstInstallment['PaymentDate']) && !empty($firstInstallment['PaymentDate']) ? $firstInstallment['PaymentDate'] : '-' ?></p>
+                                        <p>Penalty: <?php echo isset($firstInstallment['Penalty']) && !empty($firstInstallment['Penalty']) ? $firstInstallment['Penalty'] : '-' ?></p>
+                                        <p>Status: <?php echo isset($firstInstallment['Status']) && !empty($firstInstallment['Status']) ? $firstInstallment['Status'] : '-' ?></p>
+                                        <p>AmountPaid: <?php echo isset($firstInstallment['AmountPaid']) && !empty($firstInstallment['AmountPaid']) ? $firstInstallment['AmountPaid'] : '-' ?></p>
+                                        <p>TaxYear: <?php echo isset($firstInstallment['TaxYear']) && !empty($firstInstallment['TaxYear']) ? $firstInstallment['TaxYear'] : '-' ?></p>
                                 <?php
-                                    }
-                                    else
-                                    {
-                                ?>
+} else {
+    ?>
                                         <span class="orderinfo1">No data found.</span>
                                 <?php
-                                    }
-                                ?>
+}
+?>
                             </div>
-                        
-                        
+
+
                     </div>
-                    <div class="col-md-6">                      
-                        <h3>2nd Installment</h3>                    
+                    <div class="col-md-6">
+                        <h3>2nd Installment</h3>
                         <div id="secondInstallment" style="border:1px solid #000000;padding:15px;">
                         <?php
-                            if(isset($tp_data['second_installment']) && !empty($tp_data['second_installment']))
-                            {
-                                $secondInstallment = json_decode($tp_data['second_installment'],TRUE);
-                        ?>
-                                <p>Balance: <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-'?></p>
-                                <p>Amount: <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-'?></p>
-                                <p>DueDate: <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-'?></p>
-                                <p>Number: <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-'?></p>
-                                <p>PaymentDate: <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-'?></p>
-                                <p>Penalty: <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-'?></p>
-                                <p>Status: <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-'?></p>
-                                <p>AmountPaid: <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-'?></p>
-                                <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-'?></p>
+if (isset($tp_data['second_installment']) && !empty($tp_data['second_installment'])) {
+    $secondInstallment = json_decode($tp_data['second_installment'], true);
+    ?>
+                                <p>Balance: <?php echo isset($secondInstallment['Balance']) && !empty($secondInstallment['Balance']) ? $secondInstallment['Balance'] : '-' ?></p>
+                                <p>Amount: <?php echo isset($secondInstallment['Amount']) && !empty($secondInstallment['Amount']) ? $secondInstallment['Amount'] : '-' ?></p>
+                                <p>DueDate: <?php echo isset($secondInstallment['DueDate']) && !empty($secondInstallment['DueDate']) ? $secondInstallment['DueDate'] : '-' ?></p>
+                                <p>Number: <?php echo isset($secondInstallment['Number']) && !empty($secondInstallment['Number']) ? $secondInstallment['Number'] : '-' ?></p>
+                                <p>PaymentDate: <?php echo isset($secondInstallment['PaymentDate']) && !empty($secondInstallment['PaymentDate']) ? $secondInstallment['PaymentDate'] : '-' ?></p>
+                                <p>Penalty: <?php echo isset($secondInstallment['Penalty']) && !empty($secondInstallment['Penalty']) ? $secondInstallment['Penalty'] : '-' ?></p>
+                                <p>Status: <?php echo isset($secondInstallment['Status']) && !empty($secondInstallment['Status']) ? $secondInstallment['Status'] : '-' ?></p>
+                                <p>AmountPaid: <?php echo isset($secondInstallment['AmountPaid']) && !empty($secondInstallment['AmountPaid']) ? $secondInstallment['AmountPaid'] : '-' ?></p>
+                                <p>TaxYear: <?php echo isset($secondInstallment['TaxYear']) && !empty($secondInstallment['TaxYear']) ? $secondInstallment['TaxYear'] : '-' ?></p>
                         <?php
-                            }
-                            else
-                            {
-                        ?>
+} else {
+    ?>
                                 <span class="orderinfo1">No data found.</span>
                         <?php
-                            }
-                        ?>
-                    </div>                           
+}
+?>
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -343,121 +330,110 @@ h3, .h3 {
                 <div class="col-md-12">
                     <h3>Grant Deed Information:</h3>
                 </div>
-                <?php 
-                    $cs4_result_id_status = isset($tp_data['cs4_message']) && !empty($tp_data['cs4_message']) ? $tp_data['cs4_message'] : '';
-                    
-                    /*if($cs4_result_id_status == 'Success')
-                    {*/
-                ?>
-                        <div class="col-md-3"> 
+                <?php
+$cs4_result_id_status = isset($tp_data['cs4_message']) && !empty($tp_data['cs4_message']) ? $tp_data['cs4_message'] : '';
+
+/*if($cs4_result_id_status == 'Success')
+{*/
+?>
+                        <div class="col-md-3">
                             <div id="grantDeedInfoFile">
-                                <?php 
-                                    $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
-                                    $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
-                                    $state = isset($state) && !empty($state) ? $state : '';
-                                    $county = isset($county) && !empty($county) ? $county : '';
-                                    $recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
-    
-                                    if(isset($instrumentNumber) && !empty($instrumentNumber))
-                                    {
-                                        if(isset($recordedDate) && !empty($recordedDate))
-                                        {
-                                            $time = strtotime($recordedDate);
-                                            $year = date('Y',$time);
-                                        }
-
-                                        $count = substr_count($instrumentNumber, '-');
-
-                                        if(isset($count) && !empty($count))
-                                        {
-                                            $detailDocInfo = explode('-', $instrumentNumber);
-                                            
-                                            $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';   
-                                        }
-                                        else
-                                        {
-                                            $docId = str_replace($year, '', $instrumentNumber);
-                                        }
-                                        $docId = (string)((int)($docId));
-                                    }
-                                    
-                                    $file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : ''; 
-                                    $fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
-                                ?>
                                 <?php
-                                    if(isset($lv_file_url) && !empty($lv_file_url))
-                                    {
-                                        if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                                            <a href="javascript:void(0);" class="btn btn-success btn-icon-split btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $lv_file_url;?>', 'legal_vesting');">
+$L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
+$instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
+$state = isset($state) && !empty($state) ? $state : '';
+$county = isset($county) && !empty($county) ? $county : '';
+$recordedDate = isset($tp_data['cs4_recorded_date']) && !empty($tp_data['cs4_recorded_date']) ? $tp_data['cs4_recorded_date'] : '';
+
+if (isset($instrumentNumber) && !empty($instrumentNumber)) {
+    if (isset($recordedDate) && !empty($recordedDate)) {
+        $time = strtotime($recordedDate);
+        $year = date('Y', $time);
+    }
+
+    $count = substr_count($instrumentNumber, '-');
+
+    if (isset($count) && !empty($count)) {
+        $detailDocInfo = explode('-', $instrumentNumber);
+
+        $docId = isset($detailDocInfo['1']) && !empty($detailDocInfo['1']) ? $detailDocInfo['1'] : '';
+    } else {
+        $docId = str_replace($year, '', $instrumentNumber);
+    }
+    $docId = (string) ((int) ($docId));
+}
+
+$file_number = isset($tp_data['file_number']) && !empty($tp_data['file_number']) ? $tp_data['file_number'] : '';
+$fips = isset($tp_data['fips']) && !empty($tp_data['fips']) ? $tp_data['fips'] : '';
+?>
+                                <?php
+if (isset($lv_file_url) && !empty($lv_file_url)) {
+    if (env('AWS_ENABLE_FLAG') == 1) {?>
+                                            <a href="javascript:void(0);" class="btn btn-success btn-icon-split btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $lv_file_url; ?>', 'legal_vesting');">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-download"></i>
                                                 </span>
                                                 <span class="text">Download L&V</span>
-                                                
+
                                             </a>
-                                        <?php } else { ?>
+                                        <?php } else {?>
                                             <a href="<?php echo $lv_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="L&V.pdf">Download L&V</a>
-                                        <?php } ?>
+                                        <?php }?>
 
                                 <?php
-                                    } else if ($lpFileStatus == 'processing') { ?>
+} else if ($lpFileStatus == 'processing') {?>
                                         <div class="legal-vesting-no-data processing-wrapper">
                                             <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
                                             <br />
-                                            <a href="javascript:void(0);" class="btn btn-info btn-icon-split btn_mrg-top_30" onclick="fetchLvDoc(this, '<?php echo $file_number;?>', 'lv');">
+                                            <a href="javascript:void(0);" class="btn btn-info btn-icon-split btn_mrg-top_30" onclick="fetchLvDoc(this, '<?php echo $file_number; ?>', 'lv');">
                                                 <span class="icon text-white-50">
                                                     <i class="fas fa-download"></i>
                                                 </span>
                                                 <span class="text">Click to fetch</span>
                                             </a>
                                         </div>
-                                    <?php }
-                                    else
-                                    {
-                                ?>
+                                    <?php } else {
+    ?>
                                         <!-- <a href="javascript:void(0);" class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-L-V" onclick='imageCreateRequest("<?php // echo $L_V_serviceId; ?>",4,"<?php // echo $file_number; ?>");'>Download L&V</a> -->
                                         <div class="legal-vesting-no-data">
                                             <span class="orderinfo1">No legal vesting available. Our customer service will look for it and contact you within X minutes.</span>
                                         </div>
                                 <?php
-                                    }
-                                ?>
-                                
+}
+?>
+
                             </div>
                             <div class="loader" style="display: none;"></div>
                         </div>
                     <?php
-                        /*if(isset($docId) && !empty($docId))
-                        {*/
-                    ?>
+/*if(isset($docId) && !empty($docId))
+{*/
+?>
                             <div class="col-md-3">
                                 <div id="instrumentInfoFile">
                                     <?php
-                                        if(isset($deed_file_url) && !empty($deed_file_url))
-                                        { 
-                                            if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $deed_file_url;?>', 'grant_deed');">
+if (isset($deed_file_url) && !empty($deed_file_url)) {
+    if (env('AWS_ENABLE_FLAG') == 1) {?>
+                                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split btn_mrg-top_30" onclick="downloadDocumentFromAws('<?php echo $deed_file_url; ?>', 'grant_deed');">
                                                     <span class="icon text-white-50">
                                                         <i class="fas fa-download"></i>
                                                     </span>
                                                     <span class="text">Download Grant Deed</span>
                                                 </a>
-                                            <?php } else { ?>
+                                            <?php } else {?>
                                                 <a href="<?php echo $deed_file_url; ?>" class="btn btn-default btn-sm btn_mrg-top_30" download="GrantDeed.pdf">Download Grant Deed</a>
-                                            <?php } ?>
+                                            <?php }?>
                                     <?php
-                                        }
-                                        else
-                                        {
-                                    ?>
+} else {
+    ?>
                                             <!-- <a href="javascript:void(0);" onclick='generateGrantDeed("<?php // echo $fips; ?>","<?php // echo $year; ?>","<?php // echo $docId; ?>","<?php // echo $file_number; ?>");' class="btn btn-default btn-sm btn_mrg-top_30" id="btn-download-grant-deed">Download Grant Deed</a> -->
                                             <div class="grant-deed-no-data">
                                                 <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
                                             </div>
-                                    <?php  
-                                        }
-                                    ?>
-                                    
+                                    <?php
+}
+?>
+
                                 </div>
                                 <div class="loader" style="display: none;"></div>
                             </div>
@@ -467,57 +443,57 @@ h3, .h3 {
                             <!-- <div class="col-md-6 grant-deed-no-data">
                             <span class="orderinfo1">No grant deed available. Our customer service will look for it and contact you within X minutes.</span>
                         </div> -->
-                
+
                 <?php
-                        $cs3_message = isset($tp_data['cs3_message']) && !empty($tp_data['cs3_message']) ? $tp_data['cs3_message'] : '';
-                        
-                        /*if($cs3_message == 'Success')
-                        {*/
-                            $apn = str_replace('0000', '0-000', $apn);
-                    ?>
+$cs3_message = isset($tp_data['cs3_message']) && !empty($tp_data['cs3_message']) ? $tp_data['cs3_message'] : '';
+
+/*if($cs3_message == 'Success')
+{*/
+$apn = str_replace('0000', '0-000', $apn);
+?>
                              <div class="col-md-3">
                                 <div id="taxDocumentInfo">
                                     <?php
-                                        if(isset($tax_file_url) && !empty($tax_file_url))
-                                        {
-                                            if (env('AWS_ENABLE_FLAG') == 1) { ?>
-                                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split btn_mrg-top_30"  onclick="downloadDocumentFromAws('<?php echo $tax_file_url;?>', 'tax');"> 
+if (isset($tax_file_url) && !empty($tax_file_url)) {
+    if (env('AWS_ENABLE_FLAG') == 1) {?>
+                                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split btn_mrg-top_30"  onclick="downloadDocumentFromAws('<?php echo $tax_file_url; ?>', 'tax');">
                                                     <span class="icon text-white-50">
                                                         <i class="fas fa-download"></i>
                                                     </span>
                                                     <span class="text">Download Tax Document</span>
                                                 </a>
-                                            <?php } else { ?>
+                                            <?php } else {?>
                                                 <a href="<?php echo $tax_file_url; ?>" class="btn btn-success btn-icon-split btn_mrg-top_30" download="Tax.pdf">
                                                     <span class="icon text-white-50">
                                                         <i class="fas fa-download"></i>
                                                     </span>
                                                     <span class="text">Download Tax Document</span>
                                                 </a>
-                                            <?php } ?>
-                                        <?php } else if ($taxFileStatus == 'processing') { ?>
+                                            <?php }?>
+                                        <?php
+} else if ($taxFileStatus == 'processing') {?>
                                             <div class="tax-no-data  processing-wrapper">
                                                 <span class="orderinfo1">Document generation in under processing please refresh the page after some time or check your email.</span>
                                                 <br />
-                                                <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number;?>', 'tax')" > Click to fetch</button>
+                                                <button class="btn"  onClick="fetchLvDoc(this, '<?php echo $file_number; ?>', 'tax')" > Click to fetch</button>
                                             </div>
                                     <?php } else {
-                                            $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
-                                    ?>
-                                            
+    $tax_serviceId = isset($tp_data['cs3_service_id']) && !empty($tp_data['cs3_service_id']) ? $tp_data['cs3_service_id'] : '';
+    ?>
+
                                             <div class="tax-no-data">
                                                 <span class="orderinfo1">No tax document available. Our customer service will look for it and contact you within X minutes.</span>
                                             </div>
-                                    <?php  
-                                        }
-                                    ?>
-                                    
+                                    <?php
+}
+?>
+
                                 </div>
                                 <div class="loader" style="display: none;"></div>
                             </div>
                     <?php
-                        /*}*/
-                    ?>
+/*}*/
+?>
             </div>
           </div>
         </article>
@@ -529,9 +505,9 @@ h3, .h3 {
               <div class="b-advantages-group">
                     <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-screen"></i>
                             <div class="b-advantages__inner">
-                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'cpl-dashboard'; ?>">Generate CPL</a></h3>
+                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url() . 'cpl-dashboard'; ?>">Generate CPL</a></h3>
                             <div class="b-advantages__info">Our customer service team is ready to help create a farm package to help you alert the neighbors about your new listing.</div>
-                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url().'cpl-dashboard'; ?>">
+                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url() . 'cpl-dashboard'; ?>">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-seedling"></i>
                                 </span>
@@ -542,9 +518,9 @@ h3, .h3 {
                   <!-- end .b-advantages-->
                     <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-worldwide"></i>
                         <div class="b-advantages__inner">
-                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'proposed-insured'; ?>">Proposed</a></h3>
+                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url() . 'proposed-insured'; ?>">Proposed</a></h3>
                             <div class="b-advantages__info">Login in to our PCT Title Toolbox program and create your own farm package consisting of the various types of owners.</div>
-                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url().'proposed-insured'; ?>">
+                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url() . 'proposed-insured'; ?>">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-seedling"></i>
                                 </span>
@@ -555,9 +531,9 @@ h3, .h3 {
                   <!-- end .b-advantages-->
                     <section class="b-advantages b-advantages-2 b-advantages-2_mod-a b-advantages_3-col"><i class="b-advantages__icon stroke flaticon-analytics"></i>
                         <div class="b-advantages__inner">
-                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url().'order'; ?>">Open New Order</a></h3>
+                            <h3 class="b-advantages__title ui-title-inner"><a href="<?php echo base_url() . 'order'; ?>">Open New Order</a></h3>
                             <div class="b-advantages__info">Need to open another order? That's fantastic. The link below will redirect you back to our Open Order form.</div>
-                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url().'order'; ?>">
+                            <a class="btn btn-success btn-icon-split btn_mrg-top_30" href="<?php echo base_url() . 'order'; ?>">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-seedling"></i>
                                 </span>
@@ -572,7 +548,7 @@ h3, .h3 {
         </div>
       </div>
       <!-- end .section-area-->
-      
+
       <!-- end .section-default-->
     <section class="section-type-1 section-sm parallax area-bg area-bg_grad-2 area-bg_op_70">
         <div class="area-bg__inner">
@@ -594,7 +570,7 @@ h3, .h3 {
 </script>
 
 <?php
-    // $this->load->view('layout/footer');
+// $this->load->view('layout/footer');
 ?>
 <script src="<?php echo base_url(); ?>assets/libs/jquery-1.12.4.min.js"></script>
 <!-- <script type="text/javascript" src="<?php echo base_url(); ?>assets/frontend/js/jquery-1.9.1.min.js"></script> -->
@@ -610,7 +586,7 @@ h3, .h3 {
         data.order_id = "<?php echo $order_id ?>";
         data.file_number = "<?php echo $lpFileNumber ?>";
         data.escrow_id = "<?php echo $escrow_id ?>";
-        
+        console.log('data ==', data);
         if (data.file_number != '') {
             // $(document).ajaxStop(function() {
                 // place code to be executed on completion of last outstanding ajax call here
@@ -631,7 +607,7 @@ h3, .h3 {
                         //     data: data,
                         //     async: true,
                         //     success: function (response) {
-                                
+
                         //     }
                         // });
                     }
@@ -644,7 +620,7 @@ h3, .h3 {
     function fetchLvDoc(obj,fileNumber, docType) {
         // $(obj).text('Fetching ...');
         $(obj).html('<span class="text">Fetching</span>');
-        
+
         $.ajax({
 			url: base_url + "check-document",
 			type: "post",
@@ -666,12 +642,12 @@ h3, .h3 {
                         buttonText = 'Download L & V';
                         doc_type = 'legal_vesting';
                     }
-                    <?php if (env('AWS_ENABLE_FLAG') == 1) { ?>
+                    <?php if (env('AWS_ENABLE_FLAG') == 1) {?>
                         let url = response.url;
                         downloadButton = "<a href='#' class='btn btn-default btn-sm btn_mrg-top_30' onclick='downloadDocumentFromAws("+ '"' +  url + '"' + ", " + '"' + doc_type +  '"' + ");'>" + buttonText + "</a>";
-                    <?php } else { ?>
+                    <?php } else {?>
                         downloadButton = '<a href="' + response.url + '" target="_blank" class="btn btn-default btn-sm btn_mrg-top_30" >' + buttonText + '</a>';
-                    <?php } ?>
+                    <?php }?>
 					$(obj).closest('.processing-wrapper').replaceWith(downloadButton)
 				} else {
                     $(obj).html('<span class="text">Click to Fetch</span>');
