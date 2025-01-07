@@ -4474,13 +4474,7 @@ class Home extends MX_Controller
 
         $order_id = $this->input->post('order_id');
         $order_details = $this->order_model->get_order_details($order_id);
-        // echo "<pre>";
-        // print_r($order_details);die;
-        $configData = $this->order->getConfigData();
-        $addUnderwritenPartnerViaApi = $configData['add_underwriten_partner_via_api']['is_enable'];
 
-        // $file_id = $this->input->post('file_id');
-        // $order_details = $this->order_model->get_order_details($file_id);
         $lpFileNumber = $order_details['lp_file_number'];
         $splitName = explode(' ', $order_details['primary_owner']);
         $ownerLastName = end($splitName);
