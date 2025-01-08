@@ -368,7 +368,7 @@ function fileUpload(order_id) {
 }
 
 function changeClient(order_id) {
-    $('#client_file_id').val(order_id);
+    $('#client_order_id').val(order_id);
     $('#changeClientModel').modal('show');
 }
 
