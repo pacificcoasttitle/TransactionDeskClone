@@ -7285,12 +7285,12 @@ class Home extends MX_Controller
 
     public function changeClient()
     {
-        $file_id = $this->input->post('client_file_id');
+        $order_id = $this->input->post('client_order_id');
         $customer_id = $this->input->post('client_id');
-        $condition = array('file_id' => $file_id);
+        $condition = array('id' => $order_id);
         $data = array('customer_id' => $customer_id);
         $this->home_model->update($data, $condition, 'order_details');
-        $order_details = $this->order_model->get_order_details($file_id);
+        $order_details = $this->order_model->get_order_details($order_id);
         /** Save user Activity */
         $activity = 'Client user changed successfully for order : ' . $order_details['lp_file_number'];
         $this->order->logAdminActivity($activity);

@@ -401,7 +401,7 @@ class Home extends MX_Controller
                         "SecondaryOwner" => $SecondaryOwner,
                     ];
                     $transactionDetailsReq = [
-                        "LookUpCodeTitleOfficer" => $titleOfficerLookupCode,
+                        "LookUpCodeTitleOfficer" => $titleOfficerName,
                         "TitleOfficer" => $titleOfficerName,
                         "Product" => $softproProductType,
                         "EscrowNumber" => $EscrowNumber,
@@ -528,7 +528,7 @@ class Home extends MX_Controller
                     // die;
                     $order_data = json_encode($orderReq);
 
-                    // print_r($order_data);
+                    // print_r($order_data);die;
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_order', 'create_order', $order_data, array(), 0, 0);
                     // print_r($logid);die;
                     $response = $this->softpro->make_request('POST', 'create_order', $order_data, $user_data);
