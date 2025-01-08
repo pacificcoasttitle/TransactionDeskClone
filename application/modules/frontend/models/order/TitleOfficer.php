@@ -47,7 +47,7 @@ class TitleOfficer extends CI_Model
     {
         $table = 'pct_softpro_lookup_table';
         // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
-        $this->db->select('*, CONCAT(REPLACE(IFNULL(first_name, ""), "\\\\", ""), " ", IFNULL(last_name, "")) as name');
+        $this->db->select('*, CONCAT(REPLACE(IFNULL(first_name, ""), "\\\\", ""), " ", IFNULL(last_name, "")) as name, first_name as lookupCode');
         $this->db->from($table);
         $this->db->where('user_type', 'title_officer');
         $this->db->where('status', 1);
