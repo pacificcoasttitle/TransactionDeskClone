@@ -56,13 +56,16 @@ class Home extends MX_Controller
                 echo json_encode($response);
                 exit;
             }
-
-            $this->form_validation->set_rules('OpenName', 'First Name', 'required', array('required' => 'Enter your first name'));
-            $this->form_validation->set_rules('OpenLastName', 'Last Name', 'required', array('required' => 'Enter your last name'));
-            $this->form_validation->set_rules('OpenEmail', 'Email Address', 'required', array('required' => 'Enter your email address'));
+            // echo "<pre>";
+            // print_r($_POST);die;
+            $this->form_validation->set_rules('OpenName', 'Open Name', 'required', array('required' => 'Enter your first name'));
+            $this->form_validation->set_rules('OpenLastName', 'Open Last Name', 'required', array('required' => 'Enter your last name'));
+            $this->form_validation->set_rules('OpenEmail', 'Open Email', 'required', array('required' => 'Enter your email address'));
             $this->form_validation->set_rules('TransactionType', 'Transaction Type', 'required', array('required' => 'Please select Transaction Type'));
-            $this->form_validation->set_rules('OrderTypeID', 'Order Type', 'required', array('required' => 'Please select Order Type'));
+            $this->form_validation->set_rules('OrderTypeID', 'Order Type ID', 'required', array('required' => 'Please select Order Type'));
             $this->form_validation->set_rules('ProductType', 'Product Type', 'required', array('required' => 'Please select Product Type'));
+            // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
+            // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
 
             if (!is_dir('uploads/curative')) {
                 mkdir('./uploads/curative', 0777, true);
@@ -140,7 +143,7 @@ class Home extends MX_Controller
                 // echo "<pre>";
                 // print_r($titleOfficerDetails);die;
                 $titleOfficerName = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
-                $titleOfficerLookupCode = isset($titleOfficerDetails['lookup_code']) && !empty($titleOfficerDetails['lookup_code']) ? $titleOfficerDetails['lookup_code'] : '';
+                $titleOfficerLookupCode = isset($titleOfficerDetails['lookupCode']) && !empty($titleOfficerDetails['lookupCode']) ? $titleOfficerDetails['lookupCode'] : '';
 
                 $LoanAmount = $this->input->post('loanAmount');
                 $LoanNumber = $this->input->post('loanNumber');
@@ -240,12 +243,12 @@ class Home extends MX_Controller
                     $escrowId = $_POST['EscrowId'];
                     $EscrowLenderId = $_POST['EscrowId'];
                     $escrow_user_details = $this->home_model->get_user(array('id' => $escrowId));
-                    $escrowCon = array(
-                        'where' => array(
-                            'partner_id' => $escrow_user_details['partner_id'],
-                        ),
-                    );
-                    $escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
+                    // $escrowCon = array(
+                    //     'where' => array(
+                    //         'partner_id' => $escrow_user_details['partner_id'],
+                    //     ),
+                    // );
+                    // $escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
                     $escrowName = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
                     $escrowEmail = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
                     $escrowTelephone = $this->input->post('EscrowTelephone');
@@ -258,21 +261,21 @@ class Home extends MX_Controller
                         'Email' => $escrowEmail,
                         'Telephone' => $escrowTelephone,
                         'CompanyName' => $escrowCompany,
-                        'EscrowOfficerName' => $escrowOfficer,
-                        "LookUpCodeEscrowOfficer" => $escrowOfficer,
+                        // 'EscrowOfficerName' => $escrowOfficer,
+                        // "LookUpCodeEscrowOfficer" => $escrowOfficer,
                     ];
                     $escrow_details_api = array('name' => $escrowName, 'email' => $escrowEmail, 'phone' => $escrowTelephone, 'company' => $escrowCompany);
-                    $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
+                    // $partner_type_ids = explode(",", $escrowCompanyData[0]['partner_type_id']);
 
-                    if (in_array("10006", $partner_type_ids)) {
-                        $escrowPartnerTypeID = '10006';
-                    }
-                    if (in_array("9997", $partner_type_ids)) {
-                        $escrowPartnerTypeID = '9997';
-                    }
-                    if (in_array("10010", $partner_type_ids)) {
-                        $escrowPartnerTypeID = '10010';
-                    }
+                    // if (in_array("10006", $partner_type_ids)) {
+                    //     $escrowPartnerTypeID = '10006';
+                    // }
+                    // if (in_array("9997", $partner_type_ids)) {
+                    //     $escrowPartnerTypeID = '9997';
+                    // }
+                    // if (in_array("10010", $partner_type_ids)) {
+                    //     $escrowPartnerTypeID = '10010';
+                    // }
 
                     if ($orderUser['is_primary_mortgage_user'] == 1) {
                         $cplLenderId = 0;
@@ -401,7 +404,7 @@ class Home extends MX_Controller
                         "SecondaryOwner" => $SecondaryOwner,
                     ];
                     $transactionDetailsReq = [
-                        "LookUpCodeTitleOfficer" => $titleOfficerName,
+                        "LookUpCodeTitleOfficer" => $titleOfficerLookupCode,
                         "TitleOfficer" => $titleOfficerName,
                         "Product" => $softproProductType,
                         "EscrowNumber" => $EscrowNumber,
@@ -434,6 +437,10 @@ class Home extends MX_Controller
 
                     // if (strpos($ProductTypeTxt, 'Loan') !== false) {
                     $transactionDetailsReq['TransactionType'] = $TransactionType;
+                    if (!empty($escrowOfficer)) {
+                        $transactionDetailsReq['EscrowOfficerName'] = ""; //$escrowOfficer;
+                        $transactionDetailsReq['LookUpCodeEscrowOfficer'] = $escrowOfficer;
+                    }
                     $orderReq['orderType'] = $softproOrderType;
                     if ($TransactionType != 'Purchase') {
                         // $orderReq['orderType'] = "Refinance";
@@ -1462,20 +1469,20 @@ class Home extends MX_Controller
                     /* End upload softpro api logs */
                 }
 
-                $escrow_officer_email = '';
+                // $escrow_officer_email = '';
 
                 // if (isset($escrowOfficer) && !empty($escrowOfficer) && ($ProductTypeID == '4' || $ProductTypeID == '5' || $ProductTypeID == '36')) {
-                if (isset($escrowOfficer) && !empty($escrowOfficer) && ($softproOrderType == 'Title & Escrow')) {
-                    $con = array(
-                        'where' => array(
-                            'partner_id' => $escrowOfficer,
-                        ),
-                    );
-                    $escrowCompanyData = $this->home_model->get_company_rows($con);
-                    $escrow_officer_email = $escrowCompanyData[0]['email'];
-                    //$escrow_officer_email = 'hitesh.p@crestinfosystems.com';
-                    $parties_email[] = $escrow_officer_email;
-                }
+                // if (isset($escrowOfficer) && !empty($escrowOfficer) && ($softproOrderType == 'Title & Escrow')) {
+                //     $con = array(
+                //         'where' => array(
+                //             'partner_id' => $escrowOfficer,
+                //         ),
+                //     );
+                //     $escrowCompanyData = $this->home_model->get_company_rows($con);
+                //     $escrow_officer_email = $escrowCompanyData[0]['email'];
+                //     //$escrow_officer_email = 'hitesh.p@crestinfosystems.com';
+                //     $parties_email[] = $escrow_officer_email;
+                // }
 
                 $parties_email[] = 'openorders@pct.com';
                 /*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
@@ -1537,7 +1544,8 @@ class Home extends MX_Controller
                     $this->titlePointData->update($tpData, $condition);
                 }
 
-                if ((!empty($escrowEmail) && $loanFlag == 1) || (!empty($escrow_officer_email))) {
+                // if ((!empty($escrowEmail) && $loanFlag == 1) || (!empty($escrow_officer_email))) {
+                if (!empty($escrowEmail) && $loanFlag == 1) {
 
                     $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
                     if (!empty($sales_rep_img)) {
@@ -1575,13 +1583,13 @@ class Home extends MX_Controller
                         $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
                     }
 
-                    if (!empty($escrow_officer_email)) {
-                        $to = $escrow_officer_email;
-                        $mailParams['to'] = $to;
-                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
-                        //$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
-                        $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
-                    }
+                    // if (!empty($escrow_officer_email)) {
+                    //     $to = $escrow_officer_email;
+                    //     $mailParams['to'] = $to;
+                    //     $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array(), $orderId, 0);
+                    //     //$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+                    //     $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, array('status' => $escrow_mail_result), $orderId, $logid);
+                    // }
                 }
 
                 /* Send notification to admin based on rules */
@@ -1664,6 +1672,12 @@ class Home extends MX_Controller
                 $data['OrderType_error_msg'] = form_error('OrderType');
                 $data['TransactionType_error_msg'] = form_error('TransactionType');
                 $data['sendermessage_error_msg'] = form_error('sendermessage');
+                $data['EscrowOfficer_error_msg'] = form_error('escrow_officer');
+                $errMsg = form_error('OpenName') . ' ' . form_error('OpenLastName') . ' ' . form_error('OpenName') . ' ' . form_error('OpenEmail') . ' ' . form_error('ProductType') . ' ' . form_error('OrderType') . ' ' . form_error('TransactionType') . ' ' . form_error('sendermessage') . ' ' . form_error('escrow_officer');
+
+                $response = array('status' => 'error', 'message' => $errMsg);
+                echo json_encode($response);
+                exit;
             }
         } else {
             $data['title'] = 'Open Order | Pacific Coast Title Company';
@@ -1736,6 +1750,36 @@ class Home extends MX_Controller
             }
         }
     }
+
+    // public function callback_escrow_officer_validation($escrowOfficer)
+    // {
+    //     $orderType = $this->input->post('OrderType');
+    //     // $escrowOfficer = $this->input->post('escrow_officer');
+
+    //     if (!empty($orderType) && ($orderType == 'Title & Escrow' || $orderType == 'Escrow only') && empty($escrowOfficer)) {
+    //         $this->form_validation->set_message('callback_escrow_officer_validation', 'The Escrow Officer is required if Order Type is Escrow.');
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
+
+    // public function callback_escrow_officer_validation($escrowOfficer)
+    // {
+    //     $orderType = $this->input->post('OrderType');
+
+    //     // Check if the order type requires an escrow officer
+    //     if (!empty($orderType) && ($orderType == 'Title & Escrow' || $orderType == 'Escrow only') && empty($escrowOfficer)) {
+    //         // Set a custom error message
+    //         $this->form_validation->set_message(
+    //             'callback_escrow_officer_validation',
+    //             'The Escrow Officer is required if the Order Type is Escrow.'
+    //         );
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
 
     public function checkEmail()
     {

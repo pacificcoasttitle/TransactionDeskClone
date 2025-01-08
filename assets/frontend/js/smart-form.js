@@ -171,6 +171,22 @@ jQuery(document).ready(function ($) {
 						return ($("select[name=ProductTypeID]").val() == "19" || $("select[name=ProductTypeID]").val() == "33");
 					},
 				},
+			},
+			"add-escrow-officer-details": {
+				required: {
+					depends: function (element) {
+						// return ($("input[name=OrderType]").val() == "Title & Escrow" || $("input[name=OrderType]").val() == "Escrow only");
+						return ($("select[name=OrderTypeID]").val() == "2" || $("select[name=OrderTypeID]").val() == "3");
+					},
+				},
+			},
+			escrow_officer: {
+				required: {
+					depends: function (element) {
+						// return ($("input[name=OrderType]").val() == "Title & Escrow" || $("input[name=OrderType]").val() == "Escrow only");
+						return ($("select[name=OrderTypeID]").val() == "2" || $("select[name=OrderTypeID]").val() == "3");
+					},
+				},
 			}
 		},
 
@@ -277,6 +293,12 @@ jQuery(document).ready(function ($) {
 			// },
 			loanAmount: {
 				required: 'Enter loan amount',
+			},
+			"add-escrow-officer-details": {
+				required: 'Escrow Officer is required for Escrow order',
+			},
+			escrow_officer: {
+				required: 'Escrow Officer is required for Escrow order',
 			}
 		},
 
@@ -290,7 +312,7 @@ jQuery(document).ready(function ($) {
 		},
 		errorPlacement: function (error, element) {
 			if (element.is(":radio") || element.is(":checkbox")) {
-				element.closest('.option-group').after(error);
+				element.closest('.form-group').after(error);
 			} else {
 				error.insertAfter(element.parent());
 			}
