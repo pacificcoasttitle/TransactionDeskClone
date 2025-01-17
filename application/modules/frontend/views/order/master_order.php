@@ -229,16 +229,16 @@
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
-if (isset($salesRep) && !empty($salesRep)) {
-    foreach ($salesRep as $k => $v) {
-        $name = array($v['first_name'], $v['last_name']);
-        $full_name = implode(' ', $name);
-        ?>
+                                            if (isset($salesRep) && ! empty($salesRep)) {
+                                                foreach ($salesRep as $k => $v) {
+                                                    $name      = [$v['first_name'], $v['last_name']];
+                                                    $full_name = implode(' ', $name);
+                                                ?>
 																							<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
 																					<?php
-}
-}
-?>
+                                                                                        }
+                                                                                        }
+                                                                                    ?>
 									</select>
 								</div>
 							</div>
@@ -249,14 +249,14 @@ if (isset($salesRep) && !empty($salesRep)) {
 										<option value="">Title Officer</option>
 										<?php
 
-if (isset($titleOfficer) && !empty($titleOfficer)) {
-    foreach ($titleOfficer as $key => $value) {
-        ?>
+                                            if (isset($titleOfficer) && ! empty($titleOfficer)) {
+                                                foreach ($titleOfficer as $key => $value) {
+                                                ?>
 																					<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
 																				<?php
-}
-}
-?>
+                                                                                    }
+                                                                                    }
+                                                                                ?>
 									</select>
 								</div>
 							</div>
@@ -341,9 +341,9 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 							</div>
 
 							<div id="clone-email-address" class="cloneya-wrap" >
-								<?php if (!empty($deliverables)) {
-    $i = 0;
-    foreach ($deliverables as $deliverable) {?>
+								<?php if (! empty($deliverables)) {
+                                        $i = 0;
+                                    foreach ($deliverables as $deliverable) {?>
 										<div class="row form-group toclone clone-widget cloneya">
 											<div class="col-sm-10">
 													<?php if ($i == 0) {?>
@@ -358,7 +358,7 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 										</div>
 
 										<?php $i++;}
-} else {?>
+                                        } else {?>
 									<div class="row form-group toclone clone-widget cloneya">
 										<div class="col-sm-10">
 											<input type="email" class="form-control" name="AdditionalEmail[]" id="AdditionalEmail" placeholder="Email Address">
@@ -383,10 +383,10 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 								</div>
 
 <?php
-$is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
+    $is_escrow                = isset($customer_data['is_escrow']) && ! empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+    $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && ! empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-//if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
+    //if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 ?>
 										<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
@@ -428,7 +428,7 @@ $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) &&
 									<div class="col-sm-6">
 										<input type="text" name="BuyerAgentName" id="BuyerAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
-										<input type="hidden" name="BuyerAgentLookupCode" id="BuyerAgentLookupCode" value="">
+										<input type="hidden" name="BuyerAgentCompanyLookupCode" id="BuyerAgentCompanyLookupCode" value="">
 										<input type="hidden" name="BuyerAgentClientLookUpCode" id="BuyerAgentClientLookUpCode" value="">
 										<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
 									</div>
@@ -436,7 +436,7 @@ $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) &&
 									<div class="col-sm-6">
 										<input type="text" name="ListingAgentName" id="ListingAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="ListingAgentId" id="ListingAgentId" value="">
-										<input type="hidden" name="ListingAgentLookupCode" id="ListingAgentLookupCode" value="">
+										<input type="hidden" name="ListingAgentCompanyLookupCode" id="ListingAgentCompanyLookupCode" value="">
 										<input type="hidden" name="ListingAgentClientLookUpCode" id="ListingAgentClientLookUpCode" value="">
 										<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
 									</div>
@@ -493,7 +493,7 @@ $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) &&
 										<input type="text" name="LenderName" id="LenderName" class="form-control" placeholder="Lender Name">
 									</div>
 									<input type="hidden" name="LenderId" id="LenderId" value="">
-									<input type="hidden" name="LenderLookUpCode" id="LenderLookUpCode" value="">
+									<input type="hidden" name="LenderCompanyLookUpCode" id="LenderCompanyLookUpCode" value="">
 									<input type="hidden" name="LenderClientLookUpCode" id="LenderClientLookUpCode" value="">
 								</div>
 
@@ -522,7 +522,7 @@ $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) &&
 										<input type="text" name="EscrowName" id="EscrowName" class="form-control" placeholder="Escrow Name">
 									</div>
 									<input type="hidden" name="EscrowId" id="EscrowId" value="">
-									<input type="hidden" name="EscrowLookUpCode" id="EscrowLookUpCode" value="">
+									<input type="hidden" name="EscrowCompanyLookUpCode" id="EscrowCompanyLookUpCode" value="">
 									<input type="hidden" name="EscrowClientLookUpCode" id="EscrowClientLookUpCode" value="">
 								</div>
 
@@ -548,11 +548,11 @@ $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) &&
 										<select id="escrow_officer" name="escrow_officer" class="form-control">
 											<option value="">----Select Escrow Officer----</option>
 											<?php
-if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-    foreach ($escrowOfficers as $escrowOfficer) {?>
+                                                if (isset($escrowOfficers) && ! empty($escrowOfficers)) {
+                                                foreach ($escrowOfficers as $escrowOfficer) {?>
 		<option value="<?php echo $escrowOfficer['closer_examiner']; ?>"><?php echo $escrowOfficer['name']; ?></option>
 <?php
-}
+    }
 }?>
 										</select>
 									</div>
@@ -609,7 +609,7 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 							</div>
                             <div class="form-group">
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-success btn-icon-split home-submit" <?php echo($submitButtonFlag == 0) ? "disabled" : ""; ?>>
+                                    <button type="submit" class="btn btn-success btn-icon-split home-submit"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             <?php echo($submitButtonFlag == 0) ? "disabled" : ""; ?>>
                                         <span class="icon text-white-50">
                                             <i class="fas fa-save"></i>
                                         </span>
