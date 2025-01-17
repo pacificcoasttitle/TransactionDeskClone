@@ -99,7 +99,7 @@ class Order extends MX_Controller
             $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
             // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
             $nestedData[] = convertTimezone($value['created_at']);
-            $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['file_id'];
+            $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['id'];
             $action       = "<a href='" . $editOrderUrl . "' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fas fa-eye' aria-hidden='true'></span></a>";
             $nestedData[] = $action;
             $data[]       = $nestedData;
@@ -125,10 +125,11 @@ class Order extends MX_Controller
             $order_details            = $this->order_model->get_order_details($order_id);
             $customer_id              = $order_details['customer_id'];
             $con                      = ['id' => $customer_id];
-            $customer_details         = $this->home_model->get_rows($con);
+            $customer_details         = $this->home_model->sp_get_rows($con);
             $data['order_details']    = $order_details;
             $data['customer_details'] = $customer_details;
-            // echo "<pre>"; print_r($data); exit;
+            // echo "<pre>";
+            // print_r($data);exit;
             $this->admintemplate->show("order/order", "order_details", $data);
             // $this->load->view('order/layout/header', $data);
             // $this->load->view('order/order/order_details', $data);

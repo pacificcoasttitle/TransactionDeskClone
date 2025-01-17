@@ -10,29 +10,29 @@ class Order_model extends CI_Model
 
     public function get_orders($params)
     {
-        $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
-        $product_type = isset($params['product_type']) && !empty($params['product_type']) ? $params['product_type'] : '';
-        $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
+        $sales_rep    = isset($params['sales_rep']) && ! empty($params['sales_rep']) ? $params['sales_rep'] : '';
+        $product_type = isset($params['product_type']) && ! empty($params['product_type']) ? $params['product_type'] : '';
+        $order_type   = isset($params['order_type']) && ! empty($params['order_type']) ? $params['order_type'] : '';
 
-        if (isset($sales_rep) && !empty($sales_rep)) {
+        if (isset($sales_rep) && ! empty($sales_rep)) {
             $this->db->where('transaction_details.sales_representative', $sales_rep);
         }
 
-        if (isset($product_type) && !empty($product_type)) {
+        if (isset($product_type) && ! empty($product_type)) {
             $this->db->like('pct_order_product_types.product_type', $product_type);
         }
 
-        $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
+        $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
 
-        if (isset($created_by) && !empty($created_by)) {
+        if (isset($created_by) && ! empty($created_by)) {
             $this->db->where('order_details.created_by', $created_by);
         }
 
-        if (isset($order_type) && !empty($order_type)) {
+        if (isset($order_type) && ! empty($order_type)) {
             if ($order_type == 'resware_orders') {
                 // $this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null');
-                $this->db->where('order_details.file_number !=', 0);
+                $this->db->where('order_details.file_number !=', '0');
             } else if ($order_type == 'lp_orders') {
                 $this->db->where('order_details.lp_file_number is not null');
                 // $this->db->where('order_details.file_number', 0);
@@ -40,10 +40,10 @@ class Order_model extends CI_Model
 
         }
 
-        if (isset($params['searchValue']) && !empty($params['searchValue'])) {
+        if (isset($params['searchValue']) && ! empty($params['searchValue'])) {
             $keyword = $params['searchValue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('property_details.full_address', $keyword)
                     ->or_like('order_details.file_number', $keyword)
@@ -58,27 +58,27 @@ class Order_model extends CI_Model
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
             // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
             $total_records = $this->db->count_all_results();
 
-            if (isset($sales_rep) && !empty($sales_rep)) {
+            if (isset($sales_rep) && ! empty($sales_rep)) {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
 
-            if (isset($product_type) && !empty($product_type)) {
+            if (isset($product_type) && ! empty($product_type)) {
                 $this->db->like('pct_softpro_product_type.product_type', $product_type);
             }
 
-            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if (isset($created_by) && !empty($created_by)) {
+            $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
+            if (isset($created_by) && ! empty($created_by)) {
                 $this->db->where('order_details.created_by', $created_by);
             }
 
-            if (isset($order_type) && !empty($order_type)) {
+            if (isset($order_type) && ! empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     // $this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
-                    $this->db->where('order_details.file_number !=', 0);
+                    $this->db->where('order_details.file_number !=', '0');
                 } else if ($order_type == 'lp_orders') {
                     $this->db->where('order_details.lp_file_number is not null');
                     // $this->db->where('order_details.file_number', 0);
@@ -86,16 +86,16 @@ class Order_model extends CI_Model
 
             }
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('property_details.full_address', $keyword)
                     ->or_like('order_details.file_number', $keyword)
                     ->group_end();
             }
 
-            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-            $orders_lists = array();
+            $limit        = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+            $offset       = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+            $orders_lists = [];
 
             $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
@@ -105,10 +105,10 @@ class Order_model extends CI_Model
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
             // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
-            $this->db->order_by("order_details.id", "desc");
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+            $this->db->order_by("order_details.created_at", "desc");
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -126,32 +126,32 @@ class Order_model extends CI_Model
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
             // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
 
             $total_records = $this->db->count_all_results();
 
-            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-            $orders_lists = array();
+            $limit        = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+            $offset       = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+            $orders_lists = [];
 
-            if (isset($sales_rep) && !empty($sales_rep)) {
+            if (isset($sales_rep) && ! empty($sales_rep)) {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
 
-            if (isset($product_type) && !empty($product_type)) {
-                $this->db->like('pct_softpro_product_type.product_type', $product_type);
+            if (isset($product_type) && ! empty($product_type)) {
+                $this->db->like('pct_softpro_product_type.purchase_type', $product_type);
             }
 
-            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if (isset($created_by) && !empty($created_by)) {
+            $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
+            if (isset($created_by) && ! empty($created_by)) {
                 $this->db->where('order_details.created_by', $created_by);
             }
 
-            if (isset($order_type) && !empty($order_type)) {
+            if (isset($order_type) && ! empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     // $this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
-                    $this->db->where('order_details.file_number !=', 0);
+                    $this->db->where('order_details.file_number !=', '0');
                 } else if ($order_type == 'lp_orders') {
                     $this->db->where('order_details.lp_file_number is not null');
                     // $this->db->where('order_details.file_number', 0);
@@ -167,32 +167,32 @@ class Order_model extends CI_Model
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
             // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
 
-            $this->db->order_by("order_details.id", "desc");
+            $this->db->order_by("order_details.created_at", "desc");
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
             $query = $this->db->get();
-            echo $this->db->last_query();die;
+            // echo $this->db->last_query();die;
             if ($query->num_rows() > 0) {
                 $orders_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $total_records,
-            'data' => $orders_lists,
-        );
+            'data'            => $orders_lists,
+        ];
     }
 
-    public function update($data, $condition = array())
+    public function update($data, $condition = [])
     {
         $table = $this->table;
 
-        if (!empty($data)) {
+        if (! empty($data)) {
 
             $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -205,10 +205,10 @@ class Order_model extends CI_Model
         return false;
     }
 
-    public function insert($data = array())
+    public function insert($data = [])
     {
         $table = $this->table;
-        if (!empty($data)) {
+        if (! empty($data)) {
 
             $data['created_at'] = date("Y-m-d H:i:s");
 
@@ -285,7 +285,7 @@ class Order_model extends CI_Model
             CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name,
             salerep.telephone_no as sales_rep_phone,
             transaction_details.title_officer,
-            CONCAT(titleofficer.first_name, " ", titleofficer.last_name) as title_officer_name,
+            officer_name as title_officer_name,
             transaction_details.sales_amount,
             transaction_details.loan_amount,
             transaction_details.loan_number,
@@ -294,9 +294,8 @@ class Order_model extends CI_Model
             transaction_details.product_type,
             transaction_details.order_type,
             pct_softpro_order_type.order_type as order_type_name,
-            pct_softpro_product_type.product_type as product_type_name,
+            pct_softpro_product_type.product_type,
             transaction_details.purchase_type,
-            pct_order_product_types.product_type,
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
             transaction_details.borrower,
@@ -307,82 +306,73 @@ class Order_model extends CI_Model
             transaction_details.secondary_borrower,
             transaction_details.vesting,
             transaction_details.escrow_number,
-            customer_basic_details.company_name as escrow_lender_company_name,
-            customer_basic_details.softpro_company as escrow_lender_softpro_company,
-            customer_basic_details.first_name as escrow_lender_first_name,
-            customer_basic_details.last_name as escrow_lender_last_name,
-            customer_basic_details.email_address as escrow_lender_email,
-            customer_basic_details.telephone_no as escrow_lender_telephone_no,
-            customer_basic_details.lookup_code as escrow_lender_lookup_code,
-            customer_basic_details.id as lender_id,
-            customer_basic_details.resware_user_id as lender_resware_user_id,
-            customer_basic_details.partner_id as lender_partner_id,
-            customer_basic_details.street_address as lender_address,
-            customer_basic_details.city as lender_city,
-            customer_basic_details.state as lender_state,
-            customer_basic_details.zip_code as lender_zipcode,
-            customer_basic_details.company_name as lender_company_name,
-            customer_basic_details.first_name as lender_first_name,
-            customer_basic_details.last_name as lender_last_name,
-            customer_basic_details.email_address as lender_email,
-            customer_basic_details.assignment_clause as lender_assignment_clause,
-            customer_basic_details.is_escrow,
-            customer_basic_details.telephone_no as lender_telephone_no,
+            pct_softpro_lookup_table.company_name as escrow_lender_company_name,
+            pct_softpro_lookup_table.first_name as escrow_lender_first_name,
+            pct_softpro_lookup_table.last_name as escrow_lender_last_name,
+            pct_softpro_lookup_table.email_address as escrow_lender_email,
+            pct_softpro_lookup_table.phone as escrow_lender_telephone_no,
+            pct_softpro_lookup_table.lookup_code as escrow_lender_lookup_code,
+            pct_softpro_lookup_table.id as lender_id,
+            pct_softpro_lookup_table.address1 as lender_address,
+            pct_softpro_lookup_table.city as lender_city,
+            pct_softpro_lookup_table.state as lender_state,
+            pct_softpro_lookup_table.zip as lender_zipcode,
+            pct_softpro_lookup_table.company_name as lender_company_name,
+            pct_softpro_lookup_table.first_name as lender_first_name,
+            pct_softpro_lookup_table.last_name as lender_last_name,
+            pct_softpro_lookup_table.email_address as lender_email,
+            pct_softpro_lookup_table.is_escrow,
+            pct_softpro_lookup_table.phone as lender_telephone_no,
             cbd.first_name as cust_first_name,
             cbd.last_name as cust_last_name,
             cbd.email_address as cust_email_address,
             cbd.company_name as cust_company_name,
-            cbd.softpro_company as cust_softpro_company,
-            cbd.telephone_no as cust_telephone_no,
-            cbd.street_address as cust_street_address,
+            cbd.phone as cust_telephone_no,
+            cbd.address1 as cust_street_address,
             cbd.city as cust_city,
-            cbd.zip_code as cust_zip_code,
+            cbd.zip as cust_zip_code,
             cbd.lookup_code as cust_lookup_code,
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,
             salerep.email_address as salerep_email_address,
-            titleofficer.first_name as titleofficer_first_name,
-            titleofficer.last_name as titleofficer_last_name,
-            titleofficer.lookup_code as titleofficer_lookup_code,
+            titleofficer.officer_name as titleofficer_first_name,
+            titleofficer.closer_examiner as titleofficer_lookup_code,
             property_details.buyer_agent_id,
-            agents.name as buyer_agent_name,
+            CONCAT(agents.first_name, " ", agents.last_name) as buyer_agent_name,
             agents.email_address as buyer_agent_email_address,
-            agents.company as buyer_agent_company,
+            agents.company_name as buyer_agent_company,
             agents.city as buyer_agent_city,
-            agents.zipcode as buyer_agent_zipcode,
-            agents.telephone_no as buyer_buyer_agent_telephone_no,
-            agents.address as buyer_agent_address,
-            agents.partner_id as buyer_agent_partner_id,
+            agents.zip as buyer_agent_zipcode,
+            agents.phone as buyer_buyer_agent_telephone_no,
+            agents.address1 as buyer_agent_address,
             agents.lookup_code as buyer_agent_lookup_code,
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
-            pct_order_product_types.product_type,
             pct_order_documents.created,
             p.created as proposed_document_created_date,
-            a.name as listing_agent_name,
+            CONCAT(a.first_name, " ", a.last_name) as listing_agent_name,
             a.email_address as listing_agent_email_address,
-            a.company as listing_agent_company,
-            a.partner_id as listing_agent_partner_id,
+            a.company_name as listing_agent_company,
             a.lookup_code as listing_agent_lookup_code,
-            a.telephone_no as listing_agent_telephone_no')
+            a.phone as listing_agent_telephone_no')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
-            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
-            ->join('pct_softpro_lookup_table as titleofficer', 'transaction_details.title_officer = titleofficer.id AND titleofficer.user_type="title_officer"')
+            ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left')
+            ->join('pct_softpro_lookup_table as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('sp_officers as titleofficer', 'transaction_details.title_officer = titleofficer.id')
         // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id')
             ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
-            ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
-            ->join('agents a', 'property_details.listing_agent_id = a.id', 'left')
+            ->join('pct_softpro_lookup_table as agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            ->join('pct_softpro_lookup_table a', 'property_details.listing_agent_id = a.id', 'left')
             ->join('pct_softpro_product_type', 'pct_softpro_product_type.id = transaction_details.purchase_type', 'left')
             ->join('pct_softpro_order_type', 'pct_softpro_order_type.id = transaction_details.order_type', 'left')
-            ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+            ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left');
+        // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->db->where('order_details.id', $orderId);
 
         $query = $this->db->get();
@@ -414,7 +404,7 @@ class Order_model extends CI_Model
 
         $query = $this->db->get();
         // echo $this->db->last_query();die;
-        $orders_data = array();
+        $orders_data = [];
         if ($query->num_rows() > 0) {
             $orders_data = $query->result_array();
         }
@@ -454,11 +444,11 @@ class Order_model extends CI_Model
 
         $tax_total_records = $this->db->count_all_results();
 
-        return array(
-            'lv_total_records' => $lv_total_records,
+        return [
+            'lv_total_records'         => $lv_total_records,
             'grant_deed_total_records' => $grant_deed_total_records,
-            'tax_total_records' => $tax_total_records,
-        );
+            'tax_total_records'        => $tax_total_records,
+        ];
     }
 
     public function get_safewire_orders_list($params)
@@ -471,14 +461,14 @@ class Order_model extends CI_Model
 
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $safewire_orders_lists = array();
+        $limit                 = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset                = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $safewire_orders_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('order_details.safewire_order_status', $keyword)
@@ -494,7 +484,7 @@ class Order_model extends CI_Model
             $this->db->where('order_details.is_create_order_on_safewire = 1');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('order_details.safewire_order_status', $keyword)
@@ -510,7 +500,7 @@ class Order_model extends CI_Model
             $this->db->where('order_details.is_create_order_on_safewire = 1');
             $this->db->order_by('order_details.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -532,7 +522,7 @@ class Order_model extends CI_Model
             $this->db->where('order_details.is_create_order_on_safewire = 1');
             $this->db->order_by('order_details.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -542,36 +532,36 @@ class Order_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $safewire_orders_lists,
-        );
+            'data'            => $safewire_orders_lists,
+        ];
     }
 
     public function get_lp_orders($params)
     {
-        $sales_rep = isset($params['sales_rep']) && !empty($params['sales_rep']) ? $params['sales_rep'] : '';
-        $product_type = isset($params['product_type']) && !empty($params['product_type']) ? $params['product_type'] : '';
-        $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
-        $start_date = isset($params['start_date']) && !empty($params['start_date']) ? $params['start_date'] : '';
-        $end_date = isset($params['end_date']) && !empty($params['end_date']) ? $params['end_date'] : '';
+        $sales_rep    = isset($params['sales_rep']) && ! empty($params['sales_rep']) ? $params['sales_rep'] : '';
+        $product_type = isset($params['product_type']) && ! empty($params['product_type']) ? $params['product_type'] : '';
+        $order_type   = isset($params['order_type']) && ! empty($params['order_type']) ? $params['order_type'] : '';
+        $start_date   = isset($params['start_date']) && ! empty($params['start_date']) ? $params['start_date'] : '';
+        $end_date     = isset($params['end_date']) && ! empty($params['end_date']) ? $params['end_date'] : '';
 
-        if (isset($sales_rep) && !empty($sales_rep)) {
+        if (isset($sales_rep) && ! empty($sales_rep)) {
             $this->db->where('transaction_details.sales_representative', $sales_rep);
         }
 
-        if (isset($product_type) && !empty($product_type)) {
+        if (isset($product_type) && ! empty($product_type)) {
             $this->db->like('pct_order_product_types.product_type', $product_type);
         }
 
-        $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
+        $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
 
-        if (isset($created_by) && !empty($created_by)) {
+        if (isset($created_by) && ! empty($created_by)) {
             $this->db->where('order_details.created_by', $created_by);
         }
 
-        if (isset($order_type) && !empty($order_type)) {
+        if (isset($order_type) && ! empty($order_type)) {
             if ($order_type == 'resware_orders') {
                 //$this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null');
@@ -582,15 +572,15 @@ class Order_model extends CI_Model
 
         }
 
-        if (!empty($end_date)) {
+        if (! empty($end_date)) {
             $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s', strtotime($start_date)));
             $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59', strtotime($end_date)));
         }
 
-        if (isset($params['searchValue']) && !empty($params['searchValue'])) {
+        if (isset($params['searchValue']) && ! empty($params['searchValue'])) {
             $keyword = $params['searchValue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.lp_file_number LIKE '%" . $keyword . "%')");
             }
 
@@ -605,20 +595,20 @@ class Order_model extends CI_Model
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $total_records = $this->db->count_all_results();
 
-            if (isset($sales_rep) && !empty($sales_rep)) {
+            if (isset($sales_rep) && ! empty($sales_rep)) {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
 
-            if (isset($product_type) && !empty($product_type)) {
+            if (isset($product_type) && ! empty($product_type)) {
                 $this->db->like('pct_order_product_types.product_type', $product_type);
             }
 
-            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if (isset($created_by) && !empty($created_by)) {
+            $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
+            if (isset($created_by) && ! empty($created_by)) {
                 $this->db->where('order_details.created_by', $created_by);
             }
 
-            if (isset($order_type) && !empty($order_type)) {
+            if (isset($order_type) && ! empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     //$this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
@@ -629,18 +619,18 @@ class Order_model extends CI_Model
 
             }
 
-            if (!empty($end_date)) {
+            if (! empty($end_date)) {
                 $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s', strtotime($start_date)));
                 $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59', strtotime($end_date)));
             }
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.lp_file_number LIKE '%" . $keyword . "%')");
             }
 
-            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-            $orders_lists = array();
+            $limit        = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+            $offset       = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+            $orders_lists = [];
 
             $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
                 ->from('order_details')
@@ -653,7 +643,7 @@ class Order_model extends CI_Model
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $this->db->order_by("order_details.id", "desc");
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -675,24 +665,24 @@ class Order_model extends CI_Model
 
             $total_records = $this->db->count_all_results();
 
-            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-            $orders_lists = array();
+            $limit        = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+            $offset       = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+            $orders_lists = [];
 
-            if (isset($sales_rep) && !empty($sales_rep)) {
+            if (isset($sales_rep) && ! empty($sales_rep)) {
                 $this->db->where('transaction_details.sales_representative', $sales_rep);
             }
 
-            if (isset($product_type) && !empty($product_type)) {
+            if (isset($product_type) && ! empty($product_type)) {
                 $this->db->like('pct_order_product_types.product_type', $product_type);
             }
 
-            $created_by = isset($params['created_by']) && !empty($params['created_by']) ? $params['created_by'] : '';
-            if (isset($created_by) && !empty($created_by)) {
+            $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
+            if (isset($created_by) && ! empty($created_by)) {
                 $this->db->where('order_details.created_by', $created_by);
             }
 
-            if (isset($order_type) && !empty($order_type)) {
+            if (isset($order_type) && ! empty($order_type)) {
                 if ($order_type == 'resware_orders') {
                     //$this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
@@ -702,7 +692,7 @@ class Order_model extends CI_Model
                 }
 
             }
-            if (!empty($end_date)) {
+            if (! empty($end_date)) {
                 $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s', strtotime($start_date)));
                 $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59', strtotime($end_date)));
             }
@@ -718,7 +708,7 @@ class Order_model extends CI_Model
             // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
             $this->db->order_by("order_details.id", "desc");
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -729,10 +719,10 @@ class Order_model extends CI_Model
             }
         }
         // echo $this->db->last_query();exit;
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $total_records,
-            'data' => $orders_lists,
-        );
+            'data'            => $orders_lists,
+        ];
     }
 }
