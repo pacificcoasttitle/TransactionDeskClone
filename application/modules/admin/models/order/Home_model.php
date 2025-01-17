@@ -29,7 +29,7 @@ class Home_model extends CI_Model
         }
     }
 
-    public function get_user($params = array())
+    public function get_user($params = [])
     {
         $table = $this->table;
         $this->db->select('*');
@@ -37,17 +37,17 @@ class Home_model extends CI_Model
         foreach ($params as $key => $val) {
             $this->db->where($key, $val);
         }
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->row_array();
-        if (!empty($result)) {
+        if (! empty($result)) {
             return $result;
         } else {
-            return array();
+            return [];
         }
 
     }
 
-    public function sp_get_user($params = array())
+    public function sp_get_user($params = [])
     {
         $table = 'pct_softpro_lookup_table';
         $this->db->select('*');
@@ -55,33 +55,33 @@ class Home_model extends CI_Model
         foreach ($params as $key => $val) {
             $this->db->where($key, $val);
         }
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->row_array();
-        if (!empty($result)) {
+        if (! empty($result)) {
             return $result;
         } else {
-            return array();
+            return [];
         }
 
     }
 
     public function get_customers($params)
     {
-        $is_escrow = isset($params['is_escrow']) && !empty($params['is_escrow']) ? $params['is_escrow'] : 0;
+        $is_escrow = isset($params['is_escrow']) && ! empty($params['is_escrow']) ? $params['is_escrow'] : 0;
 
         $this->db->where('is_escrow', $is_escrow);
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit  = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
 
-        $customer_lists = array();
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        $customer_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('first_name', $keyword)
                     ->or_like('last_name', $keyword)
@@ -95,7 +95,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('first_name', $keyword)
                     ->or_like('last_name', $keyword)
@@ -107,7 +107,7 @@ class Home_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->where('is_escrow', $is_escrow);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -125,7 +125,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_escrow', $is_escrow);
             $this->db->where('status', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -135,14 +135,14 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
-    public function get_rows($params = array(), $table = '')
+    public function get_rows($params = [], $table = '')
     {
         if (empty($table)) {
             $table = $this->table;
@@ -162,17 +162,54 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('id', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
 
-                $query = $this->db->get();
+                $query  = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+
+        // Return fetched data
+        return $result;
+    }
+
+    public function sp_get_rows($params = [], $table = '')
+    {
+        $table = 'pct_softpro_lookup_table';
+
+        $this->db->select('*');
+        $this->db->from($table);
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                $this->db->where($key, $val);
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->db->where('id', $params['id']);
+                $query  = $this->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->db->order_by('id', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit']);
+                }
+
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -199,13 +236,13 @@ class Home_model extends CI_Model
         }
     }
 
-    public function update($data, $condition = array(), $table = '')
+    public function update($data, $condition = [], $table = '')
     {
         if (empty($table)) {
             $table = $this->table;
         }
 
-        if (!empty($data)) {
+        if (! empty($data)) {
 
             $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -218,12 +255,12 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function insert($data = array(), $table = '')
+    public function insert($data = [], $table = '')
     {
         if (empty($table)) {
             $table = $this->table;
         }
-        if (!empty($data)) {
+        if (! empty($data)) {
 
             $data['created_at'] = date("Y-m-d H:i:s");
 
@@ -238,9 +275,9 @@ class Home_model extends CI_Model
 
     public function get_user_with_duplicate_email($params)
     {
-        $where = ' AND email_address != "" AND partner_id is NOT NULL AND resware_user_id is NOT NULL ';
+        $where      = ' AND email_address != "" AND partner_id is NOT NULL AND resware_user_id is NOT NULL ';
         $innerCause = ' WHERE email_address != ""';
-        if (isset($params['keyword']) && !empty($params['keyword'])) {
+        if (isset($params['keyword']) && ! empty($params['keyword'])) {
             $keyword = $params['keyword'];
 
             /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
@@ -264,14 +301,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_cpl_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $cpl_document_lists = array();
+        $limit              = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset             = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $cpl_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -284,7 +321,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_cpl_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -297,7 +334,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_cpl_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -317,7 +354,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_cpl_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -327,11 +364,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $cpl_document_lists,
-        );
+            'data'            => $cpl_document_lists,
+        ];
     }
 
     public function get_new_users_list($params)
@@ -340,15 +377,15 @@ class Home_model extends CI_Model
         $this->db->where('is_password_updated', 0);
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists = array();
+        $total_records  = $this->db->count_all_results();
+        $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $customer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -365,7 +402,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -379,7 +416,7 @@ class Home_model extends CI_Model
             $this->db->where('is_password_updated', 0);
             $this->db->where('is_new_user', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -397,7 +434,7 @@ class Home_model extends CI_Model
             $this->db->where('is_password_updated', 0);
             $this->db->where('status', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -406,11 +443,11 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_company_list($params)
@@ -421,9 +458,9 @@ class Home_model extends CI_Model
         $this->db->order_by('id', 'asc');
         $this->db->select("CONCAT(partner_name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value");
         $this->db->like('partner_name', $params['partner_name']);
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->result_array();
-        return !empty($result) ? $result : false;
+        return ! empty($result) ? $result : false;
     }
 
     public function get_title_company_list($params)
@@ -435,9 +472,9 @@ class Home_model extends CI_Model
         $this->db->select("CONCAT(partner_name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value");
         $this->db->like('partner_name', $params['partner_name']);
         $this->db->like('partner_name', 'title');
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->result_array();
-        return !empty($result) ? $result : false;
+        return ! empty($result) ? $result : false;
     }
 
     public function get_grant_deed_document_list($params)
@@ -447,14 +484,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_grant_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $grant_document_lists = array();
+        $limit                = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset               = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $grant_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -466,7 +503,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_grant_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -479,7 +516,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_grant_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -499,7 +536,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_grant_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -509,11 +546,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $grant_document_lists,
-        );
+            'data'            => $grant_document_lists,
+        ];
     }
 
     public function get_lv_document_list($params)
@@ -523,14 +560,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_lv_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $lv_document_lists = array();
+        $limit             = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset            = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $lv_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -542,7 +579,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_lv_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -555,7 +592,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_lv_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -575,7 +612,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_lv_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -585,11 +622,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lv_document_lists,
-        );
+            'data'            => $lv_document_lists,
+        ];
     }
 
     public function get_master_users_list($params)
@@ -597,15 +634,15 @@ class Home_model extends CI_Model
         $this->db->where('is_master', 1);
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists = array();
+        $total_records  = $this->db->count_all_results();
+        $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $customer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -622,7 +659,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -636,7 +673,7 @@ class Home_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->where('is_master', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -652,7 +689,7 @@ class Home_model extends CI_Model
             $this->db->where('is_master', 1);
             $this->db->where('status', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -661,11 +698,11 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_tax_document_list($params)
@@ -675,14 +712,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_tax_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $tax_document_lists = array();
+        $limit              = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset             = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $tax_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -694,7 +731,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_tax_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -707,7 +744,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_tax_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -727,7 +764,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_tax_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -737,11 +774,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $tax_document_lists,
-        );
+            'data'            => $tax_document_lists,
+        ];
     }
 
     public function get_curative_document_list($params)
@@ -751,14 +788,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_curative_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $curative_document_lists = array();
+        $limit                   = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset                  = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $curative_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -770,7 +807,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_curative_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -783,7 +820,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_curative_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -803,7 +840,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_curative_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -813,11 +850,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $curative_document_lists,
-        );
+            'data'            => $curative_document_lists,
+        ];
     }
 
     public function get_companies_list($params)
@@ -825,14 +862,14 @@ class Home_model extends CI_Model
         $this->db->from('pct_order_partner_company_info');
         $this->db->where('status', 1);
         $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $company_lists = array();
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $company_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_id", $keyword)
                     ->or_like('partner_name', $keyword)
@@ -846,7 +883,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_order_partner_company_info');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_id", $keyword)
                     ->or_like('partner_name', $keyword)
@@ -857,7 +894,7 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->where('status', 1);
@@ -870,7 +907,7 @@ class Home_model extends CI_Model
             $this->db->where('status', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->where('status', 1);
@@ -880,11 +917,11 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_incorrect_customers($params)
@@ -904,14 +941,14 @@ class Home_model extends CI_Model
 
         $total_records = $query->num_rows();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit  = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
 
-        $customer_lists = array();
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        $customer_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $where = ' AND (first_name LIKE "%' . $keyword . '%"';
                 $where .= ' OR last_name LIKE "%' . $keyword . '%"';
                 $where .= ' OR email_address LIKE "%' . $keyword . '%"';
@@ -933,8 +970,8 @@ class Home_model extends CI_Model
 
             $filter_total_records = $query->num_rows();
 
-            if (isset($keyword) && !empty($keyword)) {
-                if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
+                if (isset($keyword) && ! empty($keyword)) {
                     $where = ' AND (first_name LIKE "%' . $keyword . '%"';
                     $where .= ' OR last_name LIKE "%' . $keyword . '%"';
                     $where .= ' OR email_address LIKE "%' . $keyword . '%"';
@@ -942,10 +979,10 @@ class Home_model extends CI_Model
                 }
             }
 
-            if (isset($limit) && !empty($limit)) {
+            if (isset($limit) && ! empty($limit)) {
                 $limit = ' LIMIT ' . $limit;
             }
-            if ((isset($offset) && !empty($offset))) {
+            if ((isset($offset) && ! empty($offset))) {
                 $offset = ' OFFSET ' . $offset;
             }
 
@@ -980,10 +1017,10 @@ class Home_model extends CI_Model
                                 HAVING COUNT(email_address) = 1');
 
             $filter_total_records = $query->num_rows();
-            if (isset($limit) && !empty($limit)) {
+            if (isset($limit) && ! empty($limit)) {
                 $limit = ' LIMIT ' . $limit;
             }
-            if ((isset($offset) && !empty($offset))) {
+            if ((isset($offset) && ! empty($offset))) {
                 $offset = ' OFFSET ' . $offset;
             }
 
@@ -1005,11 +1042,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function getUsersForEmail($email, $id)
@@ -1019,12 +1056,12 @@ class Home_model extends CI_Model
         $this->db->where('random_password != ""');
         $this->db->where('email_address', $email);
         $this->db->where("id !=", $id);
-        $query = $this->db->get();
+        $query      = $this->db->get();
         $usersLists = $query->result_array();
         return $usersLists;
     }
 
-    public function get_company_rows($params = array())
+    public function get_company_rows($params = [])
     {
         $table = 'pct_order_partner_company_info';
         $this->db->select('*');
@@ -1043,17 +1080,17 @@ class Home_model extends CI_Model
 
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('id', 'asc');
 
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -1064,15 +1101,15 @@ class Home_model extends CI_Model
     {
         $this->db->where('is_added_lender_by_cpl_proposed', 1);
         $this->db->from('customer_basic_details');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists = array();
+        $total_records  = $this->db->count_all_results();
+        $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $customer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -1088,7 +1125,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -1102,7 +1139,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_added_lender_by_cpl_proposed', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1116,7 +1153,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_added_lender_by_cpl_proposed', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1125,18 +1162,18 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_password_list($params)
     {
-        $user_type = isset($params['user_type']) && !empty($params['user_type']) ? $params['user_type'] : '';
+        $user_type = isset($params['user_type']) && ! empty($params['user_type']) ? $params['user_type'] : '';
 
-        if (isset($user_type) && !empty($user_type)) {
+        if (isset($user_type) && ! empty($user_type)) {
             if ($user_type == 'title_officer') {
                 $this->db->where('is_title_officer', 1);
             } else if ($user_type == 'sales_rep') {
@@ -1155,15 +1192,15 @@ class Home_model extends CI_Model
         $this->db->where('is_password_updated', 1);
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists = array();
+        $total_records  = $this->db->count_all_results();
+        $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $customer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -1176,7 +1213,7 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
-            if (isset($user_type) && !empty($user_type)) {
+            if (isset($user_type) && ! empty($user_type)) {
                 if ($user_type == 'title_officer') {
                     $this->db->where('is_title_officer', 1);
                 } else if ($user_type == 'sales_rep') {
@@ -1197,7 +1234,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
@@ -1210,7 +1247,7 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
-            if (isset($user_type) && !empty($user_type)) {
+            if (isset($user_type) && ! empty($user_type)) {
                 if ($user_type == 'title_officer') {
                     $this->db->where('is_title_officer', 1);
                 } else if ($user_type == 'sales_rep') {
@@ -1229,7 +1266,7 @@ class Home_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1239,7 +1276,7 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         } else {
-            if (isset($user_type) && !empty($user_type)) {
+            if (isset($user_type) && ! empty($user_type)) {
                 if ($user_type == 'title_officer') {
                     $this->db->where('is_title_officer', 1);
                 } else if ($user_type == 'sales_rep') {
@@ -1260,7 +1297,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($user_type) && !empty($user_type)) {
+            if (isset($user_type) && ! empty($user_type)) {
                 if ($user_type == 'title_officer') {
                     $this->db->where('is_title_officer', 1);
                 } else if ($user_type == 'sales_rep') {
@@ -1279,7 +1316,7 @@ class Home_model extends CI_Model
             $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1289,11 +1326,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_import_order_users($params)
@@ -1304,14 +1341,14 @@ class Home_model extends CI_Model
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit  = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
 
-        $customer_lists = array();
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        $customer_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
                 // $this->db->like('first_name', $keyword);
@@ -1322,7 +1359,7 @@ class Home_model extends CI_Model
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
             }
@@ -1330,7 +1367,7 @@ class Home_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1348,7 +1385,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1358,25 +1395,25 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function getCplErrorLogs($params)
     {
         $this->db->from('pct_order_cpl_api_logs');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists = array();
+        $total_records  = $this->db->count_all_results();
+        $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $customer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
             $this->db->from('pct_order_cpl_api_logs');
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('file_number', $keyword)
                     ->or_like('cpl_page', $keyword)
@@ -1385,14 +1422,14 @@ class Home_model extends CI_Model
             }
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('file_number', $keyword)
                     ->or_like('cpl_page', $keyword)
                     ->or_like('error', $keyword)
                     ->group_end();
             }
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1407,7 +1444,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_order_cpl_api_logs');
             $filter_total_records = $this->db->count_all_results();
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1419,25 +1456,25 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function getReswareLogs($params)
     {
         $this->db->from('pct_resware_log');
         $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $lists = array();
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $lists         = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
             $this->db->from('pct_resware_log');
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('request', $keyword)
                     ->or_like('response', $keyword)
@@ -1448,7 +1485,7 @@ class Home_model extends CI_Model
 
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('request', $keyword)
                     ->or_like('response', $keyword)
@@ -1456,7 +1493,7 @@ class Home_model extends CI_Model
                     ->or_like('request_url', $keyword)
                     ->group_end();
             }
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1471,7 +1508,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_resware_log');
             $filter_total_records = $this->db->count_all_results();
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1483,11 +1520,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lists,
-        );
+            'data'            => $lists,
+        ];
     }
 
     public function getNotifications()
@@ -1502,29 +1539,29 @@ class Home_model extends CI_Model
     public function get_notifications_list($params)
     {
         $this->db->from('pct_notifications');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $notification_lists = array();
+        $total_records      = $this->db->count_all_results();
+        $limit              = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset             = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $notification_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
             $this->db->from('pct_notifications');
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('name', $keyword)
                     ->group_end();
             }
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('name', $keyword)
                     ->group_end();
             }
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_notifications');
@@ -1536,7 +1573,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_notifications');
             $filter_total_records = $this->db->count_all_results();
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_notifications');
@@ -1546,11 +1583,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $notification_lists,
-        );
+            'data'            => $notification_lists,
+        ];
     }
 
     public function get_escrow_officers($params)
@@ -1560,14 +1597,14 @@ class Home_model extends CI_Model
         $this->db->like('partner_type_id', '10010');
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $escrow_officer_lists = array();
+        $limit                = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset               = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $escrow_officer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
                     ->or_like('partner_id', $keyword)
@@ -1580,7 +1617,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_order_partner_company_info');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("partner_name", $keyword)
                     ->or_like('partner_id', $keyword)
@@ -1590,7 +1627,7 @@ class Home_model extends CI_Model
             $this->db->like('partner_type_id', '10010');
             $this->db->where('status', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_order_partner_company_info');
@@ -1606,7 +1643,7 @@ class Home_model extends CI_Model
             $this->db->like('partner_type_id', '10010');
             $this->db->where('status', 1);
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_order_partner_company_info');
@@ -1615,11 +1652,11 @@ class Home_model extends CI_Model
                 $escrow_officer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $escrow_officer_lists,
-        );
+            'data'            => $escrow_officer_lists,
+        ];
     }
 
     public function get_title_production($params)
@@ -1628,14 +1665,14 @@ class Home_model extends CI_Model
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
 
-        $customer_lists = array();
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        $customer_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
@@ -1647,7 +1684,7 @@ class Home_model extends CI_Model
             $this->db->where('is_title_production', 1);
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
@@ -1657,7 +1694,7 @@ class Home_model extends CI_Model
 
             $this->db->where('status', 1);
             $this->db->where('is_title_production', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1673,7 +1710,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_title_production', 1);
             $this->db->where('status', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1682,14 +1719,14 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
-    public function get_escrow_officer($params = array())
+    public function get_escrow_officer($params = [])
     {
         $this->db->select('*');
         $this->db->from('pct_order_partner_company_info');
@@ -1705,17 +1742,17 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('id', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
 
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -1730,14 +1767,14 @@ class Home_model extends CI_Model
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
 
-        $customer_lists = array();
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        $customer_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
@@ -1749,7 +1786,7 @@ class Home_model extends CI_Model
             $this->db->where('is_mortgage_user', 1);
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
@@ -1759,7 +1796,7 @@ class Home_model extends CI_Model
 
             $this->db->where('status', 1);
             $this->db->where('is_mortgage_user', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1775,7 +1812,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_mortgage_user', 1);
             $this->db->where('status', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1784,11 +1821,11 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_active_client_users($params)
@@ -1797,14 +1834,14 @@ class Home_model extends CI_Model
         $this->db->where('status', 1);
         $this->db->from('customer_basic_details');
         $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
 
-        $customer_lists = array();
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        $customer_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
@@ -1816,7 +1853,7 @@ class Home_model extends CI_Model
             $this->db->where('is_password_updated', 1);
             $this->db->from('customer_basic_details');
             $filter_total_records = $this->db->count_all_results();
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
                 $this->db->where("CONCAT_WS(' ',first_name,last_name) LIKE '%" . $keyword . "%'", null, false);
                 $this->db->or_like('email_address', $keyword);
@@ -1826,7 +1863,7 @@ class Home_model extends CI_Model
 
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1842,7 +1879,7 @@ class Home_model extends CI_Model
 
             $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('customer_basic_details');
@@ -1851,11 +1888,11 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_pending_json_files()
@@ -1864,9 +1901,9 @@ class Home_model extends CI_Model
         $this->db->select('file_number');
         $this->db->from('pct_order_prelim_summary');
 
-        $query = $this->db->get();
-        $result = ($query->num_rows() > 0) ? $query->result_array() : array();
-        $file_array = array();
+        $query      = $this->db->get();
+        $result     = ($query->num_rows() > 0) ? $query->result_array() : [];
+        $file_array = [];
         if (count($result)) {
             $file_array = array_column($result, 'file_number');
         }
@@ -1875,8 +1912,8 @@ class Home_model extends CI_Model
         $this->db->from('pct_order_api_logs');
         $this->db->join('order_details', 'order_details.id = pct_order_api_logs.order_id');
         $this->db->where_not_in('order_details.file_number', $file_array);
-        $query = $this->db->get();
-        $result = ($query->num_rows() > 0) ? $query->result_array() : array();
+        $query  = $this->db->get();
+        $result = ($query->num_rows() > 0) ? $query->result_array() : [];
         if (count($result)) {
             return $result[0]['total_files'];
         } else {
@@ -1891,9 +1928,9 @@ class Home_model extends CI_Model
         $this->db->select('count(id) as total_files');
         $this->db->from('order_details');
         $this->db->where('prelim_flag', '0');
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->row_array();
-        if (!empty($result)) {
+        if (! empty($result)) {
             return $result['total_files'];
         } else {
             return 0;
@@ -1915,7 +1952,7 @@ class Home_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -1926,14 +1963,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $grant_document_lists = array();
+        $limit                = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset               = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $grant_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -1945,7 +1982,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -1958,7 +1995,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -1978,7 +2015,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -1988,11 +2025,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $grant_document_lists,
-        );
+            'data'            => $grant_document_lists,
+        ];
     }
 
     public function get_lp_listing_document_list($params)
@@ -2002,14 +2039,14 @@ class Home_model extends CI_Model
         $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $grant_document_lists = array();
+        $limit                = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset               = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $grant_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -2021,7 +2058,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('order_details.file_number', $keyword)
                     ->or_like('pct_order_documents.document_name', $keyword)
@@ -2034,7 +2071,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -2054,7 +2091,7 @@ class Home_model extends CI_Model
             $this->db->where('pct_order_documents.is_pre_listing_report_doc', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -2064,11 +2101,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $grant_document_lists,
-        );
+            'data'            => $grant_document_lists,
+        ];
     }
 
     public function get_admin_user_logs($params)
@@ -2079,14 +2116,14 @@ class Home_model extends CI_Model
         //          ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
         $total_records = $this->db->count_all_results();
 
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $admin_logs_list = array();
+        $limit           = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset          = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $admin_logs_list = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('admin.first_name', $keyword)
                     ->or_like('admin.last_name', $keyword)
@@ -2100,7 +2137,7 @@ class Home_model extends CI_Model
                 ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('admin.first_name', $keyword)
                     ->or_like('admin.last_name', $keyword)
@@ -2113,7 +2150,7 @@ class Home_model extends CI_Model
                 ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $this->db->order_by('pct_admin_activity_logs.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get();
@@ -2131,7 +2168,7 @@ class Home_model extends CI_Model
                 ->join('admin', 'admin.id = pct_admin_activity_logs.user_id');
             $this->db->order_by('pct_admin_activity_logs.id', 'desc');
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
@@ -2141,11 +2178,11 @@ class Home_model extends CI_Model
             }
         }
 
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $admin_logs_list,
-        );
+            'data'            => $admin_logs_list,
+        ];
     }
 
     public function get_lp_document_list($params)
@@ -2158,17 +2195,17 @@ class Home_model extends CI_Model
             4 => 'sub_type_list',
         ];
         $this->db->from('pct_lp_document_types');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $orderBy = $orderColumnList[$params['orderColumn']];
-        $orderDir = $params['orderDir'];
-        $lp_document_lists = array();
+        $total_records     = $this->db->count_all_results();
+        $limit             = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset            = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $orderBy           = $orderColumnList[$params['orderColumn']];
+        $orderDir          = $params['orderDir'];
+        $lp_document_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
                 // ->or_like('doc_sub_type_description',$keyword)
@@ -2182,7 +2219,7 @@ class Home_model extends CI_Model
                 $this->db->where('is_display', $params['is_display']);
             }
             $filter_total_records = $this->db->count_all_results();
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("doc_type_description", $keyword)
                 // ->or_like('doc_sub_type_description',$keyword)
@@ -2195,7 +2232,7 @@ class Home_model extends CI_Model
                 $this->db->where('is_display', $params['is_display']);
             }
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by($orderBy, $orderDir);
@@ -2214,7 +2251,7 @@ class Home_model extends CI_Model
             if ((isset($params['is_display']))) {
                 $this->db->where('is_display', $params['is_display']);
             }
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by($orderBy, $orderDir);
@@ -2223,26 +2260,26 @@ class Home_model extends CI_Model
                 $lp_document_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lp_document_lists,
-        );
+            'data'            => $lp_document_lists,
+        ];
     }
 
     public function get_lp_alert_list($params)
     {
         $this->db->from('pct_lp_alert');
         $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
         // $orderDir = $params['orderDir'];
-        $lp_alert = array();
+        $lp_alert = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("days", $keyword)
                     ->or_like('color_code', $keyword)
@@ -2253,7 +2290,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_lp_alert');
 
             $filter_total_records = $this->db->count_all_results();
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like("days", $keyword)
                     ->or_like('color_code', $keyword)
@@ -2262,7 +2299,7 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('days', 'asc');
@@ -2273,7 +2310,7 @@ class Home_model extends CI_Model
         } else {
             $this->db->from('pct_lp_alert');
             $filter_total_records = $this->db->count_all_results();
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('days', 'asc');
@@ -2282,11 +2319,11 @@ class Home_model extends CI_Model
                 $lp_alert = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $lp_alert,
-        );
+            'data'            => $lp_alert,
+        ];
     }
 
     public function getSubtypeLPDocumentList()
@@ -2297,12 +2334,12 @@ class Home_model extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function insertLpDocType($data = array(), $table = '')
+    public function insertLpDocType($data = [], $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
         }
-        if (!empty($data)) {
+        if (! empty($data)) {
 
             $data['created_at'] = date("Y-m-d H:i:s");
 
@@ -2315,12 +2352,12 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function insertLpAlert($data = array(), $table = '')
+    public function insertLpAlert($data = [], $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_alert';
         }
-        if (!empty($data)) {
+        if (! empty($data)) {
             $data['created_at'] = date("Y-m-d H:i:s");
 
             // Insert data
@@ -2332,31 +2369,31 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function deleteLpDocType($condition = array(), $table = '')
+    public function deleteLpDocType($condition = [], $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
         }
-        if (!empty($condition)) {
+        if (! empty($condition)) {
             // Delete data
             return $this->db->delete($table, $condition);
         }
         return false;
     }
 
-    public function deleteLpAlert($condition = array(), $table = '')
+    public function deleteLpAlert($condition = [], $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_alert';
         }
-        if (!empty($condition)) {
+        if (! empty($condition)) {
             // Delete data
             return $this->db->delete($table, $condition);
         }
         return false;
     }
 
-    public function getLpDocType($params = array())
+    public function getLpDocType($params = [])
     {
         $this->db->select('*');
         $this->db->from('pct_lp_document_types');
@@ -2370,13 +2407,13 @@ class Home_model extends CI_Model
         if (array_key_exists("id", $params)) {
             $this->db->where('id', $params['id']);
         }
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->row_array();
         // Return fetched data
         return $result;
     }
 
-    public function getMappedDocType($params = array())
+    public function getMappedDocType($params = [])
     {
         $this->db->select('doc_type, map_in_section');
         $this->db->from('pct_lp_document_types');
@@ -2389,13 +2426,13 @@ class Home_model extends CI_Model
         if (array_key_exists("id", $params)) {
             $this->db->where('id', $params['id']);
         }
-        $query = $this->db->get();
+        $query  = $this->db->get();
         $result = $query->result_array();
         // Return fetched data
         return $result;
     }
 
-    public function getLpAlert($params = array())
+    public function getLpAlert($params = [])
     {
         $this->db->select('*');
         $this->db->from('pct_lp_alert');
@@ -2408,20 +2445,20 @@ class Home_model extends CI_Model
 
         if (array_key_exists("id", $params)) {
             $this->db->where('id', $params['id']);
-            $query = $this->db->get();
+            $query  = $this->db->get();
             $result = $query->row_array();
         }
         // Return fetched data
         return $result;
     }
 
-    public function updateLpDocType($data, $condition = array(), $table = '')
+    public function updateLpDocType($data, $condition = [], $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_document_types';
         }
 
-        if (!empty($condition)) {
+        if (! empty($condition)) {
             // Update data
             $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -2434,13 +2471,13 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function updateLpAlert($data, $condition = array(), $table = '')
+    public function updateLpAlert($data, $condition = [], $table = '')
     {
         if (empty($table)) {
             $table = 'pct_lp_alert';
         }
 
-        if (!empty($condition)) {
+        if (! empty($condition)) {
             // Update data
             $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -2465,7 +2502,7 @@ class Home_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -2485,7 +2522,7 @@ class Home_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -2500,7 +2537,7 @@ class Home_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -2516,7 +2553,7 @@ class Home_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -2532,7 +2569,7 @@ class Home_model extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -2564,16 +2601,16 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('first_name', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -2600,16 +2637,16 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('id', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -2636,16 +2673,16 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('id', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -2653,7 +2690,7 @@ class Home_model extends CI_Model
         return $result;
     }
 
-    public function get_customers_search($params = array(), $is_master_search = 0)
+    public function get_customers_search($params = [], $is_master_search = 0)
     {
         $table = $this->table;
 
@@ -2671,13 +2708,13 @@ class Home_model extends CI_Model
         } else {
             if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = $query->row_array();
             } else {
                 $this->db->order_by('id', 'asc');
                 if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit'], $params['start']);
-                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 } elseif (array_key_exists("name", $params) && array_key_exists("is_escrow", $params)) {
                     $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
@@ -2685,7 +2722,7 @@ class Home_model extends CI_Model
                     $this->db->like('first_name', $params['name']);
                     $this->db->where('is_password_updated', 1);
                 } elseif (array_key_exists("company_name", $params) && array_key_exists("is_escrow", $params)) {
-                    if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
+                    if (isset($params['is_from_order_form']) && ! empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     } else {
                         $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
@@ -2711,7 +2748,7 @@ class Home_model extends CI_Model
 
                 }
 
-                $query = $this->db->get();
+                $query  = $this->db->get();
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
@@ -2722,26 +2759,26 @@ class Home_model extends CI_Model
     public function get_daily_email_receiver($params)
     {
         $this->db->from('pct_daily_email_receiver_list');
-        $total_records = $this->db->count_all_results();
-        $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $customer_lists = array();
+        $total_records  = $this->db->count_all_results();
+        $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $customer_lists = [];
 
-        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->like("email", $keyword);
             }
 
             $this->db->from('pct_daily_email_receiver_list');
             $filter_total_records = $this->db->count_all_results();
 
-            if (isset($keyword) && !empty($keyword)) {
+            if (isset($keyword) && ! empty($keyword)) {
                 $this->db->like("email", $keyword);
             }
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_daily_email_receiver_list');
@@ -2753,7 +2790,7 @@ class Home_model extends CI_Model
             $this->db->from('pct_daily_email_receiver_list');
             $filter_total_records = $this->db->count_all_results();
 
-            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
             $query = $this->db->get('pct_daily_email_receiver_list');
@@ -2762,11 +2799,11 @@ class Home_model extends CI_Model
                 $customer_lists = $query->result_array();
             }
         }
-        return array(
-            'recordsTotal' => $total_records,
+        return [
+            'recordsTotal'    => $total_records,
             'recordsFiltered' => $filter_total_records,
-            'data' => $customer_lists,
-        );
+            'data'            => $customer_lists,
+        ];
     }
 
     public function get_sales_rep_report($month, $year)

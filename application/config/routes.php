@@ -222,12 +222,12 @@ $route['import-data-for-pay-off'] = 'frontend/order/cron/importDataForPayOff';
 $route['delete-old-logs'] = 'frontend/order/cron/deleteOldLogs';
 $route['fetch-open-contact-lookup-code'] = 'frontend/order/cron/softproOpenContactLookupCode';
 $route['fetch-escrow-company-lookup-code'] = 'frontend/order/cron/softproEscrowCompanyLookupCode';
-$route['fetch-escrow-officer-lookup-code'] = 'frontend/order/cron/softproEscrowOfficerLookupCode';
 $route['fetch-lender-lookup-code'] = 'frontend/order/cron/softproLenderLookupCode';
 $route['fetch-mortgage-broker-lookup-code'] = 'frontend/order/cron/softproMortgageBrokerLookupCode';
 $route['fetch-selling-agent-lookup-code'] = 'frontend/order/cron/softproSellingAgentLookupCode';
-$route['fetch-title-officer-lookup-code'] = 'frontend/order/cron/softproTitleOfficerLookupCode';
 $route['fetch-underwriter-lookup-code'] = 'frontend/order/cron/softproUnderwriterLookupCode';
+$route['fetch-escrow-officer-lookup-code'] = 'frontend/order/cron/softproEscrowOfficerLookupCode';
+$route['fetch-title-officer-lookup-code'] = 'frontend/order/cron/softproTitleOfficerLookupCode';
 $route['update-softpro-order-status'] = 'frontend/order/cron/updateAllSoftProOrderStatus';
 
 $route['get-pay-off-orders'] = 'frontend/order/payOff/get_pay_off_orders';
