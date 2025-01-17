@@ -112,6 +112,9 @@
                                 </div>
 								<div class="col-sm-6">
 									<input value="<?php echo $customer_data['zip_code']; ?>" type="text" name="Zipcode" id="Zipcode" class="form-control" placeholder="Zipcode">
+									<input value="<?php echo $customer_data['lookup_code']; ?>" type="hidden" name="ClientLookupCode" id="ClientLookupCode" class="form-control" placeholder="ClientLookupCode">
+									<input value="<?php echo $customer_data['flookup_code']; ?>" type="hidden" name="CompanyLookupCode" id="CompanyLookupCode" class="form-control" placeholder="ClientLookupCode">
+									<input value="<?php echo $customer_data['client_type']; ?>" type="hidden" name="ClientType" id="ClientType" class="form-control" placeholder="ClientLookupCode">
                                 </div>
                             </div>
 
@@ -379,24 +382,23 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 									<span>Add Agent Details</span>
 								</div>
 
-								<?php
+<?php
 $is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
 $is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
 
-if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
-    ?>
-										<div class="col-sm-3 align-display">
+//if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
+?>
+										<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>
 										</div>
 
-									<?php
-}if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
-										<div class="col-sm-3 align-display">
+<?php // }if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
+										<div class="col-sm-3 align-display" id="add-escrow-section" style="display: none;">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
 											<span >Add Escrow</span>
 										</div>
-								<?php }?>
+								<?php // }?>
 
 								<div class="col-sm-3 align-display" id="add-escrow-officer-section" style="display:none;">
 									<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-officer-details" id="add-escrow-officer-details">
@@ -427,6 +429,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 										<input type="text" name="BuyerAgentName" id="BuyerAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
 										<input type="hidden" name="BuyerAgentLookupCode" id="BuyerAgentLookupCode" value="">
+										<input type="hidden" name="BuyerAgentClientLookUpCode" id="BuyerAgentClientLookUpCode" value="">
 										<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
 									</div>
 
@@ -434,6 +437,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 										<input type="text" name="ListingAgentName" id="ListingAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="ListingAgentId" id="ListingAgentId" value="">
 										<input type="hidden" name="ListingAgentLookupCode" id="ListingAgentLookupCode" value="">
+										<input type="hidden" name="ListingAgentClientLookUpCode" id="ListingAgentClientLookUpCode" value="">
 										<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
 									</div>
 								</div>
@@ -476,7 +480,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 							</div>
 
 							<div id="lender-details-fields" style="display: none;">
-								<div class="row spacer-b30 spacer-t30">
+								<div class="row mb-5">
 									<div class="col-sm-12">
 										<div class="tagline"><span> Add Lender Details </span></div>
 									</div>
@@ -490,6 +494,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 									</div>
 									<input type="hidden" name="LenderId" id="LenderId" value="">
 									<input type="hidden" name="LenderLookUpCode" id="LenderLookUpCode" value="">
+									<input type="hidden" name="LenderClientLookUpCode" id="LenderClientLookUpCode" value="">
 								</div>
 
 								<div class="row form-group">
@@ -518,6 +523,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 									</div>
 									<input type="hidden" name="EscrowId" id="EscrowId" value="">
 									<input type="hidden" name="EscrowLookUpCode" id="EscrowLookUpCode" value="">
+									<input type="hidden" name="EscrowClientLookUpCode" id="EscrowClientLookUpCode" value="">
 								</div>
 
 								<div class="row form-group">
@@ -544,7 +550,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 											<?php
 if (isset($escrowOfficers) && !empty($escrowOfficers)) {
     foreach ($escrowOfficers as $escrowOfficer) {?>
-		<option value="<?php echo $escrowOfficer['lookup_code']; ?>"><?php echo $escrowOfficer['lookup_code']; ?></option>
+		<option value="<?php echo $escrowOfficer['closer_examiner']; ?>"><?php echo $escrowOfficer['name']; ?></option>
 <?php
 }
 }?>
@@ -603,7 +609,7 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
 							</div>
                             <div class="form-group">
                                 <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-success btn-icon-split home-submit" <?php echo ($submitButtonFlag == 0) ? "disabled" : ""; ?>>
+                                    <button type="submit" class="btn btn-success btn-icon-split home-submit" <?php echo($submitButtonFlag == 0) ? "disabled" : ""; ?>>
                                         <span class="icon text-white-50">
                                             <i class="fas fa-save"></i>
                                         </span>

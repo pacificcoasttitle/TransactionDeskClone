@@ -360,6 +360,7 @@ $(document).ready(function () {
             $("#BuyerAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#BuyerAgentId").val(ui.item.id);
             $("#BuyerAgentLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
+            $("#BuyerAgentClientLookUpCode").val(ui.item.flookup_code).parent().addClass('state-success');
             $("#buyer_agent_partner_id").val(ui.item.partner_id);
         },
         change: function (event, ui) {
@@ -406,6 +407,7 @@ $(document).ready(function () {
             $("#ListingAgentCompany").val(ui.item.company).parent().addClass('state-success');
             $("#ListingAgentId").val(ui.item.id);
             $("#ListingAgentLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
+            $("#ListingAgentClientLookUpCode").val(ui.item.flookup_code).parent().addClass('state-success');
             $("#listing_agent_partner_id").val(ui.item.partner_id);
         },
         change: function (event, ui) {
@@ -453,6 +455,8 @@ $(document).ready(function () {
             $("#LenderTelephone").val(ui.item.telephone_no).parent().addClass('state-success');
             $("#LenderCompany").val(ui.item.company).parent().addClass('state-success');
             $("#LenderId").val(ui.item.id);
+            $("#LenderLookUpCode").val(ui.item.lookup_code);
+            $("#LenderClientLookUpCode").val(ui.item.flookup_code);
         },
         change: function (event, ui) {
             if (ui.item == null) {
@@ -500,6 +504,7 @@ $(document).ready(function () {
             $("#EscrowCompany").val(ui.item.name).parent().addClass('state-success');
             $("#EscrowId").val(ui.item.id);
             $("#EscrowLookUpCode").val(ui.item.lookup_code);
+            $("#EscrowClientLookUpCode").val(ui.item.flookup_code);
 
         },
         change: function (event, ui) {

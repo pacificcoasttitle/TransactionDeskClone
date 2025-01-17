@@ -90,6 +90,9 @@ $(document).ready(function () {
                 $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
                 $("#City").val(ui.item.city).parent().addClass('state-success');
                 $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
+                $("#ClientLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
+                $("#CompanyLookupCode").val(ui.item.flookup_code).parent().addClass('state-success');
+                $("#ClientType").val(ui.item.client_type).parent().addClass('state-success');
                 $("#CustomerId").val(ui.item.id);
                 if (ui.item.sales_rep_id) {
                     $("#SalesRep").val(ui.item.sales_rep_id)

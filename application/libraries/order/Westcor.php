@@ -186,7 +186,7 @@ class Westcor
         $res = array();
         $resToken = $this->get_token($orderDetails['order_id']);
         $branchData = $this->getBranches($orderDetails['fnf_agent_id']);
-        $orderUser = $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->CI->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
 
         $propertyDetail = explode(",", $orderDetails['full_address']);
         $propery[] = array(
@@ -264,7 +264,7 @@ class Westcor
             $sellers = array();
         }
 
-        $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+        $lenderDetails = $this->CI->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
         $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
         $name = !empty($lenderFormData) ? $lenderFormData['lender_fullname'] : $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         if (!empty($lenderDetails)) {

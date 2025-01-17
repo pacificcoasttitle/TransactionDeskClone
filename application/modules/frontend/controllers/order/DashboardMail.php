@@ -1003,7 +1003,7 @@ class DashboardMail extends MX_Controller
         );
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-        $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
         $user_data['email'] = $orderUser['email_address'];
         $user_data['password'] = $orderUser['random_password'];
         $user_data['from_mail'] = 1;

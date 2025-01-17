@@ -100,6 +100,9 @@ class Home extends MX_Controller
                 $StreetAddress = $this->input->post('StreetAddress');
                 $City = $this->input->post('City');
                 $Zipcode = $this->input->post('Zipcode');
+                $ClientLookupCode = $this->input->post('ClientLookupCode');
+                $CompanyLookupCode = $this->input->post('CompanyLookupCode');
+                $ClientType = $this->input->post('ClientType');
 
                 $PropertyAddress = $this->input->post('Property');
                 $SplitPropertyAddress = explode(' ', $PropertyAddress);
@@ -183,6 +186,7 @@ class Home extends MX_Controller
                     $BuyerAgentTelephone = $this->input->post('BuyerAgentTelephone');
                     $BuyerAgentCompany = $this->input->post('BuyerAgentCompany');
                     $BuyerAgentLookupCode = $this->input->post('BuyerAgentLookupCode');
+                    $BuyerAgentClientLookUpCode = $this->input->post('BuyerAgentClientLookUpCode');
                     $parties_email[] = $BuyerAgentEmailAddress;
                     $buyers_agent_details = array('name' => $BuyerAgentName, 'email' => $BuyerAgentEmailAddress, 'telephone' => $BuyerAgentTelephone, 'company' => $BuyerAgentCompany);
                     $orderReq['buyersAgentDetails'] = [
@@ -190,7 +194,8 @@ class Home extends MX_Controller
                         'Email' => $BuyerAgentEmailAddress,
                         'Telephone' => $BuyerAgentTelephone,
                         'CompanyName' => $BuyerAgentCompany,
-                        "LookUpCodeBuyerAgent" => $BuyerAgentLookupCode,
+                        "LookUpCode" => $BuyerAgentLookupCode,
+                        "ClientLookUpCode" => $BuyerAgentClientLookUpCode,
                     ];
                 }
 
@@ -201,6 +206,7 @@ class Home extends MX_Controller
                     $ListingAgentTelephone = $this->input->post('ListingAgentTelephone');
                     $ListingAgentCompany = $this->input->post('ListingAgentCompany');
                     $ListingAgentLookupCode = $this->input->post('ListingAgentLookupCode');
+                    $LenderClientLookUpCode = $this->input->post('LenderClientLookUpCode');
                     $parties_email[] = $ListingAgentEmailAddress;
                     $listing_agent_details = array('name' => $ListingAgentName, 'email' => $ListingAgentEmailAddress, 'telephone' => $ListingAgentTelephone, 'company' => $ListingAgentCompany);
                     $orderReq['listingAgentDetails'] = [
@@ -208,7 +214,8 @@ class Home extends MX_Controller
                         'Email' => $ListingAgentEmailAddress,
                         'Telephone' => $ListingAgentTelephone,
                         'CompanyName' => $ListingAgentCompany,
-                        "LookUpCodeListingAgent" => $ListingAgentLookupCode,
+                        "LookUpCode" => $ListingAgentLookupCode,
+                        "ClientLookUpCode" => $LenderClientLookUpCode,
                     ];
                 }
 
@@ -217,24 +224,24 @@ class Home extends MX_Controller
                 $lender_details_api = $escrow_details_api = array();
 
                 if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
-                    $orderUser = $this->home_model->get_user(array('id' => $_POST['id']));
+                    $orderUser = $this->home_model->sp_get_user(array('id' => $_POST['id']));
                     $is_escrow = $orderUser['is_escrow'];
                     $user_data['email'] = $orderUser['email_address'];
                     $user_data['password'] = $orderUser['random_password'];
-                    $con = array(
-                        'where' => array(
-                            'partner_id' => $orderUser['partner_id'],
-                        ),
-                    );
-                    $companyData = $this->home_model->get_company_rows($con);
+                    // $con = array(
+                    //     'where' => array(
+                    //         'partner_id' => $orderUser['partner_id'],
+                    //     ),
+                    // );
+                    // $companyData = $this->home_model->get_company_rows($con);
                 } else {
                     $orderUser = $this->home_model->get_user(array('id' => $userdata['id']));
-                    $con = array(
-                        'where' => array(
-                            'partner_id' => $orderUser['partner_id'],
-                        ),
-                    );
-                    $companyData = $this->home_model->get_company_rows($con);
+                    // $con = array(
+                    //     'where' => array(
+                    //         'partner_id' => $orderUser['partner_id'],
+                    //     ),
+                    // );
+                    // $companyData = $this->home_model->get_company_rows($con);
                 }
 
                 $cplLenderId = 0;
@@ -242,7 +249,7 @@ class Home extends MX_Controller
                 if (isset($_POST['EscrowId']) && !empty($_POST['EscrowId'])) {
                     $escrowId = $_POST['EscrowId'];
                     $EscrowLenderId = $_POST['EscrowId'];
-                    $escrow_user_details = $this->home_model->get_user(array('id' => $escrowId));
+                    // $escrow_user_details = $this->home_model->get_user(array('id' => $escrowId));
                     // $escrowCon = array(
                     //     'where' => array(
                     //         'partner_id' => $escrow_user_details['partner_id'],
@@ -254,9 +261,11 @@ class Home extends MX_Controller
                     $escrowTelephone = $this->input->post('EscrowTelephone');
                     $escrowCompany = $this->input->post('EscrowCompany');
                     $escrowLookUpCode = $this->input->post('EscrowLookUpCode');
+                    $escrowClientLookUpCode = $this->input->post('EscrowClientLookUpCode');
                     $escrow_details = array('name' => $escrowName, 'email' => $escrowEmail, 'telephone' => $escrowName, 'company' => $escrowCompany);
                     $orderReq['escrowDetails'] = [
                         'LookUpCode' => $escrowLookUpCode,
+                        'ClientLookUpCode' => $escrowClientLookUpCode,
                         'Name' => $escrowName,
                         'Email' => $escrowEmail,
                         'Telephone' => $escrowTelephone,
@@ -300,19 +309,22 @@ class Home extends MX_Controller
                 }*/
 
                 // if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
-                // $lenderId = $_POST['LenderId'];
-                $lenderId = 7948;
-                $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
+                $lenderId = $_POST['LenderId'];
+                // $lenderId = 7948;
+                // $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
                 // print_r($lender_user_details);die;
                 $lenderName = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
                 $lenderEmail = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
                 $lenderTelephone = $this->input->post('LenderTelephone');
                 $lenderCompany = $this->input->post('LenderCompany');
                 $lenderLookUpCode = $this->input->post('LenderLookUpCode');
+                $lenderClientLookUpCode = $this->input->post('LenderClientLookUpCode');
                 $lender_details = array('name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany);
                 if (!empty($lenderEmail)) {
+                    // echo "Hello";die;
                     $orderReq['lenderDetails'] = [
                         'LookUpCode' => $lenderLookUpCode,
+                        'ClientLookUpCode' => $lenderClientLookUpCode,
                         'Name' => $lenderName,
                         'Email' => $lenderEmail,
                         'Telephone' => $lenderTelephone,
@@ -385,6 +397,9 @@ class Home extends MX_Controller
                         "EmailNotifications" => true,
                         "State" => "",
                         "SalesRep" => $salesRepName,
+                        "ClientLookupCode" => $ClientLookupCode,
+                        "CompanyLookupCode" => $CompanyLookupCode,
+                        "UserType" => $ClientType,
                     ];
                     $orderReq['propertyDetails'] = [
                         "Address1" => $PropertyAddress,
@@ -410,9 +425,12 @@ class Home extends MX_Controller
                         "EscrowNumber" => $EscrowNumber,
                         "PrimaryBorrower" => $primaryBorrower,
                         "SecondaryBorrower" => $secondaryBorrower,
-                        "LoanAmount" => $LoanAmount,
-                        "SalesAmount" => $SalesAmount,
+                        // "LoanAmount" => $LoanAmount,
                     ];
+
+                    if (!empty($SalesAmount)) {
+                        $transactionDetailsReq["SalesAmount"] = $SalesAmount;
+                    }
                     // $orderReq["buyersAgentDetails"] = [
                     //     "Name" => "Agent Doe",
                     //     "Email" => "agent.john@example.com",
@@ -443,6 +461,7 @@ class Home extends MX_Controller
                     }
                     $orderReq['orderType'] = $softproOrderType;
                     if ($TransactionType != 'Purchase') {
+                        $transactionDetailsReq["LoanAmount"] = $LoanAmount;
                         // $orderReq['orderType'] = "Refinance";
                         $transactionDetailsReq['PrimaryBorrower'] = $OwnerFirstName . ' ' . $OwnerLastName;
                         // $place_order['Buyers'][] = $legalEntity; //
@@ -465,7 +484,7 @@ class Home extends MX_Controller
                     $loan = array();
                     if (isset($LoanAmount) && !empty($LoanAmount)) {
                         $loan['LoanAmount'] = $LoanAmount;
-                        $transactionDetailsReq['LoanAmount'] = $LoanAmount;
+                        // $transactionDetailsReq['LoanAmount'] = $LoanAmount;
                     }
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
@@ -1054,57 +1073,57 @@ class Home extends MX_Controller
 
                 }
                 /* Buyers Agent */
-                if (isset($BuyerAgentId) && !empty($BuyerAgentId)) {
-                    $buyerData = array(
-                        'name' => $BuyerAgentName,
-                        'email_address' => $BuyerAgentEmailAddress,
-                        'company' => $BuyerAgentCompany,
-                        'telephone_no' => $BuyerAgentTelephone,
-                        'status' => 1,
-                    );
-                    $condition = array(
-                        'id' => $BuyerAgentId,
-                    );
-                    $this->agent_model->update($buyerData, $condition);
+                /*if (isset($BuyerAgentId) && !empty($BuyerAgentId)) {
+                $buyerData = array(
+                'name' => $BuyerAgentName,
+                'email_address' => $BuyerAgentEmailAddress,
+                'company' => $BuyerAgentCompany,
+                'telephone_no' => $BuyerAgentTelephone,
+                'status' => 1,
+                );
+                $condition = array(
+                'id' => $BuyerAgentId,
+                );
+                $this->agent_model->update($buyerData, $condition);
                 } else if (isset($agentDetailFlag)) {
-                    if (!empty($BuyerAgentName) && !empty($BuyerAgentEmailAddress) && !empty($BuyerAgentCompany) && !empty($BuyerAgentTelephone)) {
-                        $buyerData = array(
-                            'name' => $BuyerAgentName,
-                            'email_address' => $BuyerAgentEmailAddress,
-                            'company' => $BuyerAgentCompany,
-                            'telephone_no' => $BuyerAgentTelephone,
-                            'status' => 1,
-                        );
-                        $BuyerAgentId = $this->agent_model->insert($buyerData);
-                    }
+                if (!empty($BuyerAgentName) && !empty($BuyerAgentEmailAddress) && !empty($BuyerAgentCompany) && !empty($BuyerAgentTelephone)) {
+                $buyerData = array(
+                'name' => $BuyerAgentName,
+                'email_address' => $BuyerAgentEmailAddress,
+                'company' => $BuyerAgentCompany,
+                'telephone_no' => $BuyerAgentTelephone,
+                'status' => 1,
+                );
+                $BuyerAgentId = $this->agent_model->insert($buyerData);
                 }
+                }*/
                 /* Buyers Agent */
 
                 /* Listing Agent */
-                if (isset($ListingAgentId) && !empty($ListingAgentId)) {
-                    $listngAgentData = array(
-                        'name' => $ListingAgentName,
-                        'email_address' => $ListingAgentEmailAddress,
-                        'company' => $ListingAgentCompany,
-                        'telephone_no' => $ListingAgentTelephone,
-                        'status' => 1,
-                    );
-                    $condition = array(
-                        'id' => $ListingAgentId,
-                    );
-                    $this->agent_model->update($listngAgentData, $condition);
+                /*if (isset($ListingAgentId) && !empty($ListingAgentId)) {
+                $listngAgentData = array(
+                'name' => $ListingAgentName,
+                'email_address' => $ListingAgentEmailAddress,
+                'company' => $ListingAgentCompany,
+                'telephone_no' => $ListingAgentTelephone,
+                'status' => 1,
+                );
+                $condition = array(
+                'id' => $ListingAgentId,
+                );
+                $this->agent_model->update($listngAgentData, $condition);
                 } else if (isset($agentDetailFlag)) {
-                    if (!empty($ListingAgentName) && !empty($ListingAgentEmailAddress) && !empty($ListingAgentCompany) && !empty($ListingAgentCompany)) {
-                        $listngAgentData = array(
-                            'name' => $ListingAgentName,
-                            'email_address' => $ListingAgentEmailAddress,
-                            'company' => $ListingAgentCompany,
-                            'telephone_no' => $ListingAgentCompany,
-                            'status' => 1,
-                        );
-                        $ListingAgentId = $this->agent_model->insert($listngAgentData);
-                    }
+                if (!empty($ListingAgentName) && !empty($ListingAgentEmailAddress) && !empty($ListingAgentCompany) && !empty($ListingAgentCompany)) {
+                $listngAgentData = array(
+                'name' => $ListingAgentName,
+                'email_address' => $ListingAgentEmailAddress,
+                'company' => $ListingAgentCompany,
+                'telephone_no' => $ListingAgentCompany,
+                'status' => 1,
+                );
+                $ListingAgentId = $this->agent_model->insert($listngAgentData);
                 }
+                }*/
                 /* Listing Agent */
 
                 $propertyData = array(
@@ -1235,18 +1254,18 @@ class Home extends MX_Controller
                     $name = explode(' ', $lenderName);
                     $first_name = $name[0];
                     $last_name = $name[1];
-                    $lenderData = array(
-                        'first_name' => $first_name,
-                        'last_name' => $last_name,
-                        'email_address' => $lenderEmail,
-                        'company_name' => $lenderCompany,
-                        'telephone_no' => $lenderTelephone,
-                        'status' => 1,
+                    /*$lenderData = array(
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
+                    'email_address' => $lenderEmail,
+                    'company_name' => $lenderCompany,
+                    'telephone_no' => $lenderTelephone,
+                    'status' => 1,
                     );
                     $condition = array(
-                        'id' => $lenderId,
+                    'id' => $lenderId,
                     );
-                    $lenderId = $this->home_model->update($lenderData, $condition);
+                    $lenderId = $this->home_model->update($lenderData, $condition);*/
                     $message = 'You have added on order number #' . $orderNumber;
                     $notificationData = array(
                         'sent_user_id' => $lenderId,
@@ -1694,15 +1713,13 @@ class Home extends MX_Controller
             $data['productType'] =  $this->productType->getProductTypes($condition);*/
 
             $condition = array(
-                'where' => array(
-                    'status' => 1,
-                ),
+                // 'where' => array(
+                //     'status' => 1,
+                // ),
             );
 
             // $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
             $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerLookupDetails($condition);
-            // echo "<pre>";
-            // print_r($data);die;
             // $data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
             $condition = array(
                 'where' => array(
@@ -1713,6 +1730,8 @@ class Home extends MX_Controller
             $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
             // $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
             $data['escrowOfficers'] = $this->home_model->getEscrowOfficerLookupDetails();
+            // echo "<pre>";
+            // print_r($data['escrowOfficers']);die;
             $data['productType'] = $this->home_model->get_product_types();
             // echo "<pre>";
             // print_r($data);die;
@@ -1738,13 +1757,14 @@ class Home extends MX_Controller
                 // $this->template->show("order", "master_order", $data);
             } else {
                 $data['customer_data'] = $customer_data;
-                $con = array(
-                    'where' => array(
-                        'partner_id' => $customer_data['partner_id'],
-                    ),
-                );
-                $companyData = $this->home_model->get_company_rows($con);
-                $data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
+                // $con = array(
+                //     'where' => array(
+                //         'partner_id' => $customer_data['partner_id'],
+                //     ),
+                // );
+                // $companyData = $this->home_model->get_company_rows($con);
+                // $data['deliverables'] = !empty($companyData[0]['deliverables']) ? explode(',', $companyData[0]['deliverables']) : array();
+                $data['deliverables'] = [];
                 $this->salesdashboardtemplate->show("order", "home", $data);
                 // $this->template->show("order", "home", $data);
             }
@@ -1996,7 +2016,7 @@ class Home extends MX_Controller
         // $this->load->library('order/resware');
         $escrowId = (!empty($_POST['escrow_id'])) ? $_POST['escrow_id'] : '';
         if (!empty($escrowId)) {
-            $orderUser = $this->home_model->get_user(array('id' => $escrowId));
+            $orderUser = $this->home_model->sp_get_user(array('id' => $escrowId));
         }
 
         if ((!isset($escrowId) || empty($escrowId)) || (!empty($orderUser) && $orderUser['is_escrow'] == 0)) {
@@ -2170,7 +2190,7 @@ class Home extends MX_Controller
             $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
             if ($userdata['is_master'] == 1) {
-                $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+                $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
                 $user_data['email'] = $orderUser['email_address'];
                 $user_data['password'] = $orderUser['random_password'];
             } else {
@@ -2238,7 +2258,7 @@ class Home extends MX_Controller
             $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
             if ($userdata['is_master'] == 1) {
-                $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+                $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
                 $user_data['email'] = $orderUser['email_address'];
                 $user_data['password'] = $orderUser['random_password'];
             } else {
@@ -2309,7 +2329,7 @@ class Home extends MX_Controller
             $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
             if ($userdata['is_master'] == 1) {
-                $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+                $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
                 $user_data['email'] = $orderUser['email_address'];
                 $user_data['password'] = $orderUser['random_password'];
             } else {
@@ -2446,7 +2466,7 @@ class Home extends MX_Controller
         $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
         if ($userdata['is_master'] == 1) {
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
             $user_data['email'] = $orderUser['email_address'];
             $user_data['password'] = $orderUser['random_password'];
         } else {

@@ -1297,7 +1297,7 @@ class Common extends MX_Controller
 
         $this->session->set_userdata('lender_details', $lender_details);
         unset($lender_details['lender_fullname']);
-        $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
         if ($new_existing_lender == 'add_lender') {
             $lender_details['partner_id'] = $this->input->post('partner_id');
             $lender_details['is_added_lender_by_cpl_proposed'] = 1;
@@ -1312,7 +1312,7 @@ class Common extends MX_Controller
         }
 
         $partners = array();
-        $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
+        $lenderUserDetails = $this->home_model->sp_get_user(array('id' => $LenderId));
         $secondaryEmp[] = array('UserID' => $lenderUserDetails['resware_user_id']);
         $secondaryPartners = array(
             'SecondaryEmployees' => $secondaryEmp,
@@ -1418,11 +1418,11 @@ class Common extends MX_Controller
             $userdata['id'] = 0;
         }
         $orderDetails = $this->order->get_order_details($fileId);
-        $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
 
         if ($orderUser['is_escrow'] == 1) {
             if (!empty($orderDetails['cpl_lender_id'])) {
-                $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                 $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
                 $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
@@ -1447,7 +1447,7 @@ class Common extends MX_Controller
             }
         } else {
             if (!empty($orderDetails['cpl_lender_id'])) {
-                $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                 $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
                 $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
@@ -1483,7 +1483,7 @@ class Common extends MX_Controller
                     $orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
                 }
             }
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
         }
 
         if (empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
@@ -2038,29 +2038,45 @@ class Common extends MX_Controller
         $condition['where']['is_sales_rep'] = 0;
         $is_from_order_form = $this->input->post('is_from_order_form');
         $condition['is_from_order_form'] = isset($is_from_order_form) && !empty($is_from_order_form) ? $is_from_order_form : 0;
-        $userDetails = $this->home_model->get_customers($condition, $is_master_search);
+        $userDetails = $this->home_model->get_sp_customers($condition, $is_master_search);
+        // echo "<pre>";
+        // print_r($userDetails);die;
         $userInfo = array();
 
         if (isset($userDetails) && !empty($userDetails)) {
             foreach ($userDetails as $key => $value) {
                 $data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
                 $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
-                $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+                $data['lookup_code'] = isset($value['lookup_code']) && !empty($value['lookup_code']) ? $value['lookup_code'] : '';
+                $data['flookup_code'] = isset($value['flookup_code']) && !empty($value['flookup_code']) ? $value['flookup_code'] : '';
+                // $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
                 $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
                 $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
                 $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
                 $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
-                $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+                $data['telephone_no'] = isset($value['phone']) && !empty($value['phone']) ? $value['phone'] : '';
                 $data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
-                $data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+                $data['address'] = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
+                // $data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
                 $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
                 $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
-                $data['zip_code'] = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+                $data['zip_code'] = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
                 $data['is_escrow'] = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : '';
+                $data['is_lender'] = isset($value['is_lender']) && !empty($value['is_lender']) ? $value['is_lender'] : '';
+                $data['is_selling_agent'] = isset($value['is_selling_agent']) && !empty($value['is_selling_agent']) ? $value['is_selling_agent'] : '';
+                $data['is_mortgage_broker'] = isset($value['is_mortgage_broker']) && !empty($value['is_mortgage_broker']) ? $value['is_mortgage_broker'] : '';
                 $data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
-                $data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && !empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';
+                $data['is_primary_mortgage_user'] = isset($value['is_mortgage_broker']) && !empty($value['is_mortgage_broker']) ? $value['is_mortgage_broker'] : '';
                 $data['title_officer_id'] = isset($value['title_officer_id']) && !empty($value['title_officer_id']) ? $value['title_officer_id'] : '';
                 $data['sales_rep_id'] = isset($value['sales_rep_id']) && !empty($value['sales_rep_id']) ? $value['sales_rep_id'] : '';
+                $data['client_type'] = '';
+                if (!empty($data['is_escrow'])) {
+                    $data['client_type'] = 'EscrowCompany';
+                } else if (!empty($data['is_lender'])) {
+                    $data['client_type'] = 'Lender';
+                } else if (!empty($data['is_selling_agent'])) {
+                    $data['client_type'] = 'ListingAgentBroker';
+                }
                 // array_push($userInfo, $data);
                 $userInfo[] = $data;
             }
@@ -2156,7 +2172,7 @@ class Common extends MX_Controller
         $data['property_id'] = $property_id;
         $customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
         $this->load->model('order/home_model');
-        $customer_data = $this->home_model->get_user(array('id' => $customer_id));
+        $customer_data = $this->home_model->sp_get_user(array('id' => $customer_id));
         $data['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
         $address = array();
         $street_address = isset($customer_data['street_address']) && !empty($customer_data['street_address']) ? $customer_data['street_address'] : '';
@@ -2265,7 +2281,7 @@ class Common extends MX_Controller
 
         if ($customer_data['is_escrow'] == 1) {
             if (!empty($orderDetails['cpl_lender_id'])) {
-                $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                 $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                 $data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
                 $data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
@@ -2292,7 +2308,7 @@ class Common extends MX_Controller
             }
         } else {
             if (!empty($orderDetails['cpl_lender_id'])) {
-                $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
 
                 $data['cpl_lender_id'] = $orderDetails['cpl_lender_id'];
                 $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
@@ -2318,7 +2334,7 @@ class Common extends MX_Controller
                 $data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
                 $data['lender_id'] = $customer_data['id'] ? $customer_data['id'] : '';
             }
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
         }
 
         if (empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
@@ -2413,7 +2429,7 @@ class Common extends MX_Controller
             if ($city) {
                 $lender_address[] = $city;
             }
-            $lendeUser = $this->home_model->get_user(array('id' => $LenderId));
+            $lendeUser = $this->home_model->sp_get_user(array('id' => $LenderId));
             $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
 
             if ($state) {
@@ -2430,7 +2446,7 @@ class Common extends MX_Controller
                 'company_name' => $lender_details['company_name'],
                 'assignment_clause' => $lender_details['assignment_clause'],
             );
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
             $propertyDetails = array('cpl_lender_id' => $LenderId, 'cpl_proposed_property_address' => trim($property_address), 'cpl_proposed_property_city' => trim($property_city), 'cpl_proposed_property_state' => trim($property_state), 'cpl_proposed_property_zip' => trim($property_zipcode), 'borrowers_vesting' => trim($borrowers_vesting));
             $property_update_flag = $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
             $transaction_update_flag = $this->home_model->update(array('loan_amount' => $loan_amount, 'loan_number' => $loan_number, 'title_officer' => $TitleOfficer, 'preliminary_report_date' => $p_report_date, 'supplemental_report_date' => $s_report_date), array('id' => $orderDetails['transaction_id']), 'transaction_details');

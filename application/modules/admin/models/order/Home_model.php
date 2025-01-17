@@ -47,6 +47,24 @@ class Home_model extends CI_Model
 
     }
 
+    public function sp_get_user($params = array())
+    {
+        $table = 'pct_softpro_lookup_table';
+        $this->db->select('*');
+        $this->db->from($table);
+        foreach ($params as $key => $val) {
+            $this->db->where($key, $val);
+        }
+        $query = $this->db->get();
+        $result = $query->row_array();
+        if (!empty($result)) {
+            return $result;
+        } else {
+            return array();
+        }
+
+    }
+
     public function get_customers($params)
     {
         $is_escrow = isset($params['is_escrow']) && !empty($params['is_escrow']) ? $params['is_escrow'] : 0;
