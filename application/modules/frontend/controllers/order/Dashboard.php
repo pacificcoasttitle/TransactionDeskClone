@@ -583,7 +583,7 @@ class Dashboard extends MX_Controller
                 $this->home_model->update($lender_details, $condition, 'customer_basic_details');
             }
 
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+            $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
 
             if ($orderDetails['sales_amount'] > 0) {
                 $propertyDetails = array('escrow_lender_id' => $LenderId);
@@ -605,7 +605,7 @@ class Dashboard extends MX_Controller
                 $customer_id = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
 
                 $this->load->model('order/home_model');
-                $customer_data = $this->home_model->get_user(array('id' => $customer_id));
+                $customer_data = $this->home_model->sp_get_user(array('id' => $customer_id));
                 $pdfData['company'] = isset($customer_data['company_name']) && !empty($customer_data['company_name']) ? $customer_data['company_name'] : '';
 
                 $address = array();

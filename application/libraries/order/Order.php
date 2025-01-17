@@ -663,41 +663,38 @@ class Order
             transaction_details.vesting,
             transaction_details.escrow_number,
             transaction_details.additional_email,
-            customer_basic_details.id as lender_id,
-            customer_basic_details.partner_id as lender_partner_id,
-            customer_basic_details.street_address as lender_address,
-            customer_basic_details.city as lender_city,
-            customer_basic_details.state as lender_state,
-            customer_basic_details.zip_code as lender_zipcode,
-            customer_basic_details.company_name as lender_company_name,
-            customer_basic_details.first_name as lender_first_name,
-            customer_basic_details.last_name as lender_last_name,
-            customer_basic_details.email_address as lender_email,
-            customer_basic_details.assignment_clause as lender_assignment_clause,
-            customer_basic_details.is_escrow,
-            customer_basic_details.telephone_no as lender_telephone_no,
+            pct_softpro_lookup_table.id as lender_id,
+            pct_softpro_lookup_table.address1 as lender_address,
+            pct_softpro_lookup_table.city as lender_city,
+            pct_softpro_lookup_table.state as lender_state,
+            pct_softpro_lookup_table.zip as lender_zipcode,
+            pct_softpro_lookup_table.company_name as lender_company_name,
+            pct_softpro_lookup_table.first_name as lender_first_name,
+            pct_softpro_lookup_table.last_name as lender_last_name,
+            pct_softpro_lookup_table.email_address as lender_email,
+            pct_softpro_lookup_table.is_escrow,
+            pct_softpro_lookup_table.phone as lender_telephone_no,
             cbd.first_name as cust_first_name,
             cbd.last_name as cust_last_name,
             cbd.company_name as cust_company_name,
-            cbd.street_address as cust_address,
+            cbd.address1 as cust_address,
             cbd.city as cust_city,
             cbd.state as cust_state,
-            cbd.zip_code as cust_zipcode,
+            cbd.zip as cust_zipcode,
             cbd.is_escrow as is_client_escrow,
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,
             salerep.email_address as salerep_email_address,
-            titleofficer.first_name as titleofficer_first_name,
-            titleofficer.last_name as titleofficer_last_name,
-            titleofficer.email_address as title_officer_email,
-            agents.name as agent_name,
-            agents.address as agent_address,
+            titleofficer.officer_name as titleofficer_first_name,
+            titleofficer.closer_examiner as title_officer_email,
+            agents.first_name as agent_name,
+            agents.address1 as agent_address,
             agents.email_address as agent_email_address,
             agents.city as agent_city,
-            agents.zipcode as agent_zipcode,
-            agents.telephone_no as agent_telephone_no,
-            agents.company as agent_company,
+            agents.zip as agent_zipcode,
+            agents.phone as agent_telephone_no,
+            agents.company_name as agent_company,
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
@@ -708,13 +705,18 @@ class Order
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
-            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
-            ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+        // ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
+        // ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
+        // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+            ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left')
+            ->join('pct_softpro_lookup_table as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('sp_officers as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+
             ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
-            ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
+        // ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            ->join('pct_softpro_lookup_table as agents', 'property_details.buyer_agent_id = agents.id', 'left')
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
             ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1')
             ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1');

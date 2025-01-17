@@ -207,10 +207,10 @@ class Natic
         $zipcode = $orderDetails['cpl_proposed_property_zip'];
 
         $this->CI->load->model('order/home_model');
-        $orderUser = $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $orderUser = $this->CI->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
 
         if (!empty($orderDetails['cpl_lender_id'])) {
-            $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+            $lenderDetails = $this->CI->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
             $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
             $orderDetails['lender_assignment_clause'] = (!empty($lenderFormData) ? $lenderFormData['assignment_clause'] : ($lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : ''));
             $orderDetails['lender_address'] = !empty($lenderFormData) ? $lenderFormData['street_address'] : $lenderDetails['street_address'];

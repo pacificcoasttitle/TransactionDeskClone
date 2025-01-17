@@ -391,7 +391,7 @@ class PayOff extends MX_Controller
         $fileId = $this->uri->segment(2);
         $this->load->model('order/home_model');
         $data['orderDetails'] = $this->order->get_order_details($fileId);
-        $data['orderUser'] = $this->home_model->get_user(array('id' => $data['orderDetails']['customer_id']));
+        $data['orderUser'] = $this->home_model->sp_get_user(array('id' => $data['orderDetails']['customer_id']));
         $data['titleOfficer'] = $this->home_model->get_user(array('id' => $data['orderDetails']['title_officer']));
         $userdata = $this->session->userdata('user');
         $name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';

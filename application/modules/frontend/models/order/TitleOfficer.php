@@ -45,12 +45,12 @@ class TitleOfficer extends CI_Model
 
     public function getTitleOfficerLookupDetails($params)
     {
-        $table = 'pct_softpro_lookup_table';
+        $table = 'sp_officers';
         // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
-        $this->db->select('*, CONCAT(REPLACE(IFNULL(first_name, ""), "\\\\", ""), " ", IFNULL(last_name, "")) as name, first_name as lookupCode');
+        $this->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name, closer_examiner as lookupCode');
         $this->db->from($table);
-        $this->db->where('user_type', 'title_officer');
-        $this->db->where('status', 1);
+        $this->db->where('is_title_officer', 1);
+        // $this->db->where('status', 1);
 
         if (array_key_exists("where", $params)) {
             foreach ($params['where'] as $key => $val) {

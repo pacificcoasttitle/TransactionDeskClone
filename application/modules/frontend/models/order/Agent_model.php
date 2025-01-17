@@ -1,79 +1,79 @@
 <?php
-class Agent_model extends CI_Model 
+class Agent_model extends CI_Model
 {
-	function __construct() {
+    public function __construct()
+    {
         // Set table name
-        $this->table = 'agents';
+        $this->table = 'pct_softpro_lookup_table';
     }
 
     public function get_agents($params = array())
     {
-    	$table = $this->table;
+        $table = $this->table;
 
         $this->db->select('*');
         $this->db->from($table);
-        
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }elseif(array_key_exists("name", $params))
-            {
-            	$this->db->select('CONCAT(name," - ",email_address) AS value');
-                $this->db->like('name', $params['name']);
+            } elseif (array_key_exists("name", $params)) {
+                $this->db->select('CONCAT(first_name," - ",email_address) AS value');
+                $this->db->like('first_name', $params['name']);
+                $this->db->where('is_selling_agent', 1);
                 $query = $this->db->get();
                 $result = $query->result_array();
-            }else{
+            } else {
                 $this->db->order_by('id', 'asc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
-                    $this->db->limit($params['limit'],$params['start']);
-                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                
+                $this->db->where('is_selling_agent', 1);
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
-        
+
         // Return fetched data
         return $result;
     }
 
-    public function update($data, $condition = array(), $table='') 
+    public function update($data, $condition = array(), $table = '')
     {
-        if(empty($table)) {
+        if (empty($table)) {
             $table = $this->table;
         }
-        
-        if(!empty($data))
-        {          
-            
+
+        if (!empty($data)) {
+
             $data['updated_at'] = date("Y-m-d H:i:s");
 
             // Update data
             $update = $this->db->update($table, $data, $condition);
-            
+
             // Return the status
-            return $update?true:false;
+            return $update ? true : false;
         }
         return false;
     }
 
-    public function insert($data = array()) 
+    public function insert($data = array())
     {
         $table = $this->table;
         if (!empty($data)) {
-            if(!isset($data['created_at'])) {
+            if (!isset($data['created_at'])) {
                 $data['created_at'] = date("Y-m-d H:i:s");
             }
             $this->db->insert($table, $data);

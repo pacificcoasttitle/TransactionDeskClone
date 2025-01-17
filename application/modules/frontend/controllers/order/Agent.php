@@ -22,6 +22,8 @@ class Agent extends MX_Controller
         );
 
         $agentDetails = $this->agent_model->get_agents($condition);
+        // echo "<pre>";
+        // print_r($agentDetails);die;
         $agentInfo = array();
         if (isset($agentDetails) && !empty($agentDetails)) {
             foreach ($agentDetails as $key => $value) {
@@ -29,12 +31,12 @@ class Agent extends MX_Controller
 
                 $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
 
-                $data['name'] = isset($value['name']) && !empty($value['name']) ? $value['name'] : '';
+                $data['name'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
                 /* $data['last_name'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';*/
                 $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
-                $data['telephone_no'] = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
-                $data['company'] = isset($value['softpro_company']) && !empty($value['softpro_company']) ? $value['softpro_company'] : '';
-                $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
+                $data['telephone_no'] = isset($value['phone']) && !empty($value['phone']) ? $value['phone'] : '';
+                $data['company'] = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+                // $data['partner_id'] = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '';
                 $data['lookup_code'] = isset($value['lookup_code']) && !empty($value['lookup_code']) ? $value['lookup_code'] : '';
                 // array_push($agentInfo, $data);
                 $agentInfo[] = $data;
