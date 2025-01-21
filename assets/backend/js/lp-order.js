@@ -188,13 +188,13 @@ function regenerateReport(order_id) {
     });
 }
 
-function sendOrderToResware(order_id) {
+function sendOrderToSoftpro(order_id) {
     console.log('order_id ====', order_id);
     $('body').animate({
         opacity: 0.5
     }, "slow");
     $.ajax({
-        url: base_url + "order/admin/send-order-to-resware",
+        url: base_url + "order/admin/send-order-to-softpro",
         method: "POST",
         data: {
             order_id: order_id

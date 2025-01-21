@@ -294,7 +294,7 @@ class Order_model extends CI_Model
             transaction_details.product_type,
             transaction_details.order_type,
             pct_softpro_order_type.order_type as order_type_name,
-            pct_softpro_product_type.product_type,
+            pct_softpro_product_type.product_type as product_type_name,
             transaction_details.purchase_type,
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
@@ -312,6 +312,7 @@ class Order_model extends CI_Model
             pct_softpro_lookup_table.email_address as escrow_lender_email,
             pct_softpro_lookup_table.phone as escrow_lender_telephone_no,
             pct_softpro_lookup_table.lookup_code as escrow_lender_lookup_code,
+            pct_softpro_lookup_table.flookup_code as escrow_lender_flookup_code,
             pct_softpro_lookup_table.id as lender_id,
             pct_softpro_lookup_table.address1 as lender_address,
             pct_softpro_lookup_table.city as lender_city,
@@ -332,6 +333,11 @@ class Order_model extends CI_Model
             cbd.city as cust_city,
             cbd.zip as cust_zip_code,
             cbd.lookup_code as cust_lookup_code,
+            cbd.flookup_code as cust_flookup_code,
+            cbd.is_escrow as cust_is_escrow,
+            cbd.is_lender as cust_is_lender,
+            cbd.is_mortgage_broker as cust_is_mortgage_broker,
+            cbd.is_selling_agent as cust_is_selling_agent,
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,
@@ -347,6 +353,7 @@ class Order_model extends CI_Model
             agents.phone as buyer_buyer_agent_telephone_no,
             agents.address1 as buyer_agent_address,
             agents.lookup_code as buyer_agent_lookup_code,
+            agents.flookup_code as buyer_agent_flookup_code,
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
@@ -356,6 +363,7 @@ class Order_model extends CI_Model
             a.email_address as listing_agent_email_address,
             a.company_name as listing_agent_company,
             a.lookup_code as listing_agent_lookup_code,
+            a.flookup_code as listing_agent_flookup_code,
             a.phone as listing_agent_telephone_no')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
@@ -590,7 +598,7 @@ class Order_model extends CI_Model
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $total_records = $this->db->count_all_results();
@@ -638,7 +646,7 @@ class Order_model extends CI_Model
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
             $this->db->order_by("order_details.id", "desc");
@@ -659,7 +667,7 @@ class Order_model extends CI_Model
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
 
@@ -702,7 +710,7 @@ class Order_model extends CI_Model
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
                 ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
             // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');

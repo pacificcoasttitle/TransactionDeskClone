@@ -664,10 +664,10 @@ class Order extends MX_Controller
                         </a>
                     </li>
                     <li>
-                        <a href='#' onclick='sendOrderToResware($orderId);' title ='Resware Sync'>
+                        <a href='#' onclick='sendOrderToSoftpro($orderId);' title ='Resware Sync'>
                             <button class='btn btn-grad-2a button-color' type='button'>
                                 <i class='fas fa-sync' aria-hidden='true' style='margin-right:5px;'></i>
-                                Send Order Resware
+                                Send Order Softpro
                             </button>
                         </a>
                     </li>";

@@ -4503,4 +4503,19 @@ class Order
         $email_send_status = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
         $this->CI->apiLogs->syncLogs(0, 'sendgrid', $logName, '', $mailParams, array('status' => $email_send_status), 0, $logid);
     }
+
+    public function generateLookupCode($first_name, $last_name, $company_name) {
+        // Get the first 3 letters of the first name
+        $firstPart = ucfirst(substr($first_name, 0, 3));
+    
+        // Get the first 3 letters of the last name
+        $secondPart = ucfirst(substr($last_name, 0, 3));
+    
+        // Get the first 4 letters of the company name (remove spaces first)
+        $company_name_no_spaces = str_replace(' ', '', $company_name);
+        $thirdPart = ucfirst(substr($company_name_no_spaces, 0, 4));
+    
+        // Concatenate all parts
+        return $firstPart . $secondPart . $thirdPart;
+    }
 }
