@@ -1,5 +1,5 @@
 <?php
-if (!defined('BASEPATH')) {
+if (! defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
@@ -7,7 +7,7 @@ class SoftPro
 {
     public static $CI;
 
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
         $this->CI = &get_instance();
         $this->CI->load->database();
@@ -19,7 +19,7 @@ class SoftPro
     public function make_request($http_method, $endpoint, $postData = '', $queryParams = '')
     {
         $apiEndPoints = SOFTPRO_API_END;
-        $url = getenv("SOFT_PRO_API") . $apiEndPoints[$endpoint];
+        $url          = getenv("SOFT_PRO_API") . $apiEndPoints[$endpoint];
         if ($http_method == 'GET') {
             $url .= '?' . $queryParams;
         }
@@ -31,7 +31,7 @@ class SoftPro
         if (false) {
             $header = [
                 'Content-Type: application/json', // Set JSON content type
-                'X-API-KEY: YOUR_TOKEN_HERE', // Add Authorization header if needed
+                'X-API-KEY: YOUR_TOKEN_HERE',     // Add Authorization header if needed
                 'Content-Length: ' . strlen($postData),
             ];
         }
@@ -59,7 +59,7 @@ class SoftPro
         } else {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
         }
-        curl_setopt($ch, CURLOPT_TIMEOUT, 180); // Increase timeout
+        curl_setopt($ch, CURLOPT_TIMEOUT, 540); // Increase timeout
 
 //         $ch = curl_init();
 
@@ -157,14 +157,14 @@ class SoftPro
 
     public function loginSoftPro($userId)
     {
-        $secretKey = getenv('SOFT_PRO_TOKEN');
+        $secretKey   = getenv('SOFT_PRO_TOKEN');
         $staticToken = time();
-        $data = $userId . "|" . $staticToken;
-        $token = hash_hmac('sha256', $data, $secretKey);
+        $data        = $userId . "|" . $staticToken;
+        $token       = hash_hmac('sha256', $data, $secretKey);
 
         $request = [
-            "UserId" => $userId,
-            "Token" => $token,
+            "UserId"      => $userId,
+            "Token"       => $token,
             "TokenStatus" => 1,
         ];
 

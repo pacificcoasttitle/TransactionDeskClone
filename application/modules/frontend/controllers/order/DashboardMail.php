@@ -73,14 +73,18 @@ class DashboardMail extends MX_Controller
         }
         $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
+        $orderId = $order[0]['id'];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        
+        $orderDetails = $this->order->get_order_details($params, 1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
         $data['created'] = !empty($orderDetails['created']) ? date("m/d/Y", strtotime($orderDetails['created'])) : '';
-        $file_id = $orderDetails['file_id'];
+        $file_id = $orderDetails['order_id'];
 
         if (!empty($orderDetails['cpl_document_name'])) {
             $documentName = $orderDetails['cpl_document_name'];
@@ -123,9 +127,11 @@ class DashboardMail extends MX_Controller
         $data['mail_dashboard'] = 1;
         $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
-
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
         $post_data = $result_decoded = array();
         $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
         $userData = array(
@@ -239,10 +245,13 @@ class DashboardMail extends MX_Controller
         }
         $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $orderDetails = $this->order->get_order_details($params, 1);
 
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
@@ -303,9 +312,12 @@ class DashboardMail extends MX_Controller
 
         if (!empty($order)) {
             $orderNumber = isset($order[0]['file_number']) && !empty($order[0]['file_number']) ? $order[0]['file_number'] : '';
-            $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
+            $orderId = isset($order[0]['id']) && !empty($order[0]['id']) ? $order[0]['id'] : '';
             $data['sellerFlag'] = $sellerFlag;
-            $orderDetails = $this->order->get_order_details($fileId, 1);
+            $params = [
+                'order_details.id' => $orderId
+            ];
+            $orderDetails = $this->order->get_order_details($params, 1);
             if ($sellerFlag) {
                 $borrower_info_submitted = $order[0]['borrower_info_submitted_for_seller'];
                 $is_code_verified = $order[0]['is_code_verified_for_seller'];
@@ -534,8 +546,11 @@ class DashboardMail extends MX_Controller
         );
         $order = $this->order->get_order($condition);
         $is_seller = $this->input->post('is_seller');
-        $fileId = isset($order[0]['file_id']) && !empty($order[0]['file_id']) ? $order[0]['file_id'] : '';
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $orderId = isset($order[0]['id']) && !empty($order[0]['id']) ? $order[0]['id'] : '';
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
         $borrowerInfoData = array(
             'first_name' => $this->input->post('firstname'),
             'middle_name' => $this->input->post('middlename'),
@@ -1604,11 +1619,17 @@ class DashboardMail extends MX_Controller
     {
         $this->db->select('*')
             ->from('order_details');
-        $this->db->group_start()
-            ->where("file_id", $FileIdOrRandomNum)
-            ->or_where('random_number', $FileIdOrRandomNum)
-            ->group_end();
+        if (is_numeric($FileIdOrRandomNum)) {
+            $this->db->where("id", $FileIdOrRandomNum);
+        } else {
+            $this->db->where("random_number", $FileIdOrRandomNum);
+        }
+        // $this->db->group_start()
+        //     ->where("id", $FileIdOrRandomNum)
+        //     ->or_where('random_number', $FileIdOrRandomNum)
+        //     ->group_end();
         $query = $this->db->get();
+        // echo $this->db->last_query();die;
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
@@ -1620,7 +1641,10 @@ class DashboardMail extends MX_Controller
     {
         $file_id = $this->input->post('file_id');
         $order_id = $this->input->post('order_id');
-        $orderDetails = $this->order->get_order_details($file_id);
+        $params = [
+            'order_details.id' => $order_id
+        ];
+        $orderDetails = $this->order->get_order_details($params);
         if ($orderDetails['sales_amount'] > 0) {
             $purchase_price = $orderDetails['sales_amount'];
         } else {
@@ -1719,7 +1743,10 @@ class DashboardMail extends MX_Controller
 
         if ($json) {
             $data = json_decode($json, true);
-            $orderDetails = $this->order->get_order_details($data['order_id'], 1);
+            $params = [
+                'order_details.id' => $data['order_id']
+            ];
+            $orderDetails = $this->order->get_order_details($params, 1);
             if (!empty($orderDetails)) {
                 $order_id = $orderDetails['order_id'];
                 $this->order->syncSafewireDocuments($data['order_details'], $data['wire_instruction_details'], $orderDetails);
@@ -1752,10 +1779,13 @@ class DashboardMail extends MX_Controller
         }
         $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
         $data['title'] = 'Get Policy | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $orderDetails = $this->order->get_order_details($params, 1);
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
         $data['file_id'] = $orderDetails['file_id'];
@@ -1824,10 +1854,13 @@ class DashboardMail extends MX_Controller
             $this->session->unset_userdata('success');
         }
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $data['orderDetails'] = $this->order->get_order_details($fileId, 1);
+        $data['orderDetails'] = $this->order->get_order_details($params, 1);
         $prod_type = $data['orderDetails']['prod_type'];
         $data['borrowerDocuments'] = $this->order->getBorrowerDocuments($data['orderDetails']['order_id']);
         $data['task_name'] = $task;
@@ -1960,11 +1993,15 @@ class DashboardMail extends MX_Controller
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
 
         $this->db->select('*')
             ->from('pct_order_borrower_seller_owner_escrow_info');
-        $this->db->where('order_id', $order[0]['id']);
+        $this->db->where('order_id', $orderId);
         $this->db->order_by('id', 'desc');
         $this->db->limit(1);
         $query = $this->db->get();
@@ -2455,11 +2492,15 @@ class DashboardMail extends MX_Controller
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
 
         $this->db->select('*')
             ->from('pct_order_borrower_buyer_info');
-        $this->db->where('order_id', $order[0]['id']);
+        $this->db->where('order_id', $orderId);
         $this->db->order_by('id', 'desc');
         $this->db->limit(1);
         $query = $this->db->get();
@@ -2860,9 +2901,13 @@ class DashboardMail extends MX_Controller
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
         $data['orderDetails'] = $orderDetails;
-        $buyer_where['order_id'] = $orderDetails['order_id'];
+        $buyer_where['order_id'] = $orderId;
         $buyer_order['is_main_buyer'] = 'desc';
         $data['buyers'] = $this->home_model->get_records('pct_order_borrower_buyer_info', $buyer_where, $buyer_order);
         $data['marital_status'] = $this->marital_status;
@@ -3343,9 +3388,13 @@ class DashboardMail extends MX_Controller
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
         $data['orderDetails'] = $orderDetails;
-        $seller_where['order_id'] = $orderDetails['order_id'];
+        $seller_where['order_id'] = $orderId;
         $seller_order['is_main_seller'] = 'desc';
         $data['sellers'] = $this->home_model->get_records('pct_order_borrower_seller_info', $seller_where, $seller_order);
         $errors = array();
@@ -3799,11 +3848,15 @@ class DashboardMail extends MX_Controller
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
         $order = $this->getOrderInfo($random_number);
-        $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
+        $orderDetails = $this->order->get_order_details($params, 1);
 
         $this->db->select('*')
             ->from('pct_order_borrower_seller_owner_escrow_info');
-        $this->db->where('order_id', $order[0]['id']);
+        $this->db->where('order_id', $orderId);
         $this->db->order_by('id', 'desc');
         $this->db->limit(1);
         $query = $this->db->get();
@@ -3970,11 +4023,15 @@ class DashboardMail extends MX_Controller
             $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
             $data['mail_dashboard'] = 1;
             $order = $this->getOrderInfo($random_number);
-            $orderDetails = $this->order->get_order_details($order[0]['file_id'], 1);
+            $orderId = $order[0]['id'];
+            $params = [
+                'order_details.id' => $orderId
+            ];
+            $orderDetails = $this->order->get_order_details($orderId, 1);
 
             $this->db->select('*')
                 ->from('pct_order_borrower_buyer_info');
-            $this->db->where('order_id', $order[0]['id']);
+            $this->db->where('order_id', $orderId);
             $this->db->order_by('id', 'desc');
             $this->db->limit(1);
             $query = $this->db->get();
@@ -4415,10 +4472,13 @@ class DashboardMail extends MX_Controller
             $this->session->unset_userdata('success');
         }
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $orderDetails = $this->order->get_order_details($params, 1);
         $data['random_number'] = $orderDetails['random_number'];
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
@@ -4476,10 +4536,13 @@ class DashboardMail extends MX_Controller
         }
         $random_number = $this->uri->segment(2);
         $order = $this->getOrderInfo($random_number);
-        $fileId = $order[0]['file_id'];
+        $orderId = $order[0]['id'];
+        $params = [
+            'order_details.id' => $orderId
+        ];
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         $data['mail_dashboard'] = 1;
-        $orderDetails = $this->order->get_order_details($fileId, 1);
+        $orderDetails = $this->order->get_order_details($params, 1);
         $data['orderDetails'] = $orderDetails;
         $data['file_number'] = $orderDetails['file_number'];
         $data['full_address'] = $orderDetails['full_address'];
