@@ -56,8 +56,13 @@ class Order
         $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
         $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         $result = $this->getUserFromPartners();
-        $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
+        $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, 
+            order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,
+            order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, 
+            property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
+            pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, 
+            pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
         if ($userdata['is_sales_rep_manager'] == 1) {
             $salesUsers = $this->CI->home_model->get_user(array('id' => $salesUser));
@@ -131,12 +136,12 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
-                $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
-                    $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                    $this->CI->db->where('order_details.file_number !=', "0")->group_end();
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     // $this->CI->db->where('order_details.file_number', 0);
@@ -152,7 +157,7 @@ class Order
                     // $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != 0) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != '0') " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -165,6 +170,7 @@ class Order
 
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
                 $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
@@ -243,12 +249,12 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
-                $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
-                    $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                    $this->CI->db->where('order_details.file_number !=', "0")->group_end();
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     // $this->CI->db->where('order_details.file_number', 0);
@@ -264,7 +270,7 @@ class Order
                     // $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != 0) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != '0') " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -281,6 +287,7 @@ class Order
 
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
                 $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
@@ -367,12 +374,12 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
-                $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
-                    $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                    $this->CI->db->where('order_details.file_number !=', "0")->group_end();
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     // $this->CI->db->where('order_details.file_number', 0);
@@ -388,7 +395,7 @@ class Order
                     // $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != 0) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != '0') " . $lpOrderCondition . ")";
                 $this->CI->db->where($whereClause);
             }
 
@@ -401,6 +408,7 @@ class Order
 
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
                 $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
@@ -471,12 +479,12 @@ class Order
             // if (!in_array($email, ['info@retech.company', 'awu@pct.com', 'teammeza@pct.com', 'unit66@pct.com', 'unit33@pct.com', 'jjean@pct.com', 'unit88@pct.com', 'sgrimaldo@pct.com', 'Mpilatti@pct.com'])) {
             if ($userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0) {
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
-                $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
                 if ($order_type == 'resware_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
-                    $this->CI->db->where('order_details.file_number !=', 0)->group_end();
+                    $this->CI->db->where('order_details.file_number !=', "0")->group_end();
                 } else if ($order_type == 'lp_orders') {
                     $this->CI->db->where('order_details.lp_file_number is not null');
                     // $this->CI->db->where('order_details.file_number', 0);
@@ -494,7 +502,7 @@ class Order
                     // $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.file_number = 0 AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                     $lpOrderCondition = " OR (order_details.lp_file_number is not null AND order_details.created_at >= DATE_ADD(NOW(),INTERVAL -" . $lp_alerts['days'] . " DAY))";
                 }
-                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != 0) " . $lpOrderCondition . ")";
+                $whereClause = "((order_details.file_number IS NOT NULL AND order_details.file_number != '0') " . $lpOrderCondition . ")";
                 // print_r($whereClause);die;
                 $this->CI->db->where($whereClause);
             }
@@ -508,6 +516,7 @@ class Order
 
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
                 $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
@@ -624,6 +633,7 @@ class Order
             order_details.safewire_action_link,
             order_details.prod_type,
             order_details.resware_status,
+            order_details.softpro_status,
             order_details.borrower_email,
             property_details.id as property_id,
             property_details.address,
@@ -663,63 +673,110 @@ class Order
             transaction_details.vesting,
             transaction_details.escrow_number,
             transaction_details.additional_email,
-            pct_softpro_lookup_table.id as lender_id,
-            pct_softpro_lookup_table.address1 as lender_address,
-            pct_softpro_lookup_table.city as lender_city,
-            pct_softpro_lookup_table.state as lender_state,
-            pct_softpro_lookup_table.zip as lender_zipcode,
-            pct_softpro_lookup_table.company_name as lender_company_name,
-            pct_softpro_lookup_table.first_name as lender_first_name,
-            pct_softpro_lookup_table.last_name as lender_last_name,
-            pct_softpro_lookup_table.email_address as lender_email,
-            pct_softpro_lookup_table.is_escrow,
-            pct_softpro_lookup_table.phone as lender_telephone_no,
+
+            customer_basic_details.id as lender_id,
+            customer_basic_details.street_address as lender_address,
+            customer_basic_details.city as lender_city,
+            customer_basic_details.state as lender_state,
+            customer_basic_details.zip_code as lender_zipcode,
+            customer_basic_details.company_name as lender_company_name,
+            customer_basic_details.first_name as lender_first_name,
+            customer_basic_details.last_name as lender_last_name,
+            customer_basic_details.email_address as lender_email,
+            customer_basic_details.is_escrow,
+            customer_basic_details.telephone_no as lender_telephone_no,
+
+            pct_softpro_lookup_table.id as sp_lender_id,
+            pct_softpro_lookup_table.address1 as sp_lender_address,
+            pct_softpro_lookup_table.city as sp_lender_city,
+            pct_softpro_lookup_table.state as sp_lender_state,
+            pct_softpro_lookup_table.zip as sp_lender_zipcode,
+            pct_softpro_lookup_table.company_name as sp_lender_company_name,
+            pct_softpro_lookup_table.first_name as sp_lender_first_name,
+            pct_softpro_lookup_table.last_name as sp_lender_last_name,
+            pct_softpro_lookup_table.email_address as sp_lender_email,
+            pct_softpro_lookup_table.is_escrow as sp_is_escrow,
+            pct_softpro_lookup_table.phone as sp_lender_telephone_no,
+
             cbd.first_name as cust_first_name,
             cbd.last_name as cust_last_name,
             cbd.company_name as cust_company_name,
-            cbd.address1 as cust_address,
+            cbd.street_address as cust_address,
             cbd.city as cust_city,
             cbd.state as cust_state,
-            cbd.zip as cust_zipcode,
+            cbd.zip_code as cust_zipcode,
             cbd.is_escrow as is_client_escrow,
+
+            splt.first_name as sp_cust_first_name,
+            splt.last_name as sp_cust_last_name,
+            splt.company_name as sp_cust_company_name,
+            splt.address1 as sp_cust_address,
+            splt.city as sp_cust_city,
+            splt.state as sp_cust_state,
+            splt.zip as sp_cust_zipcode,
+            splt.is_escrow as sp_is_client_escrow,
+
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,
             salerep.email_address as salerep_email_address,
-            titleofficer.officer_name as titleofficer_first_name,
-            titleofficer.closer_examiner as title_officer_email,
+
+            CONCAT(titleofficer.first_name, " ", titleofficer.last_name) as title_officer_name,
+            titleofficer.first_name as titleofficer_first_name,
+
+            sp_to.officer_name as sp_title_officer_name,
+            sp_to.closer_examiner as sp_title_officer_email,
+
             agents.first_name as agent_name,
-            agents.address1 as agent_address,
+            agents.street_address as agent_address,
             agents.email_address as agent_email_address,
             agents.city as agent_city,
-            agents.zip as agent_zipcode,
-            agents.phone as agent_telephone_no,
+            agents.zip_code as agent_zipcode,
+            agents.telephone_no as agent_telephone_no,
             agents.company_name as agent_company,
+
+            sp_agents.first_name as sp_agent_name,
+            sp_agents.address1 as sp_agent_address,
+            sp_agents.email_address as sp_agent_email_address,
+            sp_agents.city as sp_agent_city,
+            sp_agents.zip as sp_agent_zipcode,
+            sp_agents.phone as sp_agent_telephone_no,
+            sp_agents.company_name as sp_agent_company,
+
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
-            pct_softpro_product_type.product_type,
+            pct_order_product_types.product_type as product_type_name,
+            pct_softpro_product_type.product_type as sp_product_type_name,
             pct_softpro_order_type.order_type,
             pct_order_documents.created,
             p.created as proposed_document_created_date')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-        // ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
-        // ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
-        // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+            
+            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left')
-            ->join('pct_softpro_lookup_table as cbd', 'order_details.customer_id = cbd.id', 'left')
-            ->join('sp_officers as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+
+            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
+
+            ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+            ->join('sp_officers as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
 
             ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
         // ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
-            ->join('pct_softpro_lookup_table as agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            ->join('customer_basic_details as agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            ->join('pct_softpro_lookup_table as sp_agents', 'property_details.buyer_agent_id = sp_agents.id', 'left')
+
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
-            ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1')
-            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1');
+
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+            ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left')
+
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
         // $this->CI->db->where('file_id', $fileId);
         foreach ($params as $key => $val) {
             $this->CI->db->where($key, $val);
@@ -785,7 +842,7 @@ class Order
         }
     }
 
-    public function get_order_linked_documents($fileId, $from_mail = 0)
+    public function get_order_linked_documents($orderId, $from_mail = 0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number,
@@ -803,7 +860,7 @@ class Order
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
 
-        $this->CI->db->where('order_details.file_id', $fileId);
+        $this->CI->db->where('order_details.id', $orderId);
         $this->CI->db->where('pct_order_documents.is_linked_doc', 1);
         $this->CI->db->order_by('pct_order_documents.index_number', 'asc');
         if ($userdata['is_master'] == 0 && $from_mail == 0) {
@@ -1236,7 +1293,7 @@ class Order
         }
     }
 
-    public function get_order_uploaded_documents($fileId)
+    public function get_order_uploaded_documents($orderId)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number,
@@ -1253,7 +1310,7 @@ class Order
             ->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
 
-        $this->CI->db->where('order_details.file_id', $fileId);
+        $this->CI->db->where('order_details.id', $orderId);
         $this->CI->db->group_start()
             ->where('pct_order_documents.is_grant_doc', 1)
             ->or_where('pct_order_documents.is_cpl_doc', 1)

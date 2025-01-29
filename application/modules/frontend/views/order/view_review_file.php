@@ -74,7 +74,7 @@
 							<?php } ?>
 						</div>
 
-						<input type="hidden" id="fileId" name="fileId" value="<?php echo $orderDetails['file_id'];?>">
+						<input type="hidden" id="fileNumber" name="fileNumber" value="<?php echo $orderDetails['file_number'];?>">
 						<input type="hidden" id="orderId" name="orderId" value="<?php echo $orderDetails['order_id'];?>">
 					</div>
 
@@ -219,7 +219,7 @@
 	aria-labelledby="Create a Note" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
 		<div class="modal-content">
-			<form method="POST" action="<?php echo base_url();?>update-prelim-action/<?php echo $orderDetails['file_id'];?>" enctype="multipart/form-data">
+			<form method="POST" action="<?php echo base_url();?>update-prelim-action/<?php echo $orderDetails['order_id'];?>" enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-lg-12">
 						<div class="card shadow">

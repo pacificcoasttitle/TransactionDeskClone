@@ -91,7 +91,7 @@ $(document).ready(function () {
         $('select').not(".sectionSelect").selectpicker();
     }
 
-    if ($('#tbl-customers-listing').length || $('#tbl-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length) {
+    if ($('#tbl-customers-listing').length || $('#tbl-sp-escrow-listing').length || $('#tbl-agents-listing').length || $('#tbl-sp-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sp-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-sp-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length) {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
 
             if (this.context.length) {
@@ -155,6 +155,67 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-agents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
+                else if (this.context[0].sTableId == 'tbl-sp-agents-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/home/get_sp_agent_list",
+                        data: {
+                            keyword: $('#tbl-sp-agents-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-sp-agents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if (this.context[0].sTableId == 'tbl-sp-escrow-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/agent/get_sp_escrow_list",
+                        data: {
+                            keyword: $('#tbl-sp-escrow-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-agents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if (this.context[0].sTableId == 'tbl-sp-lenders-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/home/get_lender_list",
+                        data: {
+                            keyword: $('#tbl-sp-lenders-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-sp-lenders-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if (this.context[0].sTableId == 'tbl-sp-title-officer-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "order/admin/get-sp-title-officer-list",
+                        data: {
+                            keyword: $('#tbl-sp-title-officer-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-sp-title-officer-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+
                 else if (this.context[0].sTableId == 'tbl-sales-rep-listing') {
                     var jsonResult = $.ajax({
                         type: "POST",
@@ -334,6 +395,20 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-companies-listing thead tr th:not('.not-take')").map(function () { return this.innerHTML; }).get() };
+                } else if (this.context[0].sTableId == 'tbl-softpro-companies-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/home/get_companies_list",
+                        data: {
+                            keyword: $('#tbl-softpro-companies-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-softpro-companies-listing thead tr th:not('.not-take')").map(function () { return this.innerHTML; }).get() };
                 }
                 else if (this.context[0].sTableId == 'tbl-cpl-proposed-users-listing') {
                     var jsonResult = $.ajax({
@@ -835,6 +910,548 @@ $(document).ready(function () {
                     $("#page-preloader").hide();
                 }
             }
+        });
+    }
+
+    if ($('#tbl-sp-lenders-listing').length) {
+        lenders_list = $('#tbl-sp-lenders-listing').DataTable({
+            /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#Name, Email, Company Name",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-csv').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Lenders',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                        format: {
+                            body: function (data, row, column, node) {
+                                // Strip $ from salary column to make it numeric
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_sp_lender_list", // json datasource
+                type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-lenders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-lenders-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-sp-agents-listing').length) {
+        agent_list = $('#tbl-sp-agents-listing').DataTable({
+            /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            /*"columnDefs": [
+                { "searchable": false, "targets": [0,1] }
+            ],*/
+            "language": {
+                searchPlaceholder: "#Name, Email, Address",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-agent-data').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Agents',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4],
+                        format: {
+                            body: function (data, row, column, node) {
+                                // Strip $ from salary column to make it numeric
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_sp_agent_list", // json datasource
+                type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-agents-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-agents-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-sp-escrow-listing').length) {
+        sp_escrows_list = $('#tbl-sp-escrow-listing').DataTable({
+            /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#Name, Email, Company Name",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-csv').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Customers',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                        format: {
+                            body: function (data, row, column, node) {
+                                // Strip $ from salary column to make it numeric
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_sp_escrow_list", // json datasource
+                type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-escrow-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-escrow-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-sp-mortgage-listing').length) {
+        mortgage_list = $('#tbl-sp-mortgage-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#Name, Email, Company Name",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-csv').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Lenders',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_sp_mortgage_brokers_list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-mortgage-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-mortgage-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-sp-new-users-listing').length) {
+        customer_list = $('#tbl-sp-new-users-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search #",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_new_user').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: '',
+                    exportOptions: {
+                        columns: [2, 4, 5],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 2 || column === 4 || column === 5) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_sp_new_users_list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-new-users-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-new-users-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-sp-title-officer-listing').length) {
+        title_officer_list = $('#tbl-sp-title-officer-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search #",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-sp-title-officer-data').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Title Officers',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 0 || column === 1 || column === 2) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "order/admin/get-sp-title-officer-list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-title-officer-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-title-officer-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-sp-escrow-officers-listing').length) {
+        escrow_officers_list = $('#tbl-sp-escrow-officers-listing').DataTable({
+            /*"pageLength": 2,*/
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1, 2] }
+            ],
+            "language": {
+                searchPlaceholder: "Search #",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_customer').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: '<"FilterCredentialListing">lfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Customers',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_sp_escrow_officers_list", // json datasource
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                /*data   : function( d ) {
+                    d.credentials_check = $('#FilterCredentialListing').val();
+                }, */// method  , by default get
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-escrow-officers-listing-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-escrow-officers-listing-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            },
         });
     }
 
@@ -3277,6 +3894,81 @@ $(document).ready(function () {
         });
     }
 
+    if ($('#tbl-softpro-companies-listing').length) {
+        companies_list = $('#tbl-softpro-companies-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "Search #",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_companies').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Companies',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_softpro_companies_list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-softpro-companies-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-softpro-companies-listing_processing").css("display", "none");
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
     if ($('#tbl-incorrect-customers-listing').length) {
         incorrect_customer_list = $('#tbl-incorrect-customers-listing').DataTable({
             /*"pageLength": 2,*/
@@ -5711,14 +6403,61 @@ function updateUnderwriter(partner_id, underwriter_type, underwriter) {
     });
 }
 
-function updateTitleSalesUser(partner_id, id, user_type) {
+function updateTitleSalesUser(lookup_code, id, user_type) {
 
     $('body').animate({ opacity: 0.5 }, "slow");
     $.ajax({
         url: base_url + "order/admin/update-title-sales-company",
         method: "POST",
         data: {
-            partner_id: partner_id,
+            lookup_code: lookup_code,
+            user_id: id,
+            user_type: user_type
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            if (result.status == 'success') {
+                $('body').animate({ opacity: 1.0 }, "slow");
+                $('#companies_success_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#companies_success_msg").offset().top
+                }, 1000);
+                companies_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#companies_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#companies_error_msg').html(result.msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#companies_error_msg").offset().top
+                }, 1000);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                setTimeout(function () {
+                    $('#companies_error_msg').html('').hide();
+                }, 4000);
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#companies_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#companies_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#companies_error_msg').html('').hide();
+            }, 4000);
+        }
+    });
+}
+
+function updateTitleSalesSPUser(lookup_code, id, user_type) {
+
+    $('body').animate({ opacity: 0.5 }, "slow");
+    $.ajax({
+        url: base_url + "order/admin/update-title-sales-sp-company",
+        method: "POST",
+        data: {
+            lookup_code: lookup_code,
             user_id: id,
             user_type: user_type
         },

@@ -1,11 +1,11 @@
-$(document).ready(function(){
+$(document).ready(function () {
     summary();
 });
 
 var dropdown = document.getElementsByClassName("dropdown-btn");
 var i;
 for (i = 0; i < dropdown.length; i++) {
-    dropdown[i].addEventListener("click", function() {
+    dropdown[i].addEventListener("click", function () {
         this.classList.toggle("active");
         var dropdownContent = this.nextElementSibling;
         if (dropdownContent.style.display === "block") {
@@ -16,20 +16,18 @@ for (i = 0; i < dropdown.length; i++) {
     });
 }
 
-function updateAction()
-{
+function updateAction() {
     $('#note_information').modal('show');
 }
 
-function summary()
-{
+function summary() {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
         url: base_url + "summary",
         type: "post",
         data: {
-            fileId: $('#fileId').val()
+            orderId: $('#orderId').val()
         },
         dataType: "html",
         success: function (response) {
@@ -40,15 +38,14 @@ function summary()
     });
 }
 
-function prelim()
-{
+function prelim() {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
         url: base_url + "prelim",
         type: "post",
         data: {
-            fileId: $('#fileId').val()
+            orderId: $('#orderId').val()
         },
         dataType: "html",
         success: function (response) {
@@ -59,8 +56,7 @@ function prelim()
     });
 }
 
-function load_doc(is_sync, resware_document_id, order_id, document_id)
-{
+function load_doc(is_sync, resware_document_id, order_id, document_id) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
@@ -76,21 +72,20 @@ function load_doc(is_sync, resware_document_id, order_id, document_id)
         success: function (response) {
             var results = JSON.parse(response);
             $('#links_details').html(results);
-            $('#'+resware_document_id).attr("onclick", "load_doc(1, "+resware_document_id+", "+order_id+", "+document_id+")");
+            $('#' + resware_document_id).attr("onclick", "load_doc(1, " + resware_document_id + ", " + order_id + ", " + document_id + ")");
             $('#page-preloader').css('display', 'none');
         }
     });
 }
 
-function legal_vesting()
-{
+function legal_vesting() {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
         url: base_url + "legal-vesting",
         type: "post",
         data: {
-            fileId: $('#fileId').val()
+            orderId: $('#orderId').val()
         },
         dataType: "html",
         success: function (response) {
@@ -101,15 +96,14 @@ function legal_vesting()
     });
 }
 
-function plat_map()
-{
+function plat_map() {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
         url: base_url + "plat-map",
         type: "post",
         data: {
-            fileId: $('#fileId').val()
+            orderId: $('#orderId').val()
         },
         dataType: "html",
         success: function (response) {
@@ -120,11 +114,10 @@ function plat_map()
     });
 }
 
-function download_document(resware_document_id, order_id, document_name) 
-{
+function download_document(resware_document_id, order_id, document_name) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
-    var fileId = $('#fileId').val();
+    var orderId = $('#orderId').val();
     $.ajax({
         url: base_url + "download-document",
         type: "post",
@@ -132,7 +125,7 @@ function download_document(resware_document_id, order_id, document_name)
             resware_document_id: resware_document_id,
             order_id: order_id,
             document_name: document_name,
-            fileId: fileId
+            orderId: orderId
         },
         dataType: "html",
         success: function (response) {
@@ -165,8 +158,7 @@ function download_document(resware_document_id, order_id, document_name)
     });
 }
 
-function upload_document(resware_document_id, order_id, document_name) 
-{
+function upload_document(resware_document_id, order_id, document_name) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
@@ -176,7 +168,7 @@ function upload_document(resware_document_id, order_id, document_name)
             resware_document_id: resware_document_id,
             order_id: order_id,
             document_name: document_name,
-            fileId: $('#fileId').val()
+            orderId: $('#orderId').val()
         },
         dataType: "html",
         success: function (response) {
@@ -184,15 +176,14 @@ function upload_document(resware_document_id, order_id, document_name)
             var results = JSON.parse(response);
             if (results.status == 'success') {
                 alert(results.msg);
-            } else if(results.status == 'error') {
+            } else if (results.status == 'error') {
                 alert(results.msg);
             }
         }
     });
 }
 
-function base64toBlob(base64Data, contentType) 
-{
+function base64toBlob(base64Data, contentType) {
     contentType = contentType || '';
     var sliceSize = 1024;
     var byteCharacters = atob(base64Data);

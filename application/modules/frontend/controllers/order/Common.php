@@ -4,16 +4,8 @@
 
 class Common extends MX_Controller
 {
-
-    private $cpl_js_version = '02';
-    private $proposed_js_version = '01';
-    private $prelim_orders_js_version = '01';
-    private $prelim_order_js_version = '02';
-    private $upload_doc_orders_js_version = '01';
-    private $upload_document_for_order = '01';
-    private $notes_order_js = '01';
-    private $policy_orders_js_version = '01';
-
+    private $version = '02';
+ 
     public function __construct()
     {
         parent::__construct();
@@ -42,7 +34,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_' . $this->prelim_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_orders.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "review_files", $data);
     }
 
@@ -56,16 +48,21 @@ class Common extends MX_Controller
         $linked_doc = array();
         $this->load->library('order/resware');
         $this->load->model('order/document');
-        $fileId = $this->uri->segment(2);
+        $orderId = $this->uri->segment(2);
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $orderDetails = $this->order->get_order_details($fileId);
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
+        // echo "<pre>";
+        // print_r($orderDetails);die;
         $prelimDocument = $this->order->get_prelim_document($orderDetails['order_id']);
         if ((isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep'])) || (isset($userdata['is_title_officer']) && !empty($userdata['is_title_officer']))) {
-            $linked_doc = $this->order->get_order_linked_documents($fileId, 1);
+            $linked_doc = $this->order->get_order_linked_documents($orderId, 1);
         } else {
-            $linked_doc = $this->order->get_order_linked_documents($fileId);
+            $linked_doc = $this->order->get_order_linked_documents($orderId);
         }
-        $uploaded_docs = $this->order->get_order_uploaded_documents($fileId);
+        $uploaded_docs = $this->order->get_order_uploaded_documents($orderId);
 
         if (isset($orderDetails['file_number']) && !empty($orderDetails['file_number'])) {
             $condition = array('file_number' => $orderDetails['file_number']);
@@ -92,11 +89,11 @@ class Common extends MX_Controller
         $data['prelimDocument'] = $prelimDocument;
         $data['orderDetails'] = $orderDetails;
         $data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_' . $this->prelim_order_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/css/theme.css?v=prelim_order_' . $this->prelim_order_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/view-review-file.css?v=' . $this->prelim_order_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_order.js?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/css/theme.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/view-review-file.css?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "view_review_file", $data);
-        // $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v='.$this->version));
         // $this->template->show("order", "view_review_file", $data);
     }
 
@@ -105,8 +102,13 @@ class Common extends MX_Controller
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
         }
-        $fileId = $this->input->post('fileId');
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderId = $this->input->post('orderId');
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
+        // echo "<pre>";
+        // print_r($orderDetails);die;
         $policy_type = '';
         if (isset($orderDetails['product_type']) && !empty($orderDetails['product_type'])) {
             if (strpos($orderDetails['product_type'], 'Loan:') !== false) {
@@ -157,6 +159,7 @@ class Common extends MX_Controller
         }
         $data['prelim_details']['address'] = $address;
         $data['prelim_details']['property_type'] = $property_type;
+        
         $results = $this->load->view('order/review_file_summary', $data, true);
         echo json_encode($results, true);
     }
@@ -248,8 +251,11 @@ class Common extends MX_Controller
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
         }
-        $fileId = $this->input->post('fileId');
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderId = $this->input->post('orderId');
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
 
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         if (env('AWS_ENABLE_FLAG') == 1) {
@@ -272,7 +278,7 @@ class Common extends MX_Controller
 
             $condition = array(
                 'where' => array(
-                    'file_id' => $file_id,
+                    'file_number' => $file_number,
                 ),
             );
             $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
@@ -293,8 +299,11 @@ class Common extends MX_Controller
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
         }
-        $fileId = $this->input->post('fileId');
-        $orderDetails = $this->order->get_order_details($fileId);
+        $orderId = $this->input->post('orderId');
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
 
         $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         if (env('AWS_ENABLE_FLAG') == 1) {
@@ -525,8 +534,8 @@ class Common extends MX_Controller
         $userdata = $this->session->userdata('user');
         $this->load->model('order/note');
         $this->load->model('order/document');
-        $fileId = $this->uri->segment(2);
-        $endPoint = 'files/' . $fileId . '/actions';
+        $orderId = $this->uri->segment(2);
+        $endPoint = 'files/' . $orderId . '/actions';
         $user_data['admin_api'] = 1;
         $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), array(), 0, 0);
         $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
@@ -602,7 +611,10 @@ class Common extends MX_Controller
                 }
                 $subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
                 $body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
-                $orderDetails = $this->order->get_order_details($fileId);
+                $params = [
+                    'order_details.id' => $orderId,
+                ];
+                $orderDetails = $this->order->get_order_details($params);
                 $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 
                 $request = array();
@@ -613,18 +625,32 @@ class Common extends MX_Controller
                 $request['Expedite'] = true;
                 $notes_data = json_encode($request);
 
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
-                $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
+                $notesData = [
+                    "OrderNumber"  => $orderNumber,
+                    "Text" => $orderNumber
+                ];
+                $reqData = json_encode($notesData);
+                // print_r($reqData);
+                $response = $this->softpro->make_request('POST', 'add_note', $reqData);
+                /* Start upload softpro api logs */
+                $softproLog = [
+                    'request_type' => 'add_note_in_softpro',
+                    'request_url'  => 'add_note',
+                    'request'      => $reqData,
+                    'response'     => json_encode($response),
+                    'status'       => $response['status'],
+                    'file_number'  => $orderNumber,
+                    'created_at'   => date("Y-m-d H:i:s"),
+                ];
+                $this->db->insert('pct_resware_log', $softproLog);
 
-                if (isset($result) && !empty($result)) {
-                    $response = json_decode($result, true);
+                if (isset($response) && ! empty($response)) {
+                    // $response = $result, true);
 
-                    if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-                        $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                    if (isset($response['status']) && $response['status'] == 'error') {
+                        $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                         $errors[] = $message;
                     } else {
-                        $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
                         $notesData = array(
                             'resware_note_id' => $noteId,
                             'subject' => $subject,
@@ -641,6 +667,34 @@ class Common extends MX_Controller
                         }
                     }
                 }
+                // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
+                // $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+                // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
+
+                // if (isset($result) && !empty($result)) {
+                //     $response = json_decode($result, true);
+
+                //     if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+                //         $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+                //         $errors[] = $message;
+                //     } else {
+                //         $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+                //         $notesData = array(
+                //             'resware_note_id' => $noteId,
+                //             'subject' => $subject,
+                //             'note' => $body,
+                //             'user_id' => $userdata['id'],
+                //             'order_id' => $orderId,
+                //             'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
+                //         );
+                //         $id = $this->note->insert($notesData);
+                //         if ($noteId && $id) {
+                //             $success .= 'Note created successfully.';
+                //         } else {
+                //             $errors .= 'Something went wrong. Please try again.';
+                //         }
+                //     }
+                // }
 
                 $data = $this->upload->data();
                 $contents = file_get_contents($data['full_path']);
@@ -656,51 +710,91 @@ class Common extends MX_Controller
                     'order_id' => $orderId,
                     'task_id' => 0,
                     'description' => 'Prelim Upload Document',
-                    'is_sync' => 1,
-                    'is_prelim_document' => 0,
+                    'is_sync' => 0,
+                    'is_prelim_document' => 1,
                 );
 
                 $this->order->uploadDocumentOnAwsS3($document_name, 'prelim-upload-doc');
                 $documentId = $this->document->insert($documentData);
 
-                $endPoint = 'files/' . $fileId . '/documents';
-                $documentApiData = array(
-                    'DocumentName' => $data['file_name'],
-                    'DocumentType' => array(
-                        'DocumentTypeID' => 1032,
-                    ),
-                    'Description' => 'Prelim Upload Document',
-                    'InternalOnly' => false,
-                    'DocumentBody' => $binaryData,
-                );
-                $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-                if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
-                    $user_data['admin_api'] = 1;
-                }
+                // $endPoint = 'files/' . $fileId . '/documents';
+                // $documentApiData = array(
+                //     'DocumentName' => $data['file_name'],
+                //     'DocumentType' => array(
+                //         'DocumentTypeID' => 1032,
+                //     ),
+                //     'Description' => 'Prelim Upload Document',
+                //     'InternalOnly' => false,
+                //     'DocumentBody' => $binaryData,
+                // );
+                // $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+                // if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+                //     $user_data['admin_api'] = 1;
+                // }
+                $uploadFileToSoftPro[] = [
+                    "FolderName" => 'prelim',
+                    "FileURL"    => env('AWS_PATH') . "prelim-upload-doc/" . $document_name,
+                ];
+                $fileData = [
+                    "OrderNumber"  => $orderNumber,
+                    "DocumentName" => $orderNumber,
+                    "FileList"     => $uploadFileToSoftPro,
+                ];
+                $reqData = json_encode($fileData);
+                // print_r($reqData);
+                $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
 
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderId, 0);
-                $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-                $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderId, $logid);
-                $res = json_decode($result);
-                if (!empty($res->Document->DocumentID)) {
-                    $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-                    $success .= "Document uploaded successfully";
-                } else {
-                    $errors .= " Something went wrong.Please try again";
-                }
+                /* Start upload softpro api logs */
+                $softproLog = [
+                    'request_type' => 'upload_prelim_document_to_resware',
+                    'request_url'  => 'upload_file',
+                    'request'      => $reqData,
+                    'response'     => json_encode($response),
+                    'status'       => $response['status'],
+                    'file_number'  => $orderNumber,
+                    'created_at'   => date("Y-m-d H:i:s"),
+                ];
+                $this->db->insert('pct_resware_log', $softproLog);
 
-                $orderDetails = $this->order->get_order_details($fileId);
+                if (isset($response) && ! empty($response)) {
+                    // $response = $result, true);
+
+                    if (isset($response['status']) && $response['status'] == 'error') {
+                        $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
+                        $errors[] = $message;
+                        $errors .= " Something went wrong.Please try again";
+                    } else {
+                        $documentData = ['is_sync' => 1];
+                        $condition = ['id' => $documentId];
+                        $this->document->update($documentData, $condition);
+                        $success .= "Document uploaded successfully";
+                    }
+                }
+                
+
+                // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderId, 0);
+                // $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+                // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderId, $logid);
+                // $res = json_decode($result);
+                // if (!empty($res->Document->DocumentID)) {
+                //     $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+                //     $success .= "Document uploaded successfully";
+                // } else {
+                //     $errors .= " Something went wrong.Please try again";
+                // }
+
+                // $orderDetails = $this->order->get_order_details($fileId);
 
                 /* Start add resware api logs */
-                $reswareLogData = array(
-                    'request_type' => 'upload_prelim_document_to_resware',
-                    'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-                    'request' => $document_api_data,
-                    'response' => $result,
-                    'status' => 'success',
-                    'created_at' => date("Y-m-d H:i:s"),
-                );
-                $this->db->insert('pct_resware_log', $reswareLogData);
+                // $reswareLogData = array(
+                //     'request_type' => 'upload_prelim_document_to_resware',
+                //     'request_url' => env('RESWARE_ORDER_API') . $endPoint,
+                //     'request' => $document_api_data,
+                //     'response' => $result,
+                //     'status' => 'success',
+                //     'created_at' => date("Y-m-d H:i:s"),
+                // );
+                // $this->db->insert('pct_resware_log', $reswareLogData);
                 /* End add resware api logs */
 
                 $data = array(
@@ -719,6 +813,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $fileId = $this->input->post('fileId');
+        
         if ($fileId) {
             $userdata = $this->session->userdata('user');
             $orderDetails = $this->order->get_order_details($fileId);
@@ -748,7 +843,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_' . $this->upload_doc_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order/common", "upload_doc_orders", $data);
     }
 
@@ -805,7 +900,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/policy.js?v=policy_orders_' . $this->policy_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/policy.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order/common", "policy_orders", $data);
     }
 
@@ -986,9 +1081,9 @@ class Common extends MX_Controller
                 $data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
             }
         }
-        // $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+        // $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v='.$this->version));
         // $this->template->show("order/common", "upload_documents", $data);
-        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_' . $this->upload_document_for_order));
+        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "upload_documents", $data);
     }
 
@@ -1122,7 +1217,10 @@ class Common extends MX_Controller
                 }
             }
         }
-        $orderDetails = $this->order->get_order_details($fileId);
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
         if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
             $message = 'Documents uploaded for order number #' . $orderDetails['file_number'];
             $notificationData = array(
@@ -1170,7 +1268,7 @@ class Common extends MX_Controller
             $this->session->unset_userdata('success');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/cpl.js?v=cpl_' . $this->cpl_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/cpl.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "cpl", $data);
         // $this->template->show("order", "cpl", $data);
     }
@@ -2642,9 +2740,9 @@ class Common extends MX_Controller
         $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
         $data['proposedBranches'] = $this->order->getProposedBranches();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        // $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v='.$this->version));
         // $this->template->show("order", "proposed_insured", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/proposed.js?v=cpl_' . $this->cpl_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/proposed.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "proposed_insured", $data);
     }
 
@@ -2818,8 +2916,8 @@ class Common extends MX_Controller
             $data['notes'] = $this->order->get_order_notes($orderId);
         }
 
-        // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
-        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->notes_order_js));
+        // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v='.$this->version) );
+        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "get_notes", $data);
         // $this->template->show("order/common", "get_notes", $data);
     }

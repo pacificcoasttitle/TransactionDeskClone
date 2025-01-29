@@ -230,6 +230,30 @@ $route['fetch-escrow-officer-lookup-code']    = 'frontend/order/cron/softproEscr
 $route['fetch-title-officer-lookup-code']     = 'frontend/order/cron/softproTitleOfficerLookupCode';
 $route['update-softpro-order-status']         = 'frontend/order/cron/updateAllSoftProOrderStatus';
 
+$route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
+$route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
+$route['order/admin/edit-softpro-agent/:num']       = 'admin/order/home/spEditAgent';
+$route['order/admin/softpro-escrow']                = 'admin/order/home/spAdminEscrow';
+$route['order/admin/softpro-lenders']               = 'admin/order/home/spAdminLenders';
+$route['order/admin/softpro-mortgage-brokers']      = 'admin/order/home/spAdminMortgageBrokers';
+$route['is-softpro-mortgage-primary-user']          = 'admin/order/home/isSPMortgagePrimaryUser';
+$route['order/admin/softpro-new-users']             = 'admin/order/home/spNewUsers';
+$route['order/admin/add-softpro-new-user']          = 'admin/order/home/spAddNewUser';
+
+$route['order/admin/softpro-sales-rep']                     = 'admin/order/sales/index';
+$route['order/admin/get-sp-sales-rep-list']            = 'admin/order/sales/get_sp_sales_rep_list';
+// $route['order/admin/add-softpro-sales-rep']                 = 'admin/order/sales/add_sp_sales_rep';
+// $route['order/admin/edit-softpro-sales-rep/:num']           = 'admin/order/sales/edit_sp_sales_rep';
+$route['order/admin/softpro-title-officers']                = 'admin/order/title/spAdminTitleOfficer';
+$route['order/admin/get-sp-title-officer-list']        = 'admin/order/title/get_sp_title_officer_list';
+// $route['order/admin/add-softpro-title-officer']             = 'admin/order/title/add_sp_title_officer';
+// $route['order/admin/edit-softpro-title-officer/:num']       = 'admin/order/title/edit_sp_title_officer';
+$route['order/admin/softpro-escrow-officers']          = 'admin/order/home/spAdminEscrowOfficers';
+// $route['order/admin/add-softpro-escrow-officer']       = 'admin/order/home/add_sp_escrow_officer';
+// $route['order/admin/edit-softpro-escrow-officer/:num'] = 'admin/order/home/edit_sp_escrow_officer';
+$route['sp-store-deliverables']                   = 'admin/order/home/spStoreDeliverables';
+$route['order/admin/update-title-sales-sp-company']    = 'admin/order/home/updateTitleSalesSPCompany';
+
 $route['get-pay-off-orders']           = 'frontend/order/payOff/get_pay_off_orders';
 $route['get-transactees']              = 'frontend/order/payOff/get_transactees';
 $route['add-transactee']               = 'frontend/order/payOff/addTransactee';
@@ -321,6 +345,7 @@ $route['order/admin/file-documents']                = 'admin/order/home/file_doc
 $route['get-form-details']                          = 'admin/order/home/getFormDetails';
 $route['delete-form']                               = 'admin/order/home/deleteForm';
 $route['order/admin/companies']                     = 'admin/order/home/companies';
+
 $route['order/admin/add-company']                   = 'admin/order/home/addCompany';
 $route['order/admin/delete-company']                = 'admin/order/home/deleteCompany';
 $route['order/admin/incorrect-users']               = 'admin/order/home/incorrect_users';

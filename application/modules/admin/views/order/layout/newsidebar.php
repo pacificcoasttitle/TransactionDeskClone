@@ -3,7 +3,7 @@ $userdata = $this->session->userdata('admin');
 $roleList = $this->common->getRoleList();
 $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 $roleName = $roleList[$role_id];
-$settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $commisionTabLinks = $payoffSectionLink = false;
+$settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $commisionTabLinks = $payoffSectionLink = $spUsersTabLinks = $spClientTabLinks = false;
 
 if (
     $this->uri->uri_string() == 'order/admin/roles' ||
@@ -120,7 +120,7 @@ if (
     $this->uri->segment(3) == 'edit-lender' ||
     $this->uri->uri_string() == 'order/admin/mortgage-brokers' ||
     $this->uri->uri_string() == 'order/admin/companies' ||
-    $this->uri->uri_string() == 'order/admin/add-company' ||
+	$this->uri->uri_string() == 'order/admin/add-company' ||
     $this->uri->uri_string() == 'order/admin/incorrect-users' ||
     $this->uri->uri_string() == 'order/admin/new-users' ||
     $this->uri->uri_string() == 'order/admin/add-new-user' ||
@@ -128,6 +128,32 @@ if (
 ) {
     $clientTabLinks = true;
 }
+
+if (
+    $this->uri->uri_string() == 'order/admin/softpro-agents' ||
+    $this->uri->uri_string() == 'order/admin/softpro-escrows' ||
+    $this->uri->uri_string() == 'order/admin/softpro-lenders' ||
+    $this->uri->uri_string() == 'order/admin/softpro-mortgage-brokers' ||
+    $this->uri->uri_string() == 'order/admin/softpro-companies' ||
+    $this->uri->uri_string() == 'order/admin/softpro-new-users'
+) {
+    $spClientTabLinks = true;
+}
+
+if (
+    $this->uri->uri_string() == 'order/admin/softpro-sales-rep' ||
+    $this->uri->uri_string() == 'order/admin/add-softpro-sales-rep' ||
+    $this->uri->segment(3) == 'edit-softpro-sales-rep' ||
+    $this->uri->uri_string() == 'order/admin/softpro-title-officers' ||
+    $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' ||
+    $this->uri->segment(3) == 'edit-softpro-title-officer' ||
+    $this->uri->uri_string() == 'order/admin/softpro-escrow-officers' ||
+    $this->uri->segment(3) == 'edit-softpro-escrow-officer' ||
+    $this->uri->segment(3) == 'add-softpro-escrow-officer'
+) {
+    $spUsersTabLinks = true;
+}
+
 
 ?>
 
@@ -220,18 +246,33 @@ if (
 				</a>
 				<div class="collapse <?php if ($clientTabLinks) {echo 'show';}?>" aria-labelledby="clientsDropdown" id="clients">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<?php if ($role_id == 1): ?>
-						<?php endif;?>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/agents'; ?>">Agents</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/import') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow'; ?>">Escrow</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lenders'; ?>">Lenders</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mortgage-brokers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mortgage-brokers'; ?>">Mortgage Brokers</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/companies'; ?>">Companies</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/incorrect-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/incorrect-users'; ?>">Incorrect Users</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/client-users-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/client-users-list'; ?>">Edit Client Type</a>
+						<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/incorrect-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/incorrect-users'; ?>">Incorrect Users</a> -->
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/client-users-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/client-users-list'; ?>">Client Type</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/new-users'; ?>">New Clients</a>
 
 
+					</div>
+				</div>
+			</li>
+
+			<li class="nav-item <?php if ($spClientTabLinks) {echo 'active';}?>">
+				<a class="nav-link <?php if (!$spClientTabLinks) {echo 'collapsed';}?>" href="#" id="spClientsDropdown" role="button" data-toggle="collapse" data-target="#spClients" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-fw fa-users"></i>
+					<span>Softpro Clients</span>
+				</a>
+				<div class="collapse <?php if ($spClientTabLinks) {echo 'show';}?>" aria-labelledby="spClientsDropdown" id="spClients">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-agents' || $this->uri->segment(3) == 'edit-softpro-agent') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-agents'; ?>">Agents</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow'; ?>">Escrow</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-lenders' || $this->uri->segment(3) == 'edit-softpro-lender') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-lenders'; ?>">Lenders</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-mortgage-brokers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-mortgage-brokers'; ?>">Mortgage Brokers</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-companies') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-companies'; ?>">Companies</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-new-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-new-users'; ?>">New Clients</a>
 					</div>
 				</div>
 			</li>
@@ -255,6 +296,22 @@ if (
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-proposed-users' || $this->uri->segment(3) == 'edit-cpl-proposed-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-proposed-users'; ?>">CPL/Proposed Users</a>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow-officers' || $this->uri->segment(3) == 'edit-escrow-officer' || $this->uri->segment(3) == 'add-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow-officers'; ?>">Escrow Officers</a>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/title-production' || $this->uri->segment(3) == 'edit-title-production' || $this->uri->segment(3) == 'add-title-production') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/title-production'; ?>">Title Production</a>
+					</div>
+				</div>
+			</li>
+
+			<li class="nav-item <?php if ($spUsersTabLinks) {echo 'active';}?>">
+				<a class="nav-link <?php if (!$spUsersTabLinks) {echo 'collapsed';}?>" href="#" id="spUsersDropdown" role="button" data-toggle="collapse" data-target="#spUsers" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-fw fa-users"></i>
+					<span>Softpro PCT Users</span>
+				</a>
+				<div class="collapse <?php if ($spUsersTabLinks) {echo 'show';}?>" aria-labelledby="spUsersDropdown" id="spUsers">
+					<div class="bg-white py-2 collapse-inner rounded">
+							<?php if (!in_array($roleName, ['CS Admin'])): ?>
+								<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/sp-sales-rep' || $this->uri->uri_string() == 'order/admin/add-softpro-sales-rep' || $this->uri->segment(3) == 'edit-softpro-sales-rep') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-rep'; ?>">Sales Rep.</a> -->
+							<?php endif;?>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>
 					</div>
 				</div>
 			</li>

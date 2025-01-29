@@ -79,7 +79,11 @@ class Order extends MX_Controller
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = removeMultipleSpace($value['full_address']);
-            $nestedData[] = $value['product_type'];
+            if (!empty($value['softpro_status'])) {
+                $nestedData[] = $value['sp_product_type'];
+            } else {
+                $nestedData[] = $value['product_type'];
+            }
             if (empty($value['sales_rep_name'])) {
                 $salesRepSelection = $salesRepList;
                 $salesRepSelection = str_replace('transaction_id', $value['transaction_id'], $salesRepSelection);
@@ -124,10 +128,7 @@ class Order extends MX_Controller
         if (isset($order_id) && ! empty($order_id)) {
             $order_details            = $this->order_model->get_order_details($order_id);
             $customer_id              = $order_details['customer_id'];
-            $con                      = ['id' => $customer_id];
-            $customer_details         = $this->home_model->sp_get_rows($con);
             $data['order_details']    = $order_details;
-            $data['customer_details'] = $customer_details;
             // echo "<pre>";
             // print_r($data);exit;
             $this->admintemplate->show("order/order", "order_details", $data);
@@ -592,7 +593,11 @@ class Order extends MX_Controller
             $nestedData[] = $count;
             $nestedData[] = $fileNumber; //$value['lp_file_number'] . '(' .')';
             $nestedData[] = $value['full_address'];
-            $nestedData[] = $value['product_type'];
+            if (!empty($value['softpro_status'])) {
+                $nestedData[] = $value['sp_product_type'];
+            } else {
+                $nestedData[] = $value['product_type'];
+            }
             $nestedData[] = $value['sales_rep_name'];
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';

@@ -35,7 +35,7 @@ function imageCreateRequest(serviceId,methodId,fileNumber)
         type: "POST"
     })
         .done(function(response, textStatus, jqXHR) {
-
+            $('#page-preloader').css('display', 'none');
             var responseStatus = $(response).find('ReturnStatus').text();
             
             if (responseStatus == 'Failed') 
@@ -48,6 +48,7 @@ function imageCreateRequest(serviceId,methodId,fileNumber)
             }
         })
         .fail(function(err) {
+            $('#page-preloader').css('display', 'none');
         });
 }
 

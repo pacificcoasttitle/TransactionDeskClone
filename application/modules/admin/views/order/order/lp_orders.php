@@ -98,7 +98,7 @@ if (!empty($errors)) {?>
                             <!-- <th width="7%">Lp Doc Name</th> -->
                             <th width="10%">Report Status</th>
                             <th width="10%">Avoid Duplication</th>
-                            <th width="5%">Sync To Resware</th>
+                            <th width="5%">Sync To Resware / Softpro</th>
                             <th width="8%">Created At</th>
                             <th width="16%">Action</th>
                         </tr>

@@ -47,24 +47,6 @@ class Home_model extends CI_Model
 
     }
 
-    public function sp_get_user($params = [])
-    {
-        $table = 'pct_softpro_lookup_table';
-        $this->db->select('*');
-        $this->db->from($table);
-        foreach ($params as $key => $val) {
-            $this->db->where($key, $val);
-        }
-        $query  = $this->db->get();
-        $result = $query->row_array();
-        if (! empty($result)) {
-            return $result;
-        } else {
-            return [];
-        }
-
-    }
-
     public function get_customers($params)
     {
         $is_escrow = isset($params['is_escrow']) && ! empty($params['is_escrow']) ? $params['is_escrow'] : 0;
@@ -181,43 +163,6 @@ class Home_model extends CI_Model
         return $result;
     }
 
-    public function sp_get_rows($params = [], $table = '')
-    {
-        $table = 'pct_softpro_lookup_table';
-
-        $this->db->select('*');
-        $this->db->from($table);
-
-        if (array_key_exists("where", $params)) {
-            foreach ($params['where'] as $key => $val) {
-                $this->db->where($key, $val);
-            }
-        }
-
-        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
-            $result = $this->db->count_all_results();
-        } else {
-            if (array_key_exists("id", $params)) {
-                $this->db->where('id', $params['id']);
-                $query  = $this->db->get();
-                $result = $query->row_array();
-            } else {
-                $this->db->order_by('id', 'asc');
-                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
-                    $this->db->limit($params['limit'], $params['start']);
-                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
-                    $this->db->limit($params['limit']);
-                }
-
-                $query  = $this->db->get();
-                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
-            }
-        }
-
-        // Return fetched data
-        return $result;
-    }
-
     public function get_customer_number()
     {
         $query = $this->db->query("SELECT random_num
@@ -241,8 +186,8 @@ class Home_model extends CI_Model
         if (empty($table)) {
             $table = $this->table;
         }
-
-        if (! empty($data)) {
+        
+        if (!empty($data)) {
 
             $data['updated_at'] = date("Y-m-d H:i:s");
 
@@ -260,7 +205,7 @@ class Home_model extends CI_Model
         if (empty($table)) {
             $table = $this->table;
         }
-        if (! empty($data)) {
+        if (!empty($data)) {
 
             $data['created_at'] = date("Y-m-d H:i:s");
 
@@ -2876,4 +2821,338 @@ class Home_model extends CI_Model
 
         return $query->result_array();
     }
+
+    public function sp_get_user($params = [])
+    {
+        $table = 'pct_softpro_lookup_table';
+        $this->db->select('*');
+        $this->db->from($table);
+        foreach ($params as $key => $val) {
+            $this->db->where($key, $val);
+        }
+        $query  = $this->db->get();
+        $result = $query->row_array();
+        if (! empty($result)) {
+            return $result;
+        } else {
+            return [];
+        }
+
+    }
+
+    public function sp_get_rows($params = [], $table = '')
+    {
+        $table = 'pct_softpro_lookup_table';
+
+        $this->db->select('*');
+        $this->db->from($table);
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                $this->db->where($key, $val);
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->db->where('id', $params['id']);
+                $query  = $this->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->db->order_by('id', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (! array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit']);
+                }
+
+                $query  = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+
+        // Return fetched data
+        return $result;
+    }
+
+    public function get_softpro_companies_list($params)
+    {
+        $this->db->from('sp_company');
+        // $this->db->where('status', 1);
+        $total_records = $this->db->count_all_results();
+        $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $company_lists = [];
+
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like("lookup_code", $keyword)
+                    ->or_like('name', $keyword)
+                    ->or_like('address1', $keyword)
+                    ->or_like('city', $keyword)
+                    ->or_like('state', $keyword)
+                    ->or_like('zip', $keyword)
+                    ->group_end();
+            }
+            // $this->db->where('status', 1);
+            $this->db->from('sp_company');
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like("lookup_code", $keyword)
+                    ->or_like('name', $keyword)
+                    ->or_like('address1', $keyword)
+                    ->or_like('city', $keyword)
+                    ->or_like('state', $keyword)
+                    ->or_like('zip', $keyword)
+                    ->group_end();
+            }
+
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            // $this->db->where('status', 1);
+            $query = $this->db->get('sp_company');
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        } else {
+            $this->db->from('sp_company');
+            // $this->db->where('status', 1);
+            $filter_total_records = $this->db->count_all_results();
+
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            // $this->db->where('status', 1);
+            $query = $this->db->get('sp_company');
+
+            if ($query->num_rows() > 0) {
+                $customer_lists = $query->result_array();
+            }
+        }
+        return [
+            'recordsTotal'    => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data'            => $customer_lists,
+        ];
+    }
+    
+    public function get_sp_admin_users_list($params)
+    {
+        $is_escrow = isset($params['is_escrow']) && ! empty($params['is_escrow']) ? $params['is_escrow'] : 0;
+        $is_lender = isset($params['is_lender']) && ! empty($params['is_lender']) ? $params['is_lender'] : 0;
+        $is_mortgage_broker = isset($params['is_mortgage_broker']) && ! empty($params['is_mortgage_broker']) ? $params['is_mortgage_broker'] : 0;
+        $is_selling_agent = isset($params['is_selling_agent']) && ! empty($params['is_selling_agent']) ? $params['is_selling_agent'] : 0;
+        $is_new_user = isset($params['is_new_user']) && ! empty($params['is_new_user']) ? $params['is_new_user'] : 0;
+        // $is_escrow = 1;
+        
+        
+        $limit  = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+
+        $escrow_lists = [];
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
+
+            $keyword = $params['searchvalue'];
+            if ($is_escrow == 1) {
+                $this->db->where('is_escrow', $is_escrow);
+            } else if ($is_lender == 1) {
+                $this->db->where('is_lender', $is_lender);
+            } else if ($is_mortgage_broker == 1) {
+                $this->db->where('is_mortgage_broker', $is_mortgage_broker);
+            } else if ($is_selling_agent == 1) {
+                $this->db->where('is_selling_agent', $is_selling_agent);
+            } else if ($is_new_user == 1) {
+                $this->db->where('is_new_user', $is_new_user);
+            }
+            $this->db->where('status', 1);
+            $this->db->from('pct_softpro_lookup_table');
+            $total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like('first_name', $keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
+                    ->or_like('company_name', $keyword)
+                    ->or_like('lookup_code', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->where('is_escrow', $is_escrow);if ($is_escrow == 1) {
+                $this->db->where('is_escrow', $is_escrow);
+            } else if ($is_lender == 1) {
+                $this->db->where('is_lender', $is_lender);
+            } else if ($is_mortgage_broker == 1) {
+                $this->db->where('is_mortgage_broker', $is_mortgage_broker);
+            } else if ($is_new_user == 1) {
+                $this->db->where('is_new_user', $is_new_user);
+            }
+            $this->db->where('status', 1);
+            $this->db->get('pct_softpro_lookup_table');
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like('first_name', $keyword)
+                    ->or_like('last_name', $keyword)
+                    ->or_like('email_address', $keyword)
+                    ->or_like('company_name', $keyword)
+                    ->or_like('lookup_code', $keyword)
+                    ->group_end();
+            }
+
+            if ($is_escrow == 1) {
+                $this->db->where('is_escrow', $is_escrow);
+            } else if ($is_lender == 1) {
+                $this->db->where('is_lender', $is_lender);
+            } else if ($is_mortgage_broker == 1) {
+                $this->db->where('is_mortgage_broker', $is_mortgage_broker);
+            } else if ($is_new_user == 1) {
+                $this->db->where('is_new_user', $is_new_user);
+            }
+            $this->db->where('status', 1);
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query =  $this->db->get('pct_softpro_lookup_table');
+
+            if ($query->num_rows() > 0) {
+                $escrow_lists = $query->result_array();
+            }
+        } else {
+
+            if ($is_escrow == 1) {
+                $this->db->where('is_escrow', $is_escrow);
+            } else if ($is_lender == 1) {
+                $this->db->where('is_lender', $is_lender);
+            } else if ($is_mortgage_broker == 1) {
+                $this->db->where('is_mortgage_broker', $is_mortgage_broker);
+            } else if ($is_new_user == 1) {
+                $this->db->where('is_new_user', $is_new_user);
+            }
+            $this->db->where('status', 1);
+            $this->db->from('pct_softpro_lookup_table');
+
+            $filter_total_records = $this->db->count_all_results();
+
+            if ($is_escrow == 1) {
+                $this->db->where('is_escrow', $is_escrow);
+            } else if ($is_lender == 1) {
+                $this->db->where('is_lender', $is_lender);
+            } else if ($is_mortgage_broker == 1) {
+                $this->db->where('is_mortgage_broker', $is_mortgage_broker);
+            } else if ($is_new_user == 1) {
+                $this->db->where('is_new_user', $is_new_user);
+            }
+            $this->db->where('status', 1);
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get('pct_softpro_lookup_table');
+            if ($query->num_rows() > 0) {
+                $escrow_lists = $query->result_array();
+            }
+        }
+
+        return [
+            'recordsTotal'    => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data'            => $escrow_lists,
+        ];
+    }
+
+    public function get_sp_officers_list($params)
+    {
+        $is_title_officer = isset($params['is_title_officer']) && ! empty($params['is_title_officer']) ? $params['is_title_officer'] : 0;
+        $is_escrow_officer = isset($params['is_escrow_officer']) && ! empty($params['is_escrow_officer']) ? $params['is_escrow_officer'] : 0;
+
+        if ($is_title_officer == 1) {
+            $this->db->where('is_title_officer', 1);
+        } else if ($is_escrow_officer == 1) {
+            $this->db->where('is_escrow_officer', 1);
+        }
+    	$this->db->from('sp_officers');
+		$total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $officers_lists = array();
+        
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
+				$this->db->like('officer_name', $keyword);
+                $this->db->or_like('lookup_code', $keyword);
+                $this->db->or_like('closer_examiner', $keyword);
+                $this->db->group_end();
+            }
+            if ($is_title_officer == 1) {
+                $this->db->where('is_title_officer', 1);
+            } else if ($is_escrow_officer == 1) {
+                $this->db->where('is_escrow_officer', 1);
+            }
+	    	$this->db->from('sp_officers');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
+				$this->db->like('officer_name', $keyword);
+				$this->db->or_like('lookup_code', $keyword);
+                $this->db->or_like('closer_examiner', $keyword);
+                $this->db->group_end();
+			}
+
+            if ($is_title_officer == 1) {
+                $this->db->where('is_title_officer', 1);
+            } else if ($is_escrow_officer == 1) {
+                $this->db->where('is_escrow_officer', 1);
+            }
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get('sp_officers');
+			
+			if ($query->num_rows() > 0) {
+                $officers_lists = $query->result_array();
+	        }
+    	} else {
+            if ($is_title_officer == 1) {
+                $this->db->where('is_title_officer', 1);
+            } else if ($is_escrow_officer == 1) {
+                $this->db->where('is_escrow_officer', 1);
+            }
+	    	$this->db->from('sp_officers');
+			$filter_total_records =  $this->db->count_all_results();
+
+            if ($is_title_officer == 1) {
+                $this->db->where('is_title_officer', 1);
+            } else if ($is_escrow_officer == 1) {
+                $this->db->where('is_escrow_officer', 1);
+            }
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get('sp_officers');
+
+			if ($query->num_rows() > 0) {
+	            $officers_lists = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $officers_lists
+        );
+    }
+
+
 }

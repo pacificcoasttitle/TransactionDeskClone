@@ -795,7 +795,7 @@ class Dashboard extends MX_Controller
 
                 if ($order['prelim_summary_id'] != 0) {
                     $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
-                    $actions = "<a href='" . base_url() . "review-file/" . $order['file_id'] . "'>
+                    $actions = "<a href='" . base_url() . "review-file/" . $order['id'] . "'>
 							<button type='submit' class='btn btn-$class btn-icon-split'>
 								<span class='icon text-white-50'>
 									<i class='fas fa-file'></i>

@@ -1187,7 +1187,8 @@ class Home extends MX_Controller
                     'escrow_officer_id' => $this->input->post('escrow_officer'),
                     'prod_type'         => $TransactionType,
                     // 'prod_type' => $loanFlag == 1 ? 'loan' : 'sale',
-                    'resware_status'    => ($lpOrderFlag == 1) ? 'open' : '',
+                    // 'resware_status'    => ($lpOrderFlag == 1) ? 'open' : '',
+                    'softpro_status'    => ($lpOrderFlag == 1) ? 'open' : '',
                     'status'            => 1,
                 ];
 
@@ -1465,7 +1466,7 @@ class Home extends MX_Controller
                     ];
                 }
 
-                if (! empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
+                if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
                     $fileData = [
                         "OrderNumber"  => $orderNumber,
                         "DocumentName" => $orderNumber,
