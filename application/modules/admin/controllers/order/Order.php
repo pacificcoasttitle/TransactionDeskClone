@@ -91,7 +91,7 @@ class Order extends MX_Controller
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = removeMultipleSpace($value['full_address']);
-            if (!empty($value['softpro_status'])) {
+            if ($value['is_softpro_order'] == 1) {
                 $nestedData[] = $value['sp_product_type'];
                 if (empty($value['sp_sales_rep_name'])) {
                     $salesRepSelection = $spSalesRepList;
@@ -613,7 +613,7 @@ class Order extends MX_Controller
             $nestedData[] = $count;
             $nestedData[] = $fileNumber; //$value['lp_file_number'] . '(' .')';
             $nestedData[] = $value['full_address'];
-            if (!empty($value['softpro_status'])) {
+            if ($value['is_softpro_order'] == 1) {
                 $nestedData[] = $value['sp_product_type'];
                 $nestedData[] = $value['sp_sales_rep_name'];
             } else {

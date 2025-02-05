@@ -4527,44 +4527,44 @@ class Home extends MX_Controller
         if ($order_details['cust_is_escrow']) {
             $ClientType                = 'EscrowCompany';
             $orderReq['escrowDetails'] = [
-                'CompanyLookUpCode' => $order_details['escrow_lender_flookup_code'],
-                'ClientLookUpCode'  => $order_details['escrow_lender_lookup_code'],
-                'Name'              => $order_details['escrow_lender_first_name'] . ' ' . $order_details['escrow_lender_last_name'],
-                'Email'             => $order_details['escrow_lender_email'],
-                'Telephone'         => $order_details['escrow_lender_telephone_no'],
-                'CompanyName'       => $order_details['escrow_lender_company_name'],
+                'CompanyLookUpCode' => $order_details['sp_escrow_lender_flookup_code'],
+                'ClientLookUpCode'  => $order_details['sp_escrow_lender_lookup_code'],
+                'Name'              => $order_details['sp_escrow_lender_first_name'] . ' ' . $order_details['sp_escrow_lender_last_name'],
+                'Email'             => $order_details['sp_escrow_lender_email'],
+                'Telephone'         => $order_details['sp_escrow_lender_telephone_no'],
+                'CompanyName'       => $order_details['sp_escrow_lender_company_name'],
                 // 'EscrowOfficerName' => $escrowOfficer,
                 // "LookUpCodeEscrowOfficer" => $escrowOfficer,
             ];
         } else if ($order_details['cust_is_lender']) {
             $ClientType                = 'Lender';
             $orderReq['lenderDetails'] = [
-                'CompanyLookUpCode' => $order_details['escrow_lender_flookup_code'],
-                'ClientLookUpCode'  => $order_details['escrow_lender_lookup_code'],
-                'Name'              => $order_details['escrow_lender_first_name'] . ' ' . $order_details['escrow_lender_last_name'],
-                'Email'             => $order_details['escrow_lender_email'],
+                'CompanyLookUpCode' => $order_details['sp_escrow_lender_flookup_code'],
+                'ClientLookUpCode'  => $order_details['sp_escrow_lender_lookup_code'],
+                'Name'              => $order_details['sp_escrow_lender_first_name'] . ' ' . $order_details['escrow_lender_last_name'],
+                'Email'             => $order_details['sp_escrow_lender_email'],
                 'Telephone'         => $order_details['escrow_lender_telephone_no'],
                 'CompanyName'       => $order_details['escrow_lender_company_name'],
             ];
-        } else if ($order_details['cust_is_mortgage_broker']) {
+        } else if ($order_details['sp_cust_is_mortgage_broker']) {
             $ClientType = 'MortgageBroker';
-        } else if ($order_details['cust_is_selling_agent']) {
+        } else if ($order_details['sp_cust_is_selling_agent']) {
             $ClientType = 'ListingAgentBroker';
         }
         $orderReq['personalDetails'] = [
-            "CompanyName"        => $order_details['cust_company_name'],
-            "Email"              => $order_details['cust_email_address'],
-            "FirstName"          => $order_details['cust_first_name'],
-            "LastName"           => $order_details['cust_last_name'],
-            "Telephone"          => $order_details['cust_telephone_no'],
-            "Address"            => $order_details['cust_street_address'],
-            "City"               => $order_details['cust_city'],
-            "ZipCode"            => $order_details['cust_zip_code'],
+            "CompanyName"        => $order_details['sp_cust_company_name'],
+            "Email"              => $order_details['sp_cust_email_address'],
+            "FirstName"          => $order_details['sp_cust_first_name'],
+            "LastName"           => $order_details['sp_cust_last_name'],
+            "Telephone"          => $order_details['sp_cust_telephone_no'],
+            "Address"            => $order_details['sp_cust_street_address'],
+            "City"               => $order_details['sp_cust_city'],
+            "ZipCode"            => $order_details['sp_cust_zip_code'],
             "EmailNotifications" => true,
             "State"              => "",
-            "SalesRep"           => $order_details['salerep_first_name'] . ' ' . $order_details['salerep_last_name'],
-            "ClientLookupCode"   => $order_details['cust_lookup_code'],  //$ClientLookupCode,
-            "CompanyLookupCode"  => $order_details['cust_flookup_code'], //$CompanyLookupCode,
+            "SalesRep"           => $order_details['sp_salerep_first_name'] . ' ' . $order_details['sp_salerep_last_name'],
+            "ClientLookupCode"   => $order_details['sp_cust_lookup_code'],  //$ClientLookupCode,
+            "CompanyLookupCode"  => $order_details['sp_cust_flookup_code'], //$CompanyLookupCode,
             "UserType"           => $ClientType,
         ];
 
@@ -4586,9 +4586,9 @@ class Home extends MX_Controller
             "SecondaryOwner" => $order_details['secondary_owner'],
         ];
         $transactionDetailsReq = [
-            "LookUpCodeTitleOfficer" => $order_details['titleofficer_lookup_code'],
-            "TitleOfficer"           => $order_details['titleofficer_first_name'],
-            "Product"                => $order_details['product_type_name'],
+            "LookUpCodeTitleOfficer" => $order_details['sp_titleofficer_lookup_code'],
+            "TitleOfficer"           => $order_details['sp_title_officer_name'],
+            "Product"                => $order_details['sp_product_type_name'],
             "EscrowNumber"           => $order_details['escrow_number'],
             "PrimaryBorrower"        => $order_details['borrower'],
             "SecondaryBorrower"      => $order_details['secondary_borrower'],
@@ -4674,12 +4674,12 @@ class Home extends MX_Controller
             // );
             // $place_order['Note']['buyers_agent'] = $buyers_agent_details;
             $orderReq['buyersAgentDetails'] = [
-                'Name'              => $order_details['buyer_agent_name'],
-                'Email'             => $order_details['buyer_agent_email_address'],
-                'Telephone'         => $order_details['buyer_agent_telephone_no'],
-                'CompanyName'       => $order_details['buyer_agent_company'],
-                "ClientLookUpCode"  => $order_details['buyer_agent_lookup_code'],
-                "CompanyLookUpCode" => $order_details['buyer_agent_flookup_code'],
+                'Name'              => $order_details['sp_buyer_agent_name'],
+                'Email'             => $order_details['sp_buyer_agent_email_address'],
+                'Telephone'         => $order_details['sp_buyer_agent_telephone_no'],
+                'CompanyName'       => $order_details['sp_buyer_agent_company'],
+                "ClientLookUpCode"  => $order_details['sp_buyer_agent_lookup_code'],
+                "CompanyLookUpCode" => $order_details['sp_buyer_agent_flookup_code'],
             ];
         }
 
@@ -4692,12 +4692,12 @@ class Home extends MX_Controller
             // );
             // $place_order['Note']['listing_agent'] = $listing_agent_details;
             $orderReq['listingAgentDetails'] = [
-                'Name'              => $order_details['listing_agent_name'],
-                'Email'             => $order_details['listing_agent_email_address'],
-                'Telephone'         => $order_details['listing_agent_company'],
-                'CompanyName'       => $order_details['listing_agent_telephone_no'],
-                "ClientLookUpCode"  => $order_details['listing_agent_lookup_code'],
-                "CompanyLookUpCode" => $order_details['listing_agent_flookup_code'],
+                'Name'              => $order_details['sp_listing_agent_name'],
+                'Email'             => $order_details['sp_listing_agent_email_address'],
+                'Telephone'         => $order_details['sp_listing_agent_company'],
+                'CompanyName'       => $order_details['sp_listing_agent_telephone_no'],
+                "ClientLookUpCode"  => $order_details['sp_listing_agent_lookup_code'],
+                "CompanyLookUpCode" => $order_details['sp_listing_agent_flookup_code'],
             ];
         }
 
@@ -4714,7 +4714,7 @@ class Home extends MX_Controller
         // }
 
         $user_data              = [];
-        $orderUser              = $this->home_model->get_user(['id' => $order_details['customer_id']]);
+        $orderUser              = $this->home_model->sp_get_user(['id' => $order_details['customer_id']]);
         $user_data['email']     = $orderUser['email_address'];
         $user_data['password']  = $orderUser['random_password'];
         $user_data['from_mail'] = 1;
@@ -5521,13 +5521,13 @@ class Home extends MX_Controller
                     $data     = [
                         'orderNumber'      => $orderNumber,
                         'orderId'          => $order_details['order_id'],
-                        'OpenName'         => $order_details['cust_first_name'] . ' ' . $order_details['cust_last_name'],
-                        'Opentelephone'    => $order_details['cust_telephone_no'],
-                        'OpenEmail'        => $order_details['cust_email_address'],
-                        'CompanyName'      => $order_details['cust_company_name'],
-                        'StreetAddress'    => $order_details['cust_street_address'],
-                        'City'             => $order_details['cust_city'],
-                        'Zipcode'          => $order_details['cust_zip_code'],
+                        'OpenName'         => $order_details['sp_cust_first_name'] . ' ' . $order_details['sp_cust_last_name'],
+                        'Opentelephone'    => $order_details['sp_cust_telephone_no'],
+                        'OpenEmail'        => $order_details['sp_cust_email_address'],
+                        'CompanyName'      => $order_details['sp_cust_company_name'],
+                        'StreetAddress'    => $order_details['sp_cust_street_address'],
+                        'City'             => $order_details['sp_cust_city'],
+                        'Zipcode'          => $order_details['sp_cust_zip_code'],
                         'openAt'           => gmdate("m-d-Y h:i A", strtotime($order_details['opened_date']) + 3600 * ($timezone + date("I"))),
                         'PropertyAddress'  => $order_details['address'],
                         'FullProperty'     => $order_details['full_address'],
@@ -5545,20 +5545,20 @@ class Home extends MX_Controller
                         'EscrowNumber'     => $order_details['escrow_officer_id'],
                         'randomString'     => $this->order->randomPassword(),
                     ];
-                    if (isset($order_details['lender_id']) && !empty($order_details['lender_id'])) {
+                    if (isset($order_details['sp_lender_id']) && !empty($order_details['sp_lender_id'])) {
                         $data['lender_details'] = $lender_details;
                     }
 
-                    if (isset($order_details['buyer_agent_id']) && !empty($order_details['buyer_agent_id'])) {
+                    if (isset($order_details['sp_buyer_agent_id']) && !empty($order_details['sp_buyer_agent_id'])) {
                         $data['buyers_agent'] = $buyers_agent_details;
                     }
 
-                    if (isset($order_details['listing_agent_id']) && !empty($order_details['listing_agent_id'])) {
+                    if (isset($order_details['sp_listing_agent_id']) && !empty($order_details['sp_listing_agent_id'])) {
                         $data['listing_agent'] = [
-                            'name'      => $listingDetails['listing_agent_name'],
-                            'email'     => $listingDetails['listing_agent_email_address'],
-                            'telephone' => $listingDetails['listing_agent_telephone_no'],
-                            'company'   => $listingDetails['listing_agent_company'],
+                            'name'      => $listingDetails['sp_listing_agent_name'],
+                            'email'     => $listingDetails['sp_listing_agent_email_address'],
+                            'telephone' => $listingDetails['sp_listing_agent_telephone_no'],
+                            'company'   => $listingDetails['sp_listing_agent_company'],
                         ];
                     }
 

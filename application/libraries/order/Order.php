@@ -634,6 +634,7 @@ class Order
             order_details.prod_type,
             order_details.resware_status,
             order_details.softpro_status,
+            order_details.is_softpro_order
             order_details.borrower_email,
             property_details.id as property_id,
             property_details.address,
