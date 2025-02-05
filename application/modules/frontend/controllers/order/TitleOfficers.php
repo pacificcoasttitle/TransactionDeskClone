@@ -159,7 +159,7 @@ class TitleOfficers extends MX_Controller
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['file_id'].'" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-eye"></i></span><span class="text"> View / Add Notes </span></a>';
+                $nestedData[] = '<a href="'.base_url().'get-notes/'.$order['id'].'" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-eye"></i></span><span class="text"> View / Add Notes </span></a>';
                 $data[] = $nestedData; 
                 $i++; 
             }

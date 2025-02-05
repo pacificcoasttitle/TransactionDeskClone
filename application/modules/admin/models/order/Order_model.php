@@ -19,7 +19,10 @@ class Order_model extends CI_Model
         }
 
         if (isset($product_type) && ! empty($product_type)) {
-            $this->db->like('pct_order_product_types.product_type', $product_type);
+            $this->db->group_start();
+            $this->db->like('pct_order_product_types.product_type', $product_type)
+                ->or_like('pct_softpro_product_type.product_type', $product_type)
+            ->group_end();
         }
 
         $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
@@ -29,7 +32,7 @@ class Order_model extends CI_Model
         }
 
         if (isset($order_type) && ! empty($order_type)) {
-            if ($order_type == 'resware_orders') {
+            if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                 // $this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null');
                 $this->db->where('order_details.file_number !=', '0');
@@ -50,15 +53,16 @@ class Order_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, tpd.email_sent_status')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.resware_status, order_details.softpro_status, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name, pct_softpro_product_type.product_type as sp_product_type,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
-            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
             $total_records = $this->db->count_all_results();
 
             if (isset($sales_rep) && ! empty($sales_rep)) {
@@ -66,7 +70,10 @@ class Order_model extends CI_Model
             }
 
             if (isset($product_type) && ! empty($product_type)) {
-                $this->db->like('pct_softpro_product_type.product_type', $product_type);
+                $this->db->group_start();
+                $this->db->like('pct_order_product_types.product_type', $product_type)
+                    ->or_like('pct_softpro_product_type.product_type', $product_type)
+                ->group_end();
             }
 
             $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
@@ -75,7 +82,7 @@ class Order_model extends CI_Model
             }
 
             if (isset($order_type) && ! empty($order_type)) {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     // $this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
                     $this->db->where('order_details.file_number !=', '0');
@@ -97,15 +104,16 @@ class Order_model extends CI_Model
             $offset       = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
             $orders_lists = [];
 
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.resware_status, order_details.softpro_status, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name, pct_softpro_product_type.product_type as sp_product_type,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
-            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
             $this->db->order_by("order_details.created_at", "desc");
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -118,15 +126,16 @@ class Order_model extends CI_Model
                 $orders_lists = $query->result_array();
             }
         } else {
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.resware_status, order_details.softpro_status, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.id as transaction_id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name, pct_softpro_product_type.product_type as sp_product_type,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
-            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
 
             $total_records = $this->db->count_all_results();
 
@@ -139,7 +148,10 @@ class Order_model extends CI_Model
             }
 
             if (isset($product_type) && ! empty($product_type)) {
-                $this->db->like('pct_softpro_product_type.purchase_type', $product_type);
+                $this->db->group_start();
+                $this->db->like('pct_order_product_types.product_type', $product_type)
+                    ->or_like('pct_softpro_product_type.product_type', $product_type)
+                ->group_end();
             }
 
             $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
@@ -148,7 +160,7 @@ class Order_model extends CI_Model
             }
 
             if (isset($order_type) && ! empty($order_type)) {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     // $this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
                     $this->db->where('order_details.file_number !=', '0');
@@ -159,15 +171,16 @@ class Order_model extends CI_Model
 
             }
 
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,transaction_details.id as transaction_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.resware_status, order_details.softpro_status, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,transaction_details.id as transaction_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name, pct_softpro_product_type.product_type as sp_product_type,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
-            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
-                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
 
             $this->db->order_by("order_details.created_at", "desc");
 
@@ -257,6 +270,7 @@ class Order_model extends CI_Model
             order_details.safewire_action_link,
             order_details.prod_type,
             order_details.resware_status,
+            order_details.softpro_status,
             order_details.borrower_email,
             property_details.id as property_id,
             property_details.address,
@@ -280,12 +294,10 @@ class Order_model extends CI_Model
             property_details.cpl_proposed_property_state,
             property_details.cpl_proposed_property_zip,
             property_details.unit_number,
+            property_details.buyer_agent_id,
             transaction_details.id as transaction_id,
             transaction_details.sales_representative,
-            CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name,
-            salerep.telephone_no as sales_rep_phone,
             transaction_details.title_officer,
-            officer_name as title_officer_name,
             transaction_details.sales_amount,
             transaction_details.loan_amount,
             transaction_details.loan_number,
@@ -293,94 +305,165 @@ class Order_model extends CI_Model
             transaction_details.transaction_type,
             transaction_details.product_type,
             transaction_details.order_type,
-            pct_softpro_order_type.order_type as order_type_name,
-            pct_softpro_product_type.product_type as product_type_name,
             transaction_details.purchase_type,
             transaction_details.supplemental_report_date,
             transaction_details.preliminary_report_date,
             transaction_details.borrower,
-            CONCAT_WS(",",transaction_details.additional_email,transaction_details.additional_email_1,transaction_details.additional_email_2) as additional_emails,
             transaction_details.additional_email,
             transaction_details.additional_email_1,
             transaction_details.additional_email_2,
             transaction_details.secondary_borrower,
             transaction_details.vesting,
             transaction_details.escrow_number,
-            pct_softpro_lookup_table.company_name as escrow_lender_company_name,
-            pct_softpro_lookup_table.first_name as escrow_lender_first_name,
-            pct_softpro_lookup_table.last_name as escrow_lender_last_name,
-            pct_softpro_lookup_table.email_address as escrow_lender_email,
-            pct_softpro_lookup_table.phone as escrow_lender_telephone_no,
-            pct_softpro_lookup_table.lookup_code as escrow_lender_lookup_code,
-            pct_softpro_lookup_table.flookup_code as escrow_lender_flookup_code,
-            pct_softpro_lookup_table.id as lender_id,
-            pct_softpro_lookup_table.address1 as lender_address,
-            pct_softpro_lookup_table.city as lender_city,
-            pct_softpro_lookup_table.state as lender_state,
-            pct_softpro_lookup_table.zip as lender_zipcode,
-            pct_softpro_lookup_table.company_name as lender_company_name,
-            pct_softpro_lookup_table.first_name as lender_first_name,
-            pct_softpro_lookup_table.last_name as lender_last_name,
-            pct_softpro_lookup_table.email_address as lender_email,
-            pct_softpro_lookup_table.is_escrow,
-            pct_softpro_lookup_table.phone as lender_telephone_no,
+            CONCAT_WS(",",transaction_details.additional_email,transaction_details.additional_email_1,transaction_details.additional_email_2) as additional_emails,
+            pct_softpro_order_type.order_type as order_type_name,
+            pct_order_product_types.product_type as product_type_name,
+            pct_softpro_product_type.product_type as sp_product_type_name,
+
+            customer_basic_details.company_name as escrow_lender_company_name,
+            customer_basic_details.first_name as escrow_lender_first_name,
+            customer_basic_details.last_name as escrow_lender_last_name,
+            customer_basic_details.email_address as escrow_lender_email,
+            customer_basic_details.telephone_no as escrow_lender_telephone_no,
+            customer_basic_details.id as lender_id,
+            customer_basic_details.street_address as lender_address,
+            customer_basic_details.city as lender_city,
+            customer_basic_details.state as lender_state,
+            customer_basic_details.zip_code as lender_zipcode,
+            customer_basic_details.is_escrow,
+
+            pct_softpro_lookup_table.company_name as sp_escrow_lender_company_name,
+            pct_softpro_lookup_table.first_name as sp_escrow_lender_first_name,
+            pct_softpro_lookup_table.last_name as sp_escrow_lender_last_name,
+            pct_softpro_lookup_table.email_address as sp_escrow_lender_email,
+            pct_softpro_lookup_table.phone as sp_escrow_lender_telephone_no,
+            pct_softpro_lookup_table.lookup_code as sp_escrow_lender_lookup_code,
+            pct_softpro_lookup_table.flookup_code as sp_escrow_lender_flookup_code,
+            pct_softpro_lookup_table.id as sp_lender_id,
+            pct_softpro_lookup_table.address1 as sp_lender_address,
+            pct_softpro_lookup_table.city as sp_lender_city,
+            pct_softpro_lookup_table.state as sp_lender_state,
+            pct_softpro_lookup_table.zip as sp_lender_zipcode,
+            pct_softpro_lookup_table.is_escrow as sp_is_escrow,
+            
             cbd.first_name as cust_first_name,
             cbd.last_name as cust_last_name,
             cbd.email_address as cust_email_address,
             cbd.company_name as cust_company_name,
-            cbd.phone as cust_telephone_no,
-            cbd.address1 as cust_street_address,
+            cbd.telephone_no as cust_telephone_no,
+            cbd.street_address as cust_street_address,
             cbd.city as cust_city,
-            cbd.zip as cust_zip_code,
+            cbd.zip_code as cust_zip_code,
             cbd.lookup_code as cust_lookup_code,
             cbd.flookup_code as cust_flookup_code,
             cbd.is_escrow as cust_is_escrow,
-            cbd.is_lender as cust_is_lender,
-            cbd.is_mortgage_broker as cust_is_mortgage_broker,
-            cbd.is_selling_agent as cust_is_selling_agent,
+            cbd.is_mortgage_user as cust_is_mortgage_broker,
+
+            splt.first_name as sp_cust_first_name,
+            splt.last_name as sp_cust_last_name,
+            splt.email_address as sp_cust_email_address,
+            splt.company_name as sp_cust_company_name,
+            splt.phone as sp_cust_telephone_no,
+            splt.address1 as sp_cust_street_address,
+            splt.city as sp_cust_city,
+            splt.zip as sp_cust_zip_code,
+            splt.lookup_code as sp_cust_lookup_code,
+            splt.flookup_code as sp_cust_flookup_code,
+            splt.is_escrow as sp_cust_is_escrow,
+            splt.is_lender as sp_cust_is_lender,
+            splt.is_mortgage_broker as sp_cust_is_mortgage_broker,
+            splt.is_selling_agent as sp_cust_is_selling_agent,
+
+            CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name,
+            salerep.telephone_no as sales_rep_phone,
             salerep.first_name as salerep_first_name,
             salerep.last_name as salerep_last_name,
             salerep.is_mail_notification as salerep_is_mail_notification,
             salerep.email_address as salerep_email_address,
-            titleofficer.officer_name as titleofficer_first_name,
-            titleofficer.closer_examiner as titleofficer_lookup_code,
-            property_details.buyer_agent_id,
+
+            CONCAT(sp_salerep.first_name, " ", sp_salerep.last_name) as sp_sales_rep_name,
+            sp_salerep.phone as sales_rep_phone,
+            sp_salerep.first_name as sp_salerep_first_name,
+            sp_salerep.last_name as sp_salerep_last_name,
+            sp_salerep.is_mail_notification as sp_salerep_is_mail_notification,
+            sp_salerep.email_address as sp_salerep_email_address,
+
+            CONCAT(titleofficer.first_name, " ", titleofficer.last_name) as title_officer_name,
+            titleofficer.first_name as titleofficer_first_name,
+
+            sp_to.officer_name as sp_title_officer_name,
+            sp_to.closer_examiner as sp_titleofficer_lookup_code,
+
             CONCAT(agents.first_name, " ", agents.last_name) as buyer_agent_name,
             agents.email_address as buyer_agent_email_address,
             agents.company_name as buyer_agent_company,
             agents.city as buyer_agent_city,
-            agents.zip as buyer_agent_zipcode,
-            agents.phone as buyer_buyer_agent_telephone_no,
-            agents.address1 as buyer_agent_address,
-            agents.lookup_code as buyer_agent_lookup_code,
-            agents.flookup_code as buyer_agent_flookup_code,
+            agents.zip_code as buyer_agent_zipcode,
+            agents.telephone_no as buyer_agent_telephone_no,
+            agents.street_address as buyer_agent_address,
+
+            CONCAT(sp_agents.first_name, " ", sp_agents.last_name) as sp_buyer_agent_name,
+            sp_agents.email_address as sp_buyer_agent_email_address,
+            sp_agents.company_name as sp_buyer_agent_company,
+            sp_agents.city as sp_buyer_agent_city,
+            sp_agents.zip as sp_buyer_agent_zipcode,
+            sp_agents.phone as sp_buyer_agent_telephone_no,
+            sp_agents.address1 as sp_buyer_agent_address,
+            sp_agents.lookup_code as sp_buyer_agent_lookup_code,
+            sp_agents.flookup_code as sp_buyer_agent_flookup_code,
+
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
             pct_order_documents.created,
             p.created as proposed_document_created_date,
+
             CONCAT(a.first_name, " ", a.last_name) as listing_agent_name,
             a.email_address as listing_agent_email_address,
             a.company_name as listing_agent_company,
-            a.lookup_code as listing_agent_lookup_code,
-            a.flookup_code as listing_agent_flookup_code,
-            a.phone as listing_agent_telephone_no')
+            a.telephone_no as listing_agent_telephone_no,
+
+            CONCAT(sp_la.first_name, " ", sp_la.last_name) as sp_listing_agent_name,
+            sp_la.email_address as sp_listing_agent_email_address,
+            sp_la.company_name as sp_listing_agent_company,
+            sp_la.lookup_code as sp_listing_agent_lookup_code,
+            sp_la.flookup_code as sp_listing_agent_flookup_code,
+            sp_la.phone as sp_listing_agent_telephone_no'
+            
+
+            
+            )
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+
+            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left')
-            ->join('pct_softpro_lookup_table as cbd', 'order_details.customer_id = cbd.id', 'left')
-            ->join('sp_officers as titleofficer', 'transaction_details.title_officer = titleofficer.id')
-        // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id')
+
+            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
+
+            ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+            ->join('sp_officers as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
+
             ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
+            ->join('pct_softpro_lookup_table as sp_salerep', 'transaction_details.sales_representative = sp_salerep.id', 'left')
+
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
-            ->join('pct_softpro_lookup_table as agents', 'property_details.buyer_agent_id = agents.id', 'left')
-            ->join('pct_softpro_lookup_table a', 'property_details.listing_agent_id = a.id', 'left')
+
+            ->join('customer_basic_details as agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            ->join('pct_softpro_lookup_table as sp_agents', 'property_details.buyer_agent_id = sp_agents.id', 'left')
+
+            ->join('customer_basic_details a', 'property_details.listing_agent_id = a.id', 'left')
+            ->join('pct_softpro_lookup_table sp_la', 'property_details.listing_agent_id = sp_la.id', 'left')
+
             ->join('pct_softpro_product_type', 'pct_softpro_product_type.id = transaction_details.purchase_type', 'left')
+            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+            
             ->join('pct_softpro_order_type', 'pct_softpro_order_type.id = transaction_details.order_type', 'left')
+            
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left');
-        // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
         $this->db->where('order_details.id', $orderId);
 
         $query = $this->db->get();
@@ -560,7 +643,11 @@ class Order_model extends CI_Model
         }
 
         if (isset($product_type) && ! empty($product_type)) {
-            $this->db->like('pct_order_product_types.product_type', $product_type);
+            $this->db->group_start();
+                $this->db->like('pct_order_product_types.product_type', $product_type)
+                    ->or_like('pct_softpro_product_type.product_type', $product_type)
+                ->group_end();
+            // $this->db->like('pct_order_product_types.product_type', $product_type);
         }
 
         $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
@@ -570,7 +657,7 @@ class Order_model extends CI_Model
         }
 
         if (isset($order_type) && ! empty($order_type)) {
-            if ($order_type == 'resware_orders') {
+            if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                 //$this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null');
             } else if ($order_type == 'lp_orders') {
@@ -592,15 +679,17 @@ class Order_model extends CI_Model
                 $this->db->where("(property_details.full_address LIKE '%" . $keyword . "%' OR order_details.lp_file_number LIKE '%" . $keyword . "%')");
             }
 
-            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
+            $this->db->select('order_details.file_number, order_details.lp_file_number,order_details.file_id, order_details.resware_status, order_details.softpro_status, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type, CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name, pct_order_product_types.product_type, sp_pt.product_type as sp_product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
-                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type as sp_pt', 'transaction_details.purchase_type = sp_pt.id AND sp_pt.status=1', 'left');
             $total_records = $this->db->count_all_results();
 
             if (isset($sales_rep) && ! empty($sales_rep)) {
@@ -608,7 +697,11 @@ class Order_model extends CI_Model
             }
 
             if (isset($product_type) && ! empty($product_type)) {
-                $this->db->like('pct_order_product_types.product_type', $product_type);
+                $this->db->group_start();
+                $this->db->like('pct_order_product_types.product_type', $product_type)
+                    ->or_like('sp_pt.product_type', $product_type)
+                ->group_end();
+                // $this->db->like('pct_order_product_types.product_type', $product_type);
             }
 
             $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
@@ -617,7 +710,7 @@ class Order_model extends CI_Model
             }
 
             if (isset($order_type) && ! empty($order_type)) {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     //$this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
                 } else if ($order_type == 'lp_orders') {
@@ -640,15 +733,17 @@ class Order_model extends CI_Model
             $offset       = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
             $orders_lists = [];
 
-            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
+            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, order_details.resware_status, order_details.softpro_status, property_details.allow_duplication, property_details.id as property_id,property_details.full_address,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name,pct_order_product_types.product_type,sp_pt.product_type as sp_product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
-                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type as sp_pt', 'transaction_details.purchase_type = sp_pt.id AND sp_pt.status=1', 'left');
             $this->db->order_by("order_details.id", "desc");
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -661,15 +756,17 @@ class Order_model extends CI_Model
                 $orders_lists = $query->result_array();
             }
         } else {
-            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_order_product_types.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
+            $this->db->select('order_details.file_number, order_details.lp_file_number, order_details.file_id, order_details.resware_status, order_details.softpro_status, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name,pct_order_product_types.product_type,sp_pt.product_type as sp_product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
-                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type as sp_pt', 'transaction_details.purchase_type = sp_pt.id AND sp_pt.status=1', 'left');
 
             $total_records = $this->db->count_all_results();
 
@@ -682,7 +779,11 @@ class Order_model extends CI_Model
             }
 
             if (isset($product_type) && ! empty($product_type)) {
-                $this->db->like('pct_order_product_types.product_type', $product_type);
+                $this->db->group_start();
+                $this->db->like('pct_order_product_types.product_type', $product_type)
+                    ->or_like('sp_pt.product_type', $product_type)
+                ->group_end();
+                // $this->db->like('pct_order_product_types.product_type', $product_type);
             }
 
             $created_by = isset($params['created_by']) && ! empty($params['created_by']) ? $params['created_by'] : '';
@@ -691,7 +792,7 @@ class Order_model extends CI_Model
             }
 
             if (isset($order_type) && ! empty($order_type)) {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     //$this->db->where('order_details.lp_file_number is null');
                     $this->db->where('order_details.file_number is not null');
                 } else if ($order_type == 'lp_orders') {
@@ -704,16 +805,17 @@ class Order_model extends CI_Model
                 $this->db->where('order_details.created_at >=', date('Y-m-d H:i:s', strtotime($start_date)));
                 $this->db->where('order_details.created_at <=', date('Y-m-d 23:59:59', strtotime($end_date)));
             }
-            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name,pct_softpro_product_type.product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
+            $this->db->select('order_details.lp_report_status, order_details.file_number, order_details.lp_file_number, order_details.file_id, order_details.resware_status, order_details.softpro_status, property_details.allow_duplication, property_details.full_address,property_details.id as property_id,order_details.id,transaction_details.sales_representative,transaction_details.purchase_type,CONCAT(cbd.first_name, " ", cbd.last_name) as sales_rep_name, CONCAT(sp_sales.first_name, " ", sp_sales.last_name) as sp_sales_rep_name,pct_order_product_types.product_type,sp_pt.product_type as sp_product_type, customer_basic_details.first_name, customer_basic_details.last_name,order_details.created_at, pct_order_documents.document_name,tpd.email_sent_status')
                 ->from('order_details')
                 ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by', 'left')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
+                ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
                 ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id and pct_order_documents.is_pre_listing_report_doc=1', 'left')
-                ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
-            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+                ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+                ->join('pct_softpro_product_type as sp_pt', 'transaction_details.purchase_type = sp_pt.id AND sp_pt.status=1', 'left');
 
             $this->db->order_by("order_details.id", "desc");
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {

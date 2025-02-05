@@ -73,20 +73,44 @@ class Order extends MX_Controller
                 $salesRepList .= '<option value="' . $sales_rep['id'] . '">' . $sales_rep['first_name'] . ' ' . $sales_rep['last_name'] . '</option>';
             }
         }
-        $salesRepList .= '</select>';
+
+        $sp_sales_rep_lists = $this->sales_model->get_sp_sales_reps(['sales_rep_enable' => 1]);
+        // print_r($sp_sales_rep_lists);die;
+        $spSalesRepList    = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateSalesUserForOrder(transaction_id, this.value);" id="sales_rep" name="sales_rep">
+        <option value="">Select Sales Rep</option>';
+        if (isset($sp_sales_rep_lists['data']) && ! empty($sp_sales_rep_lists['data'])) {
+            foreach ($sp_sales_rep_lists['data'] as $key => $sales_rep) {
+                $spSalesRepList .= '<option value="' . $sales_rep['id'] . '">' . $sales_rep['first_name'] . ' ' . $sales_rep['last_name'] . '</option>';
+            }
+        }
+        $spSalesRepList .= '</select>';
+        // echo "<pre>";
+        // print_r($ordersList['data']);die;
         foreach ($ordersList['data'] as $key => $value) {
             $nestedData   = [];
             $nestedData[] = $count;
             $nestedData[] = $value['file_number'];
             $nestedData[] = removeMultipleSpace($value['full_address']);
-            $nestedData[] = $value['product_type'];
-            if (empty($value['sales_rep_name'])) {
-                $salesRepSelection = $salesRepList;
-                $salesRepSelection = str_replace('transaction_id', $value['transaction_id'], $salesRepSelection);
-                // $salesRepSelection = str_replace('value="' . $value['sales_rep_id'] . '"', 'value="' . $value['sales_rep_id'] . '" selected', $salesRepSelection);
-                $nestedData[] = $salesRepSelection;
+            if (!empty($value['softpro_status'])) {
+                $nestedData[] = $value['sp_product_type'];
+                if (empty($value['sp_sales_rep_name'])) {
+                    $salesRepSelection = $spSalesRepList;
+                    $salesRepSelection = str_replace('transaction_id', $value['transaction_id'], $salesRepSelection);
+                    // $salesRepSelection = str_replace('value="' . $value['sales_rep_id'] . '"', 'value="' . $value['sales_rep_id'] . '" selected', $salesRepSelection);
+                    $nestedData[] = $salesRepSelection;
+                } else {
+                    $nestedData[] = $value['sp_sales_rep_name'];
+                }
             } else {
-                $nestedData[] = $value['sales_rep_name'];
+                $nestedData[] = $value['product_type'];
+                if (empty($value['sales_rep_name'])) {
+                    $salesRepSelection = $salesRepList;
+                    $salesRepSelection = str_replace('transaction_id', $value['transaction_id'], $salesRepSelection);
+                    // $salesRepSelection = str_replace('value="' . $value['sales_rep_id'] . '"', 'value="' . $value['sales_rep_id'] . '" selected', $salesRepSelection);
+                    $nestedData[] = $salesRepSelection;
+                } else {
+                    $nestedData[] = $value['sales_rep_name'];
+                }
             }
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
@@ -124,10 +148,7 @@ class Order extends MX_Controller
         if (isset($order_id) && ! empty($order_id)) {
             $order_details            = $this->order_model->get_order_details($order_id);
             $customer_id              = $order_details['customer_id'];
-            $con                      = ['id' => $customer_id];
-            $customer_details         = $this->home_model->sp_get_rows($con);
             $data['order_details']    = $order_details;
-            $data['customer_details'] = $customer_details;
             // echo "<pre>";
             // print_r($data);exit;
             $this->admintemplate->show("order/order", "order_details", $data);
@@ -592,8 +613,13 @@ class Order extends MX_Controller
             $nestedData[] = $count;
             $nestedData[] = $fileNumber; //$value['lp_file_number'] . '(' .')';
             $nestedData[] = $value['full_address'];
-            $nestedData[] = $value['product_type'];
-            $nestedData[] = $value['sales_rep_name'];
+            if (!empty($value['softpro_status'])) {
+                $nestedData[] = $value['sp_product_type'];
+                $nestedData[] = $value['sp_sales_rep_name'];
+            } else {
+                $nestedData[] = $value['product_type'];
+                $nestedData[] = $value['sales_rep_name'];
+            }
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
             //$nestedData[] = $value['document_name'];

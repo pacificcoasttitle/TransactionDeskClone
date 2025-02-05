@@ -13,6 +13,7 @@ class Title extends MX_Controller
         $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/title_model');
+        $this->load->model('order/home_model');
         $this->load->library('order/common');
         $this->common->is_admin();
     }
@@ -228,5 +229,61 @@ class Title extends MX_Controller
         $this->db->update('customer_basic_details', $data, $condition);
         $data = array('status' => 'success', 'msg' => 'Flag updated successfully.');
         echo json_encode($data);
+    }
+
+    public function spAdminTitleOfficer()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Title Officers';
+        $this->admintemplate->show("order/title", "sp_title", $data);
+    }
+
+    public function get_sp_title_officer_list()
+    {
+        $params = array();
+        $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $title_officer_lists = $this->home_model->get_sp_officers_list($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $title_officer_lists = $this->home_model->get_sp_officers_list($params);
+        }
+
+        if (isset($title_officer_lists['data']) && !empty($title_officer_lists['data'])) {
+            foreach ($title_officer_lists['data'] as $key => $value) {
+                $nestedData = array();
+                $nestedData[] = $value['closer_examiner'];
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['officer_name'];
+                $id = $value['id'];
+                /*if ($value['email_receive_flag'] == 1) {
+                $checked = 'checked';
+                } else {
+                $checked = '';
+                }*/
+                // $nestedData[] = "<input $checked onclick='updateTitleOfficerEmailReceiveFlag();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    // $editOrderUrl = base_url() . 'order/admin/edit-title-officer/' . $value['id'];
+                    // $action = "<div style='display: flex;justify-content: space-evenly;' ><a href='" . $editOrderUrl . "' class='edit-agent'title ='Edit Title Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                    // $action .= "<a href='javascript:void(0);' onclick='deleteTitleOfficer(" . $value['id'] . ")' title='Delete Title Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                    // $nestedData[] = $action;
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data['recordsTotal'] = intval($title_officer_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($title_officer_lists['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 }

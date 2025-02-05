@@ -5461,21 +5461,53 @@ class Home extends MX_Controller
                     }
 
                     if (!empty($uploadFileToSoftPro)) {
+                        $logData = [
+                            'order_number' => $orderNumber,
+                            'document_name' => $orderNumber,
+                            'file_list' => json_encode($uploadFileToSoftPro)
+                        ];
+                        
+                        $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
+
                         $fileData = [
+                            "Id" => $fileUploadLogId,
                             "OrderNumber"  => $orderNumber,
                             "DocumentName" => $lpFileNumber,
                             "FileList"     => $uploadFileToSoftPro,
                         ];
-                        $reqData = json_encode($fileData);
+                        $fileUploadReq[] = $fileData;
+                        $reqData = json_encode($fileUploadReq);
                         // print_r($reqData);
-                        $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        $response = json_decode($result, true);
+                        if (isset($response) && !empty($response)) {
+                            foreach ($response as $key => $res) {
+                                if ($res['Status'] == 200) {
+                                    $updateData[] = [
+                                        'is_synced' => 1,
+                                        'id' => $res['Id']
+                                    ];
+                                } else {
+                                    $updateData[] = [
+                                        'is_synced' => 0,
+                                        'id' => $res['Id']
+                                    ];
+                                }
+                            }
+                        }
+
+                        foreach ($updateData as $key => $update_row) {
+                            $this->db->where('id', $update_row['id']);
+                            $this->db->update('sp_file_upload_logs', $update_row);
+                        }
+
                         /* Start upload softpro api logs */
                         $softproLog = [
                             'request_type' => 'upload_file_in_softpro',
                             'request_url'  => 'upload_file',
                             'request'      => $reqData,
-                            'response'     => json_encode($response),
-                            'status'       => $response['status'],
+                            'response'     => $result,
+                            'status'       => '', //$response['status'],
                             'file_number'  => $orderNumber,
                             'created_at'   => date("Y-m-d H:i:s"),
                         ];
@@ -5485,7 +5517,6 @@ class Home extends MX_Controller
                     /** End upload document to resware */
 
                     /** Send email to sales rep */
-
                     $timezone = -8;
                     $data     = [
                         'orderNumber'      => $orderNumber,
@@ -7606,5 +7637,651 @@ class Home extends MX_Controller
 
         echo json_encode($res);
         exit;
+    }
+
+    public function softproCompanies()
+    {
+        $data            = [];
+        $data['errors']  = '';
+        $data['success'] = '';
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $data['title'] = 'PCT Order: Companies';
+        $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
+        // $this->admintemplate->addJS( base_url('assets/backend/vendor/jquery/jquery.min.js'));
+        // $this->admintemplate->addJS( base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js?v=1'));
+        $this->admintemplate->show("order/home", "softpro_companies", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/companies', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_softpro_companies_list()
+    {
+        $params = [];
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $company_lists         = $this->home_model->get_softpro_companies_list($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $company_lists         = $this->home_model->get_softpro_companies_list($params);
+        }
+        $data = [];
+        if (isset($company_lists['data']) && !empty($company_lists['data'])) {
+            $this->load->model('order/sales_model');
+            $this->load->model('order/title_model');
+            $sales_rep_lists     = $this->sales_model->get_sales_reps(['sales_rep_enable' => 1]);
+            $title_officer_lists = $this->home_model->get_sp_officers_list([['is_title_officer' => 1]]);
+
+            $salesRepList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateTitleSalesSPUser(lookup_code, this.value, \'sales\');" id="sales_rep" name="sales_rep">
+                                    <option value="">Select Sales Rep</option>';
+            if (isset($sales_rep_lists['data']) && !empty($sales_rep_lists['data'])) {
+                foreach ($sales_rep_lists['data'] as $key => $sales_rep) {
+                    $salesRepList .= '<option value="' . $sales_rep['id'] . '" data-lookup-code="' . $sales_rep['lookup_code'] . '">' . $sales_rep['first_name'] . ' ' . $sales_rep['last_name'] . '</option>';
+                }
+            }
+            $salesRepList .= '</select>';
+
+            $titleOfficerList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateTitleSalesSPUser(lookup_code, this.value,  \'title\' );" id="title_officer" name="title_officer">
+                                    <option value="">Select Title Officer</option>';
+            if (isset($title_officer_lists['data']) && !empty($title_officer_lists['data'])) {
+                foreach ($title_officer_lists['data'] as $key => $title_officer) {
+                    $titleOfficerList .= '<option value="' . $title_officer['id'] . '" data-lookup-code="' . $title_officer['closer_examiner'] . '">' . $title_officer['closer_examiner'] . ' - ' . $title_officer['officer_name'] . '</option>';
+                }
+            }
+            $titleOfficerList .= '</select>';
+            
+            $i = $params['start'] + 1;
+            foreach ($company_lists['data'] as $key => $value) {
+                $nestedData        = [];
+                $nestedData[]      = $i;
+                $nestedData[]      = $value['lookup_code'];
+                $nestedData[]      = $value['name'];
+                $nestedData[]      = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
+                $lookupCode = $value['lookup_code'];
+                $salesRepSelection = $salesRepList;
+                $salesRepSelection = str_replace('lookup_code', "'" . $lookupCode . "'", $salesRepSelection);
+                if (!empty($value['sales_rep_id'])) {
+                    $salesRepSelection = str_replace('value="' . $value['sales_rep_id'] . '"', 'value="' . $value['sales_rep_id'] . '" selected', $salesRepSelection);
+                }
+
+                $titleOfficerSelection = $titleOfficerList;
+                $titleOfficerSelection = str_replace('lookup_code', "'" . $lookupCode . "'", $titleOfficerSelection);
+                if (!empty($value['title_officer_id'])) {
+                    $titleOfficerSelection = str_replace('value="' . $value['title_officer_id'] . '"', 'value="' . $value['title_officer_id'] . '" selected', $titleOfficerSelection);
+                }
+
+                $nestedData[] = $salesRepSelection;
+                $nestedData[] = $titleOfficerSelection;
+                if (!empty($value['loan_underwriter'])) {
+                    $loan_underwriter = $value['loan_underwriter'];
+                } else {
+                    $loan_underwriter = '';
+                }
+                $loanUnderwriterSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter(' . '"' . $lookupCode . '"' . ',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
+                                    <option value="">Select</option>
+                                    <option value="westcor">Westcor</option>
+                                    <option value="north_american">North American</option>
+                                    <option value="commonwealth">Commonwealth</option>
+                                </select>';
+                $loanUnderwriterSelection = str_replace('value="' . $loan_underwriter . '"', 'value="' . $loan_underwriter . '" selected', $loanUnderwriterSelection);
+                $nestedData[]             = $loanUnderwriterSelection;
+
+                if (!empty($value['sales_underwriter'])) {
+                    $sales_underwriter = $value['sales_underwriter'];
+                } else {
+                    $sales_underwriter = '';
+                }
+                $salesUnderwriterSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter(' . '"' . $lookupCode . '"' . ',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
+                                    <option value="westcor">Westcor</option>
+                                    <option value="north_american">North American</option>
+                                    <option value="commonwealth">Commonwealth</option>
+                                </select>';
+                $salesUnderwriterSelection = str_replace('value="' . $sales_underwriter . '"', 'value="' . $sales_underwriter . '" selected', $salesUnderwriterSelection);
+                $nestedData[]              = $salesUnderwriterSelection;
+                
+                if (!empty($value['deliverables'])) {
+                    $deliverables     = explode(',', $value['deliverables']);
+                    $deliverablesInfo = '';
+                    foreach ($deliverables as $deliverable) {
+                        $deliverablesInfo .= $deliverable . "<br>";
+                    }
+                    $deliverablesInfo .= "<a href='javascript:void(0)' onclick='addOrUpdateSPCompanyDeliverables(" . '"' . $lookupCode . '"' . ");'><i class='fas fa-edit'></i></a>";
+                    $nestedData[] = $deliverablesInfo;
+                } else {
+                    $nestedData[] = "<a href='javascript:void(0)' onclick='addOrUpdateSPCompanyDeliverables(" . '"' . $lookupCode . '"' . ")'><i class='fas fa-plus-circle'></i></a>";
+                }
+                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteCompany(" . '"' . $lookupCode . '"' . ")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+                $data[]       = $nestedData;
+                $i++;
+            }
+        }
+
+        $json_data['recordsTotal']    = intval($company_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($company_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spAdminAgent()
+    {
+        $data            = [];
+        $data['errors']  = '';
+        $data['success'] = '';
+        if ($this->session->userdata('errors')) {
+            $data['errors'] = $this->session->userdata('errors');
+            $this->session->unset_userdata('errors');
+        }
+        if ($this->session->userdata('success')) {
+            $data['success'] = $this->session->userdata('success');
+            $this->session->unset_userdata('success');
+        }
+        $data['title'] = 'PCT Order: Agents';
+        $this->admintemplate->show("order/home", "sp_agents", $data);
+    }
+
+    public function get_sp_agent_list()
+    {
+        $params = array();  $data = array();
+        if(isset($_POST['draw']) && !empty($_POST['draw']))
+        {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+
+            $pageno = ($params['start'] / $params['length'])+1;
+            $params['is_selling_agent'] = 1;
+            $agent_lists = $this->home_model->get_sp_admin_users_list($params);
+           
+           // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+            $json_data['draw'] = intval( $params['draw'] );
+        }
+        else
+        {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $agent_lists = $this->agent_model->get_agents($params);
+        }
+        
+
+        if(isset($agent_lists['data']) && !empty($agent_lists['data']))
+        {
+            foreach ($agent_lists['data'] as $key => $value) 
+            {
+                $nestedData=array();
+                $partner_id = isset($value['partner_id']) && !empty($value['partner_id']) ? $value['partner_id'] : '-';
+                // $nestedData[] = $partner_id;
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['phone'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['address1']." ".$value['city']." ".$value['zipcode'];
+                
+                // if(isset($_POST['draw']) && !empty($_POST['draw']))
+                // {
+                //     $editOrderUrl = base_url().'order/admin/edit-agent/'.$value['id'];
+                //     $action = "<div style='display: flex;justify-content: space-evenly;'><a href='".$editOrderUrl."' class='edit-agent' title ='Edit Agent Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+
+                //     $action .= "<a href='javascript:void(0);' onclick='deleteAgent(".$value['id'].")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+
+                //     $nestedData[] = $action;
+                // }
+                
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $agent_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $agent_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spAdminEscrow()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Escrow';
+        $this->admintemplate->show("order/home", "sp_escrows", $data);
+    }
+
+    public function get_sp_escrow_list()
+    {
+        $params = [];
+        // echo "<pre>"; print_r($_POST); exit;
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow']   = 1;
+
+            $pageno = ($params['start'] / $params['length']) + 1;
+
+            $escrowLists = $this->home_model->get_sp_admin_users_list($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $escrowLists        = $this->home_model->get_sp_admin_users_list($params);
+        }
+        $data = [];
+
+        if (isset($escrowLists['data']) && !empty($escrowLists['data'])) {
+            foreach ($escrowLists['data'] as $key => $value) {
+                $nestedData = [];
+                $user_id    = $value['id'];
+                /*$nestedData[] = $value['customer_number'];*/
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+
+                // $nestedData[] = $value['telephone_no'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['address1'];
+                $nestedData[] = $value['city'];
+                $nestedData[] = $value['zip'];
+                // if ($value['is_dual_cpl'] == 1) {
+                //     $checked = 'checked';
+                // } else {
+                //     $checked = '';
+                // }
+                // $nestedData[] = "<input $checked onclick='isDualCplUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                // if ($value['is_allow_only_resware_orders'] == 1) {
+                //     $checked = 'checked';
+                // } else {
+                //     $checked = '';
+                // }
+                // $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+
+                // if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                //     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
+
+                //     $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
+                //     $nestedData[] = $action;
+                // }
+
+                $data[] = $nestedData;
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal']    = intval($customer_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($customer_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spAdminlenders()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Lenders';
+        $this->admintemplate->show("order/home", "sp_lenders", $data);
+    }
+
+    public function get_sp_lender_list()
+    {
+        $params = [];
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_lender']   = 1;
+
+            $pageno = ($params['start'] / $params['length']) + 1;
+
+            $lender_lists = $this->home_model->get_sp_admin_users_list($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $lender_lists          = $this->home_model->get_sp_admin_users_list($params);
+        }
+        $data = [];
+
+        if (isset($lender_lists['data']) && !empty($lender_lists['data'])) {
+            foreach ($lender_lists['data'] as $key => $value) {
+                $nestedData   = [];
+                $user_id      = $value['id'];
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
+                // if ($value['is_mortgage_user'] == 1) {
+                //     $checked = 'checked';
+                // } else {
+                //     $checked = '';
+                // }
+                // $nestedData[] = "<input $checked onclick='isMortgageUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                // $specialSel   = $value['is_special_lender'] == 1 ? 'selected' : '';
+                // $normalSel    = $value['is_special_lender'] == 0 ? 'selected' : '';
+                // $id           = $value['id'];
+                // $nestedData[] = "<select class='custom-select custom-select-sm form-control form-control-sm' onchange='changeLenderUserType($id, this.value);' id='user_type' name='user_type'><option $normalSel value='0'>Normal</option><option $specialSel value='1'>Special</option></select>";
+                // // $nestedData[] = $value['lender_type'];
+
+                // if ($value['is_dual_cpl'] == 1) {
+                //     $checked = 'checked';
+                // } else {
+                //     $checked = '';
+                // }
+                // $nestedData[] = "<input $checked onclick='isDualCplUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+
+                // if ($value['is_allow_only_resware_orders'] == 1) {
+                //     $checked = 'checked';
+                // } else {
+                //     $checked = '';
+                // }
+                // $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+
+                // if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                //     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
+
+                //     $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                //     $nestedData[] = $action;
+                // }
+
+                $data[] = $nestedData;
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal']    = intval($lender_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($lender_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spAdminMortgageBrokers()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Mortgage Brokers';
+        $this->admintemplate->addJS(base_url('assets/backend/js/mortgage-brokers.js'));
+        $this->admintemplate->show("order/home", "sp_mortgage_brokers", $data);
+    }
+
+    public function get_sp_mortgage_brokers_list()
+    {
+        $params = [];
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow']   = 0;
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $mortgage_lists        = $this->home_model->get_sp_admin_users_list($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $mortgage_lists        = $this->home_model->get_cget_mortgage_usersustomers($params);
+        }
+
+        $data = [];
+        if (isset($mortgage_lists['data']) && !empty($mortgage_lists['data'])) {
+            foreach ($mortgage_lists['data'] as $key => $value) {
+                $nestedData   = [];
+                $user_id      = $value['id'];
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['first_name'];
+                $nestedData[] = $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip_code'];
+                // if ($value['is_primary_mortgage_user'] == 1) {
+                //     $checked = 'checked';
+                // } else {
+                //     $checked = '';
+                // }
+                // $nestedData[] = "<input $checked onclick='isMortgagePrimaryUser();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")' class='btn btn-action'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
+                $data[] = $nestedData;
+            }
+        }
+        $json_data['recordsTotal']    = intval($mortgage_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($mortgage_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spNewUsers()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: New Users';
+        $this->admintemplate->show("order/home", "sp_new_users", $data);
+    }
+
+    public function get_sp_new_users_list()
+    {
+        $params = [];
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $params['is_new_user'] = 1;
+            $new_users_lists       = $this->home_model->get_sp_admin_users_list($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['is_new_user'] = 1;
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $new_users_lists       = $this->home_model->get_sp_admin_users_list($params);
+        }
+
+        $data = [];
+        if (isset($new_users_lists['data']) && !empty($new_users_lists['data'])) {
+            foreach ($new_users_lists['data'] as $key => $value) {
+                $nestedData = [];
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $nestedData[] = $value['lookup_code'];
+                    $nestedData[] = $value['first_name'];
+                    $nestedData[] = $value['last_name'];
+                    $nestedData[] = $value['email_address'];
+                    $nestedData[] = $value['company_name'];
+                    // $nestedData[] = 'Pacific1';
+                } else {
+                    $nestedData[] = $value['email_address'];
+                    $nestedData[] = 'Pacific1';
+                    $nestedData[] = $value['lookup_code'];
+                }
+                $data[] = $nestedData;
+            }
+        }
+
+        $json_data['recordsTotal']    = intval($new_users_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($new_users_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spAdminEscrowOfficers()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Escrow Officers';
+        $this->admintemplate->show("order/home", "sp_escrow_officers", $data);
+    }
+
+    public function get_sp_escrow_officers_list()
+    {
+        $params = [];
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue']     = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+            $params['is_escrow_officer'] = 1;
+            $pageno = ($params['start'] / $params['length']) + 1;
+
+            $escrow_officer_lists = $this->home_model->get_sp_officers_list($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['is_escrow_officer'] = 1;
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $escrow_officer_lists  = $this->home_model->get_sp_officers_list($params);
+        }
+        $data = [];
+
+        if (isset($escrow_officer_lists['data']) && !empty($escrow_officer_lists['data'])) {
+            foreach ($escrow_officer_lists['data'] as $key => $value) {
+                $nestedData = [];
+
+                $nestedData[] = $value['closer_examiner'];
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['officer_name'];
+
+                // $action  = "";
+                // $editUrl = base_url() . 'order/admin/edit-escrow-officer/' . $value['id'];
+                // $action  = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Escrow Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+
+                // $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(" . $value['id'] . ")' title='Delete Escrow Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                // $nestedData[] = $action;
+
+                $data[] = $nestedData;
+                // $cnt++;
+            }
+        }
+        $json_data['recordsTotal']    = intval($escrow_officer_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($escrow_officer_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function spStoreDeliverables()
+    {
+        $AdditionalEmail = $this->input->post('AdditionalEmail');
+        $lookup_code      = $this->input->post('lookup_code');
+        $condition       = [
+            'lookup_code' => $lookup_code,
+        ];
+        // print_r($AdditionalEmail);die;
+        $updateFlag = $this->home_model->update(['deliverables' => implode(',', $AdditionalEmail)], $condition, 'sp_company');
+        if ($updateFlag) {
+            $success = 'Deliverables added successfully.';
+            $data    = [
+                "success" => $success,
+            ];
+        } else {
+            $data    = [
+                "error" => 'Something went wrong! Please try again.',
+            ];
+        }
+        $this->session->set_userdata($data);
+        redirect(base_url() . 'order/admin/softpro-companies');
+    }
+
+    public function getspDeliverables()
+    {
+        $lookup_code = $this->input->post('lookup_code');
+        $this->db->select('*');
+        $this->db->from('sp_company');
+        $this->db->where('lookup_code', $lookup_code);
+        $query       = $this->db->get();
+        $companyInfo = $query->row_array();
+        if (!empty($companyInfo['deliverables'])) {
+            $deliverables = explode(',', $companyInfo['deliverables']);
+            $result       = ['deliverables' => $deliverables];
+        } else {
+            $result = ['deliverables' => []];
+        }
+        echo json_encode($result);
+        exit;
+    }
+
+    public function updateTitleSalesSPCompany()
+    {
+        $lookupCode = $this->input->post('lookup_code');
+        $userId    = $this->input->post('user_id');
+        $userType  = $this->input->post('user_type');
+        if (empty($lookupCode) || empty($userType)) {
+            $data = ['status' => 'error', 'msg' => 'Invalid details.'];
+            echo json_encode($data);exit();
+        }
+
+        $updateData = [];
+        if ($userType === 'title') {
+            $updateData['title_officer_id'] = $userId;
+        } else if ($userType === 'sales') {
+            $updateData['sales_rep_id'] = $userId;
+        }
+        // $updateData = array($underwriter_type => $underwriter);
+
+        $condition = ['lookup_code' => $lookupCode];
+        $this->home_model->update($updateData, $condition, 'sp_company');
+        // print_r($a);die;
+
+        /** Save user Activity */
+        $activity = 'Comapny lookup code: ' . $lookupCode . ' user type: ' . $userType . ' details  Updated value:- ' . $userId;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+
+        $data = ['status' => 'success', 'msg' => 'Details updated successfully.'];
+        echo json_encode($data);
+    }
+
+    public function updateSpSalesUserForOrder()
+    {
+        $transactionId = $this->input->post('transaction_id');
+        $userId        = $this->input->post('user_id');
+        if (empty($transactionId)) {
+            $data = ['status' => 'error', 'msg' => 'Invalid details.'];
+            echo json_encode($data);exit();
+        }
+
+        $updateData                         = [];
+        $updateData['sales_representative'] = $userId;
+        $condition                          = ['id' => $transactionId];
+        $this->home_model->update($updateData, $condition, 'transaction_details');
+
+        /** Save user Activity */
+        $activity = 'For Transaction id: ' . $transactionId . ' Sales representative assigned:- ' . $userId;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+
+        $data = ['status' => 'success', 'msg' => 'Details updated successfully.'];
+        echo json_encode($data);
     }
 }

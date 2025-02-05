@@ -80,6 +80,13 @@ class FileUpload extends MX_Controller
                                 "FolderName" => 'desk-file-upload',
                                 "FileURL" => env('AWS_PATH') . "desk-file-upload/" . $fileName,
                             ];
+                            $logData = [
+                                'order_number' => $orderNumber,
+                                'document_name' => $documentName,
+                                'file_list' => json_encode($fileList)
+                            ];
+                            
+                            $id = $this->order->save_sp_file_upload_log($logData);
                         }
 
                         $fileData = [
@@ -87,16 +94,38 @@ class FileUpload extends MX_Controller
                             "DocumentName" => $documentName,
                             "FileList" => $fileList,
                         ];
-                        $reqData = json_encode($fileData);
+                        $fileUploadReq[] = $fileData;
+                        $reqData = json_encode($fileUploadReq);
                         // print_r($reqData);
-                        $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        $response = json_decode($result, true);
+                        if (isset($response) && !empty($response)) {
+                            foreach ($response as $key => $res) {
+                                if ($res['Status'] == 200) {
+                                    $updateData[] = [
+                                        'is_synced' => 1,
+                                        'id' => $res['Id']
+                                    ];
+                                } else {
+                                    $updateData[] = [
+                                        'is_synced' => 0,
+                                        'id' => $res['Id']
+                                    ];
+                                }
+                            }
+                        }
+
+                        foreach ($updateData as $key => $update_row) {
+                            $this->db->where('id', $update_row['id']);
+                            $this->db->update('sp_file_upload_logs', $update_row);
+                        }
                         /* Start add softpro api logs */
                         $reswareData = array(
                             'request_type' => 'upload_file_in_softpro',
                             'request_url' => 'upload_file',
                             'request' => $reqData,
-                            'response' => json_encode($response),
-                            'status' => $response['status'],
+                            'response' => $result,
+                            'status' => '',
                             'file_number' => $orderNumber,
                             'created_at' => date("Y-m-d H:i:s"),
                         );

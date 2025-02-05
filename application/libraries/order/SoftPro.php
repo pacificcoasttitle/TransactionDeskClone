@@ -86,7 +86,9 @@ class SoftPro
         //     echo $response;
         // }
 
-        $response = curl_exec($ch);
+        $result = curl_exec($ch);
+        // $result = curl_exec($ch);
+        // return $response;
         // print_r($response);die;
         // Execute the request
         // $response = curl_exec($ch);
@@ -94,16 +96,17 @@ class SoftPro
         if (curl_error($ch)) {
             return ['status' => 'error', 'message' => curl_error($ch)];
         } else {
-            // echo 'hhelo';
-            $res = json_decode($response, true);
-            if ($res['Status'] == 200) {
+            $res = json_decode($result, true);
+            if (isset($res['Status']) && $res['Status'] == 200) {
                 $return = ['status' => 'success', 'message' => $res['Message'], 'data' => $res['data']];
                 if (isset($res['OrderNumber']) && !empty($res['OrderNumber'])) {
                     $return['OrderNumber'] = $res['OrderNumber'];
                 }
                 return $return;
-            } else {
+            } else if (isset($res['Status']) && $res['Status'] != 200)  {
                 return ['status' => 'error', 'message' => $res['Message'], 'data' => $res];
+            } else {
+                return $result;
             }
         }
 
