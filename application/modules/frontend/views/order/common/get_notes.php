@@ -38,7 +38,7 @@
 			<form class="form-reply ui-form-1" action="<?php echo base_url();?>create-note" method="POST" id="create-note" name="create-note">
 				<div class="col-md-6 mt-2">
 					<input class="form-control" type="text" name="subject" id="subject" placeholder="Subject" required>
-					<input type="hidden" name="fileId" id="fileId" value="<?php echo $orderDetails['file_id']; ?>">
+					<input type="hidden" name="orderId" id="orderId" value="<?php echo $orderDetails['order_id']; ?>">
 				</div>
 				<div class="col-md-6 mt-2">
 					<textarea class="form-control" rows="4" name="body" id="body" placeholder="Note" required></textarea>

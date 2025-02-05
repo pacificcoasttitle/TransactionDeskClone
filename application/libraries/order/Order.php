@@ -4575,4 +4575,10 @@ class Order
         // Concatenate all parts
         return $firstPart . $secondPart . $thirdPart;
     }
+
+    public function save_sp_file_upload_log($data) {
+        $this->CI->db->insert('sp_file_upload_logs', $data);
+        $documentId = $this->CI->db->insert_id();
+        return $documentId;
+    }
 }

@@ -308,7 +308,7 @@ if (
 				<div class="collapse <?php if ($spUsersTabLinks) {echo 'show';}?>" aria-labelledby="spUsersDropdown" id="spUsers">
 					<div class="bg-white py-2 collapse-inner rounded">
 							<?php if (!in_array($roleName, ['CS Admin'])): ?>
-								<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/sp-sales-rep' || $this->uri->uri_string() == 'order/admin/add-softpro-sales-rep' || $this->uri->segment(3) == 'edit-softpro-sales-rep') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-rep'; ?>">Sales Rep.</a> -->
+								<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-sales-reps' || $this->uri->segment(3) == 'edit-softpro-sales-reps' || $this->uri->segment(3) == 'add-softpro-sales-reps') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-reps'; ?>">Sales Reps</a>
 							<?php endif;?>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>

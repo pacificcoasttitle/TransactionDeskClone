@@ -5461,21 +5461,53 @@ class Home extends MX_Controller
                     }
 
                     if (!empty($uploadFileToSoftPro)) {
+                        $logData = [
+                            'order_number' => $orderNumber,
+                            'document_name' => $orderNumber,
+                            'file_list' => json_encode($uploadFileToSoftPro)
+                        ];
+                        
+                        $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
+
                         $fileData = [
+                            "Id" => $fileUploadLogId,
                             "OrderNumber"  => $orderNumber,
                             "DocumentName" => $lpFileNumber,
                             "FileList"     => $uploadFileToSoftPro,
                         ];
-                        $reqData = json_encode($fileData);
+                        $fileUploadReq[] = $fileData;
+                        $reqData = json_encode($fileUploadReq);
                         // print_r($reqData);
-                        $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                        $response = json_decode($result, true);
+                        if (isset($response) && !empty($response)) {
+                            foreach ($response as $key => $res) {
+                                if ($res['Status'] == 200) {
+                                    $updateData[] = [
+                                        'is_synced' => 1,
+                                        'id' => $res['Id']
+                                    ];
+                                } else {
+                                    $updateData[] = [
+                                        'is_synced' => 0,
+                                        'id' => $res['Id']
+                                    ];
+                                }
+                            }
+                        }
+
+                        foreach ($updateData as $key => $update_row) {
+                            $this->db->where('id', $update_row['id']);
+                            $this->db->update('sp_file_upload_logs', $update_row);
+                        }
+
                         /* Start upload softpro api logs */
                         $softproLog = [
                             'request_type' => 'upload_file_in_softpro',
                             'request_url'  => 'upload_file',
                             'request'      => $reqData,
-                            'response'     => json_encode($response),
-                            'status'       => $response['status'],
+                            'response'     => $result,
+                            'status'       => '', //$response['status'],
                             'file_number'  => $orderNumber,
                             'created_at'   => date("Y-m-d H:i:s"),
                         ];
@@ -5485,7 +5517,6 @@ class Home extends MX_Controller
                     /** End upload document to resware */
 
                     /** Send email to sales rep */
-
                     $timezone = -8;
                     $data     = [
                         'orderNumber'      => $orderNumber,
@@ -8224,6 +8255,29 @@ class Home extends MX_Controller
 
         /** Save user Activity */
         $activity = 'Comapny lookup code: ' . $lookupCode . ' user type: ' . $userType . ' details  Updated value:- ' . $userId;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+
+        $data = ['status' => 'success', 'msg' => 'Details updated successfully.'];
+        echo json_encode($data);
+    }
+
+    public function updateSpSalesUserForOrder()
+    {
+        $transactionId = $this->input->post('transaction_id');
+        $userId        = $this->input->post('user_id');
+        if (empty($transactionId)) {
+            $data = ['status' => 'error', 'msg' => 'Invalid details.'];
+            echo json_encode($data);exit();
+        }
+
+        $updateData                         = [];
+        $updateData['sales_representative'] = $userId;
+        $condition                          = ['id' => $transactionId];
+        $this->home_model->update($updateData, $condition, 'transaction_details');
+
+        /** Save user Activity */
+        $activity = 'For Transaction id: ' . $transactionId . ' Sales representative assigned:- ' . $userId;
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
 

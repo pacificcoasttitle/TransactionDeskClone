@@ -25,6 +25,7 @@ class Common extends MX_Controller
         $this->load->model('order/home_model');
         $this->load->model('order/fees_model');
         $this->load->library('order/resware');
+        $this->load->library('order/softPro');
         $this->load->library('order/common');
     }
 
@@ -2887,7 +2888,7 @@ class Common extends MX_Controller
         echo json_encode($response);
     }
 
-    public function get_notes($fileId)
+    public function get_notes($orderId)
     {
         //echo $fileId;exit;
         $userdata = $this->session->userdata('user');
@@ -2903,7 +2904,10 @@ class Common extends MX_Controller
             $this->session->unset_userdata('success');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $orderDetails = $this->order->get_order_details($fileId);
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
         $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
         $data['orderDetails'] = $orderDetails;
         $prod_type = $orderDetails['prod_type'];
@@ -2915,7 +2919,8 @@ class Common extends MX_Controller
             $data['tasks'] = array();
             $data['notes'] = $this->order->get_order_notes($orderId);
         }
-
+        // echo "<pre>";
+        // print_r($data);die;
         // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v='.$this->version) );
         $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "get_notes", $data);
@@ -2924,64 +2929,116 @@ class Common extends MX_Controller
 
     public function create_note()
     {
-        $fileId = isset($_POST['fileId']) && !empty($_POST['fileId']) ? $_POST['fileId'] : '';
+        $orderId = isset($_POST['orderId']) && !empty($_POST['orderId']) ? $_POST['orderId'] : '';
         $errors = array();
         $success = array();
         $this->load->model('order/note');
-        if (isset($fileId) && !empty($fileId)) {
+        if (isset($orderId) && !empty($orderId)) {
             $userdata = $this->session->userdata('user');
             $subject = isset($_POST['subject']) && !empty($_POST['subject']) ? $_POST['subject'] : '';
             $body = isset($_POST['body']) && !empty($_POST['body']) ? $_POST['body'] : '';
-            $orderDetails = $this->order->get_order_details($fileId);
-            $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+            $params = [
+                'order_details.id' => $orderId,
+            ];
+            $orderDetails = $this->order->get_order_details($params);
+            // $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
             $this->load->library('order/resware');
             $request = array();
-            $endPoint = 'files/' . $fileId . '/notes';
-            $request['Subject'] = $subject;
-            $request['Body'] = $body;
-            $request['FileID'] = $fileId;
-            $notes_data = json_encode($request);
+            // $endPoint = 'files/' . $fileId . '/notes';
+            $endPoint = 'add_note';
+            // $notes['Subject'] = $subject;
+            $notes['Text'] = $body;
+            $notes['OrderNumber'] = $orderDetails['file_number'];
+            $notesReq[] = $notes;
+            $reqData = json_encode($notesReq);
             $user_data = array();
 
-            if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
-                $user_data['admin_api'] = 1;
-            }
+            // print_r($reqData);die;
+            // if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_escrow_assistant'] == 1) {
+            //     $user_data['admin_api'] = 1;
+            // }
 
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
-            $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
+            // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
+            // $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
+            // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
+            
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', $endPoint, env('SOFT_PRO_API') . $endPoint, $reqData, array(), $orderId, 0);
+            $result = $this->softpro->make_request('POST', $endPoint, $reqData);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', $endPoint, env('SOFT_PRO_API') . $endPoint, $reqData, $result, $orderId, $logid);
+            $response      = json_decode($result, true);
+            /* Start add softpro api logs */
+            $softproLog = [
+                'request_type' => 'add_note_in_softpro',
+                'request_url'  => 'add_note',
+                'request'      => $reqData,
+                'response'     => $result,
+                'status'       => 'error',
+                'created_at'   => date("Y-m-d H:i:s"),
+            ];
 
-            if (isset($result) && !empty($result)) {
-                $response = json_decode($result, true);
-
-                if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-                    $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-                    $errors[] = $message;
-                } else {
-                    $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
-                    $notesData = array(
-                        'resware_note_id' => $noteId,
-                        'subject' => $subject,
-                        'note' => $body,
-                        'user_id' => $userdata['id'],
-                        'order_id' => $orderId,
-                        'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
-                    );
-                    $id = $this->note->insert($notesData);
-                    if ($noteId && $id) {
-                        $success[] = 'Note created successfully.';
+            $this->db->insert('pct_resware_log', $softproLog);
+            /* End add softpro api logs */
+            // echo "<pre>";
+            // print_r($response);die;
+            if (isset($response) && !empty($response)) {
+                // $response = $result, true);
+                foreach ($response as $key => $res) {
+                    if ($res['Status'] != 200) {
+                        $message = isset($response['Message']) && !empty($response['Message']) ? $response['Message'] : '';
+                        $errors[] = $message;
                     } else {
-                        $errors[] = 'Something went wrong. Please try again.';
+                        $notesData = array(
+                            'is_softpro_notes' => 1,
+                            'is_sync' => !empty($res['FileUploadedStatus']) ? $res['FileUploadedStatus'] : 0,
+                            'subject' => $subject,
+                            'note' => $body,
+                            'user_id' => $userdata['id'],
+                            'order_id' => $orderId,
+                            'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
+                        );
+                        $id = $this->note->insert($notesData);
+                        if ($id) {
+                            $success[] = 'Note created successfully.';
+                        } else {
+                            $errors[] = 'Something went wrong. Please try again.';
+                        }
                     }
                 }
             }
+            
+            
+            
+            // if (isset($result) && !empty($result)) {
+            //     $response = json_decode($result, true);
+
+            //     if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
+            //         $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
+            //         $errors[] = $message;
+            //     } else {
+            //         $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
+            //         $notesData = array(
+            //             'resware_note_id' => $noteId,
+            //             'subject' => $subject,
+            //             'note' => $body,
+            //             'user_id' => $userdata['id'],
+            //             'order_id' => $orderId,
+            //             'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
+            //         );
+            //         $id = $this->note->insert($notesData);
+            //         if ($noteId && $id) {
+            //             $success[] = 'Note created successfully.';
+            //         } else {
+            //             $errors[] = 'Something went wrong. Please try again.';
+            //         }
+            //     }
+            // }
 
             $data = array(
                 "errors" => $errors,
                 "success" => $success,
             );
             $this->session->set_userdata($data);
-            redirect(base_url() . 'get-notes/' . $fileId);
+            redirect(base_url() . 'get-notes/' . $orderId);
         }
     }
 

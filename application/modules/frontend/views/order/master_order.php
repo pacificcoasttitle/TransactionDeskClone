@@ -233,12 +233,13 @@
                                                 foreach ($salesRep as $k => $v) {
                                                     $name      = [$v['first_name'], $v['last_name']];
                                                     $full_name = implode(' ', $name);
+                                                    // $full_name = $v['officer_name'];
                                                 ?>
-																							<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
-																					<?php
-                                                                                        }
-                                                                                        }
-                                                                                    ?>
+														<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+												<?php
+													}
+													}
+												?>
 									</select>
 								</div>
 							</div>
@@ -252,11 +253,11 @@
                                             if (isset($titleOfficer) && ! empty($titleOfficer)) {
                                                 foreach ($titleOfficer as $key => $value) {
                                                 ?>
-																					<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-																				<?php
-                                                                                    }
-                                                                                    }
-                                                                                ?>
+													<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+												<?php
+													}
+													}
+												?>
 									</select>
 								</div>
 							</div>

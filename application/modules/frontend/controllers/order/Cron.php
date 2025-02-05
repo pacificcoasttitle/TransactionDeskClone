@@ -6474,6 +6474,65 @@ class Cron extends MX_Controller
         }
     }
 
+    public function softproSalesrepsLookupCode()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+
+        $response    = $this->softpro->make_request('GET', 'fetch_sales_reps');
+        // echo "<pre> Sales reps";
+        // print_r($response);
+        // echo "Hello";die;
+        if ($response['status'] == 'success') {
+            // Get existing emails from the database
+            $new_data        = $response['data'];
+            // $closer_examiner = $this->db->select('closer_examiner')->from('sp_officers')->where('is_sales_rep', 1)->get()->result_array();
+            // $closer_examiner = array_column($closer_examiner, 'closer_examiner');
+            $existingLookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('is_sales_rep', 1)->get()->result_array();
+            $existingLookupcode = array_column($existingLookupcode, 'lookup_code');
+
+            // Separate data into updates and inserts
+            $update_data = [];
+            $insert_data = [];
+            foreach ($new_data as $key => $row) {
+                // print_r($row);
+                if (in_array($row['LookUpCode'], $existingLookupcode)) {
+                    $update_data[$key]['lookup_code'] = $row['LookUpCode'];
+                    $update_data[$key]['first_name']    = $row['FirstName'];
+                    $update_data[$key]['last_name']    = $row['LastName'];
+                    $update_data[$key]['email_address']    = $row['Email'];
+                    $update_data[$key]['is_sales_rep'] = 1;
+                } else {
+                    $insert_data[$key]['lookup_code'] = $row['LookUpCode'];
+                    $insert_data[$key]['first_name']    = $row['FirstName'];
+                    $insert_data[$key]['last_name']    = $row['LastName'];
+                    $insert_data[$key]['email_address']    = $row['Email'];
+                    $insert_data[$key]['is_sales_rep'] = 1;
+                }
+            }
+            // echo "<pre>";
+            // print_r($update_data);
+            // echo "Hello";die;
+            // Perform batch update for existing emails
+            if (! empty($update_data)) {
+                foreach ($update_data as $update_row) {
+                    $this->db->where('lookup_code', $update_row['lookup_code']);
+                    $this->db->where('is_sales_rep', 1);
+                    $this->db->update('pct_softpro_lookup_table', $update_row);
+                }
+            }
+
+            // Perform batch insert for new emails
+            if (! empty($insert_data)) {
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
+            }
+
+            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+        }
+    }
+
     public function softproUnderwriterLookupCode()
     {
         ini_set('max_execution_time', 0);
@@ -6611,6 +6670,46 @@ class Cron extends MX_Controller
             }
 
             print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]));
+        }
+    }
+
+    public function spSyncFailedDocument() {
+        
+        $records = $this->db->select('id, order_number, file_list, document_name')->from('sp_file_upload_logs')->where('is_synced', 0)->group_by('order_number')->get()->result_array();
+        if (!empty($records)) {
+            foreach ($records as $key => $value) {
+                $fileData = [
+                    "Id" => $value['id'],
+                    "OrderNumber"  => $value['order_number'],
+                    "DocumentName" => $value['document_name'],
+                    "FileList"     => json_decode($value['file_list']),
+                ];
+                $fileUploadReq[] = $fileData;
+            }
+            $reqData = json_encode($fileUploadReq);
+            $this->load->library('order/softPro');
+            $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+            $response = json_decode($result, true);
+
+            if (isset($response) && !empty($response)) {
+                foreach ($response as $key => $res) {
+                    if ($res['Status'] == 200) {
+                        $updateData[] = [
+                            'is_synced' => 1,
+                            'id' => $res['Id']
+                        ];
+                    } else {
+                        $updateData[] = [
+                            'is_synced' => 0,
+                            'id' => $res['Id']
+                        ];
+                    }
+                }
+            }
+            foreach ($updateData as $key => $update_row) {
+                $this->db->where('id', $update_row['id']);
+                $this->db->update('sp_file_upload_logs', $update_row);
+            }
         }
     }
 }

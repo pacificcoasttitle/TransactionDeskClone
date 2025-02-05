@@ -484,7 +484,13 @@
                                                 <div class="form-group row">
                                                     <label for="name" class="col-sm-3 col-form-label">Sales Rep:</label>
                                                     <div class="col-sm-9 col-form-label">
-                                                        <?php echo $order_details['sales_rep_name']; ?>
+                                                    <?php 
+                                                        if (!empty($order_details['softpro_status'])) {
+                                                            echo $order_details['sp_sales_rep_name'];
+                                                        } else {
+                                                            echo $order_details['sales_rep_name'];
+                                                        }
+                                                    ?>
                                                     </div>
                                                 </div>
                                         <?php

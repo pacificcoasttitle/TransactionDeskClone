@@ -941,4 +941,77 @@ class Sales extends MX_Controller {
         }
         echo json_encode($response);
     }
+
+    public function spAdminSalesReps()
+    {
+        $data = array();
+        
+        $data['title'] = 'PCT Order: Sales Rep.';
+        
+        $salesStatusData = $this->order->getSalesConfigData();
+        $data['sales_rep_status_flag'] = $salesStatusData['value'];
+        $this->admintemplate->show("order/sales", "sp_sales", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/sales/sales', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function get_sp_sales_rep_list()
+    {
+        $params = array();  $data = array();
+        $params['sales_rep_enable'] = $this->input->post('sales_rep_enable');
+        if ($this->input->post('sales_rep_enable') == '1' || $this->input->post('sales_rep_enable') == '0') {
+            $salesData = array(
+                'value' => $this->input->post('sales_rep_enable'),
+            );
+            $this->db->update('pct_configs', $salesData, array('slug' => 'sales_rep_status_flag'));
+        }   
+        
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length'])+1;
+            $sales_rep_lists = $this->sales_model->get_sp_sales_reps($params);
+            $json_data['draw'] = intval( $params['draw'] );
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $sales_rep_lists = $this->sales_model->get_sp_sales_reps($params);
+        }
+        
+        if (isset($sales_rep_lists['data']) && !empty($sales_rep_lists['data'])) {
+            foreach ($sales_rep_lists['data'] as $key => $value)  {
+               // echo "<pre>"; print_r($value); exit;
+                $nestedData=array();
+                $nestedData[] = $value['lookup_code'];
+                $nestedData[] = $value['first_name']." ".$value['last_name'];
+                // $nestedData[] = $value['name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['phone'];
+                $nestedData[] = ($value['is_sales_rep_manager'] == 1) ? 'Sales Rep Manager' : 'Sales Rep';
+                $nestedData[] = ($value['is_mail_notification'] == 1) ? 'On' : 'Off';
+                $nestedData[] = ($value['status'] == 1) ? 'Enable' : 'Disable';
+                
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    $editOrderUrl = base_url().'order/admin/edit-sp-sales-rep/'.$value['id'];
+                    $action = "<div style='display:flex;justify-content: space-around;' ><a href='".$editOrderUrl."' class='edit-agent'title ='Edit Sales Rep Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteSPSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+					if($this->common->if_super_admin()) {
+						$action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
+					}
+                    $action .= " </div>";
+                    $nestedData[] = $action;
+                }
+                $data[] = $nestedData;            
+            }
+        }
+
+        $json_data['recordsTotal'] = intval( $sales_rep_lists['recordsTotal'] );
+        $json_data['recordsFiltered'] = intval( $sales_rep_lists['recordsFiltered'] );
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
+    }
 }

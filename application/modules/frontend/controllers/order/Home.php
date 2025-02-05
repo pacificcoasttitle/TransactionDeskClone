@@ -35,10 +35,10 @@ class Home extends MX_Controller
         $this->load->model('order/titleOfficer');
         $this->load->model('order/partnerApiLogs');
         $this->load->library('order/titlepoint');
-        if (isset($_POST) && ! empty($_POST)) {
+        if (isset($_POST) && !empty($_POST)) {
             $random_number = $this->input->post('random_number');
 
-            if (isset($random_number) && ! empty($random_number)) {
+            if (isset($random_number) && !empty($random_number)) {
                 $condition = [
                     'where'      => [
                         'session_id' => 'tp_api_id_' . $random_number,
@@ -76,7 +76,7 @@ class Home extends MX_Controller
             $config['max_size']      = 20000;
             $this->load->library('upload', $config);
 
-            if (! empty($_FILES['upload_curative']['name'])) {
+            if (!empty($_FILES['upload_curative']['name'])) {
                 if (! $this->upload->do_upload('upload_curative')) {
                     $response = ['status' => 'error', 'message' => $this->upload->display_errors()];
                     echo json_encode($response);
@@ -106,9 +106,9 @@ class Home extends MX_Controller
 
                 $PropertyAddress      = $this->input->post('Property');
                 $SplitPropertyAddress = explode(' ', $PropertyAddress);
-                $StreetNumber         = isset($SplitPropertyAddress[0]) && ! empty($SplitPropertyAddress[0]) ? $SplitPropertyAddress[0] : '';
+                $StreetNumber         = isset($SplitPropertyAddress[0]) && !empty($SplitPropertyAddress[0]) ? $SplitPropertyAddress[0] : '';
                 $PrimaryStreetName    = array_slice($SplitPropertyAddress, 1);
-                $StreetName           = isset($PrimaryStreetName) && ! empty($PrimaryStreetName) ? implode(" ", $PrimaryStreetName) : '';
+                $StreetName           = isset($PrimaryStreetName) && !empty($PrimaryStreetName) ? implode(" ", $PrimaryStreetName) : '';
 
                 $PropertyState = $this->input->post('property-state');
                 $PropertyCity  = $this->input->post('property-city');
@@ -131,11 +131,13 @@ class Home extends MX_Controller
                 $condition = [
                     'id' => $SalesRep,
                 ];
-                $salesRepDetails = $this->home_model->getSalesRepDetails($condition);
+                // $salesRepDetails = $this->home_model->getSalesRepDetails($condition);
+                $salesRepDetails = $this->home_model->getSPSalesRepDetails($condition);
+                
                 if ($salesRepDetails["is_mail_notification"] == 1) {
-                    $parties_email[] = isset($salesRepDetails["email_address"]) && ! empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
+                    $parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
                 }
-                $salesRepName = isset($salesRepDetails["first_name"]) && ! empty($salesRepDetails["first_name"]) ? $salesRepDetails["first_name"] . ' ' . $salesRepDetails["last_name"] : '';
+                $salesRepName = isset($salesRepDetails["first_name"]) && !empty($salesRepDetails["first_name"]) ? $salesRepDetails["first_name"] . ' ' . $salesRepDetails["last_name"] : '';
 
                 $TitleOfficer = $this->input->post('TitleOfficer');
                 $condition    = [
@@ -145,8 +147,8 @@ class Home extends MX_Controller
                 $titleOfficerDetails = $this->titleOfficer->getTitleOfficerLookupDetails($condition);
                 // echo "<pre>";
                 // print_r($titleOfficerDetails);die;
-                $titleOfficerName       = isset($titleOfficerDetails['name']) && ! empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
-                $titleOfficerLookupCode = isset($titleOfficerDetails['lookupCode']) && ! empty($titleOfficerDetails['lookupCode']) ? $titleOfficerDetails['lookupCode'] : '';
+                $titleOfficerName       = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
+                $titleOfficerLookupCode = isset($titleOfficerDetails['lookupCode']) && !empty($titleOfficerDetails['lookupCode']) ? $titleOfficerDetails['lookupCode'] : '';
 
                 $LoanAmount   = $this->input->post('loanAmount');
                 $LoanNumber   = $this->input->post('loanNumber');
@@ -160,16 +162,16 @@ class Home extends MX_Controller
                 $ProductTypeTxt       = $this->input->post('ProductType');
                 $primaryBorrower      = $this->input->post('primaryBorrower');
                 $secondaryBorrower    = $this->input->post('secondaryBorrower');
-                $TransactionTypeID    = isset($_POST["TransactionTypeID"]) && ! empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
+                $TransactionTypeID    = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
                 $TransactionType      = $this->input->post('TransactionType');
                 $ProductTypeID        = $this->input->post('ProductTypeID');
                 $softproProductType   = $this->input->post('ProductType');
                 $softproProductTypeId = $this->input->post('ProductTypeID');
                 $softproOrderType     = $this->input->post('OrderType');
                 $softproOrderTypeId   = $this->input->post('OrderTypeID');
-                $CCR                  = isset($_POST["CCR"]) && ! empty($_POST["CCR"]) ? 1 : 0;
-                $Docs                 = isset($_POST["Docs"]) && ! empty($_POST["Docs"]) ? 1 : 0;
-                $Ease                 = isset($_POST["Ease"]) && ! empty($_POST["Ease"]) ? 1 : 0;
+                $CCR                  = isset($_POST["CCR"]) && !empty($_POST["CCR"]) ? 1 : 0;
+                $Docs                 = isset($_POST["Docs"]) && !empty($_POST["Docs"]) ? 1 : 0;
+                $Ease                 = isset($_POST["Ease"]) && !empty($_POST["Ease"]) ? 1 : 0;
 
                 $sendermessage        = $this->input->post('sendermessage');
                 $BuyerAgentId         = $this->input->post('BuyerAgentId');
@@ -180,7 +182,7 @@ class Home extends MX_Controller
                 $user_data            = [];
                 $orderReq             = [];
                 $buyers_agent_details = $listing_agent_details = [];
-                if ((isset($BuyerAgentId) && ! empty($BuyerAgentId)) || isset($agentDetailFlag)) {
+                if ((isset($BuyerAgentId) && !empty($BuyerAgentId)) || isset($agentDetailFlag)) {
                     $BuyerAgentName                 = $this->input->post('BuyerAgentName');
                     $BuyerAgentEmailAddress         = $this->input->post('BuyerAgentEmailAddress');
                     $BuyerAgentTelephone            = $this->input->post('BuyerAgentTelephone');
@@ -200,9 +202,9 @@ class Home extends MX_Controller
                 }
 
                 $ListingAgentId = $this->input->post('ListingAgentId');
-                if ((isset($ListingAgentId) && ! empty($ListingAgentId)) || isset($agentDetailFlag)) {
+                if ((isset($ListingAgentId) && !empty($ListingAgentId)) || isset($agentDetailFlag)) {
                     $ListingAgentName                = $this->input->post('ListingAgentName');
-                    $ListingAgentEmailAddress        = isset($_POST["ListingAgentEmailAddress"]) && ! empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
+                    $ListingAgentEmailAddress        = isset($_POST["ListingAgentEmailAddress"]) && !empty($_POST["ListingAgentEmailAddress"]) ? strip_tags(trim($_POST["ListingAgentEmailAddress"])) : '';
                     $ListingAgentTelephone           = $this->input->post('ListingAgentTelephone');
                     $ListingAgentCompany             = $this->input->post('ListingAgentCompany');
                     $ListingAgentCompanyLookupCode   = $this->input->post('ListingAgentCompanyLookupCode');
@@ -223,7 +225,7 @@ class Home extends MX_Controller
                 $lender_details     = $escrow_details     = [];
                 $lender_details_api = $escrow_details_api = [];
 
-                if (isset($userdata['is_master']) && ! empty($userdata['is_master'])) {
+                if (isset($userdata['is_master']) && !empty($userdata['is_master'])) {
                     $orderUser             = $this->home_model->sp_get_user(['id' => $_POST['id']]);
                     $is_escrow             = $orderUser['is_escrow'];
                     $user_data['email']    = $orderUser['email_address'];
@@ -246,7 +248,7 @@ class Home extends MX_Controller
 
                 $cplLenderId    = 0;
                 $EscrowLenderId = 0;
-                if (isset($_POST['EscrowId']) && ! empty($_POST['EscrowId'])) {
+                if (isset($_POST['EscrowId']) && !empty($_POST['EscrowId'])) {
                     $escrowId       = $_POST['EscrowId'];
                     $EscrowLenderId = $_POST['EscrowId'];
                     // $escrow_user_details = $this->home_model->get_user(array('id' => $escrowId));
@@ -256,8 +258,8 @@ class Home extends MX_Controller
                     //     ),
                     // );
                     // $escrowCompanyData = $this->home_model->get_company_rows($escrowCon);
-                    $escrowName                = isset($_POST['EscrowName']) && ! empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
-                    $escrowEmail               = isset($_POST['EscrowEmailAddress']) && ! empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
+                    $escrowName                = isset($_POST['EscrowName']) && !empty($_POST['EscrowName']) ? $_POST['EscrowName'] : '';
+                    $escrowEmail               = isset($_POST['EscrowEmailAddress']) && !empty($_POST['EscrowEmailAddress']) ? $_POST['EscrowEmailAddress'] : '';
                     $escrowTelephone           = $this->input->post('EscrowTelephone');
                     $escrowCompany             = $this->input->post('EscrowCompany');
                     $escrowCompanyLookUpCode   = $this->input->post('EscrowCompanyLookUpCode');
@@ -313,14 +315,14 @@ class Home extends MX_Controller
                 // $lenderId = 7948;
                 // $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
                 // print_r($lender_user_details);die;
-                $lenderName              = isset($_POST['LenderName']) && ! empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
-                $lenderEmail             = isset($_POST['LenderEmailAddress']) && ! empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
+                $lenderName              = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
+                $lenderEmail             = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
                 $lenderTelephone         = $this->input->post('LenderTelephone');
                 $lenderCompany           = $this->input->post('LenderCompany');
                 $lenderCompanyLookUpCode = $this->input->post('LenderCompanyLookUpCode');
                 $lenderClientLookUpCode  = $this->input->post('LenderClientLookUpCode');
                 $lender_details          = ['name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany];
-                if (! empty($lenderEmail)) {
+                if (!empty($lenderEmail)) {
                     // echo "Hello";die;
                     $orderReq['lenderDetails'] = [
                         'CompanyLookUpCode' => $lenderCompanyLookUpCode,
@@ -355,16 +357,16 @@ class Home extends MX_Controller
                 );
                 }*/
 
-                if (isset($escrowEmail) && ! empty($escrowEmail)) {
+                if (isset($escrowEmail) && !empty($escrowEmail)) {
                     $parties_email[] = $escrowEmail;
                 }
 
-                if (isset($lenderEmail) && ! empty($lenderEmail)) {
+                if (isset($lenderEmail) && !empty($lenderEmail)) {
                     $parties_email[] = $lenderEmail;
                 }
 
                 $AdditionalEmails = $this->input->post('AdditionalEmail');
-                if (isset($AdditionalEmails) && ! empty($AdditionalEmails)) {
+                if (isset($AdditionalEmails) && !empty($AdditionalEmails)) {
                     foreach ($AdditionalEmails as $AdditionalEmail) {
                         $parties_email[] = $AdditionalEmail;
                     }
@@ -428,7 +430,7 @@ class Home extends MX_Controller
                         // "LoanAmount" => $LoanAmount,
                     ];
 
-                    if (! empty($SalesAmount)) {
+                    if (!empty($SalesAmount)) {
                         $transactionDetailsReq["SalesAmount"] = $SalesAmount;
                     }
                     // $orderReq["buyersAgentDetails"] = [
@@ -455,11 +457,11 @@ class Home extends MX_Controller
 
                     // if (strpos($ProductTypeTxt, 'Loan') !== false) {
                     $transactionDetailsReq['TransactionType'] = $TransactionType;
-                    if (! empty($escrowOfficer)) {
+                    if (!empty($escrowOfficer)) {
                         $transactionDetailsReq['EscrowOfficerName']       = ""; //$escrowOfficer;
                         $transactionDetailsReq['LookUpCodeEscrowOfficer'] = $escrowOfficer;
                     }
-                    $orderReq['orderType'] = $softproOrderType;
+                    $orderReq['orderType'] = $TransactionType; //$softproOrderType;
                     if ($TransactionType != 'Purchase') {
                         $transactionDetailsReq["LoanAmount"] = $LoanAmount;
                         // $orderReq['orderType'] = "Refinance";
@@ -471,7 +473,7 @@ class Home extends MX_Controller
                         $borrowerPrimaryName = array_slice($borrowerName, 0, -1);
                         $borrowerFirstName   = implode(" ", $borrowerPrimaryName);
                         $borrowers           = ['EntityType' => 'INDIVIDUAL', 'IsPrimaryTransactee' => 'true', 'primary' => ['First' => $borrowerFirstName, 'Last' => $borrowerLastName]];
-                        if (isset($SalesAmount) && ! empty($SalesAmount)) {
+                        if (isset($SalesAmount) && !empty($SalesAmount)) {
                             $transactionDetailsReq['SalesAmount'] = $SalesAmount;
                         }
                         // $transactionDetailsReq['TransactionType'] = "Purchase";
@@ -482,12 +484,12 @@ class Home extends MX_Controller
                     }
                     // $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = [];
-                    if (isset($LoanAmount) && ! empty($LoanAmount)) {
+                    if (isset($LoanAmount) && !empty($LoanAmount)) {
                         $loan['LoanAmount']                  = $LoanAmount;
                         $transactionDetailsReq['LoanAmount'] = $LoanAmount;
                     }
 
-                    if (isset($LoanNumber) && ! empty($LoanNumber)) {
+                    if (isset($LoanNumber) && !empty($LoanNumber)) {
                         $loan['LoanNumber']                  = $LoanNumber;
                         $transactionDetailsReq['LoanNumber'] = $LoanNumber;
                     }
@@ -564,7 +566,7 @@ class Home extends MX_Controller
                     // $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
                     $lpOrderFlag = 0;
 
-                    if (isset($response) && ! empty($response)) {
+                    if (isset($response) && !empty($response)) {
                         // $response = $result, true);
 
                         if (isset($response['status']) && $response['status'] == 'error') {
@@ -587,8 +589,8 @@ class Home extends MX_Controller
                         } else {
                             // $response = $response['data'];
                             $orderNumber = $file_id = '';
-                            if (isset($response['OrderNumber']) && ! empty($response['OrderNumber'])) {
-                                $orderNumber = isset($response['OrderNumber']) && ! empty($response['OrderNumber']) ? $response['OrderNumber'] : '';
+                            if (isset($response['OrderNumber']) && !empty($response['OrderNumber'])) {
+                                $orderNumber = isset($response['OrderNumber']) && !empty($response['OrderNumber']) ? $response['OrderNumber'] : '';
                                 // $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
                             }
                             /* Start add softpro api logs */
@@ -1055,7 +1057,7 @@ class Home extends MX_Controller
                 }
 
                 $lp_file_number = null;
-                $customer_id    = isset($_POST['id']) && ! empty($_POST['id']) ? $_POST['id'] : '';
+                $customer_id    = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
                 if ($lpOrderFlag == 1) {
                     $orderInfo = $this->home_model->getLastFileNumberForLpOrders();
                     if (empty($orderInfo)) {
@@ -1176,7 +1178,7 @@ class Home extends MX_Controller
                 $orderData     = [
                     'customer_id'       => $customer_id,
                     // 'file_id' => $file_id,
-                    'file_number'       => isset($orderNumber) && ! empty($orderNumber) ? $orderNumber : 0,
+                    'file_number'       => isset($orderNumber) && !empty($orderNumber) ? $orderNumber : 0,
                     'lp_file_number'    => $lp_file_number,
                     'property_id'       => $propertyId,
                     'transaction_id'    => $transactionId,
@@ -1222,7 +1224,7 @@ class Home extends MX_Controller
                 }
 
                 /* Escrow Details */
-                if (isset($escrowId) && ! empty($escrowId)) {
+                if (isset($escrowId) && !empty($escrowId)) {
                     $name       = explode(' ', $escrowName);
                     $first_name = $name[0];
                     $last_name  = $name[1];
@@ -1251,7 +1253,7 @@ class Home extends MX_Controller
                 /* Escrow Details */
 
                 /* Lender Details */
-                if (isset($lenderId) && ! empty($lenderId)) {
+                if (isset($lenderId) && !empty($lenderId)) {
                     $name       = explode(' ', $lenderName);
                     $first_name = $name[0];
                     $last_name  = $name[1];
@@ -1279,7 +1281,7 @@ class Home extends MX_Controller
                 }
                 /*Lender Details */
 
-                if (! empty($SalesRep)) {
+                if (!empty($SalesRep)) {
                     $message          = 'You have added on order number #' . $orderNumber;
                     $notificationData = [
                         'sent_user_id' => $SalesRep,
@@ -1291,7 +1293,7 @@ class Home extends MX_Controller
                     $this->order->sendNotification($message, 'added', $SalesRep, 0);
                 }
 
-                if (! empty($TitleOfficer)) {
+                if (!empty($TitleOfficer)) {
                     $message          = 'You have added on order number #' . $orderNumber;
                     $notificationData = [
                         'sent_user_id' => $TitleOfficer,
@@ -1336,7 +1338,6 @@ class Home extends MX_Controller
                     //     $this->order->uploadDocumentOnAwsS3($orderNumber .'.pdf', 'tax');
                     // }
                     $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-
                     /** If Title point shuf off is enabled from admin setting then Legal Vesting, Tax Doc, Grant deed title point api will not call */
                     /**
                      * Comment from Jerry (26-03-2024)
@@ -1344,32 +1345,40 @@ class Home extends MX_Controller
                      * order number retrieved, and email confirmation to go out to all parties
                      */
                     if (empty($titlePointShutOff) || $titlePointShutOff == 0) {
-                        $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && ! empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
+                        $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
                         $this->titlepoint->generateTaxDoc($tax_serviceId, $orderNumber, $orderId);
-
-                        $serviceId = isset($titlePointDetails['cs4_service_id']) && ! empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+                        
+                        $serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
                         $this->titlepoint->generateImg($serviceId, $orderNumber, $orderId);
-
-                        $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && ! empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
-
-                        $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && ! empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
-                        $fips         = isset($titlePointDetails['fips']) && ! empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
-
+                        
+                        $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+                        
+                        $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+                        $fips         = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+                        
                         $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
                     }
-
+                    
                 }
-
-                $orderDetails = $this->order->get_order_details($orderNumber);
+                $params = [
+                    'order_details.file_number' => $orderNumber,
+                ];
+                if ($lpOrderFlag == 1) {
+                    $params = [
+                        'order_details.lp_file_number' => $orderNumber,
+                    ];
+                }
+                // print_r($orderNumber);die;
+                $orderDetails = $this->order->get_order_details($params);
 
                 // Convert to PST
-
+                
                 $timezone = -8;
-
+                
                 $opened_date = gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600 * ($timezone + date("I")));
-
+                
                 // Convert to PST
-
+                
                 $data = [
                     'orderNumber'       => $orderNumber,
                     // 'orderId' => $file_id,
@@ -1419,7 +1428,7 @@ class Home extends MX_Controller
                 $email_notification = $this->input->post('email_notification');
 
                 $this->session->set_userdata('email_notification', $email_notification);
-                if (($is_escrow == 0) && (isset($userdata['is_master']) && ! empty($userdata['is_master'])) && (empty($email_notification))) {
+                if (($is_escrow == 0) && (isset($userdata['is_master']) && !empty($userdata['is_master'])) && (empty($email_notification))) {
                     $to = env('OPEN_ORDER_ADMIN_EMAIL');
                     /*$cc = array();*/
                 } else {
@@ -1431,7 +1440,7 @@ class Home extends MX_Controller
                 $deedfilename        = $orderNumber . '.pdf';
                 $taxfilename         = $orderNumber . '.pdf';
                 $uploadFileToSoftPro = [];
-                if (! empty($_FILES['upload_curative']['name'])) {
+                if (!empty($_FILES['upload_curative']['name'])) {
                     // $this->uploadCurativeDocsToResware($orderDetails);
                     $uploadFileToSoftPro[] = [
                         "FolderName" => 'curative',
@@ -1467,21 +1476,55 @@ class Home extends MX_Controller
                 }
 
                 if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
+                    $logData = [
+                        'order_number' => $orderNumber,
+                        'document_name' => $orderNumber,
+                        'file_list' => json_encode($uploadFileToSoftPro)
+                    ];
+                    
+                    $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
+
                     $fileData = [
+                        "Id" => $fileUploadLogId,
                         "OrderNumber"  => $orderNumber,
                         "DocumentName" => $orderNumber,
                         "FileList"     => $uploadFileToSoftPro,
                     ];
-                    $reqData = json_encode($fileData);
+                    $fileUploadReq[] = $fileData;
+                    $reqData = json_encode($fileUploadReq);
+                    // $reqData = json_encode($fileData);
                     // print_r($reqData);
-                    $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                    $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+
+                    $response = json_decode($result, true);
+                    if (isset($response) && !empty($response)) {
+                        foreach ($response as $key => $res) {
+                            if ($res['Status'] == 200) {
+                                $updateData[] = [
+                                    'is_synced' => 1,
+                                    'id' => $res['Id']
+                                ];
+                            } else {
+                                $updateData[] = [
+                                    'is_synced' => 0,
+                                    'id' => $res['Id']
+                                ];
+                            }
+                        }
+                    }
+
+                    foreach ($updateData as $key => $update_row) {
+                        $this->db->where('id', $update_row['id']);
+                        $this->db->update('sp_file_upload_logs', $update_row);
+                    }
+
                     /* Start upload softpro api logs */
                     $softproLog = [
                         'request_type' => 'upload_file_in_softpro',
                         'request_url'  => 'upload_file',
                         'request'      => $reqData,
-                        'response'     => json_encode($response),
-                        'status'       => $response['status'],
+                        'response'     => $result,
+                        'status'       => '',//$response['status'],
                         'file_number'  => $orderNumber,
                         'created_at'   => date("Y-m-d H:i:s"),
                     ];
@@ -1507,7 +1550,7 @@ class Home extends MX_Controller
                 $parties_email[] = 'openorders@pct.com';
                 /*$cc = array(env('OPEN_ORDER_ADMIN_EMAIL'));*/
                 //$parties_email[] = env('ORDER_ADMIN_EMAIL');
-                $cc = isset($parties_email) && ! empty($parties_email) ? $parties_email : [];
+                $cc = isset($parties_email) && !empty($parties_email) ? $parties_email : [];
                 $this->load->helper('sendemail');
 
                 $mailParams = [
@@ -1539,7 +1582,7 @@ class Home extends MX_Controller
                 ) {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
-                    if (isset($titleOfficerDetails['email_address']) && ! empty($titleOfficerDetails['email_address'])) {
+                    if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
                     $logid       = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, [], $orderId, 0);
@@ -1565,10 +1608,10 @@ class Home extends MX_Controller
                 }
 
                 // if ((!empty($escrowEmail) && $loanFlag == 1) || (!empty($escrow_officer_email))) {
-                if (! empty($escrowEmail) && $loanFlag == 1) {
+                if (!empty($escrowEmail) && $loanFlag == 1) {
 
-                    $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && ! empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
-                    if (! empty($sales_rep_img)) {
+                    $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
+                    if (!empty($sales_rep_img)) {
                         $sales_rep_img = env('AWS_PATH') . str_replace('uploads/', '', $sales_rep_img);
                     }
 
@@ -1595,7 +1638,7 @@ class Home extends MX_Controller
                         'message'   => json_encode($email_data),
                     ];
 
-                    if (! empty($escrowEmail) && $loanFlag == 1) {
+                    if (!empty($escrowEmail) && $loanFlag == 1) {
                         $to               = $escrowEmail;
                         $mailParams['to'] = $to;
                         $logid            = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, [], $orderId, 0);
@@ -1620,8 +1663,8 @@ class Home extends MX_Controller
                 ];
                 $rules = $this->home_model->get_rules_rows($condition);
 
-                if (isset($rules) && ! empty($rules)) {
-                    $counties_rule = isset($rules[0]['value']) && ! empty($rules[0]['value']) ? $rules[0]['value'] : [];
+                if (isset($rules) && !empty($rules)) {
+                    $counties_rule = isset($rules[0]['value']) && !empty($rules[0]['value']) ? $rules[0]['value'] : [];
                     $counties_ids  = explode(',', $counties_rule);
 
                     $counties = [];
@@ -1702,7 +1745,7 @@ class Home extends MX_Controller
         } else {
             $data['title'] = 'Open Order | Pacific Coast Title Company';
             $customer_data = $this->home_model->get_user(['id' => $userdata['id']]);
-            $is_master     = isset($customer_data['is_master']) && ! empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
+            $is_master     = isset($customer_data['is_master']) && !empty($customer_data['is_master']) ? $customer_data['is_master'] : '';
 
             /*$condition = array(
             'where' => array(
@@ -1728,11 +1771,12 @@ class Home extends MX_Controller
                     'status'       => 1,
                 ],
             ];
-            $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+            // $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+            $data['salesRep'] = $this->home_model->getSPSalesRepDetails($condition);
             // $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
             $data['escrowOfficers'] = $this->home_model->getEscrowOfficerLookupDetails();
             // echo "<pre>";
-            // print_r($data['escrowOfficers']);die;
+            // print_r($data['salesRep']);die;
             $data['productType'] = $this->home_model->get_product_types();
             // echo "<pre>";
             // print_r($data);die;
@@ -1754,7 +1798,7 @@ class Home extends MX_Controller
             $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/custom.css?v=custom_' . $this->custom_js_version));
             // $this->salesdashboardtemplate->addCss( base_url('assets/libs/bootstrap/bootstrap.css'));
             if ($is_master) {
-                $this->salesdashboardtemplate->show("order", "master_order", $data);
+            $this->salesdashboardtemplate->show("order", "master_order", $data);
                 // $this->template->show("order", "master_order", $data);
             } else {
                 $data['customer_data'] = $customer_data;
@@ -1804,7 +1848,7 @@ class Home extends MX_Controller
 
     public function checkEmail()
     {
-        $email = isset($_POST['CustomerEmail']) && ! empty($_POST['CustomerEmail']) ? $_POST['CustomerEmail'] : '';
+        $email = isset($_POST['CustomerEmail']) && !empty($_POST['CustomerEmail']) ? $_POST['CustomerEmail'] : '';
 
         $condition = [
             'where'      => [
@@ -1823,7 +1867,7 @@ class Home extends MX_Controller
 
     public function getCustomerNumber()
     {
-        $email = isset($_POST['email_address']) && ! empty($_POST['email_address']) ? $_POST['email_address'] : '';
+        $email = isset($_POST['email_address']) && !empty($_POST['email_address']) ? $_POST['email_address'] : '';
 
         $condition = [
             'where' => [
@@ -1833,8 +1877,8 @@ class Home extends MX_Controller
         $result = $this->home_model->get_customers($condition);
 
         $data = [];
-        if (isset($result) && ! empty($result)) {
-            $customer_number         = isset($result[0]['customer_number']) && ! empty($result[0]['customer_number']) ? $result[0]['customer_number'] : '';
+        if (isset($result) && !empty($result)) {
+            $customer_number         = isset($result[0]['customer_number']) && !empty($result[0]['customer_number']) ? $result[0]['customer_number'] : '';
             $data['customer_number'] = $customer_number;
         }
 
@@ -1844,7 +1888,7 @@ class Home extends MX_Controller
 
     public function getCustomerDetails()
     {
-        $customer_no = isset($_POST['customer_no']) && ! empty($_POST['customer_no']) ? $_POST['customer_no'] : '';
+        $customer_no = isset($_POST['customer_no']) && !empty($_POST['customer_no']) ? $_POST['customer_no'] : '';
 
         $condition = [
             'where' => [
@@ -1854,19 +1898,19 @@ class Home extends MX_Controller
         $result = $this->home_model->get_customers($condition);
 
         $data = [];
-        if (isset($result) && ! empty($result)) {
+        if (isset($result) && !empty($result)) {
             foreach ($result as $key => $value) {
-                $data['id']              = isset($value['id']) && ! empty($value['id']) ? $value['id'] : '';
-                $data['customer_number'] = isset($value['customer_number']) && ! empty($value['customer_number']) ? $value['customer_number'] : '';
-                $data['first_name']      = isset($value['first_name']) && ! empty($value['first_name']) ? $value['first_name'] : '';
-                $data['last_name']       = isset($value['last_name']) && ! empty($value['last_name']) ? $value['last_name'] : '';
-                $data['telephone_no']    = isset($value['telephone_no']) && ! empty($value['telephone_no']) ? $value['telephone_no'] : '';
-                $data['email_address']   = isset($value['email_address']) && ! empty($value['email_address']) ? $value['email_address'] : '';
-                $data['company_name']    = isset($value['company_name']) && ! empty($value['company_name']) ? $value['company_name'] : '';
-                $data['street_address']  = isset($value['street_address']) && ! empty($value['street_address']) ? $value['street_address'] : '';
-                $data['city']            = isset($value['city']) && ! empty($value['city']) ? $value['city'] : '';
-                $data['zip_code']        = isset($value['zip_code']) && ! empty($value['zip_code']) ? $value['zip_code'] : '';
-                $data['is_escrow']       = isset($value['is_escrow']) && ! empty($value['is_escrow']) ? $value['is_escrow'] : 0;
+                $data['id']              = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+                $data['customer_number'] = isset($value['customer_number']) && !empty($value['customer_number']) ? $value['customer_number'] : '';
+                $data['first_name']      = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
+                $data['last_name']       = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
+                $data['telephone_no']    = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
+                $data['email_address']   = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+                $data['company_name']    = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
+                $data['street_address']  = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+                $data['city']            = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['zip_code']        = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+                $data['is_escrow']       = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : 0;
             }
         }
 
@@ -1886,7 +1930,7 @@ class Home extends MX_Controller
                 ],
             ];
             $titlePointDetails = $this->titlePointData->gettitlePointDetails($condition);
-            $session_id        = isset($titlePointDetails[0]['session_id']) && ! empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
+            $session_id        = isset($titlePointDetails[0]['session_id']) && !empty($titlePointDetails[0]['session_id']) ? $titlePointDetails[0]['session_id'] : '';
             $order_id          = $titlePointDetails[0]['order_id'];
             $params            = [
                 'order_details.id' => $order_id,
@@ -1895,23 +1939,23 @@ class Home extends MX_Controller
             $orderDetails = $this->order->get_order_details($params);
             // echo "<pre>";
             // print_r($orderDetails);die;
-            $file_number = isset($orderDetails['file_number']) && ! empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+            $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
 
-            $property_id  = isset($orderDetails['property_id']) && ! empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
-            $customer_id  = isset($orderDetails['customer_id']) && ! empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
+            $property_id  = isset($orderDetails['property_id']) && !empty($orderDetails['property_id']) ? $orderDetails['property_id'] : '';
+            $customer_id  = isset($orderDetails['customer_id']) && !empty($orderDetails['customer_id']) ? $orderDetails['customer_id'] : '';
             $propertyData = $this->home_model->get_property_details($property_id);
-            $orderId      = isset($orderDetails['order_id']) && ! empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
-            $county       = isset($propertyData['county']) && ! empty($propertyData['county']) ? $propertyData['county'] : '';
-            $apn          = isset($propertyData['apn']) && ! empty($propertyData['apn']) ? $propertyData['apn'] : '';
-            $FullProperty = isset($propertyData['full_address']) && ! empty($propertyData['full_address']) ? $propertyData['full_address'] : '';
-            $address      = isset($propertyData['address']) && ! empty($propertyData['address']) ? $propertyData['address'] : '';
+            $orderId      = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+            $county       = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] : '';
+            $apn          = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
+            $FullProperty = isset($propertyData['full_address']) && !empty($propertyData['full_address']) ? $propertyData['full_address'] : '';
+            $address      = isset($propertyData['address']) && !empty($propertyData['address']) ? $propertyData['address'] : '';
 
-            $propertyState = isset($propertyData['state']) && ! empty($propertyData['state']) ? $propertyData['state'] : '';
-            $lpFileNumber  = isset($orderDetails['lp_file_number']) && ! empty($orderDetails['lp_file_number']) ? $orderDetails['lp_file_number'] : '';
+            $propertyState = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] : '';
+            $lpFileNumber  = isset($orderDetails['lp_file_number']) && !empty($orderDetails['lp_file_number']) ? $orderDetails['lp_file_number'] : '';
 
-            $propertyCity = isset($propertyData['city']) && ! empty($propertyData['city']) ? $propertyData['city'] : '';
-            $escrowId     = isset($propertyData['escrow_lender_id']) && ! empty($propertyData['escrow_lender_id']) ? $propertyData['escrow_lender_id'] : '';
-            $fileNumber   = ((isset($file_number) && ! empty($file_number)) ? $file_number : ((isset($lpFileNumber) && ! empty($lpFileNumber)) ? $lpFileNumber : ''));
+            $propertyCity = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] : '';
+            $escrowId     = isset($propertyData['escrow_lender_id']) && !empty($propertyData['escrow_lender_id']) ? $propertyData['escrow_lender_id'] : '';
+            $fileNumber   = ((isset($file_number) && !empty($file_number)) ? $file_number : ((isset($lpFileNumber) && !empty($lpFileNumber)) ? $lpFileNumber : ''));
             $lv_file_url  = '';
             if (env('AWS_ENABLE_FLAG') == 1) {
                 if ($this->order->fileExistOrNotOnS3('legal-vesting/' . $fileNumber . '.pdf')) {
@@ -1952,14 +1996,14 @@ class Home extends MX_Controller
             $data['tax_file_url'] = $tax_file_url;
         }
 
-        $data['tp_data']       = isset($titlePointDetails[0]) && ! empty($titlePointDetails[0]) ? $titlePointDetails[0] : [];
-        $data['state']         = isset($propertyState) && ! empty($propertyState) ? $propertyState : '';
-        $data['city']          = isset($propertyCity) && ! empty($propertyCity) ? $propertyCity : '';
-        $data['county']        = isset($county) && ! empty($county) ? $county : '';
-        $data['apn']           = isset($apn) && ! empty($apn) ? $apn : '';
-        $data['property']      = isset($FullProperty) && ! empty($FullProperty) ? $FullProperty : '';
-        $data['address']       = isset($address) && ! empty($address) ? $address : '';
-        $data['customer_id']   = isset($customer_id) && ! empty($customer_id) ? $customer_id : '';
+        $data['tp_data']       = isset($titlePointDetails[0]) && !empty($titlePointDetails[0]) ? $titlePointDetails[0] : [];
+        $data['state']         = isset($propertyState) && !empty($propertyState) ? $propertyState : '';
+        $data['city']          = isset($propertyCity) && !empty($propertyCity) ? $propertyCity : '';
+        $data['county']        = isset($county) && !empty($county) ? $county : '';
+        $data['apn']           = isset($apn) && !empty($apn) ? $apn : '';
+        $data['property']      = isset($FullProperty) && !empty($FullProperty) ? $FullProperty : '';
+        $data['address']       = isset($address) && !empty($address) ? $address : '';
+        $data['customer_id']   = isset($customer_id) && !empty($customer_id) ? $customer_id : '';
         $data['file_num']      = $file_number;
         $data['order_id']      = $orderId;
         $data['escrow_id']     = $escrowId;
@@ -2015,12 +2059,12 @@ class Home extends MX_Controller
         $this->load->library('order/titlepoint');
         $this->load->model('order/note');
         // $this->load->library('order/resware');
-        $escrowId = (! empty($_POST['escrow_id'])) ? $_POST['escrow_id'] : '';
-        if (! empty($escrowId)) {
+        $escrowId = (!empty($_POST['escrow_id'])) ? $_POST['escrow_id'] : '';
+        if (!empty($escrowId)) {
             $orderUser = $this->home_model->sp_get_user(['id' => $escrowId]);
         }
 
-        if ((! isset($escrowId) || empty($escrowId)) || (! empty($orderUser) && $orderUser['is_escrow'] == 0)) {
+        if ((! isset($escrowId) || empty($escrowId)) || (!empty($orderUser) && $orderUser['is_escrow'] == 0)) {
             $fileNumber = $_POST['file_number'];
 
             $this->order->createLpReport($fileNumber, false, true);
@@ -2054,19 +2098,19 @@ class Home extends MX_Controller
             $customer_id = $this->input->post('customer_id');
             $subject     = $this->input->post('subject');
 
-            if (isset($customer_id) && ! empty($customer_id)) {
+            if (isset($customer_id) && !empty($customer_id)) {
                 $condition = [
                     'id' => $customer_id,
                 ];
                 $customerDetails = $this->home_model->get_customers($condition);
-                $first_name      = isset($customerDetails['first_name']) && ! empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
-                $last_name       = isset($customerDetails['last_name']) && ! empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
-                $telephone_no    = isset($customerDetails['telephone_no']) && ! empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
-                $email_address   = isset($customerDetails['email_address']) && ! empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-                $company_name    = isset($customerDetails['company_name']) && ! empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
-                $street_address  = isset($customerDetails['street_address']) && ! empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
-                $city            = isset($customerDetails['city']) && ! empty($customerDetails['city']) ? $customerDetails['city'] : '';
-                $zipcode         = isset($customerDetails['zip_code']) && ! empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+                $first_name      = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
+                $last_name       = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
+                $telephone_no    = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
+                $email_address   = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+                $company_name    = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
+                $street_address  = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+                $city            = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
+                $zipcode         = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
 
                 $property = $this->input->post('property');
 
@@ -2097,19 +2141,19 @@ class Home extends MX_Controller
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
 
-        $email      = isset($_POST['email']) && ! empty($_POST['email']) ? $_POST['email'] : '';
-        $customerId = isset($_POST['customerId']) && ! empty($_POST['customerId']) ? $_POST['customerId'] : '';
+        $email      = isset($_POST['email']) && !empty($_POST['email']) ? $_POST['email'] : '';
+        $customerId = isset($_POST['customerId']) && !empty($_POST['customerId']) ? $_POST['customerId'] : '';
 
         $condition = [
             'id' => $customerId,
         ];
         $customerDetails = $this->home_model->get_customers($condition);
 
-        $email_address = isset($customerDetails['email_address']) && ! empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-        $password      = isset($customerDetails['random_password']) && ! empty($customerDetails['random_password']) ? $customerDetails['random_password'] : '';
+        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
+        $password      = isset($customerDetails['random_password']) && !empty($customerDetails['random_password']) ? $customerDetails['random_password'] : '';
         $data          = ['email' => $email_address, 'password' => $password];
 
-        $resware_user_id = isset($customerDetails['resware_user_id']) && ! empty($customerDetails['resware_user_id']) ? $customerDetails['resware_user_id'] : '';
+        $resware_user_id = isset($customerDetails['resware_user_id']) && !empty($customerDetails['resware_user_id']) ? $customerDetails['resware_user_id'] : '';
         $endPoint        = 'types/products?ClientsClientID=' . $resware_user_id;
         $logid           = $this->apiLogs->syncLogs($customerDetails['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, $data, [], 0, 0);
         $this->load->library('order/resware');
@@ -2118,7 +2162,7 @@ class Home extends MX_Controller
         $response      = json_decode($result, true);
         $product_types = [];
 
-        if (isset($response) && ! empty($response)) {
+        if (isset($response) && !empty($response)) {
             foreach ($response as $key => $value) {
                 if (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3) {
                     $con = [
@@ -2551,7 +2595,7 @@ class Home extends MX_Controller
         $query       = $this->db->get();
         $partnerInfo = $query->row_array();
 
-        if (! empty($partnerInfo['deliverables'])) {
+        if (!empty($partnerInfo['deliverables'])) {
             $deliverables = explode(',', $partnerInfo['deliverables']);
             $result       = ['deliverables' => $deliverables];
         } else {

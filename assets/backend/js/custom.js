@@ -91,7 +91,7 @@ $(document).ready(function () {
         $('select').not(".sectionSelect").selectpicker();
     }
 
-    if ($('#tbl-customers-listing').length || $('#tbl-sp-escrow-listing').length || $('#tbl-agents-listing').length || $('#tbl-sp-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sp-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-sp-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length) {
+    if ($('#tbl-customers-listing').length || $('#tbl-sp-escrow-listing').length || $('#tbl-agents-listing').length || $('#tbl-sp-agents-listing').length || $('#tbl-lenders-listing').length || $('#tbl-sp-lenders-listing').length || $('#tbl-sales-rep-listing').length || $('#tbl-sp-sales-rep-listing').length || $('#tbl-title-officer-listing').length || $('#tbl-sp-title-officer-listing').length || $('#tbl-credentials-customers-listing').length || $('#tbl-cpl-documents-listing').length || $('#tbl-new-users-listing').length || $('#tbl-master-users-listing').length || $('#tbl-companies-listing').length || $('#tbl-cpl-proposed-users-listing').length || $('#tbl-escrow-instruction-listing').length || $('#tbl-lp-xml-listing').length) {
         jQuery.fn.DataTable.Api.register('buttons.exportData()', function (options) {
 
             if (this.context.length) {
@@ -215,7 +215,6 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-sp-title-officer-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
-
                 else if (this.context[0].sTableId == 'tbl-sales-rep-listing') {
                     var jsonResult = $.ajax({
                         type: "POST",
@@ -230,6 +229,21 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-sales-rep-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if (this.context[0].sTableId == 'tbl-sp-sales-rep-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "order/admin/get-sales-rep-list",
+                        data: {
+                            keyword: $('#tbl-sp-sales-rep-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-sp-sales-rep-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else if (this.context[0].sTableId == 'tbl-credentials-customers-listing') {
                     var jsonResult = $.ajax({
@@ -1453,6 +1467,93 @@ $(document).ready(function () {
                 }
             },
         });
+    }
+
+    if ($('#tbl-sp-sales-rep-listing').length) {
+        sales_rep_list = $('#tbl-sp-sales-rep-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#Name, Email, Telephone",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export-sales-rep-data').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Bl<"FilterOrderListing">frtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Sales Rep.',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 0 || column === 1 || column === 2) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "order/admin/get-sp-sales-rep-list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                data: function (d) {
+                    d.sales_rep_enable = $('#enable_sales_rep').is(":checked") || $('#sales_rep_status_flag').val() == '1' ? 1 : 0;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-sp-sales-rep-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-sp-sales-rep-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+        var sales_rep_status_flag = $('#sales_rep_status_flag').val();
+        var sales_rep_status_checked = '';
+        if (sales_rep_status_flag == '1') {
+            sales_rep_status_checked = 'checked';
+        } else {
+            sales_rep_status_checked = '';
+        }
+        $("div.FilterOrderListing").html('<label> Show Hidden: <input style="width:20px;height:20px;" ' + sales_rep_status_checked + ' type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>');
     }
 
     /* Mortgage Brokers listing table */
