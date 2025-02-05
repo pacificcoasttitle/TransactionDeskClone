@@ -8261,27 +8261,5 @@ class Home extends MX_Controller
         $data = ['status' => 'success', 'msg' => 'Details updated successfully.'];
         echo json_encode($data);
     }
-
-    public function updateSpSalesUserForOrder()
-    {
-        $transactionId = $this->input->post('transaction_id');
-        $userId        = $this->input->post('user_id');
-        if (empty($transactionId)) {
-            $data = ['status' => 'error', 'msg' => 'Invalid details.'];
-            echo json_encode($data);exit();
-        }
-
-        $updateData                         = [];
-        $updateData['sales_representative'] = $userId;
-        $condition                          = ['id' => $transactionId];
-        $this->home_model->update($updateData, $condition, 'transaction_details');
-
-        /** Save user Activity */
-        $activity = 'For Transaction id: ' . $transactionId . ' Sales representative assigned:- ' . $userId;
-        $this->order->logAdminActivity($activity);
-        /** End Save user activity */
-
-        $data = ['status' => 'success', 'msg' => 'Details updated successfully.'];
-        echo json_encode($data);
-    }
+    
 }
