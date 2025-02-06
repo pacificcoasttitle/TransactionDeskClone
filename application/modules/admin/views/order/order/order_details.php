@@ -147,9 +147,9 @@
                                     <div class="card-body">
                                     <?php
                                         if(
-                                            (isset($order_details['cust_company_name']) && !empty($order_details['cust_company_name']) && !empty($order_details['resware_status']))
+                                            (isset($order_details['cust_company_name']) && !empty($order_details['cust_company_name']) && ($order_details['is_softpro_order'] == 0))
                                             ||
-                                            (isset($order_details['sp_cust_company_name']) && !empty($order_details['sp_cust_company_name']) && !empty($order_details['softpro_status']))
+                                            (isset($order_details['sp_cust_company_name']) && !empty($order_details['sp_cust_company_name']) && ($order_details['is_softpro_order'] == 1))
                                             )
                                         {
                                     ?>
@@ -157,7 +157,7 @@
                                                     <label for="name" class="col-sm-3 col-form-label">Company Name:</label>
                                                     <div class="col-sm-9 col-form-label">
                                                     <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_company_name'];
                                                     } else {
                                                         echo $order_details['cust_company_name'];
@@ -170,9 +170,9 @@
                                     ?>
                                     <?php
                                         if(
-                                            (isset($order_details['cust_email_address']) && !empty($order_details['cust_email_address']) && !empty($order_details['resware_status']))
+                                            (isset($order_details['cust_email_address']) && !empty($order_details['cust_email_address']) && ($order_details['is_softpro_order'] == 0))
                                             ||
-                                            (isset($order_details['sp_cust_email_address']) && !empty($order_details['sp_cust_email_address']) && !empty($order_details['softpro_status']))
+                                            (isset($order_details['sp_cust_email_address']) && !empty($order_details['sp_cust_email_address']) && ($order_details['is_softpro_order'] == 1))
                                             )
                                         {
                                     ?>
@@ -180,7 +180,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_email_address'];
                                                     } else {
                                                         echo $order_details['cust_email_address'];
@@ -193,9 +193,9 @@
                                     ?>
                                     <?php
                                     if(
-                                        (isset($order_details['cust_first_name']) && !empty($order_details['cust_first_name']) && !empty($order_details['resware_status']))
+                                        (isset($order_details['cust_first_name']) && !empty($order_details['cust_first_name']) && ($order_details['is_softpro_order'] == 0))
                                         ||
-                                        (isset($order_details['sp_cust_first_name']) && !empty($order_details['sp_cust_first_name']) && !empty($order_details['softpro_status']))
+                                        (isset($order_details['sp_cust_first_name']) && !empty($order_details['sp_cust_first_name']) && ($order_details['is_softpro_order'] == 1))
                                         )
                                     {
                                     ?>
@@ -203,7 +203,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">First Name:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_first_name'];
                                                     } else {
                                                         echo $order_details['cust_first_name'];
@@ -217,9 +217,9 @@
                                         
                                     <?php
                                     if(
-                                        (isset($order_details['cust_last_name']) && !empty($order_details['cust_last_name']) && !empty($order_details['resware_status']))
+                                        (isset($order_details['cust_last_name']) && !empty($order_details['cust_last_name']) && ($order_details['is_softpro_order'] == 0))
                                         ||
-                                        (isset($order_details['sp_cust_last_name']) && !empty($order_details['sp_cust_last_name']) && !empty($order_details['softpro_status']))
+                                        (isset($order_details['sp_cust_last_name']) && !empty($order_details['sp_cust_last_name']) && ($order_details['is_softpro_order'] == 1))
                                         )
                                     {
                                     ?>
@@ -227,7 +227,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">Last Name:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_last_name'];
                                                     } else {
                                                         echo $order_details['cust_last_name'];
@@ -241,9 +241,9 @@
                                         
                                     <?php
                                     if(
-                                        (isset($order_details['cust_telephone_no']) && !empty($order_details['cust_telephone_no']) && !empty($order_details['resware_status']))
+                                        (isset($order_details['cust_telephone_no']) && !empty($order_details['cust_telephone_no']) && ($order_details['is_softpro_order'] == 0))
                                         ||
-                                        (isset($order_details['sp_cust_telephone_no']) && !empty($order_details['sp_cust_telephone_no']) && !empty($order_details['softpro_status']))
+                                        (isset($order_details['sp_cust_telephone_no']) && !empty($order_details['sp_cust_telephone_no']) && ($order_details['is_softpro_order'] == 1))
                                         )
                                     {
                                     ?>
@@ -251,7 +251,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">Telephone:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_telephone_no'];
                                                     } else {
                                                         echo $order_details['cust_telephone_no'];
@@ -265,9 +265,9 @@
                                         
                                     <?php
                                     if(
-                                        (isset($order_details['cust_street_address']) && !empty($order_details['cust_street_address']) && !empty($order_details['resware_status']))
+                                        (isset($order_details['cust_street_address']) && !empty($order_details['cust_street_address']) && ($order_details['is_softpro_order'] == 0))
                                         ||
-                                        (isset($order_details['sp_cust_street_address']) && !empty($order_details['sp_cust_street_address']) && !empty($order_details['softpro_status']))
+                                        (isset($order_details['sp_cust_street_address']) && !empty($order_details['sp_cust_street_address']) && ($order_details['is_softpro_order'] == 1))
                                         )
                                     {
                                     ?>
@@ -275,7 +275,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">Street Address:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_street_address'];
                                                     } else {
                                                         echo $order_details['cust_street_address'];
@@ -289,9 +289,9 @@
                                         
                                     <?php
                                     if(
-                                        (isset($order_details['cust_city']) && !empty($order_details['cust_city']) && !empty($order_details['resware_status']))
+                                        (isset($order_details['cust_city']) && !empty($order_details['cust_city']) && ($order_details['is_softpro_order'] == 0))
                                         ||
-                                        (isset($order_details['sp_cust_city']) && !empty($order_details['sp_cust_city']) && !empty($order_details['softpro_status']))
+                                        (isset($order_details['sp_cust_city']) && !empty($order_details['sp_cust_city']) && ($order_details['is_softpro_order'] == 1))
                                         )
                                     {
                                     ?>
@@ -299,7 +299,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">City:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_city'];
                                                     } else {
                                                         echo $order_details['cust_city'];
@@ -313,9 +313,9 @@
                                         
                                     <?php
                                     if(
-                                        (isset($order_details['cust_zip_code']) && !empty($order_details['cust_zip_code']) && !empty($order_details['resware_status']))
+                                        (isset($order_details['cust_zip_code']) && !empty($order_details['cust_zip_code']) && ($order_details['is_softpro_order'] == 0))
                                         ||
-                                        (isset($order_details['sp_cust_zip_code']) && !empty($order_details['sp_cust_zip_code']) && !empty($order_details['softpro_status']))
+                                        (isset($order_details['sp_cust_zip_code']) && !empty($order_details['sp_cust_zip_code']) && ($order_details['is_softpro_order'] == 1))
                                         )
                                     {
                                     ?>
@@ -323,7 +323,7 @@
                                                 <label for="name" class="col-sm-3 col-form-label">Zipcode:</label>
                                                 <div class="col-sm-9 col-form-label">
                                                 <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_cust_zip_code'];
                                                     } else {
                                                         echo $order_details['cust_zip_code'];
@@ -478,14 +478,14 @@
                                 <div id="transactionDetails" class="collapse" role="tabpanel" aria-labelledby="transactionDetailsTab" data-parent="#accordionEx">
                                     <div class="card-body">        
                                         <?php
-                                            if(isset($order_details['sales_rep_name']) && !empty($order_details['sales_rep_name']))
+                                            if((isset($order_details['sales_rep_name']) && !empty($order_details['sales_rep_name'])) || (isset($order_details['sp_sales_rep_name']) && !empty($order_details['sp_sales_rep_name'])))
                                             {
                                         ?>
                                                 <div class="form-group row">
                                                     <label for="name" class="col-sm-3 col-form-label">Sales Rep:</label>
                                                     <div class="col-sm-9 col-form-label">
                                                     <?php 
-                                                        if (!empty($order_details['softpro_status'])) {
+                                                        if ($order_details['is_softpro_order'] == 1) {
                                                             echo $order_details['sp_sales_rep_name'];
                                                         } else {
                                                             echo $order_details['sales_rep_name'];
@@ -505,7 +505,7 @@
                                                     <label for="name" class="col-sm-3 col-form-label">Title Officer:</label>
                                                     <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                        if (!empty($order_details['softpro_status'])) {
+                                                        if ($order_details['is_softpro_order'] == 1) {
                                                             echo $order_details['sp_title_officer_name'];
                                                         } else {
                                                             echo $order_details['title_officer_name']; 
@@ -526,7 +526,7 @@
                                                     <div class="col-sm-9 col-form-label">
                                                         
                                                     <?php 
-                                                        if (!empty($order_details['softpro_status'])) {
+                                                        if ($order_details['is_softpro_order'] == 1) {
                                                             echo $order_details['sp_product_type_name'];
                                                         } else {
                                                             echo $order_details['product_type_name']; 
@@ -656,9 +656,9 @@
                                         <div class="card-body">        
                                             <?php
                                             if(
-                                                (isset($order_details['buyer_agent_name']) && !empty($order_details['buyer_agent_name']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['buyer_agent_name']) && !empty($order_details['buyer_agent_name']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_buyer_agent_name']) && !empty($order_details['sp_buyer_agent_name']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_buyer_agent_name']) && !empty($order_details['sp_buyer_agent_name']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -666,7 +666,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Buyer Agent Name:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_buyer_agent_name'];
                                                     } else {
                                                         echo $order_details['buyer_agent_name'];
@@ -679,9 +679,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['buyer_agent_email_address']) && !empty($order_details['buyer_agent_email_address']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['buyer_agent_email_address']) && !empty($order_details['buyer_agent_email_address']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_buyer_agent_email_address']) && !empty($order_details['sp_buyer_agent_email_address']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_buyer_agent_email_address']) && !empty($order_details['sp_buyer_agent_email_address']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -689,7 +689,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Buyer Agent Email Address:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_buyer_agent_email_address'];
                                                     } else {
                                                         echo $order_details['buyer_agent_email_address'];
@@ -702,9 +702,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['buyer_agent_company']) && !empty($order_details['buyer_agent_company']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['buyer_agent_company']) && !empty($order_details['buyer_agent_company']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_buyer_agent_company']) && !empty($order_details['sp_buyer_agent_company']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_buyer_agent_company']) && !empty($order_details['sp_buyer_agent_company']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -712,7 +712,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Buyer Agent Company:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_buyer_agent_company'];
                                                     } else {
                                                         echo $order_details['buyer_agent_company'];
@@ -725,9 +725,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['buyer_agent_telephone_no']) && !empty($order_details['buyer_agent_telephone_no']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['buyer_agent_telephone_no']) && !empty($order_details['buyer_agent_telephone_no']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_buyer_agent_telephone_no']) && !empty($order_details['sp_buyer_agent_telephone_no']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_buyer_agent_telephone_no']) && !empty($order_details['sp_buyer_agent_telephone_no']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -735,7 +735,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Buyer Agent Telephone:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_buyer_agent_telephone_no'];
                                                     } else {
                                                         echo $order_details['buyer_agent_telephone_no'];
@@ -770,9 +770,9 @@
                                         <div class="card-body">        
                                             <?php
                                             if(
-                                                (isset($order_details['listing_agent_name']) && !empty($order_details['listing_agent_name']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['listing_agent_name']) && !empty($order_details['listing_agent_name']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_listing_agent_name']) && !empty($order_details['sp_listing_agent_name']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_listing_agent_name']) && !empty($order_details['sp_listing_agent_name']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -780,7 +780,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Listing Agent Name:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_listing_agent_name'];
                                                     } else {
                                                         echo $order_details['listing_agent_name'];
@@ -793,9 +793,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['listing_agent_email_address']) && !empty($order_details['listing_agent_email_address']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['listing_agent_email_address']) && !empty($order_details['listing_agent_email_address']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_listing_agent_email_address']) && !empty($order_details['sp_listing_agent_email_address']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_listing_agent_email_address']) && !empty($order_details['sp_listing_agent_email_address']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -803,7 +803,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Listing Agent Email Address:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_listing_agent_email_address'];
                                                     } else {
                                                         echo $order_details['listing_agent_email_address'];
@@ -816,9 +816,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['listing_agent_company']) && !empty($order_details['listing_agent_company']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['listing_agent_company']) && !empty($order_details['listing_agent_company']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_listing_agent_company']) && !empty($order_details['sp_listing_agent_company']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_listing_agent_company']) && !empty($order_details['sp_listing_agent_company']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -826,7 +826,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Listing Agent Company:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_listing_agent_company'];
                                                     } else {
                                                         echo $order_details['listing_agent_company'];
@@ -839,9 +839,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['listing_agent_telephone_no']) && !empty($order_details['listing_agent_telephone_no']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['listing_agent_telephone_no']) && !empty($order_details['listing_agent_telephone_no']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_listing_agent_telephone_no']) && !empty($order_details['sp_listing_agent_telephone_no']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_listing_agent_telephone_no']) && !empty($order_details['sp_listing_agent_telephone_no']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -849,7 +849,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Listing Agent Telephone:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_listing_agent_telephone_no'];
                                                     } else {
                                                         echo $order_details['listing_agent_telephone_no'];
@@ -884,9 +884,9 @@
                                         <div class="card-body">        
                                             <?php
                                             if(
-                                                (isset($order_details['escrow_lender_first_name']) && !empty($order_details['escrow_lender_first_name']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['escrow_lender_first_name']) && !empty($order_details['escrow_lender_first_name']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_escrow_lender_first_name']) && !empty($order_details['sp_escrow_lender_first_name']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_escrow_lender_first_name']) && !empty($order_details['sp_escrow_lender_first_name']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -894,7 +894,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">First Name:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_escrow_lender_first_name'];
                                                     } else {
                                                         echo $order_details['escrow_lender_first_name'];
@@ -907,9 +907,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['escrow_lender_last_name']) && !empty($order_details['escrow_lender_last_name']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['escrow_lender_last_name']) && !empty($order_details['escrow_lender_last_name']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_escrow_lender_last_name']) && !empty($order_details['sp_escrow_lender_last_name']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_escrow_lender_last_name']) && !empty($order_details['sp_escrow_lender_last_name']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -917,7 +917,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Last Name:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_escrow_lender_last_name'];
                                                     } else {
                                                         echo $order_details['escrow_lender_last_name'];
@@ -930,9 +930,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['escrow_lender_email']) && !empty($order_details['escrow_lender_email']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['escrow_lender_email']) && !empty($order_details['escrow_lender_email']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_escrow_lender_email']) && !empty($order_details['sp_escrow_lender_email']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_escrow_lender_email']) && !empty($order_details['sp_escrow_lender_email']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -940,7 +940,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Email Address:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_escrow_lender_email'];
                                                     } else {
                                                         echo $order_details['escrow_lender_email'];
@@ -953,9 +953,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['escrow_lender_company_name']) && !empty($order_details['escrow_lender_company_name']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['escrow_lender_company_name']) && !empty($order_details['escrow_lender_company_name']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_escrow_lender_company_name']) && !empty($order_details['sp_escrow_lender_company_name']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_escrow_lender_company_name']) && !empty($order_details['sp_escrow_lender_company_name']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -963,7 +963,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Company:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_escrow_lender_company_name'];
                                                     } else {
                                                         echo $order_details['escrow_lender_company_name'];
@@ -976,9 +976,9 @@
                                             ?>
                                             <?php
                                             if(
-                                                (isset($order_details['escrow_lender_telephone_no']) && !empty($order_details['escrow_lender_telephone_no']) && !empty($order_details['resware_status']))
+                                                (isset($order_details['escrow_lender_telephone_no']) && !empty($order_details['escrow_lender_telephone_no']) && ($order_details['is_softpro_order'] == 0))
                                                 ||
-                                                (isset($order_details['sp_escrow_lender_telephone_no']) && !empty($order_details['sp_escrow_lender_telephone_no']) && !empty($order_details['softpro_status']))
+                                                (isset($order_details['sp_escrow_lender_telephone_no']) && !empty($order_details['sp_escrow_lender_telephone_no']) && ($order_details['is_softpro_order'] == 1))
                                                 )
                                             {
                                             ?>
@@ -986,7 +986,7 @@
                                                         <label for="name" class="col-sm-3 col-form-label">Telephone:</label>
                                                         <div class="col-sm-9 col-form-label">
                                                         <?php 
-                                                    if (!empty($order_details['softpro_status'])) {
+                                                    if ($order_details['is_softpro_order'] == 1) {
                                                         echo $order_details['sp_escrow_lender_telephone_no'];
                                                     } else {
                                                         echo $order_details['escrow_lender_telephone_no'];

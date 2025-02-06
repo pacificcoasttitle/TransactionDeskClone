@@ -4524,7 +4524,7 @@ class Home extends MX_Controller
         //     $loanFlag = 0;
         // }
         $ClientType = 'EscrowCompany';
-        if ($order_details['cust_is_escrow']) {
+        if ($order_details['sp_cust_is_escrow']) {
             $ClientType                = 'EscrowCompany';
             $orderReq['escrowDetails'] = [
                 'CompanyLookUpCode' => $order_details['sp_escrow_lender_flookup_code'],
@@ -4536,7 +4536,7 @@ class Home extends MX_Controller
                 // 'EscrowOfficerName' => $escrowOfficer,
                 // "LookUpCodeEscrowOfficer" => $escrowOfficer,
             ];
-        } else if ($order_details['cust_is_lender']) {
+        } else if ($order_details['sp_cust_is_lender']) {
             $ClientType                = 'Lender';
             $orderReq['lenderDetails'] = [
                 'CompanyLookUpCode' => $order_details['sp_escrow_lender_flookup_code'],
