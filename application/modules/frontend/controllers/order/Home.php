@@ -383,7 +383,8 @@ class Home extends MX_Controller
                 $underWriter = '';
 
                 // if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '15340')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && $ProductTypeID == '20') {
-                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '67082')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
+                // if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || ($SalesRep == '67082')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
+                if (empty($_POST['EscrowId']) && empty($_POST['escrow_officer']) && ($isEnable == 1 || (strtolower($salesRepDetails['lookup_code']) == 'patrickkane')) && ($orderUser['is_allow_only_resware_orders'] == 0) && ($orderUser['is_escrow'] != 1) && ($softproOrderType == 'Title only')) {
                     $lpOrderFlag = 1;
                 } else {
                     $place_order                 = [];
@@ -1192,6 +1193,7 @@ class Home extends MX_Controller
                     // 'resware_status'    => ($lpOrderFlag == 1) ? 'open' : '',
                     'softpro_status'    => ($lpOrderFlag == 1) ? 'open' : '',
                     'status'            => 1,
+                    'is_softpro_order' => 1
                 ];
 
                 $orderId = $this->home_model->insert($orderData, 'order_details');

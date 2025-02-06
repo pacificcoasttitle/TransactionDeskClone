@@ -105,8 +105,8 @@ $(document).ready(function () {
 
                 var is_escrow = ui.item.is_escrow;
                 var is_mortgage_broker = ui.item.is_primary_mortgage_user;
-
-                if (is_mortgage_broker == 1) {
+                var is_agent = ui.item.is_selling_agent;
+                if (is_mortgage_broker == 1 || is_agent == 1) {
                     $('#add-lender-section').show();
                     $('#add-escrow-section').show();
                     $('#email-notification-section').show();
