@@ -4486,4 +4486,40 @@ class Order
         $email_send_status = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
         $this->CI->apiLogs->syncLogs(0, 'sendgrid', $logName, '', $mailParams, array('status' => $email_send_status), 0, $logid);
     }
+
+    public function sendSurveySampleEmail($data) {
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->helper('sendemail');
+        $message = $this->CI->load->view('frontend/emails/surveymonkey_email.php', $data, true);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        // $subject = 'Thank You!';
+        // $to = $data['escrow_officer_email'];
+        $to = array($data['email_address']);
+        $cc = array('piyush.j@crestinfosystems.com');
+        // print_r($message);die;
+
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = "We'd Love Your Feedback";
+        // $to = $escrow_email_address;
+        // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+        // $cc = array('piyush.j@crestinfosystems.com');
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+        // $cc = array();
+        $this->CI->load->helper('sendemail');
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'survay_sample_email_sent_mail', '', $mailParams, array(), $data['order_id'], 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        // print_r($mail_result);die;
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'survay_sample_email_sent_mail', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
+        return $mail_result;
+    }
 }

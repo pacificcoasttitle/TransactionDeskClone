@@ -2882,4 +2882,71 @@ class Common extends MX_Controller
         }
 
     }
+
+    public function surveysResult()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Surveys';
+        
+        $this->load->library('order/survey');
+        $this->load->model('order/apiLogs');
+        $endPoint = 'surveys';
+        // $userdata['email'] = $userdata['email_address'];
+        // $logid = $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), array(), 0, 0);
+        $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+        // $this->apiLogs->syncLogs($v['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
+        $survey = [];
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result, true);
+            if (isset($response['data']) && !empty($response['data'])) {
+                foreach ($response['data'] as $key => $value) {
+                    $arr = [];
+                    $arr['id'] = $value['id'];
+                    $arr['title'] = $value['title'];
+                    $arr['nickname'] = $value['nickname'];
+                    $arr['href'] = $value['href'];
+                    $endPoint = 'surveys/' . $value['id'] . '/responses/bulk';
+                    $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+                    if (isset($result) && !empty($result)) {
+                        $response = json_decode($result, true);
+                        $questionAverages = [];
+                        $textComment = [];
+                        // echo "<pre>";
+                        if (isset($response['data'])) {
+                            foreach ($response['data'] as $res) {
+                                foreach ($res['pages'] as $page) {
+                                    foreach ($page['questions'] as $question) {
+                                        $questionId = $question['id'];
+                                        foreach ($question['answers'] as $answer) {
+                                            if (isset($answer['choice_metadata']['weight'])) {
+                                                $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
+                                            }
+                                            if (isset($answer['text']) && !empty($answer['text'])) {
+                                                $textComment[] = $answer['text'];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Calculate average for each question
+                            $finalAverages = [];
+                            $i = 1;
+                            foreach ($questionAverages as $questionId => $weights) {
+                                $finalAverages['Q'.$i] = array_sum($weights) / count($weights);
+                                $i++;
+                            }
+                            // print_r($page);die;
+                            $arr['avg'] = $finalAverages;
+                            $arr['textComment'] = $textComment;
+                        }
+                    }
+                    $survey[] = $arr;
+                }
+            }
+        }
+        
+        $data['survey'] = $survey;
+        $this->salesdashboardtemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=6'));
+        $this->salesdashboardtemplate->show("order/common", "survey_result", $data);
+    }
 }

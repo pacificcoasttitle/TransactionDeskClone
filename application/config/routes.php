@@ -261,6 +261,7 @@ $route['get-revenue-data'] = 'frontend/order/salesRep/getRevenueData';
 $route['send-package/:any'] = 'frontend/order/dashboardMail/sendPackage';
 $route['add-buyer-on-order-mail'] = 'frontend/order/dashboardMail/addBuyerOnOrder';
 $route['add-seller-on-order-mail'] = 'frontend/order/dashboardMail/addSellerOnOrder';
+$route['survey-result'] = 'frontend/order/common/surveysResult';
 
 $route['national-form'] = 'frontend/order/dashboardMail/nationalForm';
 /* Route for PCT-Order backend*/
@@ -450,6 +451,8 @@ $route['order/admin/lp-alert'] = 'admin/order/home/lpAlert';
 $route['order/admin/add-lp-alert'] = 'admin/order/home/addLpAlert';
 $route['order/admin/delete-lp-alert'] = 'admin/order/home/deleteLpAlert';
 $route['order/admin/edit-lp-alert/:num'] = 'admin/order/home/editLpAlert';
+$route['order/admin/surveys'] = 'admin/order/home/surveys';
+$route['send-survey-sample-email'] = 'admin/order/home/sendSurveySampleEmail';
 
 $route['order/admin/daily-email-control'] = 'admin/order/home/dailyEmailControl';
 $route['order/admin/get-daily-emailer'] = 'admin/order/home/getDailyEmailer';
