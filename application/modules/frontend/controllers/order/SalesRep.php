@@ -211,7 +211,7 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);

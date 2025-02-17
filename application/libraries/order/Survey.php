@@ -1,7 +1,5 @@
 <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
-
 class Survey
 {
     public static $CI;
@@ -14,13 +12,12 @@ class Survey
         $this->CI->load->library('session');
         self::$CI = $this->CI;
     }
-
+    
     public function make_request($http_method, $endpoint, $body_params='', $data = array())
     {
         $login = env('RESWARE_ORDER_API');
         $password = env('RESWARE_ORDER_API');
         $bearerToken = env('SURVEYMONKEY_AUTH_TOKEN');
-
 	    $ch = curl_init(env('SURVEYMONKEY_API_URL').$endpoint);                                    
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $http_method);                        
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body_params);                   

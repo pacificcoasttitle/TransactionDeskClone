@@ -4522,4 +4522,27 @@ class Order
         $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'survay_sample_email_sent_mail', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
         return $mail_result;
     }
+
+    public function getSalesRepForOrder($orderId) {
+        $this->CI->db->select('order_details.file_number, customer_basic_details.first_name, customer_basic_details.last_name')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative and customer_basic_details.is_sales_rep = 1');
+        $this->CI->db->where('order_details.id', $orderId);
+
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function surveyReportCards($data) {
+        // echo "<pre>";
+        // print_r($this->salesdashboardtemplate->show("order/common/survey", "survey_report_cards", ['value' => $data]));die;
+        // $results = $this->load->view('order/review_file_summary', $data, true);
+        return $this->CI->load->view('frontend/order/common/survey/survey_report_cards', $data, true);
+        // echo $this->salesdashboardtemplate->show("order/common/survey", "survey_report_cards", ['value' => $data]);
+    }
+
+    public function surveyReportRating($data) {
+        return $this->CI->load->view('frontend/order/common/survey/survey_report_rating_details', $data, true);
+    }
 }

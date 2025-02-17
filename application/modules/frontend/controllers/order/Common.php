@@ -5,7 +5,7 @@
 class Common extends MX_Controller
 {
 
-    private $cpl_js_version = '02';
+    private $version = '03';
     private $proposed_js_version = '01';
     private $prelim_orders_js_version = '01';
     private $prelim_order_js_version = '02';
@@ -42,7 +42,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_orders.js?v=prelim_orders_' . $this->prelim_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_orders.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "review_files", $data);
     }
 
@@ -92,11 +92,11 @@ class Common extends MX_Controller
         $data['prelimDocument'] = $prelimDocument;
         $data['orderDetails'] = $orderDetails;
         $data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_' . $this->prelim_order_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/css/theme.css?v=prelim_order_' . $this->prelim_order_js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/view-review-file.css?v=' . $this->prelim_order_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim_order.js?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/css/theme.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/view-review-file.css?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "view_review_file", $data);
-        // $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v=prelim_order_'.$this->prelim_order_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/prelim_order.js?v='.$this->version));
         // $this->template->show("order", "view_review_file", $data);
     }
 
@@ -748,7 +748,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=upload_doc_orders_' . $this->upload_doc_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order/common", "upload_doc_orders", $data);
     }
 
@@ -805,7 +805,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/policy.js?v=policy_orders_' . $this->policy_orders_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/policy.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order/common", "policy_orders", $data);
     }
 
@@ -986,9 +986,9 @@ class Common extends MX_Controller
                 $data['tasks'] = $this->tasks_model->get_many_by("(status = 1 and parent_task_id = 0 and (prod_type = 'both' or prod_type = '$prod_type') )");
             }
         }
-        // $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_'.$this->upload_document_for_order));
+        // $this->template->addJS( base_url('assets/frontend/js/order/upload_document_for_order.js?v='.$this->version));
         // $this->template->show("order/common", "upload_documents", $data);
-        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=upload_document_for_order_' . $this->upload_document_for_order));
+        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "upload_documents", $data);
     }
 
@@ -1170,7 +1170,7 @@ class Common extends MX_Controller
             $this->session->unset_userdata('success');
         }
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/cpl.js?v=cpl_' . $this->cpl_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/cpl.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "cpl", $data);
         // $this->template->show("order", "cpl", $data);
     }
@@ -2582,9 +2582,9 @@ class Common extends MX_Controller
         $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
         $data['proposedBranches'] = $this->order->getProposedBranches();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        // $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v=cpl_'.$this->proposed_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/proposed.js?v='.$this->version));
         // $this->template->show("order", "proposed_insured", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/proposed.js?v=cpl_' . $this->cpl_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/proposed.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "proposed_insured", $data);
     }
 
@@ -2758,8 +2758,8 @@ class Common extends MX_Controller
             $data['notes'] = $this->order->get_order_notes($orderId);
         }
 
-        // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v=notes_order_js'.$this->notes_order_js) );
-        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->notes_order_js));
+        // $this->template->addJS( base_url('assets/frontend/js/order/notes_js.js?v='.$this->version) );
+        $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/notes_js.js?v=' . $this->version));
         $this->escrowdashboardtemplate->show("order/common", "get_notes", $data);
         // $this->template->show("order/common", "get_notes", $data);
     }
@@ -2896,8 +2896,12 @@ class Common extends MX_Controller
         $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
         // $this->apiLogs->syncLogs($v['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
         $survey = [];
+        $titleOfficerList = [];
+
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, true);
+            // echo "<pre>";
+            // print_r($response);die;
             if (isset($response['data']) && !empty($response['data'])) {
                 foreach ($response['data'] as $key => $value) {
                     $arr = [];
@@ -2905,48 +2909,158 @@ class Common extends MX_Controller
                     $arr['title'] = $value['title'];
                     $arr['nickname'] = $value['nickname'];
                     $arr['href'] = $value['href'];
-                    $endPoint = 'surveys/' . $value['id'] . '/responses/bulk';
-                    $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
-                    if (isset($result) && !empty($result)) {
-                        $response = json_decode($result, true);
-                        $questionAverages = [];
-                        $textComment = [];
-                        // echo "<pre>";
-                        if (isset($response['data'])) {
-                            foreach ($response['data'] as $res) {
-                                foreach ($res['pages'] as $page) {
-                                    foreach ($page['questions'] as $question) {
-                                        $questionId = $question['id'];
-                                        foreach ($question['answers'] as $answer) {
-                                            if (isset($answer['choice_metadata']['weight'])) {
-                                                $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
-                                            }
-                                            if (isset($answer['text']) && !empty($answer['text'])) {
-                                                $textComment[] = $answer['text'];
-                                            }
-                                        }
+                    $titleOfficerList[] = $arr;
+                    // break;
+                }
+            }
+        }
+        $ratingData = [];
+        if (!empty($titleOfficerList)) {
+            // $titleOffSurveyId = "417131721"; 
+            $titleOffSurveyId = $titleOfficerList['0']['id']; 
+            $endPoint = 'surveys/' . $titleOffSurveyId . '/responses/bulk';
+            $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+            if (isset($result) && !empty($result)) {
+                $response = json_decode($result, true);
+                $questionAverages = [];
+                $textComment = [];
+                $ratingArray = [];
+                // echo "<pre>";
+                if (isset($response['data'])) {
+                    foreach ($response['data'] as $res) {
+                        $ratingArr = [];
+                        $ratingArr['sales_rep'] = '-';
+                        if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
+                            $orderId = $res['custom_variables']['order_id'];
+                            $salesRepDetails = $this->order->getSalesRepForOrder($orderId);
+                            // echo "<pre>";
+                            // print_r($salesRepDetails);die;
+                            $ratingArr['sales_rep'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
+                        }
+                        $ratingData['titleOfficer'] = $titleOfficerList['0']['title'];
+                        foreach ($res['pages'] as $page) {
+                            foreach ($page['questions'] as $key => $question) {
+                                $questionId = $question['id'];
+                                foreach ($question['answers'] as $answer) {
+                                    if (isset($answer['choice_metadata']['weight'])) {
+                                        $ratingArr[$questionId] = (int)$answer['choice_metadata']['weight'];
+                                        // $ratingArr['Q'.($key+1)] = (int)$answer['choice_metadata']['weight'];
+                                        $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
+                                    }
+                                    if (isset($answer['text']) && !empty($answer['text'])) {
+                                        $ratingArr['comment'] = $answer['text'];
+                                        $textComment[] = $answer['text'];
                                     }
                                 }
                             }
-                            // Calculate average for each question
-                            $finalAverages = [];
-                            $i = 1;
-                            foreach ($questionAverages as $questionId => $weights) {
-                                $finalAverages['Q'.$i] = array_sum($weights) / count($weights);
-                                $i++;
-                            }
-                            // print_r($page);die;
-                            $arr['avg'] = $finalAverages;
-                            $arr['textComment'] = $textComment;
                         }
+                        $ratingArray[] = $ratingArr;
                     }
-                    $survey[] = $arr;
+                    // Calculate average for each question
+                    $finalAverages = [];
+                    $i = 1;
+                    foreach ($questionAverages as $questionId => $weights) {
+                        $finalAverages['Q'.$i] = number_format(array_sum($weights) / count($weights), 2);
+                        $i++;
+                    }
+                    $ratingData['rating'] = $ratingArray;
+                    // print_r($page);die;
+                    $ratingData['avg'] = $finalAverages;
+                    $ratingData['textComment'] = $textComment;
+                    $survey['survey_cards'] = $this->surveyReportCards($ratingData);
+                    $survey['survey_rating_details'] = $this->surveyReportRating($ratingData);
+                    $survey['title_officer_list'] = $titleOfficerList;
                 }
             }
         }
         
-        $data['survey'] = $survey;
-        $this->salesdashboardtemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=6'));
-        $this->salesdashboardtemplate->show("order/common", "survey_result", $data);
+        // echo "<pre>";
+        // print_r($ratingData);
+        // print_r($survey);die;
+        // $data['survey'] = $survey;
+        $this->salesdashboardtemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        $this->salesdashboardtemplate->show("order/common", "survey_result", $survey);
+    }
+
+    public function getSurveyDetails() {
+        $titleOffSurveyId = $this->input->post('title_officer_survey_id');
+        $titleOffSurveyName = $this->input->post('title_officer_survey_name');
+        if (!empty($titleOffSurveyId)) {
+            $this->load->library('order/survey');
+            $this->load->model('order/apiLogs');
+            $endPoint = 'surveys/' . $titleOffSurveyId . '/responses/bulk';
+            $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+            if (isset($result) && !empty($result)) {
+                $response = json_decode($result, true);
+                $questionAverages = [];
+                $textComment = [];
+                $ratingArray = [];
+                if (isset($response['data'])) {
+                    foreach ($response['data'] as $res) {
+                        $ratingArr = [];
+                        $ratingArr['sales_rep'] = '-';
+                        if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
+                            $orderId = $res['custom_variables']['order_id'];
+                            $salesRepDetails = $this->order->getSalesRepForOrder($orderId);
+                            // echo "<pre>";
+                            // print_r($salesRepDetails);die;
+                            $ratingArr['sales_rep'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
+                        }
+                        $ratingData['titleOfficer'] = $titleOffSurveyName;
+                        foreach ($res['pages'] as $page) {
+                            foreach ($page['questions'] as $key => $question) {
+                                $questionId = $question['id'];
+                                foreach ($question['answers'] as $answer) {
+                                    if (isset($answer['choice_metadata']['weight'])) {
+                                        // $ratingArr['Q'.($key+1)] = (int)$answer['choice_metadata']['weight'];
+                                        $ratingArr[$questionId] = (int)$answer['choice_metadata']['weight'];
+                                        $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
+                                    }
+                                    if (isset($answer['text']) && !empty($answer['text'])) {
+                                        $ratingArr['comment'] = $answer['text'];
+                                        $textComment[] = $answer['text'];
+                                    }
+                                }
+                            }
+                        }
+                        $ratingArray[] = $ratingArr;
+                    }
+                    // Calculate average for each question
+                    $finalAverages = [];
+                    $i = 1;
+                    foreach ($questionAverages as $questionId => $weights) {
+                        $finalAverages['Q'.$i] = number_format(array_sum($weights) / count($weights), 2);
+                        $i++;
+                    }
+                    $ratingData['rating'] = $ratingArray;
+                    // print_r($page);die;
+                    $ratingData['avg'] = $finalAverages;
+                    $ratingData['textComment'] = $textComment;
+                    $survey['survey_cards'] = $this->surveyReportCards($ratingData);
+                    $survey['survey_rating_details'] = $this->surveyReportRating($ratingData);
+                    // $survey['title_officer_list'] = $titleOfficerList;
+                }
+            }
+        }
+        if (!empty($survey)){
+            $res = array('status' => 'success', 'survey' => $survey);
+        } else {
+            $res = array('status' => 'error', 'msg' => "Please select file.");
+        }
+        echo json_encode($res);exit;
+    }
+
+    public function surveyReportCards($data) {
+        // echo "<pre>";
+        // print_r($this->salesdashboardtemplate->show("order/common/survey", "survey_report_cards", ['value' => $data]));die;
+        // $results = $this->load->view('order/review_file_summary', $data, true);
+        return $this->load->view('order/common/survey/survey_report_cards', $data, true);
+        // echo $this->salesdashboardtemplate->show("order/common/survey", "survey_report_cards", ['value' => $data]);
+    }
+
+    public function surveyReportRating($data) {
+        return $this->load->view('order/common/survey/survey_report_rating_details', $data, true);
     }
 }
