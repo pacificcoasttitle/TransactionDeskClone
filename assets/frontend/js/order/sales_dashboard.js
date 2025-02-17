@@ -166,6 +166,43 @@ $(document).ready(function () {
             $(".custom__task_card .custom__task_collapse").collapse('hide');
         });
     }
+
+    $("#sales_user_commission_filter").on("change", function () {
+        var user_id = $(this).val();
+        window.location.replace(base_url + 'sales-commission/' + user_id);
+    });
+
+    $("#title_officer_list").on("change", function () {
+        var title_officer_survey_id = $(this).val();
+        var title_officer_survey_name = $(this).find("option:selected").text();
+        if (title_officer_survey_id) {
+            $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+            $('#page-preloader').css('display', 'block');
+            $.ajax({
+                url: base_url + "get-survey-details",
+                type: "post",
+                data: {
+                    title_officer_survey_id: title_officer_survey_id,
+                    title_officer_survey_name: title_officer_survey_name
+                },
+                dataType: "html",
+                success: function (response) {
+
+                    var results = JSON.parse(response);
+                    console.log(results);
+                    if (results.status == 'success') {
+
+                        $('.survey-cards').html(results.survey.survey_cards);
+                        $('.survey-table').html(results.survey.survey_rating_details);
+                    }
+                    else if (results.status == 'error') {
+                        alert(results.msg);
+                    }
+                    $('#page-preloader').css('display', 'none');
+                }
+            });
+        }
+    });
 });
 
 if (typeof (salesData) != "undefined" && salesData !== null) {
@@ -589,4 +626,16 @@ function getRevenueDataBasedOnMonth(month) {
             // }, 5000);
         }
     });
+}
+
+function displayComment(comments) {
+    if (comments.length > 0) {
+        // let listHtml = "";
+        // commentsArray.forEach(function (comment) {
+        //     listHtml += `<li class="list-group-item">${comment}</li>`;
+        // });
+        // $("#commentList").html(listHtml);
+        $("#commentList").html(comments);
+        $("#commentModal").modal("show");
+    }
 }

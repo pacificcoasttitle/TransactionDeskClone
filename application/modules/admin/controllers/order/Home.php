@@ -20,6 +20,7 @@ class Home extends MX_Controller
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
 
+    private $version = '09';
     public function __construct()
     {
         parent::__construct();
@@ -7060,5 +7061,197 @@ class Home extends MX_Controller
 
         echo json_encode($res);
         exit;
+    }
+
+    // public function surveys()
+    // {
+    //     $data = array();
+    //     $data['title'] = 'PCT Order: Surveys';
+        
+    //     $this->load->library('order/survey');
+    //     $this->load->model('order/apiLogs');
+    //     $endPoint = 'surveys';
+    //     $userdata['email'] = $userdata['email_address'];
+    //     // $logid = $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), array(), 0, 0);
+    //     $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+    //     // $this->apiLogs->syncLogs($v['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
+    //     $survey = [];
+    //     if (isset($result) && !empty($result)) {
+    //         $response = json_decode($result, true);
+    //         if (isset($response['data']) && !empty($response['data'])) {
+    //             foreach ($response['data'] as $key => $value) {
+    //                 $arr = [];
+    //                 $arr['id'] = $value['id'];
+    //                 $arr['title'] = $value['title'];
+    //                 $arr['nickname'] = $value['nickname'];
+    //                 $arr['href'] = $value['href'];
+    //                 $endPoint = 'surveys/' . $value['id'] . '/responses/bulk';
+    //                 $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+    //                 if (isset($result) && !empty($result)) {
+    //                     $response = json_decode($result, true);
+    //                     $questionAverages = [];
+    //                     $textComment = [];
+    //                     // echo "<pre>";
+    //                     if (isset($response['data'])) {
+    //                         foreach ($response['data'] as $res) {
+    //                             foreach ($res['pages'] as $page) {
+    //                                 foreach ($page['questions'] as $question) {
+    //                                     $questionId = $question['id'];
+    //                                     foreach ($question['answers'] as $answer) {
+    //                                         if (isset($answer['choice_metadata']['weight'])) {
+    //                                             $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
+    //                                         }
+    //                                         if (isset($answer['text']) && !empty($answer['text'])) {
+    //                                             $textComment[] = $answer['text'];
+    //                                         }
+    //                                     }
+    //                                 }
+    //                             }
+    //                         }
+    //                         // Calculate average for each question
+    //                         $finalAverages = [];
+    //                         $i = 1;
+    //                         foreach ($questionAverages as $questionId => $weights) {
+    //                             $finalAverages['Q'.$i] = array_sum($weights) / count($weights);
+    //                             $i++;
+    //                         }
+    //                         // print_r($page);die;
+    //                         $arr['avg'] = $finalAverages;
+    //                         $arr['textComment'] = $textComment;
+    //                     }
+    //                 }
+    //                 $survey[] = $arr;
+    //                 // echo "<pre>";
+    //                 // print_r($response);die;
+    //                 // $surveyId = $value['id'];
+    //                 // $endPoint = 'surveys/' . $surveyId . '/collect';
+    //             }
+    //         }
+    //     }
+    //     // echo "<pre>";
+    //     // print_r($survey);die;
+    //     $data['survey'] = $survey;
+    //     $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=6'));
+    //     $this->admintemplate->show("order/home", "surveys", $data);
+    // }
+
+    public function surveys()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Surveys';
+        
+        $this->load->library('order/survey');
+        $this->load->model('order/apiLogs');
+        $endPoint = 'surveys';
+        // $userdata['email'] = $userdata['email_address'];
+        // $logid = $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), array(), 0, 0);
+        $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+        // $this->apiLogs->syncLogs($v['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
+        $survey = [];
+        $titleOfficerList = [];
+
+        if (isset($result) && !empty($result)) {
+            $response = json_decode($result, true);
+            // echo "<pre>";
+            // print_r($response);die;
+            if (isset($response['data']) && !empty($response['data'])) {
+                foreach ($response['data'] as $key => $value) {
+                    $arr = [];
+                    $arr['id'] = $value['id'];
+                    $arr['title'] = $value['title'];
+                    $arr['nickname'] = $value['nickname'];
+                    $arr['href'] = $value['href'];
+                    $titleOfficerList[] = $arr;
+                    // break;
+                }
+            }
+        }
+        $ratingData = [];
+        if (!empty($titleOfficerList)) {
+            // $titleOffSurveyId = "417131721"; 
+            $titleOffSurveyId = $titleOfficerList['0']['id']; 
+            $endPoint = 'surveys/' . $titleOffSurveyId . '/responses/bulk';
+            $result = $this->survey->make_request('GET', $endPoint, array(), $userdata);
+            if (isset($result) && !empty($result)) {
+                $response = json_decode($result, true);
+                $questionAverages = [];
+                $textComment = [];
+                $ratingArray = [];
+                // echo "<pre>";
+                if (isset($response['data'])) {
+                    foreach ($response['data'] as $res) {
+                        $ratingArr = [];
+                        $ratingArr['sales_rep'] = '-';
+                        if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
+                            $orderId = $res['custom_variables']['order_id'];
+                            $salesRepDetails = $this->order->getSalesRepForOrder($orderId);
+                            // echo "<pre>";
+                            // print_r($salesRepDetails);die;
+                            $ratingArr['sales_rep'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
+                        }
+                        $ratingData['titleOfficer'] = $titleOfficerList['0']['title'];
+                        foreach ($res['pages'] as $page) {
+                            foreach ($page['questions'] as $key => $question) {
+                                $questionId = $question['id'];
+                                foreach ($question['answers'] as $answer) {
+                                    if (isset($answer['choice_metadata']['weight'])) {
+                                        $ratingArr[$questionId] = (int)$answer['choice_metadata']['weight'];
+                                        // $ratingArr['Q'.($key+1)] = (int)$answer['choice_metadata']['weight'];
+                                        $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
+                                    }
+                                    if (isset($answer['text']) && !empty($answer['text'])) {
+                                        $ratingArr['comment'] = $answer['text'];
+                                        $textComment[] = $answer['text'];
+                                    }
+                                }
+                            }
+                        }
+                        $ratingArray[] = $ratingArr;
+                    }
+                    // Calculate average for each question
+                    $finalAverages = [];
+                    $i = 1;
+                    foreach ($questionAverages as $questionId => $weights) {
+                        $finalAverages['Q'.$i] = number_format(array_sum($weights) / count($weights), 2);
+                        $i++;
+                    }
+                    $ratingData['rating'] = $ratingArray;
+                    // print_r($page);die;
+                    $ratingData['avg'] = $finalAverages;
+                    $ratingData['textComment'] = $textComment;
+                    $survey['survey_cards'] = $this->order->surveyReportCards($ratingData);
+                    $survey['survey_rating_details'] = $this->order->surveyReportRating($ratingData);
+                    $survey['title_officer_list'] = $titleOfficerList;
+                }
+            }
+        }
+        
+        // echo "<pre>";
+        // print_r($ratingData);
+        // print_r($survey);die;
+        // $data['survey'] = $survey;
+        
+        // $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=' . $this->version));
+        $this->admintemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
+        // $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        // $this->salesdashboardtemplate->show("order/common", "survey_result", $survey);
+        $this->admintemplate->addJS(base_url('assets/backend/js/survey.js?v=' . $this->version));
+        $this->admintemplate->show("order/home", "surveys", $survey);
+    }
+
+    public function sendSurveySampleEmail()
+    {
+        $input = $this->input->post();
+        $data['email_address'] = $input['email_address'];
+        $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W';
+        $mail_result = $this->order->sendSurveySampleEmail($data);
+        
+        if ($mail_result) {
+            echo json_encode(['status' => 'success', 'message' => 'Mail sent successfully to : ' . $input['email_address']]);
+            exit;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Something went wrong, Please try later']);
+            exit;
+        }
     }
 }

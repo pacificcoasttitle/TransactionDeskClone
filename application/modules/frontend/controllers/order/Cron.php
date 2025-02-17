@@ -4950,6 +4950,52 @@ class Cron extends MX_Controller
         }
     }
 
+    public function sendSurvayEmail($data) {
+        if (!empty($data['title_officer_email'])) {
+            if ($data['title_officer_email'] == 'unit66@pct.com') { 
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W?order_id=' . $data['order_id']; // Clive - 143260
+            } else if ($data['title_officer_email'] == 'jjean@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/P3X7KX8?order_id=' . $data['order_id']; // Jim
+            } else if ($data['title_officer_email'] == 'unit33@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/PG7SJRG?order_id=' . $data['order_id']; // Eddie
+            } else if ($data['title_officer_email'] == 'unit88@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/6BJZ79Y?order_id=' . $data['order_id']; // Rachel
+            } else {
+                exit;
+            }
+        }
+        $message = $this->load->view('emails/surveymonkey_email.php', $data, true);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        // $subject = 'Thank You!';
+        $to = $data['escrow_officer_email'];
+
+        // $to = array('piyush.j@crestinfosystems.com', 'ghernandez@pct.com');
+        $cc = array('piyush.j@crestinfosystems.com');
+
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = "We'd Love Your Feedback";
+        // $to = $escrow_email_address;
+        // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+        // $cc = array('piyush.j@crestinfosystems.com');
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+        // $cc = array();
+        $this->load->helper('sendemail');
+        $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array(), $data['order_id'], 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
+        echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
+    }
+
     public function sendThankYouEmailForClosedOrder($fileNumbers)
     {
         $this->db->select('order_details.file_id,

@@ -261,6 +261,8 @@ $route['get-revenue-data'] = 'frontend/order/salesRep/getRevenueData';
 $route['send-package/:any'] = 'frontend/order/dashboardMail/sendPackage';
 $route['add-buyer-on-order-mail'] = 'frontend/order/dashboardMail/addBuyerOnOrder';
 $route['add-seller-on-order-mail'] = 'frontend/order/dashboardMail/addSellerOnOrder';
+$route['survey-result'] = 'frontend/order/common/surveysResult';
+$route['get-survey-details'] = 'frontend/order/common/getSurveyDetails';
 
 $route['national-form'] = 'frontend/order/dashboardMail/nationalForm';
 /* Route for PCT-Order backend*/
