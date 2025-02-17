@@ -4864,9 +4864,11 @@ class Cron extends MX_Controller
             property_details.full_address,
             property_details.escrow_lender_id,
             escrow_details.email_address as escrow_email,
+            title_officer.email_address as title_officer_email,
             listing_agent.email_address as listing_agent_email,
             buyer_agent.email_address as buyer_agent_email,
             sales_details.email_address as sales_rep_email,
+            pct_order_partner_company_info.email as escrow_officer_email,
             transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where_in('order_details.file_number', $fileNumbers);
@@ -4879,8 +4881,10 @@ class Cron extends MX_Controller
         $this->db->join('customer_basic_details as client ', 'client.id = order_details.customer_id', 'inner');
         $this->db->join('customer_basic_details as sales_details ', 'sales_details.id = transaction_details.sales_representative', 'inner');
         $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id', 'left');
+        $this->db->join('customer_basic_details as title_officer', 'title_officer.id = transaction_details.title_officer', 'left');
         $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id', 'left');
         $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id', 'left');
+        $this->db->join('pct_order_partner_company_info', 'pct_order_partner_company_info.partner_id = order_details.escrow_officer_id', 'left');
         // $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc');
         $query = $this->db->get();
         $result = $query->result_array();
@@ -4927,7 +4931,7 @@ class Cron extends MX_Controller
                     $subject = 'Your Order ' . $res['file_number'] . ' has been closed';
                     // $to = $escrow_email_address;
                     // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
-                    // $cc = array('piyush.j@crestinfosystems.com');
+                    // $to = array('piyush.j@crestinfosystems.com');
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -4936,7 +4940,7 @@ class Cron extends MX_Controller
                         'message' => json_encode($data),
                         'cc' => $cc,
                     );
-                    $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+                    $to = ['piyush.j@crestinfosystems.com', 'ghernandez@pct.com'];
                     // $cc = array();
                     $this->load->helper('sendemail');
                     $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, array(), $res['order_id'], 0);
@@ -4944,10 +4948,59 @@ class Cron extends MX_Controller
                     $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, array('status' => $escrow_mail_result), $res['orderId'], $logid);
                     echo "Mails sent successfully for Order Number : " . $res['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
                 }
+                if (!empty($res['escrow_officer_email'])) {
+                    $this->sendSurvayEmail($res);
+                }
 
             }
 
         }
+    }
+
+    public function sendSurvayEmail($data) {
+        if (!empty($data['title_officer_email'])) {
+            if ($data['title_officer_email'] == 'unit66@pct.com') { 
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W?order_id=' . $data['order_id']; // Clive - 143260
+            } else if ($data['title_officer_email'] == 'jjean@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/P3X7KX8?order_id=' . $data['order_id']; // Jim
+            } else if ($data['title_officer_email'] == 'unit33@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/PG7SJRG?order_id=' . $data['order_id']; // Eddie
+            } else if ($data['title_officer_email'] == 'unit88@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/6BJZ79Y?order_id=' . $data['order_id']; // Rachel
+            } else {
+                exit;
+            }
+        }
+        $message = $this->load->view('emails/surveymonkey_email.php', $data, true);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        // $subject = 'Thank You!';
+        $to = $data['escrow_officer_email'];
+
+        // $to = array('piyush.j@crestinfosystems.com', 'ghernandez@pct.com');
+        $cc = array('piyush.j@crestinfosystems.com');
+
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = "We'd Love Your Feedback";
+        // $to = $escrow_email_address;
+        // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+        // $cc = array('piyush.j@crestinfosystems.com');
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+        // $cc = array();
+        $this->load->helper('sendemail');
+        $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array(), $data['order_id'], 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
+        echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
     }
 
     public function sendThankYouEmailForClosedOrder($fileNumbers)

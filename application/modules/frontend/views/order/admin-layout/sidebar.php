@@ -67,6 +67,14 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Summary</span>
 			</a>
 		</li>
+		<?php if (($userdata['is_sales_rep_manager'] == 1)) {?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'survey-result') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>survey-result">
+				<i class="fas fa-poll-h"></i>
+				<span>Survey Result</span>
+			</a>
+		</li>
+		<?php }?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'logout') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url() . 'logout'; ?>">
 				<i class="fa fa-sign-out"></i>

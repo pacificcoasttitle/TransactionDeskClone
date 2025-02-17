@@ -18,6 +18,7 @@ if (
     $this->uri->uri_string() == 'order/admin/notifications' ||
     $this->uri->uri_string() == 'order/admin/holidays' ||
     $this->uri->uri_string() == 'order/admin/settings' ||
+    $this->uri->uri_string() == 'order/admin/surveys' ||
     $this->uri->uri_string() == 'order/admin/manual-report' ||
     preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
     preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string()) ||
@@ -394,6 +395,9 @@ if (
 
 							<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*manual-report*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/manual-report'; ?>">
 								Manual Report
+							</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/surveys') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/surveys'; ?>">
+								Surveys
 							</a>
 						<?php endif;?>
 					</div>
