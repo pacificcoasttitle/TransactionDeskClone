@@ -4892,6 +4892,7 @@ class Cron extends MX_Controller
         $configData = $this->order->getConfigData();
         $loanOrderEmailSendStatus = $configData['loan_order_closed_email_send_off']['is_enable'];
         $saleOrderEmailSendStatus = $configData['sale_order_closed_email_send_off']['is_enable'];
+        $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
 
         if (!empty($result)) {
             $checkFlag = 0;
@@ -4948,7 +4949,7 @@ class Cron extends MX_Controller
                     $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, array('status' => $escrow_mail_result), $res['orderId'], $logid);
                     echo "Mails sent successfully for Order Number : " . $res['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
                 }
-                if (!empty($res['escrow_officer_email'])) {
+                if (($enableSurveyEmailFlag == 1) && !empty($res['escrow_officer_email'])) {
                     $this->sendSurvayEmail($res);
                 }
 

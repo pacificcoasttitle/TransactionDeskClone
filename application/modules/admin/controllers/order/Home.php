@@ -5781,6 +5781,12 @@ class Home extends MX_Controller
             );
             $this->db->update('pct_configs', $underwrittenParnerAddFlag, array('slug' => 'add_underwriten_partner_via_api'));
 
+            $enable_survey_email = isset($input['enable_survey_email']) && !empty($input['enable_survey_email']) ? 1 : 0;
+            $enableSurveyEmailFlag = array(
+                'is_enable' => $enable_survey_email,
+            );
+            $this->db->update('pct_configs', $enableSurveyEmailFlag, array('slug' => 'enable_survey_email'));
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -5810,6 +5816,7 @@ class Home extends MX_Controller
         $res['enable_create_order_submit_button'] = $data['enable_create_order_submit_button']['is_enable'];
         $res['enable_ion_fraud_checking'] = $data['enable_ion_fraud_checking']['is_enable'];
         $res['add_underwriten_partner_via_api'] = $data['add_underwriten_partner_via_api']['is_enable'];
+        $res['enable_survey_email'] = $data['enable_survey_email']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
