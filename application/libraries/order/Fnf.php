@@ -365,7 +365,7 @@ class Fnf
         }
         // echo "Outside if";die;
         $endPoint = 'v3/CPLManagement.svc';
-
+        $lender_address = str_replace(["\r", "\n"], '', $orderDetails['lender_address']);
         $postData = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
                         <s:Body>
                             <GenerateCPLRequest xmlns="http://cpl.fnf.com/services/v3/cplmanagement/">
@@ -398,7 +398,7 @@ class Fnf
 
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
-                                        <a:Value>' . $orderDetails['lender_address'] . '</a:Value>
+                                        <a:Value>' . htmlspecialchars($lender_address, ENT_XML1, 'UTF-8') . '</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender City]</a:Name>
@@ -538,7 +538,7 @@ class Fnf
             $lenderName = $lenderDetails['company_name'];
             $lenderAttnName = $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         }
-
+        $lender_address = str_replace(["\r", "\n"], '', $orderDetails['lender_address']);
         $endPoint = 'v3/CPLManagement.svc';
         $postData = '<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
                         <s:Body>
@@ -571,7 +571,7 @@ class Fnf
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender Address 1]</a:Name>
-                                        <a:Value>' . $orderDetails['lender_address'] . '</a:Value>
+                                        <a:Value>' . htmlspecialchars($lender_address, ENT_XML1, 'UTF-8') . '</a:Value>
                                     </a:NameValue>
                                     <a:NameValue>
                                         <a:Name>[Lender City]</a:Name>
