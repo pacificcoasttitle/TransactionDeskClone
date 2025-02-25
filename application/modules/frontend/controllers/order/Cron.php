@@ -3602,7 +3602,7 @@ class Cron extends MX_Controller
 
                 // print_r($order);die;
                 $completed_date = null;
-                if (! empty($closedDate)) {
+                if (!empty($closedDate)) {
                     $myDateTime     = DateTime::createFromFormat('m/d/Y h:i:s A', $closedDate);
                     $completed_date = $myDateTime->format('Y-m-d H:i:s');
                 }
@@ -3619,7 +3619,7 @@ class Cron extends MX_Controller
 
                 $updateArray[] = [
                     'file_number'                => $file_number,
-                    'resware_status'             => strtolower($fileStatus),
+                    'softpro_status'             => strtolower($fileStatus),
                     'resware_closed_status_date' => $completed_date,
                     // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                     'updated_at'                 => date('Y-m-d H:i:s'),
@@ -3633,7 +3633,7 @@ class Cron extends MX_Controller
                 }
             }
 
-            $updateData = ['resware_status' => 'open'];
+            $updateData = ['softpro_status' => 'open'];
             $this->db->set($updateData);
             $this->db->where('lp_file_number IS NOT NULL');
             $this->db->where('file_number', 0);
@@ -6675,7 +6675,11 @@ class Cron extends MX_Controller
 
     public function spSyncFailedDocument() {
         
-        $records = $this->db->select('id, order_number, file_list, document_name')->from('sp_file_upload_logs')->where('is_synced', 0)->group_by('order_number')->get()->result_array();
+        $records = $this->db->select('id, order_number, file_list, document_name')
+                            ->from('sp_file_upload_logs')
+                            ->where('is_synced', 0)
+                            // ->group_by('order_number')
+                            ->get()->result_array();
         if (!empty($records)) {
             foreach ($records as $key => $value) {
                 $fileData = [
@@ -6700,8 +6704,9 @@ class Cron extends MX_Controller
                         ];
                     } else {
                         $updateData[] = [
-                            'is_synced' => 0,
-                            'id' => $res['Id']
+                            'is_synced' => (strtolower($res['Message']) == 'order was not found.') ? 1 : 0,
+                            'id' => $res['Id'],
+                            'reason' => $res['Message'],
                         ];
                     }
                 }

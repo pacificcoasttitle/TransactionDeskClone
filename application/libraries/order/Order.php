@@ -60,7 +60,7 @@ class Order
             order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,
             order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, 
             property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
+            order_details.created_at, order_details.resware_status, order_details.softpro_status, order_details.is_softpro_order, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
             pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, 
             pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
@@ -91,13 +91,14 @@ class Order
 
             if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
-                if ($order_type == 'resware_orders' || $order_type == 'open') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders' || $order_type == 'open') {
                     $this->CI->db->or_like('order_details.file_number', $keyword);
                 } else {
                     $this->CI->db->or_like('order_details.lp_file_number', $keyword);
                 }
                 $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)));
-                $this->CI->db->or_like('order_details.resware_status', $keyword)->group_end();
+                $this->CI->db->or_like('order_details.resware_status', $keyword);
+                $this->CI->db->or_like('order_details.softpro_status', $keyword)->group_end();
             } else {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
                 $this->CI->db->or_like('order_details.file_number', $keyword)->group_end();
@@ -105,9 +106,15 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->group_end();
                 } else {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('order_details.resware_status', $status);
+                    $this->CI->db->or_where('order_details.softpro_status', $status);
+                    $this->CI->db->group_end();
                 }
             }
 
@@ -138,7 +145,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -212,13 +219,14 @@ class Order
 
             if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
-                if ($order_type == 'resware_orders' || $order_type == 'open') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders' || $order_type == 'open') {
                     $this->CI->db->or_like('order_details.file_number', $keyword);
                 } else {
                     $this->CI->db->or_like('order_details.lp_file_number', $keyword);
                 }
                 $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)));
-                $this->CI->db->or_like('order_details.resware_status', $keyword)->group_end();
+                $this->CI->db->or_like('order_details.resware_status', $keyword);
+                $this->CI->db->or_like('order_details.softpro_status', $keyword)->group_end();
             } else {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
                 $this->CI->db->or_like('order_details.file_number', $keyword)->group_end();
@@ -226,9 +234,15 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->group_end();
                 } else {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('order_details.resware_status', $status);
+                    $this->CI->db->or_where('order_details.softpro_status', $status);
+                    $this->CI->db->group_end();
                 }
             }
 
@@ -251,7 +265,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -343,9 +357,15 @@ class Order
         } else {
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->group_end();
                 } else {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('order_details.resware_status', $status);
+                    $this->CI->db->or_where('order_details.softpro_status', $status);
+                    $this->CI->db->group_end();
                 }
             }
 
@@ -376,7 +396,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -456,9 +476,15 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
+                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->group_end();
                 } else {
+                    $this->CI->db->group_start();
                     $this->CI->db->where('order_details.resware_status', $status);
+                    $this->CI->db->or_where('order_details.softpro_status', $status);
+                    $this->CI->db->group_end();
                 }
             }
 
@@ -481,7 +507,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders') {
+                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -616,6 +642,7 @@ class Order
             order_details.westcor_file_id,
             order_details.is_regenerate_cpl,
             order_details.created_at as opened_date,
+            order_details.resware_closed_status_date as closed_date,
             order_details.fnf_agent_id,
             order_details.fnf_document_id,
             order_details.cpl_document_name,
@@ -2235,41 +2262,164 @@ class Order
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
         /*$from_name = 'Pacific Coast Title Company';
-    $from_mail = env('FROM_EMAIL');
-    $order_message_body = 'Please check attachment for CPL document.';
-    $message = $order_message_body;
-    $subject = 'CPL Document';
-    $to = $orderDetails['lender_email'];
-    $cc = array();
-    if (!empty($orderDetails['sales_representative'])) {
-    $this->CI->db->select('*')
-    ->from('pct_order_sales_rep');
-    $this->CI->db->where('id', $orderDetails['sales_representative']);
-    $query = $this->CI->db->get();
-    $salesResult = $query->row_array();
-    if (!empty($salesResult)) {
-    $cc = array($salesResult['email_address']);
-    }
-    }
-    $bcc = array();
-    $file = array(base_url().'uploads/documents/'.$document_name);
-    $this->CI->load->helper('sendemail');
-    $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
+        $from_mail = env('FROM_EMAIL');
+        $order_message_body = 'Please check attachment for CPL document.';
+        $message = $order_message_body;
+        $subject = 'CPL Document';
+        $to = $orderDetails['lender_email'];
+        $cc = array();
+        if (!empty($orderDetails['sales_representative'])) {
+        $this->CI->db->select('*')
+        ->from('pct_order_sales_rep');
+        $this->CI->db->where('id', $orderDetails['sales_representative']);
+        $query = $this->CI->db->get();
+        $salesResult = $query->row_array();
+        if (!empty($salesResult)) {
+        $cc = array($salesResult['email_address']);
+        }
+        }
+        $bcc = array();
+        $file = array(base_url().'uploads/documents/'.$document_name);
+        $this->CI->load->helper('sendemail');
+        $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
     }
 
-    public function uploadProposedDocumentToResware($document_name, $orderDetails, $binaryData)
+    public function uploadCPLDocumentToSoftpro($documentName, $orderDetails, $binaryData)
     {
         $this->CI->load->model('order/document');
         $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
+        $this->CI->load->model('order/fileDocument_model');
+        $orderNumber = $orderDetails['file_number'];
         $userdata = $this->CI->session->userdata('user');
         if (empty($userdata)) {
             $userdata['id'] = 0;
         }
-        $fileSize = filesize('./uploads/proposed-insured/' . $document_name);
+        $fileSize = filesize('./uploads/documents/' . $documentName);
         $documentData = array(
-            'document_name' => $document_name,
-            'original_document_name' => $document_name,
+            'document_name' => $documentName,
+            'original_document_name' => $documentName,
+            'document_type_id' => 1037,
+            'document_size' => $fileSize,
+            'user_id' => $userdata['id'],
+            'order_id' => $orderDetails['order_id'],
+            'description' => 'CPL Document',
+            'is_sync' => 1,
+            'is_prelim_document' => 0,
+            'is_cpl_doc' => 1,
+        );
+        $documentId = $this->CI->document->insert($documentData);
+        $saveData = array(
+            'name' => 'CPL Document',
+            'order_number' => $orderNumber,
+            'file_path' => $documentName,
+            'added_by' => $userdata['id'],
+            'is_desk_file' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+        );
+        $this->CI->fileDocument_model->insert($saveData);
+
+        $fileList[] = [
+            "FolderName" => 'desk-file-upload',
+            "FileURL" => env('AWS_PATH') . "documents/" . $documentName,
+        ];
+        $logData = [
+            'order_number' => $orderNumber,
+            'document_name' => $documentName,
+            'file_list' => json_encode($fileList)
+        ];
+        
+        $fileUploadLogId = $this->save_sp_file_upload_log($logData);
+
+        $fileData = [
+            "Id" => $fileUploadLogId,
+            "OrderNumber" => $orderNumber,
+            "DocumentName" => $documentName,
+            "FileList" => $fileList,
+        ];
+        $fileUploadReq[] = $fileData;
+        $reqData = json_encode($fileUploadReq);
+        // print_r($reqData);
+        $result = $this->CI->softpro->make_request('POST', 'upload_document', $reqData);
+        $response = json_decode($result, true);
+        if (isset($response) && !empty($response)) {
+            foreach ($response as $key => $res) {
+                if ($res['Status'] == 200) {
+                    $updateData[] = [
+                        'is_synced' => 1,
+                        'id' => $res['Id']
+                    ];
+                } else {
+                    $updateData[] = [
+                        'is_synced' => 0,
+                        'id' => $res['Id']
+                    ];
+                }
+            }
+        }
+
+        foreach ($updateData as $key => $update_row) {
+            $this->CI->db->where('id', $update_row['id']);
+            $this->CI->db->update('sp_file_upload_logs', $update_row);
+        }
+        // $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
+        // $documentApiData = array(
+        //     'DocumentName' => $document_name,
+        //     'DocumentType' => array(
+        //         'DocumentTypeID' => 1037,
+        //     ),
+        //     'Description' => 'Proposed Insured Document',
+        //     'InternalOnly' => false,
+        //     'DocumentBody' => $binaryData,
+        // );
+        // $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        // $user_data = array();
+        // if (!empty($userdata['id'])) {
+        //     if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+        //         $user_data['admin_api'] = 1;
+        //     } else {
+        //         $user_data = array();
+        //     }
+        // } else {
+        //     $user_data['admin_api'] = 1;
+        // }
+        // $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+        // $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        // $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        // $res = json_decode($result);
+
+        /* Start add resware api logs */
+        $reswareLogData = array(
+            'request_type' => 'upload_cpl_document_to_softpro',
+            'request_url' => 'upload_document',
+            'file_number' => $orderNumber,
+            'request' => $reqData,
+            'response' => $result,
+            'status' => 'success',
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+
+        $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }
+
+    public function uploadProposedDocumentToSoftpro($documentName, $orderDetails, $binaryData)
+    {
+        $this->CI->load->model('order/document');
+        $this->CI->load->library('order/resware');
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->model('order/fileDocument_model');
+        $orderNumber = $orderDetails['file_number'];
+        $userdata = $this->CI->session->userdata('user');
+        if (empty($userdata)) {
+            $userdata['id'] = 0;
+        }
+        $fileSize = filesize('./uploads/proposed-insured/' . $documentName);
+        $documentData = array(
+            'document_name' => $documentName,
+            'original_document_name' => $documentName,
             'document_type_id' => 1037,
             'document_size' => $fileSize,
             'user_id' => $userdata['id'],
@@ -2280,38 +2430,92 @@ class Order
             'is_proposed_insured_doc' => 1,
         );
         $documentId = $this->CI->document->insert($documentData);
-        $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
-        $documentApiData = array(
-            'DocumentName' => $document_name,
-            'DocumentType' => array(
-                'DocumentTypeID' => 1037,
-            ),
-            'Description' => 'Proposed Insured Document',
-            'InternalOnly' => false,
-            'DocumentBody' => $binaryData,
+        $saveData = array(
+            'name' => 'Proposed Insured Document',
+            'order_number' => $orderNumber,
+            'file_path' => $documentName,
+            'added_by' => $userdata['id'],
+            'is_desk_file' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
         );
-        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+        $this->CI->fileDocument_model->insert($saveData);
 
-        $user_data = array();
-        if (!empty($userdata['id'])) {
-            if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
-                $user_data['admin_api'] = 1;
-            } else {
-                $user_data = array();
+        $fileList[] = [
+            "FolderName" => 'desk-file-upload',
+            "FileURL" => env('AWS_PATH') . "proposed-insured/" . $documentName,
+        ];
+        $logData = [
+            'order_number' => $orderNumber,
+            'document_name' => $documentName,
+            'file_list' => json_encode($fileList)
+        ];
+        
+        $fileUploadLogId = $this->save_sp_file_upload_log($logData);
+
+        $fileData = [
+            "Id" => $fileUploadLogId,
+            "OrderNumber" => $orderNumber,
+            "DocumentName" => $documentName,
+            "FileList" => $fileList,
+        ];
+        $fileUploadReq[] = $fileData;
+        $reqData = json_encode($fileUploadReq);
+        // print_r($reqData);
+        $result = $this->CI->softpro->make_request('POST', 'upload_document', $reqData);
+        $response = json_decode($result, true);
+        if (isset($response) && !empty($response)) {
+            foreach ($response as $key => $res) {
+                if ($res['Status'] == 200) {
+                    $updateData[] = [
+                        'is_synced' => 1,
+                        'id' => $res['Id']
+                    ];
+                } else {
+                    $updateData[] = [
+                        'is_synced' => 0,
+                        'id' => $res['Id']
+                    ];
+                }
             }
-        } else {
-            $user_data['admin_api'] = 1;
         }
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-        $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-        $res = json_decode($result);
+
+        foreach ($updateData as $key => $update_row) {
+            $this->CI->db->where('id', $update_row['id']);
+            $this->CI->db->update('sp_file_upload_logs', $update_row);
+        }
+        // $endPoint = 'files/' . $orderDetails['file_id'] . '/documents';
+        // $documentApiData = array(
+        //     'DocumentName' => $document_name,
+        //     'DocumentType' => array(
+        //         'DocumentTypeID' => 1037,
+        //     ),
+        //     'Description' => 'Proposed Insured Document',
+        //     'InternalOnly' => false,
+        //     'DocumentBody' => $binaryData,
+        // );
+        // $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+
+        // $user_data = array();
+        // if (!empty($userdata['id'])) {
+        //     if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
+        //         $user_data['admin_api'] = 1;
+        //     } else {
+        //         $user_data = array();
+        //     }
+        // } else {
+        //     $user_data['admin_api'] = 1;
+        // }
+        // $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+        // $result = $this->CI->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        // $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        // $res = json_decode($result);
 
         /* Start add resware api logs */
         $reswareLogData = array(
-            'request_type' => 'upload_proposed_document_to_resware',
-            'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-            'request' => $document_api_data,
+            'request_type' => 'upload_proposed_document_to_softpro',
+            'request_url' => 'upload_document',
+            'file_number' => $orderNumber,
+            'request' => $reqData,
             'response' => $result,
             'status' => 'success',
             'created_at' => date("Y-m-d H:i:s"),
@@ -4581,5 +4785,43 @@ class Order
         $this->CI->db->insert('sp_file_upload_logs', $data);
         $documentId = $this->CI->db->insert_id();
         return $documentId;
+    }
+
+    public function getTitleOfficerLookupDetails($params)
+    {
+        $table = 'sp_officers';
+        // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
+        $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name, closer_examiner as lookupCode');
+        $this->CI->db->from($table);
+        $this->CI->db->where('is_title_officer', 1);
+        // $this->CI->db->where('status', 1);
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                $this->CI->db->where($key, $val);
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->CI->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->CI->db->where('id', $params['id']);
+                $query = $this->CI->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->CI->db->order_by('id', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->CI->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->CI->db->limit($params['limit']);
+                }
+                $query = $this->CI->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+        //echo $this->CI->db->last_query();exit;
+        // Return fetched data
+        return $result;
     }
 }
