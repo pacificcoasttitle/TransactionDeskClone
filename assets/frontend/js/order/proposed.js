@@ -64,7 +64,7 @@ $(document).ready(function () {
 				LenderCompany: "required",
 				LenderEmailAddress: "required",
 				// LenderName:"required",
-				TitleOfficer: "required",
+				titleOfficer: "required",
 				// loan_amount:"required",
 				loan_number: "required",
 				primary_first_name: "required",
@@ -74,7 +74,7 @@ $(document).ready(function () {
 				branch: "required",
 			},
 			messages: {
-				TitleOfficer: "Please select title officer",
+				titleOfficer: "Please select title officer",
 				loan_number: "Please enter loan number",
 				borrower: "Please enter borrower",
 				lender: "Please enter lender",
@@ -93,7 +93,7 @@ $(document).ready(function () {
 				var LenderAddress = $('#LenderAddress').val();
 				var LenderCity = $('#LenderCity').val();
 				var LenderZipcode = $('#LenderZipcode').val();
-				var TitleOfficer = $('#TitleOfficer').val();
+				var titleOfficer = $('#titleOfficer').val();
 				var loan_amount = $('#loan_amount').val();
 				var loan_number = $('#loan_number').val();
 				// var primary_first_name = $('#primary_first_name').val();
@@ -120,7 +120,7 @@ $(document).ready(function () {
 					url: base_url + "add-order-details",
 					type: "post",
 					data: {
-						TitleOfficer: TitleOfficer,
+						titleOfficer: titleOfficer,
 						loan_amount: loan_amount,
 						loan_number: loan_number,
 						borrowers_vesting: borrowers_vesting,
@@ -502,15 +502,15 @@ $(document).ready(function () {
 	});
 });
 
-function generateProposedInsured(fileId) {
-	if (fileId) {
+function generateProposedInsured(orderId) {
+	if (orderId) {
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 		$.ajax({
 			url: base_url + "generate-proposed-insured",
 			type: "post",
 			data: {
-				fileId: fileId,
+				orderId: orderId,
 			},
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -561,7 +561,7 @@ function generateProposedInsured(fileId) {
 				$('#orderId').val(res.orderDetails.orderId);
 				$('#transaction_id').val(res.orderDetails.transaction_id);
 				$('#property_id').val(res.orderDetails.property_id);
-				$('#fileId').val(res.orderDetails.fileId);
+				// $('#orderId').val(res.orderDetails.id);
 
 				$('#lender_information').modal('show');
 			}

@@ -86,10 +86,11 @@ class FileUpload extends MX_Controller
                                 'file_list' => json_encode($fileList)
                             ];
                             
-                            $id = $this->order->save_sp_file_upload_log($logData);
+                            $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
                         }
 
                         $fileData = [
+                            "Id" => $fileUploadLogId,
                             "OrderNumber" => $orderNumber,
                             "DocumentName" => $documentName,
                             "FileList" => $fileList,

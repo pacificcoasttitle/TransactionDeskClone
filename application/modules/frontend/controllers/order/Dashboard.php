@@ -5,6 +5,7 @@
 class Dashboard extends MX_Controller
 {
 
+    private $version = '01';
     private $dashboard_js_version = '01';
     private $fees_js_version = '01';
     private $order_fee_js_version = '03';
@@ -43,9 +44,9 @@ class Dashboard extends MX_Controller
         $data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
         $data['order_lists'] = $this->order->get_recent_orders();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        // $this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v=dashboard_'.$this->dashboard_js_version) );
+        // $this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v='.$this->version) );
         // $this->template->show("order", "dashboard", $data);
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/dashboard.js?v=prelim_order_' . $this->dashboard_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "dashboard", $data);
     }
 
@@ -177,7 +178,7 @@ class Dashboard extends MX_Controller
     public function fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/fees.js?v=fees_' . $this->fees_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/fees.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "fees", $data);
     }
 
@@ -207,7 +208,7 @@ class Dashboard extends MX_Controller
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = "<a href='" . base_url() . "get-fees/" . $order['file_id'] . "'>
+                $nestedData[] = "<a href='" . base_url() . "get-fees/" . $order['id'] . "'>
 									<button type='submit' class='btn btn-info btn-icon-split'>
 										<span class='icon text-white-50'>
 											<i class='fas fa-file'></i>
@@ -230,101 +231,135 @@ class Dashboard extends MX_Controller
     public function get_fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        $fileId = $this->uri->segment(2);
-        $orderDetails = $this->order->get_order_details($fileId);
+        $order_id = $this->uri->segment(2);
+        $params = [
+            'order_details.id' => $order_id,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
         // echo "<pre>";
         // print_r($orderDetails);die;
         $post_data = $result_decoded = array();
-        $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
-        $userData = array(
-            'admin_api' => 1,
-        );
-
-        $result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
-        if (json_decode($result) && count(json_decode($result)->Files)) {
-            $result_decoded = json_decode($result);
-            $loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
-            $salesAmount = $result_decoded->Files[0]->SalesPrice;
-        }
-
-        $result_decoded = json_decode($result);
+        
 
         if (!empty($orderDetails)) {
             $post_data['seller'] = $orderDetails['primary_owner'];
         } else {
             $post_data['seller'] = '';
         }
-        $property_data = $result_decoded->Files[0]->Properties[0];
-        $buyer_data = $result_decoded->Files[0]->Buyers[0];
-        $buyer_name = $buyer_data->Primary;
-
-        $post_data['file_id'] = $result_decoded->Files[0]->FileID;
-        $post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
-        $post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
-        $post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
-        $post_data['city'] = $property_data->City;
-        $post_data['county'] = $property_data->County;
-        $post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First . " " . $result_decoded->Files[0]->Buyers[0]->Primary->Last;
-        $post_data['full_address'] = $property_data->StreetNumber;
-        $post_data['full_address'] .= !empty($property_data->StreetDirection) ? ' ' . substr($property_data->StreetDirection, 0, 1) : '';
-        $post_data['full_address'] .= ' ' . $property_data->StreetName;
-        $post_data['full_address'] .= ' ' . $property_data->StreetSuffix;
-        $post_data['full_address'] .= ', ' . $property_data->City;
-        $post_data['full_address'] .= ', ' . $property_data->State;
-        $post_data['full_address'] .= ' ' . $property_data->Zip;
-        $post_data['borrower'] = !empty($buyer_name->First) ? $buyer_name->First : '';
-        $post_data['borrower'] .= !empty($buyer_name->Middle) ? ' ' . $buyer_name->Middle : '';
-        $post_data['borrower'] .= !empty($buyer_name->Last) ? ' ' . $buyer_name->Last : '';
-        $post_data['borrower'] = trim($post_data['borrower']);
-
-        if (empty($post_data['borrower'])) {
-            $post_data['borrower'] = !empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
-        }
-
+        
         $post_data['ECD'] = '';
-        if (!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
-            $ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "", $result_decoded->Files[0]->Dates->FileCompletedDate));
-            $ecd_date = date('m/d/Y', $ecd_timestamp / 1000);
-            $post_data['ECD'] = $ecd_date;
-        }
+        if ($orderDetails['is_softpro_order'] != 1) {
+            $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
+            $userData = array(
+                'admin_api' => 1,
+            );
+            $result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
+            if (json_decode($result) && count(json_decode($result)->Files)) {
+                $result_decoded = json_decode($result);
+                $loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
+                $salesAmount = $result_decoded->Files[0]->SalesPrice;
+            }
+            $result_decoded = json_decode($result);
 
-        if (strpos($result_decoded->Files[0]->TransactionProductType->ProductType, 'Sale') !== false) {
-            $post_data['lenderInsurance'] = 1;
-            $post_data['transactionType'] = 'Resale';
-            $post_data['transferTaxesCheck'] = 1;
+            $property_data = $result_decoded->Files[0]->Properties[0];
+            $buyer_data = $result_decoded->Files[0]->Buyers[0];
+            $buyer_name = $buyer_data->Primary;
+    
+            $post_data['file_id'] = $result_decoded->Files[0]->FileID;
+            $post_data['file_number'] = $result_decoded->Files[0]->FileNumber;
+            $post_data['loanAmount'] = $result_decoded->Files[0]->Loans[0]->LoanAmount ? $result_decoded->Files[0]->Loans[0]->LoanAmount : 0;
+            $post_data['salesPrice'] = $result_decoded->Files[0]->SalesPrice;
+            $post_data['city'] = $property_data->City;
+            $post_data['county'] = $property_data->County;
+            $post_data['borrower'] = $result_decoded->Files[0]->Buyers[0]->Primary->First . " " . $result_decoded->Files[0]->Buyers[0]->Primary->Last;
+            $post_data['full_address'] = $property_data->StreetNumber;
+            $post_data['full_address'] .= !empty($property_data->StreetDirection) ? ' ' . substr($property_data->StreetDirection, 0, 1) : '';
+            $post_data['full_address'] .= ' ' . $property_data->StreetName;
+            $post_data['full_address'] .= ' ' . $property_data->StreetSuffix;
+            $post_data['full_address'] .= ', ' . $property_data->City;
+            $post_data['full_address'] .= ', ' . $property_data->State;
+            $post_data['full_address'] .= ' ' . $property_data->Zip;
+            $post_data['borrower'] = !empty($buyer_name->First) ? $buyer_name->First : '';
+            $post_data['borrower'] .= !empty($buyer_name->Middle) ? ' ' . $buyer_name->Middle : '';
+            $post_data['borrower'] .= !empty($buyer_name->Last) ? ' ' . $buyer_name->Last : '';
+            $post_data['borrower'] = trim($post_data['borrower']);
+    
+            if (empty($post_data['borrower'])) {
+                $post_data['borrower'] = !empty($buyer_name->BusinessName) ? $buyer_name->BusinessName : '';
+            }
+            if (!empty($result_decoded->Files[0]->Dates->FileCompletedDate)) {
+                $ecd_timestamp = str_replace("-0000)/", "", str_replace("/Date(", "", $result_decoded->Files[0]->Dates->FileCompletedDate));
+                $ecd_date = date('m/d/Y', $ecd_timestamp / 1000);
+                $post_data['ECD'] = $ecd_date;
+            }
+            if (strpos($result_decoded->Files[0]->TransactionProductType->ProductType, 'Sale') !== false) {
+                $post_data['lenderInsurance'] = 1;
+                $post_data['transactionType'] = 'Resale';
+                $post_data['transferTaxesCheck'] = 1;
 
-        } else {
-            $post_data['netsheet_for'] = '';
-            $post_data['lenderInsurance'] = 0;
-            $post_data['transactionType'] = 'Re-Finance';
-            $post_data['transferTaxesCheck'] = 0;
-            $this->load->library('order/resware');
-            $endPoint = 'files/' . $fileId . '/partners';
-            $user_data['admin_api'] = 1;
-            $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $fileId, 0);
-            $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
-            $this->apiLogs->syncLogs(0, 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $fileId, $logid);
-            $resPartners = json_decode($resultPartners, true);
-
-            if (!empty($resPartners)) {
-                $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
-                if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company')) {
-                    $post_data['underwriter'] = 3;
-                } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
-                    $post_data['underwriter'] = 4;
+            } else {
+                $fileId = $orderDetails['file_id'];
+                $post_data['netsheet_for'] = '';
+                $post_data['lenderInsurance'] = 0;
+                $post_data['transactionType'] = 'Re-Finance';
+                $post_data['transferTaxesCheck'] = 0;
+                $this->load->library('order/resware');
+                $endPoint = 'files/' . $fileId . '/partners';
+                $user_data['admin_api'] = 1;
+                $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $fileId, 0);
+                $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+                $this->apiLogs->syncLogs(0, 'resware', 'get_partners_from_admin', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $fileId, $logid);
+                $resPartners = json_decode($resultPartners, true);
+    
+                if (!empty($resPartners)) {
+                    $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+                    if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || ($resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company')) {
+                        $post_data['underwriter'] = 3;
+                    } elseif ($resPartners['Partners'][$key]['PartnerName'] == 'Westcor Land Title Insurance Company') {
+                        $post_data['underwriter'] = 4;
+                    } else {
+                        $post_data['underwriter'] = 4;
+                    }
                 } else {
                     $post_data['underwriter'] = 4;
                 }
+
+                if ($orderDetails['purchase_type'] == '40' || $orderDetails['purchase_type'] == '27' || $orderDetails['purchase_type'] == '24') {
+                    $post_data['underwriter'] = 5;
+                }
+            }
+        } else {
+            $loanAmount = $orderDetails['loan_amount'];
+            $salesAmount = $orderDetails['sales_amount'];
+            $post_data['file_id'] = $orderDetails['file_id']; 
+            $post_data['file_number'] = $orderDetails['file_number']; 
+            $post_data['loanAmount'] = $orderDetails['loan_amount']; 
+            $post_data['salesPrice'] = $orderDetails['sales_amount']; 
+            $post_data['city'] = $orderDetails['property_city']; 
+            $post_data['county'] = $orderDetails['county']; 
+            $post_data['borrower'] = $orderDetails['borrowers_vesting']; 
+            $post_data['full_address'] = $orderDetails['full_address']; 
+            $post_data['borrower'] = $orderDetails['borrowers_vesting'];
+
+            if (!empty($orderDetails['closed_date'])) {
+                $ecd_date = date('m/d/Y', strtotime($orderDetails['closed_date']) / 1000);
+                $post_data['ECD'] = $ecd_date;
+            }
+            if (strtolower($orderDetails['transaction_type']) == 'purchase') {
+                $post_data['lenderInsurance'] = 1;
+                $post_data['transactionType'] = 'Resale';
+                $post_data['transferTaxesCheck'] = 1;
+
             } else {
-                $post_data['underwriter'] = 4;
+                $post_data['netsheet_for'] = '';
+                $post_data['lenderInsurance'] = 0;
+                $post_data['transactionType'] = 'Re-Finance';
+                $post_data['transferTaxesCheck'] = 0;
             }
         }
         $post_data['escrowPriceCheck'] = 1;
         $post_data['recordingPriceCheck'] = 1;
-        if ($orderDetails['purchase_type'] == '40' || $orderDetails['purchase_type'] == '27' || $orderDetails['purchase_type'] == '24') {
-            $post_data['underwriter'] = 5;
-        }
-
+        
         $ch = curl_init(env('CALC_API_URL') . 'index.php?welcome/createNetsheetDoc');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
@@ -338,7 +373,9 @@ class Dashboard extends MX_Controller
         $calcResult = json_decode(curl_exec($ch), true);
         $calcResult['transactionType'] = $post_data['transactionType'];
         $data['is_escrow_flag'] = 0;
-        if (str_contains(strtolower($orderDetails['product_type']), 'title and escrow')) {
+        if ($orderDetails['is_softpro_order'] != 1 && str_contains(strtolower($orderDetails['product_type']), 'title and escrow')) {
+            $data['is_escrow_flag'] = 1;
+        } else if ($orderDetails['order_type'] == 'Escrow only' || $orderDetails['order_type'] == 'Title & Escrow') {
             $data['is_escrow_flag'] = 1;
         }
         // if ($orderDetails['is_client_escrow'] == 1 || $orderDetails['is_escrow'] == 1) {
@@ -358,7 +395,7 @@ class Dashboard extends MX_Controller
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
 
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/order_fee.js?v=order_fee_' . $this->order_fee_js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/order_fee.js?v=' . $this->version));
         $this->salesdashboardtemplate->show("order", "get_fees", $data);
     }
 

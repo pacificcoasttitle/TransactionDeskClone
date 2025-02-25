@@ -253,8 +253,8 @@
 											</div>
 											<div class="row">
 												<div class="col-sm-12">
-													<label for="TitleOfficer" class="col-form-label">Title Officer Details</label>
-													<select id="TitleOfficer" name="TitleOfficer" class="gui-input form-control" >
+													<label for="titleOfficer" class="col-form-label">Title Officer Details</label>
+													<select id="titleOfficer" name="titleOfficer" class="form-control" placeholder="Title Officer">
 														<option value="">Title Officer</option>
 														<?php 
 														if(isset($titleOfficer) && !empty($titleOfficer))

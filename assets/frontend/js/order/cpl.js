@@ -234,7 +234,7 @@ function downloadDocumentFromAws(url, documentType) {
     });
 }
 
-function lender_pop_up(lenderFlag, fileId) {
+function lender_pop_up(lenderFlag, orderId) {
     if (lenderFlag == 1) {
         $(this).form.submit();
     } else {
@@ -244,7 +244,7 @@ function lender_pop_up(lenderFlag, fileId) {
             url: base_url + "get-order-details-cpl",
             type: "post",
             data: {
-                fileId: fileId
+                orderId: orderId
             },
             success: function (response) {
                 var res = jQuery.parseJSON(response);
@@ -297,7 +297,8 @@ function lender_pop_up(lenderFlag, fileId) {
                 }
                 $('#page-preloader').css('display', 'none');
                 $('#lender_information').modal('show');
-                $('#file_id').val(fileId);
+                $('#file_id').val(res.orderDetails['file_id']);
+                $('#order_id').val(orderId);
             }
         });
         return false;

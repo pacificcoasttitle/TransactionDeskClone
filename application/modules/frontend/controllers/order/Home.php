@@ -144,13 +144,14 @@ class Home extends MX_Controller
                     'id' => $TitleOfficer,
                 ];
                 // $titleOfficerDetails = $this->titleOfficer->getTitleOfficerDetails($condition);
-                $titleOfficerDetails = $this->titleOfficer->getTitleOfficerLookupDetails($condition);
+                $titleOfficerDetails = $this->order->getTitleOfficerLookupDetails($condition);
                 // echo "<pre>";
                 // print_r($titleOfficerDetails);die;
                 $titleOfficerName       = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
                 $titleOfficerLookupCode = isset($titleOfficerDetails['lookupCode']) && !empty($titleOfficerDetails['lookupCode']) ? $titleOfficerDetails['lookupCode'] : '';
 
                 $LoanAmount   = $this->input->post('loanAmount');
+                // print_r($LoanAmount);die;
                 $LoanNumber   = $this->input->post('loanNumber');
                 $EscrowNumber = $this->input->post('escrowNumber');
                 $Notes        = $this->input->post('notes');
@@ -417,10 +418,7 @@ class Home extends MX_Controller
                         "IsPrimaryResidence" => true,
                         "State"              => "CA",
                     ];
-                    $orderReq['sellerDetails'] = [
-                        "PrimaryOwner"   => $PrimaryOwner,
-                        "SecondaryOwner" => $SecondaryOwner,
-                    ];
+                    
                     $transactionDetailsReq = [
                         "LookUpCodeTitleOfficer" => $titleOfficerLookupCode,
                         "TitleOfficer"           => $titleOfficerName,
@@ -479,6 +477,10 @@ class Home extends MX_Controller
                         }
                         // $transactionDetailsReq['TransactionType'] = "Purchase";
                         $loanFlag = 0;
+                        $orderReq['sellerDetails'] = [
+                            "PrimaryOwner"   => $PrimaryOwner,
+                            "SecondaryOwner" => $SecondaryOwner,
+                        ];
                         // $place_order['Sellers'][] = $legalEntity; //
                         // $place_order['Buyers'][] = $borrowers; //
                         // $place_order['SalesPrice'] = $SalesAmount; //
@@ -1765,7 +1767,7 @@ class Home extends MX_Controller
             ];
 
             // $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
-            $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerLookupDetails($condition);
+            $data['titleOfficer'] = $this->order->getTitleOfficerLookupDetails($condition);
             // $data['salesRep'] = $this->salesRep->getSalesRepDetails($condition);
             $condition = [
                 'where' => [
