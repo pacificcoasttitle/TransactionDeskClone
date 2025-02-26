@@ -6749,8 +6749,9 @@ class Cron extends MX_Controller
         // $this->db->where_not_in('id', function() {
         //     $this->db->select('order_id')->from('pct_order_documents')->where('is_prelim_document', 1);
         // });
-        $this->db->where('o.softpro_status', 'closed');
+        // $this->db->where('o.softpro_status', 'closed');
         $this->db->where('o.is_softpro_order', 1);
+        $this->db->where('o.file_number !=', '0');
         $this->db->where('o.prelim_summary_id', 0);
         $this->db->order_by("o.id", "desc");
         $query       = $this->db->get();
@@ -6791,14 +6792,14 @@ class Cron extends MX_Controller
                             'is_prelim_document' => 1,
                         );
                         $documentId = $this->document->insert($documentData);
-                        $condition = array(
-                            'file_number' => $file_number,
-                        );
-                        $data = array(
-                            'prelim_summary_id' => $id,
-                        );
+                        // $condition = array(
+                        //     'file_number' => $file_number,
+                        // );
+                        // $data = array(
+                        //     'prelim_summary_id' => $id,
+                        // );
 
-                        $this->order->update($data, $condition);
+                        // $this->order->update($data, $condition);
                     }
                 }
             }
