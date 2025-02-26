@@ -87,7 +87,7 @@ function parse111()
 	$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 	$('#page-preloader').css('display', 'block');
     var imagedata = $(reportXML).find("Content").text();
-    var file_number = <?php echo isset($file_number) && !empty($file_number) ? $file_number : ''; ?>;
+    var file_number = <?php echo isset($file_number) && !empty($file_number) ? '"' . $file_number .'"' : ''; ?>;
 
     $.ajax({
         url: base_url+'/generate-plat-map',

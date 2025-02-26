@@ -35,6 +35,7 @@ class FileUpload extends MX_Controller
             $this->form_validation->set_rules('order_number', 'Order Number', 'required', array('required' => 'Enter your order number'));
             $this->form_validation->set_rules('document_name', 'Last Document Name', 'required', array('required' => 'Enter your document name'));
             if ($this->form_validation->run($this) == true) {
+                $this->load->model('order/apiLogs');
                 $config['upload_path'] = './uploads/desk-file-upload/';
                 $config['allowed_types'] = 'pdf';
                 $config['max_size'] = 12000;
@@ -97,9 +98,10 @@ class FileUpload extends MX_Controller
                         ];
                         $fileUploadReq[] = $fileData;
                         $reqData = json_encode($fileUploadReq);
-                        // print_r($reqData);
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
                         $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
                         $response = json_decode($result, true);
+                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
                         if (isset($response) && !empty($response)) {
                             foreach ($response as $key => $res) {
                                 if ($res['Status'] == 200) {

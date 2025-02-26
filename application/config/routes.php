@@ -231,6 +231,7 @@ $route['fetch-title-officer-lookup-code']     = 'frontend/order/cron/softproTitl
 $route['fetch-sales-rep-lookup-code']         = 'frontend/order/cron/softproSalesrepsLookupCode';
 $route['update-softpro-order-status']         = 'frontend/order/cron/updateAllSoftProOrderStatus';
 $route['softpro-sync-failed-file']         = 'frontend/order/cron/spSyncFailedDocument';
+$route['softpro-fetch-prelim-data']         = 'frontend/order/cron/fetchPrelimDocument';
 
 $route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';

@@ -3584,8 +3584,9 @@ class Cron extends MX_Controller
         ini_set('memory_limit', '2048M');
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
-
-        $response          = $this->softpro->make_request('GET', 'get_all_order_status', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', 'get_all_order_status', null, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'get_all_order_status');
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', 'get_all_order_status', null, json_encode($response), 0, $logid);
         $closedFileNumbers = [];
         if ($response['status'] == 'success') {
             // Get existing emails from the database
@@ -5623,7 +5624,9 @@ class Cron extends MX_Controller
 
         // echo "<pre>";
         // print_r($existingAgent);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre>";
         // print_r($response);
         // echo "Hello";die;
@@ -5775,7 +5778,9 @@ class Cron extends MX_Controller
         // $req['userType'] = 'Escrow Company';
         $queryParams = "userType=" . urlencode('Escrow Company');
         $reqData     = json_encode($req);
-        $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre>";
         // print_r($response);
         // echo "Hello";die;
@@ -5917,7 +5922,9 @@ class Cron extends MX_Controller
         // $queryParams['userType'] = 'Escrow Officer';
         $queryParams = "userType=" . urlencode('Escrow Officer');
         $reqData     = json_encode($req);
-        $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre> Escrow officer";
         // print_r($response);
         // echo "Hello";die;
@@ -5971,7 +5978,9 @@ class Cron extends MX_Controller
         // $queryParams['userType'] = 'Lender';
         $queryParams = "userType=" . urlencode('Lender');
         $reqData     = json_encode($req);
-        $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre> Lender";
         // print_r($response);
         // echo "Hello";die;
@@ -6141,7 +6150,9 @@ class Cron extends MX_Controller
         // $queryParams['userType'] = 'Mortgage Broker';
         $queryParams = "userType=" . urlencode('Mortgage Broker');
         $reqData     = json_encode($req);
-        $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre> Mortgage Broker";
         // print_r($response);
         // echo "Hello";die;
@@ -6276,7 +6287,9 @@ class Cron extends MX_Controller
         // $queryParams['userType'] = 'Selling Agent/Broker';
         $queryParams = "userType=" . urlencode('Selling Agent/Broker');
         $reqData     = json_encode($req);
-        $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre> Selling Agent/Broker";
         // print_r($response);
         // echo "Hello";die;
@@ -6427,7 +6440,9 @@ class Cron extends MX_Controller
         // $queryParams['userType'] = 'Title Officer';
         $queryParams = "userType=" . urlencode('Title Officer');
         $reqData     = json_encode($req);
-        $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre> Title officer";
         // print_r($response);
         // echo "Hello";die;
@@ -6481,7 +6496,9 @@ class Cron extends MX_Controller
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
 
-        $response    = $this->softpro->make_request('GET', 'fetch_sales_reps');
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_sales_reps', 'fetch_sales_reps', null, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'fetch_sales_reps');
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_sales_reps', 'fetch_sales_reps', null, json_encode($response), 0, $logid);
         // echo "<pre> Sales reps";
         // print_r($response);
         // echo "Hello";die;
@@ -6543,7 +6560,9 @@ class Cron extends MX_Controller
         // $queryParams['userType'] = 'Underwriter';
         $queryParams = "userType=" . urlencode('Underwriter');
         $reqData     = json_encode($req);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
         // echo "<pre> underwritter";
         // print_r($response);
         // echo "Hello";die;
@@ -6692,8 +6711,10 @@ class Cron extends MX_Controller
             }
             $reqData = json_encode($fileUploadReq);
             $this->load->library('order/softPro');
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
             $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
             $response = json_decode($result, true);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
 
             if (isset($response) && !empty($response)) {
                 foreach ($response as $key => $res) {
@@ -6717,4 +6738,70 @@ class Cron extends MX_Controller
             }
         }
     }
+
+    public function fetchPrelimDocument() 
+    {
+        echo date('Y-m-d H:i:s') . "----";
+        $this->db->select('id, customer_id, file_number, softpro_status');
+        $this->db->from('order_details');
+        $this->db->where_not_in('id', function() {
+            $this->db->select('order_id')->from('pct_order_documents')->where('is_prelim_document', 1);
+        });
+        $this->db->where('softpro_status', 'closed');
+        $this->db->where('is_softpro_order', 1);
+        $this->db->where('prelim_summary_id', 0);
+        $this->db->order_by("id", "desc");
+        $query       = $this->db->get();
+        $filesResult = $query->result_array();
+        // echo "<pre>";
+        // print_r($filesResult);
+        // die;
+        if (isset($filesResult) && !empty($filesResult)) {
+            foreach ($filesResult as $file) {
+                $data                  = [];
+                $this->load->library('order/softPro');
+                $queryParams = "orderNumber=" . urlencode($file['file_number']);
+                $req['orderNumber'] = $file_number = $file['file_number'];
+                $reqData     = json_encode($req);
+                
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_documents', 'get_prelim_documents', $reqData, [], 0, 0);
+                $response = $this->softpro->make_request('GET', 'get_prelim_documents', $reqData, $queryParams);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_documents', 'get_prelim_documents', $reqData, json_encode($response), 0, $logid);
+                // print_r($response);die;
+                // $response = json_decode($result, true);
+                if ($response['status'] == 'success' && !empty($response['data'])) {
+                    $data = $response['data'];
+                    $url = $data[0];
+                    $documentName = basename($url);
+                    $document_name = date('YmdHis') . "_prelim_doc_" . $file_number . '.pdf';
+                    $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($url, $document_name, 'documents');
+                    // echo '$uploadStatus ==' . $uploadStatus;
+                    if ($uploadStatus) {
+                        $this->load->model('order/document');
+                        $documentData = array(
+                            'document_name' => $document_name,
+                            'original_document_name' => urldecode($documentName),
+                            'user_id' => $file['customer_id'],
+                            'order_id' => $file['id'],
+                            'description' => $documentName,
+                            'created' => $created_date,
+                            'is_sync' => 1,
+                            'is_prelim_document' => 1,
+                        );
+                        $documentId = $this->document->insert($documentData);
+                        $condition = array(
+                            'file_number' => $file_number,
+                        );
+                        $data = array(
+                            'prelim_summary_id' => $id,
+                        );
+
+                        $this->order->update($data, $condition);
+                    }
+                }
+            }
+        }
+        echo date('Y-m-d H:i:s');exit;
+    }
+
 }
