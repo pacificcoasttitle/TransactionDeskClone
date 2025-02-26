@@ -64,7 +64,7 @@ class FileUpload extends MX_Controller
                             $file_upload_error_msg = 1;
                         } else {
                             $data = $this->upload->data();
-                            $fileName = $orderNumber . '_' . time() . '.pdf';
+                            $fileName = $documentName . '_' . time() . '.pdf';
 
                             $saveData = array(
                                 'name' => $documentName,
@@ -112,7 +112,8 @@ class FileUpload extends MX_Controller
                                 } else {
                                     $updateData[] = [
                                         'is_synced' => 0,
-                                        'id' => $res['Id']
+                                        'id' => $res['Id'],
+                                        'reason' => $res['Message'],
                                     ];
                                 }
                             }
