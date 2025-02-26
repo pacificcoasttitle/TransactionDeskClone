@@ -6742,15 +6742,17 @@ class Cron extends MX_Controller
     public function fetchPrelimDocument() 
     {
         echo date('Y-m-d H:i:s') . "----";
-        $this->db->select('id, customer_id, file_number, softpro_status');
-        $this->db->from('order_details');
-        $this->db->where_not_in('id', function() {
-            $this->db->select('order_id')->from('pct_order_documents')->where('is_prelim_document', 1);
-        });
-        $this->db->where('softpro_status', 'closed');
-        $this->db->where('is_softpro_order', 1);
-        $this->db->where('prelim_summary_id', 0);
-        $this->db->order_by("id", "desc");
+        $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+        $this->db->from('order_details as o');
+        $this->db->join('pct_order_documents as doc', 'o.id = doc.order_id', 'left');
+        $this->db->where('doc.order_id IS NULL');
+        // $this->db->where_not_in('id', function() {
+        //     $this->db->select('order_id')->from('pct_order_documents')->where('is_prelim_document', 1);
+        // });
+        $this->db->where('o.softpro_status', 'closed');
+        $this->db->where('o.is_softpro_order', 1);
+        $this->db->where('o.prelim_summary_id', 0);
+        $this->db->order_by("o.id", "desc");
         $query       = $this->db->get();
         $filesResult = $query->result_array();
         // echo "<pre>";
