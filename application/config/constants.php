@@ -117,7 +117,8 @@ defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
     'fetch_sales_reps' => 'ordercreation/GetOrderMarketingRep',
     'get_all_order_status' => 'ordercreation/GetOrders',
     'create_user' => 'ordercreation/CreateUser',
-    'add_note' => 'ordercreation/AddNotes'
+    'add_note' => 'ordercreation/AddNotes',
+    'get_prelim_documents' => 'ordercreation/GetAttachedDocuments'
 ]);
 
 defined('TRANSACTION_TYPE') or define('TRANSACTION_TYPE', [

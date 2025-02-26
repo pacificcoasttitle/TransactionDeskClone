@@ -81,7 +81,7 @@
 			</div>
 		</div>
 
-		<div class="typography-section__inner">
+		<div class="typography-section__inner hide">
 			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
 			<div style="border-bottom: 4px solid #D35411;"></div>
 		</div>

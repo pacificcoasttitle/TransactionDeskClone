@@ -1689,6 +1689,46 @@ class Order
         }
     }
 
+    public function uploadDocumentUsingLinkOnAwsS3($fileUrl, $fileName, $folder = '')
+    {
+        $bucket = env('AWS_BUCKET');
+        if (!empty($folder)) {
+            $keyname = $folder . "/" . basename($fileName);
+            // $filepath = "uploads/" . $folder . "/" . $fileName;
+        }
+        // print_r(urlencode($fileUrl));
+        $fileContent = file_get_contents($fileUrl);
+        // var_dump($fileContent);die;
+        // $fileContent = $this->fetchFileContent(urlencode($fileUrl));//file_get_contents($fileUrl);
+        try {
+            $s3Client = new Aws\S3\S3Client([
+                'region' => env('AWS_REGION'),
+                'version' => '2006-03-01',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                ],
+            ]);
+
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key' => $keyname,
+                'Body' => $fileContent,  // Use Body instead of SourceFile
+                'ACL' => 'public-read',
+                'ContentType' => 'application/pdf'  // Set correct content type
+            ]);
+        } catch (Aws\Exception\AwsException $e) {
+            // return $e->getMessage() . "\n";
+            return false;
+        }
+        if (!empty($result['ObjectURL'])) {
+            gc_collect_cycles();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function fileExistOrNotOnS3($key)
     {
         try {
