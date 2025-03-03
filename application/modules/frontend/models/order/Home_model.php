@@ -203,7 +203,6 @@ class Home_model extends CI_Model
     public function get_lookup_customers($params = array(), $is_master_search = 0)
     {
         $table = 'pct_softpro_lookup_table'; //$this->table;
-
         $this->db->select('pct_softpro_lookup_table.*');
         $this->db->from($table);
 
@@ -237,8 +236,14 @@ class Home_model extends CI_Model
                     if ($params['user_type'] == 'escrow') {
                         $this->db->where('is_escrow', 1);
                     }
+                    // echo "hello"; die;
                     // $this->db->where('user_type', $params['user_type']);
-                    $this->db->like('first_name', $params['name']);
+                    // $this->db->like('first_name', $params['name']);
+                    $this->db->group_start()
+                        ->like('company_name', $params['name'])
+                        ->or_like("first_name", $params['name'])
+                        ->or_like("email_address", $params['name'])
+                        ->group_end();
                     // $this->db->where('is_password_updated', 1);
                 } elseif (array_key_exists("company_name", $params) && array_key_exists("user_type", $params)) {
                     if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {

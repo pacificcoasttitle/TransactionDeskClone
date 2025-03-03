@@ -552,16 +552,23 @@ $(document).ready(function () {
     $('#TransactionType').change(function () {
         var selectedText = $(this).find('option:selected').text();
         console.log('selectedText ==', selectedText);
-        if (selectedText != 'Purchase') {
-            $('#sales-loan-amount-fields').hide();
+        if (selectedText == 'Refinance') {
+            $('#sales-loan-amount-fields').show();
+            // $('#sales-loan-amount-fields').hide();
             $('#sales-loan-amount-fields #salesAmount').hide();
             $('#sales-loan-amount-fields #primaryBorrower').hide();
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
-        } else {
+            // if (selectedText == 'Refinance') {
+            $('#sales-loan-amount-fields #loanAmount').show();
+            // }
+        } else if (selectedText == 'Purchase') {
             $('#sales-loan-amount-fields').show();
+            $('#sales-loan-amount-fields #loanAmount').hide();
             $('#sales-loan-amount-fields #salesAmount').show();
             $('#sales-loan-amount-fields #primaryBorrower').show();
             $('#sales-loan-amount-fields #secondaryBorrower').show();
+        } else {
+            $('#sales-loan-amount-fields').hide();
         }
     });
 
