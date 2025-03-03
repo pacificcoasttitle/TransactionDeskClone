@@ -743,7 +743,10 @@ class Common extends MX_Controller
                 ];
                 $reqData = json_encode($fileData);
                 // print_r($reqData);
-                $response = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+                $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                $response = json_decode($result, true);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
 
                 /* Start upload softpro api logs */
                 $softproLog = [
@@ -2286,6 +2289,7 @@ class Common extends MX_Controller
             foreach ($userDetails as $key => $value) {
                 $data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
                 $data['lookup_code'] = isset($value['lookup_code']) && !empty($value['lookup_code']) ? $value['lookup_code'] : '';
+                $data['flookup_code'] = isset($value['flookup_code']) && !empty($value['flookup_code']) ? $value['flookup_code'] : '';
                 $data['fname'] = isset($value['first_name']) && !empty($value['first_name']) ? $value['first_name'] : '';
                 $data['lname'] = isset($value['last_name']) && !empty($value['last_name']) ? $value['last_name'] : '';
                 $data['name'] = $data['fname'] . ' ' . $data['lname'];
@@ -2961,7 +2965,7 @@ class Common extends MX_Controller
 
                 if ($order['prelim_summary_id'] != 0) {
                     $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
-                    $nestedData[] = "<a href='" . base_url() . "review-file/" . $order['file_id'] . "'>
+                    $nestedData[] = "<a href='" . base_url() . "review-file/" . $order['id'] . "'>
 							<button type='submit' class='btn btn-$class btn-icon-split'>
 								<span class='icon text-white-50'>
 									<i class='fas fa-file'></i>
