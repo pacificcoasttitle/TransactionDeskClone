@@ -1498,7 +1498,9 @@ class Home extends MX_Controller
                     $reqData = json_encode($fileUploadReq);
                     // $reqData = json_encode($fileData);
                     // print_r($reqData);
+                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
                     $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                    $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
 
                     $response = json_decode($result, true);
                     if (isset($response) && !empty($response)) {

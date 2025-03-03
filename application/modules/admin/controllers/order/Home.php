@@ -5478,8 +5478,10 @@ class Home extends MX_Controller
                         $fileUploadReq[] = $fileData;
                         $reqData = json_encode($fileUploadReq);
                         // print_r($reqData);
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
                         $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
                         $response = json_decode($result, true);
+                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
                         if (isset($response) && !empty($response)) {
                             foreach ($response as $key => $res) {
                                 if ($res['Status'] == 200) {
