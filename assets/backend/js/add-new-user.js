@@ -104,9 +104,10 @@ jQuery(document).ready(function ($) {
                 // $("#Opentelephone").val(ui.item.telephone_no).parent().addClass('state-success');
                 // $("#OpenName").val(ui.item.fname).parent().addClass('state-success');
                 // $("#OpenLastName").val(ui.item.lname).parent().addClass('state-success');
-                // $("#StreetAddress").val(ui.item.address).parent().addClass('state-success');
-                // $("#City").val(ui.item.city).parent().addClass('state-success');
-                // $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
+                $("#address").val(ui.item.address).parent().addClass('state-success');
+                $("#city").val(ui.item.city).parent().addClass('state-success');
+                $("#state").val(ui.item.state).parent().addClass('state-success');
+                $("#zipcode").val(ui.item.zipcode).parent().addClass('state-success');
                 // $("#ClientLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
                 // $("#CompanyLookupCode").val(ui.item.flookup_code).parent().addClass('state-success');
                 // $("#ClientType").val(ui.item.client_type).parent().addClass('state-success');

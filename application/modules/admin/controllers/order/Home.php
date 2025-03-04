@@ -848,6 +848,10 @@ class Home extends MX_Controller
                 $data['is_lender']          = isset($value['is_lender']) && !empty($value['is_lender']) ? $value['is_lender'] : '';
                 $data['is_selling_agent']   = isset($value['is_selling_agent']) && !empty($value['is_selling_agent']) ? $value['is_selling_agent'] : '';
                 $data['is_mortgage_broker'] = isset($value['is_mortgage_broker']) && !empty($value['is_mortgage_broker']) ? $value['is_mortgage_broker'] : '';
+                $data['address'] = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
+                $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+                $data['zipcode'] = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
                 $companyInfo[]              = $data;
             }
         }
@@ -7778,6 +7782,106 @@ class Home extends MX_Controller
         $json_data['recordsFiltered'] = intval($company_lists['recordsFiltered']);
         $json_data['data']            = $data;
         echo json_encode($json_data);
+    }
+
+    public function spAddCompany() {
+        $this->load->model('order/apiLogs');
+        $userdata      = $this->session->userdata('admin');
+        $data          = [];
+        $data['title'] = 'PCT Order: Add New User';
+        $salesRepData  = [];
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('name', 'Name', 'required', ['required' => 'Please Enter Name']);
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
+            $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
+            $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
+            $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
+            $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', ['required' => 'Please Enter Zipcode']);
+            // $this->form_validation->set_rules('partner_id', 'Company', 'required', array('required' => 'Please select company based on search'));
+            // echo "<pre>";
+            // print_r($this->input->post());die;
+            if ($this->form_validation->run() == true) {
+                $userType  = $this->input->post('user_type');
+                $companyType = '';
+                $is_escrow = $is_lender = $is_mortgage_broker = $is_realtor = 0;
+                if ($userType == 'escrow') {
+                    $is_escrow = 1;
+                } else if ($userType == 'lender') {
+                    $is_lender = 1;
+                } else if ($userType == 'mortgage_broker') {
+                    $is_mortgage_broker = 1;
+                } else if ($userType == 'realtor') {
+                    $is_realtor = 1;
+                }
+                $name   = $this->input->post('name');
+                $address   = $this->input->post('address');
+                $companyLookup = $this->order->generateCompanyLookupCode($name, $address);
+                $customerData = [
+                    'Name'         => $name,
+                    'Phone'             => $this->input->post('phone'),
+                    'Email'             => $this->input->post('email_address'),
+                    'ClientLookupCode'  => $companyLookup,
+                    'Address1'          => $address,
+                    'City'              => $this->input->post('city'),
+                    'State'             => $this->input->post('state'),
+                    'Zip'               => $this->input->post('zipcode'),
+                    'CompanyType' =>  ''
+                ];
+                
+                // echo "<pre>";
+                // print_r($customerData);die;
+                // $response = $this->addNewUserToSoftpro($customerData);
+                $companyData = [
+                    'name'         => $first_name,
+                    'phone'              => $this->input->post('phone'),
+                    'email_address'      => $this->input->post('email_address'),
+                    'lookup_code'        => $companyLookup,
+                    'address1'           => $address,
+                    'city'               => $this->input->post('city'),
+                    'state'              => $this->input->post('state'),
+                    'zip'                => $this->input->post('zipcode'),
+                    'company_name'       => $company_name,
+                    'is_escrow_company'  => $is_escrow,
+                    'is_lender'          => $is_lender,
+                    'is_mortgage_broker' => $is_mortgage_broker,
+                    'is_selling_agent'   => $is_realtor
+                ];
+
+                if ($response['success']) {
+                    $insert = $this->home_model->insert($companyData, 'sp_company');
+                    /** Save user Activity */
+                    $activity = 'New company created :- ' . $this->input->post('email_address');
+                    $this->order->logAdminActivity($activity);
+                    /** End Save user activity */
+                    $data['success_msg'] = 'New Company added successfully.';
+                    $this->form_validation->reset_validation();
+
+                } else {
+                    $data['error_msg'] = $response['error'];
+                }
+            } else {
+                $data['first_name_error_msg']    = form_error('first_name');
+                $data['last_name_error_msg']     = form_error('last_name');
+                $data['email_address_error_msg'] = form_error('email_address');
+                $data['company_name_error_msg']  = form_error('company_name');
+                $data['user_type_error_msg']     = form_error('user_type');
+                $data['address_error_msg']       = form_error('address');
+                $data['city_error_msg']          = form_error('city');
+                $data['state_error_msg']         = form_error('state');
+                $data['zipcode_error_msg']       = form_error('zipcode');
+                if (empty(form_error('company_name'))) {
+                    $data['company_error_msg'] = form_error('partner_id');
+                }
+            }
+        }
+        $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addCSS(base_url('assets/frontend/css/jquery-ui.css'));
+        $this->admintemplate->addJS(base_url('assets/libs/jquery-1.12.4.min.js'));
+        $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js'));
+        $this->admintemplate->show("order/home", "add_sp_company", $data);
     }
 
     public function spAdminAgent()

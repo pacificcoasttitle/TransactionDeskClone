@@ -5775,7 +5775,7 @@ class Cron extends MX_Controller
         ini_set('memory_limit', '2048M');
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
-        // $req['userType'] = 'Escrow Company';
+        $req['userType'] = 'Escrow Company';
         $queryParams = "userType=" . urlencode('Escrow Company');
         $reqData     = json_encode($req);
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);

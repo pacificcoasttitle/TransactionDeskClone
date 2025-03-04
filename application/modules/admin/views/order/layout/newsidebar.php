@@ -135,7 +135,9 @@ if (
     $this->uri->uri_string() == 'order/admin/softpro-lenders' ||
     $this->uri->uri_string() == 'order/admin/softpro-mortgage-brokers' ||
     $this->uri->uri_string() == 'order/admin/softpro-companies' ||
-    $this->uri->uri_string() == 'order/admin/softpro-new-users'
+    $this->uri->uri_string() == 'order/admin/softpro-new-users' ||
+    $this->uri->uri_string() == 'order/admin/add-softpro-new-user' ||
+	$this->uri->uri_string() == 'order/admin/softpro-add-company'
 ) {
     $spClientTabLinks = true;
 }
@@ -271,8 +273,8 @@ if (
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow'; ?>">Escrow</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-lenders' || $this->uri->segment(3) == 'edit-softpro-lender') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-lenders'; ?>">Lenders</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-mortgage-brokers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-mortgage-brokers'; ?>">Mortgage Brokers</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-companies') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-companies'; ?>">Companies</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-new-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-new-users'; ?>">New Clients</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-companies' || $this->uri->segment(3) == 'softpro-add-company') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-companies'; ?>">Companies</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-new-users' || $this->uri->segment(3) == 'add-softpro-new-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-new-users'; ?>">New Clients</a>
 					</div>
 				</div>
 			</li>

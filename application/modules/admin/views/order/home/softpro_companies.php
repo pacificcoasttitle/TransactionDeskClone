@@ -16,31 +16,31 @@ $roleName = $roleList[$role_id];
 			<h1 class="h3 text-gray-800"> Companies </h1>
 		</div>
 		<div class="col-sm-8">
-            <a href="<?php echo base_url() ?>order/admin/add-company"  class="btn btn-success btn-icon-split float-right mr-2">
+            <a href="<?php echo base_url() ?>order/admin/softpro-add-company"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
                 <span class="text"> Add Company </span>
             </a>
-            <a href="<?php echo base_url() ?>order/admin/import-underwriters"  class="btn btn-success btn-icon-split float-right mr-2">
+            <!-- <a href="<?php echo base_url() ?>order/admin/import-underwriters"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-file-import"></i>
                 </span>
                 <span class="text"> Import Underwriter </span>
-            </a>
-            <a href="javascript:void(0);" id="refresh-company-data"  class="btn btn-success btn-icon-split float-right mr-2">
+            </a> -->
+            <!-- <a href="javascript:void(0);" id="refresh-company-data"  class="btn btn-success btn-icon-split float-right mr-2">
                 <span class="icon text-white-50">
                     <i class="fas fa-refresh"></i>
                 </span>
                 <span class="text"> Refresh </span>
-            </a>
+            </a> -->
             <?php if (!in_array($roleName, ['CS Admin'])): ?>
-                <a href="javascript:void(0);" data-export-type="csv" id="export_companies" class="btn btn-success btn-icon-split float-right mr-2">
+                <!-- <a href="javascript:void(0);" data-export-type="csv" id="export_companies" class="btn btn-success btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
                     <span class="text"> Export </span>
-                </a>
+                </a> -->
             <?php endif;?>
 		</div>
 	</div>
