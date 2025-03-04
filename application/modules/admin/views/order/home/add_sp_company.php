@@ -46,7 +46,7 @@
                             <div class="form-group">
                                 <label for="name" class="col-sm-2 col-form-label">Name<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="name" id="name" value="<?php echo set_value('name'); ?>" class="form-control" placeholder="Name">
+                                    <input type="text" class="form-control" name="name" id="name" value="" class="form-control" placeholder="Name">
                                     <?php if (!empty($name_error_msg)) {?>
                                         <span class="error"><?php echo $name_error_msg; ?></span>
                                     <?php }?>
@@ -56,7 +56,7 @@
                             <div class="form-group">
                                 <label for="email_address" class="col-sm-2 col-form-label">Email Address<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="email" value="<?php echo set_value('email_address'); ?>" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">
+                                    <input type="email" value="" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">
                                     <?php if (!empty($email_address_error_msg)) {?>
                                         <span class="error"><?php echo $email_address_error_msg; ?></span>
                                     <?php }?>
@@ -66,14 +66,14 @@
                             <div class="form-group">
                                 <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
                                 <div class="col-sm-6">
-                                    <input type="text" value="<?php echo set_value('phone'); ?>" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
+                                    <input type="text" value="" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
                                 </div>
                             </div>
 
                             <!-- <div class="form-group">
                                 <label for="company" class="col-sm-2 col-form-label">Title Company<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="title_company" id="title_company" value="<?php echo set_value('title_company'); ?>" class="form-control" placeholder="Title Company">
+                                    <input type="text" class="form-control" name="title_company" id="title_company" value="" class="form-control" placeholder="Title Company">
                                     <?php if (!empty($title_company_error_msg)) {?>
                                         <span class="error"><?php echo $title_company_error_msg; ?></span>
                                     <?php }?>
@@ -85,10 +85,10 @@
                                 <div class="col-sm-6">
                                     <select name="user_type" id="user_type" class="form-control">
                                         <option value="">Select User Type</option>
-                                        <option <?php echo set_value('user_type') == 'lender' ? 'selected' : ''; ?> value="lender">Lender</option>
-                                        <option <?php echo set_value('user_type') == 'escrow' ? 'selected' : ''; ?> value="escrow">Escrow</option>
-                                        <option <?php echo set_value('user_type') == 'mortgage_broker' ? 'selected' : ''; ?> value="mortgage_broker">Mortgage Broker</option>
-                                        <option <?php echo set_value('user_type') == 'realtor' ? 'selected' : ''; ?> value="realtor">Realtor</option>
+                                        <option value="escrow">Escrow Company</option>
+                                        <option value="lender">Lender</option>
+                                        <option value="mortgage_broker">Mortgage Broker</option>
+                                        <option value="realtor">Realtor</option>
                                     </select>
                                     <?php if (!empty($user_type_error_msg)) {?>
                                         <span class="error"><?php echo $user_type_error_msg; ?></span>
@@ -99,7 +99,7 @@
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address'); ?>" class="form-control" placeholder="Address">
+                                    <input type="text" class="form-control" name="address" id="address" value="" class="form-control" placeholder="Address">
                                     <?php if (!empty($address_error_msg)) {?>
                                         <span class="error"><?php echo $address_error_msg; ?></span>
                                     <?php }?>
@@ -109,7 +109,7 @@
                             <div class="form-group">
                                 <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city'); ?>" class="form-control" placeholder="City">
+                                    <input type="text" class="form-control" name="city" id="city" value="" class="form-control" placeholder="City">
                                     <?php if (!empty($city_error_msg)) {?>
                                         <span class="error"><?php echo $city_error_msg; ?></span>
                                     <?php }?>
@@ -119,7 +119,7 @@
                             <div class="form-group">
                                 <label for="state" class="col-sm-2 col-form-label">State<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state'); ?>" class="form-control" placeholder="State">
+                                    <input type="text" class="form-control" name="state" id="state" value="" class="form-control" placeholder="State">
                                     <?php if (!empty($state_error_msg)) {?>
                                         <span class="error"><?php echo $state_error_msg; ?></span>
                                     <?php }?>
@@ -129,7 +129,7 @@
                             <div class="form-group">
                                 <label for="zipcode" class="col-sm-2 col-form-label">Zipcode<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode'); ?>" class="form-control" placeholder="Zipcode">
+                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="" class="form-control" placeholder="Zipcode">
                                     <?php if (!empty($zipcode_error_msg)) {?>
                                         <span class="error"><?php echo $zipcode_error_msg; ?></span>
                                     <?php }?>
