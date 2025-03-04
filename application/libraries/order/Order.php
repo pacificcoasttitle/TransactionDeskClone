@@ -4825,6 +4825,18 @@ class Order
         return $firstPart . $secondPart . $thirdPart;
     }
 
+    public function generateCompanyLookupCode($name, $address) {
+
+        $part1 = substr($name, 0, 5);
+
+        // Extract the numeric part from the second string
+        preg_match('/\d+/', $address, $matches);
+        $part2 = $matches[0] ?? '';
+
+        // Combine both parts
+        return $part1 . $part2;
+    }
+
     public function save_sp_file_upload_log($data) {
         $this->CI->db->insert('sp_file_upload_logs', $data);
         $documentId = $this->CI->db->insert_id();

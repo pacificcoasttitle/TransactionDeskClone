@@ -233,7 +233,6 @@ $route['update-softpro-order-status']         = 'frontend/order/cron/updateAllSo
 $route['softpro-sync-failed-file']         = 'frontend/order/cron/spSyncFailedDocument';
 $route['softpro-fetch-prelim-data']         = 'frontend/order/cron/fetchPrelimDocument';
 
-$route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
 $route['order/admin/edit-softpro-agent/:num']       = 'admin/order/home/spEditAgent';
 $route['order/admin/softpro-escrow']                = 'admin/order/home/spAdminEscrow';
@@ -241,7 +240,10 @@ $route['order/admin/softpro-lenders']               = 'admin/order/home/spAdminL
 $route['order/admin/softpro-mortgage-brokers']      = 'admin/order/home/spAdminMortgageBrokers';
 $route['is-softpro-mortgage-primary-user']          = 'admin/order/home/isSPMortgagePrimaryUser';
 $route['order/admin/softpro-new-users']             = 'admin/order/home/spNewUsers';
-$route['order/admin/add-softpro-new-user']          = 'admin/order/home/spAddNewUser';
+$route['order/admin/add-softpro-new-user']          = 'admin/order/home/addNewUser';
+
+$route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
+$route['order/admin/softpro-add-company']                   = 'admin/order/home/spAddCompany';
 
 $route['order/admin/softpro-title-officers']                = 'admin/order/title/spAdminTitleOfficer';
 $route['order/admin/get-sp-title-officer-list']        = 'admin/order/title/get_sp_title_officer_list';

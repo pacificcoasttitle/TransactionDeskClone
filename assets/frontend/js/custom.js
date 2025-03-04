@@ -563,12 +563,16 @@ $(document).ready(function () {
             // }
         } else if (selectedText == 'Purchase') {
             $('#sales-loan-amount-fields').show();
-            $('#sales-loan-amount-fields #loanAmount').hide();
+            $('#sales-loan-amount-fields #loanAmount').show();
             $('#sales-loan-amount-fields #salesAmount').show();
             $('#sales-loan-amount-fields #primaryBorrower').show();
             $('#sales-loan-amount-fields #secondaryBorrower').show();
         } else {
             $('#sales-loan-amount-fields').hide();
+            $('#sales-loan-amount-fields #salesAmount').hide();
+            $('#sales-loan-amount-fields #loanAmount').hide();
+            $('#sales-loan-amount-fields #primaryBorrower').hide();
+            $('#sales-loan-amount-fields #secondaryBorrower').hide();
         }
     });
 

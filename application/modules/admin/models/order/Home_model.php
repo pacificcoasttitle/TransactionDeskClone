@@ -411,7 +411,7 @@ class Home_model extends CI_Model
     public function get_sp_company_list($params)
     {
         $table = 'sp_company';
-        $this->db->select("id, CONCAT(name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value, name, lookup_code, is_escrow_company, is_lender, is_selling_agent, is_mortgage_broker, is_underwriter");
+        $this->db->select("id, CONCAT(name, ' - ', CONCAT_WS(',', address1, city, state, zip)) AS value, name, address1, city, state, zip, lookup_code, is_escrow_company, is_lender, is_selling_agent, is_mortgage_broker, is_underwriter");
         $this->db->from($table);
         $this->db->order_by('id', 'asc');
         $this->db->like('name', $params['company_name']);
