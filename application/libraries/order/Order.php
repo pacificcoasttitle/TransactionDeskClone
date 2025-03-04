@@ -4826,8 +4826,8 @@ class Order
     }
 
     public function generateCompanyLookupCode($name, $address) {
-
-        $part1 = substr($name, 0, 5);
+        $name = str_replace(' ', '', $name);
+        $part1 = ucfirst(substr($name, 0, 4));
 
         // Extract the numeric part from the second string
         preg_match('/\d+/', $address, $matches);

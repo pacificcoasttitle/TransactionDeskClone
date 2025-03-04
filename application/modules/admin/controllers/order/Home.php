@@ -744,7 +744,7 @@ class Home extends MX_Controller
 
                 ];
 
-                $response = $this->addNewUserToSoftpro($customerData);
+                $response = $this->addNewUserToSoftpro($customerData, 'create_user');
                 // echo "<pre>";
                 // print_r($response);die;
                 $customerData = [
@@ -883,7 +883,7 @@ class Home extends MX_Controller
         echo json_encode($companyInfo);
     }
 
-    public function addNewUserToSoftpro($newUser)
+    public function addNewUserToSoftpro($newUser, $apiType = 'create_user')
     {
         $this->load->library('order/softPro');
         $userdata = $this->session->userdata('admin');
@@ -891,9 +891,9 @@ class Home extends MX_Controller
         $userdata['email']     = $userdata['email_address'];
         $userdata['admin_api'] = 1;
         $newUserData           = json_encode($newUser);
-        $logid                 = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_user', 'create_user', $newUserData, [], 0, 0);
-        $response              = $this->softpro->make_request('POST', 'create_user', $newUserData);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_user', 'create_user', $newUserData, json_encode($response), 0, $logid);
+        $logid                 = $this->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newUserData, [], 0, 0);
+        $response              = $this->softpro->make_request('POST', $apiType, $newUserData);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newUserData, json_encode($response), 0, $logid);
 
         if (isset($response['status']) && $response['status'] == 'error') {
             $res = [
@@ -909,7 +909,7 @@ class Home extends MX_Controller
         /* Start add resware api logs */
         $reswareLogData = [
             'request_type' => 'add_new_user_to_softpro',
-            'request_url'  => 'create_user',
+            'request_url'  => $apiType,
             'request'      => $newUserData,
             'response'     => json_encode($response),
             'status'       => $response['status'],
@@ -7808,33 +7808,38 @@ class Home extends MX_Controller
                 $is_escrow = $is_lender = $is_mortgage_broker = $is_realtor = 0;
                 if ($userType == 'escrow') {
                     $is_escrow = 1;
+                    $companyType = 'Escrow Company';
                 } else if ($userType == 'lender') {
                     $is_lender = 1;
+                    $companyType = 'Lender';
                 } else if ($userType == 'mortgage_broker') {
                     $is_mortgage_broker = 1;
+                    $companyType = 'Mortgage Broker';
                 } else if ($userType == 'realtor') {
                     $is_realtor = 1;
+                    $companyType = 'Selling Agent';
                 }
                 $name   = $this->input->post('name');
                 $address   = $this->input->post('address');
                 $companyLookup = $this->order->generateCompanyLookupCode($name, $address);
+                // print_r($companyLookup);die;
                 $customerData = [
                     'Name'         => $name,
                     'Phone'             => $this->input->post('phone'),
                     'Email'             => $this->input->post('email_address'),
-                    'ClientLookupCode'  => $companyLookup,
+                    'LookupCode'  => $companyLookup,
                     'Address1'          => $address,
                     'City'              => $this->input->post('city'),
                     'State'             => $this->input->post('state'),
                     'Zip'               => $this->input->post('zipcode'),
-                    'CompanyType' =>  ''
+                    'UserType' =>  $companyType
                 ];
                 
                 // echo "<pre>";
                 // print_r($customerData);die;
-                // $response = $this->addNewUserToSoftpro($customerData);
+                $response = $this->addNewUserToSoftpro($customerData, 'add_company');
                 $companyData = [
-                    'name'         => $first_name,
+                    'name'         => $name,
                     'phone'              => $this->input->post('phone'),
                     'email_address'      => $this->input->post('email_address'),
                     'lookup_code'        => $companyLookup,
@@ -7842,7 +7847,6 @@ class Home extends MX_Controller
                     'city'               => $this->input->post('city'),
                     'state'              => $this->input->post('state'),
                     'zip'                => $this->input->post('zipcode'),
-                    'company_name'       => $company_name,
                     'is_escrow_company'  => $is_escrow,
                     'is_lender'          => $is_lender,
                     'is_mortgage_broker' => $is_mortgage_broker,
@@ -7862,18 +7866,13 @@ class Home extends MX_Controller
                     $data['error_msg'] = $response['error'];
                 }
             } else {
-                $data['first_name_error_msg']    = form_error('first_name');
-                $data['last_name_error_msg']     = form_error('last_name');
+                $data['name_error_msg']    = form_error('name');
                 $data['email_address_error_msg'] = form_error('email_address');
-                $data['company_name_error_msg']  = form_error('company_name');
                 $data['user_type_error_msg']     = form_error('user_type');
                 $data['address_error_msg']       = form_error('address');
                 $data['city_error_msg']          = form_error('city');
                 $data['state_error_msg']         = form_error('state');
                 $data['zipcode_error_msg']       = form_error('zipcode');
-                if (empty(form_error('company_name'))) {
-                    $data['company_error_msg'] = form_error('partner_id');
-                }
             }
         }
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
