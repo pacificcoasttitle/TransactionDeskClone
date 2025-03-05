@@ -151,7 +151,8 @@ if (
     $this->uri->segment(3) == 'edit-softpro-title-officer' ||
     $this->uri->uri_string() == 'order/admin/softpro-escrow-officers' ||
     $this->uri->segment(3) == 'edit-softpro-escrow-officer' ||
-    $this->uri->segment(3) == 'add-softpro-escrow-officer'
+    $this->uri->segment(3) == 'add-softpro-escrow-officer' ||
+    $this->uri->segment(3) == 'softpro-sales-reps'
 ) {
     $spUsersTabLinks = true;
 }

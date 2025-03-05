@@ -16,19 +16,25 @@
 			<h1 class="h3 text-gray-800">Sales Rep </h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="<?php echo base_url()?>order/admin/add-sales-rep"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="javascript:void(0)" onclick="syncSoftProSalesReps();"  class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-refresh"></i>
+                </span>
+                <span class="text"> Refresh </span> 
+            </a>
+            <!-- <a href="<?php echo base_url()?>order/admin/add-sales-rep"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
                 <span class="text"> Add Sales Rep </span> 
-            </a>
+            </a> -->
             <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-                <a href="javascript:void(0);" data-export-type="csv" id="export-sales-rep-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <!-- <a href="javascript:void(0);" data-export-type="csv" id="export-sales-rep-data" class="btn btn-success btn-icon-split float-right mr-2"> 
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
                     <span class="text"> Export </span> 
-                </a>
+                </a> -->
             <?php endif; ?>
 		</div>
 	</div>

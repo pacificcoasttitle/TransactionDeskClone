@@ -2393,8 +2393,9 @@ class Order
                     ];
                 } else {
                     $updateData[] = [
-                        'is_synced' => 0,
-                        'id' => $res['Id']
+                        'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
+                        'id' => $res['Id'],
+                        'reason' => $res['Message']
                     ];
                 }
             }
@@ -2516,8 +2517,9 @@ class Order
                     ];
                 } else {
                     $updateData[] = [
-                        'is_synced' => 0,
-                        'id' => $res['Id']
+                        'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
+                        'id' => $res['Id'],
+                        'reason' => $res['Message']
                     ];
                 }
             }

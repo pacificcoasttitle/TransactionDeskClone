@@ -6546,7 +6546,8 @@ class Cron extends MX_Controller
                 $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+            echo json_encode(['status' => 'success','updated' => count($update_data), 'inserted' => count($insert_data)]);
+            exit;
         }
     }
 
@@ -6725,7 +6726,7 @@ class Cron extends MX_Controller
                         ];
                     } else {
                         $updateData[] = [
-                            'is_synced' => (strtolower($res['Message']) == 'order was not found.') ? 1 : 0,
+                            'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1, //(strtolower($res['Message']) == 'order was not found.') ? 1 : 0,
                             'id' => $res['Id'],
                             'reason' => $res['Message'],
                         ];
