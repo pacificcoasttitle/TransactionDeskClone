@@ -1003,7 +1003,7 @@ class Sales extends MX_Controller {
 						$action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
 					}
                     $action .= " </div>";
-                    $nestedData[] = $action;
+                    // $nestedData[] = $action;
                 }
                 $data[] = $nestedData;            
             }
