@@ -85,7 +85,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
+                                <label for="phone" class="col-sm-2 col-form-label">Telephone<span class="required"> *</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" value="<?php echo set_value('phone'); ?>" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
                                 </div>
@@ -120,7 +120,7 @@
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address'); ?>" readonly class="form-control" placeholder="Address">
+                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address'); ?>" class="form-control" placeholder="Address">
                                     <?php if (!empty($address_error_msg)) {?>
                                         <span class="error"><?php echo $address_error_msg; ?></span>
                                     <?php }?>
@@ -130,7 +130,7 @@
                             <div class="form-group">
                                 <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city'); ?>" readonly class="form-control" placeholder="City">
+                                    <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city'); ?>" class="form-control" placeholder="City">
                                     <?php if (!empty($city_error_msg)) {?>
                                         <span class="error"><?php echo $city_error_msg; ?></span>
                                     <?php }?>
@@ -140,7 +140,7 @@
                             <div class="form-group">
                                 <label for="state" class="col-sm-2 col-form-label">State<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state'); ?>" readonly class="form-control" placeholder="State">
+                                    <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state'); ?>" class="form-control" placeholder="State">
                                     <?php if (!empty($state_error_msg)) {?>
                                         <span class="error"><?php echo $state_error_msg; ?></span>
                                     <?php }?>
@@ -150,7 +150,7 @@
                             <div class="form-group">
                                 <label for="zipcode" class="col-sm-2 col-form-label">Zipcode<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode'); ?>" readonly class="form-control" placeholder="Zipcode">
+                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode'); ?>" class="form-control" placeholder="Zipcode">
                                     <?php if (!empty($zipcode_error_msg)) {?>
                                         <span class="error"><?php echo $zipcode_error_msg; ?></span>
                                     <?php }?>
