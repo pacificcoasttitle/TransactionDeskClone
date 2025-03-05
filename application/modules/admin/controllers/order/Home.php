@@ -701,6 +701,177 @@ class Home extends MX_Controller
         $salesRepData  = [];
 
         if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', array('required' => 'Please Enter First Name'));
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', array('required' => 'Please Enter Last Name'));
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+            $this->form_validation->set_rules('company', 'Company', 'required', array('required' => 'Please Enter Company'));
+            $this->form_validation->set_rules('user_type', 'User type', 'required', array('required' => 'Please Select User Type'));
+            $this->form_validation->set_rules('address', 'Address', 'required', array('required' => 'Please Enter Address'));
+            $this->form_validation->set_rules('city', 'City', 'required', array('required' => 'Please Enter City'));
+            $this->form_validation->set_rules('state', 'State', 'required', array('required' => 'Please Enter State'));
+            $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', array('required' => 'Please Enter Zipcode'));
+            $this->form_validation->set_rules('partner_id', 'Company', 'required', array('required' => 'Please select company based on search'));
+
+            if ($this->form_validation->run() == true) {
+                if ($userType == 'realtor') {
+                    $this->load->model('order/agent_model');
+                    $agentData = array(
+                        'name' => $this->input->post('first_name') . " " . $this->input->post('last_name'),
+                        'email_address' => $this->input->post('email_address'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'company' => $this->input->post('company'),
+                        'address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'zipcode' => $this->input->post('zipcode'),
+                        'is_listing_agent' => 0,
+                        'status' => 1,
+                    );
+
+                    $condition = array(
+                        'where' => array(
+                            'partner_id' => $this->input->post('partner_id'),
+                            'partner_employee_id' => $this->input->post('resware_client_id'),
+                        ),
+                        'returnType' => 'count',
+                    );
+                    $prevCount = $this->agent_model->get_rows($condition);
+
+                    if ($prevCount > 0) {
+                        $updateCondition = array(
+                            'partner_id' => $this->input->post('partner_id'),
+                            'partner_employee_id' => $this->input->post('resware_client_id'),
+                        );
+                        $update = $this->agent_model->update($agentData, $updateCondition);
+                    } else {
+                        $agentData['partner_id'] = $this->input->post('partner_id');
+                        $agentData['partner_employee_id'] = $this->input->post('resware_client_id');
+                        $insert = $this->agent_model->insert($agentData);
+                    }
+                } else {
+                    if ($userType == 'escrow') {
+                        $userTypeFlag = 1;
+                    } else if ($userType == 'lender') {
+                        $userTypeFlag = 0;
+                    } else if ($userType == 'mortgage_broker') {
+                        $userTypeFlag = 2;
+                    }
+
+                    $customerData = array(
+                        'partner_id' => $this->input->post('partner_id'),
+                        'resware_user_id' => !empty($this->input->post('resware_client_id')) ? $this->input->post('resware_client_id') : 0,
+                        'first_name' => $this->input->post('first_name'),
+                        'last_name' => $this->input->post('last_name'),
+                        'telephone_no' => $this->input->post('telephone_no'),
+                        'email_address' => $this->input->post('email_address'),
+                        'password' => 'Pacific1',
+                        'company_name' => $this->input->post('company'),
+                        'street_address' => $this->input->post('address'),
+                        'city' => $this->input->post('city'),
+                        'state' => $this->input->post('state'),
+                        'zip_code' => $this->input->post('zipcode'),
+                        'is_escrow' => $userTypeFlag,
+                        'is_master' => 0,
+                        'is_password_updated' => 0,
+                        'is_new_user' => 1,
+                        'status' => 1,
+                    );
+                    $response = $this->addNewUserToResware($customerData);
+
+                    if ($response['success']) {
+                        $customerData['resware_user_id'] = $response['resware_user_id'];
+                        $customerData['random_password'] = $this->order->randomPassword();
+                        $reswareUpdatePwdData = array(
+                            'user_name' => $this->input->post('email_address'),
+                            'password' => 'Pacific1',
+                            'new_password' => $customerData['random_password'],
+                        );
+                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, array(), 0, 0);
+                        $updatePwdResult = $this->updatePasswordResware($reswareUpdatePwdData);
+                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
+                        $responsePwd = json_decode($updatePwdResult, true);
+
+                        if (!empty($responsePwd['message'])) {
+                            $customerData['resware_error_msg'] = $responsePwd['message'];
+                            $data['error_msg'] = 'Password update failed due to: ' . $responsePwd['message'];
+
+                        } else {
+                            $customerData['is_password_updated'] = 1;
+                            $data['success_msg'] = 'Password updated successfully for email user: ' . $this->input->post('email_address');
+                        }
+
+                        if (!empty($this->input->post('resware_client_id'))) {
+                            $condition = array(
+                                'where' => array(
+                                    'partner_id' => $this->input->post('partner_id'),
+                                    'resware_user_id' => $this->input->post('resware_client_id'),
+                                ),
+                                'returnType' => 'count',
+                            );
+                            $prevCount = $this->home_model->get_rows($condition);
+                            if ($prevCount > 0) {
+                                $updateCondition = array(
+                                    'partner_id' => $this->input->post('partner_id'),
+                                    'resware_user_id' => $this->input->post('resware_client_id'),
+                                );
+                                $update = $this->home_model->update($customerData, $updateCondition);
+                                /** Save user Activity */
+                                $activity = 'New user updated :- ' . $this->input->post('email_address');
+                                $this->order->logAdminActivity($activity);
+                                /** End Save user activity */
+                            } else {
+                                $insert = $this->home_model->insert($customerData);
+                                /** Save user Activity */
+                                $activity = 'New user created :- ' . $this->input->post('email_address');
+                                $this->order->logAdminActivity($activity);
+                                /** End Save user activity */
+                            }
+                        } else {
+                            $insert = $this->home_model->insert($customerData);
+                            /** Save user Activity */
+                            $activity = 'New user created :- ' . $this->input->post('email_address');
+                            $this->order->logAdminActivity($activity);
+                            /** End Save user activity */
+                        }
+
+                    } else {
+                        $data['error_msg'] = $response['msg'];
+                    }
+                }
+            } else {
+                $data['first_name_error_msg']    = form_error('first_name');
+                $data['last_name_error_msg']     = form_error('last_name');
+                $data['email_address_error_msg'] = form_error('email_address');
+                $data['company_name_error_msg']  = form_error('company_name');
+                $data['user_type_error_msg']     = form_error('user_type');
+                $data['address_error_msg']       = form_error('address');
+                $data['city_error_msg']          = form_error('city');
+                $data['state_error_msg']         = form_error('state');
+                $data['zipcode_error_msg']       = form_error('zipcode');
+                if (empty(form_error('company_name'))) {
+                    $data['company_error_msg'] = form_error('partner_id');
+                }
+            }
+        }
+        $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
+        $this->admintemplate->addCSS(base_url('assets/frontend/css/jquery-ui.css'));
+        $this->admintemplate->addJS(base_url('assets/libs/jquery-1.12.4.min.js'));
+        $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-ui.min.js'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/add-new-user.js'));
+        $this->admintemplate->show("order/home", "add_new_user", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_new_user', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function addSoftProNewUser()
+    {
+        $this->load->model('order/apiLogs');
+        $userdata      = $this->session->userdata('admin');
+        $data          = [];
+        $data['title'] = 'PCT Order: Add New User';
+        $salesRepData  = [];
+
+        if ($this->input->post()) {
             $this->form_validation->set_rules('first_name', 'First Name', 'required', ['required' => 'Please Enter First Name']);
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
@@ -744,9 +915,9 @@ class Home extends MX_Controller
 
                 ];
 
-                $response = $this->addNewUserToSoftpro($customerData, 'create_user');
                 // echo "<pre>";
-                // print_r($response);die;
+                // print_r($customerData);die;
+                $response = $this->addNewUserToSoftpro($customerData, 'create_user');
                 $customerData = [
                     'first_name'         => $first_name,
                     'last_name'          => $last_name,
@@ -799,7 +970,7 @@ class Home extends MX_Controller
         $this->admintemplate->addJS(base_url('assets/libs/jquery-1.12.4.min.js'));
         $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-ui.min.js'));
         $this->admintemplate->addJS(base_url('assets/backend/js/add-new-user.js'));
-        $this->admintemplate->show("order/home", "add_new_user", $data);
+        $this->admintemplate->show("order/home", "add_sp_new_user", $data);
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_new_user', $data);
         // $this->load->view('order/layout/footer', $data);

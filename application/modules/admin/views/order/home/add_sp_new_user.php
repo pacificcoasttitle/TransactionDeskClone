@@ -27,7 +27,7 @@
                 <h1 class="h3 text-gray-800">Add New User</h1>
             </div>
             <div class="col-sm-6">
-                <a href="<?php echo base_url() . 'order/admin/new-users'; ?>" class="btn btn-info btn-icon-split float-right mr-2">
+                <a href="<?php echo base_url() . 'order/admin/softpro-new-users'; ?>" class="btn btn-info btn-icon-split float-right mr-2">
                     <span class="icon text-white-50">
                         <i class="fas fa-arrow-left"></i>
                     </span>
@@ -43,11 +43,14 @@
                     </div>
                     <div class="card-body">
                         <form id="add-new-user" method="POST">
-
                             <div class="form-group">
-                                <label for="resware_client_id" class="col-sm-2 col-form-label">Resware Client Id</label>
+                                <label for="company" class="col-sm-2 col-form-label">Company Name<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="number" class="form-control" name="resware_client_id" id="resware_client_id" value="<?php echo set_value('resware_client_id'); ?>" class="form-control" placeholder="Resware Client Id">
+                                    <input type="hidden" class="form-control" name="flookup_code" id="flookup_code" value="<?php echo set_value('flookup_code'); ?>" class="form-control" >
+                                    <input type="text" class="form-control" name="company_name" id="company_name" value="<?php echo set_value('company_name'); ?>" class="form-control" placeholder="Company Name">
+                                    <?php if (!empty($company_error_msg)) {?>
+                                        <span class="error"><?php echo $company_name_error_msg; ?></span>
+                                    <?php }?>
                                 </div>
                             </div>
 
@@ -82,23 +85,13 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="telephone_no" class="col-sm-2 col-form-label">Telephone</label>
+                                <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
                                 <div class="col-sm-6">
-                                    <input type="text" value="<?php echo set_value('telephone_no'); ?>" class="form-control" name="telephone_no" id="telephone_no" class="form-control" placeholder="Telephone">
+                                    <input type="text" value="<?php echo set_value('phone'); ?>" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="company" class="col-sm-2 col-form-label">Company<span class="required"> *</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="company" id="company" value="<?php echo set_value('company'); ?>" class="form-control" placeholder="Company">
-                                    <?php if (!empty($company_error_msg)) {?>
-                                        <span class="error"><?php echo $company_error_msg; ?></span>
-                                    <?php }?>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="company" class="col-sm-2 col-form-label">Title Company<span class="required"> *</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="title_company" id="title_company" value="<?php echo set_value('title_company'); ?>" class="form-control" placeholder="Title Company">
@@ -106,7 +99,7 @@
                                         <span class="error"><?php echo $title_company_error_msg; ?></span>
                                     <?php }?>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group">
                                 <label for="user_type" class="col-sm-2 col-form-label">User Type<span class="required"> *</span></label>
@@ -127,7 +120,7 @@
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address'); ?>" class="form-control" placeholder="Address">
+                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address'); ?>" readonly class="form-control" placeholder="Address">
                                     <?php if (!empty($address_error_msg)) {?>
                                         <span class="error"><?php echo $address_error_msg; ?></span>
                                     <?php }?>
@@ -137,7 +130,7 @@
                             <div class="form-group">
                                 <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city'); ?>" class="form-control" placeholder="City">
+                                    <input type="text" class="form-control" name="city" id="city" value="<?php echo set_value('city'); ?>" readonly class="form-control" placeholder="City">
                                     <?php if (!empty($city_error_msg)) {?>
                                         <span class="error"><?php echo $city_error_msg; ?></span>
                                     <?php }?>
@@ -147,7 +140,7 @@
                             <div class="form-group">
                                 <label for="state" class="col-sm-2 col-form-label">State<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state'); ?>" class="form-control" placeholder="State">
+                                    <input type="text" class="form-control" name="state" id="state" value="<?php echo set_value('state'); ?>" readonly class="form-control" placeholder="State">
                                     <?php if (!empty($state_error_msg)) {?>
                                         <span class="error"><?php echo $state_error_msg; ?></span>
                                     <?php }?>
@@ -157,15 +150,13 @@
                             <div class="form-group">
                                 <label for="zipcode" class="col-sm-2 col-form-label">Zipcode<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode'); ?>" class="form-control" placeholder="Zipcode">
+                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode'); ?>" readonly class="form-control" placeholder="Zipcode">
                                     <?php if (!empty($zipcode_error_msg)) {?>
                                         <span class="error"><?php echo $zipcode_error_msg; ?></span>
                                     <?php }?>
                                 </div>
                             </div>
 
-                            <input type="hidden" name="partner_id" id="partner_id" value="<?php echo set_value('partner_id'); ?>">
-                            <input type="hidden" name="title_partner_id" id="title_partner_id" value="<?php echo set_value('title_partner_id'); ?>">
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">

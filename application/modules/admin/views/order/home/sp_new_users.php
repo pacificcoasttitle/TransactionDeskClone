@@ -16,7 +16,7 @@
 			<h1 class="h3 text-gray-800"> New Users </h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="<?php echo base_url()?>order/admin/add-new-user"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="<?php echo base_url()?>order/admin/add-softpro-new-user"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
