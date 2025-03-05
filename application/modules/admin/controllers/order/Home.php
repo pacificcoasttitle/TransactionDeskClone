@@ -877,6 +877,7 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
             $this->form_validation->set_rules('company_name', 'Company Name', 'required', ['required' => 'Please Enter Company']);
             $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
+            $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
             $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
             $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
             $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
@@ -956,13 +957,11 @@ class Home extends MX_Controller
                 $data['email_address_error_msg'] = form_error('email_address');
                 $data['company_name_error_msg']  = form_error('company_name');
                 $data['user_type_error_msg']     = form_error('user_type');
+                $data['phone_error_msg']       = form_error('phone');
                 $data['address_error_msg']       = form_error('address');
                 $data['city_error_msg']          = form_error('city');
                 $data['state_error_msg']         = form_error('state');
                 $data['zipcode_error_msg']       = form_error('zipcode');
-                if (empty(form_error('company_name'))) {
-                    $data['company_error_msg'] = form_error('partner_id');
-                }
             }
         }
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
@@ -5666,8 +5665,10 @@ class Home extends MX_Controller
                                     ];
                                 } else {
                                     $updateData[] = [
-                                        'is_synced' => 0,
-                                        'id' => $res['Id']
+                                        // 'is_synced' => 0,
+                                        'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
+                                        'id' => $res['Id'],
+                                        'reason' => $res['Message']
                                     ];
                                 }
                             }
@@ -7967,6 +7968,7 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
             $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
             $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
+            $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
             $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
             $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
             $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', ['required' => 'Please Enter Zipcode']);
@@ -7988,7 +7990,7 @@ class Home extends MX_Controller
                     $companyType = 'Mortgage Broker';
                 } else if ($userType == 'realtor') {
                     $is_realtor = 1;
-                    $companyType = 'Selling Agent';
+                    $companyType = 'Selling Agent/Broker';
                 }
                 $name   = $this->input->post('name');
                 $address   = $this->input->post('address');
@@ -8006,8 +8008,6 @@ class Home extends MX_Controller
                     'UserType' =>  $companyType
                 ];
                 
-                // echo "<pre>";
-                // print_r($customerData);die;
                 $response = $this->addNewUserToSoftpro($customerData, 'add_company');
                 $companyData = [
                     'name'         => $name,
@@ -8041,6 +8041,7 @@ class Home extends MX_Controller
                 $data['email_address_error_msg'] = form_error('email_address');
                 $data['user_type_error_msg']     = form_error('user_type');
                 $data['address_error_msg']       = form_error('address');
+                $data['phone_error_msg']       = form_error('phone');
                 $data['city_error_msg']          = form_error('city');
                 $data['state_error_msg']         = form_error('state');
                 $data['zipcode_error_msg']       = form_error('zipcode');

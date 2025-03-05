@@ -48,7 +48,7 @@
                                 <div class="col-sm-6">
                                     <input type="hidden" class="form-control" name="flookup_code" id="flookup_code" value="<?php echo set_value('flookup_code'); ?>" class="form-control" >
                                     <input type="text" class="form-control" name="company_name" id="company_name" value="<?php echo set_value('company_name'); ?>" class="form-control" placeholder="Company Name">
-                                    <?php if (!empty($company_error_msg)) {?>
+                                    <?php if (!empty($company_name_error_msg)) {?>
                                         <span class="error"><?php echo $company_name_error_msg; ?></span>
                                     <?php }?>
                                 </div>
@@ -88,6 +88,9 @@
                                 <label for="phone" class="col-sm-2 col-form-label">Telephone<span class="required"> *</span></label>
                                 <div class="col-sm-6">
                                     <input type="text" value="<?php echo set_value('phone'); ?>" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
+                                    <?php if (!empty($phone_error_msg)) {?>
+                                        <span class="error"><?php echo $phone_error_msg; ?></span>
+                                    <?php }?>
                                 </div>
                             </div>
 
@@ -166,7 +169,7 @@
                                         <span class="text">Add</span>
                                     </button>
                                     <!-- <button type="submit" class="btn btn-secondary">Update</button> -->
-                                    <a href="<?php echo base_url() . 'order/admin/new-users'; ?>" class="btn btn-secondary btn-icon-split">
+                                    <a href="<?php echo base_url() . 'order/admin/softpro-new-users'; ?>" class="btn btn-secondary btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-arrow-left"></i>
                                         </span>

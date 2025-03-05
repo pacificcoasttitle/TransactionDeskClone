@@ -7531,3 +7531,48 @@ function updateTitleOfficerEmailReceiveFlag() {
         });
     });
 }
+
+function syncSoftProSalesReps() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-sales-rep-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Reps synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#sales_rep_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#sales_rep_success_msg").offset().top
+                }, 1000);
+                sales_rep_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#sales_rep_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#sales_rep_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#sales_rep_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#sales_rep_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#sales_rep_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#sales_rep_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#sales_rep_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
