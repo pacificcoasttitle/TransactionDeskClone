@@ -240,7 +240,7 @@ $route['order/admin/softpro-lenders']               = 'admin/order/home/spAdminL
 $route['order/admin/softpro-mortgage-brokers']      = 'admin/order/home/spAdminMortgageBrokers';
 $route['is-softpro-mortgage-primary-user']          = 'admin/order/home/isSPMortgagePrimaryUser';
 $route['order/admin/softpro-new-users']             = 'admin/order/home/spNewUsers';
-$route['order/admin/add-softpro-new-user']          = 'admin/order/home/addNewUser';
+$route['order/admin/add-softpro-new-user']          = 'admin/order/home/addSoftProNewUser';
 
 $route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
 $route['order/admin/softpro-add-company']                   = 'admin/order/home/spAddCompany';
