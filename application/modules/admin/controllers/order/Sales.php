@@ -985,6 +985,7 @@ class Sales extends MX_Controller {
         if (isset($sales_rep_lists['data']) && !empty($sales_rep_lists['data'])) {
             foreach ($sales_rep_lists['data'] as $key => $value)  {
                // echo "<pre>"; print_r($value); exit;
+                $id    = $value['id'];
                 $nestedData=array();
                 $nestedData[] = $value['lookup_code'];
                 $nestedData[] = $value['first_name']." ".$value['last_name'];
@@ -992,7 +993,13 @@ class Sales extends MX_Controller {
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['phone'];
                 $nestedData[] = ($value['is_sales_rep_manager'] == 1) ? 'Sales Rep Manager' : 'Sales Rep';
-                $nestedData[] = ($value['is_mail_notification'] == 1) ? 'On' : 'Off';
+                if ($value['is_mail_notification'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='updateMailNotificationReps();' style='height:30px;width:20px;' type='checkbox' id='$id' name='$id'>";
+                // $nestedData[] = ($value['is_mail_notification'] == 1) ? 'On' : 'Off';
                 $nestedData[] = ($value['status'] == 1) ? 'Enable' : 'Disable';
                 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1013,5 +1020,25 @@ class Sales extends MX_Controller {
         $json_data['recordsFiltered'] = intval( $sales_rep_lists['recordsFiltered'] );
         $json_data['data'] = $data;
         echo json_encode($json_data);
+    }
+
+    public function updateRepsMailFlag()
+    {
+        $reps_id             = $this->input->post('id');
+        $flag     = $this->input->post('flag');
+        $data['is_mail_notification'] = $flag;
+        $data['updated_at']  = date("Y-m-d H:i:s");
+        $condition           = [
+            'id' => $reps_id,
+        ];
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
+        $data = ['status' => 'success', 'msg' => 'Email flag updated successfully for sales reps.'];
+        /** Save user Activity */
+        $this->load->model('order/home_model');
+        $orderUser = $this->home_model->sp_get_user($condition);
+        $activity  = 'Mail notification value: ' . $flag . ' updated successfully for sales rep : ' . $orderUser['email_address'];
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+        echo json_encode($data);
     }
 }

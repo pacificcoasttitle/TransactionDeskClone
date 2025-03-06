@@ -44,8 +44,8 @@ class FileUpload extends MX_Controller
                 if (!is_dir('/uploads/desk-file-upload')) {
                     mkdir('./uploads/desk-file-upload', 0777, true);
                 }
-                $orderNumber = $this->input->post('order_number');
-                $documentName = $this->input->post('document_name');
+                $orderNumber = $this->sanitizeFilename($this->input->post('order_number'));
+                $documentName = $this->sanitizeFilename($this->input->post('document_name'));
                 if (!empty($_FILES['multiFiles']['name'])) {
                     $files = $_FILES['multiFiles'];
                     $cpt = count($files['name']);
@@ -241,4 +241,11 @@ class FileUpload extends MX_Controller
         echo json_encode($json_data);
     }
 
+    function sanitizeFilename($filename) {
+        // Remove or replace common illegal characters
+        $filename = preg_replace('/[\/:*?"<>|\\\]/', '', $filename); // Windows illegal characters
+        $filename = str_replace(["\t", "\n", "\r"], '', $filename); // Remove tab, newlines, and carriage returns
+    
+        return trim($filename);
+    }
 }

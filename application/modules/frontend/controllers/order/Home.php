@@ -552,26 +552,17 @@ class Home extends MX_Controller
                     ];
 
                     // $order_data = json_encode($place_order);
-                    // echo "<pre>";
-                    // print_r($orderReq);
-
-                    // print_r($orderReq);
-                    // die;
+                    
                     $order_data = json_encode($orderReq);
 
-                    // print_r($order_data);die;
                     $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_order', 'create_order', $order_data, [], 0, 0);
-                    // print_r($logid);die;
                     $response = $this->softpro->make_request('POST', 'create_order', $order_data, $user_data);
                     $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'create_order', 'create_order', $order_data, json_encode($response), 0, $logid);
-                    // print_r($response);die;
                     // $this->load->library('order/resware');
                     // $result = $this->resware->make_request('POST', 'orders', $order_data, $user_data);
                     $lpOrderFlag = 0;
 
                     if (isset($response) && !empty($response)) {
-                        // $response = $result, true);
-
                         if (isset($response['status']) && $response['status'] == 'error') {
                             // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                             /* Start add softpro api logs */
@@ -594,21 +585,22 @@ class Home extends MX_Controller
                             $orderNumber = $file_id = '';
                             if (isset($response['OrderNumber']) && !empty($response['OrderNumber'])) {
                                 $orderNumber = isset($response['OrderNumber']) && !empty($response['OrderNumber']) ? $response['OrderNumber'] : '';
-                                // $file_id = isset($response['FileID']) && !empty($response['FileID']) ? $response['FileID'] : '';
+                                /* Start add softpro api logs */
+                                $softproLog = [
+                                    'request_type' => 'create_order_in_softpro',
+                                    'request_url'  => 'create_order',
+                                    'request'      => $order_data,
+                                    'response'     => json_encode($response),
+                                    'status'       => 'success',
+                                    // 'file_id' => $file_id,
+                                    'file_number'  => $orderNumber,
+                                    'created_at'   => date("Y-m-d H:i:s"),
+                                ];
+                                // print_r($softproLog);die;
+                                $this->db->insert('pct_resware_log', $softproLog);
+                                $this->order->updateTaskStatus('open_order', $orderNumber);
+                               
                             }
-                            /* Start add softpro api logs */
-                            $softproLog = [
-                                'request_type' => 'create_order_in_softpro',
-                                'request_url'  => 'create_order',
-                                'request'      => $order_data,
-                                'response'     => json_encode($response),
-                                'status'       => 'success',
-                                // 'file_id' => $file_id,
-                                'file_number'  => $orderNumber,
-                                'created_at'   => date("Y-m-d H:i:s"),
-                            ];
-                            // print_r($softproLog);die;
-                            $this->db->insert('pct_resware_log', $softproLog);
 
                             /* End add softpro api logs */
                             /*if ($orderNumber) {
@@ -1451,7 +1443,7 @@ class Home extends MX_Controller
                         "FileURL"    => env('AWS_PATH') . "curative/" . $fileName,
                     ];
                 }
-
+                $isLvDocs = false;
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('legal-vesting/' . $lvfilename)) {
                     $file[] = env('AWS_PATH') . "legal-vesting/" . $lvfilename;
                     // $this->uploadLvDocsToResware($lvfilename, $file_id, $orderDetails, $lpOrderFlag);
@@ -1459,6 +1451,7 @@ class Home extends MX_Controller
                         "FolderName" => 'legal-vesting',
                         "FileURL"    => env('AWS_PATH') . "legal-vesting/" . $lvfilename,
                     ];
+                    $isLvDocs = true;
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('grant-deed/' . $deedfilename)) {
@@ -1511,11 +1504,15 @@ class Home extends MX_Controller
                                     'id' => $res['Id']
                                 ];
                             } else {
-                                $updateData[] = [
+                                $updateArr = [
                                     'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
                                     'id' => $res['Id'],
                                     'reason' => $res['Message']
                                 ];
+                                if ($updateArr['is_synced'] && $isLvDocs) {
+                                    $this->order->updateTaskStatus('lv_client', $orderNumber);
+                                }
+                                $updateData[] = $updateArr;
                             }
                         }
                     }
