@@ -4882,4 +4882,50 @@ class Order
         // Return fetched data
         return $result;
     }
+
+    public function updateTaskStatus($taskType, $orderNumber) {
+        $taskIds = SOFTPRO_TASK_ID;
+        $taskReq[] = [
+            "OrderNumber" => $orderNumber,
+            "TaskId" => $taskIds[$taskType]
+        ];
+        
+        $taskData = json_encode($taskReq);
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->library('order/softPro');
+        
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', 'update_task', $taskData, [], 0, 0);
+        $taskResponse = $this->CI->softpro->make_request('POST', 'update_task', $taskData);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', 'update_task', $taskData, json_encode($taskResponse), 0, $logid);
+
+        if (isset($taskResponse) && !empty($taskResponse)) {
+            if (isset($taskResponse['status']) && $taskResponse['status'] == 'error') {
+                // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
+                /* Start add softpro api logs */
+                $softproLog = [
+                    'request_type' => 'create_order_update_task',
+                    'request_url'  => 'update_task',
+                    'request'      => $taskData,
+                    'response'     => json_encode($taskResponse),
+                    'status'       => 'error',
+                    'created_at'   => date("Y-m-d H:i:s"),
+                ];
+
+                $this->CI->db->insert('pct_resware_log', $softproLog);
+                /* End add softpro api logs */
+            } else {
+                /* Start add softpro api logs */
+                $softproLog = [
+                    'request_type' => 'create_order_update_task',
+                    'request_url'  => 'update_task',
+                    'request'      => $taskData,
+                    'response'     => json_encode($taskResponse),
+                    'status'       => 'success',
+                    'file_number'  => $orderNumber,
+                    'created_at'   => date("Y-m-d H:i:s"),
+                ];
+                $this->CI->db->insert('pct_resware_log', $softproLog);
+            }
+        }
+    }
 }

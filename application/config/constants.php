@@ -120,7 +120,13 @@ defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
     'add_note' => 'ordercreation/AddNotes',
     'get_prelim_documents' => 'ordercreation/GetAttachedDocuments',
     'add_company' => 'ordercreation/AddCompany',
-    
+    'update_task' => 'ordercreation/AddTask'
+]);
+
+defined('SOFTPRO_TASK_ID') or define('SOFTPRO_TASK_ID', [
+    'open_order' => '01-005',
+    'lv_client' => '01-010',
+    'update_prelim' => '03-005'
 ]);
 
 defined('TRANSACTION_TYPE') or define('TRANSACTION_TYPE', [
