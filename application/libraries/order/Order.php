@@ -4928,4 +4928,20 @@ class Order
             }
         }
     }
+
+    function splitFullName($fullName) {
+        // Trim and split the full name into an array
+        $nameParts = explode(' ', trim($fullName));
+    
+        // Assign values based on the number of parts
+        $firstName = $nameParts[0] ?? '';
+        $middleName = count($nameParts) > 2 ? $nameParts[1] : '';
+        $lastName = count($nameParts) > 2 ? $nameParts[2] : ($nameParts[1] ?? '');
+    
+        return [
+            'first_name' => $firstName,
+            'middle_name' => $middleName,
+            'last_name' => $lastName
+        ];
+    }
 }
