@@ -126,6 +126,8 @@ class Home extends MX_Controller
                 $PrimaryName      = array_slice($SplitName, 0, -1);
                 $OwnerFirstName   = implode(" ", $PrimaryName);
                 $SecondaryOwner   = $this->input->post('SecondaryOwner');
+                $primaryOwnerArray = $this->order->splitFullName($PrimaryOwner);
+                $secondaryOwnerArray = $this->order->splitFullName($SecondaryOwner);
 
                 $SalesRep  = $this->input->post('SalesRep');
                 $condition = [
@@ -163,6 +165,9 @@ class Home extends MX_Controller
                 $ProductTypeTxt       = $this->input->post('ProductType');
                 $primaryBorrower      = $this->input->post('primaryBorrower');
                 $secondaryBorrower    = $this->input->post('secondaryBorrower');
+                $primaryBorrowerArray = $this->order->splitFullName($primaryBorrower);
+                $secondaryBorrowerArray = $this->order->splitFullName($secondaryBorrower);
+                
                 $TransactionTypeID    = isset($_POST["TransactionTypeID"]) && !empty($_POST["TransactionTypeID"]) ? $_POST["TransactionTypeID"] : 3;
                 $TransactionType      = $this->input->post('TransactionType');
                 $ProductTypeID        = $this->input->post('ProductTypeID');
@@ -420,12 +425,18 @@ class Home extends MX_Controller
                     ];
                     
                     $transactionDetailsReq = [
-                        "LookUpCodeTitleOfficer" => $titleOfficerLookupCode,
-                        "TitleOfficer"           => $titleOfficerName,
+                        "LookUpCodeTitleOffice" => $titleOfficerLookupCode,
+                        "TitleOffice"           => $titleOfficerName,
                         "Product"                => $softproProductType,
                         "EscrowNumber"           => $EscrowNumber,
-                        "PrimaryBorrower"        => $primaryBorrower,
-                        "SecondaryBorrower"      => $secondaryBorrower,
+                        // "PrimaryBorrower"        => $primaryBorrower,
+                        // "SecondaryBorrower"      => $secondaryBorrower,
+                        'PrimaryBorrowerFirstName' => $primaryBorrowerArray['first_name'],
+                        'PrimaryBorrowerMiddleName' => $primaryBorrowerArray['middle_name'],
+                        'PrimaryBorrowerLastName' => $primaryBorrowerArray['last_name'],
+                        'SecondaryBorrowerFirstName' => $secondaryBorrowerArray['first_name'],
+                        'SecondaryBorrowerMiddleName' => $secondaryBorrowerArray['middle_name'],
+                        'SecondaryBorrowerLastName' => $secondaryBorrowerArray['last_name'],
                         // "LoanAmount" => $LoanAmount,
                     ];
 
@@ -464,7 +475,10 @@ class Home extends MX_Controller
                     if ($TransactionType != 'Purchase') {
                         $transactionDetailsReq["LoanAmount"] = $LoanAmount;
                         // $orderReq['orderType'] = "Refinance";
-                        $transactionDetailsReq['PrimaryBorrower'] = $OwnerFirstName . ' ' . $OwnerLastName;
+                        // $transactionDetailsReq['PrimaryBorrower '] = $OwnerFirstName . ' ' . $OwnerLastName;
+                        $transactionDetailsReq['PrimaryBorrowerFirstName'] = $primaryOwnerArray['first_name'];
+                        $transactionDetailsReq['PrimaryBorrowerMiddleName'] = $primaryOwnerArray['middle_name'];
+                        $transactionDetailsReq['PrimaryBorrowerLastName'] = $primaryOwnerArray['last_name'];
                         // $place_order['Buyers'][] = $legalEntity; //
                     } else {
                         $borrowerName        = explode(' ', $primaryBorrower);
@@ -478,8 +492,14 @@ class Home extends MX_Controller
                         // $transactionDetailsReq['TransactionType'] = "Purchase";
                         $loanFlag = 0;
                         $orderReq['sellerDetails'] = [
-                            "PrimaryOwner"   => $PrimaryOwner,
-                            "SecondaryOwner" => $SecondaryOwner,
+                            // "PrimaryOwner"   => $PrimaryOwner,
+                            // "SecondaryOwner" => $SecondaryOwner,
+                            "PrimaryOwnerFirstName"   => $primaryOwnerArray['first_name'],
+                            "PrimaryOwnerMiddleName"   => $primaryOwnerArray['middle_name'],
+                            "PrimaryOwnerLastName"   => $primaryOwnerArray['last_name'],
+                            "SecondaryOwnerFirstName" => $secondaryOwnerArray['first_name'],
+                            "SecondaryOwnerMiddleName" => $secondaryOwnerArray['middle_name'],
+                            "SecondaryOwnerLastName" => $secondaryOwnerArray['last_name'],
                         ];
                         // $place_order['Sellers'][] = $legalEntity; //
                         // $place_order['Buyers'][] = $borrowers; //
