@@ -147,8 +147,8 @@ class Home extends MX_Controller
                 $titleOfficerDetails = $this->order->getTitleOfficerLookupDetails($condition);
                 // echo "<pre>";
                 // print_r($titleOfficerDetails);die;
-                $titleOfficerName       = isset($titleOfficerDetails['name']) && !empty($titleOfficerDetails['name']) ? $titleOfficerDetails['name'] : '';
-                $titleOfficerLookupCode = isset($titleOfficerDetails['lookupCode']) && !empty($titleOfficerDetails['lookupCode']) ? $titleOfficerDetails['lookupCode'] : '';
+                $titleOfficerName       = isset($titleOfficerDetails['closer_examiner']) && !empty($titleOfficerDetails['closer_examiner']) ? $titleOfficerDetails['closer_examiner'] : '';
+                $titleOfficerLookupCode = isset($titleOfficerDetails['lookup_code']) && !empty($titleOfficerDetails['lookup_code']) ? $titleOfficerDetails['lookup_code'] : '';
 
                 $LoanAmount   = $this->input->post('loanAmount');
                 // print_r($LoanAmount);die;
