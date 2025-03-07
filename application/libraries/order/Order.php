@@ -4849,7 +4849,7 @@ class Order
     {
         $table = 'sp_officers';
         // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
-        $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name, closer_examiner as lookupCode');
+        $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name');
         $this->CI->db->from($table);
         $this->CI->db->where('is_title_officer', 1);
         // $this->CI->db->where('status', 1);
