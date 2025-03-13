@@ -29,6 +29,13 @@
                     </span>
                     <span class="text"> Export </span> 
                 </a>
+
+                <a href="<?php echo base_url()?>order/admin/export-sales-rep-client" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-file-export"></i>
+                    </span>
+                    <span class="text"> Export Sales Rep Client</span> 
+                </a>
             <?php endif; ?>
 		</div>
 	</div>

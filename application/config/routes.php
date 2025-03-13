@@ -281,6 +281,7 @@ $route['order/admin/logout'] = 'admin/order/home/logout';
 $route['order/admin/sales-rep'] = 'admin/order/sales/index';
 $route['order/admin/get-sales-rep-list'] = 'admin/order/sales/get_sales_rep_list';
 $route['order/admin/add-sales-rep'] = 'admin/order/sales/add_sales_rep';
+$route['order/admin/export-sales-rep-client'] = 'admin/order/sales/export_sales_rep_client';
 $route['order/admin/edit-sales-rep/:num'] = 'admin/order/sales/edit_sales_rep';
 $route['order/admin/title-officers'] = 'admin/order/title/index';
 $route['order/admin/get-title-officer-list'] = 'admin/order/title/get_title_officer_list';
@@ -298,6 +299,8 @@ $route['order/admin/cpl-documents'] = 'admin/order/home/cpl_document';
 $route['order/admin/ion-fraud-documents'] = 'admin/order/home/ion_fraud_document';
 $route['order/admin/order-details/:num'] = 'admin/order/order/order_details';
 $route['order/admin/export-orders'] = 'admin/order/order/export_orders';
+$route['order/admin/export-sales-reps'] = 'admin/order/sales/export_sales_reps';
+
 $route['order/admin/export_lp_orders'] = 'admin/order/order/exportLpOrders';
 $route['order/admin/new-users'] = 'admin/order/home/newUsers';
 $route['order/admin/add-new-user'] = 'admin/order/home/addNewUser';
