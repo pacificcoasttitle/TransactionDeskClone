@@ -58,7 +58,7 @@
                                         <span class="text">Export Client</span>
                                     </button>
                                     <!-- <button type="submit" class="btn btn-secondary">Update</button> -->
-                                    <a href="<?php echo base_url() . 'order/admin/new-users'; ?>" class="btn btn-secondary btn-icon-split">
+                                    <a href="<?php echo base_url() . 'order/admin/sales-rep'; ?>" class="btn btn-secondary btn-icon-split">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-arrow-left"></i>
                                         </span>

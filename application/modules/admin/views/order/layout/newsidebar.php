@@ -95,7 +95,8 @@ if (
     $this->uri->uri_string() == 'order/admin/sales-rep' ||
     $this->uri->uri_string() == 'order/admin/add-sales-rep' ||
     $this->uri->segment(3) == 'edit-sales-rep' ||
-    $this->uri->uri_string() == 'order/admin/title-officers' ||
+    $this->uri->segment(3) == 'export-sales-rep-client' ||
+	$this->uri->uri_string() == 'order/admin/title-officers' ||
     $this->uri->uri_string() == 'order/admin/add-title-officer' ||
     $this->uri->segment(3) == 'edit-title-officer' ||
     $this->uri->uri_string() == 'order/admin/master-users' ||
@@ -247,7 +248,7 @@ if (
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin_users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin_users'; ?>">Admin</a>
 							<?php endif;?>
 							<?php if (!in_array($roleName, ['CS Admin'])): ?>
-								<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/sales-rep'; ?>">Sales Rep.</a>
+								<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/sales-rep' || $this->uri->uri_string() == 'order/admin/add-sales-rep' || $this->uri->segment(3) == 'edit-sales-rep' || $this->uri->segment(3) == 'export-sales-rep-client') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/sales-rep'; ?>">Sales Rep.</a>
 							<?php endif;?>
 
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/title-officers' || $this->uri->uri_string() == 'order/admin/add-title-officer' || $this->uri->segment(3) == 'edit-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/title-officers'; ?>">Title Officer</a>
