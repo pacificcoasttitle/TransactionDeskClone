@@ -876,6 +876,7 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
             $this->form_validation->set_rules('company_name', 'Company Name', 'required', ['required' => 'Please Enter Company']);
+            $this->form_validation->set_rules('lookup_code', 'Lookup Code', 'required|min_length[10]', ['required' => 'Please Lookup Code']);
             $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
             $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
             $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
@@ -902,12 +903,13 @@ class Home extends MX_Controller
                 $first_name   = $this->input->post('first_name');
                 $last_name    = $this->input->post('last_name');
                 $company_name = $this->input->post('company_name');
+                $lookup_code = $this->input->post('lookup_code');
                 $customerData = [
                     'FirstName'         => $first_name,
                     'LastName'          => $last_name,
                     'Phone'             => $this->input->post('phone'),
                     'Email'             => $this->input->post('email_address'),
-                    'ClientLookupCode'  => $this->order->generateLookupCode($first_name, $last_name, $company_name),
+                    'ClientLookupCode'  => $lookup_code,
                     'CompanyLookupCode' => $this->input->post('flookup_code'),
                     'Address1'          => $this->input->post('address'),
                     'City'              => $this->input->post('city'),
@@ -924,7 +926,7 @@ class Home extends MX_Controller
                     'last_name'          => $last_name,
                     'phone'              => $this->input->post('phone'),
                     'email_address'      => $this->input->post('email_address'),
-                    'lookup_code'        => $this->order->generateLookupCode($first_name, $last_name, $company_name),
+                    'lookup_code'        => $lookup_code,
                     'flookup_code'       => $this->input->post('flookup_code'),
                     'address1'           => $this->input->post('address'),
                     'city'               => $this->input->post('city'),
@@ -949,13 +951,14 @@ class Home extends MX_Controller
                     $this->form_validation->reset_validation();
 
                 } else {
-                    $data['error_msg'] = $response['error'];
+                    $data['error_msg'] = $response['msg'];
                 }
             } else {
                 $data['first_name_error_msg']    = form_error('first_name');
                 $data['last_name_error_msg']     = form_error('last_name');
                 $data['email_address_error_msg'] = form_error('email_address');
                 $data['company_name_error_msg']  = form_error('company_name');
+                $data['lookup_code_error_msg']  = form_error('lookup_code');
                 $data['user_type_error_msg']     = form_error('user_type');
                 $data['phone_error_msg']       = form_error('phone');
                 $data['address_error_msg']       = form_error('address');
@@ -973,6 +976,18 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_new_user', $data);
         // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function generateLookupCode() {
+        $first_name   = $this->input->post('first_name');
+        $last_name    = $this->input->post('last_name');
+        $company_name = $this->input->post('company_name');
+        $code = '';
+        if (!empty($company_name) && !empty($first_name) && !empty($last_name)) {
+            $code = $this->order->generateLookupCode($first_name, $last_name, $company_name);
+        }
+        $res = ['code' => $code];
+        echo json_encode($res);
     }
 
     public function get_company_list()
@@ -4755,20 +4770,40 @@ class Home extends MX_Controller
             "IsPrimaryResidence" => true,
             "State"              => "CA",
         ];
+        $PrimaryOwner = $order_details['primary_owner'];
+        $SecondaryOwner = $order_details['secondary_owner'];
+        $primaryBorrower      = $order_details['borrower'];
+        $secondaryBorrower    = $order_details['secondary_borrower'];
+        $primaryOwnerArray = $this->order->splitFullName($PrimaryOwner);
+        $secondaryOwnerArray = $this->order->splitFullName($SecondaryOwner);
+        $primaryBorrowerArray = $this->order->splitFullName($primaryBorrower);
+        $secondaryBorrowerArray = $this->order->splitFullName($secondaryBorrower);
         $orderReq['sellerDetails'] = [
-            "PrimaryOwner"   => $order_details['primary_owner'],
-            "SecondaryOwner" => $order_details['secondary_owner'],
+            // "PrimaryOwner"   => $PrimaryOwner,
+            // "SecondaryOwner" => $SecondaryOwner,
+            "PrimaryOwnerFirstName"   => $primaryOwnerArray['first_name'],
+            "PrimaryOwnerMiddleName"   => $primaryOwnerArray['middle_name'],
+            "PrimaryOwnerLastName"   => $primaryOwnerArray['last_name'],
+            "SecondaryOwnerFirstName" => $secondaryOwnerArray['first_name'],
+            "SecondaryOwnerMiddleName" => $secondaryOwnerArray['middle_name'],
+            "SecondaryOwnerLastName" => $secondaryOwnerArray['last_name'],
         ];
         $transactionDetailsReq = [
             "LookUpCodeTitleOfficer" => $order_details['sp_titleofficer_lookup_code'],
-            "TitleOfficer"           => $order_details['sp_title_officer_name'],
+            "TitleOffice"           => $order_details['sp_title_officer_name'],
             "Product"                => $order_details['sp_product_type_name'],
             "EscrowNumber"           => $order_details['escrow_number'],
-            "PrimaryBorrower"        => $order_details['borrower'],
-            "SecondaryBorrower"      => $order_details['secondary_borrower'],
+            // "PrimaryBorrower"        => $order_details['borrower'],
+            // "SecondaryBorrower"      => $order_details['secondary_borrower'],
             // "LoanAmount"             => $order_details['loan_amount'],
             // "SalesAmount"            => $order_details['sales_amount'],
             "TransactionType"        => $order_details['transaction_type'],
+            'PrimaryBorrowerFirstName' => $primaryBorrowerArray['first_name'],
+            'PrimaryBorrowerMiddleName' => $primaryBorrowerArray['middle_name'],
+            'PrimaryBorrowerLastName' => $primaryBorrowerArray['last_name'],
+            'SecondaryBorrowerFirstName' => $secondaryBorrowerArray['first_name'],
+            'SecondaryBorrowerMiddleName' => $secondaryBorrowerArray['middle_name'],
+            'SecondaryBorrowerLastName' => $secondaryBorrowerArray['last_name'],
         ];
 
         $TransactionType = $order_details['transaction_type'];
@@ -4776,8 +4811,11 @@ class Home extends MX_Controller
         $softproOrderType      = $order_details['order_type_name'];
         $orderReq['orderType'] = $order_details['order_type_name'];
         if ($TransactionType != 'Purchase') {
-            $transactionDetailsReq['PrimaryBorrower']   = $order_details['primary_owner'];
-            $transactionDetailsReq['SecondaryBorrower'] = $order_details['secondary_owner'];
+            // $transactionDetailsReq['PrimaryBorrower']   = $order_details['primary_owner'];
+            // $transactionDetailsReq['SecondaryBorrower'] = $order_details['secondary_owner'];
+            $transactionDetailsReq['PrimaryBorrowerFirstName'] = $primaryOwnerArray['first_name'];
+            $transactionDetailsReq['PrimaryBorrowerMiddleName'] = $primaryOwnerArray['middle_name'];
+            $transactionDetailsReq['PrimaryBorrowerLastName'] = $primaryOwnerArray['last_name'];
         } else {
             $borrowerName        = explode(' ', $order_details['borrower']);
             $borrowerLastName    = end($borrowerName);
@@ -4788,6 +4826,14 @@ class Home extends MX_Controller
                 $transactionDetailsReq['SalesAmount'] = $order_details['sales_amount'];
             }
             $loanFlag = 0;
+            $orderReq['sellerDetails'] = [
+                "PrimaryOwnerFirstName"   => $primaryOwnerArray['first_name'],
+                "PrimaryOwnerMiddleName"   => $primaryOwnerArray['middle_name'],
+                "PrimaryOwnerLastName"   => $primaryOwnerArray['last_name'],
+                "SecondaryOwnerFirstName" => $secondaryOwnerArray['first_name'],
+                "SecondaryOwnerMiddleName" => $secondaryOwnerArray['middle_name'],
+                "SecondaryOwnerLastName" => $secondaryOwnerArray['last_name'],
+            ];
         }
 
         // $place_order['TransactionProductType'] = array(
@@ -8034,7 +8080,7 @@ class Home extends MX_Controller
                     $this->form_validation->reset_validation();
 
                 } else {
-                    $data['error_msg'] = $response['error'];
+                    $data['error_msg'] = $response['msg'];
                 }
             } else {
                 $data['name_error_msg']    = form_error('name');

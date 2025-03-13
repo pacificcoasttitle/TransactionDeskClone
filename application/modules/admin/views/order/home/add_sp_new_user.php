@@ -75,6 +75,16 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="lookup_code" class="col-sm-2 col-form-label">Lookup Code<span class="required"> *</span></label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" name="lookup_code" id="lookup_code" value="<?php echo set_value('lookup_code'); ?>" class="form-control" placeholder="Lookup Code">
+                                    <?php if (!empty($lookup_code_error_msg)) {?>
+                                        <span class="error"><?php echo $lookup_code_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="email_address" class="col-sm-2 col-form-label">Email Address<span class="required"> *</span></label>
                                 <div class="col-sm-6">
                                     <input type="email" value="<?php echo set_value('email_address'); ?>" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">

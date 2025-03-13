@@ -152,4 +152,36 @@ jQuery(document).ready(function ($) {
             }
         });
     }
+
+
+});
+
+$("#add-new-user #lookup_code").prop("disabled", false);
+if (!$('#add-new-user #company_name').val() || !$('#add-new-user #first_name').val() || !$('#add-new-user #last_name').val()) {
+    $("#add-new-user #lookup_code").prop("disabled", true);
+}
+
+$('#add-new-user #company_name, #add-new-user #first_name, #add-new-user #last_name').on('focusout', function (e) {
+    let company_name = $('#add-new-user #company_name').val();
+    let first_name = $('#add-new-user #first_name').val();
+    let last_name = $('#add-new-user #last_name').val();
+
+    if (company_name && first_name && last_name) {
+        $.ajax({
+            url: base_url + "order/admin/generate-lookupcode",
+            data: {
+                company_name: company_name,
+                first_name: first_name,
+                last_name: last_name
+            },
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $("#add-new-user #lookup_code").val(data.code);
+                $("#add-new-user #lookup_code").prop("disabled", false);
+            }
+        });
+    }
+
 });
