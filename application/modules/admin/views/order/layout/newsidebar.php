@@ -131,7 +131,7 @@ if (
 
 if (
     $this->uri->uri_string() == 'order/admin/softpro-agents' ||
-    $this->uri->uri_string() == 'order/admin/softpro-escrows' ||
+    $this->uri->uri_string() == 'order/admin/softpro-escrow' ||
     $this->uri->uri_string() == 'order/admin/softpro-lenders' ||
     $this->uri->uri_string() == 'order/admin/softpro-mortgage-brokers' ||
     $this->uri->uri_string() == 'order/admin/softpro-companies' ||
