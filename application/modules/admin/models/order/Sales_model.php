@@ -139,4 +139,14 @@ class Sales_model extends CI_Model
         }
         return false;
     }
+
+    public function get_sales_reps_client($sales_id) {
+        $this->db->distinct();
+        $this->db->select('c.id, c.first_name, c.last_name, c.company_name, c.email_address, c.telephone_no, c.street_address, c.city, c.state, c.zip_code');
+        $this->db->from('transaction_details as t');
+        $this->db->join('customer_basic_details as c', 't.customer_id = c.id', 'inner');
+        $this->db->where('t.sales_representative', $sales_id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
