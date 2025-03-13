@@ -379,7 +379,7 @@ class Sales extends MX_Controller {
 		
         $this->admintemplate->addJS( base_url('assets/vendor/jquery/jquery.min.js'));
         $this->admintemplate->addJS( base_url('assets/admin/js/jquery.validate.min.js'));
-        $this->admintemplate->addJS( base_url('assets/backend/js/add-sales-rep.js'));
+        $this->admintemplate->addJS( base_url('assets/backend/js/add-sales-rep.js?v=1.0'));
         
 		$this->admintemplate->show("order/sales", "add_sales_rep", $data);
         // $this->load->view('order/layout/header', $data);
