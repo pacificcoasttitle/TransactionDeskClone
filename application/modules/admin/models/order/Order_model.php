@@ -386,6 +386,8 @@ class Order_model extends CI_Model
             sp_salerep.phone as sales_rep_phone,
             sp_salerep.first_name as sp_salerep_first_name,
             sp_salerep.last_name as sp_salerep_last_name,
+            sp_salerep.full_name as sp_salerep_full_name,
+            sp_salerep.lookup_code as sp_salerep_lookup_code,
             sp_salerep.is_mail_notification as sp_salerep_is_mail_notification,
             sp_salerep.email_address as sp_salerep_email_address,
 

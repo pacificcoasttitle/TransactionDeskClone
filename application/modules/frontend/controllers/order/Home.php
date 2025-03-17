@@ -139,7 +139,7 @@ class Home extends MX_Controller
                 if ($salesRepDetails["is_mail_notification"] == 1) {
                     $parties_email[] = isset($salesRepDetails["email_address"]) && !empty($salesRepDetails["email_address"]) ? $salesRepDetails["email_address"] : '';
                 }
-                $salesRepName = isset($salesRepDetails["first_name"]) && !empty($salesRepDetails["first_name"]) ? $salesRepDetails["first_name"] . ' ' . $salesRepDetails["last_name"] : '';
+                $salesRepName = isset($salesRepDetails["lookup_code"]) && !empty($salesRepDetails["lookup_code"]) ? $salesRepDetails["lookup_code"] : '';
 
                 $TitleOfficer = $this->input->post('TitleOfficer');
                 $condition    = [

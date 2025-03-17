@@ -6507,6 +6507,10 @@ class Cron extends MX_Controller
             $new_data        = $response['data'];
             // $closer_examiner = $this->db->select('closer_examiner')->from('sp_officers')->where('is_sales_rep', 1)->get()->result_array();
             // $closer_examiner = array_column($closer_examiner, 'closer_examiner');
+            
+            $this->db->where('is_sales_rep', 1);
+            $this->db->update('pct_softpro_lookup_table', ['status' => 0]);
+            
             $existingLookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->where('is_sales_rep', 1)->get()->result_array();
             $existingLookupcode = array_column($existingLookupcode, 'lookup_code');
 
@@ -6517,16 +6521,20 @@ class Cron extends MX_Controller
                 // print_r($row);
                 if (in_array($row['LookUpCode'], $existingLookupcode)) {
                     $update_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    $update_data[$key]['first_name']    = $row['FirstName'];
-                    $update_data[$key]['last_name']    = $row['LastName'];
+                    // $update_data[$key]['first_name']    = $row['FirstName'];
+                    // $update_data[$key]['last_name']    = $row['LastName'];
+                    $update_data[$key]['full_name']    = $row['FullName'];
                     $update_data[$key]['email_address']    = $row['Email'];
                     $update_data[$key]['is_sales_rep'] = 1;
+                    $update_data[$key]['status'] = 1;
                 } else {
                     $insert_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    $insert_data[$key]['first_name']    = $row['FirstName'];
-                    $insert_data[$key]['last_name']    = $row['LastName'];
+                    // $insert_data[$key]['first_name']    = $row['FirstName'];
+                    // $insert_data[$key]['last_name']    = $row['LastName'];
+                    $update_data[$key]['full_name']    = $row['FullName'];
                     $insert_data[$key]['email_address']    = $row['Email'];
                     $insert_data[$key]['is_sales_rep'] = 1;
+                    $insert_data[$key]['status'] = 1;
                 }
             }
             // echo "<pre>";
