@@ -4751,7 +4751,7 @@ class Home extends MX_Controller
             "ZipCode"            => $order_details['sp_cust_zip_code'],
             "EmailNotifications" => true,
             "State"              => "",
-            "SalesRep"           => $order_details['sp_salerep_first_name'] . ' ' . $order_details['sp_salerep_last_name'],
+            "SalesRep"           => $order_details['sp_salerep_lookup_code'],
             "ClientLookupCode"   => $order_details['sp_cust_lookup_code'],  //$ClientLookupCode,
             "CompanyLookupCode"  => $order_details['sp_cust_flookup_code'], //$CompanyLookupCode,
             "UserType"           => $ClientType,

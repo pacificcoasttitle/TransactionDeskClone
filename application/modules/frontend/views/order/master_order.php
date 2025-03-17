@@ -231,9 +231,9 @@
 										<?php
                                             if (isset($salesRep) && ! empty($salesRep)) {
                                                 foreach ($salesRep as $k => $v) {
-                                                    $name      = [$v['first_name'], $v['last_name']];
-                                                    $full_name = implode(' ', $name);
-                                                    // $full_name = $v['officer_name'];
+                                                    // $name      = [$v['first_name'], $v['last_name']];
+                                                    // $full_name = implode(' ', $name);
+                                                    $full_name = $v['full_name'];
                                                 ?>
 														<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
 												<?php
