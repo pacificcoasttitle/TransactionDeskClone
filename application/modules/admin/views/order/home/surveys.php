@@ -31,6 +31,76 @@
         color: #e6e63a
     }
 
+    .order-count-cotainer {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        font-weight: 400;
+        color: #858796;
+        text-align: center;
+        vertical-align: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: .35rem;
+        transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.float-right {
+    float: right !important;
+}
+
+.btn-icon-split {
+    padding: 0;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.btn-success.focus, .btn-success:focus {
+    color: #fff;
+    background-color: #218838;
+    border-color: #169b6b;
+    box-shadow: 0 0 0 .2rem rgba(62, 208, 156, .5);
+}
+
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.btn-icon-split .icon {
+    background: rgba(0, 0, 0, .15);
+    display: inline-block;
+    padding: .375rem .75rem;
+}
+
+.text-white-50 {
+    color: rgba(255, 255, 255, .5) !important;
+}
+
+.btn-icon-split .text {
+    display: inline-block;
+    padding: .375rem .75rem;
+}
+.card-body .btn {
+    width: auto;
+}
 </style>
 <!-- <section class="section-type-4a section-defaulta container-fluid" style="padding-bottom:0px;"> -->
 <div class="container-fluid">
@@ -57,6 +127,10 @@
                                     </label>
                                 </div>
                             </div>
+                            <!-- <div class="col-sm-6">
+                                <a href="javascript:void(0)" class="btn btn-success btn-icon-split float-right mr-2" onclick="$('#send_sample_email').modal('show')"> 
+                                    <span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">Send Sample Email</span> </a>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -162,7 +236,10 @@
                     </div>
                 </div>
                 <div class="order-count-cotainer">
-                    <h4 class="ui-title-block_light">Below is list of all survey response.</h3>
+                    <h3 class="ui-title-block_light">Below is list of all survey response.</h3>
+                    <a href="javascript:void(0)" class="btn btn-success btn-icon-split float-right mr-2" onclick="$('#send_sample_email').modal('show')"> 
+                                <span class="icon text-white-50"><i class="fas fa-plus"></i></span><span class="text">Send Sample Email</span> </a>
+                            
                 </div>	
                 
                 <div class="card shadow mb-4">
@@ -311,5 +388,52 @@
 </div>
 
 <script>
-    
+    $(document).on('click', '#send_sample_mail_btn', function() {
+        console.log('send_sample_mail_btn');
+        $('#surveys_error_msg').hide();
+        var email_address = $('#email_address').val();
+        if (!email_address) {
+            $('#surveys_error_msg, .surveys_error_msg').html('Please enter email address.').show();
+            setTimeout(function () {
+                $('#surveys_error_msg, .surveys_error_msg').html('').hide();
+            }, 5000);
+            return;
+        }
+        $.ajax({
+            url: base_url + "send-survey-sample-email",
+            method: "POST",
+            data: {
+                email_address: $('#email_address').val()
+            },
+            success: function (data) {
+                var result = jQuery.parseJSON(data);
+                $('#send_sample_email').modal('hide');
+                $('#surveys_success_msg').html(result.message).show();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#send_sample_email').modal('hide');
+                $('#surveys_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#surveys_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#surveys_error_msg').html('').hide();
+                }, 5000);
+            }
+        });
+    });
+    $(document).ready(function() {
+    });
+    function displayComment(commentsArray) {
+        $("#commentList").html("");
+        if (commentsArray.length > 0) {
+            let listHtml = "";
+            commentsArray.forEach(function (comment) {
+                listHtml += `<li class="list-group-item">${comment}</li>`;
+            });
+            $("#commentList").html(listHtml);
+            $("#commentModal").modal("show");
+        }
+    }
 </script>
