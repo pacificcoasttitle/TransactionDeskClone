@@ -6816,4 +6816,99 @@ class Cron extends MX_Controller
         echo date('Y-m-d H:i:s');exit;
     }
 
+    public function transferLoginDetails() {
+        $salesrepList = $this->db->select('lookup_code, email_address, id')
+                                    ->from('pct_softpro_lookup_table')
+                                    ->where(['status' => 1])
+                                    // ->where('password is null')
+                                    ->get()
+                                    ->result_array();
+        // echo "<pre>";
+        foreach ($salesrepList as $key => $value) {
+            // print_r($value);
+            $pctSalesRep = $this->db->select('email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, id')
+                                    ->from('customer_basic_details')
+                                    ->where([
+                                        'status' => 1,
+                                        'email_address' => $value['email_address']
+                                        ])
+                                    ->where('password is not null')
+                                    ->get()->row_array();
+            // print_r($pctSalesRep);
+            if (!empty($pctSalesRep)) {
+                $updateData = [
+                    "password" => $pctSalesRep['password'],
+                    "random_password" => $pctSalesRep['random_password'],
+                    "is_tmp_password" => $pctSalesRep['is_tmp_password'],
+                    "is_password_required" => $pctSalesRep['is_password_required'],
+                    "is_password_updated" => $pctSalesRep['is_password_updated'],
+                    "allow_login" => 1,
+                ];
+                $this->db->where('id', $value['id']);
+                $this->db->update('pct_softpro_lookup_table', $updateData);
+
+                $updateOrder = [
+                    'created_by' => $value['id']
+                ];
+                $this->db->where(['created_by' => $pctSalesRep['id'], 'is_softpro_order' => 1]);
+                $this->db->update('order_details', $updateOrder);
+            }
+        }
+        // print_r($salesrepList);die;
+        
+    }
+
+
+    public function transferMasterUserLoginDetails() {
+        $pctMasterUsers = $this->db->select('id, email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, first_name, last_name, telephone_no, company_name, street_address, city, state, zip_code, is_master, status, is_mail_notification')
+                                    ->from('customer_basic_details')
+                                    ->where('is_master', 1)
+                                    ->get()->result_array();
+
+        // echo "<pre>";
+        // print_r($pctMasterUsers);die;
+        echo "count of master user in pct: " . count($pctMasterUsers);
+        echo "<br>";
+        $i = 0;
+        foreach ($pctMasterUsers as $key => $user) {
+            $pctSalesRep = $this->db->select('email_address')
+                                    ->from('pct_softpro_lookup_table')
+                                    ->where('email_address', $user['email_address'])
+                                    ->get()
+                                    ->row_array();
+            if (empty($pctSalesRep)) {
+                $insertData = [
+                    "company_name" => $user["company_name"],
+                    "email_address" => $user["email_address"],
+                    "password" => $user["password"],
+                    "random_password" => $user["random_password"],
+                    "is_tmp_password" => $user["is_tmp_password"],
+                    "is_password_required" => $user["is_password_required"],
+                    "is_password_updated" => $user["is_password_updated"],
+                    "first_name" => $user["first_name"],
+                    "last_name" => $user["last_name"],
+                    "phone" => $user["telephone_no"],
+                    "address1" => $user["street_address"],
+                    "city" => $user["city"],
+                    "state" => $user["state"],
+                    "zip" => $user["zip_code"],
+                    "is_master" => $user["is_master"],
+                    "status" => $user["status"],
+                    "is_mail_notification" => $user["is_mail_notification"],
+                ];
+
+                $insert = $this->db->insert('pct_softpro_lookup_table', $insertData);
+                if ($insert) {
+                    $id = $this->db->insert_id();
+                    $updateOrder = [
+                        'created_by' => $id
+                    ];
+                    $this->db->where(['created_by' => $user['id'], 'is_softpro_order' => 1]);
+                    $this->db->update('order_details', $updateOrder);
+                }
+                $i++;
+            }
+        }
+        echo "count of inserted master user in lookup: " . $i;
+    }
 }
