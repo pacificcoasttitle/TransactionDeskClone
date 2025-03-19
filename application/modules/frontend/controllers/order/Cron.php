@@ -6844,8 +6844,6 @@ class Cron extends MX_Controller
                     "is_password_required" => $pctSalesRep['is_password_required'],
                     "is_password_updated" => $pctSalesRep['is_password_updated'],
                     "allow_login" => 1,
-                    "is_sales_rep_manager" => $pctSalesRep['is_sales_rep_manager'],
-                    "sales_rep_users" => $salesRepUsers,
                 ];
                 if ($pctSalesRep['is_sales_rep_manager']) {
                     $salesUser = explode(',', $pctSalesRep['sales_rep_users']);
