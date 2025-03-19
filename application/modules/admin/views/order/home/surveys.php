@@ -101,6 +101,15 @@
 .card-body .btn {
     width: auto;
 }
+
+.btn-danger {
+    color: #fff;
+    background-color: #e74a3b;
+    border-color: #e74a3b;
+}
+.modal-body {
+    height: auto;
+}
 </style>
 <!-- <section class="section-type-4a section-defaulta container-fluid" style="padding-bottom:0px;"> -->
 <div class="container-fluid">
