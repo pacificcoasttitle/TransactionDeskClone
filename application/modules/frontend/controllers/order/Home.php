@@ -243,7 +243,7 @@ class Home extends MX_Controller
                     // );
                     // $companyData = $this->home_model->get_company_rows($con);
                 } else {
-                    $orderUser = $this->home_model->get_user(['id' => $userdata['id']]);
+                    $orderUser = $this->home_model->sp_get_user(['id' => $userdata['id']]);
                     // $con = array(
                     //     'where' => array(
                     //         'partner_id' => $orderUser['partner_id'],
@@ -523,7 +523,7 @@ class Home extends MX_Controller
                         $loan['LoanType']     = 'ConvIns';
                         // $place_order['SettlementStatementVersion'] = 'HUD';
                     }
-                    $orderReq['Loans']              = $loan;
+                    // $orderReq['Loans']              = $loan;
                     $orderReq['transactionDetails'] = $transactionDetailsReq;
                     // echo "<pre>";
                     // print_r($orderReq);die;
@@ -1241,21 +1241,21 @@ class Home extends MX_Controller
 
                 /* Escrow Details */
                 if (isset($escrowId) && !empty($escrowId)) {
-                    $name       = explode(' ', $escrowName);
-                    $first_name = $name[0];
-                    $last_name  = $name[1];
-                    $escrowData = [
-                        'first_name'    => $first_name,
-                        'last_name'     => $last_name,
-                        'email_address' => $escrowEmail,
-                        'company_name'  => $escrowCompany,
-                        'telephone_no'  => $escrowTelephone,
-                        'status'        => 1,
-                    ];
-                    $condition = [
-                        'id' => $escrowId,
-                    ];
-                    $this->home_model->update($escrowData, $condition);
+                    // $name       = explode(' ', $escrowName);
+                    // $first_name = $name[0];
+                    // $last_name  = $name[1];
+                    // $escrowData = [
+                    //     'first_name'    => $first_name,
+                    //     'last_name'     => $last_name,
+                    //     'email_address' => $escrowEmail,
+                    //     'company_name'  => $escrowCompany,
+                    //     'telephone_no'  => $escrowTelephone,
+                    //     'status'        => 1,
+                    // ];
+                    // $condition = [
+                    //     'id' => $escrowId,
+                    // ];
+                    // $this->home_model->update($escrowData, $condition);
                     $message          = 'You have added on order number #' . $orderNumber;
                     $notificationData = [
                         'sent_user_id' => $escrowId,
@@ -1270,9 +1270,9 @@ class Home extends MX_Controller
 
                 /* Lender Details */
                 if (isset($lenderId) && !empty($lenderId)) {
-                    $name       = explode(' ', $lenderName);
-                    $first_name = $name[0];
-                    $last_name  = $name[1];
+                    // $name       = explode(' ', $lenderName);
+                    // $first_name = $name[0];
+                    // $last_name  = $name[1];
                     /*$lenderData = array(
                     'first_name' => $first_name,
                     'last_name' => $last_name,

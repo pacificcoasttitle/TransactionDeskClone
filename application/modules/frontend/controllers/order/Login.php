@@ -68,8 +68,9 @@ class Login extends MX_Controller
                 }
             } else {
                 $email = $this->input->post('email_address');
-                $user = $this->home_model->get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
-
+                $user = $this->home_model->sp_get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
+                // echo "<pre>";
+                // print_r($user);die;
                 if (!empty($user)) {
                     if ($user['is_password_required'] == 1 && $is_password_field_show == 0 && $user['is_tmp_password'] == 1) {
                         $response = array('status' => 'error', 'password_err_msg' => "Plese enter a password that is sent in email. If you don't receive any email then please contact us administrator.", 'is_password_field_show' => 1);
@@ -84,7 +85,8 @@ class Login extends MX_Controller
                                 $this->load->library('order/order');
                                 $randomString = $this->order->randomPassword();
                                 $hash = md5($user['id'] . $user['email_address'] . $randomString);
-                                $this->home_model->update(array('hash' => $hash), array('id' => $user['id']));
+                                // $this->home_model->update(array('hash' => $hash), array('id' => $user['id']));
+                                $this->home_model->update(array('hash' => $hash), array('id' => $user['id']), 'pct_softpro_lookup_table');
                                 $response = array('status' => 'success', 'message' => '', 'url' => 'change-password/' . $hash);
                                 echo json_encode($response);exit;
                             } else {

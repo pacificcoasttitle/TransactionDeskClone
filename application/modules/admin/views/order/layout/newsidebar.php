@@ -242,7 +242,7 @@ if (
 		<?php endif;?>
 
 		<?php if ($role_id != 3 && $role_id != 5): ?>
-			<li class="nav-item <?php if ($clientTabLinks) {echo 'active';}?>">
+			<li class="nav-item hide <?php if ($clientTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$clientTabLinks) {echo 'collapsed';}?>" href="#" id="clientsDropdown" role="button" data-toggle="collapse" data-target="#clients" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-users"></i>
 					<span>Clients</span>
@@ -280,7 +280,7 @@ if (
 				</div>
 			</li>
 
-			<li class="nav-item <?php if ($usersTabLinks) {echo 'active';}?>">
+			<li class="nav-item hide <?php if ($usersTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$usersTabLinks) {echo 'collapsed';}?>" href="#" id="usersDropdown" role="button" data-toggle="collapse" data-target="#users" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-users"></i>
 					<span>PCT Users</span>
@@ -331,9 +331,9 @@ if (
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/grant-deed-log') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/grant-deed-log'; ?>">Grant Deed</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/tax-data') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/tax-data'; ?>">Tax Data</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/tax-log') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/tax-log'; ?>">Tax Document</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/partner-api-log') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/partner-api-log'; ?>">Partner Api</a>
+						<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/partner-api-log') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/partner-api-log'; ?>">Partner Api</a> -->
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cpl-error-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cpl-error-logs'; ?>">CPL Error</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/resware-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/resware-logs'; ?>">ResWare Log</a>
+						<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/resware-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/resware-logs'; ?>">ResWare Log</a> -->
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lp-xml-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lp-xml-logs'; ?>">LP Xml</a>
 						<?php if ($role_id == 1): ?>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin-user-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin-user-logs'; ?>">Admin Activity</a>

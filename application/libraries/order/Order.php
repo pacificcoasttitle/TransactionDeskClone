@@ -73,7 +73,8 @@ class Order
                 }
                 if (!$salesRepManagerFlag) {
                     $this->CI->db->select('id');
-                    $this->CI->db->from('customer_basic_details');
+                    $this->CI->db->from('pct_softpro_lookup_table');
+                    // $this->CI->db->from('customer_basic_details');
                     $this->CI->db->where('is_sales_rep', 1);
                     $this->CI->db->where('is_sales_rep_manager', 1);
                     $this->CI->db->where('id !=', $userdata['id']);
@@ -133,7 +134,8 @@ class Order
             }
 
             if (isset($is_pay_off) && !empty($is_pay_off)) {
-                $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
+                $select .= ', pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name';
+                // $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
             }
 
             if ($userdata['is_sales_rep_manager'] == 1) {
@@ -178,7 +180,7 @@ class Order
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
@@ -191,7 +193,7 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                    $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
+                    $this->CI->db->join('pct_softpro_lookup_table as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
                         $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
@@ -302,7 +304,7 @@ class Order
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
@@ -315,7 +317,7 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                    $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
+                    $this->CI->db->join('pct_softpro_lookup_table as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
                         $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
@@ -384,7 +386,8 @@ class Order
             }
 
             if (isset($is_pay_off) && !empty($is_pay_off)) {
-                $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
+                $select .= ', pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name';
+                // $select .= ', customer_basic_details.first_name, customer_basic_details.last_name';
             }
 
             if ($userdata['is_sales_rep_manager'] == 1) {
@@ -429,7 +432,7 @@ class Order
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
@@ -442,7 +445,7 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                    $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
+                    $this->CI->db->join('pct_softpro_lookup_table as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
                         $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
@@ -543,7 +546,7 @@ class Order
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
                 $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
@@ -556,7 +559,7 @@ class Order
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 1) {
                 if ($userdata['is_sales_rep_manager'] == 1) {
                     $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                    $this->CI->db->join('customer_basic_details as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
+                    $this->CI->db->join('pct_softpro_lookup_table as sales_users', 'sales_users.id = transaction_details.sales_representative', 'inner');
                     if ($salesUser != 'all') {
                         $this->CI->db->where_in('transaction_details.sales_representative', $salesUser);
                     }
@@ -702,18 +705,6 @@ class Order
             transaction_details.escrow_number,
             transaction_details.additional_email,
 
-            customer_basic_details.id as lender_id,
-            customer_basic_details.street_address as lender_address,
-            customer_basic_details.city as lender_city,
-            customer_basic_details.state as lender_state,
-            customer_basic_details.zip_code as lender_zipcode,
-            customer_basic_details.company_name as lender_company_name,
-            customer_basic_details.first_name as lender_first_name,
-            customer_basic_details.last_name as lender_last_name,
-            customer_basic_details.email_address as lender_email,
-            customer_basic_details.is_escrow,
-            customer_basic_details.telephone_no as lender_telephone_no,
-
             pct_softpro_lookup_table.id as sp_lender_id,
             pct_softpro_lookup_table.address1 as sp_lender_address,
             pct_softpro_lookup_table.city as sp_lender_city,
@@ -726,14 +717,6 @@ class Order
             pct_softpro_lookup_table.is_escrow as sp_is_escrow,
             pct_softpro_lookup_table.phone as sp_lender_telephone_no,
 
-            cbd.first_name as cust_first_name,
-            cbd.last_name as cust_last_name,
-            cbd.company_name as cust_company_name,
-            cbd.street_address as cust_address,
-            cbd.city as cust_city,
-            cbd.state as cust_state,
-            cbd.zip_code as cust_zipcode,
-            cbd.is_escrow as is_client_escrow,
 
             splt.first_name as sp_cust_first_name,
             splt.last_name as sp_cust_last_name,
@@ -744,24 +727,9 @@ class Order
             splt.zip as sp_cust_zipcode,
             splt.is_escrow as sp_is_client_escrow,
 
-            salerep.first_name as salerep_first_name,
-            salerep.last_name as salerep_last_name,
-            salerep.is_mail_notification as salerep_is_mail_notification,
-            salerep.email_address as salerep_email_address,
-
-            CONCAT(titleofficer.first_name, " ", titleofficer.last_name) as title_officer_name,
-            titleofficer.first_name as titleofficer_first_name,
-
             sp_to.officer_name as sp_title_officer_name,
             sp_to.closer_examiner as sp_title_officer_email,
 
-            agents.first_name as agent_name,
-            agents.street_address as agent_address,
-            agents.email_address as agent_email_address,
-            agents.city as agent_city,
-            agents.zip_code as agent_zipcode,
-            agents.telephone_no as agent_telephone_no,
-            agents.company_name as agent_company,
 
             sp_agents.first_name as sp_agent_name,
             sp_agents.address1 as sp_agent_address,
@@ -783,20 +751,20 @@ class Order
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             
-            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
+            // ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
             ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left')
 
-            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
+            // ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
             ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
 
-            ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
+            // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
             ->join('sp_officers as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
 
-            ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
+            // ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
             ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
         // ->join('agents', 'property_details.buyer_agent_id = agents.id', 'left')
-            ->join('customer_basic_details as agents', 'property_details.buyer_agent_id = agents.id', 'left')
+            // ->join('customer_basic_details as agents', 'property_details.buyer_agent_id = agents.id', 'left')
             ->join('pct_softpro_lookup_table as sp_agents', 'property_details.buyer_agent_id = sp_agents.id', 'left')
 
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
@@ -1202,13 +1170,13 @@ class Order
                 order_details.file_id,
                 property_details.full_address,
                 order_details.id,
-                customer_basic_details.company_name,
+                pct_softpro_lookup_table.company_name,
                 pct_order_sales_rep.name,
                 order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+                ->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = order_details.created_by')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
             $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
@@ -1230,13 +1198,13 @@ class Order
                 order_details.file_id,
                 property_details.full_address,
                 order_details.id,
-                customer_basic_details.company_name,
+                pct_softpro_lookup_table.company_name,
                 pct_order_sales_rep.name,
                 order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+                ->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = order_details.created_by')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
             $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
@@ -1256,13 +1224,13 @@ class Order
                 order_details.file_id,
                 property_details.full_address,
                 order_details.id,
-                customer_basic_details.company_name,
+                pct_softpro_lookup_table.company_name,
                 pct_order_sales_rep.name,
                 order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+                ->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = order_details.created_by')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
             $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
@@ -1277,13 +1245,13 @@ class Order
                 order_details.file_id,
                 property_details.full_address,
                 order_details.id,
-                customer_basic_details.company_name,
+                pct_softpro_lookup_table.company_name,
                 pct_order_sales_rep.name,
                 order_details.created_at,
                 property_details.primary_owner')
                 ->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
-                ->join('customer_basic_details', 'customer_basic_details.id = order_details.created_by')
+                ->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = order_details.created_by')
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 ->join('pct_order_sales_rep', 'pct_order_sales_rep.id = transaction_details.sales_representative', 'left');
             $this->CI->db->where('property_details.escrow_lender_id', $userdata['id']);
@@ -2107,7 +2075,7 @@ class Order
 
     public function getSalesRep($params = array())
     {
-        $table = 'customer_basic_details';
+        $table = 'pct_softpro_lookup_table';
         $this->CI->db->select('*');
         $this->CI->db->from($table);
 
@@ -2640,7 +2608,7 @@ class Order
     public function get_sales_users($sales_rep_users = array())
     {
         $this->CI->db->select('*');
-        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->from('pct_softpro_lookup_table');
         $this->CI->db->where('is_sales_rep', 1);
         $this->CI->db->where('status', 1);
         if (!empty($sales_rep_users)) {
@@ -2706,7 +2674,7 @@ class Order
     {
         $this->CI->db->select('*');
         $this->CI->db->where_in('email_address', $emailAddresses);
-        $query = $this->CI->db->get('customer_basic_details');
+        $query = $this->CI->db->get('pct_softpro_lookup_table');
         if ($query->num_rows() > 0) {
             return $query->result_array();
         } else {
@@ -3194,7 +3162,7 @@ class Order
     {
         $this->CI->load->model('order/apiLogs');
         $this->CI->db->select('*');
-        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->from('pct_softpro_lookup_table');
         $this->CI->db->where('is_sales_rep', 1);
         $this->CI->db->where('is_sales_rep_manager', 1);
         $this->CI->db->where('status', 1);
@@ -3347,7 +3315,7 @@ class Order
     {
         $this->CI->load->model('order/apiLogs');
         $this->CI->db->select('*');
-        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->from('pct_softpro_lookup_table');
         $this->CI->db->where('is_sales_rep', 1);
         $this->CI->db->where('is_sales_rep_manager', 1);
         $this->CI->db->where('status', 1);
@@ -4325,8 +4293,8 @@ class Order
             order_details.id as order_id,
             order_details.resware_status,
             property_details.full_address,
-            customer_basic_details.email_address as sales_email,
-            CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_name,
+            pct_softpro_lookup_table.email_address as sales_email,
+            CONCAT_WS(" ", pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name) as sales_name,
             CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name,
             user_details.email_address,
             user_details.company_name,
@@ -4343,11 +4311,11 @@ class Order
         } else {
             $this->CI->db->where('transaction_details.sales_representative', $sales_rep_id);
         }
-        $this->CI->db->where('customer_basic_details.email_address != ""');
+        $this->CI->db->where('pct_softpro_lookup_table.email_address != ""');
         $this->CI->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
         $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
-        $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative', 'inner');
-        $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id', 'inner');
+        $this->CI->db->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = transaction_details.sales_representative', 'inner');
+        $this->CI->db->join('pct_softpro_lookup_table as user_details', 'user_details.id = order_details.customer_id', 'inner');
         $this->CI->db->join('pct_order_partner_company_info as pci', 'pci.partner_id = user_details.partner_id', 'left');
         $this->CI->db->order_by('transaction_details.sales_representative asc, order_details.customer_id asc');
         $query = $this->CI->db->get();
@@ -4381,11 +4349,11 @@ class Order
                 $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
                 $this->CI->db->where('transaction_details.sales_representative', $sales_rep_user_id);
-                $this->CI->db->where('customer_basic_details.email_address != ""');
+                $this->CI->db->where('pct_softpro_lookup_table.email_address != ""');
                 $this->CI->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
-                $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative', 'inner');
-                $this->CI->db->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id', 'inner');
+                $this->CI->db->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = transaction_details.sales_representative', 'inner');
+                $this->CI->db->join('pct_softpro_lookup_table as user_details', 'user_details.id = order_details.customer_id', 'inner');
                 $this->CI->db->group_by('user_details.id');
                 $query = $this->CI->db->get();
                 $resultMax = $query->result_array();
@@ -4568,12 +4536,12 @@ class Order
         }
         $startDate = date('Y-m-d 00:00:00', strtotime('-90 days', strtotime(date('Y-m-d'))));
         //$endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
-        $this->CI->db->select('customer_basic_details.email_address, user_details.company_name, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", customer_basic_details.first_name, customer_basic_details.last_name) as sales_rep_name')
+        $this->CI->db->select('pct_softpro_lookup_table.email_address, user_details.company_name, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name) as sales_rep_name')
             ->from('order_details')
-            ->join('customer_basic_details as user_details', 'user_details.id = order_details.customer_id', 'inner')
+            ->join('pct_softpro_lookup_table as user_details', 'user_details.id = order_details.customer_id', 'inner')
 
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative', 'inner');
+            ->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = transaction_details.sales_representative', 'inner');
         //$this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where("order_details.created_at <= '$startDate'");
         if (!empty($salesRepUsers)) {
