@@ -6826,10 +6826,11 @@ class Cron extends MX_Controller
         // echo "<pre>";
         foreach ($salesrepList as $key => $value) {
             // print_r($value);
-            $pctSalesRep = $this->db->select('email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, id')
+            $pctSalesRep = $this->db->select('email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, id, is_sales_rep_manager, sales_rep_users')
                                     ->from('customer_basic_details')
                                     ->where([
                                         'status' => 1,
+                                        // 'email_address' => 'teammeza@pct.com'
                                         'email_address' => $value['email_address']
                                         ])
                                     ->where('password is not null')
@@ -6843,7 +6844,30 @@ class Cron extends MX_Controller
                     "is_password_required" => $pctSalesRep['is_password_required'],
                     "is_password_updated" => $pctSalesRep['is_password_updated'],
                     "allow_login" => 1,
+                    "is_sales_rep_manager" => $pctSalesRep['is_sales_rep_manager'],
+                    "sales_rep_users" => $salesRepUsers,
                 ];
+                if ($pctSalesRep['is_sales_rep_manager']) {
+                    $salesUser = explode(',', $pctSalesRep['sales_rep_users']);
+                    $salesRepUsers = $this->db->select('email_address')
+                                            ->from('customer_basic_details')
+                                            ->where_in('id', $salesUser)
+                                            ->get()->result_array();
+                    $salesRepUsersEmail = array_column($salesRepUsers, 'email_address');
+                    if (!empty($salesRepUsersEmail)) {
+                        $lookupSalesIds = $this->db->select('id')
+                                        ->from('pct_softpro_lookup_table')
+                                        ->where_in('email_address', $salesRepUsersEmail)
+                                        // ->where('password is null')
+                                        ->get()
+                                        ->result_array();
+                        $lookupSalesIds = array_column($lookupSalesIds, 'id');
+                        $lookupSalesIdsImpload = implode(',', $lookupSalesIds);
+                    }
+                    $updateData['is_sales_rep_manager'] = $pctSalesRep['is_sales_rep_manager'];
+                    $updateData['sales_rep_users'] = $lookupSalesIdsImpload;
+                    
+                }
                 $this->db->where('id', $value['id']);
                 $this->db->update('pct_softpro_lookup_table', $updateData);
 
