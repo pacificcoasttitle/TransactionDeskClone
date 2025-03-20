@@ -4763,12 +4763,12 @@ class Home extends MX_Controller
             "APNNumberParcelID"  => $order_details['apn'],
             "Country"            => $order_details['county'],
             "Description"        => $order_details['legal_description'],
-            "City"               => $order_details['cust_city'],
-            "State"              => $order_details['county'],
-            "Zip"                => $order_details['cust_zip_code'],
+            "City"               => $order_details['property_city'],
+            "State"              => $order_details['property_state'],
+            "Zip"                => $order_details['property_zip'],
             "EscrowBriefLegal"   => $order_details['legal_description'],
             "IsPrimaryResidence" => true,
-            "State"              => "CA",
+            // "State"              => "CA",
         ];
         $PrimaryOwner = $order_details['primary_owner'];
         $SecondaryOwner = $order_details['secondary_owner'];
@@ -4789,8 +4789,8 @@ class Home extends MX_Controller
             "SecondaryOwnerLastName" => $secondaryOwnerArray['last_name'],
         ];
         $transactionDetailsReq = [
-            "LookUpCodeTitleOfficer" => $order_details['sp_titleofficer_lookup_code'],
-            "TitleOffice"           => $order_details['sp_title_officer_name'],
+            "LookUpCodeTitleOffice" => $order_details['sp_titleofficer_lookup_code'],
+            "TitleOffice"           => $order_details['sp_titleofficer_closer_examiner'],
             "Product"                => $order_details['sp_product_type_name'],
             "EscrowNumber"           => $order_details['escrow_number'],
             // "PrimaryBorrower"        => $order_details['borrower'],
@@ -4809,7 +4809,7 @@ class Home extends MX_Controller
         $TransactionType = $order_details['transaction_type'];
         // $transactionDetailsReq['TransactionType'] = $order_details['transaction_type'];
         $softproOrderType      = $order_details['order_type_name'];
-        $orderReq['orderType'] = $order_details['order_type_name'];
+        $orderReq['orderType'] = $order_details['product_type_name'];
         if ($TransactionType != 'Purchase') {
             // $transactionDetailsReq['PrimaryBorrower']   = $order_details['primary_owner'];
             // $transactionDetailsReq['SecondaryBorrower'] = $order_details['secondary_owner'];
