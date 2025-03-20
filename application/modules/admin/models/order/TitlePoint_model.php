@@ -50,7 +50,7 @@ class TitlePoint_model extends CI_Model
 
     public function getLvLogs($params)
     {
-        $this->db->where('order_id IS NOT NULL');
+        $this->db->where('file_number IS NOT NULL');
         $this->db->from($this->table);
         $total_records = $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -90,7 +90,8 @@ class TitlePoint_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             
             // $this->db->from($this->table);
@@ -129,7 +130,8 @@ class TitlePoint_model extends CI_Model
             $this->db->where($key."!=", $val);
             }
             }*/
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             $query = $this->db->get();
@@ -144,7 +146,8 @@ class TitlePoint_model extends CI_Model
             $this->db->where($key."!=", $val);
             }
             }*/
-            $this->db->where('order_id IS NOT NULL');
+            $this->db->where('file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             $this->db->from($this->table);
 
@@ -159,7 +162,8 @@ class TitlePoint_model extends CI_Model
                 ->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->where('cs4_message IS NOT NULL AND cs4_message != ""');
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -183,7 +187,8 @@ class TitlePoint_model extends CI_Model
     public function getPreListingLogs($params)
     {
         $this->db->join('order_details', 'order_details.id = tp.order_id');
-        $this->db->where('tp.order_id IS NOT NULL');
+        $this->db->where('tp.file_number IS NOT NULL');
+        $this->db->where('tp.file_number !=', '');
         $this->db->where('order_details.is_softpro_order', 1);
         $this->db->where('tp.geo_file_status IS NOT NULL');
         $this->db->from($this->table . ' as tp');
@@ -228,7 +233,8 @@ class TitlePoint_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             $this->db->from($this->table);
             $filter_total_records = $this->db->count_all_results();
@@ -262,7 +268,8 @@ class TitlePoint_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('tp.id', 'desc');
             $query = $this->db->get();
@@ -275,7 +282,8 @@ class TitlePoint_model extends CI_Model
                 ->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             $this->db->where('tp.geo_file_status IS NOT NULL');
 
@@ -285,7 +293,8 @@ class TitlePoint_model extends CI_Model
                 ->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             $this->db->where('tp.geo_file_status IS NOT NULL');
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -371,7 +380,8 @@ class TitlePoint_model extends CI_Model
     public function getTaxData($params)
     {
         $this->db->join('order_details', 'order_details.id = tp.order_id');
-        $this->db->where('tp.order_id IS NOT NULL');
+        $this->db->where('tp.file_number IS NOT NULL');
+        $this->db->where('tp.file_number !=', '');
         $this->db->where('order_details.is_softpro_order', 1);
         $this->db->from($this->table . ' as tp');
         $total_records = $this->db->count_all_results();
@@ -414,7 +424,8 @@ class TitlePoint_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->from($this->table);
             $filter_total_records = $this->db->count_all_results();
@@ -447,7 +458,8 @@ class TitlePoint_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('tp.id', 'desc');
 
@@ -458,7 +470,8 @@ class TitlePoint_model extends CI_Model
             }
 
         } else {
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
 
@@ -473,7 +486,8 @@ class TitlePoint_model extends CI_Model
                 ->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -497,7 +511,8 @@ class TitlePoint_model extends CI_Model
     {
         //print_r($params);exit;
         $this->db->join('order_details', 'order_details.id = tp.order_id');
-        $this->db->where('tp.order_id IS NOT NULL');
+        $this->db->where('tp.file_number IS NOT NULL');
+        $this->db->where('tp.file_number !=', '');
         $this->db->where('order_details.is_softpro_order', 1);
         $this->db->from($this->table . ' as tp');
         $total_records = $this->db->count_all_results();
@@ -517,7 +532,8 @@ class TitlePoint_model extends CI_Model
             $this->db->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             if (!empty($dateRange)) {
                 $dateRangeArr = explode(' - ', $dateRange);
@@ -543,7 +559,8 @@ class TitlePoint_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->from();
             $filter_total_records = $this->db->count_all_results();
@@ -579,7 +596,8 @@ class TitlePoint_model extends CI_Model
 
             $this->db->order_by('tp.id', 'desc');
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
 
             $query = $this->db->get();
@@ -589,7 +607,8 @@ class TitlePoint_model extends CI_Model
             }
 
         } else {
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
 
@@ -604,7 +623,8 @@ class TitlePoint_model extends CI_Model
                 ->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             // $this->db->where('cs3_message IS NOT NULL AND cs3_message != ""');
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -628,7 +648,8 @@ class TitlePoint_model extends CI_Model
     public function getGrantDeedLogs($params)
     {
         $this->db->join('order_details', 'order_details.id = tp.order_id');
-        $this->db->where('tp.order_id IS NOT NULL');
+        $this->db->where('tp.file_number IS NOT NULL');
+        $this->db->where('tp.file_number !=', '');
         $this->db->where('order_details.is_softpro_order', 1);
         $this->db->from($this->table . ' as tp');
 
@@ -673,7 +694,8 @@ class TitlePoint_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
 
             $filter_total_records = $this->db->count_all_results();
@@ -708,7 +730,8 @@ class TitlePoint_model extends CI_Model
             }
             $this->db->order_by('tp.id', 'desc');
 
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
 
             $query = $this->db->get();
@@ -717,7 +740,8 @@ class TitlePoint_model extends CI_Model
                 $logs_lists = $query->result_array();
             }
         } else {
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
             $this->db->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
@@ -729,7 +753,8 @@ class TitlePoint_model extends CI_Model
                 ->from($this->table . ' as tp')
                 ->join('order_details', 'order_details.id = tp.order_id')
                 ->join('property_details as pd', 'order_details.property_id = pd.id');
-            $this->db->where('tp.order_id IS NOT NULL');
+            $this->db->where('tp.file_number IS NOT NULL');
+            $this->db->where('tp.file_number !=', '');
             $this->db->where('order_details.is_softpro_order', 1);
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {

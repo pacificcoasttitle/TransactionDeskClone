@@ -77,7 +77,7 @@ class Home extends MX_Controller
             $this->load->library('upload', $config);
 
             if (!empty($_FILES['upload_curative']['name'])) {
-                if (! $this->upload->do_upload('upload_curative')) {
+                if (!$this->upload->do_upload('upload_curative')) {
                     $response = ['status' => 'error', 'message' => $this->upload->display_errors()];
                     echo json_encode($response);
                     exit;
@@ -1456,12 +1456,26 @@ class Home extends MX_Controller
                 $deedfilename        = $orderNumber . '.pdf';
                 $taxfilename         = $orderNumber . '.pdf';
                 $uploadFileToSoftPro = [];
+                $documentIds = [];
                 if (!empty($_FILES['upload_curative']['name'])) {
                     // $this->uploadCurativeDocsToResware($orderDetails);
                     $uploadFileToSoftPro[] = [
                         "FolderName" => 'curative',
                         "FileURL"    => env('AWS_PATH') . "curative/" . $fileName,
                     ];
+                    $documentData = [
+                        'document_name'          => $fileName,
+                        'original_document_name' => $data['file_name'],
+                        'document_type_id'       => 1033,
+                        'document_size'          => 0,
+                        'user_id'                => $userdata['id'],
+                        'order_id'               => $orderDetails['order_id'],
+                        'description'            => 'Curative Documents',
+                        'is_sync'                => 1,
+                        'is_curative_doc'        => 1,
+                    ];
+            
+                    $$documentIds[] = $this->document->insert($documentData);
                 }
                 $isLvDocs = false;
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('legal-vesting/' . $lvfilename)) {
@@ -1472,6 +1486,20 @@ class Home extends MX_Controller
                         "FileURL"    => env('AWS_PATH') . "legal-vesting/" . $lvfilename,
                     ];
                     $isLvDocs = true;
+                    $fileSize = filesize(env('AWS_PATH') . "legal-vesting/" . $lvfilename);
+                    $documentData = [
+                        'document_name'          => $lvfilename,
+                        'original_document_name' => $lvfilename,
+                        'document_type_id'       => 1037,
+                        'document_size'          => $fileSize,
+                        'user_id'                => $userdata['id'],
+                        'order_id'               => $orderDetails['order_id'],
+                        'description'            => 'Legal & Vesting Document',
+                        'is_sync'                => 1,
+                        'is_prelim_document'     => 0,
+                        'is_lv_doc'              => 1,
+                    ];
+                    $$documentIds[] = $this->document->insert($documentData);
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('grant-deed/' . $deedfilename)) {
@@ -1481,6 +1509,20 @@ class Home extends MX_Controller
                         "FolderName" => 'grant-deed',
                         "FileURL"    => env('AWS_PATH') . "grant-deed/" . $deedfilename,
                     ];
+                    $fileSize = filesize(env('AWS_PATH') . "grant-deed/" . $deedfilename);
+                    $documentData = [
+                        'document_name'          => $deedfilename,
+                        'original_document_name' => $deedfilename,
+                        'document_type_id'       => 1037,
+                        'document_size'          => $fileSize,
+                        'user_id'                => $userdata['id'],
+                        'order_id'               => $orderDetails['order_id'],
+                        'description'            => 'Grant Deed Document',
+                        'is_sync'                => 1,
+                        'is_prelim_document'     => 0,
+                        'is_grant_doc'           => 1,
+                    ];
+                    $$documentIds[] = $this->document->insert($documentData);
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
@@ -1490,6 +1532,20 @@ class Home extends MX_Controller
                         "FolderName" => 'tax',
                         "FileURL"    => env('AWS_PATH') . "tax/" . $taxfilename,
                     ];
+                    $fileSize = filesize(env('AWS_PATH') . "tax/" . $taxfilename);
+                    $documentData = [
+                        'document_name'          => $taxfilename,
+                        'original_document_name' => $taxfilename,
+                        'document_type_id'       => 1037,
+                        'document_size'          => $fileSize,
+                        'user_id'                => $userdata['id'],
+                        'order_id'               => $orderDetails['order_id'],
+                        'description'            => 'Tax Document',
+                        'is_sync'                => 1,
+                        'is_prelim_document'     => 0,
+                        'is_tax_doc'             => 1,
+                    ];
+                    $$documentIds[] = $this->document->insert($documentData);
                 }
 
                 if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
@@ -1506,6 +1562,7 @@ class Home extends MX_Controller
                         "OrderNumber"  => $orderNumber,
                         "DocumentName" => $orderNumber,
                         "FileList"     => $uploadFileToSoftPro,
+                        "document_ids" => json_encode($$documentIds)
                     ];
                     $fileUploadReq[] = $fileData;
                     $reqData = json_encode($fileUploadReq);
