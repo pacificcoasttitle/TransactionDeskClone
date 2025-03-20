@@ -435,7 +435,8 @@ class Order_model extends CI_Model
             sp_salerep.email_address as sp_salerep_email_address,
 
             sp_to.officer_name as sp_title_officer_name,
-            sp_to.closer_examiner as sp_titleofficer_lookup_code,
+            sp_to.closer_examiner as sp_titleofficer_closer_examiner,
+            sp_to.lookup_code as sp_titleofficer_lookup_code,
 
             CONCAT(sp_agents.first_name, " ", sp_agents.last_name) as sp_buyer_agent_name,
             sp_agents.email_address as sp_buyer_agent_email_address,
