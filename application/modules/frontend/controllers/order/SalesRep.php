@@ -289,7 +289,7 @@ class SalesRep extends MX_Controller
                 if ($order['file_number'] == 0 && !empty($order['lp_file_number'])) {
                     $nestedData[] = ucfirst($order['lp_report_status']);
                 } else {
-                    $nestedData[] = ucfirst($order['resware_status']);
+                    $nestedData[] = ucfirst($order['softpro_status']);
                 }
 
                 // $action = '<select style="width:auto;margin-left:10px;" name="order_type_filter" id="order_type_filter" class="custom-select custom-select-sm form-control form-control-sm">';
@@ -311,13 +311,13 @@ class SalesRep extends MX_Controller
                 // $action .= "</select>";
                 $action = '<div class="dropdown"><a class="btn dropdown-toggle click-action-type" type="button" data-toggle="dropdown" href="#">Click Action Type <span class="caret"></span></a><ul class="dropdown-menu">';
                 if ($order['prelim_summary_id'] != 0) {
-                    $action .= "<li><a href='" . base_url() . "review-file/" . $order['file_id'] . "'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a></li>";
+                    $action .= "<li><a href='" . base_url() . "review-file/" . $order['id'] . "'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a></li>";
                 } else {
                     $action .= "<li><a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a></li>";
                 }
 
                 if (!empty($order['file_number'])) {
-                    $action .= "<li><a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(" . $order['file_id'] . ");'>VIEW Partners</button></a></li>";
+                    // $action .= "<li><a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(" . $order['id'] . ");'>VIEW Partners</button></a></li>";
                 }
 
                 if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
