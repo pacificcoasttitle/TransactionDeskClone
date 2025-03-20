@@ -19,7 +19,7 @@ class Order
     public function get_recent_orders()
     {
         $userdata = $this->CI->session->userdata('user');
-        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner,order_details.borrower_invited,order_details.resware_status')
+        $this->CI->db->select('order_details.file_number, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, order_details.created_at, property_details.primary_owner,order_details.borrower_invited,order_details.softpro_status')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id');
 
@@ -55,12 +55,12 @@ class Order
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
         $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
         $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
-        $result = $this->getUserFromPartners();
+        // $result = $this->getUserFromPartners();
         $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, 
-            order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,
+            order_details.created_at as opened_date, order_details.file_number, property_details.full_address,
             order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, 
             property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.softpro_status, order_details.is_softpro_order, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
+            order_details.created_at, order_details.softpro_status, order_details.is_softpro_order, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
             pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, 
             pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
@@ -92,13 +92,12 @@ class Order
 
             if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
-                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders' || $order_type == 'open') {
+                if ($order_type == 'softpro_orders' || $order_type == 'open') {
                     $this->CI->db->or_like('order_details.file_number', $keyword);
                 } else {
                     $this->CI->db->or_like('order_details.lp_file_number', $keyword);
                 }
                 $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)));
-                $this->CI->db->or_like('order_details.resware_status', $keyword);
                 $this->CI->db->or_like('order_details.softpro_status', $keyword)->group_end();
             } else {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
@@ -107,15 +106,9 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
-                    $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
-                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
-                    $this->CI->db->group_end();
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
                 } else {
-                    $this->CI->db->group_start();
-                    $this->CI->db->where('order_details.resware_status', $status);
-                    $this->CI->db->or_where('order_details.softpro_status', $status);
-                    $this->CI->db->group_end();
+                    $this->CI->db->where('order_details.softpro_status', $status);
                 }
             }
 
@@ -147,7 +140,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
+                if ($order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -208,26 +201,25 @@ class Order
                 $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
             }
 
-            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+            /*if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if (!empty($result)) {
                     $this->CI->db->group_start()
                         ->where_in('order_details.customer_id', explode(',', $result['ids']))
                         ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
                         ->group_end();
                 }
-            }
+            }*/
 
             $total_records = $this->CI->db->count_all_results();
 
             if (isset($keyword) && !empty($keyword) && $salesFlag == 1) {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
-                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders' || $order_type == 'open') {
+                if ($order_type == 'softpro_orders' || $order_type == 'open') {
                     $this->CI->db->or_like('order_details.file_number', $keyword);
                 } else {
                     $this->CI->db->or_like('order_details.lp_file_number', $keyword);
                 }
                 $this->CI->db->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)));
-                $this->CI->db->or_like('order_details.resware_status', $keyword);
                 $this->CI->db->or_like('order_details.softpro_status', $keyword)->group_end();
             } else {
                 $this->CI->db->group_start()->like('property_details.full_address', $keyword);
@@ -236,15 +228,9 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
-                    $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
-                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
-                    $this->CI->db->group_end();
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
                 } else {
-                    $this->CI->db->group_start();
-                    $this->CI->db->where('order_details.resware_status', $status);
-                    $this->CI->db->or_where('order_details.softpro_status', $status);
-                    $this->CI->db->group_end();
+                    $this->CI->db->where('order_details.softpro_status', $status);
                 }
             }
 
@@ -267,7 +253,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
+                if ($order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -330,14 +316,14 @@ class Order
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
             }
-            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+            /*if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if (!empty($result)) {
                     $this->CI->db->group_start()
                         ->where_in('order_details.customer_id', explode(',', $result['ids']))
                         ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
                         ->group_end();
                 }
-            }
+            }*/
 
             if (!empty($dashboard_order_by)) {
                 $this->CI->db->order_by('order_details.prelim_summary_id desc');
@@ -360,13 +346,10 @@ class Order
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
                     $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
-                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
-                    $this->CI->db->group_end();
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
                 } else {
                     $this->CI->db->group_start();
-                    $this->CI->db->where('order_details.resware_status', $status);
-                    $this->CI->db->or_where('order_details.softpro_status', $status);
+                    $this->CI->db->where('order_details.softpro_status', $status);
                     $this->CI->db->group_end();
                 }
             }
@@ -399,7 +382,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
+                if ($order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -458,14 +441,14 @@ class Order
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
             }
-            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+            /*if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if (!empty($result)) {
                     $this->CI->db->group_start()
                         ->where_in('order_details.customer_id', explode(',', $result['ids']))
                         ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
                         ->group_end();
                 }
-            }
+            }*/
 
             /*if ($userdata['is_master'] == 0) {
             $this->CI->db->where('order_details.customer_id', $userdata['id']);
@@ -480,14 +463,10 @@ class Order
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
                     $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.resware_status != "closed" and  order_details.resware_status != "cancelled") OR order_details.resware_status IS NULL)');
-                    $this->CI->db->or_where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
                     $this->CI->db->group_end();
                 } else {
-                    $this->CI->db->group_start();
-                    $this->CI->db->where('order_details.resware_status', $status);
-                    $this->CI->db->or_where('order_details.softpro_status', $status);
-                    $this->CI->db->group_end();
+                    $this->CI->db->where('order_details.softpro_status', $status);
                 }
             }
 
@@ -510,7 +489,7 @@ class Order
                 $this->CI->db->group_start()->where('order_details.file_number is not null');
                 $this->CI->db->where('order_details.file_number !=', "0")->group_end();
             } else if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
-                if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
+                if ($order_type == 'softpro_orders') {
                     //$this->CI->db->where('order_details.lp_file_number is null');
                     $this->CI->db->group_start()->where('order_details.file_number is not null');
                     $this->CI->db->where('order_details.file_number !=', "0")->group_end();
@@ -572,14 +551,14 @@ class Order
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->where('transaction_details.title_officer', $userdata['id']);
             }
-            if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
+            /*if ($userdata['is_master'] == 1 && !empty($userdata['partner_companies'])) {
                 if (!empty($result)) {
                     $this->CI->db->group_start()
                         ->where_in('order_details.customer_id', explode(',', $result['ids']))
                         ->or_where_in('property_details.escrow_lender_id', explode(',', $result['ids']))
                         ->group_end();
                 }
-            }
+            }*/
 
             if (!empty($dashboard_order_by)) {
                 $this->CI->db->order_by('order_details.prelim_summary_id desc');
@@ -662,7 +641,6 @@ class Order
             order_details.is_create_order_on_safewire,
             order_details.safewire_action_link,
             order_details.prod_type,
-            order_details.resware_status,
             order_details.softpro_status,
             order_details.is_softpro_order,
             order_details.borrower_email,
@@ -806,11 +784,10 @@ class Order
         }
     }
 
-    public function get_order_documents($fileId, $from_mail = 0)
+    public function get_order_documents($orderId, $from_mail = 0)
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 order_details.id as order_id,
                 pct_order_documents.document_name,
                 pct_order_documents.document_name,
@@ -823,7 +800,7 @@ class Order
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
-        $this->CI->db->where('order_details.file_id', $fileId);
+        $this->CI->db->where('order_details.id', $orderId);
         if ($userdata['is_master'] == 0 && $from_mail == 0) {
             $this->CI->db->group_start()
                 ->where('order_details.customer_id', $userdata['id'])
@@ -842,7 +819,6 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 order_details.id as order_id,
                 pct_order_documents.document_name,
                 pct_order_documents.id,
@@ -1167,7 +1143,6 @@ class Order
                     ->group_end();
             }
             $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 property_details.full_address,
                 order_details.id,
                 pct_softpro_lookup_table.company_name,
@@ -1195,7 +1170,6 @@ class Order
             $orders_lists = array();
 
             $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 property_details.full_address,
                 order_details.id,
                 pct_softpro_lookup_table.company_name,
@@ -1221,7 +1195,6 @@ class Order
             }
         } else {
             $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 property_details.full_address,
                 order_details.id,
                 pct_softpro_lookup_table.company_name,
@@ -1242,7 +1215,6 @@ class Order
             $orders_lists = array();
 
             $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 property_details.full_address,
                 order_details.id,
                 pct_softpro_lookup_table.company_name,
@@ -1293,7 +1265,6 @@ class Order
     {
         $userdata = $this->CI->session->userdata('user');
         $this->CI->db->select('order_details.file_number,
-                order_details.file_id,
                 order_details.id as order_id,
                 pct_order_documents.id,
                 pct_order_documents.document_name,
@@ -1924,7 +1895,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('order_details.resware_status', 'open');
+        $this->CI->db->where('order_details.softpro_status', 'open');
         // $this->CI->db->where('MONTH(order_details.created_at)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
@@ -1962,7 +1933,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('order_details.resware_status', 'open');
+        $this->CI->db->where('order_details.softpro_status', 'open');
         // $this->CI->db->where('MONTH(order_details.created_at)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
@@ -2003,7 +1974,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
-        $this->CI->db->where('order_details.resware_status', 'closed');
+        $this->CI->db->where('order_details.softpro_status', 'closed');
         // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
@@ -2043,7 +2014,7 @@ class Order
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'sale');
-        $this->CI->db->where('order_details.resware_status', 'closed');
+        $this->CI->db->where('order_details.softpro_status', 'closed');
         // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
@@ -2810,8 +2781,8 @@ class Order
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
 
-        $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, order_details.file_id,property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
-            order_details.created_at, order_details.resware_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated,property_details.primary_owner, pct_order_product_types.product_type,order_details.prod_type';
+        $select = 'order_details.prelim_summary_id, order_details.created_at as opened_date, order_details.file_number, property_details.full_address,order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.softpro_status, order_details.proposed_insured_document_name, order_details.is_payoff_generated,property_details.primary_owner, pct_order_product_types.product_type,order_details.prod_type';
 
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
@@ -2821,7 +2792,7 @@ class Order
                     ->like('property_details.full_address', $keyword)
                     ->or_like('order_details.file_number', $keyword)
                     ->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)))
-                    ->or_like('order_details.resware_status', $keyword)
+                    ->or_like('order_details.softpro_status', $keyword)
                     ->group_end();
             }
 
@@ -2853,7 +2824,7 @@ class Order
                     ->like('property_details.full_address', $keyword)
                     ->or_like('order_details.file_number', $keyword)
                     ->or_like('order_details.created_at', date("Y-m-d", strtotime($keyword)))
-                    ->or_like('order_details.resware_status', $keyword)
+                    ->or_like('order_details.softpro_status', $keyword)
                     ->group_end();
             }
 
@@ -3078,7 +3049,7 @@ class Order
 
                 $orderData = array(
                     'customer_id' => $customerId,
-                    'file_id' => $res['FileID'],
+                    // 'file_id' => $res['FileID'],
                     'file_number' => $res['FileNumber'],
                     'property_id' => $propertyId,
                     'transaction_id' => $transactionId,
@@ -3088,7 +3059,7 @@ class Order
                     'is_payoff_order' => 1,
                     'random_number' => $randomString,
                     'resware_closed_status_date' => $completed_date,
-                    'resware_status' => strtolower($res['Status']['Name']),
+                    'softpro_status' => strtolower($res['Status']['Name']),
                     'sent_to_accounting_date' => $completed_date,
                 );
                 $this->CI->home_model->insert($orderData, 'order_details');
@@ -3825,7 +3796,7 @@ class Order
         $this->CI->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
         // die;
         $this->uploadDocumentOnAwsS3($document_name, 'pre-listing-doc');
-        $this->insertRecord($document_name, $file_id, $orderDetails);
+        $this->insertRecord($document_name, $orderDetails);
         /*** Upload Pre listing doc to resware */
         //$this->uploadPreListingDocsToResware($geoFileName, $file_id, $orderDetails);
         // }
@@ -3834,7 +3805,7 @@ class Order
     /**
      * Insert pre listing document record in document table
      */
-    public function insertRecord($document_name, $fileId, $orderDetails)
+    public function insertRecord($document_name, $orderDetails)
     {
         $this->CI->load->model('order/document');
         // $this->load->library('order/resware');
@@ -3883,6 +3854,7 @@ class Order
             $fileId = $titlePointInstrumentDetails['file_id'];
             $fileNumber = $titlePointInstrumentDetails['file_number'];
             $fips = $titlePointInstrumentDetails['fips'];
+            $orderId = $titlePointInstrumentDetails['order_id'];
 
             if (!empty($grantDeedInstuNum) && strtotime($grantDeedRecordedDate) > strtotime($recordedDate)) {
                 $insertData = array(
@@ -3922,14 +3894,14 @@ class Order
                         'cs4_recorded_date' => $recordedDate,
                     );
 
-                    $orderCondition = array(
-                        'where' => array(
-                            'file_id' => $fileId,
-                        ),
-                    );
+                    // $orderCondition = array(
+                    //     'where' => array(
+                    //         'file_id' => $fileId,
+                    //     ),
+                    // );
 
-                    $orderDetails = $this->get_rows($orderCondition);
-                    $orderId = $orderDetails['id'];
+                    // $orderDetails = $this->get_rows($orderCondition);
+                    // $orderId = $orderDetails['id'];
                     $this->CI->titlepoint->generateGrantDeed($newInstuNum, $recordedDate, $fips, $fileNumber, $orderId);
                     $this->CI->titlePointData->update($tpData, $condition);
                     if ($regenerate == true) {
@@ -4287,11 +4259,11 @@ class Order
         //     $user_data = array();
         // }
 
-        $this->CI->db->select('order_details.file_id,
+        $this->CI->db->select('order_details.id,
             order_details.file_number,
             order_details.customer_id,
             order_details.id as order_id,
-            order_details.resware_status,
+            order_details.softpro_status,
             property_details.full_address,
             pct_softpro_lookup_table.email_address as sales_email,
             CONCAT_WS(" ", pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name) as sales_name,
@@ -4536,7 +4508,7 @@ class Order
         }
         $startDate = date('Y-m-d 00:00:00', strtotime('-90 days', strtotime(date('Y-m-d'))));
         //$endDate = date('Y-m-d 23:59:59', strtotime('-7 days', strtotime(date('Y-m-d'))));
-        $this->CI->db->select('pct_softpro_lookup_table.email_address, user_details.company_name, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.resware_status, order_details.created_at, CONCAT_WS(" ", pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name) as sales_rep_name')
+        $this->CI->db->select('pct_softpro_lookup_table.email_address, user_details.company_name, user_details.id as user_id, CONCAT_WS(" ", user_details.first_name, user_details.last_name) as name, order_details.softpro_status, order_details.created_at, CONCAT_WS(" ", pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name) as sales_rep_name')
             ->from('order_details')
             ->join('pct_softpro_lookup_table as user_details', 'user_details.id = order_details.customer_id', 'inner')
 
@@ -4561,7 +4533,7 @@ class Order
         $i = 0;
         if (!empty($result)) {
             foreach ($result as $res) {
-                if ($res['resware_status'] == 'open') {
+                if ($res['softpro_status'] == 'open') {
                     if (!empty($res['name'])) {
                         $key = array_search($res['user_id'], array_column($users, 'id'));
                         if ($key === false) {
@@ -4577,7 +4549,7 @@ class Order
                         }
                     }
                 } else {
-                    if ($res['resware_status'] != 'cancelled') {
+                    if ($res['softpro_status'] != 'cancelled') {
                         if (!empty($res)) {
                             $key = array_search($res['user_id'], array_column($users, 'id'));
                             if (strlen($key) > 0) {
@@ -4628,7 +4600,7 @@ class Order
         if (empty($userId)) {
             $userId = $userdata['id'];
         }
-        $this->CI->db->select('order_details.file_number, order_details.file_id, property_details.full_address,order_details.id, order_details.prod_type, order_details.premium')
+        $this->CI->db->select('order_details.file_number, order_details.id, property_details.full_address,order_details.id, order_details.prod_type, order_details.premium')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
