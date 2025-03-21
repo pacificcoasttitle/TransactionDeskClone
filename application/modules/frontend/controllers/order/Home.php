@@ -1499,7 +1499,7 @@ class Home extends MX_Controller
                         'is_prelim_document'     => 0,
                         'is_lv_doc'              => 1,
                     ];
-                    $$documentIds[] = $this->document->insert($documentData);
+                    $documentIds[] = $this->document->insert($documentData);
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('grant-deed/' . $deedfilename)) {
@@ -1522,7 +1522,7 @@ class Home extends MX_Controller
                         'is_prelim_document'     => 0,
                         'is_grant_doc'           => 1,
                     ];
-                    $$documentIds[] = $this->document->insert($documentData);
+                    $documentIds[] = $this->document->insert($documentData);
                 }
 
                 if ((empty($titlePointShutOff) || $titlePointShutOff == 0) && $this->order->fileExistOrNotOnS3('tax/' . $taxfilename)) {
@@ -1545,7 +1545,7 @@ class Home extends MX_Controller
                         'is_prelim_document'     => 0,
                         'is_tax_doc'             => 1,
                     ];
-                    $$documentIds[] = $this->document->insert($documentData);
+                    $documentIds[] = $this->document->insert($documentData);
                 }
 
                 if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
