@@ -617,10 +617,11 @@ class Order extends MX_Controller
             if ($value['is_softpro_order'] == 1) {
                 $nestedData[] = $value['sp_product_type'];
                 $nestedData[] = $value['sp_sales_rep_name'];
-            } else {
-                $nestedData[] = $value['product_type'];
-                $nestedData[] = $value['sales_rep_name'];
-            }
+            } 
+            // else {
+            //     $nestedData[] = $value['product_type'];
+            //     $nestedData[] = $value['sales_rep_name'];
+            // }
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
             //$nestedData[] = $value['document_name'];

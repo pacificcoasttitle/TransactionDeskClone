@@ -1457,6 +1457,7 @@ class Home extends MX_Controller
                 $taxfilename         = $orderNumber . '.pdf';
                 $uploadFileToSoftPro = [];
                 $documentIds = [];
+                $this->load->model('order/document');
                 if (!empty($_FILES['upload_curative']['name'])) {
                     // $this->uploadCurativeDocsToResware($orderDetails);
                     $uploadFileToSoftPro[] = [
@@ -1471,7 +1472,7 @@ class Home extends MX_Controller
                         'user_id'                => $userdata['id'],
                         'order_id'               => $orderDetails['order_id'],
                         'description'            => 'Curative Documents',
-                        'is_sync'                => 1,
+                        'is_sync'                => 0,
                         'is_curative_doc'        => 1,
                     ];
             
@@ -1495,7 +1496,7 @@ class Home extends MX_Controller
                         'user_id'                => $userdata['id'],
                         'order_id'               => $orderDetails['order_id'],
                         'description'            => 'Legal & Vesting Document',
-                        'is_sync'                => 1,
+                        'is_sync'                => 0,
                         'is_prelim_document'     => 0,
                         'is_lv_doc'              => 1,
                     ];
@@ -1518,7 +1519,7 @@ class Home extends MX_Controller
                         'user_id'                => $userdata['id'],
                         'order_id'               => $orderDetails['order_id'],
                         'description'            => 'Grant Deed Document',
-                        'is_sync'                => 1,
+                        'is_sync'                => 0,
                         'is_prelim_document'     => 0,
                         'is_grant_doc'           => 1,
                     ];
@@ -1541,7 +1542,7 @@ class Home extends MX_Controller
                         'user_id'                => $userdata['id'],
                         'order_id'               => $orderDetails['order_id'],
                         'description'            => 'Tax Document',
-                        'is_sync'                => 1,
+                        'is_sync'                => 0,
                         'is_prelim_document'     => 0,
                         'is_tax_doc'             => 1,
                     ];
@@ -1552,7 +1553,8 @@ class Home extends MX_Controller
                     $logData = [
                         'order_number' => $orderNumber,
                         'document_name' => $orderNumber,
-                        'file_list' => json_encode($uploadFileToSoftPro)
+                        'file_list' => json_encode($uploadFileToSoftPro),
+                        "document_ids" => json_encode($documentIds)
                     ];
                     
                     $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
@@ -1562,7 +1564,6 @@ class Home extends MX_Controller
                         "OrderNumber"  => $orderNumber,
                         "DocumentName" => $orderNumber,
                         "FileList"     => $uploadFileToSoftPro,
-                        "document_ids" => json_encode($$documentIds)
                     ];
                     $fileUploadReq[] = $fileData;
                     $reqData = json_encode($fileUploadReq);
@@ -1580,6 +1581,8 @@ class Home extends MX_Controller
                                     'is_synced' => 1,
                                     'id' => $res['Id']
                                 ];
+                                $this->db->where_in('id', $documentIds);
+                                $this->db->update('pct_order_documents', ['$is_sync' => 1]);
                             } else {
                                 $updateArr = [
                                     'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
