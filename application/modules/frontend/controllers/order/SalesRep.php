@@ -319,7 +319,7 @@ class SalesRep extends MX_Controller
                 } catch (Exception $e) {
                     $sheetData = [];
                 }
-
+                unlink($tempFile);
                 return [
                     'closeOrderSummary' => $closeOrderSummary,
                     'closedSalesOrderNumbers' => $closedSalesOrderNumbers,
