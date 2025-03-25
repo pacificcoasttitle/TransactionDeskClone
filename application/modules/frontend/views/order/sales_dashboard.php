@@ -242,7 +242,32 @@
                                                     <div class="toclone">
                                                         <div class="spacer-b10">
                                                             <label class="field" id="revenue_container">
-
+															<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
+																<thead>
+																	<tr>
+																		<th>Sr No</th>
+																		<th>File Number</th>
+																		<th>Address</th>
+																		<th>Product Type</th>
+																		<th>Revenue</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<?php if (!empty($revenue_data)) { ?>
+																		<?php foreach($revenue_data as $key => $val) { ?>
+																	<tr>
+																		<td width='12%'><?php echo $key + 1;?></td>
+																		<td width='20%'><?php echo ltrim($val[3], "*");?></td>
+																		<td width='44%'><?php echo $val[9] ?></td>
+																		<td width='12%'><?php echo $val[4] ?></td>
+																		<td width='12%'><?php echo $val[10] ?></td>
+																	</tr>
+																	<?php } ?>
+																	<?php } else {  ?>
+																		<tr><td colspan='5'>No records found.</td></tr>
+																	<?php } ?>
+																</tbody>
+															</table>
                                                             </label>
                                                         </div>
                                                     </div>

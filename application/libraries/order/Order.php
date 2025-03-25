@@ -1710,12 +1710,16 @@ class Order
         return $query->result_array();
 
     }
-    public function getOpenOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    public function getOpenOrdersCountForRefiProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders, sum(escrow_amount) as total_escrow_amount_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('order_details.prod_type', 'loan');
+        // $this->CI->db->where('order_details.prod_type', 'loan');
+        if (!empty($closedOrderNumbers)) {
+            $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
+        }
+        $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
 
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
@@ -1752,15 +1756,19 @@ class Order
         }
 
         $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
         return $query->row_array();
     }
 
-    public function getOpenOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    public function getOpenOrdersCountForSaleProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders, sum(escrow_amount) as total_escrow_amount_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('order_details.prod_type', 'sale');
+        if (!empty($closedOrderNumbers)) {
+            $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
+        }
+        $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
 
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
@@ -1796,6 +1804,7 @@ class Order
         }
 
         $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
         return $query->row_array();
     }
 
@@ -1805,7 +1814,8 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('order_details.prod_type', 'loan');
+        // $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
@@ -1849,7 +1859,8 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-        $this->CI->db->where('order_details.prod_type', 'sale');
+        // $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
 
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
