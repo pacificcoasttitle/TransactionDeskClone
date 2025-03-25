@@ -18,7 +18,8 @@
 		"aspose-cloud/aspose-words-cloud": "^21.9",
 		"pusher/pusher-php-server": "^6.1",
 		"mpdf/mpdf": "^8.1",
-		"mikehaertl/php-pdftk": "^0.12.1"
+		"mikehaertl/php-pdftk": "^0.12.1",
+		"phpoffice/phpspreadsheet": "^1.19"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
