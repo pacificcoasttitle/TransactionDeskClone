@@ -1,6 +1,6 @@
-function isPasswordRequired()
-{    
-    $('input[type="checkbox"]').on('change', function() {
+function isPasswordRequired() {
+    console.log('clicked');
+    $('input[type="checkbox"]').on('change', function () {
         $('body').animate({ opacity: 0.5 }, "slow");
         var user_id = $(this).attr('id');
         if ($(this).is(":checked")) {
@@ -9,13 +9,13 @@ function isPasswordRequired()
             var is_password_required = 0;
         }
         $.ajax({
-            url: base_url+"is-password-required",
+            url: base_url + "is-password-required",
             method: "POST",
-            data : {
+            data: {
                 user_id: user_id,
                 is_password_required: is_password_required
             },
-            success: function(data){
+            success: function (data) {
                 var result = jQuery.parseJSON(data);
                 if (result.status == 'success') {
                     $('body').animate({ opacity: 1.0 }, "slow");
@@ -23,7 +23,7 @@ function isPasswordRequired()
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#password_listing_success_msg").offset().top
                     }, 1000);
-                    customer_list.ajax.reload( null, false );
+                    password_list.ajax.reload(null, false);
                     setTimeout(function () {
                         $('#password_listing_success_msg').html('').hide();
                     }, 4000);

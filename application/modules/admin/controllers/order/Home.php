@@ -2965,9 +2965,9 @@ class Home extends MX_Controller
                     $nestedData[] = 'Lender User';
                 }
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'];
+                $nestedData[] = $value['address1'];
                 $nestedData[] = $value['city'];
-                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['zip'];
                 $user_id      = $value['id'];
 
                 if ($value['is_password_required'] == 1) {
@@ -4285,7 +4285,7 @@ class Home extends MX_Controller
         $condition                    = [
             'id' => $user_id,
         ];
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
         /** Save user Activity */
         $orderUser = $this->home_model->get_user($condition);
         $activity  = 'Is password require to send password for user :- ' . $orderUser['email_address'] . ' : ' . (($is_password_required == 1) ? 'Yes' : 'No');
