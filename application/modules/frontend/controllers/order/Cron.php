@@ -6845,7 +6845,8 @@ class Cron extends MX_Controller
                     "is_password_updated" => $pctSalesRep['is_password_updated'],
                     "allow_login" => 1,
                 ];
-                if ($pctSalesRep['is_sales_rep_manager']) {
+                $lookupSalesIdsImpload = null;
+                if ($pctSalesRep['is_sales_rep_manager'] == 1) {
                     $salesUser = explode(',', $pctSalesRep['sales_rep_users']);
                     $salesRepUsers = $this->db->select('email_address')
                                             ->from('customer_basic_details')
