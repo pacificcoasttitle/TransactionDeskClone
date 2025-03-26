@@ -6845,7 +6845,8 @@ class Cron extends MX_Controller
                     "is_password_updated" => $pctSalesRep['is_password_updated'],
                     "allow_login" => 1,
                 ];
-                if ($pctSalesRep['is_sales_rep_manager']) {
+                $lookupSalesIdsImpload = null;
+                if ($pctSalesRep['is_sales_rep_manager'] == 1) {
                     $salesUser = explode(',', $pctSalesRep['sales_rep_users']);
                     $salesRepUsers = $this->db->select('email_address')
                                             ->from('customer_basic_details')
@@ -6962,12 +6963,14 @@ class Cron extends MX_Controller
         $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
 
         // print_r($productTypeList);die;
-        $queryParams = "DateFrom=" . urlencode('03-01-2025') . "&DateTo=" . urlencode('03-31-2025');
+        $queryParams = "DateFrom=03-01-2025&DateTo=03-10-2025";
+        // $queryParams = "DateFrom=" . urlencode('03-01-2025') . "&DateTo=" . urlencode('03-31-2025');
         $reqData     = json_encode($req);
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, json_encode($response), 0, $logid);
         // echo "<pre>";
+        // print_r($response);die;
         $sheetData = [];
         if ($response['status'] == 'success' && !empty($response['data'])) {
             
