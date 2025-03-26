@@ -234,6 +234,8 @@ $route['softpro-sync-failed-file']         = 'frontend/order/cron/spSyncFailedDo
 $route['softpro-fetch-prelim-data']         = 'frontend/order/cron/fetchPrelimDocument';
 $route['softpro-user-login']         = 'frontend/order/cron/transferLoginDetails';
 $route['fetch-pct-master-user-login']         = 'frontend/order/cron/transferMasterUserLoginDetails';
+$route['fetch-softpro-orders']         = 'frontend/order/cron/fetchSoftproOrders';
+
 
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
 $route['order/admin/edit-softpro-agent/:num']       = 'admin/order/home/spEditAgent';

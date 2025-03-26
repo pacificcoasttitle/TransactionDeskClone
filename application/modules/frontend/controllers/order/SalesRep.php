@@ -273,60 +273,63 @@ class SalesRep extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_sales_figure', 'get_sales_figure', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'get_sales_figure', $reqData);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_sales_figure', 'get_sales_figure', $reqData, json_encode($response), 0, $logid);
+
+        $closeOrderSummary['sales']['count'] = 0;
+        $closeOrderSummary['sales']['total_liability'] = 0;
+        $closeOrderSummary['sales']['total_premium'] = 0;
+        $closedSalesOrderNumbers = [];
+
+        $closeOrderSummary['refi']['count'] = 0;
+        $closeOrderSummary['refi']['total_liability'] = 0;
+        $closeOrderSummary['refi']['total_premium'] = 0;
+        $closedRefiOrderNumbers = [];
+        $sheetData = [];
         if ($response['status'] == 'success') {
-                // $inputFileName  = "http://100.29.181.61/SoftProIntegrate/assets/SalesReport/SalesReport_20250325_045033.xls";//$response['data'];
-        
-                // Save the file temporarily
-                $tempFile = FCPATH . "uploads/orders/sales_rep_reports.xls"; // Make sure "uploads/" exists
-                $inputFileName = $response['data'];
-                file_put_contents($tempFile, file_get_contents($inputFileName));
-        
-                try {
-                    // Load the Excel file
-                    $spreadsheet = IOFactory::load($tempFile);
-                    $sheetData = $spreadsheet->getActiveSheet()->toArray();
-                    
-                    $closeOrderSummary['sales']['count'] = 0;
-                    $closeOrderSummary['sales']['total_liability'] = 0;
-                    $closeOrderSummary['sales']['total_premium'] = 0;
-                    $closedSalesOrderNumbers = [];
+            // $inputFileName  = "http://100.29.181.61/SoftProIntegrate/assets/SalesReport/SalesReport_20250325_045033.xls";//$response['data'];
     
-                    $closeOrderSummary['refi']['count'] = 0;
-                    $closeOrderSummary['refi']['total_liability'] = 0;
-                    $closeOrderSummary['refi']['total_premium'] = 0;
-                    $closedRefiOrderNumbers = [];
+            // Save the file temporarily
+            $tempFile = FCPATH . "uploads/orders/sales_rep_reports.xls"; // Make sure "uploads/" exists
+            $inputFileName = $response['data'];
+            file_put_contents($tempFile, file_get_contents($inputFileName));
+    
+            try {
+                // Load the Excel file
+                $spreadsheet = IOFactory::load($tempFile);
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+                
+                
+                
+                if (!empty($sheetData)) {
+                    $headerColumns = [];
+                    $num = count($sheetData);
+                    $headerColumns = array_shift($sheetData);
                     
-                    if (!empty($sheetData)) {
-                        $headerColumns = [];
-                        $num = count($sheetData);
-                        $headerColumns = array_shift($sheetData);
-                        
-                        foreach ($sheetData as $row => $value) {
-                            if ($value[4] == 'Shortsale' || $value[4] == 'Title Report' || $value[4] == 'Prelim' || $value[4] == 'Hard Money' || $value[4] == 'Mobile Home' || $value[4] == 'Residential Resale') {
-                                $closeOrderSummary['sales']['count']++;
-                                $closeOrderSummary['sales']['total_liability'] += $value[8];
-                                $closeOrderSummary['sales']['total_premium'] += $value[10];
-                                $closedSalesOrderNumbers[] = ltrim($value[3], "*");
-                            } else if ($value[4] == 'Full ALTA' || $value[4] == 'Short Form' || $value[4] == 'Junior Loan') {
-                                $closeOrderSummary['refi']['count']++;
-                                $closeOrderSummary['refi']['total_liability'] += $value[8];
-                                $closeOrderSummary['refi']['total_premium'] += $value[10];
-                                $closedRefiOrderNumbers[] = ltrim($value[3], "*");
-                            }
+                    foreach ($sheetData as $row => $value) {
+                        if ($value[4] == 'Shortsale' || $value[4] == 'Title Report' || $value[4] == 'Prelim' || $value[4] == 'Hard Money' || $value[4] == 'Mobile Home' || $value[4] == 'Residential Resale') {
+                            $closeOrderSummary['sales']['count']++;
+                            $closeOrderSummary['sales']['total_liability'] += $value[8];
+                            $closeOrderSummary['sales']['total_premium'] += $value[10];
+                            $closedSalesOrderNumbers[] = ltrim($value[3], "*");
+                        } else if ($value[4] == 'Full ALTA' || $value[4] == 'Short Form' || $value[4] == 'Junior Loan') {
+                            $closeOrderSummary['refi']['count']++;
+                            $closeOrderSummary['refi']['total_liability'] += $value[8];
+                            $closeOrderSummary['refi']['total_premium'] += $value[10];
+                            $closedRefiOrderNumbers[] = ltrim($value[3], "*");
                         }
                     }
-        
-                } catch (Exception $e) {
-                    $sheetData = [];
                 }
-                unlink($tempFile);
-                return [
-                    'closeOrderSummary' => $closeOrderSummary,
-                    'closedSalesOrderNumbers' => $closedSalesOrderNumbers,
-                    'closedRefiOrderNumbers' => $closedRefiOrderNumbers,
-                    'sheetData' => $sheetData
-                ];
+    
+            } catch (Exception $e) {
+                $sheetData = [];
             }
+            unlink($tempFile);
+        }
+        return [
+            'closeOrderSummary' => $closeOrderSummary,
+            'closedSalesOrderNumbers' => $closedSalesOrderNumbers,
+            'closedRefiOrderNumbers' => $closedRefiOrderNumbers,
+            'sheetData' => $sheetData
+        ];
     }
 
     public function get_sales_orders()

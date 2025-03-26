@@ -6933,4 +6933,205 @@ class Cron extends MX_Controller
         }
         echo "count of inserted master user in lookup: " . $i;
     }
+
+    public function fetchSoftproOrders() {
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        $req['DateFrom'] = '03-01-2025';
+        $req['DateTo'] = '03-10-2025';
+        $query = $this->db->select('id, product_type')
+                      ->from('pct_softpro_product_type')
+                      ->get();
+
+        $productTypeList = array_column($query->result_array(), 'id', 'product_type');
+
+        $query = $this->db->select('id, full_name')
+                      ->from('pct_softpro_lookup_table')
+                      ->where('is_sales_rep', 1) 
+                      ->get();
+
+        $salesRepList = array_column($query->result_array(), 'id', 'full_name');
+
+        $query = $this->db->select('id, officer_name')
+                      ->from('sp_officers')
+                      ->where('is_title_officer', 1) 
+                      ->get();
+
+        $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
+
+        // print_r($productTypeList);die;
+        $queryParams = "DateFrom=" . urlencode('03-01-2025') . "&DateTo=" . urlencode('03-31-2025');
+        $reqData     = json_encode($req);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
+        $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, json_encode($response), 0, $logid);
+        // echo "<pre>";
+        $sheetData = [];
+        if ($response['status'] == 'success' && !empty($response['data'])) {
+            
+            $orderList = $response['data'];
+            foreach ($orderList as $key => $list) {
+                $completed_date = null;
+                $file_number = $list['OrderNumber'] ?? null;
+                $orderStatus = $list['OrderStatus'] ?? null;
+                $marketingSource = $list['MarketingSource'] ?? null;
+                $orderType = $list['OrderType'] ?? null;
+                $address = $list['Address'] ?? null;
+                $city = $list['City'] ?? null;
+                $state = $list['State'] ?? null;
+                $country = $list['Country'] ?? null;
+                $titleOfficer = $list['TitleOfficer'] ?? null;
+                $salesPrice = $list['SalesPrice'] ?? null;
+                $transactionType = $list['TransactionType'] ?? null;
+                $productType = $list['ProductType'] ?? null;
+                $receivedDate = $list['ReceivedDate'] ?? null;
+                $closedDate = $list['CompletedDate'] ?? null;
+                $marketingRep = $list['MarketingRep'] ?? null;
+                
+                if (!empty($file_number)) {
+                    $condition = [
+                        'where' => [
+                            'file_number' => $file_number,
+                        ],
+                    ];
+                    $order = $this->order->get_order($condition);
+                    // echo 'order ==';
+                    // print_r($order);
+                    if (empty($order)) {
+                        $customerId   = 0;
+                        
+                        $FullProperty = $address;
+                        // $address      = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'];
+                        $locale       = $city;
+
+                        if (($locale)) {
+                            $FullProperty .= $city;
+                            if (!empty($state)) {
+                                $FullProperty .= $state;
+                                $locale .= ', ' . $state;
+                            } else {
+                                $locale .= ', CA';
+                                $FullProperty .= 'CA';
+                            }
+                            if (!empty($zip)) {
+                                $FullProperty .= $zip;
+                            }
+                        }
+
+                        $property_details = $this->getSearchResult($address, $locale);
+                        // echo '$property_details';
+                        // print_r($property_details);
+                        // echo 'sales rep id =='. $salesRepList[$marketingRep];
+                        // print_r($list);
+                        $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                        $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                        $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                        $salesRepId = (!empty($marketingRep)) ? $salesRepList[$marketingRep] : null;
+                        $titleOfficerId = (!empty($titleOfficer)) ? $titleOfficerList[$titleOfficer] : null;
+                        $productTypeId = (!empty($productType)) ? $productTypeList[$productType] : null;
+                        $orderOpenDate = date("Y-m-d H:i:s", strtotime($receivedDate));
+                        $propertyData     = [
+                            'customer_id'       => $customerId,
+                            'buyer_agent_id'    => 0,
+                            'listing_agent_id'  => 0,
+                            'escrow_lender_id'  => 0,
+                            'parcel_id'         => null,
+                            'address'           => removeMultipleSpace($address),
+                            'city'              => $city,
+                            'state'             => $state,
+                            'zip'               => $zip,
+                            'property_type'     => $property_type,
+                            'full_address'      => removeMultipleSpace($FullProperty),
+                            'apn'               => $apn,
+                            'county'            => $country,
+                            'legal_description' => $LegalDescription,
+                            'status'            => 1,
+                        ];
+
+                        $transactionData = [
+                            'customer_id'          => $customerId,
+                            'sales_amount'         => $salesPrice,
+                            // 'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                            // 'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                            'transaction_type'     => $transactionType,
+                            'purchase_type'        => $productTypeId,
+                            'product_type'         => $productTypeId,
+                            'sales_representative' => $salesRepId,
+                            'title_officer'        => $titleOfficerId,
+                            'status'               => 1,
+                        ];
+                        
+                        // print_r($propertyData);
+                        // print_r($transactionData);
+
+                        // $propertyAddress = $address;
+                        // $productTypeID   = $res['TransactionProductType']['ProductTypeID'];
+                        // $primary_owner   = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                        // $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
+                        // $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
+                        // $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                        // $secondary_owner .= ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                        // $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
+                        // $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
+
+                        // if (strpos($ProductTypeTxt, 'Loan') !== false) {
+                        //     $propertyData['primary_owner']   = $primary_owner;
+                        //     $propertyData['secondary_owner'] = $secondary_owner;
+                        // } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
+                        //     $transactionData['borrower']           = $primary_owner;
+                        //     $transactionData['secondary_borrower'] = $secondary_owner;
+                        //     $propertyData['primary_owner']         = isset($property_details['primary_owner']) && ! empty($property_details['primary_owner']) ? $property_details['primary_owner'] : '';
+                        //     $propertyData['secondary_owner']       = isset($property_details['secondary_owner']) && ! empty($property_details['secondary_owner']) ? $property_details['secondary_owner'] : '';
+                        // }
+
+                        $propertyId    = $this->home_model->insert($propertyData, 'property_details');
+                        $transactionId = $this->home_model->insert($transactionData, 'transaction_details');
+                        $randomString  = $this->order->randomPassword();
+                        $randomString  = md5($randomString);
+
+                        if (!empty($closedDate)) {
+                            $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
+                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                        }
+
+                        $orderData = [
+                            'customer_id'                => $customerId,
+                            'file_number'                => $file_number,
+                            'property_id'                => $propertyId,
+                            'transaction_id'             => $transactionId,
+                            'created_at'                 => $orderOpenDate,
+                            'prod_type'                  => $transactionType,
+                            // 'premium'                    => $premium,
+                            'status'                     => 1,
+                            'is_imported'                => 1,
+                            // 'is_sales_rep_order'         => 1,
+                            'random_number'              => $randomString,
+                            'resware_closed_status_date' => $completed_date,
+                            'softpro_status'             => strtolower($orderStatus),
+                            'sent_to_accounting_date'    => $completed_date,
+                            'is_softpro_order'          => 1
+                        ];
+
+                        // if (! empty($premium)) {
+                        //     $orderData['premium'] = (float) $premium;
+                        // }
+
+                        // if (! empty($completed_date)) {
+                        //     $orderData['sent_to_accounting_date'] = $completed_date;
+                        // }
+                        // print_r($orderData);die;
+                        $orderId = $this->home_model->insert($orderData, 'order_details');
+                        
+                    }
+                }
+                
+            } // end foreach
+            $response = ['status' => $import_status, 'msg' => $msg];
+            
+
+            echo json_encode($response);
+        }
+    }
 }

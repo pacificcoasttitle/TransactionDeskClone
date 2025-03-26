@@ -122,6 +122,7 @@ defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
     'add_company' => 'ordercreation/AddCompany',
     'update_task' => 'ordercreation/AddTask',
     'get_sales_figure' => 'ordercreation/GetFilteredOrders',
+    'get_softpro_orders' => 'ordercreation/GetOrderDetails'
 ]);
 
 defined('SOFTPRO_TASK_ID') or define('SOFTPRO_TASK_ID', [
