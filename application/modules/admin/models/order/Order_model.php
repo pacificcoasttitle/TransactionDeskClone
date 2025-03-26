@@ -32,7 +32,7 @@ class Order_model extends CI_Model
         }
 
         if (isset($order_type) && ! empty($order_type)) {
-            if ($order_type == 'resware_orders' || $order_type == 'softpro_orders') {
+            if ($order_type == 'softpro_orders') {
                 // $this->db->where('order_details.lp_file_number is null');
                 $this->db->where('order_details.file_number is not null');
                 $this->db->where('order_details.file_number !=', '0');
