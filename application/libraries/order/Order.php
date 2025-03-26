@@ -64,7 +64,7 @@ class Order
             pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, 
             pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
 
-        if ($userdata['is_sales_rep_manager'] == 1) {
+        /*if ($userdata['is_sales_rep_manager'] == 1) {
             $salesUsers = $this->CI->home_model->get_user(array('id' => $salesUser));
             if (!empty($salesUsers['sales_rep_users'])) {
                 $salesUser = explode(',', $salesUsers['sales_rep_users']);
@@ -74,7 +74,6 @@ class Order
                 if (!$salesRepManagerFlag) {
                     $this->CI->db->select('id');
                     $this->CI->db->from('pct_softpro_lookup_table');
-                    // $this->CI->db->from('customer_basic_details');
                     $this->CI->db->where('is_sales_rep', 1);
                     $this->CI->db->where('is_sales_rep_manager', 1);
                     $this->CI->db->where('id !=', $userdata['id']);
@@ -86,7 +85,7 @@ class Order
                     }
                 }
             }
-        }
+        }*/
         if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
             $keyword = $params['searchvalue'];
 
