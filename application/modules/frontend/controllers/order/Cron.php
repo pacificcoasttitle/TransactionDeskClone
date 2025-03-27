@@ -6890,9 +6890,10 @@ class Cron extends MX_Controller
 
 
     public function transferMasterUserLoginDetails() {
-        $pctMasterUsers = $this->db->select('id, email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, first_name, last_name, telephone_no, company_name, street_address, city, state, zip_code, is_master, status, is_mail_notification')
+        $pctMasterUsers = $this->db->select('id, email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, first_name, last_name, telephone_no, company_name, street_address, city, state, zip_code, is_master, is_title_production, status, is_mail_notification')
                                     ->from('customer_basic_details')
                                     ->where('is_master', 1)
+                                    ->or_where('is_title_production', 1)
                                     ->get()->result_array();
 
         // echo "<pre>";
@@ -6923,6 +6924,7 @@ class Cron extends MX_Controller
                     "state" => $user["state"],
                     "zip" => $user["zip_code"],
                     "is_master" => $user["is_master"],
+                    "is_title_production" => $user["is_title_production"],
                     "status" => $user["status"],
                     "is_mail_notification" => $user["is_mail_notification"],
                 ];
