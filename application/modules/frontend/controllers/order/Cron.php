@@ -6703,7 +6703,7 @@ class Cron extends MX_Controller
 
     public function spSyncFailedDocument() {
         
-        $records = $this->db->select('id, order_number, file_list, document_name')
+        $records = $this->db->select('id, order_number, file_list, document_name, document_ids')
                             ->from('sp_file_upload_logs')
                             ->where('is_synced', 0)
                             // ->group_by('order_number')
@@ -6720,10 +6720,10 @@ class Cron extends MX_Controller
             }
             $reqData = json_encode($fileUploadReq);
             $this->load->library('order/softPro');
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document_cron', 'upload_document', $reqData, [], 0, 0);
             $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
             $response = json_decode($result, true);
-            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document_cron', 'upload_document', $reqData, json_encode($response), 0, $logid);
 
             if (isset($response) && !empty($response)) {
                 foreach ($response as $key => $res) {
@@ -6732,6 +6732,13 @@ class Cron extends MX_Controller
                             'is_synced' => 1,
                             'id' => $res['Id']
                         ];
+                        if (!empty($value['document_ids'])) {
+                            $docIds = json_decode($value['document_ids'], true);
+                            if (!empty($docIds)) {
+                                $this->db->where_in('id', $docIds);
+                                $this->db->update('pct_order_documents', ['is_sync' => 1]);
+                            }
+                        }
                     } else {
                         $updateData[] = [
                             'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1, //(strtolower($res['Message']) == 'order was not found.') ? 1 : 0,
@@ -6962,9 +6969,7 @@ class Cron extends MX_Controller
 
         $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
 
-        // print_r($productTypeList);die;
         $queryParams = "DateFrom=03-01-2025&DateTo=03-10-2025";
-        // $queryParams = "DateFrom=" . urlencode('03-01-2025') . "&DateTo=" . urlencode('03-31-2025');
         $reqData     = json_encode($req);
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
@@ -6992,7 +6997,11 @@ class Cron extends MX_Controller
                 $receivedDate = $list['ReceivedDate'] ?? null;
                 $closedDate = $list['CompletedDate'] ?? null;
                 $marketingRep = $list['MarketingRep'] ?? null;
-                
+                if (!empty($closedDate)) {
+                    $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
+                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                }
+
                 if (!empty($file_number)) {
                     $condition = [
                         'where' => [
@@ -7094,10 +7103,7 @@ class Cron extends MX_Controller
                         $randomString  = $this->order->randomPassword();
                         $randomString  = md5($randomString);
 
-                        if (!empty($closedDate)) {
-                            $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
-                            $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                        }
+                        
 
                         $orderData = [
                             'customer_id'                => $customerId,
@@ -7127,6 +7133,20 @@ class Cron extends MX_Controller
                         // print_r($orderData);die;
                         $orderId = $this->home_model->insert($orderData, 'order_details');
                         
+                    } else {
+                        $orderStatus = strtolower($orderStatus);
+                        $orderData = [
+                            'softpro_status' => $orderStatus,
+                        ];
+                        if ($orderStatus == 'closed') {
+                            $orderData['resware_closed_status_date'] = $completed_date;
+                            $orderData['sent_to_accounting_date'] = $completed_date;
+                        }
+                        $condition = [
+                            'file_number' => $file_number
+                        ];
+
+                        $orderId = $this->home_model->update($orderData, $condition, 'order_details');
                     }
                 }
                 

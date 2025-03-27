@@ -71,7 +71,7 @@ class SalesRep extends MX_Controller
         $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
 
         $request = [
-            "DateType" => "Order Received Date",
+            "DateType" => "Closed Date",
             "MarketingRep" => $salesrepDetails['full_name'],
             "DateFrom"  => date('m-01-Y'),
             "DateThrough" => date('m-d-Y'),
@@ -218,7 +218,7 @@ class SalesRep extends MX_Controller
             /** For last 4 months calculations */
             
             $request = [
-                "DateType" => "Order Received Date",
+                "DateType" => "Closed Date",
                 "MarketingRep" => $salesrepDetails['full_name'],
                 "DateFrom"  => date('m-01-Y', strtotime('-3 months', strtotime(date('Y-m-d')))),
                 "DateThrough" => date('m-d-Y'),
