@@ -86,14 +86,14 @@ class Home extends MX_Controller
         $this->load->model('order/customer_basic_details_model');
         $customer_filter      = ['is_escrow' => 1, 'status' => 1];
         $escrowUsersCount     = $this->customer_basic_details_model->count_by($customer_filter);
-        $customer_filter      = ['is_escrow' => 0, 'status' => 1];
+        $customer_filter      = ['is_lender' => 1, 'status' => 1];
         $lenderUsersCount     = $this->customer_basic_details_model->count_by($customer_filter);
         $customer_filter      = ['is_sales_rep' => 1];
         $salesRepUsersCount   = $this->customer_basic_details_model->count_by($customer_filter);
         $customer_filter      = [];
-        $expiredPasswords     = $this->home_model->get_incorrect_customers($customer_filter);
-        $expiredPasswordCount = $expiredPasswords['recordsTotal'];
-        $failedJsonCount      = $this->home_model->get_failed_json_files();
+        // $expiredPasswords     = $this->home_model->get_incorrect_customers($customer_filter);
+        $expiredPasswordCount = 0;//$expiredPasswords['recordsTotal'];
+        $failedJsonCount      = 0;//$this->home_model->get_failed_json_files();
 
         $data = [
             'title'                => 'PCT Order: Dashboard',
@@ -2965,9 +2965,9 @@ class Home extends MX_Controller
                     $nestedData[] = 'Lender User';
                 }
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'];
+                $nestedData[] = $value['address1'];
                 $nestedData[] = $value['city'];
-                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['zip'];
                 $user_id      = $value['id'];
 
                 if ($value['is_password_required'] == 1) {
@@ -4285,7 +4285,7 @@ class Home extends MX_Controller
         $condition                    = [
             'id' => $user_id,
         ];
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
         /** Save user Activity */
         $orderUser = $this->home_model->get_user($condition);
         $activity  = 'Is password require to send password for user :- ' . $orderUser['email_address'] . ' : ' . (($is_password_required == 1) ? 'Yes' : 'No');
@@ -4763,12 +4763,12 @@ class Home extends MX_Controller
             "APNNumberParcelID"  => $order_details['apn'],
             "Country"            => $order_details['county'],
             "Description"        => $order_details['legal_description'],
-            "City"               => $order_details['cust_city'],
-            "State"              => $order_details['county'],
-            "Zip"                => $order_details['cust_zip_code'],
+            "City"               => $order_details['property_city'],
+            "State"              => $order_details['property_state'],
+            "Zip"                => $order_details['property_zip'],
             "EscrowBriefLegal"   => $order_details['legal_description'],
             "IsPrimaryResidence" => true,
-            "State"              => "CA",
+            // "State"              => "CA",
         ];
         $PrimaryOwner = $order_details['primary_owner'];
         $SecondaryOwner = $order_details['secondary_owner'];
@@ -4789,8 +4789,8 @@ class Home extends MX_Controller
             "SecondaryOwnerLastName" => $secondaryOwnerArray['last_name'],
         ];
         $transactionDetailsReq = [
-            "LookUpCodeTitleOfficer" => $order_details['sp_titleofficer_lookup_code'],
-            "TitleOffice"           => $order_details['sp_title_officer_name'],
+            "LookUpCodeTitleOffice" => $order_details['sp_titleofficer_lookup_code'],
+            "TitleOffice"           => $order_details['sp_titleofficer_closer_examiner'],
             "Product"                => $order_details['sp_product_type_name'],
             "EscrowNumber"           => $order_details['escrow_number'],
             // "PrimaryBorrower"        => $order_details['borrower'],
@@ -4809,7 +4809,7 @@ class Home extends MX_Controller
         $TransactionType = $order_details['transaction_type'];
         // $transactionDetailsReq['TransactionType'] = $order_details['transaction_type'];
         $softproOrderType      = $order_details['order_type_name'];
-        $orderReq['orderType'] = $order_details['order_type_name'];
+        $orderReq['orderType'] = $order_details['product_type_name'];
         if ($TransactionType != 'Purchase') {
             // $transactionDetailsReq['PrimaryBorrower']   = $order_details['primary_owner'];
             // $transactionDetailsReq['SecondaryBorrower'] = $order_details['secondary_owner'];

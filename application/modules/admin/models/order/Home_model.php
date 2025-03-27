@@ -438,6 +438,7 @@ class Home_model extends CI_Model
     {
         $this->db->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+        $this->db->where('order_details.is_softpro_order', 1);
         $this->db->where('pct_order_documents.is_grant_doc', 1);
         $total_records = $this->db->count_all_results();
 
@@ -458,6 +459,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && ! empty($keyword)) {
@@ -471,6 +473,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -485,12 +488,14 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_grant_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -498,6 +503,7 @@ class Home_model extends CI_Model
             }
 
             $query = $this->db->get();
+            // print_r($this->db->last_query());die;
             if ($query->num_rows() > 0) {
                 $grant_document_lists = $query->result_array();
             }
@@ -515,6 +521,7 @@ class Home_model extends CI_Model
         $this->db->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_lv_doc', 1);
+        $this->db->where('order_details.is_softpro_order', 1);
         $total_records = $this->db->count_all_results();
 
         $limit             = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
@@ -534,6 +541,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && ! empty($keyword)) {
@@ -547,6 +555,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -561,12 +570,14 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_lv_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -667,6 +678,7 @@ class Home_model extends CI_Model
         $this->db->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_tax_doc', 1);
+        $this->db->where('order_details.is_softpro_order', 1);
         $total_records = $this->db->count_all_results();
 
         $limit              = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
@@ -699,6 +711,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_tax_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -713,6 +726,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_tax_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $filter_total_records = $this->db->count_all_results();
 
             $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
@@ -743,6 +757,7 @@ class Home_model extends CI_Model
         $this->db->from('order_details')
             ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
         $this->db->where('pct_order_documents.is_curative_doc', 1);
+        $this->db->where('order_details.is_softpro_order', 1);
         $total_records = $this->db->count_all_results();
 
         $limit                   = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
@@ -762,6 +777,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_curative_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && ! empty($keyword)) {
@@ -775,6 +791,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_curative_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -795,6 +812,7 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
             $this->db->where('pct_order_documents.is_curative_doc', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
             $this->db->order_by('pct_order_documents.id', 'desc');
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
@@ -1148,7 +1166,7 @@ class Home_model extends CI_Model
         }
         $this->db->where('is_password_updated', 1);
         $this->db->where('status', 1);
-        $this->db->from('customer_basic_details');
+        $this->db->from('pct_softpro_lookup_table');
         $total_records  = $this->db->count_all_results();
         $limit          = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
         $offset         = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
@@ -1162,11 +1180,11 @@ class Home_model extends CI_Model
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
-                    ->or_like('street_address', $keyword)
+                    ->or_like('address1', $keyword)
                     ->or_like('company_name', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
-                    ->or_like('zip_code', $keyword)
+                    ->or_like('zip', $keyword)
                     ->group_end();
             }
 
@@ -1188,7 +1206,7 @@ class Home_model extends CI_Model
             }
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
-            $this->db->from('customer_basic_details');
+            $this->db->from('pct_softpro_lookup_table');
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($keyword) && ! empty($keyword)) {
@@ -1196,11 +1214,11 @@ class Home_model extends CI_Model
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
-                    ->or_like('street_address', $keyword)
+                    ->or_like('address1', $keyword)
                     ->or_like('company_name', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
-                    ->or_like('zip_code', $keyword)
+                    ->or_like('zip', $keyword)
                     ->group_end();
             }
 
@@ -1221,13 +1239,13 @@ class Home_model extends CI_Model
                 }
             }
             $this->db->where('status', 1);
-            $this->db->where('is_password_updated', 1);
+            // $this->db->where('is_password_updated', 1);
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
 
-            $query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('pct_softpro_lookup_table');
 
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
@@ -1251,7 +1269,7 @@ class Home_model extends CI_Model
             }
             $this->db->where('status', 1);
             $this->db->where('is_password_updated', 1);
-            $this->db->from('customer_basic_details');
+            $this->db->from('pct_softpro_lookup_table');
             $filter_total_records = $this->db->count_all_results();
 
             if (isset($user_type) && ! empty($user_type)) {
@@ -1270,13 +1288,13 @@ class Home_model extends CI_Model
                     $this->db->where('is_special_lender', 1);
                 }
             }
-            $this->db->where('is_password_updated', 1);
+            // $this->db->where('is_password_updated', 1);
             $this->db->where('status', 1);
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            $query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('pct_softpro_lookup_table');
 
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();

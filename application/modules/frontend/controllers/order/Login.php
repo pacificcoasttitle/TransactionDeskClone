@@ -68,8 +68,10 @@ class Login extends MX_Controller
                 }
             } else {
                 $email = $this->input->post('email_address');
-                $user = $this->home_model->get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
-
+                // $user = $this->home_model->sp_get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
+                $user = $this->home_model->sp_get_user(array('email_address' => $email, 'status' => 1));
+                // echo "<pre>";
+                // print_r($user);die;
                 if (!empty($user)) {
                     if ($user['is_password_required'] == 1 && $is_password_field_show == 0 && $user['is_tmp_password'] == 1) {
                         $response = array('status' => 'error', 'password_err_msg' => "Plese enter a password that is sent in email. If you don't receive any email then please contact us administrator.", 'is_password_field_show' => 1);
@@ -84,7 +86,8 @@ class Login extends MX_Controller
                                 $this->load->library('order/order');
                                 $randomString = $this->order->randomPassword();
                                 $hash = md5($user['id'] . $user['email_address'] . $randomString);
-                                $this->home_model->update(array('hash' => $hash), array('id' => $user['id']));
+                                // $this->home_model->update(array('hash' => $hash), array('id' => $user['id']));
+                                $this->home_model->update(array('hash' => $hash), array('id' => $user['id']), 'pct_softpro_lookup_table');
                                 $response = array('status' => 'success', 'message' => '', 'url' => 'change-password/' . $hash);
                                 echo json_encode($response);exit;
                             } else {
@@ -96,6 +99,7 @@ class Login extends MX_Controller
                                 $session_data = array(
                                     "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
                                     "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'] . " " . $user['last_name'] : '',
+                                    "full_name" => isset($user['full_name']) && !empty($user['full_name']) ? $user['full_name'] : '',
                                     "email" => isset($user['email_address']) && !empty($user['email_address']) ? $user['email_address'] : '',
                                     "random_password" => isset($user['random_password']) && !empty($user['random_password']) ? $user['random_password'] : '',
                                     "is_admin" => 0,
@@ -107,7 +111,7 @@ class Login extends MX_Controller
                                     "is_title_production" => $user['is_title_production'],
                                     "is_escrow_officer" => $user['is_escrow_officer'],
                                     "is_escrow_assistant" => $user['is_escrow_assistant'],
-                                    "partner_companies" => $user['partner_companies'],
+                                    "lookup_code" => $user['lookup_code'],
                                     "is_special_lender" => isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                                 );
                                 $this->session->set_userdata('user', $session_data);
@@ -121,6 +125,7 @@ class Login extends MX_Controller
                         $session_data = array(
                             "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
                             "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'] . " " . $user['last_name'] : '',
+                            "full_name" => isset($user['full_name']) && !empty($user['full_name']) ? $user['full_name'] : '',
                             "email" => isset($user['email_address']) && !empty($user['email_address']) ? $user['email_address'] : '',
                             "random_password" => isset($user['random_password']) && !empty($user['random_password']) ? $user['random_password'] : '',
                             "is_admin" => 0,
@@ -132,7 +137,7 @@ class Login extends MX_Controller
                             "is_title_production" => $user['is_title_production'],
                             "is_escrow_officer" => $user['is_escrow_officer'],
                             "is_escrow_assistant" => $user['is_escrow_assistant'],
-                            "partner_companies" => $user['partner_companies'],
+                            "lookup_code" => $user['lookup_code'],
                             "is_special_lender" => isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                         );
                         $this->session->set_userdata('user', $session_data);

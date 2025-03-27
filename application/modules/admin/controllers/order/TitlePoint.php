@@ -83,32 +83,32 @@ class TitlePoint extends MX_Controller
         if (isset($logs_list['data']) && !empty($logs_list['data'])) {
             $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if (isset($file_id) && !empty($file_id)) {
+                // $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                // if (isset($file_id) && !empty($file_id)) {
                     // $order_details = $this->titlePoint_model->get_order_details($file_id);
 
-                    $nestedData = array();
+                $nestedData = array();
 
-                    $nestedData[] = $count;
-                    $nestedData[] = $value['file_number'];
-                    $nestedData[] = $value['full_address'];
+                $nestedData[] = $count;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['full_address'];
 
-                    if ($this->order->fileExistOrNotOnS3('legal-vesting/' . $value['file_number'] . '.pdf')) {
-                        $nestedData[] = 'Success';
-                    } else if ((strtolower($value['lv_file_status']) != 'success') && !empty($value['lv_file_status'])) {
-                        $nestedData[] = $value['lv_file_status'];
-                    } else if (empty($value['lv_file_status']) && (strtolower($value['cs4_message']) == 'success')) {
-                        $nestedData[] = 'Failed';
-                    } else {
-                        $nestedData[] = $value['cs4_message'];
-                    }
-
-                    // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
-                    $nestedData[] = convertTimezone($value['created_at']);
-
-                    $data[] = $nestedData;
-                    $count++;
+                if ($this->order->fileExistOrNotOnS3('legal-vesting/' . $value['file_number'] . '.pdf')) {
+                    $nestedData[] = 'Success';
+                } else if ((strtolower($value['lv_file_status']) != 'success') && !empty($value['lv_file_status'])) {
+                    $nestedData[] = $value['lv_file_status'];
+                } else if (empty($value['lv_file_status']) && (strtolower($value['cs4_message']) == 'success')) {
+                    $nestedData[] = 'Failed';
+                } else {
+                    $nestedData[] = $value['cs4_message'];
                 }
+
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $nestedData[] = convertTimezone($value['created_at']);
+
+                $data[] = $nestedData;
+                $count++;
+                // }
             }
         }
         $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
@@ -150,32 +150,32 @@ class TitlePoint extends MX_Controller
         if (isset($logs_list['data']) && !empty($logs_list['data'])) {
             $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if (isset($file_id) && !empty($file_id)) {
+                // $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                // if (isset($file_id) && !empty($file_id)) {
                     // $order_details = $this->titlePoint_model->get_order_details($file_id);
 
-                    $nestedData = array();
+                $nestedData = array();
 
-                    $nestedData[] = $count;
-                    $nestedData[] = $value['file_number'];
-                    $nestedData[] = $value['full_address'];
+                $nestedData[] = $count;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['full_address'];
 
-                    if ($this->order->fileExistOrNotOnS3('pre-listing-doc/' . $value['file_number'] . '.pdf')) {
-                        $nestedData[] = 'Success';
-                    } else if ((strtolower($value['geo_file_status']) != 'success') && !empty($value['geo_file_status'])) {
-                        $nestedData[] = $value['geo_file_status'] . ' : ' . $value['geo_file_message'];
-                    } else if (empty($value['geo_file_status']) && (strtolower($value['geo_file_status']) == 'success')) {
-                        $nestedData[] = 'Failed';
-                    } else {
-                        $nestedData[] = $value['geo_file_status'];
-                    }
-
-                    // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
-                    $nestedData[] = convertTimezone($value['created_at']);
-
-                    $data[] = $nestedData;
-                    $count++;
+                if ($this->order->fileExistOrNotOnS3('pre-listing-doc/' . $value['file_number'] . '.pdf')) {
+                    $nestedData[] = 'Success';
+                } else if ((strtolower($value['geo_file_status']) != 'success') && !empty($value['geo_file_status'])) {
+                    $nestedData[] = $value['geo_file_status'] . ' : ' . $value['geo_file_message'];
+                } else if (empty($value['geo_file_status']) && (strtolower($value['geo_file_status']) == 'success')) {
+                    $nestedData[] = 'Failed';
+                } else {
+                    $nestedData[] = $value['geo_file_status'];
                 }
+
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $nestedData[] = convertTimezone($value['created_at']);
+
+                $data[] = $nestedData;
+                $count++;
+                // }
             }
         }
         $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
@@ -216,28 +216,28 @@ class TitlePoint extends MX_Controller
         if (isset($logs_list['data']) && !empty($logs_list['data'])) {
             $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if (isset($file_id) && !empty($file_id)) {
+                // $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                // if (isset($file_id) && !empty($file_id)) {
 
-                    $nestedData = array();
+                $nestedData = array();
 
-                    $nestedData[] = $count;
-                    $nestedData[] = $value['lp_file_number'];
-                    $nestedData[] = convertTimezone($value['created_at']);
+                $nestedData[] = $count;
+                $nestedData[] = $value['lp_file_number'];
+                $nestedData[] = convertTimezone($value['created_at']);
 
-                    $documentUrl = env('AWS_PATH') . 'lp-xml/' . $value['lp_file_number'] . '.xml';
-                    if ($this->order->fileExistOrNotOnS3('lp-xml/' . $value['lp_file_number'] . '.xml')) {
-                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"xml"' . ");'><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                    } else {
-                        $nestedData[] = 'XML not exist';
-                    }
-
-                    // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
-
-                    $data[] = $nestedData;
-                    $count++;
+                $documentUrl = env('AWS_PATH') . 'lp-xml/' . $value['lp_file_number'] . '.xml';
+                if ($this->order->fileExistOrNotOnS3('lp-xml/' . $value['lp_file_number'] . '.xml')) {
+                    $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"xml"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                } else {
+                    $nestedData[] = 'XML not exist';
                 }
+
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+
+                $data[] = $nestedData;
+                $count++;
+                // }
             }
         }
         $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
@@ -322,35 +322,33 @@ class TitlePoint extends MX_Controller
         if (isset($logs_list['data']) && !empty($logs_list['data'])) {
             $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if (isset($file_id) && !empty($file_id)) {
-                    // $order_details = $this->titlePoint_model->get_order_details($file_id);
+                // $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                // if (isset($file_id) && !empty($file_id)) {
+                $nestedData = array();
+                $nestedData[] = $count;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['full_address'];
+                $nestedData[] = $value['apn'];
 
-                    $nestedData = array();
-                    $nestedData[] = $count;
-                    $nestedData[] = $value['file_number'];
-                    $nestedData[] = $value['full_address'];
-                    $nestedData[] = $value['apn'];
-
-                    if ((!empty($value['tax_data_status']))) {
-                        $nestedData[] = $value['tax_data_status'];
-                    } else {
-                        $nestedData[] = 'Failed';
-                    }
-                    $nestedData[] = convertTimezone($value['created_at']);
-                    $orderId = $value['order_id'];
-                    $sessionId = $value['session_id'];
-                    $documentUrl = env('AWS_PATH') . 'tax-data-xml/' . $sessionId . '.xml';
-                    if (!empty($value['tax_data_status']) && $this->order->fileExistOrNotOnS3('tax-data-xml/' . $sessionId . '.xml')) {
-                        $nestedData[] = "<div style='display:flex;'><a href='javascript:void(0)' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"xml"' . ");'><i class='fas fa-fw fa-download'></i></a>
-                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
-                    } else {
-                        $nestedData[] = 'XML not exist';
-                    }
-
-                    $data[] = $nestedData;
-                    $count++;
+                if ((!empty($value['tax_data_status']))) {
+                    $nestedData[] = $value['tax_data_status'];
+                } else {
+                    $nestedData[] = 'Failed';
                 }
+                $nestedData[] = convertTimezone($value['created_at']);
+                $orderId = $value['order_id'];
+                $sessionId = $value['session_id'];
+                $documentUrl = env('AWS_PATH') . 'tax-data-xml/' . $sessionId . '.xml';
+                if (!empty($value['tax_data_status']) && $this->order->fileExistOrNotOnS3('tax-data-xml/' . $sessionId . '.xml')) {
+                    $nestedData[] = "<div style='display:flex;'><a href='javascript:void(0)' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"xml"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                    <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                } else {
+                    $nestedData[] = 'XML not exist';
+                }
+
+                $data[] = $nestedData;
+                $count++;
+                // }
             }
         }
         $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
@@ -392,42 +390,41 @@ class TitlePoint extends MX_Controller
         if (isset($logs_list['data']) && !empty($logs_list['data'])) {
             $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if (isset($file_id) && !empty($file_id)) {
-                    // $order_details = $this->titlePoint_model->get_order_details($file_id);
+                // $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                // if (isset($file_id) && !empty($file_id)) {
+                    
+                $nestedData = array();
+                /*$nestedData[] = $value['customer_number'];*/
+                $nestedData[] = $count;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['full_address'];
+                $nestedData[] = $value['apn'];
 
-                    $nestedData = array();
-                    /*$nestedData[] = $value['customer_number'];*/
-                    $nestedData[] = $count;
-                    $nestedData[] = $value['file_number'];
-                    $nestedData[] = $value['full_address'];
-                    $nestedData[] = $value['apn'];
-
-                    if ($this->order->fileExistOrNotOnS3('tax/' . $value['file_number'] . '.pdf')) {
-                        $nestedData[] = 'Success';
-                    } else if ((strtolower($value['tax_file_status']) != 'success') && !empty($value['tax_file_status'])) {
-                        $nestedData[] = $value['tax_file_status'];
-                    } else if (empty($value['tax_file_status']) && (strtolower($value['cs3_message']) == 'success')) {
-                        $nestedData[] = 'Failed';
-                    } else {
-                        $nestedData[] = $value['cs3_message'];
-                    }
-                    // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
-                    $nestedData[] = convertTimezone($value['created_at']);
-                    $orderId = $value['order_id'];
-                    $fileNumber = $value['file_number'];
-                    if ($value['tax_file_status'] == 'processing' && !empty($value['tax_request_id'])) {
-                        $taxRequestId = $value['tax_request_id'];
-                        $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='regenerateTaxDocument(" . '"' . $taxRequestId . '"' . ", " . '"' . $orderId . '"' . ", " . '"' . $fileNumber . '"' . ");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
-                    } else if ($value['tax_file_status'] == 'processing' && empty($value['tax_request_id'])) {
-                        $cs3ServiceId = $value['cs3_service_id'];
-                        $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='generateTaxDocument(" . '"' . $cs3ServiceId . '"' . ", " . '"' . $orderId . '"' . ", " . '"' . $fileNumber . '"' . ");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
-                    } else {
-                        $nestedData[] = '';
-                    }
-                    $data[] = $nestedData;
-                    $count++;
+                if ($this->order->fileExistOrNotOnS3('tax/' . $value['file_number'] . '.pdf')) {
+                    $nestedData[] = 'Success';
+                } else if ((strtolower($value['tax_file_status']) != 'success') && !empty($value['tax_file_status'])) {
+                    $nestedData[] = $value['tax_file_status'];
+                } else if (empty($value['tax_file_status']) && (strtolower($value['cs3_message']) == 'success')) {
+                    $nestedData[] = 'Failed';
+                } else {
+                    $nestedData[] = $value['cs3_message'];
                 }
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+                $nestedData[] = convertTimezone($value['created_at']);
+                $orderId = $value['order_id'];
+                $fileNumber = $value['file_number'];
+                if ($value['tax_file_status'] == 'processing' && !empty($value['tax_request_id'])) {
+                    $taxRequestId = $value['tax_request_id'];
+                    $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='regenerateTaxDocument(" . '"' . $taxRequestId . '"' . ", " . '"' . $orderId . '"' . ", " . '"' . $fileNumber . '"' . ");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                } else if ($value['tax_file_status'] == 'processing' && empty($value['tax_request_id'])) {
+                    $cs3ServiceId = $value['cs3_service_id'];
+                    $nestedData[] = "<a style='margin-left:5px;' href='#' onclick='generateTaxDocument(" . '"' . $cs3ServiceId . '"' . ", " . '"' . $orderId . '"' . ", " . '"' . $fileNumber . '"' . ");' title='Regenerate Tax Document'><i class='fas fa-sync' aria-hidden='true'></i></a>";
+                } else {
+                    $nestedData[] = '';
+                }
+                $data[] = $nestedData;
+                $count++;
+                
             }
         }
         $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
@@ -478,10 +475,8 @@ class TitlePoint extends MX_Controller
         if (isset($logs_list['data']) && !empty($logs_list['data'])) {
             $count = $params['start'] + 1;
             foreach ($logs_list['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
-                if (isset($file_id) && !empty($file_id)) {
-                    // $order_details = $this->titlePoint_model->get_order_details($file_id);
-
+                // $file_id = isset($value['file_id']) && !empty($value['file_id']) ? $value['file_id'] : '';
+                // if (isset($file_id) && !empty($file_id)) {
                     $nestedData = array();
 
                     $nestedData[] = $count;
@@ -501,7 +496,7 @@ class TitlePoint extends MX_Controller
                     $nestedData[] = convertTimezone($value['created_at']);
                     $data[] = $nestedData;
                     $count++;
-                }
+                // }
             }
         }
         $json_data['recordsTotal'] = intval($logs_list['recordsTotal']);
