@@ -6947,8 +6947,11 @@ class Cron extends MX_Controller
         $this->load->model('order/apiLogs');
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
-        $req['DateFrom'] = '03-01-2025';
-        $req['DateTo'] = '03-10-2025';
+        // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
+        $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
+        $endDate = date('m-d-Y');
+        $req['DateFrom'] = $startDate;
+        $req['DateTo'] = $endDate;
         $query = $this->db->select('id, product_type')
                       ->from('pct_softpro_product_type')
                       ->get();
@@ -6969,7 +6972,8 @@ class Cron extends MX_Controller
 
         $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
 
-        $queryParams = "DateFrom=03-01-2025&DateTo=03-10-2025";
+        $queryParams = "DateFrom=$startDate&DateTo=$endDate";
+        // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $reqData     = json_encode($req);
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
@@ -6977,6 +6981,7 @@ class Cron extends MX_Controller
         // echo "<pre>";
         // print_r($response);die;
         $sheetData = [];
+        $importedOrderCount = 0;
         if ($response['status'] == 'success' && !empty($response['data'])) {
             
             $orderList = $response['data'];
@@ -7013,7 +7018,7 @@ class Cron extends MX_Controller
                     // print_r($order);
                     if (empty($order)) {
                         $customerId   = 0;
-                        
+                        $importedOrderCount++;
                         $FullProperty = $address;
                         // $address      = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'];
                         $locale       = $city;
@@ -7151,10 +7156,7 @@ class Cron extends MX_Controller
                 }
                 
             } // end foreach
-            $response = ['status' => $import_status, 'msg' => $msg];
-            
-
-            echo json_encode($response);
+            echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported successfully']);
         }
     }
 }
