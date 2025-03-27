@@ -42,6 +42,11 @@
                         <i class="fas fa-file-export"></i>
                     </span>
                     <span class="text"> Export </span> </a>
+                <a href="javascript:void(0);" data-export-type="csv" onclick="syncSoftProOrders();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-refresh"></i>
+                    </span>
+                    <span class="text"> Sync Order </span> </a>
             </div>
         <?php endif; ?>
 
