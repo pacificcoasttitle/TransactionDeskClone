@@ -522,7 +522,7 @@ class Westcor
 
                 $this->CI->home_model->update($order_details, $condition, 'order_details');
                 $this->CI->order->uploadDocumentOnAwsS3($document_name, 'documents');
-                $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
+                $this->CI->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
                 // $this->CI->order->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']);
                 $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
                 if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
