@@ -1849,7 +1849,7 @@ class Common extends MX_Controller
         }
         $orderId = $this->uri->segment(2);
         $params = [
-            'order_details.id' => $order_id,
+            'order_details.id' => $orderId,
         ];
         $orderDetails = $this->order->get_order_details($params);
         $fileId = $orderDetails['file_id'];
