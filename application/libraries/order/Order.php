@@ -227,7 +227,7 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL)');
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
                 }
@@ -462,7 +462,7 @@ class Order
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
                     $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL)');
                     $this->CI->db->group_end();
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
