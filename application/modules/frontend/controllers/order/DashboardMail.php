@@ -112,7 +112,7 @@ class DashboardMail extends MX_Controller
         } else {
             // $data['action'] = "<div style='display:flex;'><form onclick='return lender_pop_up(0, $file_id);' action='" . base_url() . "create-cpl/" . $file_id . "' method='POST'><button class='btn btn-grad-2a generate button-color' type='submit'>GENERATE</button></form>
             //                     <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);'><button class='btn btn-grad-2a generate button-color' type='button'>Edit</button></a></div>";
-            $data['action'] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $file_id);' action='" . base_url() . "create-cpl/" . $order['file_id'] . "' method='POST'><a href='javascript:void(0);'  title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span><span class='text'>Generate</span></a></form>
+            $data['action'] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $file_id);' action='" . base_url() . "create-cpl/" . $file_id . "' method='POST'><a href='javascript:void(0);'  title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span><span class='text'>Generate</span></a></form>
                                 <a onclick='return lender_pop_up(0, $file_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
         }
         // $this->load->view('layout/head_dashboard', $data);

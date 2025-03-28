@@ -198,6 +198,7 @@ if (!empty($errors)) {
                                                         <input type="text" name="LenderCompany" id="LenderCompany" class="form-control gui-input ui-autocomplete-input" placeholder="Lender Company Name" required="required">
                                                         <input type="hidden" name="LenderId" id="LenderId" value="">
                                                         <input type="hidden" name="file_id" id="file_id" value="">
+														<input type="hidden" name="order_id" id="order_id" value="">
                                                         <input type="hidden" name="partner_id" id="partner_id" value="">
                                                     </div>
                                                 </div>
@@ -923,7 +924,7 @@ if (!empty($errors)) {
 		});
 	});
 
-    function lender_pop_up(lenderFlag, fileId)
+    function lender_pop_up(lenderFlag, orderId)
     {
 		if (lenderFlag == 1) {
 			$(this).form.submit();
@@ -934,7 +935,7 @@ if (!empty($errors)) {
 				url: base_url + "get-order-details-cpl",
 				type: "post",
 				data: {
-					fileId: fileId,
+					orderId: orderId,
 					requestFrom: 'generic-form',
 				},
 				success: function (response) {
@@ -984,7 +985,8 @@ if (!empty($errors)) {
 					}
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');
-					$('#file_id').val(fileId);
+					// $('#file_id').val(orderId);
+					$('#order_id').val(orderId);
 				}
 			});
 			return false;
