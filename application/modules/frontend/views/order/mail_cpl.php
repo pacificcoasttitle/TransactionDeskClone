@@ -924,7 +924,7 @@ if (!empty($errors)) {
 		});
 	});
 
-    function lender_pop_up(lenderFlag, fileId)
+    function lender_pop_up(lenderFlag, orderId)
     {
 		if (lenderFlag == 1) {
 			$(this).form.submit();
@@ -935,7 +935,7 @@ if (!empty($errors)) {
 				url: base_url + "get-order-details-cpl",
 				type: "post",
 				data: {
-					fileId: fileId,
+					orderId: orderId,
 					requestFrom: 'generic-form',
 				},
 				success: function (response) {
@@ -985,8 +985,8 @@ if (!empty($errors)) {
 					}
 					$('#page-preloader').css('display', 'none');
 					$('#lender_information').modal('show');
-					// $('#file_id').val(fileId);
-					$('#order_id').val(fileId);
+					// $('#file_id').val(orderId);
+					$('#order_id').val(orderId);
 				}
 			});
 			return false;
