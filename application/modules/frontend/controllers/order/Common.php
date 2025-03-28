@@ -1354,9 +1354,12 @@ class Common extends MX_Controller
     {
         $userdata = $this->session->userdata('user');
         $this->load->library('order/westcor');
-        $fileId = $this->uri->segment(2);
-        $orderDetails = $this->order->get_order_details($fileId);
-        $data = $this->westcor->generateCplDocument($fileId, $orderDetails);
+        $orderId = $this->uri->segment(2);
+        $params = [
+            'order_details.id' => $orderId,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
+        $data = $this->westcor->generateCplDocument($orderId, $orderDetails);
         $this->session->set_userdata($data);
         $this->session->unset_userdata('lender_details');
         if (!empty($userdata['id'])) {
@@ -1404,35 +1407,35 @@ class Common extends MX_Controller
             'lender_fullname' => $this->input->post('LenderName'),
             'state' => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
             'company_name' => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
-            'street_address' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
+            'address1' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
             'city' => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-            'zip_code' => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
+            'zip' => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
             'assignment_clause' => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "",
         );
 
         $this->session->set_userdata('lender_details', $lender_details);
         unset($lender_details['lender_fullname']);
-        if ($orderDetails['is_softpro_order'] == 1) {
-            $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
-            $lenderUserDetails = $this->home_model->sp_get_user(array('id' => $LenderId));
-        } else {
+        // if ($orderDetails['is_softpro_order'] == 1) {
+        //     $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
+        //     $lenderUserDetails = $this->home_model->sp_get_user(array('id' => $LenderId));
+        // } else {
             $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
             
             if ($new_existing_lender == 'add_lender') {
-                $lender_details['partner_id'] = $this->input->post('partner_id');
+                // $lender_details['partner_id'] = $this->input->post('partner_id');
                 $lender_details['is_added_lender_by_cpl_proposed'] = 1;
                 $lender_details['is_escrow'] = 0;
                 $lender_details['status'] = 0;
-                $LenderId = $this->home_model->insert($lender_details, 'customer_basic_details');
+                $LenderId = $this->home_model->insert($lender_details, 'pct_softpro_lookup_table');
             } else {
                 $condition = array(
                     'id' => $LenderId,
                 );
-                $this->home_model->update($lender_details, $condition, 'customer_basic_details');
+                $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
             }
             $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
             
-            $partners = array();
+            /*$partners = array();
             $secondaryEmp[] = array('UserID' => $lenderUserDetails['resware_user_id']);
             $secondaryPartners = array(
                 'SecondaryEmployees' => $secondaryEmp,
@@ -1498,8 +1501,8 @@ class Common extends MX_Controller
                     $resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
                     $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
                 }
-            }
-        }
+            }*/
+        // }
         
 
 
@@ -1519,11 +1522,11 @@ class Common extends MX_Controller
         if ($cplApi == 'fnf') {
             redirect(base_url() . "create-cpl-for-fnf/" . $order_id);
         } else if ($cplApi == 'westcor') {
-            redirect(base_url() . "create-cpl/" . $file_id);
+            redirect(base_url() . "create-cpl/" . $order_id);
         } else if ($cplApi == 'doma') {
-            redirect(base_url() . "create-cpl-for-doma/" . $file_id);
+            redirect(base_url() . "create-cpl-for-doma/" . $order_id);
         } else {
-            redirect(base_url() . "create-cpl-for-natic/" . $file_id);
+            redirect(base_url() . "create-cpl-for-natic/" . $order_id);
         }
     }
 
@@ -1533,7 +1536,7 @@ class Common extends MX_Controller
         $this->load->library('order/natic');
         // $this->load->library('order/doma');
         $this->load->model('order/home_model');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         // echo "<pre>";
         $orderId = $this->input->post('orderId');
         $requestFrom = $this->input->post('requestFrom');
@@ -1547,24 +1550,24 @@ class Common extends MX_Controller
         $orderDetails = $this->order->get_order_details($params);
         $isSoftProStatus = $orderDetails['is_softpro_order'];
         // print_r($orderDetails);die;
-        if ($orderDetails['is_softpro_order']) {
+        // if ($orderDetails['is_softpro_order']) {
             $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
-        } else {
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-        }
+        // } else {
+        //     $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        // }
         
         if ($orderUser['is_escrow'] == 1) {
             if (!empty($orderDetails['cpl_lender_id'])) {
-                if ($orderDetails['is_softpro_order']) {
+                // if ($orderDetails['is_softpro_order']) {
                     $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                     // print_r($orderUser);die;
                     $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                     $orderDetails['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
-                } else {
-                    $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-                    $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
-                    $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-                }
+                // } else {
+                //     $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                //     $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+                //     $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                // }
                 // $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                 $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
@@ -1575,7 +1578,7 @@ class Common extends MX_Controller
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
             } else {
-                if ($orderDetails['is_softpro_order']) {
+                // if ($orderDetails['is_softpro_order']) {
                     $orderDetails['lender_first_name'] = $orderDetails['sp_lender_first_name'] ? $orderDetails['sp_lender_first_name'] : '';
                     $orderDetails['lender_last_name'] = $orderDetails['sp_lender_last_name'] ? $orderDetails['sp_lender_last_name'] : '';
                     $orderDetails['lender_email'] = $orderDetails['sp_lender_email'] ? $orderDetails['sp_lender_email'] : '';
@@ -1586,30 +1589,30 @@ class Common extends MX_Controller
                     $orderDetails['lender_zipcode'] = $orderDetails['sp_lender_zipcode'] ? $orderDetails['sp_lender_zipcode'] : '';
                     $orderDetails['lender_assignment_clause'] = $orderDetails['sp_lender_assignment_clause'] ? $orderDetails['sp_lender_assignment_clause'] : '';
                     $orderDetails['lender_id'] = $orderDetails['sp_lender_id'] ? $orderDetails['sp_lender_id'] : '';
-                } else {
-                    $orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
-                    $orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
-                    $orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
-                    $orderDetails['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
-                    $orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
-                    $orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
-                    $orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
-                    $orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
-                    $orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
-                    $orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
-                }
+                // } else {
+                //     $orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
+                //     $orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
+                //     $orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
+                //     $orderDetails['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
+                //     $orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
+                //     $orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
+                //     $orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
+                //     $orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
+                //     $orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+                //     $orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
+                // }
             }
         } else {
             if (!empty($orderDetails['cpl_lender_id'])) {
-                if ($orderDetails['is_softpro_order']) {
+                // if ($orderDetails['is_softpro_order']) {
                     $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                     $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                     $orderDetails['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
-                } else {
-                    $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-                    $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
-                    $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-                }
+                // } else {
+                //     $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+                //     $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
+                //     $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
+                // }
                 // $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
                 $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                 $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
@@ -1620,7 +1623,7 @@ class Common extends MX_Controller
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
             } else {
-                if ((!$orderDetails['is_softpro_order'] && $orderUser['is_primary_mortgage_user'] == 1) || ($orderDetails['is_softpro_order'] && $orderUser['is_mortgage_broker'] == 1)) {
+                if ($orderDetails['is_softpro_order'] && $orderUser['is_mortgage_broker'] == 1) {
                     $orderDetails['lender_first_name'] = '';
                     $orderDetails['lender_last_name'] = '';
                     $orderDetails['lender_email'] = '';
@@ -1647,27 +1650,27 @@ class Common extends MX_Controller
             // $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
         }
 
-        if ($isSoftProStatus) {
-            if (empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
-                $orderDetails['lender_name'] = '';
-            } else if (empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
-                $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
-            } else if (!empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
-                $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'];
-            } else if (!empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
-                $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
-            }
-        } else {
-            if (empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
-                $orderDetails['lender_name'] = '';
-            } else if (empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
-                $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
-            } else if (!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
-                $orderDetails['lender_name'] = $orderDetails['lender_first_name'];
-            } else if (!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
-                $orderDetails['lender_name'] = $orderDetails['lender_first_name'] . " " . $orderDetails['lender_last_name'];
-            }
+        // if ($isSoftProStatus) {
+        if (empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
+            $orderDetails['lender_name'] = '';
+        } else if (empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
+            $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+        } else if (!empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
+            $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'];
+        } else if (!empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
+            $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
         }
+        // } else {
+        //     if (empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+        //         $orderDetails['lender_name'] = '';
+        //     } else if (empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+        //         $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+        //     } else if (!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+        //         $orderDetails['lender_name'] = $orderDetails['lender_first_name'];
+        //     } else if (!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+        //         $orderDetails['lender_name'] = $orderDetails['lender_first_name'] . " " . $orderDetails['lender_last_name'];
+        //     }
+        // }
 
         if ($orderDetails['sales_amount'] > 0) {
             if (!empty($orderDetails['borrower'])) {
@@ -1695,8 +1698,8 @@ class Common extends MX_Controller
             }
         }
 
-        if (!$isSoftProStatus) {
-            $endPoint = 'files/' . $fileId . '/partners';
+        // if (!$isSoftProStatus) {
+            // $endPoint = 'files/' . $fileId . '/partners';
             $user_data = array();
             if (!empty($userdata['id']) && (empty($requestFrom) || $requestFrom != 'generic-form')) {
                 if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
@@ -1707,14 +1710,42 @@ class Common extends MX_Controller
             } else {
                 $user_data['admin_api'] = 1;
             }
-
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, $user_data, array(), $orderDetails['order_id'], 0);
-            $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
-            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
-            $resPartners = json_decode($resultPartners, true);
-            if (!empty($resPartners)) {
-                $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
+            
+            // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, $user_data, array(), $orderDetails['order_id'], 0);
+            // $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
+            // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_partners', env('RESWARE_ORDER_API') . $endPoint, array(), $resultPartners, $orderDetails['order_id'], $logid);
+            // $resPartners = json_decode($resultPartners, true);
+            
+            if (strtolower($orderDetails['product_type_name']) == 'full alta') {
+                $underWriter = 'commonwealth';
+                $orderDetails['cpl_api'] = 'fnf';
+                $agentsData = $this->fnf->getAgents();
+                if ($agentsData === false) {
+                    $orderDetails['email'] = $orderUser['email_address'];
+                    $agentsData = $this->fnf->getAgentsFromApi($orderDetails);
+                }
+                $orderDetails['agents_data'] = $agentsData;
+            } else {
                 $underWriter = 'westcor';
+                $this->load->library('order/westcor');
+                $branchesData = $this->westcor->getBranches();
+                if ($branchesData === false) {
+                    $branchesData = $this->westcor->getBranchesFromApi();
+                }
+                $orderDetails['agents_data'] = $branchesData;
+                $orderDetails['cpl_api'] = 'westcor';
+            }
+            $underwriter_data = [
+                'underwriter' => $underWriter,
+            ];
+            $update_condition = [
+                'id' => $orderId,
+            ];
+            // echo "<pre>";
+            // print_r($orderDetails);die;
+            $this->order->update($underwriter_data, $update_condition);
+            /*if (!empty($resPartners)) {
+                $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
                 if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance')) {
                     $cplApi = 'doma';
                     $orderDetails['cpl_api'] = 'doma';
@@ -1767,11 +1798,11 @@ class Common extends MX_Controller
                     'underwriter' => $underWriter,
                 ];
                 $update_condition = [
-                    'file_id' => $fileId,
+                    'id' => $orderId,
                 ];
                 $this->order->update($underwriter_data, $update_condition);
-            }
-        }
+            }*/
+        // }
         if (!empty($orderDetails['borrowers_vesting'])) {
             $orderDetails['borrowers_vesting'] = $orderDetails['borrowers_vesting'];
         } else {
@@ -1864,11 +1895,12 @@ class Common extends MX_Controller
                 $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
                 $success[] = "CPL document edited successfully for file number - " . $orderDetails['file_number'];
                 $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
-                if ($orderDetails['is_softpro_order'] == 1) {
-                    $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails, $editCplResponse['response']['a:Content']);
-                } else {
-                    $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $editCplResponse['response']['a:Content']);
-                }
+                // if ($orderDetails['is_softpro_order'] == 1) {
+                    $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
+                // }
+                //  else {
+                //     $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $editCplResponse['response']['a:Content']);
+                // }
                 if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
                     $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
                     $notificationData = array(

@@ -106,7 +106,7 @@ class Home_model extends CI_Model
                     if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     } else {
-                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, customer_basic_details.city, customer_basic_details.state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', address1, pct_softpro_lookup_table.city, pct_softpro_lookup_table.state, zip)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     }
                     if ($params['is_escrow'] == 0) {
                         $this->db->where('is_lender', 1);
@@ -245,7 +245,7 @@ class Home_model extends CI_Model
                     if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     } else {
-                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, customer_basic_details.city, customer_basic_details.state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', address1, pct_softpro_lookup_table.city, pct_softpro_lookup_table.state, zip)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     }
                     if ($params['user_type'] == 'escrow') {
                         $this->db->where('is_escrow', 1);
@@ -310,7 +310,7 @@ class Home_model extends CI_Model
                     if (isset($params['is_from_order_form']) && !empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     } else {
-                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, customer_basic_details.city, customer_basic_details.state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, pct_softpro_lookup_table.city, pct_softpro_lookup_table.state, zip)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     }
                     if ($params['user_type'] == 'escrow') {
                         $this->db->where('is_escrow', 1);
