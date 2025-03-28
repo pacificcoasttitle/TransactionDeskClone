@@ -6706,6 +6706,8 @@ class Cron extends MX_Controller
         $records = $this->db->select('id, order_number, file_list, document_name, document_ids')
                             ->from('sp_file_upload_logs')
                             ->where('is_synced', 0)
+                            ->limit(10)
+                            ->order_by('id', 'asc')
                             // ->group_by('order_number')
                             ->get()->result_array();
         if (!empty($records)) {
