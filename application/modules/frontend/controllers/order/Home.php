@@ -1549,7 +1549,7 @@ class Home extends MX_Controller
                     $documentIds[] = $this->document->insert($documentData);
                 }
 
-                if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0) {
+                if (!empty($uploadFileToSoftPro) && $lpOrderFlag == 0 && !empty($orderNumber)) {
                     $logData = [
                         'order_number' => $orderNumber,
                         'document_name' => $orderNumber,
@@ -1726,7 +1726,7 @@ class Home extends MX_Controller
                         $to               = $escrowEmail;
                         $mailParams['to'] = $to;
                         $logid            = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, [], $orderId, 0);
-                        //$escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
+                        $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
                         $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, ['status' => $escrow_mail_result], $orderId, $logid);
                     }
 
