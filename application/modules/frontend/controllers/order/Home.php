@@ -1582,7 +1582,7 @@ class Home extends MX_Controller
                                     'id' => $res['Id']
                                 ];
                                 $this->db->where_in('id', $documentIds);
-                                $this->db->update('pct_order_documents', ['$is_sync' => 1]);
+                                $this->db->update('pct_order_documents', ['is_sync' => 1]);
                             } else {
                                 $updateArr = [
                                     'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
