@@ -719,7 +719,7 @@ class Order
             pct_order_fnf_agents.agent_number,
             pct_order_fnf_agents.underwriter_code,
             pct_order_fnf_agents.underwriter,
-            pct_order_product_types.product_type as product_type_name,
+            pct_softpro_product_type.product_type as product_type_name,
             pct_softpro_product_type.product_type as sp_product_type_name,
             pct_softpro_order_type.order_type,
             pct_order_documents.created,
@@ -746,7 +746,7 @@ class Order
 
             ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
 
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
+            // ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
             ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left')
 
             ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
@@ -2273,7 +2273,7 @@ class Order
         $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
     }
 
-    public function uploadCPLDocumentToSoftpro($documentName, $orderDetails, $binaryData)
+    public function uploadCPLDocumentToSoftpro($documentName, $orderDetails)
     {
         $this->CI->load->model('order/document');
         $this->CI->load->library('order/resware');
@@ -2329,10 +2329,10 @@ class Order
         $fileUploadReq[] = $fileData;
         $reqData = json_encode($fileUploadReq);
         // print_r($reqData);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
         $result = $this->CI->softpro->make_request('POST', 'upload_document', $reqData);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
         $response = json_decode($result, true);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
         if (isset($response) && !empty($response)) {
             foreach ($response as $key => $res) {
                 if ($res['Status'] == 200) {

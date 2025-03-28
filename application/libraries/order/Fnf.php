@@ -531,10 +531,10 @@ class Fnf
         if (!empty($orderDetails['cpl_lender_id'])) {
             $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
             $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
-            $orderDetails['lender_address'] = $lenderDetails['street_address'];
+            $orderDetails['lender_address'] = $lenderDetails['address1'];
             $orderDetails['lender_city'] = $lenderDetails['city'];
             $orderDetails['lender_state'] = $lenderDetails['state'];
-            $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'];
+            $orderDetails['lender_zipcode'] = $lenderDetails['zip'];
             $lenderName = $lenderDetails['company_name'];
             $lenderAttnName = $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         }

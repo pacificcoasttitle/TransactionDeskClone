@@ -70,7 +70,7 @@ $(document).ready(function () {
     }
 });
 
-$("#LenderCompany").focusin(function () {
+$("#LenderCompany, #LenderName").focusin(function () {
     if ($('input[name="new_existing_lender"]:checked').val() == 'existing_lender') {
         if ($('.ui-widget.ui-autocomplete').length > 0) {
             $('#LenderCompany').autocomplete("enable");
