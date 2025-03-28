@@ -105,7 +105,7 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
                 }
@@ -227,7 +227,7 @@ class Order
 
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
-                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
                 }
@@ -326,9 +326,9 @@ class Order
 
             if (!empty($dashboard_order_by)) {
                 $this->CI->db->order_by('order_details.prelim_summary_id desc');
-                $this->CI->db->order_by("order_details.id", "desc");
+                $this->CI->db->order_by("order_details.created_at", "desc");
             } else {
-                $this->CI->db->order_by("order_details.id", "desc");
+                $this->CI->db->order_by("order_details.created_at", "desc");
             }
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -345,7 +345,7 @@ class Order
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
                     $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
                 } else {
                     $this->CI->db->group_start();
                     $this->CI->db->where('order_details.softpro_status', $status);
@@ -462,7 +462,7 @@ class Order
             if (isset($status) && !empty($status)) {
                 if ($status == 'open') {
                     $this->CI->db->group_start();
-                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "cancelled") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
                     $this->CI->db->group_end();
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
@@ -561,9 +561,9 @@ class Order
 
             if (!empty($dashboard_order_by)) {
                 $this->CI->db->order_by('order_details.prelim_summary_id desc');
-                $this->CI->db->order_by("order_details.id", "desc");
+                $this->CI->db->order_by("order_details.created_at", "desc");
             } else {
-                $this->CI->db->order_by("order_details.id", "desc");
+                $this->CI->db->order_by("order_details.created_at", "desc");
             }
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -4559,7 +4559,7 @@ class Order
                         }
                     }
                 } else {
-                    if ($res['softpro_status'] != 'cancelled') {
+                    if ($res['softpro_status'] != 'canceled') {
                         if (!empty($res)) {
                             $key = array_search($res['user_id'], array_column($users, 'id'));
                             if (strlen($key) > 0) {
