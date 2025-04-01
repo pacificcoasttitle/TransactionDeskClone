@@ -356,10 +356,10 @@ class Fnf
             $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
             // print_r($lenderFormData);die;
             $orderDetails['lender_assignment_clause'] = (!empty($lenderFormData) ? $lenderFormData['assignment_clause'] : ($lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : ''));
-            $orderDetails['lender_address'] = !empty($lenderFormData) ? $lenderFormData['street_address'] : $lenderDetails['street_address'];
+            $orderDetails['lender_address'] = !empty($lenderFormData) ? $lenderFormData['address1'] : $lenderDetails['address1'];
             $orderDetails['lender_city'] = !empty($lenderFormData) ? $lenderFormData['city'] : $lenderDetails['city'];
             $orderDetails['lender_state'] = !empty($lenderFormData) ? $lenderFormData['state'] : $lenderDetails['state'];
-            $orderDetails['lender_zipcode'] = !empty($lenderFormData) ? $lenderFormData['zip_code'] : $lenderDetails['zip_code'];
+            $orderDetails['lender_zipcode'] = !empty($lenderFormData) ? $lenderFormData['zip'] : $lenderDetails['zip'];
             $lenderName = !empty($lenderFormData) ? $lenderFormData['company_name'] : $lenderDetails['company_name'];
             $lenderAttnName = !empty($lenderFormData) ? $lenderFormData['lender_fullname'] : $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         }
