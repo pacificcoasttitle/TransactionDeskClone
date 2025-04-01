@@ -48,7 +48,7 @@
             height: 21px !important;
             width: 21px !important;
             top: 5px !important;
-            margin: 0px 10px !important;
+            margin: 3px 25px !important;
             background: none !important;
             left: 0 !important;
         }
@@ -114,7 +114,7 @@
                                         <input class="radio" type="radio" name="actions" id="get_fees" value="get_fees" checked="checked">Get Fees  
                                         <input class="radio" type="radio" name="actions" id="get_cpl" value="get_cpl">Get CPL
                                         <input class="radio" type="radio" name="actions" id="get_proposed" value="get_proposed">Get Proposed
-                                        <input class="radio" type="radio" name="actions" id="get_policy" value="get_policy">Get Policy
+                                        <!-- <input class="radio" type="radio" name="actions" id="get_policy" value="get_policy">Get Policy -->
                                         <input class="radio" type="radio" name="actions" id="get_netsheet" value="get_netsheet">Get Netsheet
                                     </label>
                                 </div>

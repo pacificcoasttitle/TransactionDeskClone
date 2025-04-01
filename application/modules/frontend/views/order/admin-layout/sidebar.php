@@ -137,12 +137,12 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Fee Estimate</span>
 			</a>
 		</li>
-		<li class="nav-item <?php if ($this->uri->segment(1) == 'policy-orders' || $this->uri->segment(1) == 'policy-order') {echo 'active';}?>">
+		<!-- <li class="nav-item <?php if ($this->uri->segment(1) == 'policy-orders' || $this->uri->segment(1) == 'policy-order') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url() . 'policy-orders'; ?>">
 				<i class="fa fa-shield "></i>
 				<span>Get Policy</span>
 			</a>
-		</li>
+		</li> -->
 		<?php }?>
 
 	<?php }?>
