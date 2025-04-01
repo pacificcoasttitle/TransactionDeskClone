@@ -275,7 +275,7 @@ class Common extends MX_Controller
             }
         } else {
             $this->load->model('order/titlePointData');
-            $file_id = isset($orderDetails['file_id']) && !empty($orderDetails['file_id']) ? $orderDetails['file_id'] : '';
+            // $file_id = isset($orderDetails['file_id']) && !empty($orderDetails['file_id']) ? $orderDetails['file_id'] : '';
 
             $condition = array(
                 'where' => array(
@@ -880,7 +880,7 @@ class Common extends MX_Controller
                 $nestedData[] = $i;
                 $nestedData[] = $order['file_number'];
                 $nestedData[] = $order['full_address'];
-                $nestedData[] = "<a href='" . base_url() . "upload-documents/" . $order['file_id'] . "'>
+                $nestedData[] = "<a href='" . base_url() . "upload-documents/" . $order['id'] . "'>
 									<button type='submit' class='btn btn-info btn-icon-split'>
 										<span class='icon text-white-50'>
 											<i class='fas fa-file'></i>
@@ -1852,14 +1852,14 @@ class Common extends MX_Controller
             'order_details.id' => $orderId,
         ];
         $orderDetails = $this->order->get_order_details($params);
-        $fileId = $orderDetails['file_id'];
+        // $fileId = $orderDetails['file_id'];
         $vendorTokenData = $this->fnf->get_vendor_token();
-
+        
         if ($vendorTokenData === false) {
             $vendorTokenData = $this->fnf->generateVendorToken($orderDetails);
         }
         $userTokenData = $this->fnf->get_user_token();
-
+        
         if ($userTokenData === false) {
             $userTokenData = $this->fnf->generateUserToken($orderDetails);
             if (!$userTokenData) {
@@ -1873,7 +1873,7 @@ class Common extends MX_Controller
             }
         }
         $oldOrderFlag = 0;
-
+        
         if (!empty($orderDetails['created'])) {
             $date = new DateTime($orderDetails['created']);
             $date2 = new DateTime('2021-01-29 00:00:00');
@@ -1882,17 +1882,17 @@ class Common extends MX_Controller
                 $oldOrderFlag = 1;
             }
         }
-
+        
         if (!empty($orderDetails['fnf_document_id']) && $oldOrderFlag == 0) {
             $editCplResponse = $this->fnf->editCpl($orderDetails, $vendorTokenData, $userTokenData);
             if ($editCplResponse['success']) {
                 $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
-                $document_name = "fnf_" . $cplCount . "_" . $fileId . ".pdf";
+                $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
                 if (!is_dir('uploads/documents')) {
                     mkdir('./uploads/documents', 0777, true);
                 }
                 file_put_contents('./uploads/documents/' . $document_name, base64_decode($editCplResponse['response']['a:Content']));
-                $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
+                $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
                 $success[] = "CPL document edited successfully for file number - " . $orderDetails['file_number'];
                 $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
                 // if ($orderDetails['is_softpro_order'] == 1) {
@@ -1956,96 +1956,97 @@ class Common extends MX_Controller
                 "errors" => $errors,
                 "success" => $success,
             );
-        }
+        } else {
+            $getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
+            if ($getCPLFormNameResponse['success']) {
+                $key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
+                //$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
+                $orderDetails['formname'] = 'Standard CPL_' . $orderDetails['property_state'];
+                $generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
 
-        $getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
-        if ($getCPLFormNameResponse['success']) {
-            $key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
-            //$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
-            $orderDetails['formname'] = 'Standard CPL_' . $orderDetails['property_state'];
-            $generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
-
-            if ($generateCplResponse['success']) {
-                $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
-                $document_name = "fnf_" . $cplCount . "_" . $fileId . ".pdf";
-                if (!is_dir('uploads/documents')) {
-                    mkdir('./uploads/documents', 0777, true);
-                }
-                file_put_contents('./uploads/documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
-                $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('file_id' => $fileId), 'order_details');
-                $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
-                $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
-                $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
-                if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
-                    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['customer_id'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
-                    );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
-                } else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
-                    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['title_officer'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
-                    );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+                if ($generateCplResponse['success']) {
+                    $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
+                    $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
+                    if (!is_dir('uploads/documents')) {
+                        mkdir('./uploads/documents', 0777, true);
+                    }
+                    file_put_contents('./uploads/documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
+                    $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
+                    $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
+                    $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+                    // $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
+                    $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
+                    if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+                        $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['customer_id'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+                    } else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+                        $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['title_officer'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+                    } else {
+                        $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['title_officer'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['customer_id'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+                    }
                 } else {
-                    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['title_officer'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
+                    $errors[] = $generateCplResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+                    $cplErrorData = array(
+                        'order_id' => $orderDetails['order_id'],
+                        'file_number' => $orderDetails['file_number'],
+                        'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+                        'error' => $generateCplResponse['error'],
+                        'customer_id' => $orderDetails['customer_id'],
+                        'property_address' => $orderDetails['full_address'],
                     );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['customer_id'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
-                    );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+                    $this->order->storeCplError($cplErrorData);
                 }
+                $data = array(
+                    "errors" => $errors,
+                    "success" => $success,
+                );
             } else {
-                $errors[] = $generateCplResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+                $errors[] = $getCPLFormNameResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
                 $cplErrorData = array(
                     'order_id' => $orderDetails['order_id'],
                     'file_number' => $orderDetails['file_number'],
                     'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
-                    'error' => $generateCplResponse['error'],
+                    'error' => $getCPLFormNameResponse['error'],
                     'customer_id' => $orderDetails['customer_id'],
                     'property_address' => $orderDetails['full_address'],
                 );
                 $this->order->storeCplError($cplErrorData);
+                $data = array(
+                    "errors" => $errors,
+                    "success" => $success,
+                );
             }
-            $data = array(
-                "errors" => $errors,
-                "success" => $success,
-            );
-        } else {
-            $errors[] = $getCPLFormNameResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
-            $cplErrorData = array(
-                'order_id' => $orderDetails['order_id'],
-                'file_number' => $orderDetails['file_number'],
-                'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
-                'error' => $getCPLFormNameResponse['error'],
-                'customer_id' => $orderDetails['customer_id'],
-                'property_address' => $orderDetails['full_address'],
-            );
-            $this->order->storeCplError($cplErrorData);
-            $data = array(
-                "errors" => $errors,
-                "success" => $success,
-            );
         }
         $this->session->unset_userdata('lender_details');
         $this->session->set_userdata($data);
@@ -2937,7 +2938,7 @@ class Common extends MX_Controller
                 // $nestedData[] = !empty($order['proposed_document_created_date']) ? date("m/d/Y", strtotime($order['proposed_document_created_date'])) : '';
                 $nestedData[] = !empty($order['proposed_document_created_date']) ? convertTimezone($order['proposed_document_created_date'], 'm/d/Y') : '';
                 if (!empty($order['proposed_insured_document_name'])) {
-                    $file_id = $order['file_id'];
+                    $orderId = $order['id'];
                     $documentName = $order['proposed_insured_document_name'];
                     if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH') . "proposed-insured/" . $documentName;
@@ -2951,7 +2952,7 @@ class Common extends MX_Controller
                 } else {
                     $action = '<div style="display:flex;justify-content: space-around;" ><a href="javascript:void(0);" onclick="generateProposedInsured(' . $order['id'] . ');" type="button" title="Generate" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-seedling"></i></span><span class="text">Generate</span></a>';
                 }
-                $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $order['file_id'] . ');" class="btn btn-primary btn-icon-split" ><span class="icon text-white-50"><i class="fas fa-edit"></i></span><span class="text">Edit</span></a></div>';
+                $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $order['id'] . ');" class="btn btn-primary btn-icon-split" ><span class="icon text-white-50"><i class="fas fa-edit"></i></span><span class="text">Edit</span></a></div>';
 
                 $nestedData[] = $action;
 
