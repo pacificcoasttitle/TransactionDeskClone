@@ -313,7 +313,7 @@
 											<div class="row">
 												<div class="col-sm-12">
 													<label for="Supplemental_report_date" class="col-form-label">Supplemental Report Date</label>
-													<input required="required" type="text" class="gui-input form-control" name="supplemental_report_date" id="Supplemental_report_date" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
+													<input required="required" type="text" class="gui-input form-control" name="supplemental_report_date" id="supplemental_report_date" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
 												</div>
 											</div>
 											<div class="row">
