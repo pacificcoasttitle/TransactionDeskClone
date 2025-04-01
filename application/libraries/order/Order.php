@@ -2281,6 +2281,7 @@ class Order
         $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->model('order/fileDocument_model');
+        $documentIds = [];
         $orderNumber = $orderDetails['file_number'];
         $userdata = $this->CI->session->userdata('user');
         if (empty($userdata)) {
@@ -2299,7 +2300,7 @@ class Order
             'is_prelim_document' => 0,
             'is_cpl_doc' => 1,
         );
-        $documentId = $this->CI->document->insert($documentData);
+        $documentIds[] =  $documentId = $this->CI->document->insert($documentData);
         $saveData = array(
             'name' => 'CPL Document',
             'order_number' => $orderNumber,
@@ -2317,7 +2318,8 @@ class Order
         $logData = [
             'order_number' => $orderNumber,
             'document_name' => $documentName,
-            'file_list' => json_encode($fileList)
+            'file_list' => json_encode($fileList),
+            "document_ids" => json_encode($documentIds)
         ];
         
         $fileUploadLogId = $this->save_sp_file_upload_log($logData);
@@ -2406,6 +2408,7 @@ class Order
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->model('order/fileDocument_model');
         $orderNumber = $orderDetails['file_number'];
+        $documentIds = [];
         $userdata = $this->CI->session->userdata('user');
         if (empty($userdata)) {
             $userdata['id'] = 0;
@@ -2423,7 +2426,7 @@ class Order
             'is_prelim_document' => 0,
             'is_proposed_insured_doc' => 1,
         );
-        $documentId = $this->CI->document->insert($documentData);
+        $documentIds[] = $documentId = $this->CI->document->insert($documentData);
         $saveData = array(
             'name' => 'Proposed Insured Document',
             'order_number' => $orderNumber,
@@ -2441,7 +2444,8 @@ class Order
         $logData = [
             'order_number' => $orderNumber,
             'document_name' => $documentName,
-            'file_list' => json_encode($fileList)
+            'file_list' => json_encode($fileList),
+            "document_ids" => json_encode($documentIds)
         ];
         
         $fileUploadLogId = $this->save_sp_file_upload_log($logData);

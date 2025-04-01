@@ -526,7 +526,7 @@ class Fnf
         $this->CI->load->model('order/home_model');
         $orderUser = $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
         $lenderName = $orderDetails['lender_company_name'];
-        $lenderAttnName = $orderDetails['lender_first_name'] . " " . $orderDetails['lender_last_name'];
+        $lenderAttnName = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
 
         if (!empty($orderDetails['cpl_lender_id'])) {
             $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
