@@ -271,17 +271,17 @@ class DashboardMail extends MX_Controller
             }
         } else {
             // $action = '<a href="javascript:void(0);" onclick="generateProposedInsured(' . $orderDetails['file_id'] . ');"><button class="btn btn-grad-2a button-color" type="button">Generate</button></a>';
-            $action = '<div style="display:flex;justify-content: space-around; width: 100%;" ><a href="javascript:void(0);" onclick="generateProposedInsured(' . $orderDetails['file_id'] . ');" type="button" title="Generate" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-seedling"></i></span><span class="text">Generate</span></a>';
+            $action = '<div style="display:flex;justify-content: space-around; width: 100%;" ><a href="javascript:void(0);" onclick="generateProposedInsured(' . $orderId . ');" type="button" title="Generate" class="btn btn-success btn-icon-split"><span class="icon text-white-50"><i class="fas fa-seedling"></i></span><span class="text">Generate</span></a>';
         }
 
         // $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $orderDetails['file_id'] . ');"><button class="btn btn-grad-2a button-color" type="button">Edit</button></a>';
-        $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $orderDetails['file_id'] . ');" class="btn btn-primary btn-icon-split" ><span class="icon text-white-50"><i class="fas fa-edit"></i></span><span class="text">Edit</span></a></div>';
+        $action .= '<a href="javascript:void(0);" onclick="editInformation(' . $orderId . ');" class="btn btn-primary btn-icon-split" ><span class="icon text-white-50"><i class="fas fa-edit"></i></span><span class="text">Edit</span></a></div>';
 
         $data['action'] = $action;
         $condition = array(
-            'where' => array(
-                'status' => 1,
-            ),
+            // 'where' => array(
+            //     'status' => 1,
+            // ),
         );
 
         $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);

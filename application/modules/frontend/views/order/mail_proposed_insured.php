@@ -293,7 +293,7 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <label for="Supplemental_report_date" class="col-form-label">Supplemental Report Date</label>
-                                                        <input required="required" type="text" class="gui-input form-control" name="supplemental_report_date" id="Supplemental_report_date" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
+                                                        <input required="required" type="text" class="gui-input form-control" name="supplemental_report_date" id="supplemental_report_date" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -480,7 +480,7 @@ if (isset($proposedBranches) && !empty($proposedBranches)) {
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <label for="edit_TitleOfficer" class="col-form-label">Title Officer Details</label>
-                                                        <select id="edit_TitleOfficer" name="TitleOfficer" class="gui-input form-control" >
+                                                        <select id="edit_TitleOfficer" name="titleOfficer" class="gui-input form-control" >
                                                             <option value="">Title Officer</option>
                                                             <?php
 if (isset($titleOfficer) && !empty($titleOfficer)) {
@@ -1146,7 +1146,7 @@ $(document).ready(function () {
 	                url: base_url + "add-order-details",
 	                type: "post",
 	                data:{
-	                    TitleOfficer: TitleOfficer,
+	                    titleOfficer: TitleOfficer,
 	                    loan_amount: loan_amount,
 	                    loan_number: loan_number,
 	                    borrowers_vesting: borrowers_vesting,
@@ -1481,7 +1481,7 @@ $(document).ready(function () {
 		            url: base_url + "add-order-details",
 		            type: "post",
 		            data:{
-		                TitleOfficer: TitleOfficer,
+		                titleOfficer: TitleOfficer,
 	                    loan_amount: loan_amount,
 	                    loan_number: loan_number,
 	                    // primary_first_name: primary_first_name,
@@ -1506,7 +1506,7 @@ $(document).ready(function () {
 	                    property_city: property_city,
 	                    property_state: property_state,
 	                    property_zipcode: property_zipcode,
-	                    fileId: fileId,
+	                    orderId: orderId,
 	                    s_report_date: supplemental_report_date,
 	                    p_report_date: preliminary_report_date,
 						new_existing_lender: new_existing_lender,
@@ -1564,9 +1564,9 @@ $(document).ready(function () {
 		});
 	});
 
-function generateProposedInsured(fileId)
+function generateProposedInsured(orderId)
 {
-	if(fileId)
+	if(orderId)
 	{
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
@@ -1574,7 +1574,7 @@ function generateProposedInsured(fileId)
             url: base_url + "generate-proposed-insured",
             type: "post",
             data:{
-                fileId: fileId,
+                orderId: orderId,
             },
             success: function(response) {
             	var res = JSON.parse(response);
@@ -1606,7 +1606,7 @@ function generateProposedInsured(fileId)
 
 					$("#loan_amount").val(res.orderDetails['loan_amount']);
 					$("#loan_number").val(res.orderDetails['loan_number']);
-					$("#TitleOfficer").val(res.orderDetails['title_officer']);
+					$("#titleOfficer").val(res.orderDetails['title_officer']);
 
                 	$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
 
@@ -1638,7 +1638,7 @@ function generateProposedInsured(fileId)
 				$('#orderId').val(res.orderDetails.orderId);
             	$('#transaction_id').val(res.orderDetails.transaction_id);
             	$('#property_id').val(res.orderDetails.property_id);
-            	$('#fileId').val(res.orderDetails.fileId);
+            	$('#orderId').val(res.orderDetails.orderId);
 				/*if(dataRequired == 0)
 				{
 					$( "#add-order-details" ).submit();
@@ -1678,9 +1678,9 @@ function base64toBlob(base64Data, contentType)
     return new Blob(byteArrays, { type: contentType });
 }
 
-function editInformation(fileId)
+function editInformation(orderId)
 {
-	if(fileId)
+	if(orderId)
 	{
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
@@ -1690,7 +1690,7 @@ function editInformation(fileId)
             url: base_url + "generate-proposed-insured",
             type: "post",
             data:{
-                fileId: fileId,
+                orderId: orderId,
             },
             success: function(response) {
             	$('#page-preloader').css('display', 'none');
@@ -1766,7 +1766,8 @@ function editInformation(fileId)
 					$('#edit_orderId').val(res.orderDetails.orderId);
 	            	$('#edit_transaction_id').val(res.orderDetails.transaction_id);
 	            	$('#edit_property_id').val(res.orderDetails.property_id);
-	            	$('#edit_fileId').val(res.orderDetails.fileId);
+	            	$('#edit_fileId').val(res.orderDetails.orderId);
+	            	$('#edit_orderId').val(res.orderDetails.orderId);
                 	$('#edit_information').modal('show');
                 }
                 else

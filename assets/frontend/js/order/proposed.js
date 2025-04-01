@@ -427,7 +427,7 @@ $(document).ready(function () {
 					url: base_url + "add-order-details",
 					type: "post",
 					data: {
-						TitleOfficer: TitleOfficer,
+						titleOfficer: TitleOfficer,
 						loan_amount: loan_amount,
 						loan_number: loan_number,
 						LenderId: LenderId,
@@ -531,9 +531,9 @@ function generateProposedInsured(orderId) {
 					$("#property_zipcode").val(res.orderDetails['property_zip']);
 					$("#loan_amount").val(res.orderDetails['loan_amount']);
 					$("#loan_number").val(res.orderDetails['loan_number']);
+					$("#branch").val(res.orderDetails['proposed_branch_id']);
 
-
-					$("#TitleOfficer").val(res.orderDetails['title_officer']);
+					$("#titleOfficer").val(res.orderDetails['title_officer']);
 
 
 					if (res.orderDetails['supplemental_report_date'] == null || res.orderDetails['supplemental_report_date'] == undefined || res.orderDetails['supplemental_report_date'].length == 0) {
@@ -567,7 +567,7 @@ function generateProposedInsured(orderId) {
 			}
 		});
 	} else {
-		alert("File ID required.");
+		alert("Order ID required.");
 	}
 }
 
@@ -594,7 +594,7 @@ function base64toBlob(base64Data, contentType) {
 	});
 }
 
-function editInformation(fileId) {
+function editInformation(orderId) {
 	if (fileId) {
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
@@ -604,7 +604,7 @@ function editInformation(fileId) {
 			url: base_url + "generate-proposed-insured",
 			type: "post",
 			data: {
-				fileId: fileId,
+				orderId: orderId,
 			},
 			success: function (response) {
 				$('#page-preloader').css('display', 'none');
@@ -670,7 +670,7 @@ function editInformation(fileId) {
 					$('#edit_orderId').val(res.orderDetails.orderId);
 					$('#edit_transaction_id').val(res.orderDetails.transaction_id);
 					$('#edit_property_id').val(res.orderDetails.property_id);
-					$('#edit_fileId').val(res.orderDetails.fileId);
+					$('#edit_orderId').val(res.orderDetails.orderId);
 					$('#edit_information').modal('show');
 				} else {
 					alert("Something went wrong. Please try again.");

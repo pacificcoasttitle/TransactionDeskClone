@@ -281,7 +281,7 @@
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="loan_amount" class="col-form-label">Loan Amount</label>
-													<input required="required" type="text" class="gui-input form-control" name="loan_amount" id="loan_amount" placeholder="Loan Number">
+													<input required="required" type="text" class="gui-input form-control" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
 												</div>
 												<div class="col-sm-6">
 													<label for="loan_number" class="col-form-label">Loan Number</label>
@@ -724,7 +724,7 @@
 											<div class="row">
 												<div class="col-sm-12">
 													<label for="edit_TitleOfficer" class="col-form-label">Title Officer Details</label>
-													<select id="edit_TitleOfficer" name="TitleOfficer" class="gui-input form-control" >
+													<select id="edit_TitleOfficer" name="titleOfficer" class="gui-input form-control" >
 														<option value="">Title Officer</option>
 														<?php 
 														if(isset($titleOfficer) && !empty($titleOfficer))
@@ -751,7 +751,7 @@
 											<div class="row">
 												<div class="col-sm-6">
 													<label for="edit_loan_amount" class="col-form-label">Loan Amount</label>
-													<input required="required" type="text" class="gui-input form-control" name="loan_amount" id="edit_loan_amount" placeholder="Loan Number">
+													<input required="required" type="text" class="gui-input form-control" name="loan_amount" id="edit_loan_amount" placeholder="Loan Amount">
 												</div>
 												<div class="col-sm-6">
 													<label for="edit_loan_number" class="col-form-label">Loan Number</label>
