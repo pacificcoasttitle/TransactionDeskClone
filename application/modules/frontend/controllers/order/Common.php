@@ -1956,97 +1956,97 @@ class Common extends MX_Controller
                 "errors" => $errors,
                 "success" => $success,
             );
-        }
+        } else {
+            $getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
+            if ($getCPLFormNameResponse['success']) {
+                $key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
+                //$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
+                $orderDetails['formname'] = 'Standard CPL_' . $orderDetails['property_state'];
+                $generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
 
-        $getCPLFormNameResponse = $this->fnf->getCPLForm($orderDetails, $vendorTokenData, $userTokenData);
-        if ($getCPLFormNameResponse['success']) {
-            $key = array_search('Lender', array_column($getCPLFormNameResponse['response'], 'a:RecipientType'));
-            //$orderDetails['formname'] = $getCPLFormNameResponse['response'][$key]['a:FormName'];
-            $orderDetails['formname'] = 'Standard CPL_' . $orderDetails['property_state'];
-            $generateCplResponse = $this->fnf->generateCpl($orderDetails, $vendorTokenData, $userTokenData);
-
-            if ($generateCplResponse['success']) {
-                $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
-                $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
-                if (!is_dir('uploads/documents')) {
-                    mkdir('./uploads/documents', 0777, true);
-                }
-                file_put_contents('./uploads/documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
-                $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
-                $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
-                $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
-                // $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
-                $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
-                if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
-                    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['customer_id'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
-                    );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
-                } else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
-                    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['title_officer'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
-                    );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+                if ($generateCplResponse['success']) {
+                    $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
+                    $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
+                    if (!is_dir('uploads/documents')) {
+                        mkdir('./uploads/documents', 0777, true);
+                    }
+                    file_put_contents('./uploads/documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
+                    $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
+                    $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
+                    $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+                    // $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
+                    $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
+                    if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
+                        $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['customer_id'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+                    } else if (!empty($userdata) && $userdata['id'] == $orderDetails['customer_id']) {
+                        $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['title_officer'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+                    } else {
+                        $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['title_officer'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
+                        $notificationData = array(
+                            'sent_user_id' => $orderDetails['customer_id'],
+                            'message' => $message,
+                            'is_admin' => 0,
+                            'type' => 'created',
+                        );
+                        $this->home_model->insert($notificationData, 'pct_order_notifications');
+                        $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+                    }
                 } else {
-                    $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['title_officer'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
+                    $errors[] = $generateCplResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+                    $cplErrorData = array(
+                        'order_id' => $orderDetails['order_id'],
+                        'file_number' => $orderDetails['file_number'],
+                        'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
+                        'error' => $generateCplResponse['error'],
+                        'customer_id' => $orderDetails['customer_id'],
+                        'property_address' => $orderDetails['full_address'],
                     );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['title_officer'], 0);
-                    $notificationData = array(
-                        'sent_user_id' => $orderDetails['customer_id'],
-                        'message' => $message,
-                        'is_admin' => 0,
-                        'type' => 'created',
-                    );
-                    $this->home_model->insert($notificationData, 'pct_order_notifications');
-                    $this->order->sendNotification($message, 'created', $orderDetails['customer_id'], 0);
+                    $this->order->storeCplError($cplErrorData);
                 }
+                $data = array(
+                    "errors" => $errors,
+                    "success" => $success,
+                );
             } else {
-                $errors[] = $generateCplResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
+                $errors[] = $getCPLFormNameResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
                 $cplErrorData = array(
                     'order_id' => $orderDetails['order_id'],
                     'file_number' => $orderDetails['file_number'],
                     'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
-                    'error' => $generateCplResponse['error'],
+                    'error' => $getCPLFormNameResponse['error'],
                     'customer_id' => $orderDetails['customer_id'],
                     'property_address' => $orderDetails['full_address'],
                 );
                 $this->order->storeCplError($cplErrorData);
+                $data = array(
+                    "errors" => $errors,
+                    "success" => $success,
+                );
             }
-            $data = array(
-                "errors" => $errors,
-                "success" => $success,
-            );
-        } else {
-            $errors[] = $getCPLFormNameResponse['error'] . "<br> We are aware of the Error generated by our CPL form and that our Customer service team will be contacting them shortly.";
-            $cplErrorData = array(
-                'order_id' => $orderDetails['order_id'],
-                'file_number' => $orderDetails['file_number'],
-                'cpl_page' => $userdata['id'] > 0 ? 'Dashboard' : 'Generic Or Mail page',
-                'error' => $getCPLFormNameResponse['error'],
-                'customer_id' => $orderDetails['customer_id'],
-                'property_address' => $orderDetails['full_address'],
-            );
-            $this->order->storeCplError($cplErrorData);
-            $data = array(
-                "errors" => $errors,
-                "success" => $success,
-            );
         }
         $this->session->unset_userdata('lender_details');
         $this->session->set_userdata($data);
