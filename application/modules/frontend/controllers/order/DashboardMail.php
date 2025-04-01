@@ -284,7 +284,8 @@ class DashboardMail extends MX_Controller
             // ),
         );
 
-        $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+        // $data['titleOfficer'] = $this->titleOfficer->getTitleOfficerDetails($condition);
+        $data['titleOfficer'] = $this->order->getTitleOfficerLookupDetails($condition);
         $data['proposedBranches'] = $this->order->getProposedBranches();
 
         // $this->load->view('layout/head_dashboard', $data);

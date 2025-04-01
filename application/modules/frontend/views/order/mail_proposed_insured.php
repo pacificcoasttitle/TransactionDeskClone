@@ -236,7 +236,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <label for="TitleOfficer" class="col-form-label">Title Officer Details</label>
-                                                        <select id="TitleOfficer" name="TitleOfficer" class="gui-input form-control" >
+                                                        <select id="TitleOfficer" name="titleOfficer" class="gui-input form-control" >
                                                             <option value="">Title Officer</option>
                                                             <?php
 if (isset($titleOfficer) && !empty($titleOfficer)) {
@@ -1606,7 +1606,7 @@ function generateProposedInsured(orderId)
 
 					$("#loan_amount").val(res.orderDetails['loan_amount']);
 					$("#loan_number").val(res.orderDetails['loan_number']);
-					$("#titleOfficer").val(res.orderDetails['title_officer']);
+					$("#TitleOfficer").val(res.orderDetails['title_officer']);
 
                 	$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
 
