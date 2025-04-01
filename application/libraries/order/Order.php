@@ -1101,10 +1101,12 @@ class Order
 
     public function checkDuplicateOrder($apn)
     {
-        $this->CI->db->select('*')
-            ->from('property_details');
+        $this->CI->db->select('property_details.*')
+            ->from('property_details')
+            ->join('order_details', 'property_details.id = order_details.property_id', 'left');
 
-        $this->CI->db->where('apn', $apn);
+        $this->CI->db->where('property_details.apn', $apn);
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0) {
             $count = $query->num_rows();
