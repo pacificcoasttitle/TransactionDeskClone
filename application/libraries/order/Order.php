@@ -693,6 +693,7 @@ class Order
             pct_softpro_lookup_table.email_address as sp_lender_email,
             pct_softpro_lookup_table.is_escrow as sp_is_escrow,
             pct_softpro_lookup_table.phone as sp_lender_telephone_no,
+            pct_softpro_lookup_table.assignment_clause as lender_assignment_clause,
 
 
             splt.first_name as sp_cust_first_name,
@@ -2401,7 +2402,7 @@ class Order
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 
-    public function uploadProposedDocumentToSoftpro($documentName, $orderDetails, $binaryData)
+    public function uploadProposedDocumentToSoftpro($documentName, $orderDetails)
     {
         $this->CI->load->model('order/document');
         $this->CI->load->library('order/resware');
@@ -2459,10 +2460,10 @@ class Order
         $fileUploadReq[] = $fileData;
         $reqData = json_encode($fileUploadReq);
         // print_r($reqData);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
         $result = $this->CI->softpro->make_request('POST', 'upload_document', $reqData);
         $response = json_decode($result, true);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
         if (isset($response) && !empty($response)) {
             foreach ($response as $key => $res) {
                 if ($res['Status'] == 200) {
