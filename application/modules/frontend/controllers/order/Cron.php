@@ -6951,11 +6951,35 @@ class Cron extends MX_Controller
         $this->load->model('order/apiLogs');
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
+        if (isset($_GET['DateFrom'])) {
+            $req['DateFrom'] = '';
+            if (!empty($_GET['DateFrom'])) {
+                $startDate = date('m-d-Y', strtotime($_GET['DateFrom']));
+                $req['DateFrom'] = $startDate;
+            }
+        }
+
+        if (isset($_GET['DateTo'])) {
+            $req['DateTo'] = '';
+            if (!empty($_GET['DateTo'])) {
+                $endDate = date('m-d-Y', strtotime($_GET['DateTo']));
+                $req['DateTo'] = $endDate;
+            }
+        }
+
+        if (isset($_GET['orderNumber'])) {
+            $orderNumber = $_GET['orderNumber'];
+            $req['OrderNumber'] = $orderNumber;
+        }
+
+        if (empty($_GET)) {
+            $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
+            $endDate = date('m-d-Y');
+            $req['DateFrom'] = $startDate;
+            $req['DateTo'] = $endDate;
+        }
+        
         // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
-        $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
-        $endDate = date('m-d-Y');
-        $req['DateFrom'] = $startDate;
-        $req['DateTo'] = $endDate;
         $query = $this->db->select('id, product_type')
                       ->from('pct_softpro_product_type')
                       ->get();
@@ -6976,7 +7000,9 @@ class Cron extends MX_Controller
 
         $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
 
-        $queryParams = "DateFrom=$startDate&DateTo=$endDate";
+        $queryParams = http_build_query($req);
+        // print_r($queryParams);die;
+        // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $reqData     = json_encode($req);
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
@@ -6986,6 +7012,7 @@ class Cron extends MX_Controller
         // print_r($response);die;
         $sheetData = [];
         $importedOrderCount = 0;
+        $updatedOrderCount = 0;
         if ($response['status'] == 'success' && !empty($response['data'])) {
             
             $orderList = $response['data'];
@@ -7156,11 +7183,20 @@ class Cron extends MX_Controller
                         ];
 
                         $orderId = $this->home_model->update($orderData, $condition, 'order_details');
+
+                        $salesPrice = $list['SalesPrice'] ?? null;
+                        
+                        $result = $this->db->select('id')->from('order_details')->where($condition)->get()->row_array();
+                        if (isset($result['id'])) {
+                            $updateDate = ['sales_amount' => $salesPrice];
+                            $updatedOrderCount++;
+                            $this->home_model->update($updateDate, ['id' => $result['id']], 'transaction_details');
+                        }
                     }
                 }
                 
             } // end foreach
-            echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported successfully']);
         }
+        echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported and ' .$updatedOrderCount .' Order updated successfully']);
     }
 }

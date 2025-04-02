@@ -7577,10 +7577,29 @@ function syncSoftProSalesReps() {
     });
 }
 
-function syncSoftProOrders() {
+function formatDate(date) {
+    let dd = String(date.getDate()).padStart(2, '0');
+    let mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    let yyyy = date.getFullYear();
+    return dd + '-' + mm + '-' + yyyy;
+}
+
+function syncSoftProOrders(fileNumber = '') {
     $("#page-preloader").show();
+    let queryParams = '';
+    if (fileNumber != '') {
+        queryParams = `orderNumber=${fileNumber}&DateFrom=&DateTo=`;
+    } else {
+        let today = new Date();
+        let yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        let dateFrom = formatDate(yesterday);
+        let dateTo = formatDate(today);
+        queryParams = `DateFrom=${dateFrom}&DateTo=${dateTo}`;
+    }
     $.ajax({
-        url: base_url + "fetch-softpro-orders",
+        url: base_url + "fetch-softpro-orders?" + queryParams,
         method: "POST",
         success: function (data) {
             var result = jQuery.parseJSON(data);

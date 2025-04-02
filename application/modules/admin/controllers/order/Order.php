@@ -125,7 +125,11 @@ class Order extends MX_Controller
             // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
             $nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['id'];
-            $action       = "<a href='" . $editOrderUrl . "' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fas fa-eye' aria-hidden='true'></span></a>";
+            $action       = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editOrderUrl . "' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fas fa-eye' aria-hidden='true'></span></a>";
+            if ($value['is_imported'] == 1) {
+                $action       .= "<a href='javascript:void(0);' onclick=syncSoftProOrders('".$value['file_number']."'); class='view-icon action-btn-padding' title ='Fetch latest data'><span class='fas fa-refresh' aria-hidden='true'></span></a>";
+            }
+            $action       .= "</div>";
             $nestedData[] = $action;
             $data[]       = $nestedData;
             $count++;
