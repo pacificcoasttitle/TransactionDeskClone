@@ -7224,7 +7224,8 @@ class Cron extends MX_Controller
         }
 
         if (empty($_GET)) {
-            $startDate = date('m-d-Y', strtotime('-10 day', strtotime(date('Y-m-d'))));
+            // $startDate = date('m-d-Y', strtotime('-10 day', strtotime(date('Y-m-d'))));
+            $startDate = date('02-15-Y');
             $endDate = date('m-d-Y');
             $req['DateFrom'] = $startDate;
             $req['DateTo'] = $endDate;
