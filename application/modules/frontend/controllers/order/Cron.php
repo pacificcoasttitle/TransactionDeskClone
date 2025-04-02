@@ -7001,6 +7001,7 @@ class Cron extends MX_Controller
         $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
 
         $queryParams = http_build_query($req);
+        // print_r($queryParams);die;
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $reqData     = json_encode($req);
@@ -7195,7 +7196,7 @@ class Cron extends MX_Controller
                 }
                 
             } // end foreach
-            echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported and ' .$updatedOrderCount .' Order updated successfully']);
         }
+        echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported and ' .$updatedOrderCount .' Order updated successfully']);
     }
 }
