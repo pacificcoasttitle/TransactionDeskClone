@@ -7261,7 +7261,7 @@ class Cron extends MX_Controller
                     // print_r($filesResult);
                     // print_r($prelimSummaryDetails);die;
                     // print_r($prelimLink);die;
-                    if (empty($prelimSummaryDetails) && !empty($filesResult)) {
+                    if (empty($prelimSummaryDetails) && !empty($filesResult) && !empty($data['data'])) {
                         // echo "hello";die;
                         $prelimLink = $data['data'][0];
                         $prelimFetchedCount++;
