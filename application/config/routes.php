@@ -235,6 +235,8 @@ $route['softpro-fetch-prelim-data']         = 'frontend/order/cron/fetchPrelimDo
 $route['softpro-user-login']         = 'frontend/order/cron/transferLoginDetails';
 $route['fetch-pct-master-user-login']         = 'frontend/order/cron/transferMasterUserLoginDetails';
 $route['fetch-softpro-orders']         = 'frontend/order/cron/fetchSoftproOrders';
+$route['fetch-bulk-prelim-report']         = 'frontend/order/cron/fetchBulkPrelimreport';
+$route['fetch-single-prelim-report']         = 'frontend/order/cron/fetchSinglePrelimreport';
 
 
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
