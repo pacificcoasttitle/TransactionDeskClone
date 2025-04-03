@@ -641,6 +641,7 @@ class Order extends MX_Controller
                                             'country' => $data[35],
                                             'premium' => $amount,
                                             'order_type' => trim($data[48]),
+                                            'escrow_closed_date' => $data[17],
                                         ];
 
                                     }
@@ -652,8 +653,8 @@ class Order extends MX_Controller
                             foreach ($updateData as $key => $value) {
                                 // echo "<pre>";
                                 // print_r($value);
-                                $orderDetails = $this->db->select('id, property_id, transaction_id')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
                                 // $value['order_number'] = "TEST-20001451-OCT";
+                                $orderDetails = $this->db->select('id, property_id, transaction_id')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
                                 if (!empty($orderDetails)) {
                                     $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
 
@@ -670,8 +671,12 @@ class Order extends MX_Controller
                                         'premium' => $value['premium'],
                                         'bill_code' => $value['bill_code'],
                                         'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
+                                        'softpro_status' => 'closed',
+                                        'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['escrow_closed_date'])),
+                                        'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['escrow_closed_date']))
                                     ];
-
+// echo "<pre>";
+// print_r($updateOrderDetails);die;
                                     $id = $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
                                     $updateCount++;
                                     // echo 'id ==' . $id;
