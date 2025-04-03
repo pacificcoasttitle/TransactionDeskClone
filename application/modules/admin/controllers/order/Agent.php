@@ -139,9 +139,10 @@ class Agent extends MX_Controller {
                 $data['error_msg'] = 'Invalid file, please select only CSV file.';
             }
         }
-        $this->load->view('order/layout/header', $data);
-        $this->load->view('order/agent/import', $data);
-        $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/agent/", "import", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/agent/import', $data);
+        // $this->load->view('order/layout/footer', $data);
     }
 
     public function file_check($str)

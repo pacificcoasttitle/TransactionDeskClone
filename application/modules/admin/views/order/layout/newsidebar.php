@@ -83,7 +83,10 @@ if ($this->uri->uri_string() == 'order/admin/transactees-list' ||
     $payoffSectionLink = true;
 }
 
-if ($this->uri->uri_string() == 'order/admin/orders' || $this->uri->uri_string() == 'order/admin/lp-orders' || $this->uri->segment(3) == 'order-details') {
+if ($this->uri->uri_string() == 'order/admin/orders' || 
+	$this->uri->uri_string() == 'order/admin/lp-orders' || 
+	$this->uri->segment(3) == 'order-details' ||
+	$this->uri->uri_string() == 'order/admin/import-revenue-data') {
     $orderTabLinks = true;
 }
 
@@ -234,6 +237,9 @@ if (
 						<?php if ($role_id != 3): ?>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lp-orders') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lp-orders'; ?>">
 							LP Orders
+						</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/import-revenue-data') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/import-revenue-data'; ?>">
+							Import Revenue Data
 						</a>
 						<?php endif;?>
 					</div>
