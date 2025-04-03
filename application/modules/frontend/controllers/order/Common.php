@@ -1434,74 +1434,6 @@ class Common extends MX_Controller
                 $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
             }
             $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
-            
-            /*$partners = array();
-            $secondaryEmp[] = array('UserID' => $lenderUserDetails['resware_user_id']);
-            $secondaryPartners = array(
-                'SecondaryEmployees' => $secondaryEmp,
-                'PartnerTypeID' => 3,
-                'PartnerID' => $lenderUserDetails['partner_id'],
-                'PartnerType' => array(
-                    'PartnerTypeID' => 3,
-                ),
-            );
-            $endPoint = 'files/' . $file_id . '/partners';
-            $partnerUserData = array(
-                'admin_api' => 1,
-            );
-    
-            if(!empty($lenderUserDetails['resware_user_id'])) {
-                if ($orderUser['is_escrow'] == 1) {
-                    if(empty($orderDetails['escrow_lender_id'])) {
-                        $partners[] = $secondaryPartners;
-                    } else if (!empty($orderDetails['escrow_lender_id']) && $orderDetails['escrow_lender_id'] != $LenderId) {
-                        $partners[] = $secondaryPartners;
-                        $removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['escrow_lender_id']));
-                        $removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
-                        $removeSecondaryPartners = array(
-                            'SecondaryEmployees'=> $removeSecondaryEmp,
-                            'PartnerTypeID' => 3,
-                            'PartnerID' => $removeLenderUserDetails['partner_id'],
-                            'PartnerType' => array(
-                                'PartnerTypeID' => 3
-                            )
-                        );
-                        $removePartners[] = $removeSecondaryPartners;
-                        $removePartnerData = json_encode(array('Partners' => $removePartners));
-                        $removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
-                        $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
-                    }
-                } else {
-                    if(empty($orderDetails['cpl_lender_id'])) {
-                        $partners[] = $secondaryPartners;
-                    } else if (!empty($orderDetails['cpl_lender_id']) && $orderDetails['cpl_lender_id'] != $LenderId) {
-                        $partners[] = $secondaryPartners;
-                        $removeLenderUserDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-                        $removeSecondaryEmp[] = array('UserID'=> $removeLenderUserDetails['resware_user_id']);
-                        $removeSecondaryPartners = array(
-                            'SecondaryEmployees'=> $removeSecondaryEmp,
-                            'PartnerTypeID' => 3,
-                            'PartnerID' => $removeLenderUserDetails['partner_id'],
-                            'PartnerType' => array(
-                                'PartnerTypeID' => 3
-                            )
-                        );
-                        $removePartners[] = $removeSecondaryPartners;
-                        $removePartnerData = json_encode(array('Partners' => $removePartners));
-                        $removeLogid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, array(), 0, 0);
-                        $resultRemovePartner = $this->resware->make_request('DELETE', $endPoint, $removePartnerData, $partnerUserData);
-                        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'delete_partner', env('RESWARE_ORDER_API').$endPoint, $removePartnerData, $resultRemovePartner, 0, $removeLogid);
-                    }
-                }
-    
-                if(!empty($partners)) {
-                    $partnerData = json_encode(array('Partners' => $partners));
-                    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, array(), 0, 0);
-                    $resultPartner = $this->resware->make_request('POST', $endPoint, $partnerData, $partnerUserData);
-                    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'add_partner', env('RESWARE_ORDER_API').$endPoint, $partnerData, $resultPartner, 0, $logid);
-                }
-            }*/
         // }
         
 
@@ -1555,7 +1487,6 @@ class Common extends MX_Controller
         // } else {
         //     $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
         // }
-        
         if ($orderUser['is_escrow'] == 1) {
             if (!empty($orderDetails['cpl_lender_id'])) {
                 // if ($orderDetails['is_softpro_order']) {
@@ -1651,25 +1582,25 @@ class Common extends MX_Controller
         }
 
         // if ($isSoftProStatus) {
-        if (empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
-            $orderDetails['lender_name'] = '';
-        } else if (empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
-            $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
-        } else if (!empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
-            $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'];
-        } else if (!empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
-            $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
-        }
+        // if (empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
+        //     $orderDetails['lender_name'] = '';
+        // } else if (empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
+        //     $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+        // } else if (!empty($orderDetails['sp_lender_first_name']) && empty($orderDetails['sp_lender_last_name'])) {
+        //     $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'];
+        // } else if (!empty($orderDetails['sp_lender_first_name']) && !empty($orderDetails['sp_lender_last_name'])) {
+        //     $orderDetails['lender_name'] = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
+        // }
         // } else {
-        //     if (empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
-        //         $orderDetails['lender_name'] = '';
-        //     } else if (empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
-        //         $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
-        //     } else if (!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
-        //         $orderDetails['lender_name'] = $orderDetails['lender_first_name'];
-        //     } else if (!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
-        //         $orderDetails['lender_name'] = $orderDetails['lender_first_name'] . " " . $orderDetails['lender_last_name'];
-        //     }
+            if (empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+                $orderDetails['lender_name'] = '';
+            } else if (empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+                $orderDetails['lender_name'] = $orderDetails['lender_last_name'];
+            } else if (!empty($orderDetails['lender_first_name']) && empty($orderDetails['lender_last_name'])) {
+                $orderDetails['lender_name'] = $orderDetails['lender_first_name'];
+            } else if (!empty($orderDetails['lender_first_name']) && !empty($orderDetails['lender_last_name'])) {
+                $orderDetails['lender_name'] = $orderDetails['lender_first_name'] . " " . $orderDetails['lender_last_name'];
+            }
         // }
 
         if ($orderDetails['sales_amount'] > 0) {
