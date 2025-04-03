@@ -2,6 +2,7 @@
 
 (defined('BASEPATH')) or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
 class Order extends MX_Controller
 {
 
@@ -560,6 +561,198 @@ class Order extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/order/lp_orders', $data);
         // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function importRevenueData()
+    {
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+        $this->load->library('form_validation');
+        $data = array();
+        $data['title'] = 'PCT Order: Import Revenue Data';
+        
+        if(!empty($_FILES))
+        {
+            // Form field validation rules
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            $billCodeFilter = ['ESC', 'TPC', 'TPD', 'TPW', 'TSGC', 'TSGD', 'TSGW'];
+            // Validate submitted form data
+            if($this->form_validation->run($this) == true)
+            {
+                $document_name           = time() . "_" . $_FILES['file']['name'];
+                
+                $config['upload_path']   = './uploads/';
+                $config['allowed_types'] = 'xls|xlsx';
+                $config['max_size']      = 12000;
+                $config['file_name'] = $document_name;
+                
+                $this->load->library('upload', $config);
+                $updateCount = 0;
+
+                if (! $this->upload->do_upload('file')) {
+                    $data['error_msg'] = $this->upload->display_errors();
+                } else {
+                    $fileData = $this->upload->data();
+                    $filePath = './uploads/' . $fileData['file_name'];
+
+                    $spreadsheet = IOFactory::load($filePath);
+                    $sheet = $spreadsheet->getActiveSheet();
+                    // echo "<pre>";
+                    // print_r($sheet->toArray());die;
+                    $sheetData = $sheet->toArray();
+                    $updateData = [];
+                    if (!empty($sheetData) && count($sheetData) > 1) {
+                        $query = $this->db->select('id, product_type')
+                            ->from('pct_softpro_product_type')
+                            ->get();
+
+                        $productTypeList = array_column($query->result_array(), 'id', 'product_type');
+
+                        $query = $this->db->select('id, order_type')
+                            ->from('pct_softpro_order_type')
+                            ->get();
+
+                        $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
+
+
+                        foreach ($sheetData as $key => $data) {
+                            if ($key == 0) {
+                                $columnNames = $data;
+                            } else {
+                                $rowData = array();
+                                if (in_array($data[8], $billCodeFilter)) {
+                                    $amount = (float) str_replace(['$', ','], '', $data[42]);
+                                    $amount = round($amount, 2);
+                                    
+                                    if (array_key_exists($data[2], $updateData)) { 
+                                        $updateData[$data[2]]['premium'] += $amount;
+                                    } else {
+                                        $updateData[$data[2]] = [
+                                            'order_number' => $data[2],
+                                            'transaction_date' => $data[3],
+                                            'bill_code' => $data[8],
+                                            'transaction_type' => trim($data[15]),
+                                            'sales_rep' => $data[26],
+                                            'full_address' => $data[29],
+                                            'address' => $data[30],
+                                            'city' => $data[34],
+                                            'state' => $data[33],
+                                            'zip' => $data[32],
+                                            'country' => $data[35],
+                                            'premium' => $amount,
+                                            'order_type' => trim($data[48]),
+                                        ];
+
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!empty($updateData)) {
+                            foreach ($updateData as $key => $value) {
+                                // echo "<pre>";
+                                // print_r($value);
+                                $orderDetails = $this->db->select('id, property_id, transaction_id')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
+                                $value['order_number'] = "TEST-20001451-OCT";
+                                if (!empty($orderDetails)) {
+                                    $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
+
+                                    // echo 'productTypeList';
+                                    // print_r($productTypeList);
+                                    // echo 'orderTypeList';
+                                    // print_r($orderTypeList);
+                                    // echo 'order details';
+                                    // print_r($orderDetails);
+                                    // echo 'salesRepDetails';
+                                    // print_r($salesRepDetails);
+                                    // print_r($value);
+                                    $updateOrderDetails = [
+                                        'premium' => $value['premium'],
+                                        'bill_code' => $value['bill_code'],
+                                        'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
+                                    ];
+
+                                    $id = $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
+                                    $updateCount++;
+                                    // echo 'id ==' . $id;
+                                    
+                                    if (!empty($salesRepDetails)) {
+                                        $updateTransactionDetails['sales_representative'] = $salesRepDetails['id'];
+                                    }
+                                    if (!empty($value['order_type']) && !empty($orderTypeList[$value['order_type']])) {
+                                        $updateTransactionDetails['order_type'] = $orderTypeList[$value['order_type']];
+                                    }
+                                    if (!empty($value['transaction_type'])) {
+                                        $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
+                                    }
+                                    if (!empty($updateTransactionDetails)) {
+                                        $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
+                                    }
+    
+                                    // if (!empty($value['full_address'])) {
+                                    //     $updatePropertyDetails = [
+                                    //         'full_address' => $value['full_address'],
+                                    //         'address' => $value['address'],
+                                    //         'city' => $value['city'],
+                                    //         'state' => $value['state'],
+                                    //         'zip' => $value['zip'],
+                                    //         'county' => $value['country']
+                                    //     ];
+                                    //     $this->db->update('property_details', $updatePropertyDetails, array('id' => $orderDetails['property_id']));
+                                    // }
+    
+                                    // echo 'updateOrderDetails';
+                                    // print_r($updateOrderDetails);
+                                    // echo 'updateTransactionDetails';
+                                    // print_r($updateTransactionDetails);die;
+                                }
+                            }
+                        }
+                        // echo "hello <pre>";
+                        // print_r($updateData);die;
+                        
+                        unlink('uploads/' . $fileData['file_name']);
+                        $this->session->set_flashdata('success', 'Data updated for total ' . $updateCount . ' Orders');
+                    }
+                }
+                
+            }
+            else
+            {
+                $this->session->set_flashdata('error', 'Invalid file, please select only CSV file.');
+                $data['error_msg'] = form_error('file');
+                // echo form_error('file');die;
+            }
+        }
+        $this->admintemplate->show("order/order", "import_revenue", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/agent/import', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function file_check($str)
+    {
+        $allowed_mime_types = array('text/x-comma-separated-values','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
+        if(isset($_FILES['file']['name']) && $_FILES['file']['name'] != "")
+        {
+            $mime = get_mime_by_extension($_FILES['file']['name']);
+            $fileAr = explode('.', $_FILES['file']['name']);
+            $ext = end($fileAr);
+            // print_r($mime);
+            // echo "<br>";
+            // print_r($ext);die;
+            if(($ext == 'xlsx' || $ext == 'xls') && in_array($mime, $allowed_mime_types)){
+                return true;
+            }else{
+                $this->form_validation->set_message('file_check', 'Please select only xlsx or xls file to upload.');
+                return false;
+            }
+        }
+        else
+        {
+            $this->form_validation->set_message('file_check', 'Please select a xlsx or xls file to upload.');
+            return false;
+        }
     }
 
     public function searchDocumentType()

@@ -7071,10 +7071,7 @@ class Cron extends MX_Controller
                         }
 
                         $property_details = $this->getSearchResult($address, $locale);
-                        // echo '$property_details';
-                        // print_r($property_details);
-                        // echo 'sales rep id =='. $salesRepList[$marketingRep];
-                        // print_r($list);
+                        
                         $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
                         $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
                         $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
