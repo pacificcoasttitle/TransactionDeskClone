@@ -653,7 +653,7 @@ class Order extends MX_Controller
                                 // echo "<pre>";
                                 // print_r($value);
                                 $orderDetails = $this->db->select('id, property_id, transaction_id')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
-                                $value['order_number'] = "TEST-20001451-OCT";
+                                // $value['order_number'] = "TEST-20001451-OCT";
                                 if (!empty($orderDetails)) {
                                     $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
 
