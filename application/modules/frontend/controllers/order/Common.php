@@ -2947,13 +2947,22 @@ class Common extends MX_Controller
 							</button>
 						</a>";
                 } else {
-                    $nestedData[] = "<a href='javascript:void(0)'>
+                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'>
+                    <a href='javascript:void(0)'>
 						<button type='submit' class='btn btn-info btn-icon-split'>
 							<span class='icon text-white-50'>
 								<i class='fas fa-tasks'></i>
 							</span>
 							<span class='text'>Not Ready</span>
-						</button></a>";
+						</button></a>
+                    <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+						<button type='button' class='btn btn-primary btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-refresh'></i>
+							</span>
+							<span class='text'>Get Prelim Doc</span>
+						</button></a>
+                    </div>";
                 }
 
                 $data[] = $nestedData;
