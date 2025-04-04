@@ -484,6 +484,7 @@ $route['order/admin/dashboard']                     = 'admin/order/home/index';
 $route['order/admin/pre-listing-documents']         = 'admin/order/home/pre_listing_document';
 $route['order/admin/lp-listing-documents']          = 'admin/order/home/lp_listing_document';
 $route['order/admin/lp-orders']                     = 'admin/order/order/lpOrders';
+$route['order/admin/import-revenue-data']           = 'admin/order/order/importRevenueData';
 $route['order/admin/search-document-type']          = 'admin/order/order/searchDocumentType';
 $route['order/admin/search-document-sub-type']      = 'admin/order/order/searchDocumentSubType';
 

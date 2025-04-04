@@ -242,7 +242,7 @@
                                                     <div class="toclone">
                                                         <div class="spacer-b10">
                                                             <label class="field" id="revenue_container">
-															<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
+															<!-- <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
 																<thead>
 																	<tr>
 																		<th>Sr No</th>
@@ -267,7 +267,7 @@
 																		<tr><td colspan='5'>No records found.</td></tr>
 																	<?php } ?>
 																</tbody>
-															</table>
+															</table> -->
                                                             </label>
                                                         </div>
                                                     </div>

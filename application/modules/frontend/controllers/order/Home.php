@@ -583,7 +583,7 @@ class Home extends MX_Controller
                     $lpOrderFlag = 0;
 
                     if (isset($response) && !empty($response)) {
-                        if (isset($response['status']) && $response['status'] == 'error') {
+                        if (isset($response['status']) && $response['status'] == 'error' || !isset($response['OrderNumber'])) {
                             // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                             /* Start add softpro api logs */
                             $softproLog = [
