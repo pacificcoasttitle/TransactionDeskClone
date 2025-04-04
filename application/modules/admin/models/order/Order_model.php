@@ -872,4 +872,15 @@ class Order_model extends CI_Model
             'data'            => $orders_lists,
         ];
     }
+
+    public function logAdminActivity($activity)
+    {
+        $userdata = $this->session->userdata('admin');
+        $data = array(
+            'user_id' => $userdata['id'] ?? 1,
+            'message' => $activity,
+            'created_at' => date("Y-m-d H:i:s"),
+        );
+        $this->db->insert('pct_admin_activity_logs', $data);
+    }
 }
