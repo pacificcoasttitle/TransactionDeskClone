@@ -7222,7 +7222,7 @@ class Cron extends MX_Controller
 
         if (empty($_GET)) {
             // $startDate = date('m-d-Y', strtotime('-10 day', strtotime(date('Y-m-d'))));
-            $startDate = date('02-15-Y');
+            $startDate = date('03-01-Y');
             $endDate = date('m-d-Y');
             $req['DateFrom'] = $startDate;
             $req['DateTo'] = $endDate;
@@ -7232,10 +7232,12 @@ class Cron extends MX_Controller
         // print_r($queryParams);die;
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
+        $apiEndPoints = SOFTPRO_API_END;
+        $reqUrl          = getenv("SOFT_PRO_API") . $apiEndPoints['get_bulk_prelim_report'] . '?'.$queryParams;
         $reqData     = json_encode($req);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', 'get_bulk_prelim_report', $reqData, [], 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, [], 0, 0);
         $result    = $this->softpro->make_request('GET', 'get_bulk_prelim_report', $reqData, $queryParams);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', 'get_bulk_prelim_report', $reqData, json_encode($response), 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, json_encode($response), 0, $logid);
         // $result = '[{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001439-GLT","FileUploadedStatus":true,"data":[]},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001440-GLT","FileUploadedStatus":true,"data":[]},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001457-GLT","FileUploadedStatus":true,"data":["http://100.29.181.61/SoftProIntegrate/assets/5%20-%20Prelims%20and%20Updates_Prelim_093958.pdf"]},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false}]';
         // print_r($result);die;
         $response = json_decode($result, true);
