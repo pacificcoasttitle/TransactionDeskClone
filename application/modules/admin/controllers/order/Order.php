@@ -667,13 +667,14 @@ class Order extends MX_Controller
                                     // echo 'salesRepDetails';
                                     // print_r($salesRepDetails);
                                     // print_r($value);
+                                    // $transactionDate = date('Y-m-d', strtotime($value['transaction_date']));
                                     $updateOrderDetails = [
                                         'premium' => $value['premium'],
                                         'bill_code' => $value['bill_code'],
                                         'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
                                         'softpro_status' => 'closed',
-                                        'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['escrow_closed_date'])),
-                                        'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['escrow_closed_date']))
+                                        'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
+                                        'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date']))
                                     ];
 // echo "<pre>";
 // print_r($updateOrderDetails);die;

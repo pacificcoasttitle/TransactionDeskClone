@@ -530,7 +530,7 @@ function getPartners(fileId) {
 
 function getRevenueData() {
     $('#revenue_model').modal('show');
-    /*$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var sales_rep_id = $('#sales_user_filter').val();
     $.ajax({
@@ -560,7 +560,7 @@ function getRevenueData() {
             //     $('#lp_order_error_msg').html('').hide();
             // }, 5000);
         }
-    });*/
+    });
 }
 
 function getRevenueDataBasedOnMonth(month) {
