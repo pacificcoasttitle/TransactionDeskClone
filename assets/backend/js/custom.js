@@ -12,6 +12,7 @@ var lp_order_list = '';
 var admin_user_logs = '';
 var lp_document_list = '';
 var daily_email_receiver_list = '';
+var prelim_list = '';
 
 $(document).ready(function () {
 
