@@ -7414,4 +7414,22 @@ class Cron extends MX_Controller
         }
         echo json_encode(['status' => 'success','message' => $prelimFetchedCount . ' Orders prelim document updated successfully']);
     }
+
+    public function postPrelimreport() {
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        // if (isset($_GET['orderNumber'])) {
+        //     $req['orderNumber'] = $_GET['orderNumber'];
+        // }
+        
+        // $queryParams = http_build_query($req);
+        
+        $reqData     = json_encode($_POST);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'post_prelim_report', 'post_prelim_report', $reqData, [], 0, 0);
+        // $response    = $this->softpro->make_request('GET', 'post_prelim_report', $reqData, $queryParams);
+        // $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'post_prelim_report', 'post_prelim_report', $reqData, json_encode($response), 0, $logid);
+        
+    }
 }
