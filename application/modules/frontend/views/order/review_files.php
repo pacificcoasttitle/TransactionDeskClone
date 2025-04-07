@@ -31,10 +31,10 @@
 					<table class="table table-bordered" id="prelim_files" width="100%" cellspacing="0">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>File Number</th>
-								<th>Property Address</th>
-								<th>Files</th>
+								<th width="5%">#</th>
+								<th width="10%">File Number</th>
+								<th width="60%">Property Address</th>
+								<th width="25%">Files</th>
 							</tr>
 						</thead>                
 						<tbody></tbody>

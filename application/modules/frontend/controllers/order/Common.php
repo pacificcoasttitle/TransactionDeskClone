@@ -2947,7 +2947,7 @@ class Common extends MX_Controller
 							</button>
 						</a>";
                 } else {
-                    $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'>
+                    $nestedData[] = "<div style='display: flex;justify-content: space-between;'>
                     <a href='javascript:void(0)'>
 						<button type='submit' class='btn btn-info btn-icon-split'>
 							<span class='icon text-white-50'>
