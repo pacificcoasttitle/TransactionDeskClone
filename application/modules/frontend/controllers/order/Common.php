@@ -174,10 +174,10 @@ class Common extends MX_Controller
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
-        $resware_document_id = $this->input->post('resware_document_id');
+        // $resware_document_id = $this->input->post('resware_document_id');
         $order_id = $this->input->post('order_id');
         $document_id = $this->input->post('document_id');
-        $documentDetail = $this->order->get_document_detail($resware_document_id, $order_id, $document_id);
+        $documentDetail = $this->order->get_document_detail($order_id, $document_id);
         $is_sync = $this->input->post('is_sync');
 
         if ($userdata['is_title_officer'] == 1 || $userdata['is_sales_rep'] == 1 || $userdata['is_master'] == 1) {
@@ -186,24 +186,24 @@ class Common extends MX_Controller
             $user_data = array();
         }
 
-        if ($is_sync == 0) {
-            $endPoint = 'documents/' . $resware_document_id . '?format=json';
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order_id, 0);
-            $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
-            $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), $resultDocument, $order_id, $logid);
-            $resDocument = json_decode($resultDocument, true);
-            if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
-                $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
-                if (!is_dir('uploads/documents')) {
-                    mkdir('./uploads/documents', 0777, true);
-                }
-                file_put_contents('./uploads/documents/' . $documentDetail['document_name'], $documentContent);
-                $this->order->uploadDocumentOnAwsS3($documentDetail['document_name'], 'documents');
-                $this->document->update(array('is_sync' => 1), array('api_document_id' => $resware_document_id));
-            }
-        }
+        // if ($is_sync == 0) {
+        //     $endPoint = 'documents/' . $resware_document_id . '?format=json';
+        //     $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), $order_id, 0);
+        //     $resultDocument = $this->resware->make_request('GET', $endPoint, '', $user_data);
+        //     $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), $resultDocument, $order_id, $logid);
+        //     $resDocument = json_decode($resultDocument, true);
+        //     if (isset($resDocument['Document']) && !empty($resDocument['Document'])) {
+        //         $documentContent = base64_decode($resDocument['Document']['DocumentBody'], true);
+        //         if (!is_dir('uploads/documents')) {
+        //             mkdir('./uploads/documents', 0777, true);
+        //         }
+        //         file_put_contents('./uploads/documents/' . $documentDetail['document_name'], $documentContent);
+        //         $this->order->uploadDocumentOnAwsS3($documentDetail['document_name'], 'documents');
+        //         $this->document->update(array('is_sync' => 1), array('api_document_id' => $resware_document_id));
+        //     }
+        // }
 
-        $data['api_document_id'] = $resware_document_id;
+        // $data['api_document_id'] = $resware_document_id;
         $data['order_id'] = $order_id;
         $data['document_name'] = $documentDetail['document_name'];
         if ($documentDetail['is_grant_doc'] == 1) {
