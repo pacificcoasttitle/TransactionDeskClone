@@ -7294,39 +7294,44 @@ class Cron extends MX_Controller
                         // print_r($prelimSummaryDetails);die;
                         // print_r($prelimLink);die;
                         if (empty($prelimSummaryDetails) && !empty($filesResult) && !empty($data['data'])) {
-                            // echo "hello";die;
                             $prelimLink = $data['data'][0];
-                            $prelimFetchedCount++;
-                            $documentName = basename($prelimLink);
-                            $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
-                            $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
-    
-                            if ($uploadStatus) {
-                                $this->load->model('order/document');
-                                $documentData = array(
-                                    'document_name' => $document_name,
-                                    'original_document_name' => urldecode($documentName),
-                                    'user_id' => $filesResult['customer_id'],
-                                    'order_id' => $filesResult['id'],
-                                    'description' => $documentName,
-                                    'created' => date('Y-m-d H:i:s'),
-                                    'is_sync' => 1,
-                                    'is_prelim_document' => 1,
-                                );
-                                $documentId = $this->document->insert($documentData);
-    
-                                $summaryData = [
-                                    'file_number' => $filesResult['file_number'],
-                                    'created_at' => date('Y-m-d H:i:s'),
-                                ];
-                                $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
-                                $condition = array(
-                                    'id' => $filesResult['id'],
-                                );
-                                $data = array(
-                                    'prelim_summary_id' => $id,
-                                );
-                                $this->order->update($data, $condition);
+                            $ext = pathinfo(parse_url($prelimLink, PHP_URL_PATH), PATHINFO_EXTENSION);
+                            if (strtolower($ext) === 'pdf') {
+                                $file_number = $data['OrderNumber'];
+                                $prelimFetchedCount++;
+                                $documentName = basename($prelimLink);
+                                $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
+                                // $activity = $file_number;
+                                // $this->order->logAdminActivity($activity);
+                                $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
+                                
+                                if ($uploadStatus) {
+                                    $this->load->model('order/document');
+                                    $documentData = array(
+                                        'document_name' => $document_name,
+                                        'original_document_name' => urldecode($documentName),
+                                        'user_id' => $filesResult['customer_id'],
+                                        'order_id' => $filesResult['id'],
+                                        'description' => $documentName,
+                                        'created' => date('Y-m-d H:i:s'),
+                                        'is_sync' => 1,
+                                        'is_prelim_document' => 1,
+                                    );
+                                    $documentId = $this->document->insert($documentData);
+        
+                                    $summaryData = [
+                                        'file_number' => $filesResult['file_number'],
+                                        'created_at' => date('Y-m-d H:i:s'),
+                                    ];
+                                    $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                                    $condition = array(
+                                        'id' => $filesResult['id'],
+                                    );
+                                    $data = array(
+                                        'prelim_summary_id' => $id,
+                                    );
+                                    $this->order->update($data, $condition);
+                                }
                             }
                         }
                     }
@@ -7413,5 +7418,23 @@ class Cron extends MX_Controller
             
         }
         echo json_encode(['status' => 'success','message' => $prelimFetchedCount . ' Orders prelim document updated successfully']);
+    }
+
+    public function postPrelimreport() {
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+        // if (isset($_GET['orderNumber'])) {
+        //     $req['orderNumber'] = $_GET['orderNumber'];
+        // }
+        
+        // $queryParams = http_build_query($req);
+        
+        $reqData     = json_encode($_POST);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'post_prelim_report', 'post_prelim_report', $reqData, [], 0, 0);
+        // $response    = $this->softpro->make_request('GET', 'post_prelim_report', $reqData, $queryParams);
+        // $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'post_prelim_report', 'post_prelim_report', $reqData, json_encode($response), 0, $logid);
+        
     }
 }

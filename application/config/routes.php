@@ -237,6 +237,7 @@ $route['fetch-pct-master-user-login']         = 'frontend/order/cron/transferMas
 $route['fetch-softpro-orders']         = 'frontend/order/cron/fetchSoftproOrders';
 $route['fetch-bulk-prelim-report']         = 'frontend/order/cron/fetchBulkPrelimreport';
 $route['fetch-single-prelim-report']         = 'frontend/order/cron/fetchSinglePrelimreport';
+$route['post-prelim-report']         = 'frontend/order/cron/postPrelimreport';
 
 
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
