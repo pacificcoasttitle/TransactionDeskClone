@@ -626,7 +626,7 @@ class SalesRep extends MX_Controller
                     }
                     // print_r($prelimDoc);die;
                     // $action .= "<li><a href='" . base_url() . "review-file/" . $order['id'] . "'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a></li>";
-                    $action .= "<li><a href='" . $prelimUrl . "' target='_blank'><button class='btn btn-grad-2a button-color' type='button'>REVIEW PRELIM</button></a></li>";
+                    $action .= "<li><a href='" . $prelimUrl . "' target='_blank'><button class='btn btn-grad-2a button-color btn-success' type='button'>REVIEW PRELIM</button></a></li>";
                 } else {
                     $action .= "<li><a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a></li>";
                 }
