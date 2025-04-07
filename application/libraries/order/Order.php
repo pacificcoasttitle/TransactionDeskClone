@@ -1026,12 +1026,12 @@ class Order
         }
     }
 
-    public function get_document_detail($api_document_id, $order_id, $document_id)
+    public function get_document_detail($order_id, $document_id)
     {
         $this->CI->db->select('*')
             ->from('pct_order_documents');
 
-        $this->CI->db->where('api_document_id', $api_document_id);
+        // $this->CI->db->where('api_document_id', $api_document_id);
         $this->CI->db->where('order_id', $order_id);
         $this->CI->db->where('id', $document_id);
         $query = $this->CI->db->get();
