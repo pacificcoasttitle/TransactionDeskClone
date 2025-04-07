@@ -7199,11 +7199,38 @@ class Cron extends MX_Controller
         echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported and ' .$updatedOrderCount .' Order updated successfully']);
     }
 
+    public function getDateIntervals($start, $end, $intervalDays = 10)
+    {
+        $startTime = strtotime($start);  // e.g. "01-03-2025"
+        $endTime = strtotime($end);      // e.g. "15-04-2025"
+
+        $intervals = [];
+
+        while ($startTime <= $endTime) {
+            $from = date('m-d-Y', $startTime);
+
+            $nextTime = strtotime("+$intervalDays days", $startTime);
+            if ($nextTime > $endTime) {
+                $nextTime = $endTime;
+            }
+
+            $to = date('m-d-Y', $nextTime);
+            $req['DateFrom'] = $from;
+            $req['DateTo'] = $to;
+            $intervals[] = http_build_query($req);
+
+            $startTime = strtotime('+1 day', $nextTime); 
+        }
+
+        return $intervals;
+    }
+
     public function fetchBulkPrelimreport() {
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
+        $prelimFetchedCount= 0;
         if (isset($_GET['DateFrom'])) {
             $req['DateFrom'] = '';
             if (!empty($_GET['DateFrom'])) {
@@ -7222,86 +7249,90 @@ class Cron extends MX_Controller
 
         if (empty($_GET)) {
             // $startDate = date('m-d-Y', strtotime('-10 day', strtotime(date('Y-m-d'))));
-            $startDate = date('03-01-Y');
-            $endDate = date('m-d-Y');
+            $startDate = date('01-03-2025');
+            $endDate = date('d-m-Y');
             $req['DateFrom'] = $startDate;
             $req['DateTo'] = $endDate;
         }
+        // print_r($req);die;
+        $dateIntervalQueryParams = $this->getDateIntervals($startDate, $endDate, 5);
+        // echo "<pre>";
+        // print_r($dateIntervalQueryParams);die;
+        // $queryParams = http_build_query($req);
         
-        $queryParams = http_build_query($req);
-        // print_r($queryParams);die;
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $apiEndPoints = SOFTPRO_API_END;
-        $reqUrl          = getenv("SOFT_PRO_API") . $apiEndPoints['get_bulk_prelim_report'] . '?'.$queryParams;
-        $reqData     = json_encode($req);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, [], 0, 0);
-        $result    = $this->softpro->make_request('GET', 'get_bulk_prelim_report', $reqData, $queryParams);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, json_encode($response), 0, $logid);
-        // $result = '[{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001439-GLT","FileUploadedStatus":true,"data":[]},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001440-GLT","FileUploadedStatus":true,"data":[]},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001457-GLT","FileUploadedStatus":true,"data":["http://100.29.181.61/SoftProIntegrate/assets/5%20-%20Prelims%20and%20Updates_Prelim_093958.pdf"]},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false}]';
-        // print_r($result);die;
-        $response = json_decode($result, true);
-        // echo "<pre>";
-        // print_r($response);die;
-        $prelimFetchedCount= 0;
-        if (!empty($response)) {
+        foreach ($dateIntervalQueryParams as $key => $range) {
+            $reqData = $queryParams = $range;
+            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_bulk_prelim_report'] . '?'.$queryParams;
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, [], 0, 0);
+            $result    = $this->softpro->make_request('GET', 'get_bulk_prelim_report', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, json_encode($response), 0, $logid);
             
-            foreach ($response as $key => $data) {
-                if ($data['Status'] == 200 && !empty($data['data'])) {
-                    $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
-                    $this->db->from('order_details as o');
-                    $this->db->where('o.file_number', $data['OrderNumber']);
-                    $filesResult = $this->db->get()->row_array();
-
-                    $this->db->select('*');
-                    $this->db->from('pct_order_prelim_summary as s');
-                    $this->db->where('file_number', $data['OrderNumber']);
-                    $prelimSummaryDetails = $this->db->get()->row_array();
-
-                    // print_r($filesResult);
-                    // print_r($prelimSummaryDetails);die;
-                    // print_r($prelimLink);die;
-                    if (empty($prelimSummaryDetails) && !empty($filesResult) && !empty($data['data'])) {
-                        // echo "hello";die;
-                        $prelimLink = $data['data'][0];
-                        $prelimFetchedCount++;
-                        $documentName = basename($prelimLink);
-                        $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
-                        $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
-
-                        if ($uploadStatus) {
-                            $this->load->model('order/document');
-                            $documentData = array(
-                                'document_name' => $document_name,
-                                'original_document_name' => urldecode($documentName),
-                                'user_id' => $filesResult['customer_id'],
-                                'order_id' => $filesResult['id'],
-                                'description' => $documentName,
-                                'created' => date('Y-m-d H:i:s'),
-                                'is_sync' => 1,
-                                'is_prelim_document' => 1,
-                            );
-                            $documentId = $this->document->insert($documentData);
-
-                            $summaryData = [
-                                'file_number' => $filesResult['file_number'],
-                                'created_at' => date('Y-m-d H:i:s'),
-                            ];
-                            $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
-                            $condition = array(
-                                'id' => $filesResult['id'],
-                            );
-                            $data = array(
-                                'prelim_summary_id' => $id,
-                            );
-                            $this->order->update($data, $condition);
+            $response = json_decode($result, true);
+            
+            if (!empty($response)) {
+                
+                foreach ($response as $key => $data) {
+                    if ($data['Status'] == 200 && !empty($data['data'])) {
+                        $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+                        $this->db->from('order_details as o');
+                        $this->db->where('o.file_number', $data['OrderNumber']);
+                        $filesResult = $this->db->get()->row_array();
+    
+                        $this->db->select('*');
+                        $this->db->from('pct_order_prelim_summary as s');
+                        $this->db->where('file_number', $data['OrderNumber']);
+                        $prelimSummaryDetails = $this->db->get()->row_array();
+    
+                        // print_r($filesResult);
+                        // print_r($prelimSummaryDetails);die;
+                        // print_r($prelimLink);die;
+                        if (empty($prelimSummaryDetails) && !empty($filesResult) && !empty($data['data'])) {
+                            // echo "hello";die;
+                            $prelimLink = $data['data'][0];
+                            $prelimFetchedCount++;
+                            $documentName = basename($prelimLink);
+                            $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
+                            $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
+    
+                            if ($uploadStatus) {
+                                $this->load->model('order/document');
+                                $documentData = array(
+                                    'document_name' => $document_name,
+                                    'original_document_name' => urldecode($documentName),
+                                    'user_id' => $filesResult['customer_id'],
+                                    'order_id' => $filesResult['id'],
+                                    'description' => $documentName,
+                                    'created' => date('Y-m-d H:i:s'),
+                                    'is_sync' => 1,
+                                    'is_prelim_document' => 1,
+                                );
+                                $documentId = $this->document->insert($documentData);
+    
+                                $summaryData = [
+                                    'file_number' => $filesResult['file_number'],
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                ];
+                                $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                                $condition = array(
+                                    'id' => $filesResult['id'],
+                                );
+                                $data = array(
+                                    'prelim_summary_id' => $id,
+                                );
+                                $this->order->update($data, $condition);
+                            }
                         }
                     }
-                }
-
-                
-            } // end foreach
+    
+                    
+                } // end foreach
+            }
         }
+        
+        
         echo json_encode(['status' => 'success','message' => $prelimFetchedCount . ' Orders prelim document updated successfully']);
     }
 
