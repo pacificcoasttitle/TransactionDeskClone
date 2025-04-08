@@ -47,6 +47,11 @@
                         <i class="fas fa-refresh"></i>
                     </span>
                     <span class="text"> Sync Order </span> </a>
+                <a href="javascript:void(0);" onclick="syncSoftProOrdersStatus();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-refresh"></i>
+                    </span>
+                    <span class="text"> Sync Order Status</span> </a>
             </div>
         <?php endif; ?>
 
