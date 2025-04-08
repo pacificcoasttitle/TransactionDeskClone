@@ -599,7 +599,6 @@ class SalesRep extends MX_Controller
                     $nestedData[] = ucfirst($order['softpro_status']);
                 }
 
-                $action = '';
                 /*$action = '<div class="dropdown"><a class="btn dropdown-toggle click-action-type" type="button" data-toggle="dropdown" href="#">Click Action Type <span class="caret"></span></a><ul class="dropdown-menu">';
                 if ($order['prelim_summary_id'] != 0) {
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
@@ -624,8 +623,8 @@ class SalesRep extends MX_Controller
                     $reportDocumentUrl = env('AWS_PATH') . "pre-listing-doc/pre_listing_report_" . $order['lp_file_number'] . '.pdf';
                     $action .= "<li><a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a></li><li><a target='_blank' href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View LP Report</button></a></li>";
                 }
-                $action .= "</ul></div>";
-                $action = "<div style='display: flex;justify-content: space-between;'>";*/
+                $action .= "</ul></div>";*/
+                $action = "<div style='display: flex;justify-content: space-between;'>";
                 if ($order['prelim_summary_id'] != 0) {
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
                     if (env('AWS_ENABLE_FLAG') == 1) {
