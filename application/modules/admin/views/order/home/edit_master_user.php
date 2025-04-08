@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <label for="telephone_no" class="col-sm-2 col-form-label">Telephone</label>
                                 <div class="col-sm-6">
-                                    <input type="text" value="<?php echo set_value('telephone_no') ? set_value('telephone_no') : $master_user_info['telephone_no']; ?>" class="form-control" name="telephone_no" id="telephone_no" class="form-control" placeholder="Telephone">
+                                    <input type="text" value="<?php echo set_value('telephone_no') ? set_value('telephone_no') : $master_user_info['phone']; ?>" class="form-control" name="telephone_no" id="telephone_no" class="form-control" placeholder="Telephone">
                                 </div>
                             </div>
 
@@ -96,7 +96,7 @@
                             <div class="form-group">
                                 <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address') ? set_value('address') : $master_user_info['street_address']; ?>" class="form-control" placeholder="Address">
+                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address') ? set_value('address') : $master_user_info['address1']; ?>" class="form-control" placeholder="Address">
                                     <?php if (!empty($address_error_msg)) {?>
                                         <span class="error"><?php echo $address_error_msg; ?></span>
                                     <?php }?>
@@ -126,31 +126,10 @@
                             <div class="form-group">
                                 <label for="zipcode" class="col-sm-2 col-form-label">Zipcode<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode') ? set_value('zipcode') : $master_user_info['zip_code'] ?>" class="form-control" placeholder="Zipcode">
+                                    <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode') ? set_value('zipcode') : $master_user_info['zip'] ?>" class="form-control" placeholder="Zipcode">
                                     <?php if (!empty($zipcode_error_msg)) {?>
                                         <span class="error"><?php echo $zipcode_error_msg; ?></span>
                                     <?php }?>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="zipcode" class="col-sm-2 col-form-label">Select Company</label>
-                                <div class="col-sm-6">
-                                    <select name="partner_companies[]"  class="selectpicker" multiple data-live-search="true">
-                                        <?php foreach ($companys as $company) {?>
-                                            <?php $selected = '';
-    if (set_value('partner_companies') && in_array($company['partner_id'], set_value('partner_companies'))) {
-        $selected = 'selected';
-    } else {
-        $partnerCompanies = explode(',', $master_user_info['partner_companies']);
-        if (in_array($company['partner_id'], $partnerCompanies)) {
-            $selected = 'selected';
-        }
-    }
-    ?>
-                                            <option data-subtext="<?php echo $company['address1']; ?> <?php echo $company['city']; ?>" <?php echo $selected; ?> value="<?php echo $company['partner_id']; ?>"><?php echo $company['partner_name']; ?></option>
-                                        <?php }?>
-                                    </select>
                                 </div>
                             </div>
 
