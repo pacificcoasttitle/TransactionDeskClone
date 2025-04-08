@@ -168,7 +168,7 @@ class Order
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
                 ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
-
+            $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
@@ -285,7 +285,7 @@ class Order
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
                 ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
-
+            $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
@@ -410,7 +410,7 @@ class Order
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
                 ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
-
+            $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
@@ -520,7 +520,7 @@ class Order
                 ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
                 ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
-
+            $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
                 $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
                 $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
