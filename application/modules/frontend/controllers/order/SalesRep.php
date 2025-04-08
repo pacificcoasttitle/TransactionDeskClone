@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '10';
+    private $version = '11';
 
     public function __construct()
     {
@@ -599,24 +599,8 @@ class SalesRep extends MX_Controller
                     $nestedData[] = ucfirst($order['softpro_status']);
                 }
 
-                // $action = '<select style="width:auto;margin-left:10px;" name="order_type_filter" id="order_type_filter" class="custom-select custom-select-sm form-control form-control-sm">';
-                // if ($order['prelim_summary_id'] != 0) {
-                //     $action .= "<option value='REVIEW FILE' ><a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>REVIEW FILE</button></a></option>";
-                // } else {
-                //     $action .= "<option value='Not Ready'><a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;' type='button'>Not Ready</button></a></option>";
-                // }
-
-                // if (!empty($order['file_number'])) {
-                //     $action .= "<option value='VIEW Partners' ><a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>VIEW Partners</button></a></option>";
-                // }
-
-                // if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
-                //     $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['lp_file_number'].'.pdf';
-                //     $reportDocumentUrl = env('AWS_PATH')."pre-listing-doc/pre_listing_report_".$order['lp_file_number'].'.pdf';
-                //     $action .= "<option value='View Pre List Doc'><a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a><a target='_blank href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View LP Report</button></a></option>";
-                // }
-                // $action .= "</select>";
-                $action = '<div class="dropdown"><a class="btn dropdown-toggle click-action-type" type="button" data-toggle="dropdown" href="#">Click Action Type <span class="caret"></span></a><ul class="dropdown-menu">';
+                $action = '';
+                /*$action = '<div class="dropdown"><a class="btn dropdown-toggle click-action-type" type="button" data-toggle="dropdown" href="#">Click Action Type <span class="caret"></span></a><ul class="dropdown-menu">';
                 if ($order['prelim_summary_id'] != 0) {
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
                     if (env('AWS_ENABLE_FLAG') == 1) {
@@ -641,6 +625,63 @@ class SalesRep extends MX_Controller
                     $action .= "<li><a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a></li><li><a target='_blank' href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View LP Report</button></a></li>";
                 }
                 $action .= "</ul></div>";
+                $action = "<div style='display: flex;justify-content: space-between;'>";*/
+                if ($order['prelim_summary_id'] != 0) {
+                    $prelimDoc = $this->order->get_prelim_document($order['id']);
+                    if (env('AWS_ENABLE_FLAG') == 1) {
+                        $prelimUrl = env('AWS_PATH') . "documents/" . $prelimDoc['document_name'];
+                    } else {
+                        $prelimUrl = base_url() . 'uploads/documents/' . $prelimDoc['document_name'];
+                    }
+                    $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+                    $action .= "<a href='" . $prelimUrl . "' target='_blank'>
+							<button type='submit' class='btn btn-$class btn-icon-split'>
+								<span class='icon text-white-50'>
+									<i class='fas fa-file'></i>
+								</span>
+								<span class='text'>Review File</span>
+							</button>
+						</a>";
+                } else {
+                    $action .= "<a href='javascript:void(0)'>
+						<button type='submit' class='btn btn-info btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-tasks'></i>
+							</span>
+							<span class='text'>Not Ready</span>
+						</button></a>
+                    <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+						<button type='button' class='btn btn-primary btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-refresh'></i>
+							</span>
+							<span class='text'>Get Prelim Doc</span>
+						</button></a>
+                    ";
+                }
+
+                if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
+                    $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $order['lp_file_number'] . '.pdf';
+                    $reportDocumentUrl = env('AWS_PATH') . "pre-listing-doc/pre_listing_report_" . $order['lp_file_number'] . '.pdf';                    
+                    $action .= "<a href='".$documentUrl."' target='_blank'>
+						<button type='submit' class='btn btn-info btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-tasks'></i>
+							</span>
+							<span class='text'>View Pre List Doc</span>
+						</button></a>
+                    <a href='".$reportDocumentUrl."' target='_blank'>
+						<button type='button' class='btn btn-primary btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-refresh'></i>
+							</span>
+							<span class='text'>View LP Report</span>
+						</button></a>
+                    ";
+                }
+                $action .= "</div>";
+
+
                 $nestedData[] = $action;
                 $now = time();
                 $your_date = strtotime($order['created_at']);

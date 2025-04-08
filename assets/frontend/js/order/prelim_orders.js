@@ -64,13 +64,6 @@ function fetchPrelimDocument(fileNumber = '') {
         queryParams = `orderNumber=${fileNumber}`;
         url = base_url + "fetch-single-prelim-report?" + queryParams;
     } else {
-        // let today = new Date();
-        // let yesterday = new Date();
-        // yesterday.setDate(today.getDate() - 1);
-
-        // let dateFrom = formatDate(yesterday);
-        // let dateTo = formatDate(today);
-        // queryParams = `DateFrom=${dateFrom}&DateTo=${dateTo}`;
         url = base_url + "fetch-bulk-prelim-report";
     }
     $.ajax({
