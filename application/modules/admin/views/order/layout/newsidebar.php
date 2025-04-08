@@ -91,16 +91,12 @@ if ($this->uri->uri_string() == 'order/admin/orders' ||
 }
 
 if (
-    $this->uri->uri_string() == 'order/admin/admin_users' ||
-    $this->uri->uri_string() == 'order/admin/sales-rep' ||
+	$this->uri->uri_string() == 'order/admin/sales-rep' ||
     $this->uri->uri_string() == 'order/admin/add-sales-rep' ||
     $this->uri->segment(3) == 'edit-sales-rep' ||
     $this->uri->uri_string() == 'order/admin/title-officers' ||
     $this->uri->uri_string() == 'order/admin/add-title-officer' ||
     $this->uri->segment(3) == 'edit-title-officer' ||
-    $this->uri->uri_string() == 'order/admin/master-users' ||
-    $this->uri->uri_string() == 'order/admin/add-new-master-user' ||
-    $this->uri->segment(3) == 'edit-master-user' ||
     $this->uri->uri_string() == 'order/admin/cpl-proposed-users' ||
     $this->uri->segment(3) == 'edit-cpl-proposed-user' ||
     $this->uri->uri_string() == 'order/admin/escrow-officers' ||
@@ -146,6 +142,10 @@ if (
 }
 
 if (
+	$this->uri->uri_string() == 'order/admin/admin_users' ||
+    $this->uri->uri_string() == 'order/admin/master-users' ||
+    $this->uri->uri_string() == 'order/admin/add-new-master-user' ||
+    $this->uri->segment(3) == 'edit-master-user' ||
     $this->uri->uri_string() == 'order/admin/softpro-sales-rep' ||
     $this->uri->uri_string() == 'order/admin/add-softpro-sales-rep' ||
     $this->uri->segment(3) == 'edit-softpro-sales-rep' ||
@@ -293,7 +293,7 @@ if (
 				</a>
 				<div class="collapse <?php if ($usersTabLinks) {echo 'show';}?>" aria-labelledby="usersDropdown" id="users">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<?php if ($role_id == 1): ?>
+							<?php if ($role_id == 1): ?>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin_users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin_users'; ?>">Admin</a>
 							<?php endif;?>
 							<?php if (!in_array($roleName, ['CS Admin'])): ?>
@@ -316,11 +316,15 @@ if (
 				</a>
 				<div class="collapse <?php if ($spUsersTabLinks) {echo 'show';}?>" aria-labelledby="spUsersDropdown" id="spUsers">
 					<div class="bg-white py-2 collapse-inner rounded">
-							<?php if (!in_array($roleName, ['CS Admin'])): ?>
-								<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-sales-reps' || $this->uri->segment(3) == 'edit-softpro-sales-reps' || $this->uri->segment(3) == 'add-softpro-sales-reps') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-reps'; ?>">Sales Reps</a>
-							<?php endif;?>
-							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
-							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>
+						<?php if ($role_id == 1): ?>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin_users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin_users'; ?>">Admin</a>
+						<?php endif;?>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/master-users'; ?>">Master Users</a>
+						<?php if (!in_array($roleName, ['CS Admin'])): ?>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-sales-reps' || $this->uri->segment(3) == 'edit-softpro-sales-reps' || $this->uri->segment(3) == 'add-softpro-sales-reps') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-reps'; ?>">Sales Reps</a>
+						<?php endif;?>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>
 					</div>
 				</div>
 			</li>
