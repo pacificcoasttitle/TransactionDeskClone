@@ -6957,22 +6957,23 @@ class Cron extends MX_Controller
         $this->load->model('order/apiLogs');
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
+        $req['DateFrom'] = '';
         if (isset($_GET['DateFrom'])) {
-            $req['DateFrom'] = '';
             if (!empty($_GET['DateFrom'])) {
                 $startDate = date('m-d-Y', strtotime($_GET['DateFrom']));
                 $req['DateFrom'] = $startDate;
             }
         }
 
+        $req['DateTo'] = '';
         if (isset($_GET['DateTo'])) {
-            $req['DateTo'] = '';
             if (!empty($_GET['DateTo'])) {
                 $endDate = date('m-d-Y', strtotime($_GET['DateTo']));
                 $req['DateTo'] = $endDate;
             }
         }
 
+        $req['OrderNumber'] = "";
         if (isset($_GET['orderNumber'])) {
             $orderNumber = $_GET['orderNumber'];
             $req['OrderNumber'] = $orderNumber;
