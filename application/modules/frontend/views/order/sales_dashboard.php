@@ -138,6 +138,8 @@
 					<div class="card shadow mb-4">
 						<div class="card-body">
 							<div class="table-responsive">
+								<div id="prelim_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+								<div id="prelim_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
 								<table class="table table-bordered" id="orders_listing" width="100%" cellspacing="0">
 									<thead>
 										<tr>
