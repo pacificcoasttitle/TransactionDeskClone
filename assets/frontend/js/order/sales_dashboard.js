@@ -117,17 +117,17 @@ $(document).ready(function () {
     }
 
     $("#order_type_filter").on("change", function () {
-        order_list.ajax.reload();
+        prelim_list.ajax.reload();
     });
 
     $("#order_type_filter").on("change", function () {
         localStorage.setItem("sales_rep_manager_flag", true);
-        order_list.ajax.reload();
+        prelim_list.ajax.reload();
     });
 
     $("#order_status_filter").on("change", function () {
         localStorage.setItem("sales_rep_manager_flag", true);
-        order_list.ajax.reload();
+        prelim_list.ajax.reload();
     });
 
     // $("#orders_filter").on("change", function(){
