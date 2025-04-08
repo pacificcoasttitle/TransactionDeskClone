@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '11';
+    private $version = '12';
 
     public function __construct()
     {

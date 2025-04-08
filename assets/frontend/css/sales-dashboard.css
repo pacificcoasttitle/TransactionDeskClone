@@ -184,6 +184,10 @@ th {
     padding-top: 24px;
 }
 
+.btn-icon-split .text {
+    font-size: 13px;
+}
+
 /* .btn {
     display: inline-block;
     margin-bottom: 0;
