@@ -3616,7 +3616,7 @@ class Cron extends MX_Controller
 
                 if (strtolower($fileStatus) == 'closed') {
                     if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
-                        if (! in_array($file_number, $closedFileNumbers)) {
+                        if (!in_array($file_number, $closedFileNumbers)) {
                             $closedFileNumbers[] = $file_number;
                         }
                     }
@@ -3625,13 +3625,14 @@ class Cron extends MX_Controller
                 $updateArray[] = [
                     'file_number'                => $file_number,
                     'softpro_status'             => strtolower($fileStatus),
-                    'resware_closed_status_date' => $completed_date,
+                    'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                     // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                     'updated_at'                 => date('Y-m-d H:i:s'),
                 ];
             }
-
-            if (! empty($updateArray)) {
+            // echo "<pre>";
+            // print_r($updateArray);die;
+            if (!empty($updateArray)) {
                 $chunk1 = array_chunk($updateArray, 100);
                 for ($i = 0; $i < count($chunk1); $i++) {
                     $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
@@ -3648,9 +3649,9 @@ class Cron extends MX_Controller
                 // $this->sendEmailForClosedOrder($closedFileNumbers);
 
             }
-            echo "All orders status updated successfully" . "<br>";
+            
             $this->updateAllowDuplicationFlag();
-            echo date('Y-m-d H:i:s');exit;
+            echo json_encode(['status' => 'success','message' => 'All orders status updated successfully']);exit;
 
         }
 
@@ -5491,7 +5492,7 @@ class Cron extends MX_Controller
     {
         $this->db->select('order_details.property_id');
         $this->db->from('order_details');
-        $this->db->where('order_details.resware_status = "closed" OR order_details.resware_status = "clear for policy"');
+        $this->db->where('order_details.softpro_status = "closed" OR order_details.softpro_status = "clear for policy"');
         $this->db->where('property_details.allow_duplication = 0');
         $this->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
         $this->db->order_by("order_details.id", "desc");
