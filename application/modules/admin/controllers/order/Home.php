@@ -1451,7 +1451,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['street_address'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip_code'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editUrl      = base_url() . 'order/admin/edit-master-user/' . $value['id'];
                     $nestedData[] = "<div style='display: flex;justify-content: space-evenly;' ><a href='" . $editUrl . "'   title='Edit Master User'><span class='fas fa-edit' aria-hidden='true'></span></a><a href='javascript:void(0);' onclick='deleteMasterUser(" . $value['id'] . ")'  title='Delete Master User'><span class='fas fa-trash' aria-hidden='true'></span></a></div>";
@@ -1491,15 +1491,15 @@ class Home extends MX_Controller
                 $customerData = [
                     'first_name'          => $this->input->post('first_name'),
                     'last_name'           => $this->input->post('last_name'),
-                    'telephone_no'        => $this->input->post('telephone_no'),
+                    'phone'        => $this->input->post('telephone_no'),
                     'email_address'       => $this->input->post('email_address'),
                     'password'            => 'Pacific1',
                     'company_name'        => $this->input->post('company'),
-                    'street_address'      => $this->input->post('address'),
+                    'address1'      => $this->input->post('address'),
                     'city'                => $this->input->post('city'),
                     'state'               => $this->input->post('state'),
-                    'zip_code'            => $this->input->post('zipcode'),
-                    'partner_companies'   => implode(",", $this->input->post('partner_companies')),
+                    'zip'            => $this->input->post('zipcode'),
+                    // 'partner_companies'   => implode(",", $this->input->post('partner_companies')),
                     'is_escrow'           => 0,
                     'is_master'           => 1,
                     'is_password_updated' => 1,
@@ -1560,15 +1560,15 @@ class Home extends MX_Controller
                     $customerData = [
                         'first_name'          => $this->input->post('first_name'),
                         'last_name'           => $this->input->post('last_name'),
-                        'telephone_no'        => $this->input->post('telephone_no'),
+                        'phone'        => $this->input->post('telephone_no'),
                         'email_address'       => $this->input->post('email_address'),
                         'password'            => 'Pacific1',
                         'company_name'        => $this->input->post('company'),
-                        'street_address'      => $this->input->post('address'),
+                        'address1'      => $this->input->post('address'),
                         'city'                => $this->input->post('city'),
                         'state'               => $this->input->post('state'),
-                        'zip_code'            => $this->input->post('zipcode'),
-                        'partner_companies'   => implode(",", $this->input->post('partner_companies')),
+                        'zip'            => $this->input->post('zipcode'),
+                        // 'partner_companies'   => implode(",", $this->input->post('partner_companies')),
                         'is_escrow'           => 0,
                         'is_master'           => 1,
                         'is_password_updated' => 1,

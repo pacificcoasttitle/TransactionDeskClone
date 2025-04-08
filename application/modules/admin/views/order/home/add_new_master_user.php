@@ -125,21 +125,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="zipcode" class="col-sm-2 col-form-label">Select Company</label>
-                                <div class="col-sm-6">
-                                    <select name="partner_companies[]"  class="selectpicker" multiple data-live-search="true">
-                                        <?php foreach ($companys as $company) {?>
-                                            <?php $selected = '';
-    if (set_value('partner_companies') && in_array($company['partner_id'], set_value('partner_companies'))) {
-        $selected = 'selected';
-    }
-    ?>
-                                            <option <?php echo $selected; ?> value="<?php echo $company['partner_id']; ?>"><?php echo $company['partner_name']; ?></option>
-                                        <?php }?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">
                                         <span class="icon text-white-50">
