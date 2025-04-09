@@ -608,7 +608,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
-                if ($value['api_document_id'] > 0) {
+                if ($value['is_sync']) {
                     $nestedData[] = 'Yes';
                 } else {
                     $nestedData[] = 'No';
@@ -1330,7 +1330,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
-                if ($value['api_document_id'] > 0) {
+                if ($value['is_sync']) {
                     $nestedData[] = 'Yes';
                 } else {
                     $nestedData[] = 'No';
@@ -1391,7 +1391,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
-                if ($value['api_document_id'] > 0) {
+                if ($value['is_sync']) {
                     $nestedData[] = 'Yes';
                 } else {
                     $nestedData[] = 'No';
@@ -1659,7 +1659,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
-                if ($value['api_document_id'] > 0) {
+                if ($value['is_sync']) {
                     $nestedData[] = 'Yes';
                 } else {
                     $nestedData[] = 'No';
@@ -1732,7 +1732,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['file_number'];
                 $nestedData[] = $value['document_name'];
                 $documentName = $value['document_name'];
-                if ($value['api_document_id'] > 0) {
+                if ($value['is_sync']) {
                     $nestedData[] = 'Yes';
                 } else {
                     $nestedData[] = 'No';
