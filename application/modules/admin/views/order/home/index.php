@@ -229,7 +229,6 @@
                 <div class="row">
                     <div class="col-sm-12 mb-3">
                         <h1 class="h5 mb-0 text-primary"># Of Clients</h1>
-                        <!-- <div class="card-header card-header-info text-info"> # of Clients </div> -->
                     </div>
                 </div>
 
@@ -246,7 +245,7 @@
                                         <i class="fas fa-users fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url() . 'order/admin/escrow' ?>">
+                                <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url() . 'order/admin/softpro-escrow' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -255,22 +254,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-md-4 col-sm-12">
-                        <div class="card border-info">
-
-                            <div class="card-body text-info">
-                                <div class="mr-5"><?php echo $escrowUsersCount . ' Escrows'; ?></div>
-                            </div>
-
-                            <a class="card-footer clearfix small z-1 bg-info text-white" href="<?php echo base_url('order/admin/escrow'); ?>">
-                                <span class="float-left">View Details</span>
-                                <span class="float-right">
-                                    <i class="fas fa-angle-right"></i>
-                                </span>
-                            </a>
-                        </div>
-
-                    </div> -->
                     <div class="col-md-4 col-sm-12">
                         <div class="card border-left-success shadow h-100 py-2">
                             <div class="card-body">
@@ -283,7 +266,7 @@
                                         <i class="fas fa-users fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails text-success" href="<?php echo base_url() . 'order/admin/lenders' ?>">
+                                <a class="clearfix small z-1 viewDetails text-success" href="<?php echo base_url() . 'order/admin/softpro-lenders' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -292,21 +275,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-md-4 col-sm-12">
-                        <div class="card border-info">
-
-                            <div class="card-body text-info">
-                                <div class="mr-5"><?php echo $lenderUsersCount . ' Lenders'; ?></div>
-                            </div>
-
-                            <a class="card-footer clearfix small z-1 bg-info text-white" href="<?php echo base_url('order/admin/lenders'); ?>">
-                                <span class="float-left">View Details</span>
-                                <span class="float-right">
-                                    <i class="fas fa-angle-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div> -->
                     <div class="col-md-4 col-sm-12">
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
@@ -319,7 +287,7 @@
                                         <i class="fas fa-users fa-2x text-gray-300"></i>
                                     </div>
                                 </div>
-                                <a class="clearfix small z-1 viewDetails text-info" href="<?php echo base_url() . 'order/admin/sales-rep' ?>">
+                                <a class="clearfix small z-1 viewDetails text-info" href="<?php echo base_url() . 'order/admin/softpro-sales-rep' ?>">
                                     <span class="">View Details</span>
                                     <span class="">
                                         <i class="fas fa-angle-right"></i>
@@ -328,21 +296,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-md-4 col-sm-12">
-                        <div class="card border-info">
-
-                            <div class="card-body text-info">
-                                <div class="mr-5"><?php echo $salesRepUsersCount . ' Sales Rep'; ?></div>
-                            </div>
-
-                            <a class="card-footer clearfix small z-1 bg-info text-white" href="<?php echo base_url('order/admin/sales-rep'); ?>">
-                                <span class="float-left">View Details</span>
-                                <span class="float-right">
-                                    <i class="fas fa-angle-right"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div> -->
 
                 </div>
         </div>
@@ -351,19 +304,18 @@
             <div class="col-md-6 col-sm-12">
                 <div class="card border-left-primary shadow h-100 py-2">
                     <h1 class="card-header h5 mb-0 text-primary"># Of expired passwords</h1>
-                    <!-- <div class="card-header card-header-primary text-primary "># of expired passwords </div> -->
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Passwords expired</div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $expiredPasswordCount; ?></div>
-                                <!-- <button type="button" class="btn btn-danger text-right float-right" onclick="refreshExipredPasswords();"><i class="fas fa-refresh"></i></button> -->
                             </div>
-                            <div class="col-auto cursorPoint" onclick="refreshExipredPasswords();">
+                            <div class="col-auto cursorPoint">
                                 <i class="fas fa-refresh fa-2x text-gray-300"></i>
                             </div>
                         </div>
-                        <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url() . 'order/admin/incorrect-users' ?>">
+                        <!-- <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url() . 'order/admin/incorrect-users' ?>"> -->
+                        <a class="clearfix small z-1 viewDetails text-primary" href="javascript:void(0);">
                             <span class="">View Details</span>
                             <span class="">
                                 <i class="fas fa-angle-right"></i>
@@ -372,30 +324,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-6 col-sm-12">
-                <div class="card">
-
-                    <div class="card-header bg-danger text-white">
-                        # of expired passwords
-                    </div>
-
-                    <div class="card-body text-danger">
-                        <div id="refresh_password_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-                        <div id="refresh_password_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
-                        <div class="mr-5"><?php echo $expiredPasswordCount . ' Passwords expired'; ?>
-                            <button type="button" class="btn btn-danger text-right float-right" onclick="refreshExipredPasswords();"><i class="fas fa-refresh"></i></button>
-                        </div>
-                    </div>
-
-                    <a class="card-footer clearfix small z-1 bg-danger text-white" href="<?php echo base_url('order/admin/incorrect-users'); ?>">
-                        <span class="float-left">View Details</span>
-                        <span class="float-right">
-                            <i class="fas fa-angle-right"></i>
-                        </span>
-                    </a>
-                </div>
-
-            </div> -->
             <div class="col-md-6 col-sm-12">
                 <div class="card border-left-info shadow h-100 py-2">
                     <h1 class="card-header h5 mb-0 text-info">Not received JSON</h1>
@@ -410,25 +338,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-6 col-sm-12">
-                <div class="card">
-
-                    <div class="card-header bg-danger text-white">
-                        Not received JSON
-                    </div>
-
-                    <div class="card-body text-danger">
-                        <div class="mr-5"><?php echo $failedJsonCount . ' files'; ?></div>
-                    </div>
-
-                    <div class="card-footer clearfix small z-1 bg-danger text-white">
-                        <span class="float-left">&nbsp;</span>
-                        <span class="float-right">
-                        </span>
-                    </div>
-                </div>
-
-            </div> -->
     </div>
 
     <div class="row">
