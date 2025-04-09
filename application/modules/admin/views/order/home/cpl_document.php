@@ -42,7 +42,7 @@
                             <th>Sr No</th>
                             <th>File Number</th>
                             <th>Document Name</th>
-                            <th>Sent To Resware</th>
+                            <th>Sent To Softpro</th>
                             <th>Created At</th>
                             <th>Action</th>
                         </tr>
