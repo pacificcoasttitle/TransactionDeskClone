@@ -46,28 +46,33 @@ class Home extends MX_Controller
         $order_filter['type'] = 'closed';
         $closedOrderData      = $this->order_model->get_order_count($order_filter);
         // $titlePointData = $this->order_model->get_title_point_count();
-
-        $openLoanCount   = $openSalesCount   = 0;
-        $closedLoanCount = $closedSalesCount = 0;
+        $openLoanCount   = $openSalesCount   = $openOtherCount = 0;
+        $closedLoanCount = $closedSalesCount = $closedOtherCount = 0;
 
         if (isset($openOrderData) && !empty($openOrderData)) {
             foreach ($openOrderData as $key => $value) {
-                if ($value['type'] == 'loan') {
+                if ($value['type'] == 'Refinance') {
                     $openLoanCount = $value['total'];
                 }
-                if ($value['type'] == 'sale') {
+                if ($value['type'] == 'Purchase') {
                     $openSalesCount = $value['total'];
+                }
+                if ($value['type'] == 'Other') {
+                    $openOtherCount = $value['total'];
                 }
             }
         }
 
         if (isset($closedOrderData) && !empty($closedOrderData)) {
             foreach ($closedOrderData as $key => $value) {
-                if ($value['type'] == 'loan') {
+                if ($value['type'] == 'Refinance') {
                     $closedLoanCount = $value['total'];
                 }
-                if ($value['type'] == 'sale') {
+                if ($value['type'] == 'Purchase') {
                     $closedSalesCount = $value['total'];
+                }
+                if ($value['type'] == 'Other') {
+                    $closedOtherCount = $value['total'];
                 }
             }
         }
@@ -99,8 +104,10 @@ class Home extends MX_Controller
             'title'                => 'PCT Order: Dashboard',
             'openLoanCount'        => $openLoanCount,
             'openSalesCount'       => $openSalesCount,
+            'openOtherCount'       => $openOtherCount,
             'closedLoanCount'      => $closedLoanCount,
             'closedSalesCount'     => $closedSalesCount,
+            'closedOtherCount'     => $closedOtherCount,
             'escrowUsersCount'     => $escrowUsersCount,
             'lenderUsersCount'     => $lenderUsersCount,
             'salesRepUsersCount'   => $salesRepUsersCount,
@@ -7797,11 +7804,11 @@ class Home extends MX_Controller
         if (isset($ordersList) && !empty($ordersList)) {
             // $export_data = array();
             foreach ($ordersList as $key => $value) {
-                $file_id = isset($value['file_id']) && !empty(!empty($value['file_id'])) ? $value['file_id'] : '';
-                if ($file_id) {
+                $file_number = isset($value['file_number']) && !empty(!empty($value['file_number'])) ? $value['file_number'] : '';
+                if ($file_number) {
 
                     $export_data[] = [
-                        'transaction_status' => ($value['file_number'] == 0 && !empty($value['lp_file_number'])) ? ucfirst($value['lp_report_status']) : ucfirst($value['resware_status']), //$value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
+                        'transaction_status' => ($value['file_number'] == 0 && !empty($value['lp_file_number'])) ? ucfirst($value['lp_report_status']) : ucfirst($value['softpro_status']), //$value['resware_status'], //(empty($value['sent_to_accounting_date'])) ? 'Open' : 'Closed',
                         'client_name'        => $value['client_name'],
                         'client_email'       => $value['client_email'],
                         'client_phone'       => $value['client_phone'],
