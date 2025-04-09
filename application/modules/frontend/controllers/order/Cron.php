@@ -3584,76 +3584,179 @@ class Cron extends MX_Controller
     public function updateAllSoftProOrderStatus()
     {
         $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
-        $this->load->library('order/softPro');
-        $this->load->model('order/apiLogs');
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', 'get_all_order_status', null, [], 0, 0);
-        $response = $this->softpro->make_request('GET', 'get_all_order_status');
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', 'get_all_order_status', null, json_encode($response), 0, $logid);
-        $closedFileNumbers = [];
-        if ($response['status'] == 'success') {
-            // Get existing emails from the database
-            $orderData   = $response['data'];
-            $updateArray = [];
-            foreach ($orderData as $key => $order) {
-                $file_number = '';
-                $fileStatus  = '';
-                $closedDate  = '';
+        $req['DateFrom'] = '';
+        if (isset($_GET['DateFrom'])) {
+            if (!empty($_GET['DateFrom'])) {
+                $startDate = date('m-d-Y', strtotime($_GET['DateFrom']));
+                $req['DateFrom'] = $startDate;
+            }
+        }
 
-                $file_number = $order['OrderNumber'];
-                $fileStatus  = $order['OrderStatus'];
-                $closedDate  = $order['LastModifiedOn'];
+        $req['DateTo'] = '';
+        if (isset($_GET['DateTo'])) {
+            if (!empty($_GET['DateTo'])) {
+                $endDate = date('m-d-Y', strtotime($_GET['DateTo']));
+                $req['DateTo'] = $endDate;
+            }
+        }
 
-                // print_r($order);die;
-                $completed_date = null;
-                if (!empty($closedDate)) {
-                    $myDateTime     = DateTime::createFromFormat('m/d/Y h:i:s A', $closedDate);
-                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
-                }
-                // echo "<pre>";
-                // print_r($completed_date);die;
+        if (empty($_GET)) {
+            $startDate = date('01-03-2025');
+            $endDate = date('d-m-Y');
+            $req['DateFrom'] = $startDate;
+            $req['DateTo'] = $endDate;
+        }
 
-                if (strtolower($fileStatus) == 'closed') {
-                    if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
-                        if (!in_array($file_number, $closedFileNumbers)) {
-                            $closedFileNumbers[] = $file_number;
+        $dateIntervalQueryParams = $this->getDateIntervals($startDate, $endDate, 10);
+        // echo "<pre>";
+        // print_r($dateIntervalQueryParams);die;
+        $apiEndPoints = SOFTPRO_API_END;
+
+        foreach ($dateIntervalQueryParams as $key => $range) {
+            $reqData = $queryParams = $range;
+            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_all_order_status'] . '?'.$queryParams;
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', $reqUrl, $reqData, [], 0, 0);
+            $response    = $this->softpro->make_request('GET', 'get_all_order_status', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', $reqUrl, $reqData, json_encode($response), 0, $logid);
+            
+            // $response = json_decode($result, true);
+            if ($response['status'] == 'success') {
+                // Get existing emails from the database
+                $orderData   = $response['data'];
+                $updateArray = [];
+                foreach ($orderData as $key => $order) {
+                    $file_number = '';
+                    $fileStatus  = '';
+                    $closedDate  = '';
+    
+                    $file_number = $order['OrderNumber'];
+                    $fileStatus  = $order['OrderStatus'];
+                    $closedDate  = $order['LastModifiedOn'];
+    
+                    // print_r($order);die;
+                    $completed_date = null;
+                    if (!empty($closedDate)) {
+                        $myDateTime     = DateTime::createFromFormat('m/d/Y h:i:s A', $closedDate);
+                        $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                    }
+                    // echo "<pre>";
+                    // print_r($completed_date);die;
+    
+                    if (strtolower($fileStatus) == 'closed') {
+                        if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
+                            if (!in_array($file_number, $closedFileNumbers)) {
+                                $closedFileNumbers[] = $file_number;
+                            }
                         }
                     }
+    
+                    $updateArray[] = [
+                        'file_number'                => $file_number,
+                        'softpro_status'             => strtolower($fileStatus),
+                        'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                        // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                        'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                        'updated_at'                 => date('Y-m-d H:i:s'),
+                    ];
                 }
-
-                $updateArray[] = [
-                    'file_number'                => $file_number,
-                    'softpro_status'             => strtolower($fileStatus),
-                    'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
-                    // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
-                    'updated_at'                 => date('Y-m-d H:i:s'),
-                ];
-            }
-            // echo "<pre>";
-            // print_r($updateArray);die;
-            if (!empty($updateArray)) {
-                $chunk1 = array_chunk($updateArray, 100);
-                for ($i = 0; $i < count($chunk1); $i++) {
-                    $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
+                // echo "<pre>";
+                // print_r($updateArray);die;
+                if (!empty($updateArray)) {
+                    $chunk1 = array_chunk($updateArray, 100);
+                    for ($i = 0; $i < count($chunk1); $i++) {
+                        $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
+                    }
                 }
+    
+                $updateData = ['softpro_status' => 'open'];
+                $this->db->set($updateData);
+                $this->db->where('lp_file_number IS NOT NULL');
+                $this->db->where('file_number', 0);
+                $this->db->update('order_details');
+    
+                if (! empty($closedFileNumbers)) {
+                    // $this->sendEmailForClosedOrder($closedFileNumbers);
+    
+                }
+                
+                $this->updateAllowDuplicationFlag();
+                
             }
-
-            $updateData = ['softpro_status' => 'open'];
-            $this->db->set($updateData);
-            $this->db->where('lp_file_number IS NOT NULL');
-            $this->db->where('file_number', 0);
-            $this->db->update('order_details');
-
-            if (! empty($closedFileNumbers)) {
-                // $this->sendEmailForClosedOrder($closedFileNumbers);
-
-            }
-            
-            $this->updateAllowDuplicationFlag();
-            echo json_encode(['status' => 'success','message' => 'All orders status updated successfully']);exit;
-
         }
+        echo json_encode(['status' => 'success','message' => 'All orders status updated successfully']);exit;
+
+
+
+
+        // $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', 'get_all_order_status', null, [], 0, 0);
+        // $response = $this->softpro->make_request('GET', 'get_all_order_status');
+        // $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', 'get_all_order_status', null, json_encode($response), 0, $logid);
+        // $closedFileNumbers = [];
+        // if ($response['status'] == 'success') {
+        //     // Get existing emails from the database
+        //     $orderData   = $response['data'];
+        //     $updateArray = [];
+        //     foreach ($orderData as $key => $order) {
+        //         $file_number = '';
+        //         $fileStatus  = '';
+        //         $closedDate  = '';
+
+        //         $file_number = $order['OrderNumber'];
+        //         $fileStatus  = $order['OrderStatus'];
+        //         $closedDate  = $order['LastModifiedOn'];
+
+        //         // print_r($order);die;
+        //         $completed_date = null;
+        //         if (!empty($closedDate)) {
+        //             $myDateTime     = DateTime::createFromFormat('m/d/Y h:i:s A', $closedDate);
+        //             $completed_date = $myDateTime->format('Y-m-d H:i:s');
+        //         }
+        //         // echo "<pre>";
+        //         // print_r($completed_date);die;
+
+        //         if (strtolower($fileStatus) == 'closed') {
+        //             if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
+        //                 if (!in_array($file_number, $closedFileNumbers)) {
+        //                     $closedFileNumbers[] = $file_number;
+        //                 }
+        //             }
+        //         }
+
+        //         $updateArray[] = [
+        //             'file_number'                => $file_number,
+        //             'softpro_status'             => strtolower($fileStatus),
+        //             'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+        //             // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+        //             'updated_at'                 => date('Y-m-d H:i:s'),
+        //         ];
+        //     }
+        //     // echo "<pre>";
+        //     // print_r($updateArray);die;
+        //     if (!empty($updateArray)) {
+        //         $chunk1 = array_chunk($updateArray, 100);
+        //         for ($i = 0; $i < count($chunk1); $i++) {
+        //             $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
+        //         }
+        //     }
+
+        //     $updateData = ['softpro_status' => 'open'];
+        //     $this->db->set($updateData);
+        //     $this->db->where('lp_file_number IS NOT NULL');
+        //     $this->db->where('file_number', 0);
+        //     $this->db->update('order_details');
+
+        //     if (! empty($closedFileNumbers)) {
+        //         // $this->sendEmailForClosedOrder($closedFileNumbers);
+
+        //     }
+            
+        //     $this->updateAllowDuplicationFlag();
+        //     echo json_encode(['status' => 'success','message' => 'All orders status updated successfully']);exit;
+
+        // }
 
     }
 
@@ -7261,7 +7364,7 @@ class Cron extends MX_Controller
             $req['DateTo'] = $endDate;
         }
         // print_r($req);die;
-        $dateIntervalQueryParams = $this->getDateIntervals($startDate, $endDate, 5);
+        $dateIntervalQueryParams = $this->getDateIntervals($startDate, $endDate, 6);
         // echo "<pre>";
         // print_r($dateIntervalQueryParams);die;
         // $queryParams = http_build_query($req);
