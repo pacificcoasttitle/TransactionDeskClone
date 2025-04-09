@@ -2794,7 +2794,7 @@ class Home_model extends CI_Model
             order_details.sales_amount as order_sales_amount,
             order_details.prod_type,
             order_details.escrow_amount,
-            order_details.resware_status,
+            order_details.softpro_status,
             order_details.premium,
             order_details.lp_report_status,
             property_details.primary_owner,
@@ -2812,19 +2812,19 @@ class Home_model extends CI_Model
             transaction_details.loan_amount as transaction_loan_amount,
             transaction_details.loan_number,
             transaction_details.purchase_type,
-            pct_order_product_types.transaction_type,
-            pct_order_product_types.product_type,
+            transaction_details.transaction_type,
+            pct_softpro_product_type.product_type,
             CONCAT(cbd.first_name, " ", cbd.last_name) as client_name,
             cbd.email_address as client_email,
-            cbd.telephone_no as client_phone,
+            cbd.phone as client_phone,
             salerep.email_address as sales_rep_email
             ')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
-            ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
-            ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1');
+            ->join('pct_softpro_lookup_table as cbd', 'order_details.customer_id = cbd.id', 'left')
+            ->join('pct_softpro_lookup_table as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
+            ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1');
         $this->db->group_start();
         $this->db->where('MONTH(order_details.created_at)', $month);
         $this->db->where('YEAR(order_details.created_at)', $year);
@@ -2836,7 +2836,7 @@ class Home_model extends CI_Model
         // $this->db->where('DATE(order_details.created_at)', date('2023-06-10'));
 
         $query = $this->db->get();
-
+        // print_r($this->db->last_query());die;
         return $query->result_array();
     }
 
