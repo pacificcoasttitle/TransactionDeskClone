@@ -7533,7 +7533,8 @@ class Cron extends MX_Controller
         $this->load->model('order/apiLogs');
         
         $reqData     = file_get_contents("php://input");
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_report', 'received_prelim_report', $reqData, [], 0, 0);
+        $logid =  $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_report', 'received_prelim_report', $reqData, [], 0, 0);
+        
         $response    = json_decode($reqData, true);
         if (!empty($response) && $response['Status'] == 200) {
             
@@ -7595,6 +7596,8 @@ class Cron extends MX_Controller
             $status = 'error';
             $msg = "Invalid request or order number not found.";
         }
-        echo json_encode(['status' => $status, 'message' => $msg]);exit;
+        $res = json_encode(['status' => $status, 'message' => $msg]);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_report', 'received_prelim_report', $reqData, $res, 0, $logid);
+        echo $res;exit;
     }
 }
