@@ -2435,7 +2435,7 @@ $(document).ready(function () {
         if (sales_rep) {
             var obj = jQuery.parseJSON(sales_rep);
             var options = '';
-            $.each(obj, function (key, value) {
+            $.each(sales_rep, function (key, value) {
                 options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
             });
             $("div.FilterOrderListing").html('<label> Sales Rep: <select style="width:auto;" name="FilterOrderListing" id="FilterOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label>');
