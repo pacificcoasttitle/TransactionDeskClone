@@ -281,10 +281,21 @@ function lender_pop_up(lenderFlag, orderId) {
                     $("#LenderId").val(res.orderDetails['lender_id']);
                     $("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
                     $("#loan_number").val(res.orderDetails['loan_number']);
+                    $("#sales_amount").val(parseInt(res.orderDetails['sales_amount']));
+                    $("#loan_amount").val(parseInt(res.orderDetails['loan_amount']));
                     if (res.orderDetails['unit_number']) {
                         $("#property_address").val(res.orderDetails['unit_number'] + ", " + res.orderDetails['property_address']);
                     } else {
                         $("#property_address").val(res.orderDetails['property_address']);
+                    }
+                    if (res.orderDetails['transaction_type'] == 'Refinance') {
+                        $('.sales_amount_in').addClass('hide');
+                        $('.loan_amount_in').removeClass('hide');
+                        $("#loan_amount").prop('required', true);
+                    } else {
+                        $('.sales_amount_in').removeClass('hide');
+                        $('.loan_amount_in').addClass('hide');
+                        $("#sales_amount").prop('required', true);
                     }
                     $("#property_city").val(res.orderDetails['property_city']);
                     $("#property_state").val(res.orderDetails['property_state']);

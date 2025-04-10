@@ -3,13 +3,13 @@ class Sales_model extends CI_Model
 {
 
 	function __construct() {
-        $this->table = 'customer_basic_details';
+        $this->table = 'pct_softpro_lookup_table';
     }
 	
     public function get_sales_reps($params)
     {
         $this->db->where('is_sales_rep', 1);
-        $this->db->from('customer_basic_details');
+        $this->db->from('pct_softpro_lookup_table');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -31,7 +31,7 @@ class Sales_model extends CI_Model
                         ->or_like('telephone_no', $keyword)
                         ->group_end();
             }
-	    	$this->db->from('customer_basic_details');
+	    	$this->db->from('pct_softpro_lookup_table');
 
 			$filter_total_records =  $this->db->count_all_results();
 
@@ -53,14 +53,14 @@ class Sales_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('first_name','ASC');
-			$query = $this->db->get('customer_basic_details');
+			$query = $this->db->get('pct_softpro_lookup_table');
 			
 			if ($query->num_rows() > 0) {
                 $sales_rep_lists = $query->result_array();
 	        }
     	} else {    	
             $this->db->where('is_sales_rep', 1);	
-	    	$this->db->from('customer_basic_details');
+	    	$this->db->from('pct_softpro_lookup_table');
 			$filter_total_records =  $this->db->count_all_results();
 
             if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
@@ -71,7 +71,7 @@ class Sales_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
     	    $this->db->order_by('first_name','ASC');
-			$query = $this->db->get('customer_basic_details');
+			$query = $this->db->get('pct_softpro_lookup_table');
             
 			if ($query->num_rows() > 0) {
 	            $sales_rep_lists = $query->result_array();

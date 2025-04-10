@@ -261,6 +261,7 @@ $route['order/admin/softpro-escrow-officers']          = 'admin/order/home/spAdm
 // $route['order/admin/add-softpro-escrow-officer']       = 'admin/order/home/add_sp_escrow_officer';
 // $route['order/admin/edit-softpro-escrow-officer/:num'] = 'admin/order/home/edit_sp_escrow_officer';
 $route['order/admin/softpro-sales-reps']          = 'admin/order/sales/spAdminSalesReps';
+$route['order/admin/edit-sp-sales-rep/:num']           = 'admin/order/sales/edit_sp_sales_rep';
 $route['order/admin/get-sp-sales-rep-list']            = 'admin/order/sales/get_sp_sales_rep_list';
 $route['update-reps-mail-flag']                         = 'admin/order/sales/updateRepsMailFlag';
 // $route['order/admin/add-softpro-sales-reps']       = 'admin/order/sales/add_sp_sales_reps';
