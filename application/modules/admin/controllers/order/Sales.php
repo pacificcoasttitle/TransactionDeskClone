@@ -858,6 +858,466 @@ class Sales extends MX_Controller {
         // $this->load->view('order/layout/footer', $data);
     }
 
+    public function edit_sp_sales_rep()
+    {
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Sales Rep.';
+        $id = $this->uri->segment('4');
+        $data['salesUsers'] = $this->order->get_sales_users();
+		$data['success_msg'] = $this->session->flashdata('success');
+
+        
+        if (isset($id) && !empty($id)) {
+            $con = array('id' => $id);
+            $sales_rep_info = $this->sales_model->getSalesRep($con);
+
+			$this->load->model('order/underwriter_user_model');
+			$this->load->model('order/sales_rep_commission_override_model');
+			$existing_underwriter = $this->underwriter_user_model->with('underwriter_user_threshold_obj')->get_many_by('user_id',$id);
+			$existing_commission_override_data = $this->sales_rep_commission_override_model->get_many_by('user_id',$id);
+            $existing_commission_override = array();
+            $existing_commission_override_user = null;
+            foreach($existing_commission_override_data as $existing_commission_override_obj){
+                if($existing_commission_override_obj->product_type) {
+					$existing_commission_override_user = $existing_commission_override_obj->override_user_id;
+					$existing_commission_override[$existing_commission_override_obj->product_type] = $existing_commission_override_obj->commission;
+				}
+            }
+
+            if (isset($_POST) && !empty($_POST)) {
+
+				$flash_data = array();
+               
+                $this->form_validation->set_rules('sales_rep_first_name', 'Sales Rep. First Name', 'required', array('required'=> 'Please Enter Sales Rep. First Name'));
+                $this->form_validation->set_rules('sales_rep_last_name', 'Sales Rep. Last Name', 'required', array('required'=> 'Please Enter Sales Rep. Last Name'));
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', array('required'=> 'Please Enter Email', 'valid_email' => 'Please enter valid Email'));
+                $this->form_validation->set_rules('telephone', 'Phone Number', 'required', array('required'=> 'Please Enter Phone Number'));
+                
+
+                $config['upload_path'] = 'uploads/sales-rep/';
+                $config['allowed_types'] = 'jpg|png';
+                $config['max_size']  = '2048';
+                        
+                if($this->form_validation->run() == true) {
+                    
+                    // print_r($_POST);die;
+                    $fileuri = isset($sales_rep_info['sales_rep_profile_img']) && !empty($sales_rep_info['sales_rep_profile_img']) ? $sales_rep_info['sales_rep_profile_img'] : '';
+                    $status = "success";
+                    if(is_uploaded_file($_FILES['sales_rep_profile_img']['tmp_name'])) 
+                    {  
+                        if (!is_dir('uploads/sales-rep')) 
+                        {
+                            mkdir('./uploads/sales-rep', 0777, TRUE);
+                        }
+                        
+                        $new_name = 'sales_rep_'.time().rand(10,100000);
+
+                        $config['file_name'] = $new_name;         
+                        $this->load->library('upload', $config);
+
+                        if (!$this->upload->do_upload('sales_rep_profile_img'))
+                        {
+                            $status = 'error';
+                            $msg = $this->upload->display_errors();
+                        }
+                        else
+                        {
+                            $data = $this->upload->data();
+                            $status = "success";
+                            $msg = "File successfully uploaded";
+                            $document_name = 'sales_rep_'.time().rand(10,100000).'.'.$data['image_type'];
+                            rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
+                            $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep');
+                            $fileuri=  $config['upload_path'].$document_name;
+                        }
+                    }
+
+                    $fileUrlThankYou = isset($sales_rep_info['sales_rep_profile_thank_you_img']) && !empty($sales_rep_info['sales_rep_profile_thank_you_img']) ? $sales_rep_info['sales_rep_profile_thank_you_img'] : ''; 
+                    $statusThank = "success";
+                    if(is_uploaded_file($_FILES['sales_rep_profile_thank_you_img']['tmp_name'])) { 
+    
+                        if (!is_dir('uploads/sales-rep')) {
+                            mkdir('./uploads/sales-rep', 0777, TRUE);
+                        }
+                        
+                        $sales_rep_profile_thank_you_img_name = 'sales_rep_thank_you'.time().rand(10,100000);
+                        $config['file_name'] = $sales_rep_profile_thank_you_img_name;         
+                        $this->load->library('upload', $config);
+                        $msgThankyou = '';
+                        if (!$this->upload->do_upload('sales_rep_profile_thank_you_img')) {
+                            $statusThank = 'error';
+                            $msgThankyou = $this->upload->display_errors();
+                        } else {
+                            $data = $this->upload->data();
+                            $statusThank = "success";
+                            $msgThankyou = "Thank you File successfully uploaded";
+                            $document_name = 'sales_rep_thank_you'.time().rand(10,100000).'.'.$data['image_type'];
+                            rename('./uploads/sales-rep/'.$data['file_name'], './uploads/sales-rep/'.$document_name);
+                            $this->order->uploadDocumentOnAwsS3($document_name, 'sales-rep');
+                            $fileUrlThankYou =  $config['upload_path'].$document_name;
+                        }
+                    }
+
+                    if($status == "success" && $statusThank == "success")
+                    {
+                       
+                        $salesRepData = array(
+                            'first_name' => $_POST['sales_rep_first_name'],
+                            'last_name' => $_POST['sales_rep_last_name'],
+                            'email_address' => $_POST['email_address'],
+                            'phone' =>  $_POST['telephone'],
+                            'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
+                            'status' => isset($_POST['status']) ? 0 : 1,
+                            'is_sales_rep' => 1,
+                            'is_sales_rep_manager' => isset($_POST['is_sales_rep_manager']) ? 1 : 0,
+                            'sales_rep_profile_img' => $fileuri,
+                            'sales_rep_profile_thank_you_img' => $fileUrlThankYou,
+                            'sales_rep_no_of_open_orders' => $_POST['sales_rep_no_of_open_orders'],
+                            'sales_rep_no_of_close_orders' => $_POST['sales_rep_no_of_close_orders'],
+                            'sales_rep_premium' => $_POST['sales_rep_premium'],
+                            'is_password_updated' => 1,
+                            'sales_rep_users' => implode(",",$this->input->post('sales_rep_users')),
+							'commission_draw_value' => $this->input->post('commission_draw') ? $this->input->post('commission_draw') : 0,
+							'first_in_threshold' => $this->input->post('commission_first_threshold') ? $this->input->post('commission_first_threshold') : 0,
+							'apply_bonus' => $this->input->post('apply_bonus') == "1" ? 1 : 0,
+							
+                        );
+                        // echo "<pre>";
+                        // print_r($salesRepData);die;
+
+                        $condition = array('id' => $id);
+                        $update = $this->sales_model->update($salesRepData, $condition);
+                            
+                        if ($update) {
+                            $data['success_msg'] = 'Sales Rep. updated successfully.';
+
+							if($this->common->if_super_admin()) {
+
+								$this->load->model('order/underwriter_user_threshold_model');
+								
+								$existing_underwriter_array = array();
+								$existing_escrow = array();
+								$commission_array = $this->input->post('commission');
+								foreach($existing_underwriter as $existing_underwriter_obj) {
+									if($existing_underwriter_obj->underwriter_tier_id) {
+										$existing_underwriter_array[$existing_underwriter_obj->underwriter_tier_id] = $existing_underwriter_obj;
+									}
+									elseif($existing_underwriter_obj->is_escrow) {
+										$existing_escrow = $existing_underwriter_obj;
+									}
+								}
+								foreach($commission_array as $product_key=>$product_type_array) {
+									foreach($product_type_array as $underwriter_key=>$product_underwriter) {
+										foreach($product_underwriter as $product_underwriter_tier_id=>$product_underwriter_tier){
+											$existing_underwriter_val = null;
+											if(isset($existing_underwriter_array[$product_underwriter_tier_id])) {
+												$existing_underwriter_val = $existing_underwriter_array[$product_underwriter_tier_id];
+												$this->underwriter_user_threshold_model->delete_by('underwriter_users_id',$existing_underwriter_val->id);
+											}
+											if($product_underwriter_tier['type'] == 'global') {
+												if($existing_underwriter_val) {
+													$this->underwriter_user_model->delete($existing_underwriter_val->id);
+													
+												}
+											}
+											elseif($product_underwriter_tier['type'] == 'fix') {
+												$fix_commission = $product_underwriter_tier['fix_commission'];
+												if(!empty($fix_commission)) {
+													if($existing_underwriter_val) {
+														$underwriter_user_id = $existing_underwriter_val->id;
+														$underwriter_data =[
+															'underwriter_tier_id'=>$product_underwriter_tier_id,
+															'fix_commission'=>$fix_commission,
+															'allow_threshold'=>0,
+														];
+														$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+														
+	
+													}
+													else {
+	
+														$underwriter_data =[
+															'user_id'=>$id,
+															'underwriter_tier_id'=>$product_underwriter_tier_id,
+															'fix_commission'=>$fix_commission,
+														];
+			
+														$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+														
+													}
+												}
+											}
+											elseif($product_underwriter_tier['type'] == 'override') {
+	
+												if($existing_underwriter_val) {
+													$underwriter_user_id = $existing_underwriter_val->id;
+													$underwriter_data =[
+														'underwriter_tier_id'=>$product_underwriter_tier_id,
+														'fix_commission'=>0,
+														'allow_threshold'=>1,
+													];
+													$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+													
+	
+												}
+												else {
+	
+													$underwriter_data =[
+														'user_id'=>$id,
+														'underwriter_tier_id'=>$product_underwriter_tier_id,
+														'allow_threshold'=>1,
+													];
+													
+													$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+												}
+												
+												$threshold_commissions = $product_underwriter_tier['threshold_commission'];
+												$threshold_amount_min = $product_underwriter_tier['threshold_amount_min'];
+												$threshold_amount_max = $product_underwriter_tier['threshold_amount_max'];
+	
+												foreach($threshold_commissions as $commission_key=>$threshold_commission) {
+													if(!empty($threshold_commission) && isset($threshold_amount_min[$commission_key])  && isset($threshold_amount_max[$commission_key])) {
+														$underwriter_threshold_data =[
+															'underwriter_users_id'=>$underwriter_user_id,
+															'threshold_amount_min'=>$threshold_amount_min[$commission_key],
+															'threshold_amount_max'=>$threshold_amount_max[$commission_key],
+															'threshold_commission'=>$threshold_commission,
+														];
+	
+														$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
+													}
+												}
+	
+	
+	
+	
+											}
+										}
+									}
+								}
+
+								//Escrow commission
+								$escrow_commission_array = $this->input->post('escrow_commission');
+								
+								$existing_underwriter_val = null;
+								if(!empty($existing_escrow)) {
+									$existing_underwriter_val = $existing_escrow;
+									$this->underwriter_user_threshold_model->delete_by('underwriter_users_id',$existing_underwriter_val->id);
+								}
+								if($escrow_commission_array['type'] == 'global') {
+									if($existing_underwriter_val) {
+										$this->underwriter_user_model->delete($existing_underwriter_val->id);
+									}
+								}
+								elseif($escrow_commission_array['type'] == 'fix') {
+									$fix_commission = $escrow_commission_array['fix_commission'];
+									if(!empty($fix_commission)) {
+										if($existing_underwriter_val) {
+											$underwriter_user_id = $existing_underwriter_val->id;
+											$underwriter_data =[
+												'fix_commission'=>$fix_commission,
+												'allow_threshold'=>0,
+											];
+											$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+											
+
+										}
+										else {
+
+											$underwriter_data =[
+												'user_id'=>$id,
+												'fix_commission'=>$fix_commission,
+												'is_escrow'=>1
+											];
+
+											$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+										}
+									}
+								}
+								elseif($escrow_commission_array['type'] == 'override') {
+
+									if($existing_underwriter_val) {
+										$underwriter_user_id = $existing_underwriter_val->id;
+										$underwriter_data =[
+											'fix_commission'=>0,
+											'allow_threshold'=>1,
+										];
+										$this->underwriter_user_model->update($underwriter_user_id,$underwriter_data);
+										
+
+									}
+									else {
+
+										$underwriter_data =[
+											'user_id'=>$id,
+											'allow_threshold'=>1,
+											'is_escrow'=>1
+										];
+										
+										$underwriter_user_id = $this->underwriter_user_model->insert($underwriter_data);
+									}
+									
+									$threshold_commissions = $escrow_commission_array['threshold_commission'];
+									$threshold_amount_min = $escrow_commission_array['threshold_amount_min'];
+									$threshold_amount_max = $escrow_commission_array['threshold_amount_max'];
+
+									foreach($threshold_commissions as $commission_key=>$threshold_commission) {
+										if($threshold_commission >= 0 && isset($threshold_amount_min[$commission_key])  && isset($threshold_amount_max[$commission_key])) {
+											$underwriter_threshold_data =[
+												'underwriter_users_id'=>$underwriter_user_id,
+												'threshold_amount_min'=>$threshold_amount_min[$commission_key],
+												'threshold_amount_max'=>$threshold_amount_max[$commission_key],
+												'threshold_commission'=>$threshold_commission,
+											];
+
+											$this->underwriter_user_threshold_model->insert($underwriter_threshold_data);
+										}
+									}
+
+
+								}
+								//Escrow commission
+                                //Sales rep Override commission
+                                if($this->input->post('commission_sales_rep_override_id') > 0 && count($this->input->post('commission_sales_rep_override_val'))) {
+                                    $this->load->model('order/sales_rep_commission_override_model');
+                                    $override_types= $this->input->post('commission_sales_rep_override_val');
+                                    foreach($override_types as $override_type_key=>$override_type_val) {
+                                        if($override_type_val > 0) {
+											if(isset($existing_commission_override[$override_type_key])) {
+
+												$commission_override = [
+													'override_user_id'=>$this->input->post('commission_sales_rep_override_id'),
+													'commission'=>$override_type_val
+												];
+												$update_by = [
+													'product_type'=>$override_type_key,
+													'user_id'=>$id,
+												];
+												$this->sales_rep_commission_override_model->update_by($update_by,$commission_override);
+
+											}
+											else {
+
+												$commission_override = [
+													'user_id'=>$id,
+													'override_user_id'=>$this->input->post('commission_sales_rep_override_id'),
+													'product_type'=>$override_type_key,
+													'commission'=>$override_type_val
+												];
+												$this->sales_rep_commission_override_model->insert($commission_override);
+											}
+                                        }
+										else {
+											$delete_by = [
+												'product_type'=>$override_type_key,
+												'user_id'=>$id,
+											];
+											$this->sales_rep_commission_override_model->delete_by($delete_by);
+											
+										}
+
+										
+                                    }
+
+									$stored_pocedure = "CALL calculate_commission(?)";
+									$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$this->input->post('commission_sales_rep_override_id')));
+
+                                }
+								else {
+									$delete_by = [
+										'user_id'=>$id,
+									];
+									$this->sales_rep_commission_override_model->delete_by($delete_by);
+									if($existing_commission_override_user) {
+										$stored_pocedure = "CALL calculate_commission(?)";
+										$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$existing_commission_override_user));
+									}
+								}
+								if($existing_commission_override_user && $this->input->post('commission_sales_rep_override_id')  != $existing_commission_override_user) {
+									$stored_pocedure = "CALL calculate_commission(?)";
+									$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$existing_commission_override_user));
+								}
+								
+                                //Sales rep Override commission
+								
+								$stored_pocedure = "CALL calculate_commission(?)";
+								$this->underwriter_user_model->call_sp($stored_pocedure,array('id'=>$id));
+								
+								
+							}
+                            /** Save user Activity */
+                            $activity = 'Sales rep user details updated :- ' . $_POST['email_address'];
+                            $this->order->logAdminActivity($activity);
+                            /** End save user activity */
+							$flash_data['success'] = 'Sales Rep Updated successfully.';
+							$this->session->set_flashdata($flash_data);
+
+							redirect('order/admin/edit-sp-sales-rep/'.$id);
+							
+                        } else {
+                            $data['error_msg'] = 'Error occurred while updating Sales Rep.';
+                        }
+                    }
+                    else
+                    {
+                        $data['sales_rep_profile_img_error_msg'] = $msg;
+                        $data['sales_rep_profile_thank_you_img_error_msg'] = $msgThankyou;
+                    }
+
+                } else {
+                    $data['first_name_error_msg'] = form_error('sales_rep_first_name');
+                    $data['last_name_error_msg'] = form_error('sales_rep_last_name');
+                    $data['email_error_msg'] = form_error('email_address');
+                    $data['phone_error_msg'] = form_error('telephone');
+                    $data['partner_id_error_msg'] = form_error('partner_id');
+                    $data['partner_type_id_error_msg'] = form_error('partner_type_id');
+                    $data['sales_rep_no_of_open_orders_error_msg'] = form_error('sales_rep_no_of_open_orders');
+                    $data['sales_rep_no_of_close_orders_error_msg'] = form_error('sales_rep_no_of_close_orders');
+                    $data['sales_rep_premium_error_msg'] = form_error('sales_rep_premium');
+					
+                }
+            }
+            $con = array('id' => $id);
+            $sales_rep_info = $this->sales_model->getSalesRep($con);
+
+        } else {
+            redirect('order/admin/sales-rep');
+        }
+        $data['sales_rep_info'] = $sales_rep_info;
+		//Get commission range condition
+		$this->load->model('order/underwriter_tier_model');
+		
+		
+		$underwriter_types = UNDERWRITERS;
+		$product_types = PRODUCT_TYPE;
+		$data['underwriter_tires'] = array();
+		foreach($product_types as $product_type) {
+			foreach ($underwriter_types as $key=>$underwriter_type) {
+				$data['underwriter_tires'][$product_type][$key]=$this->underwriter_tier_model->get_many_by(['product_type'=>$product_type,'underwriter'=>$key]);
+			}
+		}
+
+		$data['underwriter_types'] = $underwriter_types;
+		$data['product_types'] = PRODUCT_TYPE;
+		$data['commission_types'] = $this->commission_types;
+		
+		$data['existing_underwriter'] = array();
+		$data['escrow_commissions'] = array();
+		foreach($existing_underwriter as $existing_underwriter_obj) {
+			if($existing_underwriter_obj->underwriter_tier_id) {
+				$data['existing_underwriter'][$existing_underwriter_obj->underwriter_tier_id] = $existing_underwriter_obj;
+			}
+			elseif($existing_underwriter_obj->is_escrow) {
+				$data['escrow_commissions'] = $existing_underwriter_obj;
+			}
+		}
+		$data['is_super_admin'] =$this->common->if_super_admin();
+		$data['commission_sales_rep_override_id']=$existing_commission_override_user;
+		$data['commission_sales_rep_override_val']=$existing_commission_override;
+
+        $this->admintemplate->show("order/sales", "sp_edit_sales_rep", $data);
+    }
+
     public function delete_sales_rep()
     {
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
@@ -1005,12 +1465,12 @@ class Sales extends MX_Controller {
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-sp-sales-rep/'.$value['id'];
                     $action = "<div style='display:flex;justify-content: space-around;' ><a href='".$editOrderUrl."' class='edit-agent'title ='Edit Sales Rep Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
-                    $action .= "<a href='javascript:void(0);' onclick='deleteSPSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                    // $action .= "<a href='javascript:void(0);' onclick='deleteSPSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
 					if($this->common->if_super_admin()) {
-						$action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
+						// $action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
 					}
                     $action .= " </div>";
-                    // $nestedData[] = $action;
+                    $nestedData[] = $action;
                 }
                 $data[] = $nestedData;            
             }
