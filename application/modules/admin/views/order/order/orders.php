@@ -3,7 +3,7 @@
 
     $product_type = isset($product_type) && !empty($product_type) ? $product_type : '';
     
-    $sales_rep = json_encode($salesRep);
+    // $sales_rep = json_encode($salesRep);
     
     $master_users = json_encode($master_users);
 
@@ -13,7 +13,8 @@
 	$roleName = $roleList[$role_id];
 ?>
 <script type="text/javascript">
-    var sales_rep = '<?php echo $sales_rep; ?>';
+    var sales_rep = <?php echo json_encode($sales_rep, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>
+    // var sales_rep = JSON.parse('<?php echo addslashes(json_encode($sales_rep)); ?>');
     var master_users = '<?php echo $master_users; ?>';
     var product_type = '<?php echo $product_type; ?>';
 </script>
