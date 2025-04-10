@@ -7457,6 +7457,9 @@ class Cron extends MX_Controller
         ini_set('memory_limit', '2048M');
         if (isset($_GET['orderNumber'])) {
             $req['orderNumber'] = $_GET['orderNumber'];
+            $req['isAutomationCall'] = false;
+        } else {
+            exit;
         }
         
         $queryParams = http_build_query($req);
@@ -7485,6 +7488,7 @@ class Cron extends MX_Controller
             $prelimSummaryDetails = $this->db->get()->row_array();
 
             if (empty($prelimSummaryDetails) && !empty($response['data'])) {
+                $file_number = $response['OrderNumber'];
                 $prelimLink = $response['data'][0];
                 $prelimFetchedCount++;
                 $documentName = basename($prelimLink);
@@ -7526,20 +7530,71 @@ class Cron extends MX_Controller
     }
 
     public function postPrelimreport() {
-        $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
-        ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '2048M');
-        // if (isset($_GET['orderNumber'])) {
-        //     $req['orderNumber'] = $_GET['orderNumber'];
-        // }
         
-        // $queryParams = http_build_query($req);
-        
-        $reqData     = json_encode($_POST);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'post_prelim_report', 'post_prelim_report', $reqData, [], 0, 0);
-        // $response    = $this->softpro->make_request('GET', 'post_prelim_report', $reqData, $queryParams);
-        // $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'post_prelim_report', 'post_prelim_report', $reqData, json_encode($response), 0, $logid);
-        
+        $reqData     = file_get_contents("php://input");
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_report', 'received_prelim_report', $reqData, [], 0, 0);
+        $response    = json_decode($reqData, true);
+        if (!empty($response) && $response['Status'] == 200) {
+            
+            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+            $this->db->from('order_details as o');
+            $this->db->where('o.file_number', $response['OrderNumber']);
+            $filesResult = $this->db->get()->row_array();
+
+            $this->db->select('*');
+            $this->db->from('pct_order_prelim_summary as s');
+            $this->db->where('file_number', $response['OrderNumber']);
+            $prelimSummaryDetails = $this->db->get()->row_array();
+            if (empty($prelimSummaryDetails) && !empty($response['data']) && !empty($filesResult)) {
+                $file_number = $response['OrderNumber'];
+                $prelimLink = $response['data'][0];
+                $prelimFetchedCount++;
+                $documentName = basename($prelimLink);
+                $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
+                $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
+                if ($uploadStatus) {
+                    $this->load->model('order/document');
+                    $documentData = array(
+                        'document_name' => $document_name,
+                        'original_document_name' => urldecode($documentName),
+                        'user_id' => $filesResult['customer_id'],
+                        'order_id' => $filesResult['id'],
+                        'description' => $documentName,
+                        'created' => date('Y-m-d H:i:s'),
+                        'is_sync' => 1,
+                        'is_prelim_document' => 1,
+                    );
+                    $documentId = $this->document->insert($documentData);
+
+                    $summaryData = [
+                        'file_number' => $filesResult['file_number'],
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ];
+                    $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                    $condition = array(
+                        'id' => $filesResult['id'],
+                    );
+                    $data = array(
+                        'prelim_summary_id' => $id,
+                    );
+                    $this->order->update($data, $condition);
+                    $status = 'success';
+                    $msg = "Document uploaded sucecssfully.";
+                } else {
+                    $status = 'error';
+                    $msg = "Error while uploading.";
+                }
+            } else {
+                $status = 'error';
+                $msg = "Invalid request or Prelim already exist or order number not found.";
+            }
+            // echo '$uploadStatus ==' . $uploadStatus;
+            
+        } else {
+            $status = 'error';
+            $msg = "Invalid request or order number not found.";
+        }
+        echo json_encode(['status' => $status, 'message' => $msg]);exit;
     }
 }
