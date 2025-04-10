@@ -155,7 +155,8 @@ if (
     $this->uri->uri_string() == 'order/admin/softpro-escrow-officers' ||
     $this->uri->segment(3) == 'edit-softpro-escrow-officer' ||
     $this->uri->segment(3) == 'add-softpro-escrow-officer' ||
-    $this->uri->segment(3) == 'softpro-sales-reps'
+    $this->uri->segment(3) == 'softpro-sales-reps' ||
+	$this->uri->segment(3) == 'edit-sp-sales-rep' 
 ) {
     $spUsersTabLinks = true;
 }
@@ -321,7 +322,7 @@ if (
 						<?php endif;?>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/master-users' || $this->uri->uri_string() == 'order/admin/add-new-master-user' || $this->uri->segment(3) == 'edit-master-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/master-users'; ?>">Master Users</a>
 						<?php if (!in_array($roleName, ['CS Admin'])): ?>
-							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-sales-reps' || $this->uri->segment(3) == 'edit-softpro-sales-reps' || $this->uri->segment(3) == 'add-softpro-sales-reps') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-reps'; ?>">Sales Reps</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-sales-reps' || $this->uri->segment(3) == 'edit-sp-sales-rep' || $this->uri->segment(3) == 'add-sp-sales-rep') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-sales-reps'; ?>">Sales Reps</a>
 						<?php endif;?>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>

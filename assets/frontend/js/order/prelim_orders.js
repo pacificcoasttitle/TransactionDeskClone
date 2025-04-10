@@ -61,7 +61,7 @@ function fetchPrelimDocument(fileNumber = '') {
     let queryParams = '';
     let url = '';
     if (fileNumber != '') {
-        queryParams = `orderNumber=${fileNumber}`;
+        queryParams = `orderNumber=${fileNumber}&isAutomationCall=false`;
         url = base_url + "fetch-single-prelim-report?" + queryParams;
     } else {
         url = base_url + "fetch-bulk-prelim-report";
