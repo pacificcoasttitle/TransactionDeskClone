@@ -7158,6 +7158,7 @@ class Cron extends MX_Controller
                     $order = $this->order->get_order($condition);
                     // echo 'order ==';
                     // print_r($order);
+                    $salesRepId = (!empty($marketingRep)) ? $salesRepList[$marketingRep] : null;
                     if (empty($order)) {
                         $customerId   = 0;
                         $importedOrderCount++;
@@ -7184,7 +7185,7 @@ class Cron extends MX_Controller
                         $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
                         $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
                         $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
-                        $salesRepId = (!empty($marketingRep)) ? $salesRepList[$marketingRep] : null;
+                        
                         $titleOfficerId = (!empty($titleOfficer)) ? $titleOfficerList[$titleOfficer] : null;
                         $productTypeId = (!empty($productType)) ? $productTypeList[$productType] : null;
                         $orderOpenDate = date("Y-m-d H:i:s", strtotime($receivedDate));
@@ -7297,6 +7298,9 @@ class Cron extends MX_Controller
                         $result = $this->db->select('id')->from('order_details')->where($condition)->get()->row_array();
                         if (isset($result['id'])) {
                             $updateDate = ['sales_amount' => $salesPrice];
+                            if (!empty($salesRepId)) {
+                                $updateDate['sales_representative'] = $salesRepId;
+                            }
                             $updatedOrderCount++;
                             $this->home_model->update($updateDate, ['id' => $result['id']], 'transaction_details');
                         }
