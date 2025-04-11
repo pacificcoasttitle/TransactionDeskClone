@@ -1707,6 +1707,7 @@ class Order
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
         $this->CI->db->where('transaction_details.sales_representative', $user_id);
         $this->CI->db->where('order_details.underwriter != ', null);
+        $this->CI->db->where('order_details.is_softpro_order', 1);
 
         $query = $this->CI->db->get();
         return $query->result_array();
@@ -1717,6 +1718,7 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders, sum(escrow_amount) as total_escrow_amount_for_refi_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         // $this->CI->db->where('order_details.prod_type', 'loan');
         if (!empty($closedOrderNumbers)) {
             $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
@@ -1767,6 +1769,7 @@ class Order
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders, sum(escrow_amount) as total_escrow_amount_for_sale_open_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         if (!empty($closedOrderNumbers)) {
             $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
         }
@@ -1816,6 +1819,7 @@ class Order
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         // $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
         if ($dashboard_flag == 1) {
@@ -1863,7 +1867,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         // $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
-
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
@@ -1909,6 +1913,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('order_details.softpro_status', 'open');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         // $this->CI->db->where('MONTH(order_details.created_at)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
@@ -1950,7 +1955,8 @@ class Order
         // $this->CI->db->where('MONTH(order_details.created_at)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        
         // if ($year == 0) {
         //     $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
         // } else {
@@ -1991,7 +1997,7 @@ class Order
         // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         // if ($year == 0) {
         //     $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
         // } else {
@@ -2031,7 +2037,7 @@ class Order
         // $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('order_details.lp_file_number is not null');
         $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         // if ($year == 0) {
 
         if (is_array($userId)) {
