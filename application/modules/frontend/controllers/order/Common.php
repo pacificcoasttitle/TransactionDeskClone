@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $version = '02';
+    private $version = '03';
  
     public function __construct()
     {
