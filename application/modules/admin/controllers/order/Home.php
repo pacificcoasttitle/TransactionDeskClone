@@ -3649,6 +3649,190 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/footer', $data);
     }
 
+    public function spTitleProduction()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Title Production';
+        $this->admintemplate->show("order/home", "sp_title_production", $data);
+    }
+
+    public function get_sp_title_production_list()
+    {
+        $params = [];
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow']   = 0;
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $mortgage_lists        = $this->home_model->get_title_production($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $mortgage_lists        = $this->home_model->get_title_production($params);
+        }
+
+        $data = [];
+        if (isset($mortgage_lists['data']) && !empty($mortgage_lists['data'])) {
+            foreach ($mortgage_lists['data'] as $key => $value) {
+                $nestedData   = [];
+                $user_id      = $value['id'];
+                $nestedData[] = $value['first_name'] . ' ' . $value['last_name'];
+                $nestedData[] = $value['email_address'];
+                $nestedData[] = $value['phone'];
+                $action       = "";
+                $editUrl      = base_url() . 'order/admin/edit-softpro-title-production/' . $value['id'];
+                $action       = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Payoff User Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+
+                $action .= "<a href='javascript:void(0);' onclick='deleteSpTitleProductionUser(" . $value['id'] . ")' title='Delete Title Production User'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                $nestedData[] = $action;
+
+                $data[] = $nestedData;
+            }
+        }
+        $json_data['recordsTotal']    = intval($mortgage_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($mortgage_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function addSpTitleProductions()
+    {
+        $data             = [];
+        $data['title']    = 'PCT Order: Add Title Officer.';
+        $titleOfficerData = [];
+
+        if ($this->input->post()) {
+            $this->form_validation->set_rules('first_name', 'First Name', 'required', ['required' => 'Please Enter First Name']);
+            $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
+            $this->form_validation->set_rules('telephone', 'Phone Number', 'required', ['required' => 'Please Enter Phone Number']);
+
+            if ($this->form_validation->run() == true) {
+                $titleProductionData = [
+                    'first_name'          => $_POST['first_name'],
+                    'last_name'           => $_POST['last_name'],
+                    'email_address'       => $_POST['email_address'],
+                    'phone'        => $_POST['telephone'],
+                    'is_title_production' => 1,
+                    'is_password_updated' => 1,
+                    'status'              => 1,
+                ];
+                $insert = $this->home_model->insert($titleProductionData);
+                /** Save user Activity */
+                $activity = 'Title Production created :- ' . $_POST['email_address'];
+                $this->common->logAdminActivity($activity);
+                /** End save user activity */
+                if ($insert) {
+                    $data['success_msg'] = 'Title Production added successfully.';
+                } else {
+                    $data['error_msg'] = 'Title Production not added.';
+                }
+
+            } else {
+                $data['first_name_error_msg'] = form_error('first_name');
+                $data['last_name_error_msg']  = form_error('last_name');
+                $data['email_error_msg']      = form_error('email_address');
+                $data['telephone_error_msg']  = form_error('telephone');
+            }
+        }
+
+        $this->admintemplate->addJS(base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS(base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/add-title-production.js'));
+        $this->admintemplate->show("order/home", "sp_add_title_production", $data);
+        // $this->admintemplate->show("order/title", "add_title_officer", $data);
+        // $this->load->view('order/layout/header', $data);
+        // $this->load->view('order/home/add_escrow_officer', $data);
+        // $this->load->view('order/layout/footer', $data);
+    }
+
+    public function deleteSpTitlePproduction()
+    {
+        $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
+
+        if ($id) {
+            $updateData = ['status' => 0];
+
+            $condition = ['id' => $id];
+
+            $userDetails = $this->home_model->get_user($condition, 'pct_softpro_lookup_table');
+            $update      = $this->home_model->update($updateData, $condition, 'pct_softpro_lookup_table');
+
+            if ($update) {
+                /** Save user Activity */
+                $activity = 'Title Production deleted successfully: Partner id :- ' . $id . ' email :- ' . $userDetails['email'];
+                $this->order->logAdminActivity($activity);
+                /** End save user activity */
+                $successMsg = 'Title Production deleted successfully.';
+                $response   = ['status' => 'success', 'message' => $successMsg];
+            }
+        } else {
+            $msg      = 'Title Production ID is required.';
+            $response = ['status' => 'error', 'message' => $msg];
+        }
+
+        echo json_encode($response);
+    }
+
+    public function editSpTitlePproduction()
+    {
+        $data                = [];
+        $id                  = $this->uri->segment(4);
+        $data['title']       = 'PCT Order: Edit Title Production';
+        $titleProductionData = [];
+
+        if (isset($id) && !empty($id)) {
+            if ($this->input->post()) {
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', ['required' => 'Please Enter First Name']);
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
+                $this->form_validation->set_rules('telephone', 'Phone Number', 'required', ['required' => 'Please Enter Phone Number']);
+
+                if ($this->form_validation->run() == true) {
+                    $titleProductionData = [
+                        'first_name'    => $_POST['first_name'],
+                        'last_name'     => $_POST['last_name'],
+                        'email_address' => $_POST['email_address'],
+                        'phone'  => $_POST['telephone'],
+                        'status'        => 1,
+                    ];
+
+                    $condition = ['id' => $id];
+                    $update    = $this->home_model->update($titleProductionData, $condition, 'pct_softpro_lookup_table');
+
+                    if ($update) {
+                        /** Save user Activity */
+                        $activity = 'Title Production updated successfully: id :- ' . $id . ' - Email :- ' . $_POST['email'];
+                        $this->order->logAdminActivity($activity);
+                        /** End save user activity */
+                        $data['success_msg'] = 'Title Production updated successfully.';
+                    } else {
+                        $data['error_msg'] = 'Error occurred while updating Title Production.';
+                    }
+
+                } else {
+                    $data['first_name_error_msg'] = form_error('first_name');
+                    $data['last_name_error_msg']  = form_error('last_name');
+                    $data['email_error_msg']      = form_error('email_address');
+                    $data['telephone_error_msg']  = form_error('telephone');
+                }
+            }
+            $con                 = ['id' => $id];
+            $titleProductionData = $this->home_model->getTitleProductionUser($con);
+        } else {
+            redirect(base_url() . 'title-production');
+        }
+        $data['title_production_info'] = $titleProductionData;
+        $this->admintemplate->addJS(base_url('assets/vendor/jquery/jquery.min.js'));
+        $this->admintemplate->addJS(base_url('assets/admin/js/jquery.validate.min.js'));
+        $this->admintemplate->addJS(base_url('assets/backend/js/add-title-production.js'));
+        $this->admintemplate->show("order/home", "sp_edit_title_production", $data);
+    }
+
     public function payoff_users()
     {
         $data          = [];

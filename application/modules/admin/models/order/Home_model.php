@@ -1646,7 +1646,7 @@ class Home_model extends CI_Model
     {
         $this->db->where('is_title_production', 1);
         $this->db->where('status', 1);
-        $this->db->from('customer_basic_details');
+        $this->db->from('pct_softpro_lookup_table');
         $total_records = $this->db->count_all_results();
         $limit         = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
         $offset        = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
@@ -1665,7 +1665,7 @@ class Home_model extends CI_Model
 
             $this->db->where('status', 1);
             $this->db->where('is_title_production', 1);
-            $this->db->from('customer_basic_details');
+            $this->db->from('pct_softpro_lookup_table');
             $filter_total_records = $this->db->count_all_results();
             if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start();
@@ -1681,14 +1681,14 @@ class Home_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 
-            $query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('pct_softpro_lookup_table');
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
         } else {
             $this->db->where('status', 1);
             $this->db->where('is_title_production', 1);
-            $this->db->from('customer_basic_details');
+            $this->db->from('pct_softpro_lookup_table');
             $filter_total_records = $this->db->count_all_results();
 
             $this->db->where('is_title_production', 1);
@@ -1696,7 +1696,7 @@ class Home_model extends CI_Model
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            $query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('pct_softpro_lookup_table');
 
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
