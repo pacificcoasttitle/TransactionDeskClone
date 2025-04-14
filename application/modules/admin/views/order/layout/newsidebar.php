@@ -156,7 +156,10 @@ if (
     $this->uri->segment(3) == 'edit-softpro-escrow-officer' ||
     $this->uri->segment(3) == 'add-softpro-escrow-officer' ||
     $this->uri->segment(3) == 'softpro-sales-reps' ||
-	$this->uri->segment(3) == 'edit-sp-sales-rep' 
+	$this->uri->segment(3) == 'edit-sp-sales-rep' ||
+    $this->uri->segment(3) == 'softpro-title-production' ||
+    $this->uri->segment(3) == 'add-softpro-title-production' ||
+    $this->uri->segment(3) == 'edit-softpro-title-production'
 ) {
     $spUsersTabLinks = true;
 }
@@ -326,6 +329,7 @@ if (
 						<?php endif;?>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-production' || $this->uri->segment(3) == 'edit-softpro-title-production' || $this->uri->segment(3) == 'add-softpro-title-production') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-production'; ?>">Title Production</a>
 					</div>
 				</div>
 			</li>

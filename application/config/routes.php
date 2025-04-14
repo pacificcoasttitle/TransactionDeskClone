@@ -269,6 +269,11 @@ $route['update-reps-mail-flag']                         = 'admin/order/sales/upd
 $route['sp-store-deliverables']                   = 'admin/order/home/spStoreDeliverables';
 $route['order/admin/update-title-sales-sp-company']    = 'admin/order/home/updateTitleSalesSPCompany';
 
+$route['order/admin/softpro-title-production']           = 'admin/order/home/spTitleProduction';
+$route['order/admin/add-softpro-title-production']       = 'admin/order/home/addSpTitleProductions';
+$route['order/admin/edit-softpro-title-production/:num'] = 'admin/order/home/editSpTitlePproduction';
+$route['order/admin/delete-softpro-title-production']    = 'admin/order/home/deleteSpTitlePproduction';
+
 $route['get-pay-off-orders']           = 'frontend/order/payOff/get_pay_off_orders';
 $route['get-transactees']              = 'frontend/order/payOff/get_transactees';
 $route['add-transactee']               = 'frontend/order/payOff/addTransactee';
