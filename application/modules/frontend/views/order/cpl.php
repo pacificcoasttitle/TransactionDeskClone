@@ -218,7 +218,7 @@ if (!empty($errors)) {
 													<div class="tagline"><span> LOAN DETAILS </span></div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row loan_number_in">
 												<div class="col-sm-12">
 													<label for="loan_number" class="col-form-label">Loan Number</label>
 													<input required="required" type="text" class="gui-input form-control" name="loan_number" id="loan_number" placeholder="Loan Number">

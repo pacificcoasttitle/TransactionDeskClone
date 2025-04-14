@@ -1448,8 +1448,8 @@ class Common extends MX_Controller
             'cpl_proposed_property_state' => $this->input->post('property_state'),
             'cpl_proposed_property_zip' => $this->input->post('property_zipcode'),
         );
-        // $this->home_model->update(array('loan_number' => $loan_number, 'loan_amount' => $loan_amount, 'sales_amount' => $sales_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-        $this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+        $this->home_model->update(array('loan_number' => $loan_number, 'loan_amount' => $loan_amount, 'sales_amount' => $sales_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
+        // $this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
         $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch'), 'is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
         $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 

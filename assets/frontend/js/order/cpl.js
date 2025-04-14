@@ -281,28 +281,57 @@ function lender_pop_up(lenderFlag, orderId) {
                     $("#LenderId").val(res.orderDetails['lender_id']);
                     $("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
                     $("#loan_number").val(res.orderDetails['loan_number']);
-                    $("#sales_amount").val(parseInt(res.orderDetails['sales_amount']));
-                    $("#loan_amount").val(parseInt(res.orderDetails['loan_amount']));
+                    // $("#sales_amount").val(parseInt(res.orderDetails['sales_amount']));
+                    // $("#loan_amount").val(parseInt(res.orderDetails['loan_amount']));
+
                     if (res.orderDetails['unit_number']) {
                         $("#property_address").val(res.orderDetails['unit_number'] + ", " + res.orderDetails['property_address']);
                     } else {
                         $("#property_address").val(res.orderDetails['property_address']);
                     }
-                    /*$("#loan_amount").prop('required', false);
-                    $("#sales_amount").prop('required', false);
+                    // $("#loan_amount").prop('required', false);
+                    // $("#sales_amount").prop('required', false);
+                    let salesAmount = parseInt(res.orderDetails['sales_amount']);
+                    console.log('salesAmount ==', salesAmount);
+                    let loanAmount = parseInt(res.orderDetails['loan_amount']);
+                    console.log('loanAmount ==', loanAmount);
                     if (res.orderDetails['transaction_type'] == 'Refinance') {
-                        $('.sales_amount_in').addClass('hide');
-                        $('.loan_amount_in').removeClass('hide');
-                        $("#sales_amount").addClass('hide');
-                        $('#loan_amount').removeClass('hide');
-                        $("#loan_amount").prop('required', true);
+                        // $('.sales_amount_in').addClass('hide');
+                        // $('.loan_amount_in').removeClass('hide');
+                        // $("#sales_amount").addClass('hide');
+                        // $('#loan_amount').removeClass('hide');
+                        // $("#loan_amount").prop('required', true);
+                        if ($('.loan_amount_in').length === 0) {
+                            var loanAmountElement = `
+                            <div class="row loan_amount_in">
+                                <div class="col-sm-12">
+                                    <label for="loan_amount" class="col-form-label">Loan Amount</label>
+                                    <input type="number" class="gui-input form-control" min="1" name="loan_amount" id="loan_amount" placeholder="Loan Amount" required value="${loanAmount}">
+                                </div>
+                            </div>`;
+
+                            $('.loan_number_in').after(loanAmountElement);
+                            $('.sales_amount_in').remove();
+                        }
                     } else {
-                        $('.sales_amount_in').removeClass('hide');
-                        $('.loan_amount_in').addClass('hide');
-                        $("#sales_amount").removeClass('hide');
-                        $('#loan_amount').addClass('hide');
-                        $("#sales_amount").prop('required', true);
-                    }*/
+                        if ($('.sales_amount_in').length === 0) {
+                            var saleAmountElement = `
+                            <div class="row sales_amount_in">
+                                <div class="col-sm-12">
+                                    <label for="sales_amount" class="col-form-label">Sale Amount</label>
+                                    <input type="number" class="gui-input form-control" min="1" name="sales_amount" id="sales_amount" placeholder="Sale Amount" required value="${salesAmount}">
+                                </div>
+                            </div>`;
+
+                            $('.loan_number_in').after(saleAmountElement);
+                            $('.loan_amount_in').remove();
+                        }
+                        // $('.sales_amount_in').removeClass('hide');
+                        // $('.loan_amount_in').addClass('hide');
+                        // $("#sales_amount").removeClass('hide');
+                        // $('#loan_amount').addClass('hide');
+                        // $("#sales_amount").prop('required', true);
+                    }
                     $("#property_city").val(res.orderDetails['property_city']);
                     $("#property_state").val(res.orderDetails['property_state']);
                     $("#property_zipcode").val(res.orderDetails['property_zipcode']);
