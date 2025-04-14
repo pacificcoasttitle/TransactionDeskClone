@@ -288,15 +288,21 @@ function lender_pop_up(lenderFlag, orderId) {
                     } else {
                         $("#property_address").val(res.orderDetails['property_address']);
                     }
+                    /*$("#loan_amount").prop('required', false);
+                    $("#sales_amount").prop('required', false);
                     if (res.orderDetails['transaction_type'] == 'Refinance') {
                         $('.sales_amount_in').addClass('hide');
                         $('.loan_amount_in').removeClass('hide');
+                        $("#sales_amount").addClass('hide');
+                        $('#loan_amount').removeClass('hide');
                         $("#loan_amount").prop('required', true);
                     } else {
                         $('.sales_amount_in').removeClass('hide');
                         $('.loan_amount_in').addClass('hide');
+                        $("#sales_amount").removeClass('hide');
+                        $('#loan_amount').addClass('hide');
                         $("#sales_amount").prop('required', true);
-                    }
+                    }*/
                     $("#property_city").val(res.orderDetails['property_city']);
                     $("#property_state").val(res.orderDetails['property_state']);
                     $("#property_zipcode").val(res.orderDetails['property_zipcode']);

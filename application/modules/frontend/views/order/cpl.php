@@ -225,7 +225,7 @@ if (!empty($errors)) {
 												</div>
 											</div>
 
-											<div class="row sales_amount_in">
+											<!-- <div class="row sales_amount_in">
 												<div class="col-sm-12">
 													<label for="sales_amount" class="col-form-label">Sale Amount</label>
 													<input type="number" class="gui-input form-control" min="1" name="sales_amount" id="sales_amount" placeholder="Sale Amount">
@@ -237,7 +237,7 @@ if (!empty($errors)) {
 													<label for="loan_amount" class="col-form-label">Loan Amount</label>
 													<input type="number" class="gui-input form-control" min="1" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
 												</div>
-											</div>
+											</div> -->
 										</div>
 
 										<div class="form-group">
