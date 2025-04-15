@@ -133,26 +133,27 @@ class DashboardMail extends MX_Controller
         ];
         $orderDetails = $this->order->get_order_details($params, 1);
         $post_data = $result_decoded = array();
-        $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
-        $userData = array(
-            'admin_api' => 1,
-        );
+        // $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
+        // $userData = array(
+        //     'admin_api' => 1,
+        // );
 
-        $result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
-        if (json_decode($result) && count(json_decode($result)->Files)) {
-            $result_decoded = json_decode($result);
-            $loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
-            $salesAmount = $result_decoded->Files[0]->SalesPrice;
-        }
+        // $result = $this->resware->make_request('POST', 'files/search', $apiData, $userData);
+        // if (json_decode($result) && count(json_decode($result)->Files)) {
+        //     $result_decoded = json_decode($result);
+        //     $loanAmount = $result_decoded->Files[0]->Loans[0]->LoanAmount;
+        //     $salesAmount = $result_decoded->Files[0]->SalesPrice;
+        // }
 
-        $result_decoded = json_decode($result);
+        // $result_decoded = json_decode($result);
 
         if (!empty($orderDetails)) {
             $post_data['seller'] = $orderDetails['primary_owner'];
         } else {
             $post_data['seller'] = '';
         }
-        $property_data = $result_decoded->Files[0]->Properties[0];
+        $post_data['ECD'] = '';
+        /*$property_data = $result_decoded->Files[0]->Properties[0];
         $buyer_data = $result_decoded->Files[0]->Buyers[0];
         $buyer_name = $buyer_data->Primary;
 
@@ -197,6 +198,38 @@ class DashboardMail extends MX_Controller
             $post_data['lenderInsurance'] = 0;
             $post_data['transactionType'] = 'Re-Finance';
             $post_data['transferTaxesCheck'] = 0;
+        }*/
+        $loanAmount = $orderDetails['loan_amount'];
+        $salesAmount = $orderDetails['sales_amount'];
+        $post_data['file_id'] = $orderDetails['file_id']; 
+        $post_data['file_number'] = $orderDetails['file_number']; 
+        $post_data['loanAmount'] = $orderDetails['loan_amount']; 
+        $post_data['salesPrice'] = $orderDetails['sales_amount']; 
+        $post_data['city'] = $orderDetails['property_city']; 
+        $post_data['county'] = $orderDetails['county']; 
+        $post_data['borrower'] = $orderDetails['borrowers_vesting']; 
+        $post_data['full_address'] = $orderDetails['full_address']; 
+        $post_data['borrower'] = $orderDetails['borrowers_vesting'];
+        if (!empty($orderDetails['closed_date'])) {
+            $ecd_date = date('m/d/Y', strtotime($orderDetails['closed_date']) / 1000);
+            $post_data['ECD'] = $ecd_date;
+        }
+        if (strtolower($orderDetails['transaction_type']) == 'purchase') {
+            $post_data['lenderInsurance'] = 1;
+            $post_data['transactionType'] = 'Resale';
+            $post_data['transferTaxesCheck'] = 1;
+
+        } else {
+            $post_data['netsheet_for'] = '';
+            $post_data['lenderInsurance'] = 0;
+            $post_data['transactionType'] = 'Re-Finance';
+            $post_data['transferTaxesCheck'] = 0;
+        }
+
+        if (strtolower($orderDetails['product_type_name']) == 'junior loan') {
+            $post_data['underwriter'] = 5;
+        } else {
+            $post_data['underwriter'] = 4;
         }
         $post_data['escrowPriceCheck'] = 1;
         $post_data['recordingPriceCheck'] = 1;
@@ -214,6 +247,10 @@ class DashboardMail extends MX_Controller
         $calcResult = json_decode(curl_exec($ch), true);
 
         $calcResult['transactionType'] = $post_data['transactionType'];
+        $data['is_escrow_flag'] = 0;
+        if ($orderDetails['order_type'] == 'Escrow only' || $orderDetails['order_type'] == 'Title & Escrow') {
+            $data['is_escrow_flag'] = 1;
+        }
         //echo "<pre>";
         //print_r($calcResult);exit;
         $data['calcResult'] = $calcResult;
