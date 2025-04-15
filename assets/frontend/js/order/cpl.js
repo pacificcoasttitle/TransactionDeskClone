@@ -289,12 +289,8 @@ function lender_pop_up(lenderFlag, orderId) {
                     } else {
                         $("#property_address").val(res.orderDetails['property_address']);
                     }
-                    // $("#loan_amount").prop('required', false);
-                    // $("#sales_amount").prop('required', false);
                     let salesAmount = parseInt(res.orderDetails['sales_amount']);
-                    console.log('salesAmount ==', salesAmount);
                     let loanAmount = parseInt(res.orderDetails['loan_amount']);
-                    console.log('loanAmount ==', loanAmount);
                     if (res.orderDetails['transaction_type'] == 'Refinance') {
                         // $('.sales_amount_in').addClass('hide');
                         // $('.loan_amount_in').removeClass('hide');

@@ -283,7 +283,7 @@ if (!empty($errors)) {
                                                         <div class="tagline"><span> LOAN DETAILS </span></div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row loan_number_in">
                                                     <div class="col-sm-12">
                                                         <label for="loan_number" class="col-form-label">Loan Number</label>
                                                         <input required="required" type="text" class="gui-input form-control" name="loan_number" id="loan_number" placeholder="Loan Number">
@@ -973,6 +973,35 @@ if (!empty($errors)) {
 							$("#property_address").val(res.orderDetails['unit_number']+", "+res.orderDetails['property_address']);
 						} else {
 							$("#property_address").val(res.orderDetails['property_address']);
+						}
+						let salesAmount = parseInt(res.orderDetails['sales_amount']);
+						let loanAmount = parseInt(res.orderDetails['loan_amount']);
+						if (res.orderDetails['transaction_type'] == 'Refinance') {
+							if ($('.loan_amount_in').length === 0) {
+								var loanAmountElement = `
+								<div class="row loan_amount_in">
+									<div class="col-sm-12">
+										<label for="loan_amount" class="col-form-label">Loan Amount</label>
+										<input type="number" class="gui-input form-control" min="1" name="loan_amount" id="loan_amount" placeholder="Loan Amount" required value="${loanAmount}">
+									</div>
+								</div>`;
+
+								$('.loan_number_in').after(loanAmountElement);
+								$('.sales_amount_in').remove();
+							}
+						} else {
+							if ($('.sales_amount_in').length === 0) {
+								var saleAmountElement = `
+								<div class="row sales_amount_in">
+									<div class="col-sm-12">
+										<label for="sales_amount" class="col-form-label">Sale Amount</label>
+										<input type="number" class="gui-input form-control" min="1" name="sales_amount" id="sales_amount" placeholder="Sale Amount" required value="${salesAmount}">
+									</div>
+								</div>`;
+
+								$('.loan_number_in').after(saleAmountElement);
+								$('.loan_amount_in').remove();
+							}
 						}
 						$("#property_city").val(res.orderDetails['property_city']);
 						$("#property_state").val(res.orderDetails['property_state']);
