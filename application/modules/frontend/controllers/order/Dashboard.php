@@ -248,7 +248,7 @@ class Dashboard extends MX_Controller
         }
         
         $post_data['ECD'] = '';
-        if ($orderDetails['is_softpro_order'] != 1) {
+        /*if ($orderDetails['is_softpro_order'] != 1) {
             $apiData = json_encode(array('FileNumber' => $orderDetails['file_number']));
             $userData = array(
                 'admin_api' => 1,
@@ -328,38 +328,45 @@ class Dashboard extends MX_Controller
                     $post_data['underwriter'] = 5;
                 }
             }
-        } else {
-            $loanAmount = $orderDetails['loan_amount'];
-            $salesAmount = $orderDetails['sales_amount'];
-            $post_data['file_id'] = $orderDetails['file_id']; 
-            $post_data['file_number'] = $orderDetails['file_number']; 
-            $post_data['loanAmount'] = $orderDetails['loan_amount']; 
-            $post_data['salesPrice'] = $orderDetails['sales_amount']; 
-            $post_data['city'] = $orderDetails['property_city']; 
-            $post_data['county'] = $orderDetails['county']; 
-            $post_data['borrower'] = $orderDetails['borrowers_vesting']; 
-            $post_data['full_address'] = $orderDetails['full_address']; 
-            $post_data['borrower'] = $orderDetails['borrowers_vesting'];
+        } else {*/
+        $loanAmount = $orderDetails['loan_amount'];
+        $salesAmount = $orderDetails['sales_amount'];
+        $post_data['file_id'] = $orderDetails['file_id']; 
+        $post_data['file_number'] = $orderDetails['file_number']; 
+        $post_data['loanAmount'] = $orderDetails['loan_amount']; 
+        $post_data['salesPrice'] = $orderDetails['sales_amount']; 
+        $post_data['city'] = $orderDetails['property_city']; 
+        $post_data['county'] = $orderDetails['county']; 
+        $post_data['borrower'] = $orderDetails['borrowers_vesting']; 
+        $post_data['full_address'] = $orderDetails['full_address']; 
+        $post_data['borrower'] = $orderDetails['borrowers_vesting'];
 
-            if (!empty($orderDetails['closed_date'])) {
-                $ecd_date = date('m/d/Y', strtotime($orderDetails['closed_date']) / 1000);
-                $post_data['ECD'] = $ecd_date;
-            }
-            if (strtolower($orderDetails['transaction_type']) == 'purchase') {
-                $post_data['lenderInsurance'] = 1;
-                $post_data['transactionType'] = 'Resale';
-                $post_data['transferTaxesCheck'] = 1;
-
-            } else {
-                $post_data['netsheet_for'] = '';
-                $post_data['lenderInsurance'] = 0;
-                $post_data['transactionType'] = 'Re-Finance';
-                $post_data['transferTaxesCheck'] = 0;
-            }
+        if (!empty($orderDetails['closed_date'])) {
+            $ecd_date = date('m/d/Y', strtotime($orderDetails['closed_date']) / 1000);
+            $post_data['ECD'] = $ecd_date;
         }
+        if (strtolower($orderDetails['transaction_type']) == 'purchase') {
+            $post_data['lenderInsurance'] = 1;
+            $post_data['transactionType'] = 'Resale';
+            $post_data['transferTaxesCheck'] = 1;
+
+        } else {
+            $post_data['netsheet_for'] = '';
+            $post_data['lenderInsurance'] = 0;
+            $post_data['transactionType'] = 'Re-Finance';
+            $post_data['transferTaxesCheck'] = 0;
+        }
+
+        if (strtolower($orderDetails['product_type_name']) == 'junior loan') {
+            $post_data['underwriter'] = 5;
+        } else {
+            $post_data['underwriter'] = 4;
+        }
+        // }
         $post_data['escrowPriceCheck'] = 1;
         $post_data['recordingPriceCheck'] = 1;
-        
+        // echo "<pre>";
+        // print_r($post_data);die;
         $ch = curl_init(env('CALC_API_URL') . 'index.php?welcome/createNetsheetDoc');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post_data));
@@ -373,9 +380,10 @@ class Dashboard extends MX_Controller
         $calcResult = json_decode(curl_exec($ch), true);
         $calcResult['transactionType'] = $post_data['transactionType'];
         $data['is_escrow_flag'] = 0;
-        if ($orderDetails['is_softpro_order'] != 1 && str_contains(strtolower($orderDetails['product_type']), 'title and escrow')) {
-            $data['is_escrow_flag'] = 1;
-        } else if ($orderDetails['order_type'] == 'Escrow only' || $orderDetails['order_type'] == 'Title & Escrow') {
+        // if ($orderDetails['is_softpro_order'] != 1 && str_contains(strtolower($orderDetails['product_type']), 'title and escrow')) {
+        //     $data['is_escrow_flag'] = 1;
+        // } 
+        if ($orderDetails['order_type'] == 'Escrow only' || $orderDetails['order_type'] == 'Title & Escrow') {
             $data['is_escrow_flag'] = 1;
         }
         // if ($orderDetails['is_client_escrow'] == 1 || $orderDetails['is_escrow'] == 1) {
@@ -383,12 +391,14 @@ class Dashboard extends MX_Controller
         // } else {
         //     $data['is_escrow_flag'] = 0;
         // }
-
+        
         $data['calcResult'] = $calcResult;
         $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         $data['sales_amount'] = $salesAmount;
         $data['loan_amount'] = $loanAmount;
+        // echo "<pre>";
+        // print_r($data);die;
 
         $this->salesdashboardtemplate->addCSS(base_url('assets/front/css/style.css'));
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jspdf.debug.js'));
