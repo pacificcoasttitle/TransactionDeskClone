@@ -58,7 +58,7 @@
                             <th>Street Address</th>
                             <th>City</th>
                             <th>Zipcode</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

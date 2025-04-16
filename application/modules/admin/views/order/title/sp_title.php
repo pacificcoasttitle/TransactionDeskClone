@@ -52,6 +52,7 @@ $roleName = $roleList[$role_id];
                             <th>Closer Examiner</th>
                             <th>Lookup Code</th>
                             <th>Officer Name</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

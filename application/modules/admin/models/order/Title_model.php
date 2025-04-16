@@ -116,7 +116,7 @@ class Title_model extends CI_Model
 
     public function update($data, $condition = array()) 
     {
-    	$table = $this->table;
+    	$table = 'sp_officers';
         if (!empty($data)) {          
             $data['updated_at'] = date("Y-m-d H:i:s");
             $update = $this->db->update($table, $data, $condition);
@@ -127,7 +127,7 @@ class Title_model extends CI_Model
 
     public function insert($data = array()) 
     {
-    	$table = $this->table;
+    	$table = 'sp_officers';//$this->table;
         if (!empty($data)) {
         	$data['created_at'] = date("Y-m-d H:i:s");
             $insert = $this->db->insert($table, $data);
