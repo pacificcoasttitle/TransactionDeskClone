@@ -60,7 +60,7 @@
                             <!-- <th width="5%">Mortgage User</th>
                             <th width="10%">User Type</th>
                             <th width="5%">Dual CPL</th> -->
-                            <!-- <th width="5%">Action</th> -->
+                            <th width="5%">Action</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>

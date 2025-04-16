@@ -22,10 +22,10 @@
         </div>
   
         <div class="card-body">
-            <div id="mortgage_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="mortgage_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+            <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+            <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="tbl-mortgage-listing" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl-sp-mortgage-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Lookup Code</th>
@@ -35,6 +35,7 @@
                             <th>Company Name</th>
                             <th>Address</th>
                             <!-- <th>Primary Mortgage User</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
