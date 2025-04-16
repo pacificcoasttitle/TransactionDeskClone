@@ -249,6 +249,7 @@ class Title extends MX_Controller
             $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
             $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
             $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_title_officer'] = 1;
             $pageno = ($params['start'] / $params['length']) + 1;
             $title_officer_lists = $this->home_model->get_sp_officers_list($params);
             $json_data['draw'] = intval($params['draw']);
@@ -273,9 +274,10 @@ class Title extends MX_Controller
 
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     // $editOrderUrl = base_url() . 'order/admin/edit-title-officer/' . $value['id'];
-                    // $action = "<div style='display: flex;justify-content: space-evenly;' ><a href='" . $editOrderUrl . "' class='edit-agent'title ='Edit Title Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
-                    // $action .= "<a href='javascript:void(0);' onclick='deleteTitleOfficer(" . $value['id'] . ")' title='Delete Title Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
-                    // $nestedData[] = $action;
+                    $action = "<div style='display: flex;justify-content: space-evenly;' >";
+                    // "<a href='" . $editOrderUrl . "' class='edit-agent'title ='Edit Title Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteTitleOfficer(" . $value['id'] . ")' title='Delete Title Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                    $nestedData[] = $action;
                 }
                 $data[] = $nestedData;
             }

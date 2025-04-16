@@ -929,7 +929,7 @@ $(document).ready(function () {
     }
 
     if ($('#tbl-sp-lenders-listing').length) {
-        lenders_list = $('#tbl-sp-lenders-listing').DataTable({
+        customer_list = $('#tbl-sp-lenders-listing').DataTable({
             /*"pageLength": 2,*/
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
@@ -1085,7 +1085,7 @@ $(document).ready(function () {
     }
 
     if ($('#tbl-sp-escrow-listing').length) {
-        sp_escrows_list = $('#tbl-sp-escrow-listing').DataTable({
+        customer_list = $('#tbl-sp-escrow-listing').DataTable({
             /*"pageLength": 2,*/
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
@@ -1163,7 +1163,7 @@ $(document).ready(function () {
     }
 
     if ($('#tbl-sp-mortgage-listing').length) {
-        mortgage_list = $('#tbl-sp-mortgage-listing').DataTable({
+        customer_list = $('#tbl-sp-mortgage-listing').DataTable({
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
@@ -1559,7 +1559,7 @@ $(document).ready(function () {
 
     /* Mortgage Brokers listing table */
     if ($('#tbl-mortgage-listing').length) {
-        mortgage_list = $('#tbl-mortgage-listing').DataTable({
+        customer_list = $('#tbl-mortgage-listing').DataTable({
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [

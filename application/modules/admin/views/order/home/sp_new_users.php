@@ -43,8 +43,8 @@
         </div>
 
         <div class="card-body">
-            <div id="new_users_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="new_users_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+            <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+            <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-sp-new-users-listing" width="100%" cellspacing="0">
                     <thead>
@@ -54,6 +54,7 @@
                             <th class="not-take">Last Name</th>
                             <th>Email</th>
                             <th class="not-take">Company</th>
+                            <th class="not-take">Action</th>
                             <!-- <th>Random Password</th> -->
                         </tr>
                     </thead>                

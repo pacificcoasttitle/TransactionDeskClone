@@ -3375,12 +3375,12 @@ class Home extends MX_Controller
 
             $condition = ['id' => $id];
 
-            $companyDetails = $this->home_model->get_user($condition, 'pct_order_partner_company_info');
-            $update         = $this->home_model->update($escrowData, $condition, 'pct_order_partner_company_info');
+            $companyDetails = $this->home_model->get_user($condition, 'sp_officers');
+            $update         = $this->home_model->update($escrowData, $condition, 'sp_officers');
 
             if ($update) {
                 /** Save user Activity */
-                $activity = 'Escrow officer deleted successfully: Partner id :- ' . $companyDetails['partner_id'] . ' email :- ' . $companyDetails['email'];
+                $activity = 'Escrow officer deleted successfully: Closer Examiner :- ' . $companyDetails['closer_examiner'];
                 $this->order->logAdminActivity($activity);
                 /** End save user activity */
                 $successMsg = 'Escrow Officer deleted successfully.';
@@ -8432,12 +8432,12 @@ class Home extends MX_Controller
                 // }
                 // $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
 
-                // if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                //     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
 
-                //     $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
-                //     $nestedData[] = $action;
-                // }
+                    $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
+                    $nestedData[] = $action;
+                }
 
                 $data[] = $nestedData;
                 // $cnt++;
@@ -8518,12 +8518,12 @@ class Home extends MX_Controller
                 // }
                 // $nestedData[] = "<input $checked onclick='isAllowOnlyReswareOrders();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
 
-                // if (isset($_POST['draw']) && !empty($_POST['draw'])) {
-                //     /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
+                if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                    /*$action = "<a href='javascript:void(0);' class='btn btn-action edit-group' data-id=".$value->id." data-name='".$value->name."' title ='Edit Group Detail'><span class='fas fa-edit' aria-hidden='true'></span></a>";*/
 
-                //     $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a>";
-                //     $nestedData[] = $action;
-                // }
+                    $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")' title='Delete Customer'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                    $nestedData[] = $action;
+                }
 
                 $data[] = $nestedData;
                 // $cnt++;
@@ -8629,6 +8629,10 @@ class Home extends MX_Controller
                     $nestedData[] = $value['last_name'];
                     $nestedData[] = $value['email_address'];
                     $nestedData[] = $value['company_name'];
+                    if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $action       = "<a href='javascript:void(0);' onclick='deleteCustomer(" . $value['id'] . ")' class='btn btn-action'  title='Delete Customer'><span class='fas fa-trash' aria-hidden='true'></span></a>";
+                        $nestedData[] = $action;
+                    }
                     // $nestedData[] = 'Pacific1';
                 } else {
                     $nestedData[] = $value['email_address'];
@@ -8689,10 +8693,11 @@ class Home extends MX_Controller
 
                 // $action  = "";
                 // $editUrl = base_url() . 'order/admin/edit-escrow-officer/' . $value['id'];
-                // $action  = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editUrl . "' class='edit-agent'title ='Edit Escrow Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                $action  = "<div style='display: flex;justify-content: space-evenly;'>";
+                // <a href='" . $editUrl . "' class='edit-agent'title ='Edit Escrow Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
 
-                // $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(" . $value['id'] . ")' title='Delete Escrow Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
-                // $nestedData[] = $action;
+                $action .= "<a href='javascript:void(0);' onclick='deleteEscrowOfficer(" . $value['id'] . ")' title='Delete Escrow Officer'><i class='fas fa-trash' aria-hidden='true'></i></a></div>";
+                $nestedData[] = $action;
 
                 $data[] = $nestedData;
                 // $cnt++;

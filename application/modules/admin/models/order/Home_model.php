@@ -3116,6 +3116,7 @@ class Home_model extends CI_Model
         } else if ($is_escrow_officer == 1) {
             $this->db->where('is_escrow_officer', 1);
         }
+        $this->db->where('status', 1);
     	$this->db->from('sp_officers');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
@@ -3136,6 +3137,7 @@ class Home_model extends CI_Model
             } else if ($is_escrow_officer == 1) {
                 $this->db->where('is_escrow_officer', 1);
             }
+            $this->db->where('status', 1);
 	    	$this->db->from('sp_officers');
 			$filter_total_records =  $this->db->count_all_results();
 
@@ -3152,6 +3154,7 @@ class Home_model extends CI_Model
             } else if ($is_escrow_officer == 1) {
                 $this->db->where('is_escrow_officer', 1);
             }
+            $this->db->where('status', 1);
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
@@ -3166,6 +3169,7 @@ class Home_model extends CI_Model
             } else if ($is_escrow_officer == 1) {
                 $this->db->where('is_escrow_officer', 1);
             }
+            $this->db->where('status', 1);
 	    	$this->db->from('sp_officers');
 			$filter_total_records =  $this->db->count_all_results();
 
@@ -3174,6 +3178,7 @@ class Home_model extends CI_Model
             } else if ($is_escrow_officer == 1) {
                 $this->db->where('is_escrow_officer', 1);
             }
+            $this->db->where('status', 1);
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }

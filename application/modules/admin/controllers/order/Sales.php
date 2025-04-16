@@ -1465,7 +1465,7 @@ class Sales extends MX_Controller {
                 if (isset($_POST['draw']) && !empty($_POST['draw'])) {
                     $editOrderUrl = base_url().'order/admin/edit-sp-sales-rep/'.$value['id'];
                     $action = "<div style='display:flex;justify-content: space-around;' ><a href='".$editOrderUrl."' class='edit-agent'title ='Edit Sales Rep Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
-                    // $action .= "<a href='javascript:void(0);' onclick='deleteSPSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
+                    $action .= "<a href='javascript:void(0);' onclick='deleteSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
 					if($this->common->if_super_admin()) {
 						// $action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
 					}
