@@ -3489,6 +3489,33 @@ class Order
         }
     }
 
+    public function sendClosedOrderAgentEmail($adminFlag = 0)
+    {
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = 'Closed Order Report';
+        $to = 'ghernandez@pct.com';
+        // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+        // $to = 'ghernandez@pct.com';
+        $message = $this->CI->load->view('frontend/emails/closed_order_agent_email.php', $data, true);
+        $cc = array('piyush.j@crestinfosystems.com');
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        //$cc = array();
+        $this->CI->load->helper('sendemail');
+        $this->CI->load->model('order/apiLogs');
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_closed_mail_agent', '', $mailParams, array(), 0, 0);
+        $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_closed_mail_agent', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
+        
+    }
+
     public function getDocumetTypes()
     {
         $this->CI->db->select('*')

@@ -73,6 +73,29 @@
             <div class="col-md-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Closed Order Sample Email</h6>
+                    </div>
+                    <div class="card-body">        
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-success btn-icon-split" onclick="sendClosedOrderAgentEmail();">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </span>
+                                    <span class="text">Send Sample Email For Closed Order</span>
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"> Top Closers</h6>
                     </div>
                     <div class="card-body">        
