@@ -620,7 +620,7 @@ class Order extends MX_Controller
                                 $columnNames = $data;
                             } else {
                                 $rowData = array();
-                                if (in_array($data[8], $billCodeFilter)) {
+                                if (in_array($data[8], $billCodeFilter) && strtolower($data[4]) == 'invoice') {
                                     $amount = (float) str_replace(['$', ','], '', $data[42]);
                                     $amount = round($amount, 2);
                                     
