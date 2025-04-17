@@ -7381,7 +7381,7 @@ class Cron extends MX_Controller
             $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_bulk_prelim_report'] . '?'.$queryParams;
             $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, [], 0, 0);
             $result    = $this->softpro->make_request('GET', 'get_bulk_prelim_report', $reqData, $queryParams);
-            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, json_encode($response), 0, $logid);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, $result, 0, $logid);
             
             $response = json_decode($result, true);
             
