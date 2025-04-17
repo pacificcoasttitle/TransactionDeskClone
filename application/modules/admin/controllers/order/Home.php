@@ -4521,6 +4521,18 @@ class Home extends MX_Controller
         }
     }
 
+    public function sendClosedOrderAgentEmail()
+    {
+        // echo "admin/order/home";die;
+        $this->load->library('order/order');
+        $result = $this->order->sendClosedOrderAgentEmail(1);
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Closed order sample mail sent successfully.']);
+        } else {
+            echo json_encode(['status' => 'error']);
+        }
+    }
+
     public function updateDualCplUser()
     {
         $user_id             = $this->input->post('user_id');

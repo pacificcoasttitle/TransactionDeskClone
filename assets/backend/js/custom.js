@@ -7395,6 +7395,41 @@ function sendLPReports() {
     }
 }
 
+function sendClosedOrderAgentEmail() {
+    var ready = confirm("Are you sure want to send closed order sample email?");
+    if (ready) {
+        $('body').animate({ opacity: 0.5 }, "slow");
+        $.ajax({
+            url: base_url + "admin/order/home/sendClosedOrderAgentEmail",
+            success: function (data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('body').animate({ opacity: 1.0 }, "slow");
+                    $('#manual_report_success_msg').html(result.message).show();
+                    setTimeout(function () {
+                        $('#manual_report_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('body').animate({ opacity: 1.0 }, "slow");
+                    $('#manual_report_error_msg').html('Something went wrong. Please try it again.').show();
+                    setTimeout(function () {
+                        $('#manual_report_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('body').animate({ opacity: 1.0 }, "slow");
+                $('#manual_report_error_msg').html('Something went wrong. Please try it again.').show();
+                setTimeout(function () {
+                    $('#manual_report_error_msg').html('').hide();
+                }, 4000);
+            }
+        })
+    } else {
+        return false;
+    }
+}
+
 function isDualCplUser() {
     $('input[type="checkbox"]').on('change', function () {
         $('body').animate({ opacity: 0.5 }, "slow");
