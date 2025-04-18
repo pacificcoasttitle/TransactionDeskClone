@@ -300,45 +300,6 @@
                 </div>
         </div>
     </div>
-    <div class="row mb-4">
-            <div class="col-md-6 col-sm-12">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <h1 class="card-header h5 mb-0 text-primary"># Of expired passwords</h1>
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Passwords expired</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $expiredPasswordCount; ?></div>
-                            </div>
-                            <div class="col-auto cursorPoint">
-                                <i class="fas fa-refresh fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        <!-- <a class="clearfix small z-1 viewDetails text-primary" href="<?php echo base_url() . 'order/admin/incorrect-users' ?>"> -->
-                        <a class="clearfix small z-1 viewDetails text-primary" href="javascript:void(0);">
-                            <span class="">View Details</span>
-                            <span class="">
-                                <i class="fas fa-angle-right"></i>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="card border-left-info shadow h-100 py-2">
-                    <h1 class="card-header h5 mb-0 text-info">Not received JSON</h1>
-                    <!-- <div class="card-header card-header-info text-info ">Not received JSON</div> -->
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Files</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $failedJsonCount; ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </div>
 
     <div class="row">
 		<div class="col-xl-12">

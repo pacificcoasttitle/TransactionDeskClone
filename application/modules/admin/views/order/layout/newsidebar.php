@@ -3,17 +3,13 @@ $userdata = $this->session->userdata('admin');
 $roleList = $this->common->getRoleList();
 $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 $roleName = $roleList[$role_id];
-$settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $commisionTabLinks = $payoffSectionLink = $spUsersTabLinks = $spClientTabLinks = false;
+$settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $payoffSectionLink = $spUsersTabLinks = $spClientTabLinks = false;
 
 if (
     $this->uri->uri_string() == 'order/admin/roles' ||
-    $this->uri->uri_string() == 'order/admin/credentials-check' ||
-    $this->uri->uri_string() == 'order/admin/resware-admin-credential' ||
     $this->uri->uri_string() == 'order/admin/send-password' ||
-    $this->uri->uri_string() == 'order/admin/primary-check' ||
     $this->uri->uri_string() == 'order/admin/fees-types' ||
     $this->uri->uri_string() == 'order/admin/fees' ||
-    $this->uri->uri_string() == 'order/admin/code-book' ||
     $this->uri->uri_string() == 'order/admin/rules-manager' ||
     $this->uri->uri_string() == 'order/admin/notifications' ||
     $this->uri->uri_string() == 'order/admin/holidays' ||
@@ -62,16 +58,6 @@ if (
     $this->uri->uri_string() == 'order/admin/proposed-branches'
 ) {
     $branchTabLinks = true;
-}
-
-if (
-    preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string()) ||
-    preg_match('/order\/admin\/([a-z\-])*commission-range*/', $this->uri->uri_string()) ||
-    preg_match('/order\/admin\/([a-z\-])*commission-file*/', $this->uri->uri_string()) ||
-    preg_match('/order\/admin\/([a-z\-])*commission-config*/', $this->uri->uri_string()) ||
-    preg_match('/order\/admin\/([a-z\-])*commission-bonus*/', $this->uri->uri_string())
-) {
-    $commisionTabLinks = true;
 }
 
 if ($this->uri->uri_string() == 'order/admin/transactees-list' ||
@@ -184,13 +170,6 @@ if (
 				<i class="fas fa-fw fa-gear"></i>
 				<span>Settings</span>
 			</a>
-			<div class="collapse <?php if ($settingLinks) {echo 'show';}?> " aria-labelledby="li_settings" id="li_settings_list">
-				<div class="bg-white py-2 collapse-inner rounded">
-					<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/credentials-check') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/credentials-check'; ?>">
-						Credentials Check
-					</a>
-				</div>
-			</div>
 		</li>
 
 		<!-- Divider -->
@@ -405,25 +384,13 @@ if (
 							</a>
 						<?php endif;?>
 
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/credentials-check') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/credentials-check'; ?>">
-							Credentials Check
-						</a>
-
 						<?php if (!in_array($roleName, ['CS Admin'])): ?>
-
-							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/resware-admin-credential') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/resware-admin-credential'; ?>">
-								Resware Admin
-							</a>
 
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/send-password') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/send-password'; ?>">
 								Send Password
 							</a>
 
 						<?php endif;?>
-
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/primary-check') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/primary-check'; ?>">
-							Primary Accounts
-						</a>
 
 						<?php if (!in_array($roleName, ['CS Admin'])): ?>
 
@@ -433,10 +400,6 @@ if (
 
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/fees' || $this->uri->segment(3) == 'add-fee' || $this->uri->segment(3) == 'edit-fee') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/fees'; ?>">
 								Fees
-							</a>
-
-							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/code-book') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/code-book'; ?>">
-								Code Book
 							</a>
 
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/rules-manager') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/rules-manager'; ?>">
@@ -474,33 +437,6 @@ if (
 					</div>
 				</div>
 			</li>
-			<?php if ($role_id == 1): ?>
-			<li class="nav-item <?php if ($commisionTabLinks) {echo 'active';}?>">
-				<a class="nav-link <?php if (!$commisionTabLinks) {echo 'collapsed';}?>" href="#" id="li_commissions" role="button" data-toggle="collapse" data-target="#li_commissons_list"  aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-fw fa-gear"></i>
-					<span>Commissions</span>
-				</a>
-				<div class="collapse <?php if ($commisionTabLinks) {echo 'show';}?>" aria-labelledby="li_commissions" id="li_commissons_list">
-					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*underwriter-tier*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/underwriter-tier'; ?>">
-							Underwriter Tier
-						</a>
-						<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*commission-range*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/commission-range'; ?>">
-							Commission Range
-						</a>
-						<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*commission-file*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/commission-files'; ?>">
-							Commission Files
-						</a>
-						<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*commission-config*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/commission-config'; ?>">
-							Escrow Commisison
-						</a>
-						<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*commission-bonus*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/commission-bonus'; ?>">
-							Bonus
-						</a>
-					</div>
-				</div>
-			</li>
-			<?php endif;?>
 		<?php endif;?>
 
 		<?php if ($role_id == 1 || $role_id == 5) {?>

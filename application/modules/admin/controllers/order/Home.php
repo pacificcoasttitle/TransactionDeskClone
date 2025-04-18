@@ -2134,32 +2134,6 @@ class Home extends MX_Controller
         }
     }
 
-    public function primaryCheck()
-    {
-        $data          = [];
-        $data['title'] = 'PCT Order: Primary Account';
-        $params        = [];
-        if (isset($_POST) && !empty($_POST)) {
-            $keyword           = $this->input->post('keyword');
-            $params['keyword'] = $keyword;
-        }
-
-        $users = $this->home_model->get_user_with_duplicate_email($params);
-
-        if (isset($users) && !empty($users)) {
-            $new_users = [];
-            foreach ($users as $key => $value) {
-                $new_users[$value['email_address']][] = $value;
-            }
-        }
-
-        $data['users'] = $new_users;
-        $this->admintemplate->show("order/home", "users_check", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/users_check', $data);
-        // $this->load->view('order/layout/footer', $data);
-    }
-
     public function make_customer_primary()
     {
         $this->load->model('order/apiLogs');
@@ -3036,35 +3010,6 @@ class Home extends MX_Controller
             $response = ['status' => 'error', 'message' => $msg];
         }
         echo json_encode($response);
-    }
-
-    public function reswareAdminCredential()
-    {
-        $this->load->library('order/order');
-        $data               = [];
-        $data['title']      = 'PCT Order: Resware Admin Credential';
-        $data['credResult'] = $this->order->get_resware_admin_credential();
-
-        if ($this->input->post()) {
-            $this->form_validation->set_rules('resware_username', 'Username', 'required', ['required' => 'Please Enter Username']);
-            $this->form_validation->set_rules('resware_password', 'Password', 'required', ['required' => 'Please Enter Password']);
-            if ($this->form_validation->run() == true) {
-                $this->db->update('pct_resware_admin_credential', ['username' => $this->input->post('resware_username'), 'password' => $this->input->post('resware_password')]);
-                /** Save user Activity */
-                $activity = 'ResWare Credential updated: Username' . $this->input->post('resware_username');
-                $this->order->logAdminActivity($activity);
-                /** End Save user activity */
-                $data['success_msg'] = 'Resware Admin credentials updated successfully';
-                $data['credResult']  = $this->order->get_resware_admin_credential();
-            } else {
-                $data['resware_username_error_msg'] = form_error('resware_username');
-                $data['resware_password_error_msg'] = form_error('resware_password');
-            }
-        }
-        $this->admintemplate->show("order/home", "resware_admin_credential", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/home/resware_admin_credential', $data);
-        // $this->load->view('order/layout/footer', $data);
     }
 
     public function importOrders($value = '')

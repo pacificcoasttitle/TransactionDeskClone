@@ -339,10 +339,8 @@ $route['order/admin/title-officers']                = 'admin/order/title/index';
 $route['order/admin/get-title-officer-list']        = 'admin/order/title/get_title_officer_list';
 $route['order/admin/add-title-officer']             = 'admin/order/title/add_title_officer';
 $route['order/admin/edit-title-officer/:num']       = 'admin/order/title/edit_title_officer';
-$route['order/admin/credentials-check']             = 'admin/order/customer/index';
 $route['order/admin/lv-log']                        = 'admin/order/TitlePoint/index';
 $route['order/admin/pre-listing']                   = 'admin/order/TitlePoint/preListing';
-$route['order/admin/primary-check']                 = 'admin/order/home/primaryCheck';
 $route['order/admin/get-user-check-list']           = 'admin/order/home/get_user_check_list';
 $route['order/admin/orders(/:any)?']                = 'admin/order/order/orders';
 $route['order/admin/get-order-list']                = 'admin/order/order/get_order_list';
@@ -381,16 +379,10 @@ $route['order/admin/update-sales-rep-order']        = 'admin/order/home/updateSa
 $route['order/admin/fees-types']                    = 'admin/order/FeesTypes/index';
 $route['order/admin/add-fee-type']                  = 'admin/order/FeesTypes/add_fee_type';
 $route['order/admin/edit-fee-type/:num']            = 'admin/order/FeesTypes/edit_fee_type';
-$route['order/admin/code-book']                     = 'admin/order/CodeBook/index';
-$route['order/admin/add-code-book']                 = 'admin/order/CodeBook/add_code_book';
-$route['order/admin/import-code-book']              = 'admin/order/CodeBook/import_code_book';
-$route['order/admin/update-type']                   = 'admin/order/CodeBook/updateType';
 $route['order/admin/cpl-proposed-users']            = 'admin/order/home/cplProposedUsers';
 $route['order/admin/edit-cpl-proposed-user/:num']   = 'admin/order/home/editCplProposedUser';
 $route['order/admin/reject-cpl-proposed-user/:num'] = 'admin/order/home/rejectCplProposedUser';
-$route['order/admin/edit-code-book/:num']           = 'admin/order/CodeBook/editCodeBook';
 $route['order/admin/send-password']                 = 'admin/order/home/sendPassword';
-$route['order/admin/resware-admin-credential']      = 'admin/order/home/reswareAdminCredential';
 $route['order/admin/edit-master-user/:num']         = 'admin/order/home/editMasterUser';
 $route['order/admin/import-orders']                 = 'admin/order/home/importOrders';
 $route['order/admin/cpl-error-logs']                = 'admin/order/order/cplErrorLogs';
@@ -424,32 +416,9 @@ $route['is-mortgage-primary-user']                             = 'admin/order/ho
 $route['order/admin/client-users-list']                        = 'admin/order/home/clientList';
 $route['update-client-type']                                   = 'admin/order/home/updateClientType';
 $route['is-password-required']                                 = 'admin/order/home/isPasswordRequired';
-$route['order/admin/commission-range(/:any)?(/:num)?']         = 'admin/order/commissionRange/index$1$2';
-$route['order/admin/add-commission-range']                     = 'admin/order/commissionRange/add_commission_range';
-$route['order/admin/import-commission-range']                  = 'admin/order/commissionRange/import_commission_range';
-$route['order/admin/export-commission-range']                  = 'admin/order/commissionRange/export_commission_range';
-$route['order/admin/template-commission-range']                = 'admin/order/commissionRange/template_commission_range';
-$route['order/admin/edit-commission-range/(:num)']             = 'admin/order/commissionRange/edit_commission_range/$1';
-$route['order/admin/delete-commission-range/(:num)']           = 'admin/order/commissionRange/delete_commission_range/$1';
-$route['order/admin/commission-files(/:num)?(/:num)?(/:num)?'] = 'admin/order/commissionRange/commission_files$1$2$3';
-$route['order/admin/delete-commission-file/(:num)']            = 'admin/order/commissionRange/delete_commission_file/$1';
+
 $route['update-dual-cpl-user']                                 = 'admin/order/home/updateDualCplUser';
 $route['update-all-only-resware-order']                        = 'admin/order/home/updateAllOnlyReswareOrder';
-
-$route['order/admin/commission-bonus']               = 'admin/order/commissionRange/index_bonus';
-$route['order/admin/add-commission-bonus']           = 'admin/order/commissionRange/add_bonus';
-$route['order/admin/edit-commission-bonus/(:num)']   = 'admin/order/commissionRange/edit_bonus/$1';
-$route['order/admin/delete-commission-bonus/(:num)'] = 'admin/order/commissionRange/delete_bonus/$1';
-
-$route['order/admin/underwriter-tier']               = 'admin/order/commissionRange/index_underwriter_tier';
-$route['order/admin/add-underwriter-tier']           = 'admin/order/commissionRange/add_underwriter_tier';
-$route['order/admin/edit-underwriter-tier/(:num)']   = 'admin/order/commissionRange/edit_underwriter_tier/$1';
-$route['order/admin/delete-underwriter-tier/(:num)'] = 'admin/order/commissionRange/delete_underwriter_tier/$1';
-
-$route['order/admin/commission-config']             = 'admin/order/commissionRange/commission_config';
-$route['order/admin/edit-commission-config/(:num)'] = 'admin/order/commissionRange/edit_commission_config/$1';
-
-$route['order/admin/sales-rep-commission/(:num)'] = 'admin/order/commissionRange/sales_rep_commission/$1';
 
 $route['order/admin/get-realtors-list']        = 'admin/order/home/get_realtors_list';
 $route['order/admin/escrow-officers']          = 'admin/order/home/escrow_officers';
@@ -531,7 +500,6 @@ $route['order/admin/get-vesting-info']            = 'admin/order/home/getVesting
 $route['order/admin/add-instrument-info']         = 'admin/order/home/addInstrumentInfo';
 $route['order/admin/change-client']               = 'admin/order/home/changeClient';
 $route['order/admin/manual-report']               = 'admin/order/home/manualReport';
-$route['order/admin/delete-unaproved-customer']   = 'admin/order/customer/delete_unapproved_user';
 $route['send-summary-mail-sales-rep']             = 'admin/order/home/sendSummaryMailSalesRep';
 $route['send-non-openers-email']                  = 'admin/order/home/sendNonOpenersEmail';
 
