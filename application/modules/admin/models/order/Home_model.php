@@ -218,27 +218,6 @@ class Home_model extends CI_Model
         return false;
     }
 
-    public function get_user_with_duplicate_email($params)
-    {
-        $where      = ' AND email_address != "" AND partner_id is NOT NULL AND resware_user_id is NOT NULL ';
-        $innerCause = ' WHERE email_address != ""';
-        if (isset($params['keyword']) && ! empty($params['keyword'])) {
-            $keyword = $params['keyword'];
-
-            /*$where = ' WHERE first_name LIKE "%'.$keyword.'%"';
-            $where .= ' OR last_name LIKE "%'.$keyword.'%"';*/
-            $innerCause .= ' AND (email_address LIKE "%' . $keyword . '%" OR company_name LIKE "%' . $keyword . '%" OR first_name LIKE "%' . $keyword . '%" OR last_name LIKE "%' . $keyword . '%")';
-        }
-        $query = $this->db->query('SELECT * FROM customer_basic_details WHERE email_address IN (
-        SELECT email_address FROM customer_basic_details' . $innerCause . '
-        GROUP BY email_address HAVING COUNT(*) > 1
-        ) ' . $where . ' ORDER BY email_address ASC, is_password_updated DESC');
-
-        $result = ($query->num_rows() > 0) ? $query->result_array() : false;
-        // print_r($this->db->last_query());die;
-        return $result;
-    }
-
     public function get_cpl_document_list($params)
     {
         $this->db->from('order_details')
