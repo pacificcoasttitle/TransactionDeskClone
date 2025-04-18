@@ -1294,14 +1294,6 @@ class Order
         }
     }
 
-    public function get_resware_admin_credential()
-    {
-        $this->CI->db->select('*');
-        $this->CI->db->from('pct_resware_admin_credential');
-        $query = $this->CI->db->get();
-        return $query->row_array();
-    }
-
     public function get_order($params)
     {
         $this->CI->db->select('*');
