@@ -28,7 +28,7 @@ class Sales_model extends CI_Model
                 $this->db->group_start()
                         ->like("CONCAT_WS(' ',first_name,last_name)",$keyword, NULL, FALSE)
                         ->or_like('email_address', $keyword)
-                        ->or_like('telephone_no', $keyword)
+                        ->or_like('phone', $keyword)
                         ->group_end();
             }
 	    	$this->db->from('pct_softpro_lookup_table');
@@ -45,7 +45,7 @@ class Sales_model extends CI_Model
                 $this->db->group_start()
                         ->like("CONCAT_WS(' ',first_name,last_name)",$keyword, NULL, FALSE)
                         ->or_like('email_address', $keyword)
-                        ->or_like('telephone_no', $keyword)
+                        ->or_like('phone', $keyword)
                         ->group_end();
 			}
             
