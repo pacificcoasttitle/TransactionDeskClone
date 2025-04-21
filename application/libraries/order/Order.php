@@ -3264,14 +3264,14 @@ class Order
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Daily Production';
                     $to = $salesManger['email_address'];
-                    $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+                    // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
 
                     /** Get CC for daily email receiver */
                     $this->CI->db->select('email')->from('pct_daily_email_receiver_list')->where('status', 1);
                     if (strtolower($to) == 'ntorquato@pct.com') {
                         $this->CI->db->where_in('branch', ['both', 'orange']);
                     }
-
+                    
                     if (strtolower($to) == 'teammeza@pct.com') {
                         $this->CI->db->where_in('branch', ['both', 'glendale']);
                     }
