@@ -95,10 +95,14 @@ class Home extends MX_Controller
         $lenderUsersCount     = $this->customer_basic_details_model->count_by($customer_filter);
         $customer_filter      = ['is_sales_rep' => 1];
         $salesRepUsersCount   = $this->customer_basic_details_model->count_by($customer_filter);
+        $customer_filter      = ['is_mortgage_broker' => 1];
+        $mortgageUsersCount   = $this->customer_basic_details_model->count_by($customer_filter);
+        $customer_filter      = ['is_selling_agent' => 1];
+        $agentUsersCount   = $this->customer_basic_details_model->count_by($customer_filter);
         $customer_filter      = [];
         // $expiredPasswords     = $this->home_model->get_incorrect_customers($customer_filter);
         $expiredPasswordCount = 0;//$expiredPasswords['recordsTotal'];
-        $failedJsonCount      = 0;//$this->home_model->get_failed_json_files();
+        $failedJsonCount      = $this->home_model->get_failed_json_files();
 
         $data = [
             'title'                => 'PCT Order: Dashboard',
@@ -111,6 +115,8 @@ class Home extends MX_Controller
             'escrowUsersCount'     => $escrowUsersCount,
             'lenderUsersCount'     => $lenderUsersCount,
             'salesRepUsersCount'   => $salesRepUsersCount,
+            'mortgageUsersCount'   => $mortgageUsersCount,
+            'agentUsersCount'   => $agentUsersCount,
             'expiredPasswordCount' => $expiredPasswordCount,
             'failedJsonCount'      => $failedJsonCount,
 
