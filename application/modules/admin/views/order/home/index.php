@@ -233,7 +233,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col">
                         <div class="card border-left-primary shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -254,7 +254,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col">
                         <div class="card border-left-success shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
@@ -275,7 +275,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col">
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-cente">
@@ -296,11 +296,68 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-cente">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Mortgage Users</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $mortgageUsersCount; ?></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <a class="clearfix small z-1 viewDetails text-warning" href="<?php echo base_url() . 'order/admin/softpro-mortgage-brokers' ?>">
+                                    <span class="">View Details</span>
+                                    <span class="">
+                                        <i class="fas fa-angle-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card border-left-secondary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-cente">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Agents</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $agentUsersCount; ?></div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                                <a class="clearfix small z-1 viewDetails text-secondary" href="<?php echo base_url() . 'order/admin/softpro-agents' ?>">
+                                    <span class="">View Details</span>
+                                    <span class="">
+                                        <i class="fas fa-angle-right"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
         </div>
     </div>
 
+    <div class="row mb-4">
+        <div class="col-md-6 col-sm-12">
+            <div class="card border-left-info shadow h-100 py-2">
+                <h1 class="card-header h5 mb-0 text-info">Not received JSON</h1>
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Files</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $failedJsonCount; ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- <div class="row">
 		<div class="col-xl-12">
 
