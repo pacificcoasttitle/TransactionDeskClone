@@ -301,7 +301,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
 		<div class="col-xl-12">
 
 			<div class="card shadow mb-4">
@@ -312,7 +312,7 @@
 				<div id='calendar'></div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 </div>
 <!-- /.container-fluid -->
 

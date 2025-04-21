@@ -124,8 +124,8 @@ class Home extends MX_Controller
         // $this->load->view('order/home/index', $data);
         // $this->load->view('order/layout/footer', $data);
 
-        $this->admintemplate->addCSS(base_url('assets/libs/calendar/main.css'));
-        $this->admintemplate->addJS(base_url('assets/libs/calendar/main.js'));
+        // $this->admintemplate->addCSS(base_url('assets/libs/calendar/main.css'));
+        // $this->admintemplate->addJS(base_url('assets/libs/calendar/main.js'));
         $this->admintemplate->addJS(base_url('assets/backend/js/dashboard.js?v=dashboard_1'));
         $this->admintemplate->show("order/home", "index", $data);
     }
