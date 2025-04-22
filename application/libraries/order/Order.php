@@ -4935,7 +4935,6 @@ class Order
         }
         if ($logId == 0) {
             $data = array(
-                'order_id' => $order_id ? $order_id : 0,
                 'api_type' => $api_type,
                 'request_type' => $request_type,
                 'request_data' => !empty($request_data) ? $request_data : '',
