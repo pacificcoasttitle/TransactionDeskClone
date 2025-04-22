@@ -4926,4 +4926,40 @@ class Order
             'last_name' => $lastName
         ];
     }
+
+    public function syncLogs($api_type, $request_type, $request_url, $request_data, $response_data, $order_id = 0, $logId = 0) 
+    {
+        $table = 'pct_order_cron_logs';
+        if(is_array($request_data)) {
+            $request_data = json_encode($request_data, true);
+        }
+        if ($logId == 0) {
+            $data = array(
+                'order_id' => $order_id ? $order_id : 0,
+                'api_type' => $api_type,
+                'request_type' => $request_type,
+                'request_data' => !empty($request_data) ? $request_data : '',
+                'request_url' => $request_url,
+                'response_data' => !empty($response_data) ? $response_data : '',
+                'created' => date('Y-m-d H:i:s')
+            );
+            if (getenv('API_LOGS_ENABLE') == 1) {
+                $this->CI->db->insert($table, $data);
+                return $this->CI->db->insert_id();
+            } else {
+                return 1;
+            }
+        } else {
+            if (is_array($response_data)) {
+                $response_data = json_encode($response_data, true);
+            }
+            $data = array(
+                'response_data' => !empty($response_data) ? $response_data : '',
+                'updated' => date('Y-m-d H:i:s'),
+            );
+            if (getenv('API_LOGS_ENABLE') == 1) {
+               $this->CI->db->update($table, $data, array('id' => $logId));
+            }
+        }
+    }
 }
