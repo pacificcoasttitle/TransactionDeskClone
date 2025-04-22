@@ -32,7 +32,7 @@ class Cron extends MX_Controller
             ],
         ];
         $customers = $this->home_model->get_customers($condition);
-        if (! empty($customers)) {
+        if (!empty($customers)) {
             foreach ($customers as $customer) {
                 $this->import_orders($customer);
             }
@@ -61,7 +61,7 @@ class Cron extends MX_Controller
                 $userdata['email'] = $userdata['email_address'];
             }
         }
-        if (isset($userdata) && ! empty($userdata)) {
+        if (isset($userdata) && !empty($userdata)) {
             $msg = '';
             foreach ($order_status as $key => $value) {
                 $status = [];
@@ -79,7 +79,7 @@ class Cron extends MX_Controller
 
                 $result = json_decode($res, true);
 
-                if (isset($result['Files']) && ! empty($result['Files'])) {
+                if (isset($result['Files']) && !empty($result['Files'])) {
                     $this->db->simple_query('SET SESSION group_concat_max_len=150000');
                     $this->db->select('GROUP_CONCAT(file_id) as file_ids');
                     $this->db->from('order_details');
@@ -88,7 +88,7 @@ class Cron extends MX_Controller
                     $query       = $this->db->get();
                     $filesResult = $query->row_array();
 
-                    if (! empty($filesResult)) {
+                    if (!empty($filesResult)) {
                         $file_ids = explode(',', $filesResult['file_ids']);
                     } else {
                         $syncFlag = 0;
@@ -99,7 +99,7 @@ class Cron extends MX_Controller
                         $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
                         $partner_name  = $res['Partners'][0]['PartnerName'];
                         if ($partner_name == $userdata['company_name'] && strpos($userdata['last_name'], $partner_lname) !== false && strpos($userdata['first_name'], $partner_fname) !== false) {
-                            if (! empty($file_ids)) {
+                            if (!empty($file_ids)) {
                                 if (in_array((int) $res['FileID'], $file_ids)) {
                                     $syncFlag = 1;
                                 } else {
@@ -115,7 +115,7 @@ class Cron extends MX_Controller
                                 $locale = $res['Properties'][0]['City'];
 
                                 if (($locale)) {
-                                    if (! empty($res['Properties'][0]['State'])) {
+                                    if (!empty($res['Properties'][0]['State'])) {
                                         $locale .= ', ' . $res['Properties'][0]['State'];
                                     } else {
                                         $locale .= ', CA';
@@ -124,9 +124,9 @@ class Cron extends MX_Controller
 
                                 $property_details = $this->getSearchResult($address, $locale);
 
-                                $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                                $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                                $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                                $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                                 /* get blackkight data */
 
                                 $propertyData = [
@@ -153,23 +153,23 @@ class Cron extends MX_Controller
 
                                 $transactionData = [
                                     'customer_id'      => $userdata['id'],
-                                    'sales_amount'     => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                    'sales_amount'     => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
                                     // 'sales_representative' =>  $userdata['id'],
-                                    'loan_number'      => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                                    'loan_amount'      => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                    'loan_number'      => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                    'loan_amount'      => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                     'transaction_type' => $res['TransactionProductType']['TransactionTypeID'],
                                     'purchase_type'    => $res['TransactionProductType']['ProductTypeID'],
                                     'status'           => 1,
                                 ];
 
-                                $primary_owner = isset($res['Buyers'][0]['Primary']['First']) && ! empty($res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                                $primary_owner = isset($res['Buyers'][0]['Primary']['First']) && !empty($res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
 
-                                $primary_owner .= isset($res['Buyers'][0]['Primary']['Middle']) && ! empty($res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
-                                $primary_owner .= isset($res['Buyers'][0]['Primary']['Last']) && ! empty($res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
+                                $primary_owner .= isset($res['Buyers'][0]['Primary']['Middle']) && !empty($res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
+                                $primary_owner .= isset($res['Buyers'][0]['Primary']['Last']) && !empty($res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
 
-                                $secondary_owner = isset($res['Buyers'][0]['Secondary']['First']) && ! empty($res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
-                                $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Middle']) && ! empty($res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
-                                $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Last']) && ! empty($res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
+                                $secondary_owner = isset($res['Buyers'][0]['Secondary']['First']) && !empty($res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                                $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Middle']) && !empty($res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                                $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Last']) && !empty($res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
 
                                 $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
                                 if (strpos($ProductTypeTxt, 'Loan') !== false) {
@@ -179,8 +179,8 @@ class Cron extends MX_Controller
                                     $transactionData['borrower']           = $primary_owner;
                                     $transactionData['secondary_borrower'] = $secondary_owner;
 
-                                    $propertyData['primary_owner']   = isset($property_info['primary_owner']) && ! empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                                    $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && ! empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                    $propertyData['primary_owner']   = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                    $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
                                 }
 
                                 $propertyId = $this->home_model->insert($propertyData, 'property_details');
@@ -295,8 +295,8 @@ class Cron extends MX_Controller
         $response      = json_encode($xmlData);
         $result        = json_decode($response, true);
         $property_info = [];
-        if (isset($result['Status']) && ! empty($result['Status']) && $result['Status'] == 'OK') {
-            $reportUrl = (isset($result['ReportURL']) && ! empty($result['ReportURL'])) ? $result['ReportURL'] : '';
+        if (isset($result['Status']) && !empty($result['Status']) && $result['Status'] == 'OK') {
+            $reportUrl = (isset($result['ReportURL']) && !empty($result['ReportURL'])) ? $result['ReportURL'] : '';
 
             if ($reportUrl) {
                 $rdata      = new stdClass();
@@ -307,16 +307,16 @@ class Cron extends MX_Controller
                 $response   = json_encode($reportData);
                 $details    = json_decode($response, true);
 
-                $property_info['property_type']    = isset($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) && ! empty($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) ? $details['PropertyProfile']['PropertyCharacteristics']['UseCode'] : '';
-                $property_info['legaldescription'] = isset($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) && ! empty($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) ? $details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription'] : '';
-                $property_info['apn']              = isset($details['PropertyProfile']['APN']) && ! empty($details['PropertyProfile']['APN']) ? $details['PropertyProfile']['APN'] : '';
+                $property_info['property_type']    = isset($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) && !empty($details['PropertyProfile']['PropertyCharacteristics']['UseCode']) ? $details['PropertyProfile']['PropertyCharacteristics']['UseCode'] : '';
+                $property_info['legaldescription'] = isset($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) && !empty($details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription']) ? $details['PropertyProfile']['LegalDescriptionInfo']['LegalBriefDescription'] : '';
+                $property_info['apn']              = isset($details['PropertyProfile']['APN']) && !empty($details['PropertyProfile']['APN']) ? $details['PropertyProfile']['APN'] : '';
 
-                $property_info['unit_no'] = isset($details['PropertyProfile']['SiteUnit']) && ! empty($details['PropertyProfile']['SiteUnit']) ? $details['PropertyProfile']['SiteUnit'] : '';
+                $property_info['unit_no'] = isset($details['PropertyProfile']['SiteUnit']) && !empty($details['PropertyProfile']['SiteUnit']) ? $details['PropertyProfile']['SiteUnit'] : '';
 
-                $property_info['fips'] = isset($details['SubjectValueInfo']['FIPS']) && ! empty($details['SubjectValueInfo']['FIPS']) ? $details['SubjectValueInfo']['FIPS'] : '';
+                $property_info['fips'] = isset($details['SubjectValueInfo']['FIPS']) && !empty($details['SubjectValueInfo']['FIPS']) ? $details['SubjectValueInfo']['FIPS'] : '';
 
-                $primaryOwner                     = isset($details['PropertyProfile']['PrimaryOwnerName']) && ! empty($details['PropertyProfile']['PrimaryOwnerName']) ? $details['PropertyProfile']['PrimaryOwnerName'] : '';
-                $secondaryOwner                   = isset($details['PropertyProfile']['SecondaryOwnerName']) && ! empty($details['PropertyProfile']['SecondaryOwnerName']) ? $details['PropertyProfile']['SecondaryOwnerName'] : '';
+                $primaryOwner                     = isset($details['PropertyProfile']['PrimaryOwnerName']) && !empty($details['PropertyProfile']['PrimaryOwnerName']) ? $details['PropertyProfile']['PrimaryOwnerName'] : '';
+                $secondaryOwner                   = isset($details['PropertyProfile']['SecondaryOwnerName']) && !empty($details['PropertyProfile']['SecondaryOwnerName']) ? $details['PropertyProfile']['SecondaryOwnerName'] : '';
                 $property_info['primary_owner']   = $primaryOwner;
                 $property_info['secondary_owner'] = $secondaryOwner;
             }
@@ -357,11 +357,11 @@ class Cron extends MX_Controller
         $xmlData        = simplexml_load_string($file);
         $response       = json_encode($xmlData);
         $result         = json_decode($response, true);
-        $responseStatus = isset($result['ReturnStatus']) && ! empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 
         if ($responseStatus == 'Success') {
             $tpData    = [];
-            $requestId = isset($result['RequestID']) && ! empty($result['RequestID']) ? $result['RequestID'] : '';
+            $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
             if ($requestId) {
                 $summary_requestParams = [
                     'userID'         => env('TP_USERNAME'),
@@ -381,10 +381,10 @@ class Cron extends MX_Controller
                 $summary_response = json_encode($summary_xmlData);
                 $summary_result   = json_decode($summary_response, true);
 
-                $summary_responseStatus = isset($summary_result['ReturnStatus']) && ! empty($summary_result['ReturnStatus']) ? $summary_result['ReturnStatus'] : '';
+                $summary_responseStatus = isset($summary_result['ReturnStatus']) && !empty($summary_result['ReturnStatus']) ? $summary_result['ReturnStatus'] : '';
                 if ($summary_responseStatus == 'Success') {
-                    $resultId  = isset($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && ! empty($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : '';
-                    $serviceId = isset($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && ! empty($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+                    $resultId  = isset($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : '';
+                    $serviceId = isset($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $summary_result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
 
                     $tpData['cs4_result_id']  = $resultId;
                     $tpData['cs4_service_id'] = $serviceId;
@@ -408,14 +408,14 @@ class Cron extends MX_Controller
                     $output_response = json_encode($output_xmlData);
                     $output_result   = json_decode($output_response, true);
 
-                    $output_responseStatus = isset($output_result['ReturnStatus']) && ! empty($output_result['ReturnStatus']) ? $output_result['ReturnStatus'] : '';
+                    $output_responseStatus = isset($output_result['ReturnStatus']) && !empty($output_result['ReturnStatus']) ? $output_result['ReturnStatus'] : '';
                     if ($output_responseStatus == 'Success') {
-                        $briefLegal = isset($output_result['Result']['BriefLegal']) && ! empty($output_result['Result']['BriefLegal']) ? $output_result['Result']['BriefLegal'] : 'No data found.';
+                        $briefLegal = isset($output_result['Result']['BriefLegal']) && !empty($output_result['Result']['BriefLegal']) ? $output_result['Result']['BriefLegal'] : 'No data found.';
 
-                        $vesting = isset($output_result['Result']['Vesting']) && ! empty($output_result['Result']['Vesting']) ? $output_result['Result']['Vesting'] : 'No data found.';
+                        $vesting = isset($output_result['Result']['Vesting']) && !empty($output_result['Result']['Vesting']) ? $output_result['Result']['Vesting'] : 'No data found.';
 
-                        $instrumentNumber = isset($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) && ! empty($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) ? $output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber'] : '';
-                        $recordedDate     = isset($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) && ! empty($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) ? $output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate'] : '';
+                        $instrumentNumber = isset($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) && !empty($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber']) ? $output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['InstrumentNumber'] : '';
+                        $recordedDate     = isset($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) && !empty($output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate']) ? $output_result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'][0]['RecordedDate'] : '';
 
                         $tpData['legal_description']   = $briefLegal;
                         $tpData['vesting_information'] = $vesting;
@@ -445,7 +445,7 @@ class Cron extends MX_Controller
 
         $endPoint = 'types/products';
 
-        if (isset($counties) && ! empty($counties)) {
+        if (isset($counties) && !empty($counties)) {
             $insertCount = $updateCount = $rowCount = $notAddCount = 0;
             foreach ($counties as $k => $v) {
                 $requestParams = json_encode(['State' => 'CA', 'County' => $v]);
@@ -456,7 +456,7 @@ class Cron extends MX_Controller
                 $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_product_types', env('RESWARE_ORDER_API') . $endPoint, [], $result, 0, $logid);
                 $response = json_decode($result, true);
 
-                if (isset($response) && ! empty($response)) {
+                if (isset($response) && !empty($response)) {
                     foreach ($response as $key => $value) {
                         $rowCount++;
                         // $display_name = '';
@@ -551,11 +551,11 @@ class Cron extends MX_Controller
         $customer_lists = $this->home_model->get_customers($condition);
         $insertCount    = $updateCount    = $rowCount    = $notUpdatePasswordCount    = 0;
 
-        if (isset($customer_lists) && ! empty($customer_lists)) {
+        if (isset($customer_lists) && !empty($customer_lists)) {
 
             foreach (array_chunk($customer_lists, 50) as $key => $value) {
 
-                if (isset($value) && ! empty($value)) {
+                if (isset($value) && !empty($value)) {
 
                     foreach ($value as $k => $v) {
                         $userdata          = $v;
@@ -564,15 +564,15 @@ class Cron extends MX_Controller
                             'id' => $userdata['id'],
                         ];
 
-                        if (! empty($v['random_password']) && $v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
+                        if (!empty($v['random_password']) && $v['is_sales_rep'] == 0 && $v['is_title_officer'] == 0) {
                             $logid  = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', env('RESWARE_ORDER_API') . 'me', [], [], 0, 0);
                             $result = $this->make_request('GET', 'me', '', $userdata);
                             $this->apiLogs->syncLogs($userdata['id'], 'resware', 'password_check', env('RESWARE_ORDER_API') . 'me', [], $result, 0, $logid);
 
-                            if (isset($result) && ! empty($result)) {
+                            if (isset($result) && !empty($result)) {
                                 $response = json_decode($result, true);
 
-                                if (isset($response['Me']) && ! empty($response['Me'])) {
+                                if (isset($response['Me']) && !empty($response['Me'])) {
                                     $customerData = [
                                         'is_password_updated' => 1,
                                         'resware_error_msg'   => null,
@@ -651,10 +651,10 @@ class Cron extends MX_Controller
         $customer_lists = $this->home_model->get_customers($condition);
 
         $updateCount = $rowCount = $notAddCount = 0;
-        if (isset($customer_lists) && ! empty($customer_lists)) {
+        if (isset($customer_lists) && !empty($customer_lists)) {
 
             foreach (array_chunk($customer_lists, 50) as $key => $value) {
-                if (isset($value) && ! empty($value)) {
+                if (isset($value) && !empty($value)) {
                     foreach ($value as $k => $v) {
                         $rowCount++;
                         $userdata          = $v;
@@ -665,15 +665,15 @@ class Cron extends MX_Controller
 
                         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'validate_user', env('RESWARE_ORDER_API') . 'me', [], $result, 0, $logid);
 
-                        if (isset($result) && ! empty($result)) {
+                        if (isset($result) && !empty($result)) {
                             $response = json_decode($result, true);
 
-                            if (isset($response['Me']) && ! empty($response['Me'])) {
+                            if (isset($response['Me']) && !empty($response['Me'])) {
                                 $condition = [
                                     'id' => $userdata['id'],
                                 ];
-                                $userId       = isset($response['Me']['UserID']) && ! empty($response['Me']['UserID']) ? $response['Me']['UserID'] : '';
-                                $partnerId    = isset($response['MyCompany']['PartnerID']) && ! empty($response['MyCompany']['PartnerID']) ? $response['MyCompany']['PartnerID'] : '';
+                                $userId       = isset($response['Me']['UserID']) && !empty($response['Me']['UserID']) ? $response['Me']['UserID'] : '';
+                                $partnerId    = isset($response['MyCompany']['PartnerID']) && !empty($response['MyCompany']['PartnerID']) ? $response['MyCompany']['PartnerID'] : '';
                                 $customerData = [
                                     'resware_user_id' => $userId,
                                     'partner_id'      => $partnerId,
@@ -711,15 +711,15 @@ class Cron extends MX_Controller
         $customer_lists      = $this->home_model->get_customers($condition);
         $updatePasswordCount = $notUpdatePasswordCount = 0;
 
-        if (isset($customer_lists) && ! empty($customer_lists)) {
+        if (isset($customer_lists) && !empty($customer_lists)) {
 
             foreach (array_chunk($customer_lists, 50) as $key => $value) {
 
-                if (isset($value) && ! empty($value)) {
+                if (isset($value) && !empty($value)) {
 
                     foreach ($value as $k => $v) {
 
-                        if (! empty($v['resware_user_id']) && ! empty($v['partner_id']) && ! empty($v['email_address'])) {
+                        if (!empty($v['resware_user_id']) && !empty($v['partner_id']) && !empty($v['email_address'])) {
                             $endPoint       = 'admin/partners/' . $v['partner_id'] . '/employees/' . $v['resware_user_id'];
                             $userUpdateData = [
                                 'Password'               => 'Pacific1',
@@ -829,10 +829,10 @@ class Cron extends MX_Controller
                             $logid  = $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, [], 0, 0);
                             $result = $this->make_request('PUT', $endPoint, $userUpdateData, $userdata);
                             $this->apiLogs->syncLogs($v['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, $result, 0, $logid);
-                            if (isset($result) && ! empty($result)) {
+                            if (isset($result) && !empty($result)) {
                                 $response = json_decode($result, true);
 
-                                if (isset($response['Employee']) && ! empty($response['Employee'])) {
+                                if (isset($response['Employee']) && !empty($response['Employee'])) {
                                     $random_password = $this->order->randomPassword();
                                     $condition       = [
                                         'id' => $v['id'],
@@ -872,21 +872,21 @@ class Cron extends MX_Controller
         $customer_lists      = $this->db->get('customer_basic_details')->result_array();
         $insertedPartnerInfo = $updatedPartnerInfo = $notInsertedPartnerInfo = 0;
 
-        if (isset($customer_lists) && ! empty($customer_lists)) {
+        if (isset($customer_lists) && !empty($customer_lists)) {
             foreach (array_chunk($customer_lists, 50) as $key => $value) {
-                if (isset($value) && ! empty($value)) {
+                if (isset($value) && !empty($value)) {
                     foreach ($value as $k => $v) {
-                        if (! empty($v['company_name']) && ! empty($v['partner_id'])) {
+                        if (!empty($v['company_name']) && !empty($v['partner_id'])) {
                             $endPoint          = 'admin/partners/' . $v['partner_id'];
                             $userdata['email'] = $userdata['email_address'];
                             $logid             = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API') . $endPoint, [], [], 0, 0);
                             $result            = $this->make_request('GET', $endPoint, [], $userdata);
                             $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API') . $endPoint, [], $result, 0, $logid);
 
-                            if (isset($result) && ! empty($result)) {
+                            if (isset($result) && !empty($result)) {
                                 $response = json_decode($result, true);
 
-                                if (isset($response['AdminPartner']) && ! empty($response['AdminPartner'])) {
+                                if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
 
                                     $con = [
                                         'where'      => [
@@ -897,7 +897,7 @@ class Cron extends MX_Controller
                                     $prevCount = $this->home_model->get_company_rows($con);
 
                                     $partnerTyepIds = [];
-                                    if (! empty($response['AdminPartner']['PartnerTypes'])) {
+                                    if (!empty($response['AdminPartner']['PartnerTypes'])) {
                                         foreach ($response['AdminPartner']['PartnerTypes'] as $partnerType) {
                                             $partnerTyepIds[] = $partnerType['PartnerTypeID'];
                                         }
@@ -906,7 +906,7 @@ class Cron extends MX_Controller
                                     if ($prevCount > 0) {
                                         $customerData = [
                                             'partner_name'    => trim($response['AdminPartner']['PartnerName']),
-                                            'email'           => ! empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'email'           => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
                                             'address1'        => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city'            => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state'           => trim($response['AdminPartner']['MailingAddress']['State']),
@@ -922,7 +922,7 @@ class Cron extends MX_Controller
                                     } else {
                                         $customerData = [
                                             'partner_id'      => trim($response['AdminPartner']['PartnerCompanyID']),
-                                            'email'           => ! empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'email'           => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
                                             'partner_name'    => trim($response['AdminPartner']['PartnerName']),
                                             'address1'        => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city'            => trim($response['AdminPartner']['MailingAddress']['City']),
@@ -950,20 +950,20 @@ class Cron extends MX_Controller
         }
 
         $agents_lists = $this->db->get('agents')->result_array();
-        if (isset($agents_lists) && ! empty($agents_lists)) {
+        if (isset($agents_lists) && !empty($agents_lists)) {
             foreach (array_chunk($agents_lists, 50) as $key => $value) {
-                if (isset($value) && ! empty($value)) {
+                if (isset($value) && !empty($value)) {
                     foreach ($value as $k => $v) {
-                        if (! empty($v['company']) && ! empty($v['partner_id'])) {
+                        if (!empty($v['company']) && !empty($v['partner_id'])) {
                             $endPoint          = 'admin/partners/' . $v['partner_id'];
                             $userdata['email'] = $userdata['email_address'];
                             $logid             = $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API') . $endPoint, [], [], 0, 0);
                             $result            = $this->make_request('GET', $endPoint, [], $userdata);
                             $this->apiLogs->syncLogs($v['id'], 'resware', 'get_partner_information', env('RESWARE_ORDER_API') . $endPoint, [], $result, 0, $logid);
 
-                            if (isset($result) && ! empty($result)) {
+                            if (isset($result) && !empty($result)) {
                                 $response = json_decode($result, true);
-                                if (isset($response['AdminPartner']) && ! empty($response['AdminPartner'])) {
+                                if (isset($response['AdminPartner']) && !empty($response['AdminPartner'])) {
                                     $con = [
                                         'where'      => [
                                             'partner_id' => trim($response['AdminPartner']['PartnerCompanyID']),
@@ -973,7 +973,7 @@ class Cron extends MX_Controller
                                     $prevCount = $this->home_model->get_company_rows($con);
 
                                     $partnerTyepIds = [];
-                                    if (! empty($response['AdminPartner']['PartnerTypes'])) {
+                                    if (!empty($response['AdminPartner']['PartnerTypes'])) {
                                         foreach ($response['AdminPartner']['PartnerTypes'] as $partnerType) {
                                             $partnerTyepIds[] = $partnerType['PartnerTypeID'];
                                         }
@@ -982,7 +982,7 @@ class Cron extends MX_Controller
                                     if ($prevCount > 0) {
                                         $customerData = [
                                             'partner_name'    => trim($response['AdminPartner']['PartnerName']),
-                                            'email'           => ! empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'email'           => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
                                             'address1'        => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city'            => trim($response['AdminPartner']['MailingAddress']['City']),
                                             'state'           => trim($response['AdminPartner']['MailingAddress']['State']),
@@ -998,7 +998,7 @@ class Cron extends MX_Controller
                                     } else {
                                         $customerData = [
                                             'partner_id'      => trim($response['AdminPartner']['PartnerCompanyID']),
-                                            'email'           => ! empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
+                                            'email'           => !empty($response['AdminPartner']['ContactInformation']['EmailAddress']) ? $response['AdminPartner']['ContactInformation']['EmailAddress'] : null,
                                             'partner_name'    => trim($response['AdminPartner']['PartnerName']),
                                             'address1'        => trim($response['AdminPartner']['MailingAddress']['Address1']),
                                             'city'            => trim($response['AdminPartner']['MailingAddress']['City']),
@@ -1043,7 +1043,7 @@ class Cron extends MX_Controller
         $query        = $this->db->get();
         $orderDetails = $query->result_array();
 
-        if (! empty($orderDetails)) {
+        if (!empty($orderDetails)) {
             foreach ($orderDetails as $orderDetail) {
                 $key                  = array_search($orderDetail['customer_id'], array_column($customers, 'id'));
                 $userdata['email']    = 'admin@pct24.com';
@@ -1073,7 +1073,7 @@ class Cron extends MX_Controller
 
         $customer_lists = $this->home_model->get_customers($condition);
 
-        if (isset($customer_lists) && ! empty($customer_lists)) {
+        if (isset($customer_lists) && !empty($customer_lists)) {
             foreach ($customer_lists as $key => $salesRep) {
                 $this->import_sales_rep_orders($salesRep);
             }
@@ -1100,7 +1100,7 @@ class Cron extends MX_Controller
             $userdata['email'] = $userdata['email_address'];
         }
 
-        if (isset($userdata) && ! empty($userdata)) {
+        if (isset($userdata) && !empty($userdata)) {
             /* Fetch records from resware */
             foreach ($order_status as $key => $value) {
                 $status = [];
@@ -1118,7 +1118,7 @@ class Cron extends MX_Controller
 
                 $result = json_decode($res, true);
 
-                if (isset($result['Files']) && ! empty($result['Files'])) {
+                if (isset($result['Files']) && !empty($result['Files'])) {
                     $this->db->simple_query('SET SESSION group_concat_max_len=150000');
                     $this->db->select('GROUP_CONCAT(file_id) as file_ids');
                     $this->db->from('order_details');
@@ -1129,13 +1129,13 @@ class Cron extends MX_Controller
 
                     $filesResult = $query->row_array();
 
-                    if (! empty($filesResult)) {
+                    if (!empty($filesResult)) {
                         $file_ids = explode(',', $filesResult['file_ids']);
                     } else {
                         $syncFlag = 0;
                     }
                     foreach ($result['Files'] as $res) {
-                        if (! empty($file_ids)) {
+                        if (!empty($file_ids)) {
                             if (in_array((int) $res['FileID'], $file_ids)) {
                                 $syncFlag = 1;
                             } else {
@@ -1151,7 +1151,7 @@ class Cron extends MX_Controller
                             $locale = $res['Properties'][0]['City'];
 
                             if (($locale)) {
-                                if (! empty($res['Properties'][0]['State'])) {
+                                if (!empty($res['Properties'][0]['State'])) {
                                     $locale .= ', ' . $res['Properties'][0]['State'];
                                 } else {
                                     $locale .= ', CA';
@@ -1160,9 +1160,9 @@ class Cron extends MX_Controller
 
                             $property_details = $this->getSearchResult($address, $locale);
 
-                            $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                            $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                            $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                            $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                            $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                            $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                             /* get blackkight data */
 
                             $propertyData = [
@@ -1189,23 +1189,23 @@ class Cron extends MX_Controller
 
                             $transactionData = [
                                 'customer_id'          => 0,
-                                'sales_amount'         => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                'sales_amount'         => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
                                 'sales_representative' => $userdata['id'],
-                                'loan_number'          => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                                'loan_amount'          => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                 'transaction_type'     => $res['TransactionProductType']['TransactionTypeID'],
                                 'purchase_type'        => $res['TransactionProductType']['ProductTypeID'],
                                 'status'               => 1,
                             ];
 
-                            $primary_owner = isset($res['Buyers'][0]['Primary']['First']) && ! empty($res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
+                            $primary_owner = isset($res['Buyers'][0]['Primary']['First']) && !empty($res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
 
-                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Middle']) && ! empty($res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
-                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Last']) && ! empty($res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
+                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Middle']) && !empty($res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
+                            $primary_owner .= isset($res['Buyers'][0]['Primary']['Last']) && !empty($res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
 
-                            $secondary_owner = isset($res['Buyers'][0]['Secondary']['First']) && ! empty($res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
-                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Middle']) && ! empty($res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
-                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Last']) && ! empty($res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
+                            $secondary_owner = isset($res['Buyers'][0]['Secondary']['First']) && !empty($res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
+                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Middle']) && !empty($res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
+                            $secondary_owner .= isset($res['Buyers'][0]['Secondary']['Last']) && !empty($res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
 
                             $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
                             if (strpos($ProductTypeTxt, 'Loan') !== false) {
@@ -1215,8 +1215,8 @@ class Cron extends MX_Controller
                                 $transactionData['borrower']           = $primary_owner;
                                 $transactionData['secondary_borrower'] = $secondary_owner;
 
-                                $propertyData['primary_owner']   = isset($property_info['primary_owner']) && ! empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                                $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && ! empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                $propertyData['primary_owner']   = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                $propertyData['secondary_owner'] = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
                             }
 
                             $propertyId = $this->home_model->insert($propertyData, 'property_details');
@@ -1245,17 +1245,17 @@ class Cron extends MX_Controller
                             /* TP call */
                             $random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
 
-                            $propertyData['fipsCode'] = isset($property_details['fips']) && ! empty($property_details['fips']) ? $property_details['fips'] : '';
+                            $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
 
                             $propertyData['address'] = $address;
 
-                            $propertyData['city'] = isset($res['Properties'][0]['City']) && ! empty($res['Properties'][0]['City']) ? $res['Properties'][0]['City'] : '';
+                            $propertyData['city'] = isset($res['Properties'][0]['City']) && !empty($res['Properties'][0]['City']) ? $res['Properties'][0]['City'] : '';
 
-                            $propertyData['unit_no'] = isset($property_details['unit_no']) && ! empty($property_details['unit_no']) ? $property_details['unit_no'] : '';
+                            $propertyData['unit_no'] = isset($property_details['unit_no']) && !empty($property_details['unit_no']) ? $property_details['unit_no'] : '';
                             $propertyData['apn']     = $apn;
 
-                            $propertyData['state']  = isset($res['Properties'][0]['State']) && ! empty($res['Properties'][0]['State']) ? $res['Properties'][0]['State'] : '';
-                            $propertyData['county'] = isset($res['Properties'][0]['County']) && ! empty($res['Properties'][0]['County']) ? $res['Properties'][0]['County'] : '';
+                            $propertyData['state']  = isset($res['Properties'][0]['State']) && !empty($res['Properties'][0]['State']) ? $res['Properties'][0]['State'] : '';
+                            $propertyData['county'] = isset($res['Properties'][0]['County']) && !empty($res['Properties'][0]['County']) ? $res['Properties'][0]['County'] : '';
 
                             $this->tpCreateService(4, $random_number, $propertyData, $userdata);
 
@@ -1276,16 +1276,16 @@ class Cron extends MX_Controller
 
                             $titlePointDetails = $this->titlePointData->gettitlePointDetails($tp_condition);
 
-                            $serviceId = isset($titlePointDetails['cs4_service_id']) && ! empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
+                            $serviceId = isset($titlePointDetails['cs4_service_id']) && !empty($titlePointDetails['cs4_service_id']) ? $titlePointDetails['cs4_service_id'] : '';
                             $this->titlepoint->generateImg($serviceId, $res['FileNumber'], $orderId);
-                            $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && ! empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
+                            $instrumentNumber = isset($titlePointDetails['cs4_instrument_no']) && !empty($titlePointDetails['cs4_instrument_no']) ? $titlePointDetails['cs4_instrument_no'] : '';
 
-                            $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && ! empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
-                            $fips         = isset($titlePointDetails['fips']) && ! empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
+                            $recordedDate = isset($titlePointDetails['cs4_recorded_date']) && !empty($titlePointDetails['cs4_recorded_date']) ? $titlePointDetails['cs4_recorded_date'] : '';
+                            $fips         = isset($titlePointDetails['fips']) && !empty($titlePointDetails['fips']) ? $titlePointDetails['fips'] : '';
 
                             $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $res['FileNumber'], $orderId);
 
-                            $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && ! empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
+                            $tax_serviceId = isset($titlePointDetails['cs3_service_id']) && !empty($titlePointDetails['cs3_service_id']) ? $titlePointDetails['cs3_service_id'] : '';
 
                             $this->titlepoint->generateTaxDoc($tax_serviceId, $res['FileNumber'], $orderId);
 
@@ -1352,11 +1352,11 @@ class Cron extends MX_Controller
         ];
 
         if ($methodId == 4) {
-            $fipsCode = isset($propertyData['fipsCode']) && ! empty($propertyData['fipsCode']) ? $propertyData['fipsCode'] : '';
-            $address  = isset($propertyData['address']) && ! empty($propertyData['address']) ? $propertyData['address'] : '';
-            $city     = isset($propertyData['city']) && ! empty($propertyData['city']) ? $propertyData['city'] : '';
-            $unit_no  = isset($propertyData['unit_no']) && ! empty($propertyData['unit_no']) ? $propertyData['unit_no'] : '';
-            $apn      = isset($propertyData['apn']) && ! empty($propertyData['apn']) ? $propertyData['apn'] : '';
+            $fipsCode = isset($propertyData['fipsCode']) && !empty($propertyData['fipsCode']) ? $propertyData['fipsCode'] : '';
+            $address  = isset($propertyData['address']) && !empty($propertyData['address']) ? $propertyData['address'] : '';
+            $city     = isset($propertyData['city']) && !empty($propertyData['city']) ? $propertyData['city'] : '';
+            $unit_no  = isset($propertyData['unit_no']) && !empty($propertyData['unit_no']) ? $propertyData['unit_no'] : '';
+            $apn      = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
             if ($unit_no) {
                 $unitinfo = 'UnitNumber ' . $unit_no . ', ';
             }
@@ -1368,12 +1368,12 @@ class Cron extends MX_Controller
             $requestUrl                  = env('TP_CREATE_SERVICE_ENDPOINT');
             $request_type                = 'sales_create_service_4';
         } else if ($methodId == 3) {
-            $apn = isset($propertyData['apn']) && ! empty($propertyData['apn']) ? $propertyData['apn'] : '';
+            $apn = isset($propertyData['apn']) && !empty($propertyData['apn']) ? $propertyData['apn'] : '';
             $apn = str_replace('0000', '0-000', $apn);
 
-            $state = isset($propertyData['state']) && ! empty($propertyData['state']) ? $propertyData['state'] : '';
+            $state = isset($propertyData['state']) && !empty($propertyData['state']) ? $propertyData['state'] : '';
 
-            $county = isset($propertyData['county']) && ! empty($propertyData['county']) ? $propertyData['county'] : '';
+            $county = isset($propertyData['county']) && !empty($propertyData['county']) ? $propertyData['county'] : '';
 
             $requestParams['serviceType'] = env('TAX_SEARCH_SERVICE_TYPE');
 
@@ -1429,11 +1429,11 @@ class Cron extends MX_Controller
             }
         } else {
 
-            $responseStatus = isset($result['ReturnStatus']) && ! empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 
             if ($methodId == 4) {
                 if ($responseStatus == 'Success') {
-                    $requestId = isset($result['RequestID']) && ! empty($result['RequestID']) ? $result['RequestID'] : '';
+                    $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
                     $tpData    = [
                         'cs4_request_id' => $requestId,
                     ];
@@ -1453,14 +1453,14 @@ class Cron extends MX_Controller
                     $response = $this->tpGetRequestSummaries(4, $requestId, $random_number);
                     /* Get Request Summary */
                 } else {
-                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && ! empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
                     $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
 
             }
             if ($methodId == 3) {
                 if ($responseStatus == 'Success') {
-                    $requestId = isset($result['RequestID']) && ! empty($result['RequestID']) ? $result['RequestID'] : '';
+                    $requestId = isset($result['RequestID']) && !empty($result['RequestID']) ? $result['RequestID'] : '';
 
                     $tpData = [
                         'cs3_request_id' => $requestId,
@@ -1481,7 +1481,7 @@ class Cron extends MX_Controller
                     $response = $this->tpGetRequestSummaries(3, $requestId, $random_number);
                     /* Get Request Summary */
                 } else {
-                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && ! empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
                     $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
@@ -1591,17 +1591,17 @@ class Cron extends MX_Controller
                 $tpId = $this->titlePointData->insert($tpData);
             }
         } else {
-            $responseStatus = isset($result['ReturnStatus']) && ! empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
 
             $session_data = [];
 
             if ($methodId == 4) {
                 if ($responseStatus == 'Success') {
-                    $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && ! empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+                    $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
 
                     if ($status == 'Complete') {
-                        $resultId  = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && ! empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : '';
-                        $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && ! empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+                        $resultId  = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail'][0]['ID'] : '';
+                        $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
 
                         $tpData = [
                             'cs4_result_id'  => $resultId,
@@ -1629,17 +1629,17 @@ class Cron extends MX_Controller
                     }
 
                 } else {
-                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && ! empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
                     $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
             if ($methodId == 3) {
                 if ($responseStatus == 'Success') {
-                    $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && ! empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
+                    $status = isset($result['RequestSummaries']['RequestSummary']['Status']) && !empty($result['RequestSummaries']['RequestSummary']['Status']) ? $result['RequestSummaries']['RequestSummary']['Status'] : '';
 
                     if ($status == 'Complete') {
-                        $resultId  = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && ! empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
-                        $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && ! empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
+                        $resultId  = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ThumbNails']['ResultThumbNail']['ID'] : '';
+                        $serviceId = isset($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) && !empty($result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID']) ? $result['RequestSummaries']['RequestSummary']['Order']['Services']['Service']['ID'] : '';
                         $tpData    = [
                             'cs3_result_id'  => $resultId,
                             'cs3_service_id' => $serviceId,
@@ -1664,7 +1664,7 @@ class Cron extends MX_Controller
                         $this->tpGetResultById(3, $resultId, $random_number);
                     }
                 } else {
-                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && ! empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
                     $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
@@ -1734,41 +1734,41 @@ class Cron extends MX_Controller
                 $tpId = $this->titlePointData->insert($tpData);
             }
         } else {
-            $responseStatus = isset($result['ReturnStatus']) && ! empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+            $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $session_data   = [];
 
             if ($methodId == 4) {
                 if ($responseStatus == 'Success') {
-                    $briefLegal = isset($result['Result']['BriefLegal']) && ! empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
+                    $briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';
 
-                    $vesting = isset($result['Result']['Vesting']) && ! empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
+                    $vesting = isset($result['Result']['Vesting']) && !empty($result['Result']['Vesting']) ? $result['Result']['Vesting'] : '';
 
-                    $fips = isset($result['Result']['Fips']) && ! empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
+                    $fips = isset($result['Result']['Fips']) && !empty($result['Result']['Fips']) ? $result['Result']['Fips'] : '';
 
-                    $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && ! empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : [];
+                    $legal_vesting_info = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo'] : [];
 
                     if (count($legal_vesting_info) == count($legal_vesting_info, COUNT_RECURSIVE)) {
-                        $docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && ! empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
+                        $docType = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['DocType'] : '';
                         $docType = strtolower($docType);
 
                         if ($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution') {
-                            $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && ! empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
-                            $recordedDate     = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && ! empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
+                            $instrumentNumber = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['InstrumentNumber'] : '';
+                            $recordedDate     = isset($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) && !empty($result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate']) ? $result['Result']['LvDeeds']['LegalAndVesting2DeedInfo']['RecordedDate'] : '';
                         }
 
                     } else {
                         foreach ($legal_vesting_info as $key => $value) {
-                            $docType = isset($value['DocType']) && ! empty($value['DocType']) ? $value['DocType'] : '';
+                            $docType = isset($value['DocType']) && !empty($value['DocType']) ? $value['DocType'] : '';
                             $docType = strtolower($docType);
 
                             if ($docType == 'grant deed' || $docType == 'intrafamily transfer & dissolution' || $docType == 'quit claim deed' || $docType == 'intra-family transfer or dissolution') {
-                                $instrumentNumber = isset($value['InstrumentNumber']) && ! empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
-                                $recordedDate     = isset($value['RecordedDate']) && ! empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
+                                $instrumentNumber = isset($value['InstrumentNumber']) && !empty($value['InstrumentNumber']) ? $value['InstrumentNumber'] : '';
+                                $recordedDate     = isset($value['RecordedDate']) && !empty($value['RecordedDate']) ? $value['RecordedDate'] : '';
                                 break;
                             }
                         }
                     }
-                    $status = isset($result['Result']['Status']) && ! empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
+                    $status = isset($result['Result']['Status']) && !empty($result['Result']['Status']) ? $result['Result']['Status'] : '';
 
                     $tpData = [
                         'legal_description'   => $briefLegal,
@@ -1793,26 +1793,26 @@ class Cron extends MX_Controller
                     }
                     $this->addLogs($methodId, $responseStatus, $status, $error, $random_number);
                 } else {
-                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && ! empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
                     $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
             if ($methodId == 3) {
                 if ($responseStatus == 'Success') {
                     $firstInstallment = $secondInstallment = [];
-                    if (isset($result['Result']['TaxReport']['Installments']['Item'][0]) && ! empty($result['Result']['TaxReport']['Installments']['Item'][0])) {
+                    if (isset($result['Result']['TaxReport']['Installments']['Item'][0]) && !empty($result['Result']['TaxReport']['Installments']['Item'][0])) {
                         $firstInstallment = $result['Result']['TaxReport']['Installments']['Item'][0];
                     }
 
-                    if (isset($result['Result']['TaxReport']['Installments']['Item'][1]) && ! empty($result['Result']['TaxReport']['Installments']['Item'][1])) {
+                    if (isset($result['Result']['TaxReport']['Installments']['Item'][1]) && !empty($result['Result']['TaxReport']['Installments']['Item'][1])) {
                         $secondInstallment = $result['Result']['TaxReport']['Installments']['Item'][1];
                     }
 
-                    $status = isset($result['Result']['TaxReport']['Status']) && ! empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
+                    $status = isset($result['Result']['TaxReport']['Status']) && !empty($result['Result']['TaxReport']['Status']) ? $result['Result']['TaxReport']['Status'] : '';
                     if ($status == 'Success') {
                         $message = 'Success';
                     } else {
-                        $message = isset($result['Result']['TaxReport']['WarningMessage']) && ! empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
+                        $message = isset($result['Result']['TaxReport']['WarningMessage']) && !empty($result['Result']['TaxReport']['WarningMessage']) ? $result['Result']['TaxReport']['WarningMessage'] : '';
                     }
 
                     $tpData = [
@@ -1832,7 +1832,7 @@ class Cron extends MX_Controller
                     }
                     $this->addLogs($methodId, $responseStatus, $message, $error, $random_number);
                 } else {
-                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && ! empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
+                    $error = isset($result['ReturnErrors']['ReturnError']['ErrorDescription']) && !empty($result['ReturnErrors']['ReturnError']['ErrorDescription']) ? $result['ReturnErrors']['ReturnError']['ErrorDescription'] : '';
                     $this->addLogs($methodId, $responseStatus, '', $error, $random_number);
                 }
             }
@@ -1883,7 +1883,7 @@ class Cron extends MX_Controller
                 $query  = $this->db->get();
                 $result = $query->result_array();
 
-                if (! empty($result)) {
+                if (!empty($result)) {
                     $delimiter = ",";
 
                     if (isset($user) && $user == 'escrows') {
@@ -1941,27 +1941,27 @@ class Cron extends MX_Controller
         } else {
             $this->load->library('order/order');
             $orderDetails = $this->order->get_order_details($fileId);
-            if (! empty($orderDetails)) {
+            if (!empty($orderDetails)) {
                 if ($orderDetails['sales_amount'] > 0) {
-                    if (! empty($orderDetails['borrower'])) {
+                    if (!empty($orderDetails['borrower'])) {
                         $orderDetails['primary_owner_name'] = $orderDetails['borrower'];
                     } else {
                         $orderDetails['primary_owner_name'] = '';
                     }
 
-                    if (! empty($orderDetails['secondary_borrower'])) {
+                    if (!empty($orderDetails['secondary_borrower'])) {
                         $orderDetails['secondary_owner_name'] = $orderDetails['secondary_borrower'];
                     } else {
                         $orderDetails['secondary_owner_name'] = '';
                     }
                 } else {
-                    if (! empty($orderDetails['primary_owner'])) {
+                    if (!empty($orderDetails['primary_owner'])) {
                         $orderDetails['primary_owner_name'] = $orderDetails['primary_owner'];
                     } else {
                         $orderDetails['primary_owner_name'] = '';
                     }
 
-                    if (! empty($orderDetails['secondary_owner'])) {
+                    if (!empty($orderDetails['secondary_owner'])) {
                         $orderDetails['secondary_owner_name'] = $orderDetails['secondary_owner'];
                     } else {
                         $orderDetails['secondary_owner_name'] = '';
@@ -1970,8 +1970,8 @@ class Cron extends MX_Controller
 
                 $orderUser = $this->home_model->sp_get_user(['id' => $orderDetails['customer_id']]);
 
-                if (! empty($orderUser) && $orderUser['is_escrow'] == 1) {
-                    if (! empty($orderDetails['cpl_lender_id'])) {
+                if (!empty($orderUser) && $orderUser['is_escrow'] == 1) {
+                    if (!empty($orderDetails['cpl_lender_id'])) {
                         $lenderDetails                            = $this->home_model->sp_get_user(['id' => $orderDetails['cpl_lender_id']]);
                         $orderDetails['lender_first_name']        = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                         $orderDetails['lender_last_name']         = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
@@ -1996,7 +1996,7 @@ class Cron extends MX_Controller
                         $orderDetails['lender_id']                = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
                     }
                 } else {
-                    if (! empty($orderDetails['cpl_lender_id'])) {
+                    if (!empty($orderDetails['cpl_lender_id'])) {
                         $lenderDetails                            = $this->home_model->sp_get_user(['id' => $orderDetails['cpl_lender_id']]);
                         $orderDetails['lender_first_name']        = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
                         $orderDetails['lender_last_name']         = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
@@ -2082,7 +2082,7 @@ class Cron extends MX_Controller
         $result   = json_decode($res, true);
         $file_ids = [];
 
-        if (isset($result['Files']) && ! empty($result['Files'])) {
+        if (isset($result['Files']) && !empty($result['Files'])) {
             foreach ($result['Files'] as $res) {
                 $key = array_search($res['FileID'], array_column($filesResult, 'file_id'));
                 if ($key) {
@@ -2120,7 +2120,7 @@ class Cron extends MX_Controller
                     }
                 }
             }
-            if (! empty($file_ids)) {
+            if (!empty($file_ids)) {
                 $updateData = ['resware_status' => 'hold', 'on_hold_mail_sent' => 1];
                 $this->db->set($updateData);
                 $this->db->where_in('file_id', $file_ids);
@@ -2144,7 +2144,7 @@ class Cron extends MX_Controller
         $query       = $this->db->get();
         $filesResult = $query->result_array();
 
-        if (isset($filesResult) && ! empty($filesResult)) {
+        if (isset($filesResult) && !empty($filesResult)) {
             foreach ($filesResult as $file) {
                 $data                  = [];
                 $userdata['admin_api'] = 1;
@@ -2181,7 +2181,7 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $res) {
                 $url   = env('SAFEWIRE_URL') . $res['file_id'] . '/status';
                 $logid = $this->apiLogs->syncLogs(0, 'safewire', 'get_order_status', $url, [], [], $res['id'], 0);
@@ -2199,7 +2199,7 @@ class Cron extends MX_Controller
                 $this->apiLogs->syncLogs(0, 'safewire', 'get_wire_detail_pdf', $url, [], $result, $res['id'], $logid);
 
                 $resultSafewire = json_decode($result, true);
-                if (isset($resultSafewire['order_id']) && ! empty($resultSafewire['order_id'])) {
+                if (isset($resultSafewire['order_id']) && !empty($resultSafewire['order_id'])) {
                     $this->home_model->update(['safewire_order_status' => $resultSafewire['status']], ['file_id' => $res['file_id']], 'order_details');
                     if ($resultSafewire['status'] == 'completed' && $res['safewire_order_status'] != 'completed') {
                         $this->load->library('order/order');
@@ -2245,7 +2245,7 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             $checkFlag = 0;
             $data      = [];
             $i         = 0;
@@ -2261,11 +2261,11 @@ class Cron extends MX_Controller
                     $data['order_info'][$i]['address']        = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['order_info'][$i]['closed_date']    = date("m/d/Y", strtotime($res['resware_closed_status_date']));
-                    $data['sales_rep_profile_thank_you_img']  = ! empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
-                    if (! empty($data['sales_rep_profile_thank_you_img'])) {
+                    $data['sales_rep_profile_thank_you_img']  = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if (!empty($data['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH') . str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
                     }
-                    $data['sales_email'] = ! empty($res['sales_email']) ? $res['sales_email'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 } else {
                     $message    = $this->load->view('emails/thank_you_escrow.php', $data, true);
@@ -2296,17 +2296,17 @@ class Cron extends MX_Controller
                     $data['order_info'][$i]['address']        = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['order_info'][$i]['closed_date']    = date("m/d/Y", strtotime($res['resware_closed_status_date']));
-                    $data['sales_rep_profile_thank_you_img']  = ! empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
-                    if (! empty($data['sales_rep_profile_thank_you_img'])) {
+                    $data['sales_rep_profile_thank_you_img']  = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if (!empty($data['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH') . str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
                     }
-                    $data['sales_email'] = ! empty($res['sales_email']) ? $res['sales_email'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 }
                 $sales_email = $res['sales_email'];
                 $order_id    = $res['order_id'];
             }
-            if (! empty($data)) {
+            if (!empty($data)) {
                 $message   = $this->load->view('emails/thank_you_escrow.php', $data, true);
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
@@ -2472,9 +2472,9 @@ class Cron extends MX_Controller
                         if (in_array('Email', $headerColumns)) {
                             $emailkey    = array_search("Email", $headerColumns);
                             $sales_email = strtolower(trim($data[$emailkey]));
-                            if (! empty($sales_email)) {
+                            if (!empty($sales_email)) {
                                 $saleUserKey = array_search($sales_email, array_column($salesUsers, 'email'));
-                                if (isset($saleUserKey) && ! empty($saleUserKey)) {
+                                if (isset($saleUserKey) && !empty($saleUserKey)) {
                                     $salesRepId = $salesUsers[$saleUserKey]['id'];
                                 }
                             }
@@ -2486,9 +2486,9 @@ class Cron extends MX_Controller
                                 $saleskey     = array_search("Sales Rep", $headerColumns);
                                 $salesRepName = strtolower(trim($data[$saleskey]));
 
-                                if (! empty($salesRepName)) {
+                                if (!empty($salesRepName)) {
                                     $saleUserKey = array_search($salesRepName, array_column($salesUsers, 'sales_name'));
-                                    if (isset($saleUserKey) && ! empty($saleUserKey)) {
+                                    if (isset($saleUserKey) && !empty($saleUserKey)) {
                                         $salesRepId = $salesUsers[$saleUserKey]['id'];
                                     }
                                 }
@@ -2512,7 +2512,7 @@ class Cron extends MX_Controller
                             $titleOfficerName = preg_replace('/[^A-Za-z0-9&\_-]/', '', $titleOfficerName);
                             $titleOfficerName = str_replace('_', ' ', $titleOfficerName);
                             $titleOfckey      = array_search($titleOfficerName, array_column($titleOfficerNameArr, 'name'));
-                            if (isset($titleOfckey) && ! empty($titleOfckey)) {
+                            if (isset($titleOfckey) && !empty($titleOfckey)) {
                                 $titleOfficerId = $titleOfficerNameArr[$titleOfckey]['id'];
                             } else {
                                 $titleOfficerNameArr[$j]['name'] = $titleOfficerName;
@@ -2555,7 +2555,7 @@ class Cron extends MX_Controller
                             // }
 
                             $resultTitleOfficer = [];
-                            if (! empty($titleOfficerName)) {
+                            if (!empty($titleOfficerName)) {
                                 if ($titleOfficerId == 0) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
@@ -2563,12 +2563,12 @@ class Cron extends MX_Controller
                                     $this->db->where('is_title_officer', 1);
                                     $query              = $this->db->get();
                                     $resultTitleOfficer = $query->row_array();
-                                    if (! empty($resultTitleOfficer)) {
+                                    if (!empty($resultTitleOfficer)) {
                                         $titleOfficerId                = $resultTitleOfficer['id'];
                                         $titleOfficerNameArr[$j]['id'] = $titleOfficerId;
                                         $j++;
                                     } else {
-                                        if (! empty(trim($titleOfficerNameArr[$i]['name']))) {
+                                        if (!empty(trim($titleOfficerNameArr[$i]['name']))) {
                                             $titleOfficerNameArr[$j]['id'] = 0;
                                             $j++;
                                         }
@@ -2577,12 +2577,12 @@ class Cron extends MX_Controller
                             }
 
                             $completed_date = null;
-                            if (! empty($closedDate)) {
+                            if (!empty($closedDate)) {
                                 $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
                                 $completed_date = $myDateTime->format('Y-m-d H:i:s');
                             }
 
-                            if (! empty($file_number)) {
+                            if (!empty($file_number)) {
                                 $condition = [
                                     'where' => [
                                         'file_number' => $file_number,
@@ -2590,28 +2590,28 @@ class Cron extends MX_Controller
                                 ];
                                 $order = $this->order->get_order($condition);
 
-                                if (! empty($order)) {
+                                if (!empty($order)) {
                                     if (in_array($file_number, $file_numbers)) {
-                                        if (! empty($premium)) {
+                                        if (!empty($premium)) {
                                             $premium = (float) $premium + $order[0]['premium'];
                                         }
                                     }
                                     $file_numbers[] = $file_number;
                                     $orderData      = [];
 
-                                    if (! empty($prodType)) {
+                                    if (!empty($prodType)) {
                                         $orderData['prod_type'] = strtolower($prodType);
                                     }
 
-                                    if (! empty($premium)) {
+                                    if (!empty($premium)) {
                                         $orderData['premium'] = (float) $premium;
                                     }
 
-                                    if (! empty($completed_date)) {
+                                    if (!empty($completed_date)) {
                                         $orderData['sent_to_accounting_date'] = $completed_date;
                                     }
 
-                                    if (! empty($orderData)) {
+                                    if (!empty($orderData)) {
                                         $this->home_model->update(
                                             $orderData,
                                             [
@@ -2625,7 +2625,7 @@ class Cron extends MX_Controller
                                     $propertyAddress = $orderDetails['address'];
                                     $productTypeID   = $orderDetails['purchase_type'];
                                     $orderId         = $order[0]['id'];
-                                    if (! empty($salesRepId)) {
+                                    if (!empty($salesRepId)) {
                                         $this->home_model->update(
                                             [
                                                 'sales_representative' => $salesRepId,
@@ -2649,7 +2649,7 @@ class Cron extends MX_Controller
                                         }
                                     }
 
-                                    if (! empty($titleOfficerId)) {
+                                    if (!empty($titleOfficerId)) {
                                         $this->home_model->update(
                                             [
                                                 'title_officer' => $titleOfficerId,
@@ -2683,7 +2683,7 @@ class Cron extends MX_Controller
                                     $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
                                     $result = json_decode($res, true);
 
-                                    if (isset($result['Files']) && ! empty($result['Files'])) {
+                                    if (isset($result['Files']) && !empty($result['Files'])) {
                                         foreach ($result['Files'] as $res) {
                                             if (count($result['Files']) > 1 && strtolower($res['Status']['Name']) == 'cancelled') {
                                                 continue;
@@ -2700,7 +2700,7 @@ class Cron extends MX_Controller
                                             $user_details = $this->home_model->get_user_by_name($condition);
                                             $customerId   = 0;
 
-                                            if (isset($user_details) && ! empty($user_details)) {
+                                            if (isset($user_details) && !empty($user_details)) {
                                                 $customerId = $user_details['id'];
                                             }
 
@@ -2709,7 +2709,7 @@ class Cron extends MX_Controller
                                             $locale       = $res['Properties'][0]['City'];
 
                                             if (($locale)) {
-                                                if (! empty($res['Properties'][0]['State'])) {
+                                                if (!empty($res['Properties'][0]['State'])) {
                                                     $locale .= ', ' . $res['Properties'][0]['State'];
                                                 } else {
                                                     $locale .= ', CA';
@@ -2717,9 +2717,9 @@ class Cron extends MX_Controller
                                             }
 
                                             $property_details = $this->getSearchResult($address, $locale);
-                                            $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                                            $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                                            $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                                            $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                            $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                            $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                                             $propertyData     = [
                                                 'customer_id'       => $customerId,
                                                 'buyer_agent_id'    => 0,
@@ -2740,9 +2740,9 @@ class Cron extends MX_Controller
 
                                             $transactionData = [
                                                 'customer_id'          => $customerId,
-                                                'sales_amount'         => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
-                                                'loan_number'          => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                                                'loan_amount'          => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                                'sales_amount'         => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                                'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                                'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                                 'transaction_type'     => $res['TransactionProductType']['TransactionTypeID'],
                                                 'purchase_type'        => $res['TransactionProductType']['ProductTypeID'],
                                                 'sales_representative' => $salesRepId,
@@ -2766,8 +2766,8 @@ class Cron extends MX_Controller
                                             } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                                                 $transactionData['borrower']           = $primary_owner;
                                                 $transactionData['secondary_borrower'] = $secondary_owner;
-                                                $propertyData['primary_owner']         = isset($property_details['primary_owner']) && ! empty($property_details['primary_owner']) ? $property_details['primary_owner'] : '';
-                                                $propertyData['secondary_owner']       = isset($property_details['secondary_owner']) && ! empty($property_details['secondary_owner']) ? $property_details['secondary_owner'] : '';
+                                                $propertyData['primary_owner']         = isset($property_details['primary_owner']) && !empty($property_details['primary_owner']) ? $property_details['primary_owner'] : '';
+                                                $propertyData['secondary_owner']       = isset($property_details['secondary_owner']) && !empty($property_details['secondary_owner']) ? $property_details['secondary_owner'] : '';
                                             }
 
                                             $propertyId    = $this->home_model->insert($propertyData, 'property_details');
@@ -2779,7 +2779,7 @@ class Cron extends MX_Controller
 
                                             $completed_date = null;
                                             if (empty($closedDate)) {
-                                                if (! empty($res['Dates']['FileCompletedDate'])) {
+                                                if (!empty($res['Dates']['FileCompletedDate'])) {
                                                     $time           = round((int) (str_replace("-0000)/", "", str_replace("/Date(", "", $res['Dates']['FileCompletedDate']))) / 1000);
                                                     $completed_date = date('Y-m-d H:i:s', $time);
                                                 }
@@ -2803,11 +2803,11 @@ class Cron extends MX_Controller
                                                 'sent_to_accounting_date'    => $completed_date,
                                             ];
 
-                                            if (! empty($premium)) {
+                                            if (!empty($premium)) {
                                                 $orderData['premium'] = (float) $premium;
                                             }
 
-                                            if (! empty($completed_date)) {
+                                            if (!empty($completed_date)) {
                                                 $orderData['sent_to_accounting_date'] = $completed_date;
                                             }
 
@@ -2815,7 +2815,7 @@ class Cron extends MX_Controller
                                         }
                                     }
                                 }
-                                if (! empty($escrow_email)) {
+                                if (!empty($escrow_email)) {
                                     $from_name  = 'Pacific Coast Title Company';
                                     $from_mail  = env('FROM_EMAIL');
                                     $email_data = [
@@ -2879,18 +2879,18 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $res) {
                 $salesRepDetails = [];
-                if (! empty($res['sales_representative'])) {
+                if (!empty($res['sales_representative'])) {
                     $condition = [
                         'id' => $res['sales_representative'],
                     ];
                     $salesRepDetails = $this->home_model->getSalesRepDetails($condition);
                 }
 
-                $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && ! empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
-                if (! empty($sales_rep_img)) {
+                $sales_rep_img = isset($salesRepDetails["sales_rep_profile_img"]) && !empty($salesRepDetails["sales_rep_profile_img"]) ? $salesRepDetails["sales_rep_profile_img"] : '';
+                if (!empty($sales_rep_img)) {
                     $sales_rep_img = env('AWS_PATH') . str_replace('uploads/', '', $sales_rep_img);
                 }
                 $email_data = [
@@ -3040,7 +3040,7 @@ class Cron extends MX_Controller
                 $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
                 $result = json_decode($res, true);
 
-                if (isset($result['Files']) && ! empty($result['Files'])) {
+                if (isset($result['Files']) && !empty($result['Files'])) {
                     foreach ($result['Files'] as $res) {
                         $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
                         $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
@@ -3054,7 +3054,7 @@ class Cron extends MX_Controller
                         $user_details = $this->home_model->get_user_by_name($condition);
                         $customerId   = 0;
 
-                        if (isset($user_details) && ! empty($user_details)) {
+                        if (isset($user_details) && !empty($user_details)) {
                             $customerId = $user_details['id'];
                         }
 
@@ -3063,7 +3063,7 @@ class Cron extends MX_Controller
                         $locale       = $res['Properties'][0]['City'];
 
                         if (($locale)) {
-                            if (! empty($res['Properties'][0]['State'])) {
+                            if (!empty($res['Properties'][0]['State'])) {
                                 $locale .= ', ' . $res['Properties'][0]['State'];
                             } else {
                                 $locale .= ', CA';
@@ -3072,9 +3072,9 @@ class Cron extends MX_Controller
 
                         $property_details = $this->getSearchResult($address, $locale);
 
-                        $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                        $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                        $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                        $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                        $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                        $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
 
                         $propertyData = [
                             'customer_id'       => $customerId,
@@ -3096,12 +3096,12 @@ class Cron extends MX_Controller
 
                         $transactionData = [
                             'customer_id'          => $customerId,
-                            'sales_amount'         => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
-                            'loan_number'          => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                            'loan_amount'          => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                            'sales_amount'         => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                            'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                            'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                             'transaction_type'     => $res['TransactionProductType']['TransactionTypeID'],
                             'purchase_type'        => $res['TransactionProductType']['ProductTypeID'],
-                            'sales_representative' => ! empty($salesResult) ? $salesResult['id'] : 0,
+                            'sales_representative' => !empty($salesResult) ? $salesResult['id'] : 0,
                             'status'               => 1,
                         ];
 
@@ -3119,8 +3119,8 @@ class Cron extends MX_Controller
                         } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                             $transactionData['borrower']           = $primary_owner;
                             $transactionData['secondary_borrower'] = $secondary_owner;
-                            $propertyData['primary_owner']         = isset($property_info['primary_owner']) && ! empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                            $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && ! empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                            $propertyData['primary_owner']         = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                            $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
                         }
 
                         $propertyId    = $this->home_model->insert($propertyData, 'property_details');
@@ -3177,7 +3177,7 @@ class Cron extends MX_Controller
                 ];
 
                 $transData = [
-                    'sales_representative' => ! empty($salesResult) ? $salesResult['id'] : 0,
+                    'sales_representative' => !empty($salesResult) ? $salesResult['id'] : 0,
                 ];
 
                 $this->home_model->update($transData, $transCondition, 'transaction_details');
@@ -3197,7 +3197,7 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $customerData) {
                 $endPoint = 'admin/partners/' . $customerData['partner_id'] . '/employees/' . $customerData['resware_user_id'];
                 $method   = 'PUT';
@@ -3313,12 +3313,12 @@ class Cron extends MX_Controller
 
                 $this->apiLogs->syncLogs(0, 'resware', $apiType, env('RESWARE_ORDER_API') . $endPoint, $newUserData, $res, 0, $logid);
 
-                if (isset($res) && ! empty($res)) {
+                if (isset($res) && !empty($res)) {
                     $response = json_decode($res, true);
-                    if (isset($response['Employee']) && ! empty($response['Employee'])) {
+                    if (isset($response['Employee']) && !empty($response['Employee'])) {
                         $res = [
                             'resware_user_id' => $response['Employee']['UserID'],
-                            'msg'             => ! empty($customerData['resware_user_id']) ? 'User created successfully on Resware Side' : 'User updated successfully on Resware Side',
+                            'msg'             => !empty($customerData['resware_user_id']) ? 'User created successfully on Resware Side' : 'User updated successfully on Resware Side',
                             'success'         => true,
                         ];
                         $customerDataUpdate                    = [];
@@ -3334,7 +3334,7 @@ class Cron extends MX_Controller
                         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'change_password', env('RESWARE_UPDATE_PWD_API'), $reswareUpdatePwdData, $updatePwdResult, 0, $logid);
                         $responsePwd = json_decode($updatePwdResult, true);
 
-                        if (! empty($responsePwd['message'])) {
+                        if (!empty($responsePwd['message'])) {
                             $customerDataUpdate['resware_error_msg'] = $responsePwd['message'];
                         } else {
                             $customerDataUpdate['is_password_updated'] = 1;
@@ -3387,7 +3387,7 @@ class Cron extends MX_Controller
                     mkdir('./uploads/order-status', 0777, true);
                 }
                 $ext = pathinfo($file, PATHINFO_EXTENSION);
-                if (! empty($ext)) {
+                if (!empty($ext)) {
                     $sftp->get(env("SFTP_FOLDER") . '/order-status/' . $file, FCPATH . 'uploads/order-status/' . trim($file));
                     chmod(FCPATH . 'uploads/order-status/' . $file, 0755);
                 } else {
@@ -3465,9 +3465,9 @@ class Cron extends MX_Controller
                         if (in_array('Email', $headerColumns)) {
                             $emailkey    = array_search("Email", $headerColumns);
                             $sales_email = strtolower(trim($data[$emailkey]));
-                            if (! empty($sales_email)) {
+                            if (!empty($sales_email)) {
                                 $saleUserKey = array_search($sales_email, array_column($salesUsers, 'email'));
-                                if (isset($saleUserKey) && ! empty($saleUserKey)) {
+                                if (isset($saleUserKey) && !empty($saleUserKey)) {
                                     $salesRepId = $salesUsers[$saleUserKey]['id'];
                                 }
                             }
@@ -3478,9 +3478,9 @@ class Cron extends MX_Controller
                             if (in_array('Sales Rep', $headerColumns)) {
                                 $saleskey     = array_search("Sales Rep", $headerColumns);
                                 $salesRepName = strtolower(trim(preg_replace('/\s+/', ' ', $data[$saleskey])));
-                                if (! empty($salesRepName)) {
+                                if (!empty($salesRepName)) {
                                     $saleUserKey = array_search($salesRepName, array_column($salesUsers, 'sales_name'));
-                                    if (isset($saleUserKey) && ! empty($saleUserKey)) {
+                                    if (isset($saleUserKey) && !empty($saleUserKey)) {
                                         $salesRepId = $salesUsers[$saleUserKey]['id'];
                                     }
                                 }
@@ -3491,7 +3491,7 @@ class Cron extends MX_Controller
                         if ($row != 1) {
                             if (1 === preg_match('~[0-9]~', $file_number)) {
                                 $completed_date = null;
-                                if (! empty($closedDate)) {
+                                if (!empty($closedDate)) {
                                     $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
                                     $completed_date = $myDateTime->format('Y-m-d H:i:s');
                                 }
@@ -3537,7 +3537,7 @@ class Cron extends MX_Controller
                     }
                     fclose($handle);
 
-                    if (! empty($updateArray)) {
+                    if (!empty($updateArray)) {
                         $chunk1 = array_chunk($updateArray, 100);
                         for ($i = 0; $i < count($chunk1); $i++) {
                             $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
@@ -3556,7 +3556,7 @@ class Cron extends MX_Controller
                 rename(FCPATH . "/uploads/order-status/" . $documentName['basename'], FCPATH . "/uploads/order-status/" . $fileName);
                 $this->order->uploadDocumentOnAwsS3($fileName, 'order-status', 1);
 
-                if (! empty($closedFileNumbers)) {
+                if (!empty($closedFileNumbers)) {
                     // $param = $closedFileNumbers;
                     // $command = "php ".FCPATH."index.php frontend/order/cron sendThankYouEmailForClosedOrder $param";
                     // if (substr(php_uname(), 0, 7) == "Windows"){
@@ -3748,7 +3748,7 @@ class Cron extends MX_Controller
         //     $this->db->where('file_number', 0);
         //     $this->db->update('order_details');
 
-        //     if (! empty($closedFileNumbers)) {
+        //     if (!empty($closedFileNumbers)) {
         //         // $this->sendEmailForClosedOrder($closedFileNumbers);
 
         //     }
@@ -3883,10 +3883,10 @@ class Cron extends MX_Controller
                                 ],
                             ];
                             $order = $this->order->get_order($condition);
-                            if (! empty($order)) {
+                            if (!empty($order)) {
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
                                 $resultSales  = [];
-                                if (! empty($salesRepName) && empty($orderDetails['sales_representative'])) {
+                                if (!empty($salesRepName) && empty($orderDetails['sales_representative'])) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
                                     $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
@@ -3901,8 +3901,8 @@ class Cron extends MX_Controller
                                     $query       = $this->db->get();
                                     $resultSales = $query->row_array();
                                 }
-                                if (! empty($resultSales)) {
-                                    if (isset($resultSales['telephone_no']) && ! empty($resultSales['telephone_no'])) {
+                                if (!empty($resultSales)) {
+                                    if (isset($resultSales['telephone_no']) && !empty($resultSales['telephone_no'])) {
                                         $phoneNumber = $resultSales['telephone_no'];
                                         $sid         = env('TWILIO_SID');
                                         $token       = env('TWILIO_TOKEN');
@@ -3963,7 +3963,7 @@ class Cron extends MX_Controller
                                 $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
                                 $result = json_decode($res, true);
 
-                                if (isset($result['Files']) && ! empty($result['Files'])) {
+                                if (isset($result['Files']) && !empty($result['Files'])) {
                                     foreach ($result['Files'] as $res) {
                                         $partner_fname = $res['Partners'][0]['PrimaryEmployee']['FirstName'];
                                         $partner_lname = $res['Partners'][0]['PrimaryEmployee']['LastName'];
@@ -3977,7 +3977,7 @@ class Cron extends MX_Controller
                                         $user_details = $this->home_model->get_user_by_name($condition);
                                         $customerId   = 0;
 
-                                        if (isset($user_details) && ! empty($user_details)) {
+                                        if (isset($user_details) && !empty($user_details)) {
                                             $customerId = $user_details['id'];
                                         }
 
@@ -3986,7 +3986,7 @@ class Cron extends MX_Controller
                                         $locale       = $res['Properties'][0]['City'];
 
                                         if (($locale)) {
-                                            if (! empty($res['Properties'][0]['State'])) {
+                                            if (!empty($res['Properties'][0]['State'])) {
                                                 $locale .= ', ' . $res['Properties'][0]['State'];
                                             } else {
                                                 $locale .= ', CA';
@@ -3994,9 +3994,9 @@ class Cron extends MX_Controller
                                         }
 
                                         $property_details = $this->getSearchResult($address, $locale);
-                                        $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                                        $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                                        $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                                        $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                        $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                        $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                                         $propertyData     = [
                                             'customer_id'       => $customerId,
                                             'buyer_agent_id'    => 0,
@@ -4016,7 +4016,7 @@ class Cron extends MX_Controller
                                         ];
 
                                         $resultSales = [];
-                                        if (! empty($salesRepName)) {
+                                        if (!empty($salesRepName)) {
                                             $this->db->select('*');
                                             $this->db->from('customer_basic_details');
                                             $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
@@ -4027,12 +4027,12 @@ class Cron extends MX_Controller
 
                                         $transactionData = [
                                             'customer_id'          => $customerId,
-                                            'sales_amount'         => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
-                                            'loan_number'          => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                                            'loan_amount'          => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                            'sales_amount'         => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                            'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                            'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type'     => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type'        => $res['TransactionProductType']['ProductTypeID'],
-                                            'sales_representative' => ! empty($resultSales) ? $resultSales['id'] : 0,
+                                            'sales_representative' => !empty($resultSales) ? $resultSales['id'] : 0,
                                             'status'               => 1,
                                         ];
 
@@ -4051,8 +4051,8 @@ class Cron extends MX_Controller
                                         } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                                             $transactionData['borrower']           = $primary_owner;
                                             $transactionData['secondary_borrower'] = $secondary_owner;
-                                            $propertyData['primary_owner']         = isset($property_info['primary_owner']) && ! empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                                            $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && ! empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                            $propertyData['primary_owner']         = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                            $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
                                             $loanFlag                              = 0;
                                         }
 
@@ -4064,11 +4064,11 @@ class Cron extends MX_Controller
                                         $randomString  = md5($randomString);
 
                                         $completed_date = null;
-                                        if (! empty($closedDate)) {
+                                        if (!empty($closedDate)) {
                                             $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
                                             $completed_date = $myDateTime->format('Y-m-d H:i:s');
                                         } else {
-                                            if (! empty($res['Dates']['FileCompletedDate'])) {
+                                            if (!empty($res['Dates']['FileCompletedDate'])) {
                                                 $time           = round((int) (str_replace("-0000)/", "", str_replace("/Date(", "", $res['Dates']['FileCompletedDate']))) / 1000);
                                                 $completed_date = date('Y-m-d H:i:s', $time);
                                             }
@@ -4091,8 +4091,8 @@ class Cron extends MX_Controller
                                             'sent_to_accounting_date'    => $completed_date,
                                         ];
                                         $this->home_model->insert($orderData, 'order_details');
-                                        if (! empty($resultSales)) {
-                                            if (isset($resultSales['telephone_no']) && ! empty($resultSales['telephone_no'])) {
+                                        if (!empty($resultSales)) {
+                                            if (isset($resultSales['telephone_no']) && !empty($resultSales['telephone_no'])) {
                                                 $phoneNumber = $resultSales['telephone_no'];
                                                 $sid         = env('TWILIO_SID');
                                                 $token       = env('TWILIO_TOKEN');
@@ -4203,7 +4203,7 @@ class Cron extends MX_Controller
         $orderDetails = $query->result_array();
         $userdata     = [];
 
-        if (! empty($orderDetails)) {
+        if (!empty($orderDetails)) {
             foreach ($orderDetails as $orderDetail) {
                 $partners = [
                     'PartnerTypeID' => 10049,
@@ -4289,7 +4289,7 @@ class Cron extends MX_Controller
                             $salesRepName = preg_replace('/[^A-Za-z0-9\_-]/', '', $salesRepName);
                             $salesRepName = str_replace('_', ' ', $salesRepName);
                             $key          = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
-                            if (isset($key) && ! empty($key)) {
+                            if (isset($key) && !empty($key)) {
                                 $salesRepId = $salesRepNameArr[$key]['id'];
                             } else {
                                 $salesRepNameArr[$i]['name'] = $salesRepName;
@@ -4304,7 +4304,7 @@ class Cron extends MX_Controller
                             $titleOfficerName = preg_replace('/[^A-Za-z0-9\_-]/', '', $titleOfficerName);
                             $titleOfficerName = str_replace('_', ' ', $titleOfficerName);
                             $titleOfckey      = array_search($titleOfficerName, array_column($titleOfficerNameArr, 'name'));
-                            if (isset($titleOfckey) && ! empty($titleOfckey)) {
+                            if (isset($titleOfckey) && !empty($titleOfckey)) {
                                 $titleOfficerId = $titleOfficerNameArr[$titleOfckey]['id'];
                             } else {
                                 $titleOfficerNameArr[$j]['name'] = $titleOfficerName;
@@ -4314,7 +4314,7 @@ class Cron extends MX_Controller
                         if ($row != 1) {
                             //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
                             $resultSales = [];
-                            if (! empty($salesRepName)) {
+                            if (!empty($salesRepName)) {
                                 if ($salesRepId == 0) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
@@ -4322,12 +4322,12 @@ class Cron extends MX_Controller
                                     $this->db->where('is_sales_rep', 1);
                                     $query       = $this->db->get();
                                     $resultSales = $query->row_array();
-                                    if (! empty($resultSales)) {
+                                    if (!empty($resultSales)) {
                                         $salesRepId                = $resultSales['id'];
                                         $salesRepNameArr[$i]['id'] = $salesRepId;
                                         $i++;
                                     } else {
-                                        if (! empty(trim($salesRepNameArr[$i]['name']))) {
+                                        if (!empty(trim($salesRepNameArr[$i]['name']))) {
                                             $salesRepNameArr[$i]['id'] = 0;
                                             $i++;
                                         }
@@ -4336,7 +4336,7 @@ class Cron extends MX_Controller
                             }
 
                             $resultTitleOfficer = [];
-                            if (! empty($titleOfficerName)) {
+                            if (!empty($titleOfficerName)) {
                                 if ($titleOfficerId == 0) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
@@ -4344,12 +4344,12 @@ class Cron extends MX_Controller
                                     $this->db->where('is_title_officer', 1);
                                     $query              = $this->db->get();
                                     $resultTitleOfficer = $query->row_array();
-                                    if (! empty($resultTitleOfficer)) {
+                                    if (!empty($resultTitleOfficer)) {
                                         $titleOfficerId                = $resultTitleOfficer['id'];
                                         $titleOfficerNameArr[$j]['id'] = $titleOfficerId;
                                         $j++;
                                     } else {
-                                        if (! empty(trim($titleOfficerNameArr[$i]['name']))) {
+                                        if (!empty(trim($titleOfficerNameArr[$i]['name']))) {
                                             $titleOfficerNameArr[$j]['id'] = 0;
                                             $j++;
                                         }
@@ -4363,7 +4363,7 @@ class Cron extends MX_Controller
                                 ],
                             ];
                             $order = $this->order->get_order($condition);
-                            if (! empty($order)) {
+                            if (!empty($order)) {
                                 $this->home_model->update(
                                     [
                                         'is_payoff_order' => 1,
@@ -4374,7 +4374,7 @@ class Cron extends MX_Controller
                                     'order_details'
                                 );
                                 $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                if (! empty($salesRepId)) {
+                                if (!empty($salesRepId)) {
                                     $this->home_model->update(
                                         [
                                             'sales_representative' => $salesRepId,
@@ -4396,7 +4396,7 @@ class Cron extends MX_Controller
                                         'transaction_details'
                                     );
                                 }
-                                if (! empty($titleOfficerId)) {
+                                if (!empty($titleOfficerId)) {
                                     $this->home_model->update(
                                         [
                                             'title_officer' => $titleOfficerId,
@@ -4428,7 +4428,7 @@ class Cron extends MX_Controller
                                 $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
                                 $result = json_decode($res, true);
 
-                                if (isset($result['Files']) && ! empty($result['Files'])) {
+                                if (isset($result['Files']) && !empty($result['Files'])) {
                                     foreach ($result['Files'] as $res) {
                                         if (count($result['Files']) > 1 && strtolower($res['Status']['Name']) == 'cancelled') {
                                             continue;
@@ -4445,7 +4445,7 @@ class Cron extends MX_Controller
                                         $user_details = $this->home_model->get_user_by_name($condition);
                                         $customerId   = 0;
 
-                                        if (isset($user_details) && ! empty($user_details)) {
+                                        if (isset($user_details) && !empty($user_details)) {
                                             $customerId = $user_details['id'];
                                         }
 
@@ -4454,7 +4454,7 @@ class Cron extends MX_Controller
                                         $locale       = $res['Properties'][0]['City'];
 
                                         if (($locale)) {
-                                            if (! empty($res['Properties'][0]['State'])) {
+                                            if (!empty($res['Properties'][0]['State'])) {
                                                 $locale .= ', ' . $res['Properties'][0]['State'];
                                             } else {
                                                 $locale .= ', CA';
@@ -4462,9 +4462,9 @@ class Cron extends MX_Controller
                                         }
 
                                         $property_details = $this->getSearchResult($address, $locale);
-                                        $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                                        $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                                        $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                                        $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                        $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                        $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                                         $propertyData     = [
                                             'customer_id'       => $customerId,
                                             'buyer_agent_id'    => 0,
@@ -4485,9 +4485,9 @@ class Cron extends MX_Controller
 
                                         $transactionData = [
                                             'customer_id'          => $customerId,
-                                            'sales_amount'         => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
-                                            'loan_number'          => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                                            'loan_amount'          => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                            'sales_amount'         => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                            'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                            'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                             'transaction_type'     => $res['TransactionProductType']['TransactionTypeID'],
                                             'purchase_type'        => $res['TransactionProductType']['ProductTypeID'],
                                             'sales_representative' => $salesRepId,
@@ -4509,8 +4509,8 @@ class Cron extends MX_Controller
                                         } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                                             $transactionData['borrower']           = $primary_owner;
                                             $transactionData['secondary_borrower'] = $secondary_owner;
-                                            $propertyData['primary_owner']         = isset($property_info['primary_owner']) && ! empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                                            $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && ! empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                            $propertyData['primary_owner']         = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                            $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
                                         }
 
                                         $propertyId    = $this->home_model->insert($propertyData, 'property_details');
@@ -4522,7 +4522,7 @@ class Cron extends MX_Controller
 
                                         $completed_date = null;
                                         if (empty($closedDate)) {
-                                            if (! empty($res['Dates']['FileCompletedDate'])) {
+                                            if (!empty($res['Dates']['FileCompletedDate'])) {
                                                 $time           = round((int) (str_replace("-0000)/", "", str_replace("/Date(", "", $res['Dates']['FileCompletedDate']))) / 1000);
                                                 $completed_date = date('Y-m-d H:i:s', $time);
                                             }
@@ -4688,7 +4688,7 @@ class Cron extends MX_Controller
                             $salesRepName = preg_replace('/[^A-Za-z0-9\_-]/', '', $salesRepName);
                             $salesRepName = str_replace('_', ' ', $salesRepName);
                             $key          = array_search($salesRepName, array_column($salesRepNameArr, 'name'));
-                            if (isset($key) && ! empty($key)) {
+                            if (isset($key) && !empty($key)) {
                                 $salesRepId    = $salesRepNameArr[$key]['id'];
                                 $sales_rep_img = $salesRepNameArr[$key]['sales_rep_img'];
                             } else {
@@ -4705,7 +4705,7 @@ class Cron extends MX_Controller
                         if ($row != 1) {
                             //echo $file_number."---".$prodType."----".$premium."----".$salesRepName."---".$closedDate;exit;
                             $resultSales = [];
-                            if (! empty($salesRepName)) {
+                            if (!empty($salesRepName)) {
                                 if ($salesRepId == 0) {
                                     $this->db->select('*');
                                     $this->db->from('customer_basic_details');
@@ -4713,17 +4713,17 @@ class Cron extends MX_Controller
                                     $this->db->where('is_sales_rep', 1);
                                     $query       = $this->db->get();
                                     $resultSales = $query->row_array();
-                                    if (! empty($resultSales)) {
+                                    if (!empty($resultSales)) {
                                         $salesRepId    = $resultSales['id'];
-                                        $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && ! empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
-                                        if (! empty($sales_rep_img)) {
+                                        $sales_rep_img = isset($resultSales["sales_rep_profile_img"]) && !empty($resultSales["sales_rep_profile_img"]) ? $resultSales["sales_rep_profile_img"] : '';
+                                        if (!empty($sales_rep_img)) {
                                             $sales_rep_img = env('AWS_PATH') . str_replace('uploads/', '', $sales_rep_img);
                                         }
                                         $salesRepNameArr[$i]['id']            = $salesRepId;
                                         $salesRepNameArr[$i]['sales_rep_img'] = $sales_rep_img;
                                         $i++;
                                     } else {
-                                        if (! empty(trim($salesRepNameArr[$i]['name']))) {
+                                        if (!empty(trim($salesRepNameArr[$i]['name']))) {
                                             $salesRepNameArr[$i]['id'] = 0;
                                             $i++;
                                         }
@@ -4732,12 +4732,12 @@ class Cron extends MX_Controller
                             }
 
                             $completed_date = null;
-                            if (! empty($closedDate)) {
+                            if (!empty($closedDate)) {
                                 $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
                                 $completed_date = $myDateTime->format('Y-m-d H:i:s');
                             }
 
-                            if (! empty($file_number)) {
+                            if (!empty($file_number)) {
                                 $condition = [
                                     'where' => [
                                         'file_number' => $file_number,
@@ -4745,28 +4745,28 @@ class Cron extends MX_Controller
                                 ];
                                 $order = $this->order->get_order($condition);
 
-                                if (! empty($order)) {
+                                if (!empty($order)) {
                                     if (in_array($file_number, $file_numbers)) {
-                                        if (! empty($escrowAmount)) {
+                                        if (!empty($escrowAmount)) {
                                             $escrowAmount = (float) $escrowAmount + $order[0]['escrow_amount'];
                                         }
                                     }
                                     $file_numbers[] = $file_number;
                                     $orderData      = [];
 
-                                    if (! empty($prodType)) {
+                                    if (!empty($prodType)) {
                                         $orderData['prod_type'] = strtolower($prodType);
                                     }
 
-                                    if (! empty($escrowAmount)) {
+                                    if (!empty($escrowAmount)) {
                                         $orderData['escrow_amount'] = (float) $escrowAmount;
                                     }
 
-                                    if (! empty($completed_date)) {
+                                    if (!empty($completed_date)) {
                                         $orderData['sent_to_accounting_date'] = $completed_date;
                                     }
 
-                                    if (! empty($orderData)) {
+                                    if (!empty($orderData)) {
                                         $this->home_model->update(
                                             $orderData,
                                             [
@@ -4777,7 +4777,7 @@ class Cron extends MX_Controller
                                     }
 
                                     $orderDetails = $this->order->get_order_details($order[0]['file_id']);
-                                    if (! empty($salesRepId)) {
+                                    if (!empty($salesRepId)) {
                                         $this->home_model->update(
                                             [
                                                 'sales_representative' => $salesRepId,
@@ -4811,7 +4811,7 @@ class Cron extends MX_Controller
                                     $this->apiLogs->syncLogs(0, 'resware', 'get_order_information', env('RESWARE_ORDER_API') . 'files/search', $data, $res, 0, $logid);
                                     $result = json_decode($res, true);
 
-                                    if (isset($result['Files']) && ! empty($result['Files'])) {
+                                    if (isset($result['Files']) && !empty($result['Files'])) {
                                         foreach ($result['Files'] as $res) {
                                             if (count($result['Files']) > 1 && strtolower($res['Status']['Name']) == 'cancelled') {
                                                 continue;
@@ -4828,7 +4828,7 @@ class Cron extends MX_Controller
                                             $user_details = $this->home_model->get_user_by_name($condition);
                                             $customerId   = 0;
 
-                                            if (isset($user_details) && ! empty($user_details)) {
+                                            if (isset($user_details) && !empty($user_details)) {
                                                 $customerId = $user_details['id'];
                                             }
 
@@ -4837,7 +4837,7 @@ class Cron extends MX_Controller
                                             $locale       = $res['Properties'][0]['City'];
 
                                             if (($locale)) {
-                                                if (! empty($res['Properties'][0]['State'])) {
+                                                if (!empty($res['Properties'][0]['State'])) {
                                                     $locale .= ', ' . $res['Properties'][0]['State'];
                                                 } else {
                                                     $locale .= ', CA';
@@ -4845,9 +4845,9 @@ class Cron extends MX_Controller
                                             }
 
                                             $property_details = $this->getSearchResult($address, $locale);
-                                            $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                                            $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                                            $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                                            $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                                            $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                                            $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                                             $propertyData     = [
                                                 'customer_id'       => $customerId,
                                                 'buyer_agent_id'    => 0,
@@ -4868,9 +4868,9 @@ class Cron extends MX_Controller
 
                                             $transactionData = [
                                                 'customer_id'          => $customerId,
-                                                'sales_amount'         => ! empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
-                                                'loan_number'          => ! empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
-                                                'loan_amount'          => ! empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
+                                                'sales_amount'         => !empty($res['SalesPrice']) ? $res['SalesPrice'] : 0,
+                                                'loan_number'          => !empty($res['Loans'][0]['LoanNumber']) ? $res['Loans'][0]['LoanNumber'] : 0,
+                                                'loan_amount'          => !empty($res['Loans'][0]['LoanAmount']) ? $res['Loans'][0]['LoanAmount'] : 0,
                                                 'transaction_type'     => $res['TransactionProductType']['TransactionTypeID'],
                                                 'purchase_type'        => $res['TransactionProductType']['ProductTypeID'],
                                                 'sales_representative' => $salesRepId,
@@ -4892,8 +4892,8 @@ class Cron extends MX_Controller
                                             } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
                                                 $transactionData['borrower']           = $primary_owner;
                                                 $transactionData['secondary_borrower'] = $secondary_owner;
-                                                $propertyData['primary_owner']         = isset($property_info['primary_owner']) && ! empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
-                                                $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && ! empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
+                                                $propertyData['primary_owner']         = isset($property_info['primary_owner']) && !empty($property_info['primary_owner']) ? $property_info['primary_owner'] : '';
+                                                $propertyData['secondary_owner']       = isset($property_info['secondary_owner']) && !empty($property_info['secondary_owner']) ? $property_info['secondary_owner'] : '';
                                             }
 
                                             $propertyId    = $this->home_model->insert($propertyData, 'property_details');
@@ -4905,7 +4905,7 @@ class Cron extends MX_Controller
 
                                             $resware_closed_status_date = null;
                                             if (empty($closedDate)) {
-                                                if (! empty($res['Dates']['FileCompletedDate'])) {
+                                                if (!empty($res['Dates']['FileCompletedDate'])) {
                                                     $time                       = round((int) (str_replace("-0000)/", "", str_replace("/Date(", "", $res['Dates']['FileCompletedDate']))) / 1000);
                                                     $resware_closed_status_date = date('Y-m-d H:i:s', $time);
                                                 }
@@ -5002,7 +5002,7 @@ class Cron extends MX_Controller
             $resPartners    = json_decode($resultPartners, true);
 
             $underWriter = '';
-            if (! empty($resPartners)) {
+            if (!empty($resPartners)) {
                 $key = array_search(7, array_column($resPartners['Partners'], 'PartnerTypeID'));
                 if (str_contains($resPartners['Partners'][$key]['PartnerName'], 'Doma Title Insurance') || $resPartners['Partners'][$key]['PartnerName'] == 'North American Title Insurance Company') {
                     $underWriter = 'north_american';
@@ -5072,26 +5072,26 @@ class Cron extends MX_Controller
         $loanOrderEmailSendStatus = $configData['loan_order_closed_email_send_off']['is_enable'];
         $saleOrderEmailSendStatus = $configData['sale_order_closed_email_send_off']['is_enable'];
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             $checkFlag = 0;
             $data      = [];
             $i         = 0;
             foreach ($result as $res) {
                 // echo 'res ===';
                 if (((empty($loanOrderEmailSendStatus) || $loanOrderEmailSendStatus == 0) && $res['prod_type'] === 'loan') || ((empty($saleOrderEmailSendStatus) || $saleOrderEmailSendStatus == 0) && $res['prod_type'] === 'sale')) {
-                    $sales_email = ! empty($res['sales_rep_email']) ? $res['sales_rep_email'] : '';
+                    $sales_email = !empty($res['sales_rep_email']) ? $res['sales_rep_email'] : '';
 
                     $to = [];
-                    if (! empty($res['escrow_email'])) {
+                    if (!empty($res['escrow_email'])) {
                         array_push($to, $res['escrow_email']);
                     }
-                    if (! empty($res['listing_agent_email'])) {
+                    if (!empty($res['listing_agent_email'])) {
                         array_push($to, $res['listing_agent_email']);
                     }
-                    if (! empty($res['buyer_agent_email'])) {
+                    if (!empty($res['buyer_agent_email'])) {
                         array_push($to, $res['buyer_agent_email']);
                     }
-                    if (! empty($res['sales_email'])) {
+                    if (!empty($res['sales_email'])) {
                         array_push($to, $res['sales_email']);
                     }
 
@@ -5133,6 +5133,78 @@ class Cron extends MX_Controller
         }
     }
 
+    function normalizeAddress($address) {
+        $replacements = [
+            ' St' => ' Street',
+            ' Rd' => ' Road',
+            ' Dr' => ' Drive',
+            ' Ave' => ' Avenue',
+            ' Ln' => ' Lane',
+            ' Ct' => ' Court',
+            ' Pl' => ' Place',
+            ' Blvd' => ' Boulevard',
+            // add more as needed
+        ];
+        
+        foreach ($replacements as $abbr => $full) {
+            $address = preg_replace('/\b' . preg_quote($abbr, '/') . '\b/i', $full, $address);
+        }
+    
+        return $address;
+    }
+
+    public function sendEmailToBuyerAgent($orderDetails) {
+
+        // if (!empty($orderDetails['buyer_agent_email_address'])) {
+            
+        // } else {
+            $address = $orderDetails['address'];
+            $retsData = $this->createPipeDriveContact($address);
+            if (!empty($retsData)) {
+                $retsPropertyDetails = $retsData[0];
+                print_r($retsPropertyDetails['agent']);
+                if (!empty($retsPropertyDetails['agent']) && !empty($retsPropertyDetails['agent']['contact'])) {
+                    $orderDetails['buyer_agent_first_name'] = $retsPropertyDetails['agent']['firstName'];
+                    $orderDetails['buyer_agent_last_name'] = $retsPropertyDetails['agent']['lastName'];
+                    $orderDetails['buyer_agent_email_address'] = $retsPropertyDetails['agent']['contact']['email'];
+                    $orderDetails['buyer_agent_phone'] = $retsPropertyDetails['agent']['contact']['cell'];
+                    $orderDetails['buyer_agent_company'] = $retsPropertyDetails['agent']['contact']['office'];
+                    $orderDetails['buyer_agent_address'] = $retsPropertyDetails['agent']['contact']['address'];
+                    $officeMlsId = $retsPropertyDetails['agent']['id'];
+                    $query = "?q=" . urlencode($officeMlsId);
+            
+                    // // print_r($query);
+                    // echo "<br>";
+                    $agentApiResult = $this->rets->callSimplyRetsAgent($query);
+                    echo "<pre>";
+                    print_r($agentApiResult);
+                }
+            }
+
+        // }
+        echo "<pre>";
+        print_r($retsPropertyDetails['agent']);die;
+        $this->order->sendClosedOrderAgentEmail($orderDetails);
+
+    }
+
+    public function createPipeDriveContact($address) {
+        try {
+            $this->load->library('order/rets');
+            $address = "1750 La Mesa Oaks Dr";
+            $address = $this->normalizeAddress($address);
+            
+            $query = "?q=" . urlencode($address);
+            
+            // print_r($query);die;
+            
+            $result = $this->rets->callSimplyRets($query);
+            return json_decode($result, true);
+        } catch (\Throwable $e) {
+            echo "Login failed: " . $e->getMessage();die;
+        }
+    }
+
     public function sendThankYouEmailForClosedOrder($fileNumbers)
     {
         $this->db->select('order_details.file_id,
@@ -5165,7 +5237,7 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             $checkFlag = 0;
             $data      = [];
             $i         = 0;
@@ -5181,11 +5253,11 @@ class Cron extends MX_Controller
                     $data['order_info'][$i]['address']        = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['order_info'][$i]['closed_date']    = date("m/d/Y", strtotime($res['resware_closed_status_date']));
-                    $data['sales_rep_profile_thank_you_img']  = ! empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
-                    if (! empty($data['sales_rep_profile_thank_you_img'])) {
+                    $data['sales_rep_profile_thank_you_img']  = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if (!empty($data['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH') . str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
                     }
-                    $data['sales_email'] = ! empty($res['sales_email']) ? $res['sales_email'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 } else {
                     $message    = $this->load->view('emails/thank_you_escrow.php', $data, true);
@@ -5216,17 +5288,17 @@ class Cron extends MX_Controller
                     $data['order_info'][$i]['address']        = $res['full_address'];
                     $data['order_info'][$i]['resware_status'] = $res['resware_status'] ? $res['resware_status'] : 'closed';
                     $data['order_info'][$i]['closed_date']    = date("m/d/Y", strtotime($res['resware_closed_status_date']));
-                    $data['sales_rep_profile_thank_you_img']  = ! empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
-                    if (! empty($data['sales_rep_profile_thank_you_img'])) {
+                    $data['sales_rep_profile_thank_you_img']  = !empty($res['sales_rep_profile_thank_you_img']) ? $res['sales_rep_profile_thank_you_img'] : '';
+                    if (!empty($data['sales_rep_profile_thank_you_img'])) {
                         $data['sales_rep_profile_thank_you_img'] = env('AWS_PATH') . str_replace('uploads/', '', $data['sales_rep_profile_thank_you_img']);
                     }
-                    $data['sales_email'] = ! empty($res['sales_email']) ? $res['sales_email'] : '';
+                    $data['sales_email'] = !empty($res['sales_email']) ? $res['sales_email'] : '';
                     $i++;
                 }
                 $sales_email = $res['sales_email'];
                 $order_id    = $res['order_id'];
             }
-            if (! empty($data)) {
+            if (!empty($data)) {
                 $message   = $this->load->view('emails/thank_you_escrow.php', $data, true);
                 $from_name = 'Pacific Coast Title Company';
                 $from_mail = env('FROM_EMAIL');
@@ -5300,7 +5372,7 @@ class Cron extends MX_Controller
             $resultPartners = $this->resware->make_request('GET', $endPoint, '', $user_data);
             $resPartners    = json_decode($resultPartners, true);
             $key            = '';
-            if (! empty($resPartners)) {
+            if (!empty($resPartners)) {
                 $key = array_search(10049, array_column($resPartners['Partners'], 'PartnerTypeID'));
                 if (isset($key) && strlen($key) > 0) {
                     $order_details = [
@@ -5354,7 +5426,7 @@ class Cron extends MX_Controller
     {
         $this->load->model('order/apiLogs');
         $titlePointInstrumentDetails = $this->titlePointData->getInstrumentDetails($file_number, 1);
-        if (! empty($titlePointInstrumentDetails)) {
+        if (!empty($titlePointInstrumentDetails)) {
             foreach ($titlePointInstrumentDetails as $insDetail) {
                 $fileExist = $this->order->fileExistOrNotOnS3("title-point/" . $insDetail['id'] . '.pdf');
                 if ($fileExist) {
@@ -5367,12 +5439,12 @@ class Cron extends MX_Controller
                 $sub_type     = $insDetail['sub_type'];
                 $order_number = $insDetail['order_number'];
 
-                if (isset($recordedDate) && ! empty($recordedDate)) {
+                if (isset($recordedDate) && !empty($recordedDate)) {
                     $time = strtotime($recordedDate);
                     $year = date('Y', $time);
                 }
 
-                if (! empty($order_number)) {
+                if (!empty($order_number)) {
                     $parameters = 'FIPS=' . $fips . ',TYPE=' . $type . ',ORDER=' . $order_number . ',SUBTYPE=' . $sub_type . ',YEAR=' . $year . ',INST=' . $docId . '';
                 } else {
                     $parameters = 'FIPS=' . $fips . ',TYPE=REC,SUBTYPE=ALL,YEAR=' . $year . ',INST=' . $docId . '';
@@ -5411,14 +5483,14 @@ class Cron extends MX_Controller
                 $response = json_encode($xmlData);
                 $result   = json_decode($response, true);
                 $this->apiLogs->syncLogs(0, 'titlepoint', 'generate_instrument_document', $request, $requestParams, $result, $file_number, $logid);
-                $responseStatus = isset($result['Status']['Msg']) && ! empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
-                $docStatus      = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && ! empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
+                $responseStatus = isset($result['Status']['Msg']) && !empty($result['Status']['Msg']) ? $result['Status']['Msg'] : '';
+                $docStatus      = isset($result['Documents']['DocumentResponse']['DocStatus']['Msg']) && !empty($result['Documents']['DocumentResponse']['DocStatus']['Msg']) ? $result['Documents']['DocumentResponse']['DocStatus']['Msg'] : '';
                 $docStatus      = strtolower($docStatus);
 
-                if (isset($docStatus) && ! empty($docStatus) && $docStatus == 'ok') {
-                    $base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && ! empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
+                if (isset($docStatus) && !empty($docStatus) && $docStatus == 'ok') {
+                    $base64_data = isset($result['Documents']['DocumentResponse']['Document']['Body']['Body']) && !empty($result['Documents']['DocumentResponse']['Document']['Body']['Body']) ? $result['Documents']['DocumentResponse']['Document']['Body']['Body'] : '';
 
-                    if (isset($base64_data) && ! empty($base64_data)) {
+                    if (isset($base64_data) && !empty($base64_data)) {
                         $bin = base64_decode($base64_data, true);
 
                         if (! is_dir('uploads/title-point')) {
@@ -5455,10 +5527,10 @@ class Cron extends MX_Controller
 
         $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_tax_image_BG', $request, $response, $result, $orderId, $logid);
 
-        $imgReturnStatus = isset($result['ReturnStatus']) && ! empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
         $imgReturnStatus = strtolower($imgReturnStatus);
 
-        $generateImgStatus = isset($result['Status']) && ! empty($result['Status']) ? $result['Status'] : '';
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
         $generateImgStatus = strtolower($generateImgStatus);
 
         if ($imgReturnStatus == 'success') {
@@ -5471,9 +5543,9 @@ class Cron extends MX_Controller
                     $generateImgStatus = 'failed';
                 }
             } else if ($generateImgStatus == 'success') {
-                $base64_data = isset($result['Data']) && ! empty($result['Data']) ? $result['Data'] : '';
+                $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
 
-                if (isset($base64_data) && ! empty($base64_data)) {
+                if (isset($base64_data) && !empty($base64_data)) {
                     $bin = base64_decode($base64_data, true);
 
                     if (! is_dir('uploads/tax')) {
@@ -5532,10 +5604,10 @@ class Cron extends MX_Controller
         $result = json_decode($response, true);
         $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'generate_lv_image_BG', $request, $requestParams, $result, $orderId, $logid);
 
-        $imgReturnStatus = isset($result['ReturnStatus']) && ! empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
+        $imgReturnStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
         $imgReturnStatus = strtolower($imgReturnStatus);
 
-        $generateImgStatus = isset($result['Status']) && ! empty($result['Status']) ? $result['Status'] : '';
+        $generateImgStatus = isset($result['Status']) && !empty($result['Status']) ? $result['Status'] : '';
         $generateImgStatus = strtolower($generateImgStatus);
 
         if ($imgReturnStatus == 'success') {
@@ -5548,9 +5620,9 @@ class Cron extends MX_Controller
                     $generateImgStatus = 'failed';
                 }
             } else if ($generateImgStatus == 'success') {
-                $base64_data = isset($result['Data']) && ! empty($result['Data']) ? $result['Data'] : '';
+                $base64_data = isset($result['Data']) && !empty($result['Data']) ? $result['Data'] : '';
 
-                if (isset($base64_data) && ! empty($base64_data)) {
+                if (isset($base64_data) && !empty($base64_data)) {
                     $bin = base64_decode($base64_data, true);
 
                     if (! is_dir('uploads/legal-vesting')) {
@@ -5603,13 +5675,13 @@ class Cron extends MX_Controller
         $filesResult = $query->result_array();
 
         $duplicationUpdateArray = [];
-        if (isset($filesResult) && ! empty($filesResult)) {
+        if (isset($filesResult) && !empty($filesResult)) {
             foreach ($filesResult as $file) {
                 $duplicationUpdateArray[] = $file['property_id'];
             }
         }
 
-        if (! empty($duplicationUpdateArray)) {
+        if (!empty($duplicationUpdateArray)) {
             $chunk = array_chunk($duplicationUpdateArray, 500);
             for ($i = 0; $i < count($chunk); $i++) {
                 $updateDuplicationData = ['allow_duplication' => 1];
@@ -5629,7 +5701,7 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $res) {
                 $orderData = [
                     'lp_report_status' => 'converted',
@@ -5654,7 +5726,7 @@ class Cron extends MX_Controller
         $query  = $this->db->get();
         $result = $query->result_array();
 
-        if (! empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $res) {
                 $orderData = [
                     'lp_report_status' => 'denied',
@@ -5735,36 +5807,18 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre>";
-        // print_r($response);
-        // echo "Hello";die;
+        
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $existing_lookupcode = $this->db->select('lookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
 
             $new_data = $response['data'];
-            // $existingUserEmail = $this->db->select('email_address')
-            //     ->from('customer_basic_details')
-            //     ->where('email_address !=', '')
-            //     ->where('email_address IS NOT NULL', null, false)
-            //     ->get()->result_array();
-
-            // $existingUserEmail = array_column($existingUserEmail, 'email_address');
-
-            // $existingAgent = $this->db->select('email_address')
-            //     ->from('agents')
-            //     ->where('email_address !=', '')
-            //     ->where('email_address IS NOT NULL', null, false)
-            //     ->get()->result_array();
-            // $existingAgent = array_column($existingAgent, 'email_address');
-            // Separate data into updates and inserts
-            // $updateAgentData    = [];
             $update_data = [];
             $insert_data = [];
             // $insertCustomerData = [];
             foreach ($new_data as $key => $row) {
-                if (! empty($row['Email'])) {
+                if (!empty($row['Email'])) {
                     if (in_array(trim($row['LookupCode']), $existing_lookupcode)) {
                         // $update_data[$key]['lookup_code'] = $row['LookupCode'];
                         $update_data[$key]['flookup_code']   = $row['Filter: LookupCode'];
@@ -5791,11 +5845,6 @@ class Cron extends MX_Controller
                         $update_data[$key]['status']         = 1;
                         // $update_data[$key]['user_type'] = 'open_contact';
                     } else {
-                        // if (in_array(trim($row['Email']), $existingAgent)) {
-                        //     $updateAgentData[$key]['lookup_code'] = $row['LookupCode'];
-                        //     $updateAgentData[$key]['flookup_code'] = $row['Filter: LookupCode'];
-                        //     $updateAgentData[$key]['email_address'] = trim($row['Email']);
-                        // } else {
                         $insert_data[$key]['lookup_code']    = $row['LookupCode'];
                         $insert_data[$key]['flookup_code']   = $row['Filter: LookupCode'];
                         $insert_data[$key]['courtesy_title'] = $row['CourtesyTitle'];
@@ -5820,60 +5869,27 @@ class Cron extends MX_Controller
                         $insert_data[$key]['license_no']     = $row['License No'];
                         $insert_data[$key]['status']         = 1;
                         $insert_data[$key]['user_type']      = 'open_contact';
-
-                        // $insertCustomerData[$key]['lookup_code'] = $row['LookupCode'];
-                        // $insertCustomerData[$key]['flookup_code'] = $row['Filter: LookupCode'];
-                        // $insertCustomerData[$key]['email_address'] = trim($row['Email']);
-                        // $insertCustomerData[$key]['status'] = 1;
-                        // $insertCustomerData[$key]['user_type'] = 'open_contact';
-                        // $insertCustomerData[$key]['password'] = '';
-                        // $insertCustomerData[$key]['company_name'] = '';
-                        // $insertCustomerData[$key]['sales_rep_report_image'] = '';
-
-                        // }
                     }
                 }
 
             }
 
-            // if (!empty($update_data)) {
-            //     foreach ($update_data as $update_row) {
-            //         $this->db->where('email_address', $update_row['email_address']);
-            //         $this->db->update('customer_basic_details', $update_row);
-            //     }
-            // }
-
-            // if (!empty($updateAgentData)) {
-            //     foreach ($updateAgentData as $update_row) {
-            //         $this->db->where('email_address', $update_row['email_address']);
-            //         $this->db->update('agents', $update_row);
-            //     }
-            // }
-            // echo "<pre> updated";
-            // print_r($updateAgentData);
-            // die;
-            // echo "<pre> inserted";
-            // print_r(count($update_data));
-            // echo "----";
-            // print_r(count($insert_data));die;
-            // Perform batch insert for lookup code
-
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
-            if (! empty($insert_data)) {
+            if (!empty($insert_data)) {
                 $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
             }
 
-            // if (!empty($insertCustomerData)) {
-            //     $this->db->insert_batch('customer_basic_details', $insertCustomerData);
-            // }
-
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
         }
     }
 
@@ -5889,18 +5905,10 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre>";
-        // print_r($response);
-        // echo "Hello";die;
+        
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data = $response['data'];
-            // $existing_lookupcode = $this->db->select('flookup_code')
-            //     ->from('customer_basic_details')
-            //     ->where('flookup_code !=', '')
-            //     ->where('flookup_code IS NOT NULL', null, false)
-            //     ->get()->result_array();
-            // $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
 
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
@@ -5997,14 +6005,14 @@ class Cron extends MX_Controller
                 }
             }
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('flookup_code', $update_row['flookup_code']);
                     $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
-            if (! empty($company_update_data)) {
+            if (!empty($company_update_data)) {
                 foreach ($company_update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->update('sp_company', $update_row);
@@ -6012,11 +6020,14 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($company_insert_data)) {
+            if (!empty($company_insert_data)) {
                 $this->db->insert_batch('sp_company', $company_insert_data);
             }
-
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
         }
     }
 
@@ -6033,9 +6044,7 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre> Escrow officer";
-        // print_r($response);
-        // echo "Hello";die;
+        
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data            = $response['data'];
@@ -6059,7 +6068,7 @@ class Cron extends MX_Controller
             }
 
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('closer_examiner', $update_row['closer_examiner']);
                     $this->db->where('is_escrow_officer', 1);
@@ -6068,11 +6077,15 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($insert_data)) {
+            if (!empty($insert_data)) {
                 $this->db->insert_batch('sp_officers', $insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
         }
     }
 
@@ -6100,12 +6113,6 @@ class Cron extends MX_Controller
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_lender', 1)->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
-            // $existing_lookupcode = $this->db->select('flookup_code')
-            //     ->from('customer_basic_details')
-            //     ->where('flookup_code !=', '')
-            //     ->where('flookup_code IS NOT NULL', null, false)
-            //     ->get()->result_array();
-            // $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
@@ -6114,58 +6121,7 @@ class Cron extends MX_Controller
                     $update_data[$key]['flookup_code'] = $row['LookupCode'];
                     $update_data[$key]['company_name'] = $row['Name'];
                     $update_data[$key]['is_lender']    = 1;
-
-                    // $update_data[$key]['lookup_code'] = $row['LookupCode'];
-                    // $update_data[$key]['first_name'] = $row['Name'];
-                    // $update_data[$key]['address1'] = $row['Address1'];
-                    // $update_data[$key]['address2'] = $row['Address2'];
-                    // $update_data[$key]['city'] = $row['City'];
-                    // $update_data[$key]['state'] = $row['State'];
-                    // $update_data[$key]['zip'] = $row['Zip'];
-                    // $update_data[$key]['phone'] = $row['Phone'];
-                    // $update_data[$key]['fax'] = $row['Fax'];
-                    // $update_data[$key]['email_address'] = $row['Email'];
-
-                    // $update_data[$key]['legal_name'] = $row['LegalName'];
-                    // $update_data[$key]['fee_transfer_ledger'] = $row['FeeTransferLedger'];
-                    // $update_data[$key]['state_of_incorporation'] = $row['StateOfIncorporation'];
-                    // $update_data[$key]['marketing_rep'] = $row['MarketingRep'];
-                    // $update_data[$key]['funding_address1'] = $row['FundingAddress1'];
-                    // $update_data[$key]['funding_address2'] = $row['FundingAddress2'];
-                    // $update_data[$key]['funding_city'] = $row['FundingCity'];
-                    // $update_data[$key]['funding_state'] = $row['FundingState'];
-                    // $update_data[$key]['funding_zip'] = $row['FundingZip'];
-                    // $update_data[$key]['funding_phone'] = $row['FundingPhone'];
-                    // $update_data[$key]['funding_fax'] = $row['FundingFax'];
-                    // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
-                    // $update_data[$key]['payee_name'] = $row['PayeeName'];
-                    // $update_data[$key]['user_type'] = 'lender';
                 } else {
-                    // $insert_data[$key]['lookup_code'] = $row['LookupCode'];
-                    // $insert_data[$key]['first_name'] = $row['Name'];
-                    // $insert_data[$key]['address1'] = $row['Address1'];
-                    // $insert_data[$key]['address2'] = $row['Address2'];
-                    // $insert_data[$key]['city'] = $row['City'];
-                    // $insert_data[$key]['state'] = $row['State'];
-                    // $insert_data[$key]['zip'] = $row['Zip'];
-                    // $insert_data[$key]['phone'] = $row['Phone'];
-                    // $insert_data[$key]['fax'] = $row['Fax'];
-                    // $insert_data[$key]['email_address'] = $row['Email'];
-
-                    // $insert_data[$key]['legal_name'] = $row['LegalName'];
-                    // $insert_data[$key]['fee_transfer_ledger'] = $row['FeeTransferLedger'];
-                    // $insert_data[$key]['state_of_incorporation'] = $row['StateOfIncorporation'];
-                    // $insert_data[$key]['marketing_rep'] = $row['MarketingRep'];
-                    // $insert_data[$key]['funding_address1'] = $row['FundingAddress1'];
-                    // $insert_data[$key]['funding_address2'] = $row['FundingAddress2'];
-                    // $insert_data[$key]['funding_city'] = $row['FundingCity'];
-                    // $insert_data[$key]['funding_state'] = $row['FundingState'];
-                    // $insert_data[$key]['funding_zip'] = $row['FundingZip'];
-                    // $insert_data[$key]['funding_phone'] = $row['FundingPhone'];
-                    // $insert_data[$key]['funding_fax'] = $row['FundingFax'];
-                    // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
-                    // $insert_data[$key]['payee_name'] = $row['PayeeName'];
-                    // $insert_data[$key]['user_type'] = 'lender';
                 }
 
                 if (in_array($row['LookupCode'], $existing_lookupcode)) {
@@ -6225,14 +6181,14 @@ class Cron extends MX_Controller
             }
 
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('flookup_code', $update_row['flookup_code']);
                     $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
-            if (! empty($company_update_data)) {
+            if (!empty($company_update_data)) {
                 foreach ($company_update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->update('sp_company', $update_row);
@@ -6240,11 +6196,16 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($company_insert_data)) {
+            if (!empty($company_insert_data)) {
                 $this->db->insert_batch('sp_company', $company_insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
+            
         }
     }
 
@@ -6261,9 +6222,7 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre> Mortgage Broker";
-        // print_r($response);
-        // echo "Hello";die;
+        
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data             = $response['data'];
@@ -6272,12 +6231,6 @@ class Cron extends MX_Controller
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_mortgage_broker', 1)->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
-            // $existing_lookupcode = $this->db->select('flookup_code')
-            //     ->from('customer_basic_details')
-            //     ->where('flookup_code !=', '')
-            //     ->where('flookup_code IS NOT NULL', null, false)
-            //     ->get()->result_array();
-            // $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
@@ -6303,22 +6256,6 @@ class Cron extends MX_Controller
                     // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
                     // $update_data[$key]['user_type'] = 'mortgage_broker';
                 } else {
-                    // $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
-                    // $insert_data[$key]['first_name'] = $row['Name'];
-                    // $insert_data[$key]['payee_name'] = $row['Payee Name'];
-                    // $insert_data[$key]['address1'] = $row['Address (line 1)'];
-                    // $insert_data[$key]['address2'] = $row['Address (line 2)'];
-                    // $insert_data[$key]['city'] = $row['City'];
-                    // $insert_data[$key]['state'] = $row['State'];
-                    // $insert_data[$key]['zip'] = $row['Zip'];
-                    // $insert_data[$key]['phone'] = $row['Phone'];
-                    // $insert_data[$key]['fax'] = $row['Fax'];
-                    // $insert_data[$key]['email_address'] = $row['Email'];
-
-                    // $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
-                    // $insert_data[$key]['marketing_rep'] = $row['Marketing Rep'];
-                    // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
-                    // $insert_data[$key]['user_type'] = 'mortgage_broker';
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
@@ -6362,14 +6299,14 @@ class Cron extends MX_Controller
 
             // print_r($update_data);die;
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('flookup_code', $update_row['flookup_code']);
                     $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
-            if (! empty($company_update_data)) {
+            if (!empty($company_update_data)) {
                 foreach ($company_update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->update('sp_company', $update_row);
@@ -6377,11 +6314,15 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($company_insert_data)) {
+            if (!empty($company_insert_data)) {
                 $this->db->insert_batch('sp_company', $company_insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
         }
     }
 
@@ -6410,13 +6351,6 @@ class Cron extends MX_Controller
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_selling_agent', 1)->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
 
-            // $existing_lookupcode = $this->db->select('flookup_code')
-            //     ->from('agents')
-            //     ->where('flookup_code !=', '')
-            //     ->where('flookup_code IS NOT NULL', null, false)
-            //     ->get()->result_array();
-            // $existing_lookupcode = array_column($existing_lookupcode, 'flookup_code');
-
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
@@ -6424,48 +6358,8 @@ class Cron extends MX_Controller
                     $update_data[$key]['flookup_code']     = $row['Lookup Code'];
                     $update_data[$key]['company_name']     = $row['Name'];
                     $update_data[$key]['is_selling_agent'] = 1;
-                    // $update_data[$key]['lookup_code'] = $row['Lookup Code'];
-                    // $update_data[$key]['first_name'] = $row['Name'];
-                    // $update_data[$key]['payee_name'] = $row['Payee Name'];
-                    // $update_data[$key]['address1'] = $row['Address (line 1)'];
-                    // $update_data[$key]['address2'] = $row['Address (line 2)'];
-                    // $update_data[$key]['city'] = $row['City'];
-                    // $update_data[$key]['state'] = $row['State'];
-                    // $update_data[$key]['zip'] = $row['Zip'];
-                    // $update_data[$key]['phone'] = $row['Phone'];
-                    // $update_data[$key]['fax'] = $row['Fax'];
-                    // $update_data[$key]['email_address'] = $row['Email'];
-
-                    // $update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
-                    // $update_data[$key]['marketing_rep'] = $row['Marketing Rep'];
-                    // $update_data[$key]['license_no'] = $row['License No'];
-                    // $update_data[$key]['special_instructions'] = $row['Special Instructions'];
-                    // $update_data[$key]['user_type'] = 'selling_agent';
-
-                    // $update_data[$key]['home_phone'] = $row['Home Phone'];
-                    // $update_data[$key]['represents'] = $row['Represents'];
 
                 } else {
-                    // $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
-                    // $insert_data[$key]['first_name'] = $row['Name'];
-                    // $insert_data[$key]['payee_name'] = $row['Payee Name'];
-                    // $insert_data[$key]['address1'] = $row['Address (line 1)'];
-                    // $insert_data[$key]['address2'] = $row['Address (line 2)'];
-                    // $insert_data[$key]['city'] = $row['City'];
-                    // $insert_data[$key]['state'] = $row['State'];
-                    // $insert_data[$key]['zip'] = $row['Zip'];
-                    // $insert_data[$key]['phone'] = $row['Phone'];
-                    // $insert_data[$key]['fax'] = $row['Fax'];
-                    // $insert_data[$key]['email_address'] = $row['Email'];
-
-                    // $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
-                    // $insert_data[$key]['marketing_rep'] = $row['Marketing Rep'];
-                    // $insert_data[$key]['license_no'] = $row['License No'];
-                    // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
-                    // $insert_data[$key]['user_type'] = 'selling_agent';
-
-                    // $insert_data[$key]['home_phone'] = $row['Home Phone'];
-                    // $insert_data[$key]['represents'] = $row['Represents'];
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
@@ -6512,17 +6406,15 @@ class Cron extends MX_Controller
 
                 }
             }
-            // echo "<pre>";
-            // print_r($update_data);die;
-            // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('flookup_code', $update_row['flookup_code']);
                     $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
-            if (! empty($company_update_data)) {
+            if (!empty($company_update_data)) {
                 foreach ($company_update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->update('sp_company', $update_row);
@@ -6530,11 +6422,16 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($company_insert_data)) {
+            if (!empty($company_insert_data)) {
                 $this->db->insert_batch('sp_company', $company_insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
+            
         }
     }
 
@@ -6551,9 +6448,7 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre> Title officer";
-        // print_r($response);
-        // echo "Hello";die;
+
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data        = $response['data'];
@@ -6576,11 +6471,9 @@ class Cron extends MX_Controller
                     $insert_data[$key]['is_title_officer'] = 1;
                 }
             }
-            // echo "<pre>";
-            // print_r($update_data);
-            // echo "Hello";die;
+            
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('closer_examiner', $update_row['closer_examiner']);
                     $this->db->where('is_title_officer', 1);
@@ -6589,11 +6482,15 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($insert_data)) {
+            if (!empty($insert_data)) {
                 $this->db->insert_batch('sp_officers', $insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
         }
     }
 
@@ -6607,9 +6504,7 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_sales_reps', 'fetch_sales_reps', null, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'fetch_sales_reps');
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_sales_reps', 'fetch_sales_reps', null, json_encode($response), 0, $logid);
-        // echo "<pre> Sales reps";
-        // print_r($response);
-        // echo "Hello";die;
+        
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data        = $response['data'];
@@ -6645,11 +6540,9 @@ class Cron extends MX_Controller
                     $insert_data[$key]['status'] = 1;
                 }
             }
-            // echo "<pre>";
-            // print_r($update_data);
-            // echo "Hello";die;
+            
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->where('is_sales_rep', 1);
@@ -6658,11 +6551,15 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($insert_data)) {
+            if (!empty($insert_data)) {
                 $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
             }
 
-            echo json_encode(['status' => 'success','updated' => count($update_data), 'inserted' => count($insert_data)]);
+            $res = json_encode(['status' => 'success','updated' => count($update_data), 'inserted' => count($insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_sales_reps'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_sales_reps', $url, $reqData, $res, 0, 0);
+            echo $res;
             exit;
         }
     }
@@ -6680,9 +6577,7 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'fetch_lookup_code', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'fetch_lookup_code', 'fetch_lookup_code', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre> underwritter";
-        // print_r($response);
-        // echo "Hello";die;
+        
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data             = $response['data'];
@@ -6700,46 +6595,7 @@ class Cron extends MX_Controller
                     $update_data[$key]['flookup_code']   = $row['Lookup Code'];
                     $update_data[$key]['company_name']   = $row['Name'];
                     $update_data[$key]['is_underwriter'] = 1;
-                    // $update_data[$key]['lookup_code'] = $row['Lookup Code'];
-                    // $update_data[$key]['first_name'] = $row['Name'];
-                    // $update_data[$key]['address1'] = $row['Address (line 1)'];
-                    // $update_data[$key]['city'] = $row['City'];
-                    // $update_data[$key]['state'] = $row['State'];
-                    // $update_data[$key]['zip'] = $row['Zip'];
-                    // $update_data[$key]['phone'] = $row['Phone'];
-                    // $update_data[$key]['fax'] = $row['Fax'];
-                    // $update_data[$key]['email_address'] = $row['Email'] ?? '';
-
-                    // $update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
-                    // $update_data[$key]['county'] = $row['County'];
-                    // $update_data[$key]['splitTo_premiums'] = $row['SplitTo - Premiums'];
-                    // $update_data[$key]['percent_premiums'] = $row['Percent - Premiums'];
-                    // $update_data[$key]['billCode_premiums'] = $row['BillCode - Premiums'];
-                    // $update_data[$key]['splitTo_endorsements'] = $row['SplitTo - Endorsements'];
-                    // $update_data[$key]['percent_endorsements'] = $row['Percent - Endorsements'];
-                    // $update_data[$key]['billCode_endorsements'] = $row['BillCode - Endorsements'];
-
-                    // $update_data[$key]['user_type'] = 'underwriter';
                 } else {
-                    // $insert_data[$key]['lookup_code'] = $row['Lookup Code'];
-                    // $insert_data[$key]['first_name'] = $row['Name'];
-                    // $insert_data[$key]['address1'] = $row['Address (line 1)'];
-                    // $insert_data[$key]['city'] = $row['City'];
-                    // $insert_data[$key]['state'] = $row['State'];
-                    // $insert_data[$key]['zip'] = $row['Zip'];
-                    // $insert_data[$key]['phone'] = $row['Phone'];
-                    // $insert_data[$key]['fax'] = $row['Fax'];
-                    // $insert_data[$key]['email_address'] = $row['Email'] ?? '';
-
-                    // $insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'];
-                    // $insert_data[$key]['county'] = $row['County'];
-                    // $insert_data[$key]['splitTo_premiums'] = $row['SplitTo - Premiums'];
-                    // $insert_data[$key]['percent_premiums'] = $row['Percent - Premiums'];
-                    // $insert_data[$key]['billCode_premiums'] = $row['BillCode - Premiums'];
-                    // $insert_data[$key]['splitTo_endorsements'] = $row['SplitTo - Endorsements'];
-                    // $insert_data[$key]['percent_endorsements'] = $row['Percent - Endorsements'];
-                    // $insert_data[$key]['billCode_endorsements'] = $row['BillCode - Endorsements'];
-                    // $insert_data[$key]['user_type'] = 'underwriter';
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
@@ -6786,14 +6642,14 @@ class Cron extends MX_Controller
             }
 
             // Perform batch update for existing emails
-            if (! empty($update_data)) {
+            if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
                     $this->db->where('flookup_code', $update_row['flookup_code']);
                     $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
-            if (! empty($company_update_data)) {
+            if (!empty($company_update_data)) {
                 foreach ($company_update_data as $update_row) {
                     $this->db->where('lookup_code', $update_row['lookup_code']);
                     $this->db->update('sp_company', $update_row);
@@ -6801,11 +6657,16 @@ class Cron extends MX_Controller
             }
 
             // Perform batch insert for new emails
-            if (! empty($company_insert_data)) {
+            if (!empty($company_insert_data)) {
                 $this->db->insert_batch('sp_company', $company_insert_data);
             }
 
-            print_r(json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]));
+            $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data), 'company_updated' => count($company_update_data), 'company_inserted' => count($company_insert_data)]);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
+            print_r($res);
+            
         }
     }
 
@@ -6882,9 +6743,7 @@ class Cron extends MX_Controller
         $this->db->order_by("o.id", "desc");
         $query       = $this->db->get();
         $filesResult = $query->result_array();
-        // echo "<pre>";
-        // print_r($filesResult);
-        // die;
+        $newSyncedFile = [];
         if (isset($filesResult) && !empty($filesResult)) {
             foreach ($filesResult as $file) {
                 $data                  = [];
@@ -6896,7 +6755,7 @@ class Cron extends MX_Controller
                 $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_documents', 'get_prelim_documents', $reqData, [], 0, 0);
                 $response = $this->softpro->make_request('GET', 'get_prelim_documents', $reqData, $queryParams);
                 $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_documents', 'get_prelim_documents', $reqData, json_encode($response), 0, $logid);
-                // print_r($response);die;
+                
                 // $response = json_decode($result, true);
                 if ($response['status'] == 'success' && !empty($response['data'])) {
                     $data = $response['data'];
@@ -6918,19 +6777,21 @@ class Cron extends MX_Controller
                             'is_prelim_document' => 1,
                         );
                         $documentId = $this->document->insert($documentData);
-                        // $condition = array(
-                        //     'file_number' => $file_number,
-                        // );
-                        // $data = array(
-                        //     'prelim_summary_id' => $id,
-                        // );
-
-                        // $this->order->update($data, $condition);
                     }
+                    $newSyncedFile[] = $file_number;
                 }
             }
+            $res = json_encode(['prelim inserted' => count($newSyncedFile), 'orders_inserted' => $newSyncedFile]);
+        } else {
+            $res = "No prelim details found.";
         }
-        echo date('Y-m-d H:i:s');exit;
+        /** Cron log start */
+        $apiEndPoints = SOFTPRO_API_END;
+        $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_documents'] . '?' . $queryParams;
+        $this->order->syncLogs('softpro', 'get_prelim_documents', $url, $reqData, $res, 0, 0);
+        /** Cron log end */
+        
+        print_r($res); exit;
     }
 
     
@@ -7119,8 +6980,7 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, json_encode($response), 0, $logid);
-        // echo "<pre>";
-        // print_r($response);die;
+
         $sheetData = [];
         $importedOrderCount = 0;
         $updatedOrderCount = 0;
@@ -7182,9 +7042,9 @@ class Cron extends MX_Controller
 
                         $property_details = $this->getSearchResult($address, $locale);
                         
-                        $property_type    = isset($property_details['property_type']) && ! empty($property_details['property_type']) ? $property_details['property_type'] : '';
-                        $LegalDescription = isset($property_details['legaldescription']) && ! empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
-                        $apn              = isset($property_details['apn']) && ! empty($property_details['apn']) ? $property_details['apn'] : '';
+                        $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
+                        $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
+                        $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
                         
                         $titleOfficerId = (!empty($titleOfficer)) ? $titleOfficerList[$titleOfficer] : null;
                         $productTypeId = (!empty($productType)) ? $productTypeList[$productType] : null;
@@ -7220,29 +7080,6 @@ class Cron extends MX_Controller
                             'status'               => 1,
                         ];
                         
-                        // print_r($propertyData);
-                        // print_r($transactionData);
-
-                        // $propertyAddress = $address;
-                        // $productTypeID   = $res['TransactionProductType']['ProductTypeID'];
-                        // $primary_owner   = ($res['Buyers'][0]['Primary']['First'] && $res['Buyers'][0]['Primary']['First']) ? $res['Buyers'][0]['Primary']['First'] : '';
-                        // $primary_owner .= ($res['Buyers'][0]['Primary']['Middle'] && $res['Buyers'][0]['Primary']['Middle']) ? " " . $res['Buyers'][0]['Primary']['Middle'] : '';
-                        // $primary_owner .= ($res['Buyers'][0]['Primary']['Last'] && $res['Buyers'][0]['Primary']['Last']) ? " " . $res['Buyers'][0]['Primary']['Last'] : '';
-                        // $secondary_owner = ($res['Buyers'][0]['Secondary']['First'] && $res['Buyers'][0]['Secondary']['First']) ? $res['Buyers'][0]['Secondary']['First'] : '';
-                        // $secondary_owner .= ($res['Buyers'][0]['Secondary']['Middle'] && $res['Buyers'][0]['Secondary']['Middle']) ? $res['Buyers'][0]['Secondary']['Middle'] : '';
-                        // $secondary_owner .= ($res['Buyers'][0]['Secondary']['Last'] && $res['Buyers'][0]['Secondary']['Last']) ? " " . $res['Buyers'][0]['Secondary']['Last'] : '';
-                        // $ProductTypeTxt = $res['TransactionProductType']['ProductType'];
-
-                        // if (strpos($ProductTypeTxt, 'Loan') !== false) {
-                        //     $propertyData['primary_owner']   = $primary_owner;
-                        //     $propertyData['secondary_owner'] = $secondary_owner;
-                        // } elseif (strpos($ProductTypeTxt, 'Sale') !== false) {
-                        //     $transactionData['borrower']           = $primary_owner;
-                        //     $transactionData['secondary_borrower'] = $secondary_owner;
-                        //     $propertyData['primary_owner']         = isset($property_details['primary_owner']) && ! empty($property_details['primary_owner']) ? $property_details['primary_owner'] : '';
-                        //     $propertyData['secondary_owner']       = isset($property_details['secondary_owner']) && ! empty($property_details['secondary_owner']) ? $property_details['secondary_owner'] : '';
-                        // }
-
                         $propertyId    = $this->home_model->insert($propertyData, 'property_details');
                         $transactionId = $this->home_model->insert($transactionData, 'transaction_details');
                         $randomString  = $this->order->randomPassword();
@@ -7267,15 +7104,7 @@ class Cron extends MX_Controller
                             'sent_to_accounting_date'    => $completed_date,
                             'is_softpro_order'          => 1
                         ];
-
-                        // if (! empty($premium)) {
-                        //     $orderData['premium'] = (float) $premium;
-                        // }
-
-                        // if (! empty($completed_date)) {
-                        //     $orderData['sent_to_accounting_date'] = $completed_date;
-                        // }
-                        // print_r($orderData);die;
+                        
                         $orderId = $this->home_model->insert($orderData, 'order_details');
                         
                     } else {
@@ -7309,7 +7138,14 @@ class Cron extends MX_Controller
                 
             } // end foreach
         }
-        echo json_encode(['status' => 'success','message' => $importedOrderCount . ' Orders imported and ' .$updatedOrderCount .' Order updated successfully']);
+
+        /** Cron log start */
+        $res = $importedOrderCount . ' Orders imported and ' .$updatedOrderCount .' Order updated successfully';
+        $apiEndPoints = SOFTPRO_API_END;
+        $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_softpro_orders'] . '?' . $queryParams;
+        $this->order->syncLogs('softpro', 'get_softpro_orders', $url, $reqData, $res, 0, 0);
+        /** Cron log end */
+        echo json_encode(['status' => 'success','message' => $res]);
     }
 
     public function getDateIntervals($start, $end, $intervalDays = 10)
@@ -7377,6 +7213,7 @@ class Cron extends MX_Controller
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $apiEndPoints = SOFTPRO_API_END;
         foreach ($dateIntervalQueryParams as $key => $range) {
+            $newSyncedFile = [];
             $reqData = $queryParams = $range;
             $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_bulk_prelim_report'] . '?'.$queryParams;
             $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_bulk_prelim_report', $reqUrl, $reqData, [], 0, 0);
@@ -7399,9 +7236,6 @@ class Cron extends MX_Controller
                         $this->db->where('file_number', $data['OrderNumber']);
                         $prelimSummaryDetails = $this->db->get()->row_array();
     
-                        // print_r($filesResult);
-                        // print_r($prelimSummaryDetails);die;
-                        // print_r($prelimLink);die;
                         if (empty($prelimSummaryDetails) && !empty($filesResult) && !empty($data['data'])) {
                             $prelimLink = $data['data'][0];
                             $ext = pathinfo(parse_url($prelimLink, PHP_URL_PATH), PATHINFO_EXTENSION);
@@ -7410,8 +7244,6 @@ class Cron extends MX_Controller
                                 $prelimFetchedCount++;
                                 $documentName = basename($prelimLink);
                                 $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
-                                // $activity = $file_number;
-                                // $this->order->logAdminActivity($activity);
                                 $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
                                 
                                 if ($uploadStatus) {
@@ -7440,14 +7272,23 @@ class Cron extends MX_Controller
                                         'prelim_summary_id' => $id,
                                     );
                                     $this->order->update($data, $condition);
+                                    $newSyncedFile[] = $file_number;
                                 }
                             }
                         }
                     }
-    
-                    
                 } // end foreach
+                // print_r($res); exit;
+            } else {
+                $res = "No prelim details found.";
             }
+
+            /** Cron log start */
+            $res = json_encode(['prelim inserted' => count($newSyncedFile), 'orders_inserted' => $newSyncedFile]);
+            $url = $reqUrl;
+            $this->order->syncLogs('softpro', 'get_bulk_prelim_report', $url, $reqData, $res, 0, 0);
+            /** Cron log end */
+
         }
         
         
@@ -7467,17 +7308,13 @@ class Cron extends MX_Controller
         }
         
         $queryParams = http_build_query($req);
-        // print_r($queryParams);die;
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $reqData     = json_encode($req);
         $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_single_prelim_report', $reqData, $queryParams);
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, json_encode($response), 0, $logid);
-        // $result = '[{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001439-GLT","FileUploadedStatus":true,"data":[]},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001440-GLT","FileUploadedStatus":true,"data":[]},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":200,"Message":"Success","OrderNumber":"TEST-20001457-GLT","FileUploadedStatus":true,"data":["http://100.29.181.61/SoftProIntegrate/assets/5%20-%20Prelims%20and%20Updates_Prelim_093958.pdf"]},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false},{"Status":400,"Message":"No task for prelim","FileUploadedStatus":false}]';
         
-        // echo "<pre>";
-        // print_r($response);
         $prelimFetchedCount= 0;
         if (!empty($response) && $response['status'] == 'success') {
             
@@ -7525,11 +7362,22 @@ class Cron extends MX_Controller
                         'prelim_summary_id' => $id,
                     );
                     $this->order->update($data, $condition);
+
+                    $res = json_encode(['prelim inserted' => 1, 'orders_inserted' => $file_number]);
                 }
+            } else {
+                $res = "Prelim summury details not exist for order number: " . $req['orderNumber'];
             }
-            // echo '$uploadStatus ==' . $uploadStatus;
-            
+        } else {
+            $res = json_encode($response);
         }
+
+        /** Cron log start */
+        $apiEndPoints = SOFTPRO_API_END;
+        $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_single_prelim_report'] . '?' . $queryParams;
+        $this->order->syncLogs('softpro', 'get_single_prelim_report', $url, $reqData, $res, 0, 0);
+        /** Cron log end */
+
         echo json_encode(['status' => 'success','message' => $prelimFetchedCount . ' Orders prelim document updated successfully']);
     }
 
@@ -7600,7 +7448,14 @@ class Cron extends MX_Controller
             $status = 'error';
             $msg = "Invalid request or order number not found.";
         }
+        $apiEndPoints = SOFTPRO_API_END;
+        // $url          = getenv("SOFT_PRO_API") . $apiEndPoints['received_prelim_report'] . '?' . $queryParams;
+        
+        /** Cron log start */
         $res = json_encode(['status' => $status, 'message' => $msg]);
+        $this->order->syncLogs('softpro', 'received_prelim_report', 'received_prelim_report', $reqData, $msg, 0, 0);
+        /** Cron log end */
+
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_report', 'received_prelim_report', $reqData, $res, 0, $logid);
         echo $res;exit;
     }
