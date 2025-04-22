@@ -32,7 +32,8 @@ if (
     $this->uri->uri_string() == 'order/admin/cpl-error-logs' ||
     $this->uri->uri_string() == 'order/admin/resware-logs' ||
     $this->uri->uri_string() == 'order/admin/lp-xml-logs' ||
-    $this->uri->uri_string() == 'order/admin/admin-user-logs'
+    $this->uri->uri_string() == 'order/admin/admin-user-logs' ||
+	$this->uri->uri_string() == 'order/admin/cron-logs' 
 ) {
     $logTabLinks = true;
 }
@@ -331,6 +332,7 @@ if (
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lp-xml-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lp-xml-logs'; ?>">LP Xml</a>
 						<?php if ($role_id == 1): ?>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/admin-user-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/admin-user-logs'; ?>">Admin Activity</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/cron-logs') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/cron-logs'; ?>">Cron Logs</a>
 						<?php endif;?>
 					</div>
 				</div>

@@ -468,6 +468,7 @@ $route['order/admin/send-order-to-softpro']      = 'admin/order/home/sendOrderTo
 $route['order/admin/update-lp-report-status']    = 'admin/order/home/updateLpReportStatus';
 $route['order/admin/update-doc-section']         = 'admin/order/home/updateDocumentSection';
 $route['order/admin/admin-user-logs']            = 'admin/order/home/adminUserLogs';
+$route['order/admin/cron-logs']            = 'admin/order/home/cronLogs';
 $route['order/admin/get-instrument-data']        = 'admin/order/home/getInstrumentData';
 $route['order/admin/store-lp-document-info']     = 'admin/order/home/storeLpDocumentInfo';
 $route['order/admin/lp-document-types']          = 'admin/order/home/lpDocumentTypes';
