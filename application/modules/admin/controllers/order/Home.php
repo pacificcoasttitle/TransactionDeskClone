@@ -6297,7 +6297,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['request_type'];
                 $nestedData[] = $value['request_data'];
                 $nestedData[] = $value['response_data'];
-                $nestedData[] = convertTimezone($value['created_at']);
+                $nestedData[] = convertTimezone($value['created']);
                 $data[]       = $nestedData;
                 $i++;
             }
