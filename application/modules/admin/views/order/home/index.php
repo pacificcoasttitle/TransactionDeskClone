@@ -346,7 +346,7 @@
     <div class="row mb-4">
         <div class="col-md-6 col-sm-12">
             <div class="card border-left-info shadow h-100 py-2">
-                <h1 class="card-header h5 mb-0 text-info">Not received JSON</h1>
+                <h1 class="card-header h5 mb-0 text-info">Missing Prelims</h1>
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">

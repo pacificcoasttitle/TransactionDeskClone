@@ -1893,6 +1893,11 @@ class Home_model extends CI_Model
             ->where('prelim_flag', 0)
             ->or_where('prelim_flag is null')
             ->group_end();
+        $this->db->group_start()
+            ->where('softpro_status', 'open')
+            ->or_where('softpro_status', 'inprocess')
+            ->or_where('softpro_status', 'closed')
+            ->group_end();
         // $this->db->where('prelim_flag', 0);
         $query  = $this->db->get();
         $result = $query->row_array();
