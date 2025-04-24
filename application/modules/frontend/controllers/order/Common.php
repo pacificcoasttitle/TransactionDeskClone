@@ -2220,16 +2220,24 @@ class Common extends MX_Controller
                 $data['title_officer_id'] = isset($value['title_officer_id']) && !empty($value['title_officer_id']) ? $value['title_officer_id'] : '';
                 $data['sales_rep_id'] = isset($value['sales_rep_id']) && !empty($value['sales_rep_id']) ? $value['sales_rep_id'] : '';
                 $data['client_type'] = '';
-                
+                $clientTypeOption = '';
                 if (!empty($data['is_escrow'])) {
                     $data['client_type'] = 'EscrowCompany';
-                } else if (!empty($data['is_lender'])) {
+                    $clientTypeOption .= '<option value="EscrowCompany"> Escrow Company </option>';
+                } 
+                if (!empty($data['is_lender'])) {
                     $data['client_type'] = 'Lender';
-                } else if (!empty($data['is_selling_agent'])) {
+                    $clientTypeOption .= '<option value="Lender"> Lender </option>';
+                } 
+                if (!empty($data['is_selling_agent'])) {
                     $data['client_type'] = 'ListingAgentBroker';
-                } else if (!empty($data['is_mortgage_broker'])) {
-                    $data['client_type'] = 'MortgageBroker';
+                    $clientTypeOption .= '<option value="ListingAgentBroker"> Listing Agent Broker </option>';
                 }
+                if (!empty($data['is_mortgage_broker'])) {
+                    $data['client_type'] = 'MortgageBroker';
+                    $clientTypeOption .= '<option value="MortgageBroker"> Mortgage Broker </option>';
+                }
+                $data['client_type_option'] = $clientTypeOption;
                 // array_push($userInfo, $data);
                 $userInfo[] = $data;
             }

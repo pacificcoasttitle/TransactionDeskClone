@@ -92,8 +92,9 @@ $(document).ready(function () {
                 $("#Zipcode").val(ui.item.zip_code).parent().addClass('state-success');
                 $("#ClientLookupCode").val(ui.item.lookup_code).parent().addClass('state-success');
                 $("#CompanyLookupCode").val(ui.item.flookup_code).parent().addClass('state-success');
-                $("#ClientType").val(ui.item.client_type).parent().addClass('state-success');
+                // $("#ClientType").val(ui.item.client_type).parent().addClass('state-success');
                 $("#CustomerId").val(ui.item.id);
+                $('#ClientType').html(ui.item.client_type_option);
                 if (ui.item.sales_rep_id) {
                     $("#SalesRep").val(ui.item.sales_rep_id)
                 }
