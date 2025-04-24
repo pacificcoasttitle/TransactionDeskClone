@@ -7027,16 +7027,16 @@ class Cron extends MX_Controller
                         $locale       = $city;
 
                         if (($locale)) {
-                            $FullProperty .= $city;
+                            $FullProperty .= ', ' .  $city;
                             if (!empty($state)) {
-                                $FullProperty .= $state;
+                                $FullProperty .= ', ' . $state;
                                 $locale .= ', ' . $state;
                             } else {
                                 $locale .= ', CA';
-                                $FullProperty .= 'CA';
+                                $FullProperty .= ' CA';
                             }
                             if (!empty($zip)) {
-                                $FullProperty .= $zip;
+                                $FullProperty .= ' ' . $zip;
                             }
                         }
 
