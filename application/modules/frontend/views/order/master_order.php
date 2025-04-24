@@ -114,7 +114,12 @@
 									<input value="<?php echo $customer_data['zip_code']; ?>" type="text" name="Zipcode" id="Zipcode" class="form-control" placeholder="Zipcode">
 									<input value="<?php echo $customer_data['lookup_code']; ?>" type="hidden" name="ClientLookupCode" id="ClientLookupCode" class="form-control" placeholder="ClientLookupCode">
 									<input value="<?php echo $customer_data['flookup_code']; ?>" type="hidden" name="CompanyLookupCode" id="CompanyLookupCode" class="form-control" placeholder="ClientLookupCode">
-									<input value="<?php echo $customer_data['client_type']; ?>" type="hidden" name="ClientType" id="ClientType" class="form-control" placeholder="ClientLookupCode">
+									<!-- <input value="<?php echo $customer_data['client_type']; ?>" type="hidden" name="ClientType" id="ClientType" class="form-control" placeholder="ClientLookupCode"> -->
+                                </div>
+                            </div>
+							<div class="row form-group">
+								<div class="col-sm-6">
+									<select id="ClientType" name="ClientType" class="form-control"></select>
                                 </div>
                             </div>
 
