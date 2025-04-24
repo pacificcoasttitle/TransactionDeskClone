@@ -119,7 +119,7 @@
                             </div>
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<select id="ClientType" name="ClientType" class="form-control"></select>
+									<select id="ClientType" name="ClientType" class="form-control" placeholder="ClientType"><option>Select Client Type</option> </select>
                                 </div>
                             </div>
 
