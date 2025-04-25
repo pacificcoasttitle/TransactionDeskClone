@@ -132,7 +132,7 @@ class Home_model extends CI_Model
                     // $this->db->where('is_password_updated', 1);
 
                 }
-
+                $this->db->where('status', 1);
                 $query = $this->db->get();
                 // print_r($this->db->last_query());die;
                 $result = ($query->num_rows() > 0) ? $query->result_array() : false;
