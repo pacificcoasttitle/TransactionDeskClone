@@ -322,72 +322,72 @@ class SalesRep extends MX_Controller
         $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
 
         // get commission value from monthly commission
-        $sales_commission = 0;
-        $this->load->model('admin/order/user_monthly_commission_model');
-        $monthly_commission_arr = [
-            'user_id' => $userId,
-            'commission_year' => date('Y'),
-            'commission_month' => date('m'),
-        ];
-        $commission_obj = $this->user_monthly_commission_model->get_by($monthly_commission_arr);
-        if ($commission_obj) {
-            $sales_commission = $commission_obj->commission;
-            $details_json = $commission_obj->commission_details;
-            $first_in_threshold = $draw_amount = 0;
+        // $sales_commission = 0;
+        // $this->load->model('admin/order/user_monthly_commission_model');
+        // $monthly_commission_arr = [
+        //     'user_id' => $userId,
+        //     'commission_year' => date('Y'),
+        //     'commission_month' => date('m'),
+        // ];
+        // $commission_obj = $this->user_monthly_commission_model->get_by($monthly_commission_arr);
+        // if ($commission_obj) {
+        //     $sales_commission = $commission_obj->commission;
+        //     $details_json = $commission_obj->commission_details;
+        //     $first_in_threshold = $draw_amount = 0;
 
-            if (!empty($details_json) && json_decode($details_json)) {
+        //     if (!empty($details_json) && json_decode($details_json)) {
 
-                $details = json_decode($details_json);
-                foreach ($details as $detail_json) {
-                    if (!empty($detail_json) && json_decode($detail_json)) {
-                        $detail = json_decode($detail_json);
-                        $prod_type = $detail->prod_type;
-                        if ($prod_type == 'override_add') {
-                            $override_add_user = getUserName($detail->user_id);
-                            if ($detail->loan > 0) {
-                                $override_add_per['loan'] = $detail->loan;
-                            }
-                            if ($detail->sale > 0) {
-                                $override_add_per['sale'] = $detail->sale;
-                            }
-                            if ($detail->escrow > 0) {
-                                $override_add_per['escrow'] = $detail->escrow;
-                            }
-                            if (count($override_add_per)) {
-                                $condition = [
-                                    'user_id' => $detail->user_id,
-                                    'commission_month' => date('m'),
-                                    'commission_year' => date('Y'),
-                                ];
-                                $override_add_val = getExtraCommission($override_add_per, $condition);
-                            }
-                            if ($override_add_user):
-                                foreach ($override_add_val as $override_add_key => $override_add_comm):
-                                    if ($override_add_key == 'escrow' && is_array($override_add_comm)):
-                                        $override_commission_val = array_sum($override_add_comm);
-                                    else:
-                                        $override_commission_val = $override_add_comm;
-                                    endif;
+        //         $details = json_decode($details_json);
+        //         foreach ($details as $detail_json) {
+        //             if (!empty($detail_json) && json_decode($detail_json)) {
+        //                 $detail = json_decode($detail_json);
+        //                 $prod_type = $detail->prod_type;
+        //                 if ($prod_type == 'override_add') {
+        //                     $override_add_user = getUserName($detail->user_id);
+        //                     if ($detail->loan > 0) {
+        //                         $override_add_per['loan'] = $detail->loan;
+        //                     }
+        //                     if ($detail->sale > 0) {
+        //                         $override_add_per['sale'] = $detail->sale;
+        //                     }
+        //                     if ($detail->escrow > 0) {
+        //                         $override_add_per['escrow'] = $detail->escrow;
+        //                     }
+        //                     if (count($override_add_per)) {
+        //                         $condition = [
+        //                             'user_id' => $detail->user_id,
+        //                             'commission_month' => date('m'),
+        //                             'commission_year' => date('Y'),
+        //                         ];
+        //                         $override_add_val = getExtraCommission($override_add_per, $condition);
+        //                     }
+        //                     if ($override_add_user):
+        //                         foreach ($override_add_val as $override_add_key => $override_add_comm):
+        //                             if ($override_add_key == 'escrow' && is_array($override_add_comm)):
+        //                                 $override_commission_val = array_sum($override_add_comm);
+        //                             else:
+        //                                 $override_commission_val = $override_add_comm;
+        //                             endif;
 
-                                    $sales_commission += $override_commission_val;
+        //                             $sales_commission += $override_commission_val;
 
-                                endforeach;
-                            endif;
+        //                         endforeach;
+        //                     endif;
 
-                        } elseif ($prod_type == 'draw') {
-                            $draw_amount = $detail->commisison;
-                        } elseif ($prod_type == 'first_threshold') {
-                            $first_in_threshold = $detail->commisison;
-                        }
+        //                 } elseif ($prod_type == 'draw') {
+        //                     $draw_amount = $detail->commisison;
+        //                 } elseif ($prod_type == 'first_threshold') {
+        //                     $first_in_threshold = $detail->commisison;
+        //                 }
 
-                    }
-                }
-                if ($sales_commission < 0 && abs($draw_amount) == 0 && abs($first_in_threshold) > 0) {
-                    $sales_commission = 0;
-                }
-            }
-        }
-        $data['sales_commission'] = $sales_commission;
+        //             }
+        //         }
+        //         if ($sales_commission < 0 && abs($draw_amount) == 0 && abs($first_in_threshold) > 0) {
+        //             $sales_commission = 0;
+        //         }
+        //     }
+        // }
+        // $data['sales_commission'] = $sales_commission;
         //Commission Logic Ends
 
         $data['sale_close_count'] = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;

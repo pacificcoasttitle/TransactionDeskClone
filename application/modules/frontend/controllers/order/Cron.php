@@ -1848,6 +1848,9 @@ class Cron extends MX_Controller
         $this->db->where("request_type", "upload_document_cron");
         $this->db->delete('pct_order_api_logs');
         $this->db->query('OPTIMIZE TABLE pct_order_api_logs');
+
+        $this->db->where("DATE(created) < (curdate() - INTERVAL " . getenv('NO_OF_DAYS_TO_KEEP_API_LOGS') . " DAY)");
+        $this->db->delete('pct_order_cron_logs');
     }
 
     public function exportUsers()
