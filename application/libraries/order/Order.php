@@ -3481,12 +3481,14 @@ class Order
         }
     }
 
-    public function sendClosedOrderAgentEmail($adminFlag = 0)
+    public function sendClosedOrderAgentEmail($data=[])
     {
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $subject = 'Closed Order Report';
-        $to = 'ghernandez@pct.com';
+        $to = 'piyush.j@crestinfosystems.com';
+        $to = $data['buyer_recipient_email'];
+        // $to = 'ghernandez@pct.com';
         // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
         // $to = 'ghernandez@pct.com';
         $message = $this->CI->load->view('frontend/emails/closed_order_agent_email.php', $data, true);

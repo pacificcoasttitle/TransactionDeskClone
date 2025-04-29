@@ -3254,5 +3254,102 @@ class Home_model extends CI_Model
         );
     }
 
+    public function get_manual_buyer_list($params)
+    {
+    	$this->db->from('pct_manual_buyers');
+		$total_records =  $this->db->count_all_results();
+		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+        $data_lists = array();
+        
+    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+    		$keyword = $params['searchvalue'];
+    		if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
+				$this->db->like('order_number', $keyword);
+                $this->db->or_like('property_address', $keyword);
+                $this->db->or_like('buyer_name', $keyword);
+                $this->db->or_like('sales_rep_name', $keyword);
+                $this->db->or_like('email_recipient', $keyword);
+                $this->db->group_end();
+            }
+            
+	    	$this->db->from('pct_manual_buyers');
+			$filter_total_records =  $this->db->count_all_results();
 
+			if (isset($keyword) && !empty($keyword)) {
+                $this->db->group_start();
+				$this->db->like('order_number', $keyword);
+                $this->db->or_like('property_address', $keyword);
+                $this->db->or_like('buyer_name', $keyword);
+                $this->db->or_like('sales_rep_name', $keyword);
+                $this->db->or_like('email_recipient', $keyword);
+                $this->db->group_end();
+			}
+
+            
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get('pct_manual_buyers');
+			
+			if ($query->num_rows() > 0) {
+                $data_lists = $query->result_array();
+	        }
+    	} else {
+            
+	    	$this->db->from('pct_manual_buyers');
+			$filter_total_records =  $this->db->count_all_results();
+
+			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+			$query = $this->db->get('pct_manual_buyers');
+
+			if ($query->num_rows() > 0) {
+	            $data_lists = $query->result_array();
+	        } 
+    	}
+
+    	return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data' => $data_lists
+        );
+    }
+
+    public function getSPSalesRepDetails($params)
+    {
+        $table = 'pct_softpro_lookup_table';
+
+        $this->db->select('*');
+        $this->db->from($table);
+
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                $this->db->where($key, $val);
+            }
+        }
+
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
+            $result = $this->db->count_all_results();
+        } else {
+            if (array_key_exists("id", $params)) {
+                $this->db->where('id', $params['id']);
+                $query = $this->db->get();
+                $result = $query->row_array();
+            } else {
+                $this->db->order_by('first_name', 'asc');
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit']);
+                }
+                $query = $this->db->get();
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
+            }
+        }
+        // Return fetched data
+        return $result;
+    }
 }

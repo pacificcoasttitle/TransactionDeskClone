@@ -489,6 +489,9 @@ $route['order/admin/delete-daily-emailer']    = 'admin/order/home/deleteDailyEma
 // $route['order/admin/new-pct-lp-document-types'] = 'admin/order/home/newPctLpDocumentTypes';
 $route['order/admin/settings'] = 'admin/order/home/settings';
 
+$route['order/admin/manual-buyers']           = 'admin/order/home/manualBuyers';
+$route['send-email-to-buyer-recipient']       = 'admin/order/home/sendBuyerEmail';
+
 $route['update-title-officer-email-receive-flag'] = 'admin/order/title/updateTitleOfficerEmailFlag';
 $route['update-lp-document-type-flag']            = 'admin/order/home/updateLpDocumentTypeFlag';
 $route['update-lp-document-is-ves-type-flag']     = 'admin/order/home/updateLpDocumentTypeIsVesFlag';

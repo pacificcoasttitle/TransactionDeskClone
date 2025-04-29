@@ -168,14 +168,18 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
         </tr>
 		  <tr>
 		  <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;font-weight:400;font-style:normal;color:#000000;text-decoration:none;letter-spacing:0.5px;">
-                <div mc:edit="mcrvl959r6tju" style="margin: 0px; padding: 0px;"><p class="clienthead"  style="margin-top:10px; padding:0px;"><br>Order #</p>
-				<p class="client">200000699-GLT</p>
+                <div mc:edit="mcrvl959r6tju" style="margin: 0px; padding: 0px;">
+        <p class="clienthead"  style="margin-top:10px; padding:0px;color:#000000; margin-top:10px; margin-bottom:10px;font-weight:bold;font-size:18px;"><br>Order #</p>
+				<p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;" ><?php echo $order_number; ?></p>
 				
-				<p class="clienthead" style="margin:0px; padding:0px;">Property Address:</p><p class="client">456 Test Ave Los Angeles, CA 92920</p>
+				<p class="clienthead" style="margin:0px; padding:0px;color:#000000; margin-top:10px; margin-bottom:10px;font-weight:bold;font-size:18px;">Property Address:</p>
+        <p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;"><?php echo $property_address; ?></p>
 				
-				<p class="clienthead"  style="margin:0px; padding:0px;;">Sales Rep:</p><p class="client">David Gomez</p>
+				<p class="clienthead"  style="margin:0px; padding:0px;color:#000000; margin-top:10px; margin-bottom:10px;font-weight:bold;font-size:18px;">Sales Rep:</p>
+        <p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;"><?php echo $sales_rep_name; ?></p>
 				
-				<p class="clienthead"  style="margin:0px; padding:0px;">Buying Agent's Information:</p><p class="client">John Smith<br>Office Name:Keller Williams Realty<br>Phone:(800) 899-9887<br>Email:AgentOne@kw.com</p>
+				<p class="clienthead"  style="margin:0px; padding:0px;color:#000000; margin-top:10px; margin-bottom:10px;font-weight:bold;font-size:18px;">Buying Agent's Information:</p>
+        <p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;"><?php echo $buyer_name; ?><br>Office Name:<?php echo $buyer_office_name; ?><br>Phone:<?php echo $buyer_phone_no; ?><br>Email:<?php echo $buyer_email; ?></p>
 
 				</div>
           </td>
@@ -183,7 +187,7 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
 		
 		<tr>
 		<td>
-		<p style="margin: 0px; padding: 0px;"><br></p><p style="margin: 0px; padding: 0px;"><br></p>	
+		  <p style="margin: 0px; padding: 0px;"><br></p><p style="margin: 0px; padding: 0px;"><br></p>	
 		</td>
 		</tr>
 

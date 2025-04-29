@@ -12,9 +12,9 @@ if (
     $this->uri->uri_string() == 'order/admin/fees' ||
     $this->uri->uri_string() == 'order/admin/rules-manager' ||
     $this->uri->uri_string() == 'order/admin/notifications' ||
-    $this->uri->uri_string() == 'order/admin/holidays' ||
     $this->uri->uri_string() == 'order/admin/settings' ||
     $this->uri->uri_string() == 'order/admin/manual-report' ||
+    $this->uri->uri_string() == 'order/admin/manual-buyers' ||
     preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
     preg_match('/order\/admin\/([a-z\-])*lp-alert*/', $this->uri->uri_string()) ||
     preg_match('/order\/admin\/([a-z\-])*daily-email*/', $this->uri->uri_string())
@@ -412,10 +412,6 @@ if (
 								Notifications
 							</a>
 
-							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/holidays' || $this->uri->segment(3) == 'add-holiday' || $this->uri->segment(3) == 'edit-holiday') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/holidays'; ?>">
-								Holidays
-							</a>
-
 							<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lp-document-types'; ?>">
 								LP Document Types
 							</a>
@@ -432,8 +428,11 @@ if (
 								Settings
 							</a>
 
-							<a class="collapse-item <?php if (preg_match('/order\/admin\/([a-z\-])*manual-report*/', $this->uri->uri_string())) {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/manual-report'; ?>">
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/manual-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/manual-report'; ?>">
 								Manual Report
+							</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/manual-buyers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/manual-buyers'; ?>">
+								Manual Buyer
 							</a>
 						<?php endif;?>
 					</div>
