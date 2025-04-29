@@ -8788,5 +8788,140 @@ class Home extends MX_Controller
         $data = ['status' => 'success', 'msg' => 'Details updated successfully.'];
         echo json_encode($data);
     }
+
+    public function manualBuyers()
+    {
+        $data = array();
+		$data['title'] = 'PCT Order: Manual Buyers';
+		if ($this->input->post()) {
+            // echo "<pre>";
+            // print_r($this->input->post());die;
+			$this->form_validation->set_rules('order_number', 'Order Number', 'required', ['required' => 'Order Number is required']);
+            $this->form_validation->set_rules('property_address', 'Property Address', 'required', ['required' => 'Property Address is required']);
+            $this->form_validation->set_rules('buyer_name', 'Buyer Name', 'required', ['required' => 'Buyer Name is required']);
+            $this->form_validation->set_rules('buyer_email', 'Buyer Email', 'required', ['required' => 'Buyer Email is required']);
+            $this->form_validation->set_rules('buyer_phone_no', 'Buyer Phone Number', 'required', ['required' => 'Buyer Phone Number is required']);
+            $this->form_validation->set_rules('buyer_office_name', 'Buyer Office Name', 'required', ['required' => 'Buyer Office Name is required']);
+            $this->form_validation->set_rules('sales_rep_id', 'Sales Rep', 'required', ['required' => 'Please select Sales Rep']);
+
+            if ($this->form_validation->run($this) == true) {
+
+                $buyerData = array(
+                    'order_number' => $this->input->post('order_number'),
+                    'property_address' => $this->input->post('property_address'),
+                    'buyer_name' => $this->input->post('buyer_name'),
+                    'buyer_email' => $this->input->post('buyer_email'),
+                    'buyer_phone_no' => $this->input->post('buyer_phone_no'),
+                    'buyer_office_name' => $this->input->post('buyer_office_name'),
+                    'sales_rep_id' => $this->input->post('sales_rep_id'),
+                    'sales_rep_name' => $this->input->post('sales_rep_name')
+                );
+
+                $insert = $this->home_model->insert($buyerData, 'pct_manual_buyers');
+                $flash_data['success'] = 'Buyer added successfully.';
+
+            } else {
+                $data['order_number_error_msg']        = form_error('order_number');
+                $data['property_address_error_msg']    = form_error('property_address');
+                $data['buyer_name_error_msg']       = form_error('buyer_name');
+                $data['buyer_email_error_msg']     = form_error('buyer_email');
+                $data['buyer_phone_no_error_msg']       = form_error('buyer_phone_no');
+                $data['buyer_office_name_error_msg'] = form_error('buyer_office_name');
+                $data['sales_rep_id_error_msg']   = form_error('sales_rep_id');
+                $flash_data['error'] = 'Please fill all required fields.';
+            }
+            $this->session->set_flashdata($flash_data);
+		}
+        $condition = [
+            'where' => [
+                'is_sales_rep' => 1,
+                'status'       => 1,
+            ],
+        ];
+        // $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
+        $data['salesRep'] = $this->home_model->getSPSalesRepDetails($condition);
+		$this->admintemplate->show("order/home", "manual_buyers", $data);
+    }
+
+    public function get_manual_buyer_list()
+    {
+        $params = [];
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+
+            $params['searchvalue']     = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['where']['status'] = 1;
+            $params['is_escrow_officer'] = 1;
+            $pageno = ($params['start'] / $params['length']) + 1;
+
+            $escrow_officer_lists = $this->home_model->get_manual_buyer_list($params);
+            // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
+
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['is_escrow_officer'] = 1;
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $escrow_officer_lists  = $this->home_model->get_manual_buyer_list($params);
+        }
+        $data = [];
+
+        if (isset($escrow_officer_lists['data']) && !empty($escrow_officer_lists['data'])) {
+            foreach ($escrow_officer_lists['data'] as $key => $value) {
+                $nestedData = [];
+                $nestedData[] = $key + 1;
+                $nestedData[] = $value['order_number'];
+                $nestedData[] = $value['property_address'];
+                $nestedData[] = $value['buyer_name'];
+                $nestedData[] = $value['buyer_email'];
+                $nestedData[] = $value['buyer_phone_no'];
+                $nestedData[] = $value['sales_rep_name'];
+                // $nestedData[] = $value['email_recipient'];
+
+                // $action  = "";
+                // $editUrl = base_url() . 'order/admin/edit-escrow-officer/' . $value['id'];
+                $action  = "<div style='display: flex;justify-content: space-evenly;'>";
+                // <a href='" . $editUrl . "' class='edit-agent'title ='Edit Escrow Officer Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+
+                $action .= "<a href='javascript:void(0);' onclick='addBuyerEmailRecipient(" . $value['id'] . ")' title='Add Email Recipient'><i class='fas fa-edit' aria-hidden='true'></i></a></div>";
+                $nestedData[] = $action;
+
+                $data[] = $nestedData;
+            }
+        }
+        $json_data['recordsTotal']    = intval($escrow_officer_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($escrow_officer_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
+    public function sendBuyerEmail()
+    {
+        $buyerRecipientEmail = $this->input->post('buyer_recipient_email');
+        $buyer_id = $this->input->post('buyer_id');
+        $con = ['id' => $buyer_id];
+        $buyerData  = $this->home_model->get_rows($con, 'pct_manual_buyers');
+
+        if (empty($buyerData)) {
+            $this->session->set_flashdata('error', 'Buyer not found.');
+            redirect(base_url() . 'order/admin/manual-buyers');
+        }
+
+        $buyerData['buyer_recipient_email'] = $buyerRecipientEmail;
+        $result    = $this->order->sendClosedOrderAgentEmail($buyerData);
+
+        $updateData = [
+            'email_recipient' => $buyerRecipientEmail,
+            'email_sent_status' => $result,
+        ];
+        $this->home_model->update($updateData, $con, 'pct_manual_buyers');
+        
+        $this->session->set_flashdata('success', 'Mail sent successfully to '. $buyerRecipientEmail);
+        redirect(base_url() . 'order/admin/manual-buyers');
+    }
     
 }
