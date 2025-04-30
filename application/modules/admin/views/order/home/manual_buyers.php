@@ -11,14 +11,14 @@
 <div class="container-fluid">
 	<div class="row mb-3">
 		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Manual Buyers</h1>
+			<h1 class="h3 text-gray-800">Manual Buying Agent</h1>
 		</div>
 		<div class="col-sm-6">
             <a href="javascript:void(0);" data-toggle="modal" data-target="#addBuyerModal"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
-                <span class="text"> Add Buyer </span> 
+                <span class="text"> Add Buying Agent </span> 
             </a>
 		</div>
 	</div>
@@ -33,7 +33,7 @@
                 <span>
                     <i class="fas fa-users"></i>
                 </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Buyer</h6> 
+                <h6 class="m-0 font-weight-bold text-primary pl-10">Buying Agent</h6> 
             </div>
         </div>
                 
@@ -51,6 +51,7 @@
 							<th>Email</th>
 							<th>Phone</th>
 							<th>Sales Rep</th>
+							<th>Email Sent Time</th>
 							<th>Action</th>
                         </tr>
                     </thead>                
@@ -71,7 +72,7 @@
 					<div class="col-lg-12">
 						<div class="card shadow">
 							<div class="card-header py-3">
-								<h6 class="m-0 font-weight-bold text-primary" >Add Buyer</h6>
+								<h6 class="m-0 font-weight-bold text-primary" >Add Buying Agent</h6>
 							</div>
 							<div class="card-body"> 
 								<div class="smart-forms smart-container">
@@ -94,14 +95,14 @@
                                                     <?php } ?>
 												</div>
                                                 <div class="col-sm-12">
-													<label for="buyer_name" class="col-form-label">Buyer Name</label>
+													<label for="buyer_name" class="col-form-label">Buying Agent Name</label>
 													<input name="buyer_name" required="" type="text" class="form-control" id="buyer_name" >
                                                     <?php if(!empty($buyer_name_error_msg)){ ?>
                                                             <div class="alert alert-danger"><?php echo $buyer_name_error_msg; ?></div>
                                                     <?php } ?>
 												</div>
                                                 <div class="col-sm-12">
-													<label for="buyer_email" class="col-form-label">Buyer Email</label>
+													<label for="buyer_email" class="col-form-label">Buying Agent Email</label>
 													<input name="buyer_email" required="" type="text" class="form-control" id="buyer_email" >
                                                     <?php if(!empty($buyer_email_error_msg)){ ?>
                                                             <div class="alert alert-danger"><?php echo $buyer_email_error_msg; ?></div>
@@ -115,11 +116,19 @@
                                                     <?php } ?>
 												</div>
                                                 <div class="col-sm-12">
-													<label for="buyer_office_name" class="col-form-label">Buyer Office Name</label>
+													<label for="buyer_office_name" class="col-form-label">Buying Agent Office Name</label>
 													<input name="buyer_office_name" required="" type="text" class="form-control" id="buyer_office_name" >
                                                     <?php if(!empty($buyer_office_name_error_msg)){ ?>
                                                             <div class="alert alert-danger"><?php echo $buyer_office_name_error_msg; ?></div>
                                                     <?php } ?>
+												</div>
+												<div class="col-sm-12">
+													<label for="buyer_office_address" class="col-form-label">Buying Agent Office Address</label>
+													<input name="buyer_office_address" required="" type="text" class="form-control" id="buyer_office_address" >
+												</div>
+												<div class="col-sm-12">
+													<label for="buyer_office_city" class="col-form-label">Buying Agent Office City</label>
+													<input name="buyer_office_city" required="" type="text" class="form-control" id="buyer_office_city" >
 												</div>
                                                 
                                                 <div class="col-sm-12">
@@ -190,7 +199,7 @@
 										<div class="form-group">
 											<div class="row">
 												<div class="col-sm-12">
-													<label for="buyer_recipient_email" class="col-form-label">Buyer Recipient Email</label>
+													<label for="buyer_recipient_email" class="col-form-label">Enter Sales Managers Email</label>
 													<input name="buyer_recipient_email" required="" type="text" class="form-control" id="buyer_recipient_email">
 													<input name="buyer_id" type="hidden" class="form-control" id="buyer_id">
 												</div>

@@ -5554,7 +5554,8 @@ $(document).ready(function () {
             "paging": true,
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
-                { "searchable": false, "targets": [0, 1, 2] }
+                { "searchable": false, "targets": [0, 1, 2] },
+                { orderable: false, targets: [0] }
             ],
             "language": {
                 searchPlaceholder: "Search #",
@@ -5597,7 +5598,7 @@ $(document).ready(function () {
                 $('.dataTables_paginate > .pagination a').addClass('page-link');
                 $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
             },
-            "ordering": false,
+            // "ordering": false,
             "serverSide": true,
             "ajax": {
                 url: base_url + "admin/order/home/get_manual_buyer_list", // json datasource
