@@ -38,8 +38,8 @@
         </div>
                 
         <div class="card-body">
-            <div id="forms_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="forms_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+            <div id="tbl-manual_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+            <div id="tbl-manual_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-manual-buyers" width="100%" cellspacing="0">
                     <thead>
