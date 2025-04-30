@@ -3492,7 +3492,7 @@ class Order
         // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
         // $to = 'ghernandez@pct.com';
         $message = $this->CI->load->view('frontend/emails/closed_order_agent_email.php', $data, true);
-        $cc = array('piyush.j@crestinfosystems.com');
+        // $cc = array('piyush.j@crestinfosystems.com');
         $mailParams = array(
             'from_mail' => $from_mail,
             'from_name' => $from_name,
