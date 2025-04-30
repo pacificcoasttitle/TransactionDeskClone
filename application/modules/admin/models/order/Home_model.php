@@ -3291,11 +3291,11 @@ class Home_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('pct_manual_buyers');
+			// $query = $this->db->get('pct_manual_buyers');
 			
-			if ($query->num_rows() > 0) {
-                $data_lists = $query->result_array();
-	        }
+			// if ($query->num_rows() > 0) {
+            //     $data_lists = $query->result_array();
+	        // }
     	} else {
             
 	    	$this->db->from('pct_manual_buyers');
@@ -3304,13 +3304,29 @@ class Home_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('pct_manual_buyers');
-
-			if ($query->num_rows() > 0) {
-	            $data_lists = $query->result_array();
-	        } 
     	}
-
+        
+        if ($params['orderColumn'] > 0) {
+            if ($params['orderColumn'] == 1) {
+                $this->db->order_by('order_number', $params['orderDir']);
+            } else if ($params['orderColumn'] == 2) {
+                $this->db->order_by('property_address', $params['orderDir']);
+            } else if ($params['orderColumn'] == 3) {
+                $this->db->order_by('buyer_name', $params['orderDir']);
+            } else if ($params['orderColumn'] == 4) {
+                $this->db->order_by('buyer_email', $params['orderDir']);
+            } else if ($params['orderColumn'] == 5) {
+                $this->db->order_by('buyer_phone_no', $params['orderDir']);
+            } else if ($params['orderColumn'] == 6) {
+                $this->db->order_by('sales_rep_name', $params['orderDir']);
+            } else if ($params['orderColumn'] == 7) {
+                $this->db->order_by('updated_at', $params['orderDir']);
+            }
+        }
+        $query = $this->db->get('pct_manual_buyers');
+        if ($query->num_rows() > 0) {
+            $data_lists = $query->result_array();
+        } 
     	return array(
             'recordsTotal' => $total_records,
             'recordsFiltered' => $filter_total_records,
