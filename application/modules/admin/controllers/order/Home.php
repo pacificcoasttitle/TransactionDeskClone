@@ -8814,7 +8814,9 @@ class Home extends MX_Controller
                     'buyer_phone_no' => $this->input->post('buyer_phone_no'),
                     'buyer_office_name' => $this->input->post('buyer_office_name'),
                     'sales_rep_id' => $this->input->post('sales_rep_id'),
-                    'sales_rep_name' => $this->input->post('sales_rep_name')
+                    'sales_rep_name' => $this->input->post('sales_rep_name'),
+                    'buyer_office_address' => $this->input->post('buyer_office_address'),
+                    'buyer_office_city' => $this->input->post('buyer_office_city')
                 );
 
                 $insert = $this->home_model->insert($buyerData, 'pct_manual_buyers');
@@ -8855,10 +8857,7 @@ class Home extends MX_Controller
             $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
 
             $params['searchvalue']     = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
-            $params['where']['status'] = 1;
-            $params['is_escrow_officer'] = 1;
             $pageno = ($params['start'] / $params['length']) + 1;
-
             $escrow_officer_lists = $this->home_model->get_manual_buyer_list($params);
             // $cnt = ($pageno == 1) ? ($params['start']+1) : (($pageno - 1) * $params['length']) + 1;
 
@@ -8880,6 +8879,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['buyer_email'];
                 $nestedData[] = $value['buyer_phone_no'];
                 $nestedData[] = $value['sales_rep_name'];
+                $nestedData[] = convertTimezone($value['updated_at']);
                 // $nestedData[] = $value['email_recipient'];
 
                 // $action  = "";
