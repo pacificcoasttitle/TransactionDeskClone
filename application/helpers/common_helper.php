@@ -51,6 +51,15 @@ if (!function_exists('convertTimezone')) {
         return $date->format($format);
     }
 }
+
+if (!function_exists('getSoftproAPiUrl')) {
+    function getSoftproAPIUrl($endpoint)
+    {
+        $apiEndPoints = SOFTPRO_API_END;
+        return getenv("SOFT_PRO_API") . $apiEndPoints[$endpoint];
+    }
+}
+
 if (!function_exists('getUserName')) {
     function getUserName($id)
     {

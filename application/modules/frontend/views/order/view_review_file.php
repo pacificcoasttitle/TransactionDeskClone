@@ -51,12 +51,12 @@
 									</span>
 									<span class="text">Refresh</span>
 								</button>
-								<button class="btn-success btn-icon-split btn-sm" onClick="updateAction();">
+								<!-- <button class="btn-success btn-icon-split btn-sm" onClick="updateAction();">
 									<span class="icon text-white-50">
 										<i class="fa fa-upload"></i>
 									</span>
 									<span class="text">Update Prelim Action</span>
-								</button>
+								</button> -->
 							</div>
 
 							<!-- <span class="bg-border" style="float: right;cursor:pointer;background: #d35411;" onClick="window.location.reload();">Refresh</span> -->
