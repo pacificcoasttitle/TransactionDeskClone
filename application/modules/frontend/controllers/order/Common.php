@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $version = '03';
+    private $version = '05';
  
     public function __construct()
     {
@@ -536,12 +536,8 @@ class Common extends MX_Controller
         $this->load->model('order/note');
         $this->load->model('order/document');
         $orderId = $this->uri->segment(2);
-        $endPoint = 'files/' . $orderId . '/actions';
-        $user_data['admin_api'] = 1;
-        $logid = $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), array(), 0, 0);
-        $res = $this->resware->make_request('GET', $endPoint, array(), $user_data);
-        $this->apiLogs->syncLogs(0, 'resware', 'get_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, array(), $res, 0, $logid);
-        $result = json_decode($res, true);
+        // print_r($orderId);die;
+        
         $error = '';
         $success = '';
 
@@ -554,92 +550,122 @@ class Common extends MX_Controller
         }
 
         if (!empty($_FILES['file_upload']['name'])) {
+            // if (false) {
             if (!$this->upload->do_upload('file_upload')) {
                 $errorMsg = $this->upload->display_errors();
                 $this->session->set_userdata('error', $errorMsg);
                 $file_upload_error_msg = 1;
             } else {
-                if (isset($result['Actions']) && !empty($result['Actions'])) {
-                    $array_keymap = $this->order->array_recursive_search_key_map(126, $result['Actions']);
-                    if (!empty($array_keymap)) {
-                        $actionData = array(
-                            'StartTask' => array(
-                                'CoordinatorTypeID' => 19,
-                                'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
-                            ),
-                        );
-                        $endPoint = 'files/' . $fileId . '/actions/' . $result['Actions'][$array_keymap[0]]['FileActionID'];
-                        $user_data['admin_api'] = 1;
-                        $actionData = json_encode($actionData);
-                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $fileId, 0);
-                        $res = $this->resware->make_request('PUT', $endPoint, $actionData, $user_data);
-                        $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $fileId, $logid);
-                        $result = json_decode($res, true);
+                // if (isset($result['Actions']) && !empty($result['Actions'])) {
+                //     $array_keymap = $this->order->array_recursive_search_key_map(126, $result['Actions']);
+                //     if (!empty($array_keymap)) {
+                //         $actionData = array(
+                //             'StartTask' => array(
+                //                 'CoordinatorTypeID' => 19,
+                //                 'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
+                //             ),
+                //         );
+                //         $endPoint = 'files/' . $fileId . '/actions/' . $result['Actions'][$array_keymap[0]]['FileActionID'];
+                //         $user_data['admin_api'] = 1;
+                //         $actionData = json_encode($actionData);
+                //         $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $fileId, 0);
+                //         $res = $this->resware->make_request('PUT', $endPoint, $actionData, $user_data);
+                //         $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $fileId, $logid);
+                //         $result = json_decode($res, true);
 
-                        if (!empty($result['FileActionID'])) {
-                            $success = 'Prelim action updated successfully.';
-                        } else {
-                            $error = 'Something went wrong during update action prelim';
-                        }
+                //         if (!empty($result['FileActionID'])) {
+                //             $success = 'Prelim action updated successfully.';
+                //         } else {
+                //             $error = 'Something went wrong during update action prelim';
+                //         }
 
-                    } else {
-                        $actionData = array(
-                            'ActionType' => array(
-                                'ActionTypeID' => 126,
-                            ),
-                            'Group' => array(
-                                'ActionGroupID' => 6,
-                            ),
-                            'StartTask' => array(
-                                'CoordinatorTypeID' => 19,
-                                'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
-                            ),
-                        );
-                        $endPoint = 'files/' . $fileId . '/actions/';
-                        $user_data['admin_api'] = 1;
-                        $actionData = json_encode($actionData);
-                        $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $fileId, 0);
-                        $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
-                        $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $fileId, $logid);
-                        $result = json_decode($res, true);
+                //     } else {
+                //         $actionData = array(
+                //             'ActionType' => array(
+                //                 'ActionTypeID' => 126,
+                //             ),
+                //             'Group' => array(
+                //                 'ActionGroupID' => 6,
+                //             ),
+                //             'StartTask' => array(
+                //                 'CoordinatorTypeID' => 19,
+                //                 'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
+                //             ),
+                //         );
+                //         $endPoint = 'files/' . $fileId . '/actions/';
+                //         $user_data['admin_api'] = 1;
+                //         $actionData = json_encode($actionData);
+                //         $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $fileId, 0);
+                //         $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
+                //         $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $fileId, $logid);
+                //         $result = json_decode($res, true);
 
-                        if (!empty($result['FileActionID'])) {
-                            $success = 'Prelim action updated successfully. <br/>';
-                        } else {
-                            $errors = 'Something went wrong during update action prelim';
-                        }
-                    }
-                }
+                //         if (!empty($result['FileActionID'])) {
+                //             $success = 'Prelim action updated successfully. <br/>';
+                //         } else {
+                //             $errors = 'Something went wrong during update action prelim';
+                //         }
+                //     }
+                // }
                 $subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
                 $body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
                 $params = [
                     'order_details.id' => $orderId,
                 ];
                 $orderDetails = $this->order->get_order_details($params);
-                $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
+                // $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
 
-                $request = array();
-                $endPoint = 'files/' . $fileId . '/notes';
-                $request['Subject'] = $subject;
-                $request['Body'] = $body;
-                $request['FileID'] = $fileId;
-                $request['Expedite'] = true;
-                $notes_data = json_encode($request);
+                // $request = array();
+                // $endPoint = 'files/' . $fileId . '/notes';
+                // $request['Subject'] = $subject;
+                // $request['Body'] = $body;
+                // $request['FileID'] = $fileId;
+                // $request['Expedite'] = true;
+                // $notes_data = json_encode($request);
 
-                $notesData = [
-                    "OrderNumber"  => $orderNumber,
-                    "Text" => $orderNumber
-                ];
-                $reqData = json_encode($notesData);
+                // $notesData = [
+                //     "OrderNumber"  => $orderNumber,
+                //     "Text" => $orderNumber
+                // ];
+                // $reqData = json_encode($notesData);
                 // print_r($reqData);
-                $response = $this->softpro->make_request('POST', 'add_note', $reqData);
+                // $this->order->updateTaskStatus('update_prelim', $orderNumber);
+
+
+
+                $endPoint = 'add_note';
+                // $notes['Subject'] = $subject;
+                $notes['Text'] = $body;
+                $notes['OrderNumber'] = $orderNumber = $orderDetails['file_number'];
+                $notesReq[] = $notes;
+                $reqData = json_encode($notesReq);
+                $user_data = array();
+                $softproEndPoint = getSoftproAPIUrl($endPoint);
+
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', $endPoint, $softproEndPoint, $reqData, array(), $orderId, 0);
+                $result = $this->softpro->make_request('POST', $endPoint, $reqData);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', $endPoint, $softproEndPoint, $reqData, $result, $orderId, $logid);
+                $response      = json_decode($result, true);
+                // echo "<pre>";
+                // print_r($response);die;
+                
+                // $softproLog = [
+                //     'request_type' => 'add_note_in_softpro',
+                //     'request_url'  => 'add_note',
+                //     'request'      => $reqData,
+                //     'response'     => $result,
+                //     'status'       => 'error',
+                //     'created_at'   => date("Y-m-d H:i:s"),
+                // ];
+
+                // $response = $this->softpro->make_request('POST', 'add_note', $reqData);
                 /* Start upload softpro api logs */
                 $softproLog = [
                     'request_type' => 'add_note_in_softpro',
                     'request_url'  => 'add_note',
                     'request'      => $reqData,
                     'response'     => json_encode($response),
-                    'status'       => $response['status'],
+                    'status'       => 'success', // $response['status'],
                     'file_number'  => $orderNumber,
                     'created_at'   => date("Y-m-d H:i:s"),
                 ];
@@ -648,21 +674,23 @@ class Common extends MX_Controller
                 if (isset($response) && ! empty($response)) {
                     // $response = $result, true);
 
-                    if (isset($response['status']) && $response['status'] == 'error') {
-                        $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
+                    if (isset($response[0]['status']) && $response[0]['status'] != 200) {
+                        $message = isset($response[0]['Message']) && !empty($response[0]['Message']) ? $response[0]['Message'] : '';
                         $errors[] = $message;
                     } else {
                         $notesData = array(
-                            'resware_note_id' => $noteId,
+                            'is_softpro_notes' => 1,
+                            'is_sync' => 0,
                             'subject' => $subject,
                             'note' => $body,
                             'user_id' => $userdata['id'],
                             'order_id' => $orderId,
+                            'task_type' => 'update_prelim',
                             'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
                         );
-                        $id = $this->note->insert($notesData);
-                        if ($noteId && $id) {
-                            $success .= 'Note created successfully.';
+                        $note_id = $this->note->insert($notesData);
+                        if ($note_id) {
+                            $success .= 'Note added successfully.';
                         } else {
                             $errors .= 'Something went wrong. Please try again.';
                         }
@@ -716,65 +744,66 @@ class Common extends MX_Controller
                 );
 
                 $this->order->uploadDocumentOnAwsS3($document_name, 'prelim-upload-doc');
-                $documentId = $this->document->insert($documentData);
+                $documentIds[] = $this->document->insert($documentData);
 
-                // $endPoint = 'files/' . $fileId . '/documents';
-                // $documentApiData = array(
-                //     'DocumentName' => $data['file_name'],
-                //     'DocumentType' => array(
-                //         'DocumentTypeID' => 1032,
-                //     ),
-                //     'Description' => 'Prelim Upload Document',
-                //     'InternalOnly' => false,
-                //     'DocumentBody' => $binaryData,
-                // );
-                // $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
-                // if ($userdata['is_title_officer'] == 1 || $userdata['is_master'] == 1) {
-                //     $user_data['admin_api'] = 1;
-                // }
                 $uploadFileToSoftPro[] = [
                     "FolderName" => 'prelim',
                     "FileURL"    => env('AWS_PATH') . "prelim-upload-doc/" . $document_name,
                 ];
+
+                $logData = [
+                    'order_number' => $orderNumber,
+                    'document_name' => $document_name,
+                    'file_list' => json_encode($uploadFileToSoftPro),
+                    "document_ids" => json_encode($documentIds)
+                ];
+                
+                $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
+
                 $fileData = [
+                    "Id" => $fileUploadLogId,
                     "OrderNumber"  => $orderNumber,
-                    "DocumentName" => $orderNumber,
+                    "DocumentName" => $document_name,
                     "FileList"     => $uploadFileToSoftPro,
                 ];
-                $reqData = json_encode($fileData);
+                $fileUploadReq[] = $fileData;
+                $reqData = json_encode($fileUploadReq);
                 // print_r($reqData);
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', getSoftproAPIUrl('upload_document'), $reqData, [], 0, 0);
                 $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
                 $response = json_decode($result, true);
-                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', getSoftproAPIUrl('upload_document'), $reqData, json_encode($response), 0, $logid);
+
+                if (isset($response) && !empty($response)) {
+                    foreach ($response as $key => $res) {
+                        if ($res['Status'] == 200) {
+                            $updateData[] = [
+                                'is_synced' => 1,
+                                'id' => $res['Id']
+                            ];
+                            $this->db->where_in('id', $documentIds);
+                            $this->db->update('pct_order_documents', ['is_sync' => 1]);
+                        }
+                    }
+                }
+
+                foreach ($updateData as $key => $update_row) {
+                    $this->db->where('id', $update_row['id']);
+                    $this->db->update('sp_file_upload_logs', $update_row);
+                }
 
                 /* Start upload softpro api logs */
                 $softproLog = [
-                    'request_type' => 'upload_prelim_document_to_resware',
+                    'request_type' => 'upload_file_in_softpro',
                     'request_url'  => 'upload_file',
                     'request'      => $reqData,
-                    'response'     => json_encode($response),
-                    'status'       => $response['status'],
+                    'response'     => $result,
+                    'status'       => 'success',//$response['status'],
                     'file_number'  => $orderNumber,
                     'created_at'   => date("Y-m-d H:i:s"),
                 ];
                 $this->db->insert('pct_resware_log', $softproLog);
-
-                if (isset($response) && ! empty($response)) {
-                    // $response = $result, true);
-
-                    if (isset($response['status']) && $response['status'] == 'error') {
-                        $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
-                        $errors[] = $message;
-                        $errors .= " Something went wrong.Please try again";
-                    } else {
-                        $documentData = ['is_sync' => 1];
-                        $condition = ['id' => $documentId];
-                        $this->document->update($documentData, $condition);
-                        $success .= "Document uploaded successfully";
-                    }
-                }
-                
+                /* End upload softpro api logs */
 
                 // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderId, 0);
                 // $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
@@ -805,10 +834,13 @@ class Common extends MX_Controller
                     "error" => $errors,
                     "success" => $success,
                 );
-                $this->session->set_userdata($data);
+                $this->session->set_flashdata($data);
+                // print_r($this->session->flashdata('success'));
+                // print_r($data);exit;
             }
         }
-        redirect(base_url() . 'review-file/' . $fileId);
+        // redirect(base_url() . 'review-file/' . $orderId);
+        redirect(base_url() . 'prelim-files');
     }
 
     public function get_partners()
@@ -2949,14 +2981,22 @@ class Common extends MX_Controller
 
                 if ($order['prelim_summary_id'] != 0) {
                     $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
-                    $nestedData[] = "<a href='" . base_url() . "review-file/" . $order['id'] . "'>
+                    $nestedData[] = "<div style='display: flex;justify-content: space-between;'><a href='" . base_url() . "review-file/" . $order['id'] . "'>
 							<button type='submit' class='btn btn-$class btn-icon-split'>
 								<span class='icon text-white-50'>
 									<i class='fas fa-file'></i>
 								</span>
 								<span class='text'>Review File</span>
 							</button>
-						</a>";
+						</a>
+                        <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
+						<button type='button' class='btn btn-primary btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-refresh'></i>
+							</span>
+							<span class='text'>Update Action</span>
+						</button></a>
+                    </div>";
                 } else {
                     $nestedData[] = "<div style='display: flex;justify-content: space-between;'>
                     <a href='javascript:void(0)'>
