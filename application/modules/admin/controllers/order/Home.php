@@ -8879,7 +8879,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['buyer_email'];
                 $nestedData[] = $value['buyer_phone_no'];
                 $nestedData[] = $value['sales_rep_name'];
-                $nestedData[] = convertTimezone($value['updated_at']);
+                $nestedData[] = (!empty($value['updated_at'])) ? convertTimezone($value['updated_at']) : '';
                 // $nestedData[] = $value['email_recipient'];
 
                 // $action  = "";
