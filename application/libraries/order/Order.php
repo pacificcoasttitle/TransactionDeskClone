@@ -3504,9 +3504,9 @@ class Order
         //$cc = array();
         $this->CI->load->helper('sendemail');
         $this->CI->load->model('order/apiLogs');
-        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_closed_mail_agent', '', $mailParams, array(), 0, 0);
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_closed_mail_agent', 'send_closed_mail_agent', $mailParams, array(), 0, 0);
         $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
-        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_closed_mail_agent', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_closed_mail_agent', 'send_closed_mail_agent', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
         return $escrow_mail_result;
         
     }
