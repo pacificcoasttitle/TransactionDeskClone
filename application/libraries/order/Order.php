@@ -4879,16 +4879,16 @@ class Order
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->library('order/softPro');
         
-        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', 'update_task', $taskData, [], 0, 0);
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', getSoftproAPIUrl('update_task'), $taskData, [], 0, 0);
         $taskResponse = $this->CI->softpro->make_request('POST', 'update_task', $taskData);
-        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', 'update_task', $taskData, json_encode($taskResponse), 0, $logid);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', getSoftproAPIUrl('update_task'), $taskData, json_encode($taskResponse), 0, $logid);
 
         if (isset($taskResponse) && !empty($taskResponse)) {
             if (isset($taskResponse['status']) && $taskResponse['status'] == 'error') {
                 // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                 /* Start add softpro api logs */
                 $softproLog = [
-                    'request_type' => 'create_order_update_task',
+                    'request_type' => $taskType,
                     'request_url'  => 'update_task',
                     'request'      => $taskData,
                     'response'     => json_encode($taskResponse),
@@ -4902,7 +4902,7 @@ class Order
                 /* Start add softpro api logs */
                 $softproLog = [
                     'request_type' => 'create_order_update_task',
-                    'request_url'  => 'update_task',
+                    'request_url'  => $taskType,
                     'request'      => $taskData,
                     'response'     => json_encode($taskResponse),
                     'status'       => 'success',
