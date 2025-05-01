@@ -102,6 +102,7 @@ class FileUpload extends MX_Controller
                         $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
                         $response = json_decode($result, true);
                         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+
                         if (isset($response) && !empty($response)) {
                             foreach ($response as $key => $res) {
                                 if ($res['Status'] == 200) {
@@ -109,9 +110,17 @@ class FileUpload extends MX_Controller
                                         'is_synced' => 1,
                                         'id' => $res['Id']
                                     ];
+                                    $this->session->set_flashdata('success', 'Document info saved successfully.');
                                 } else {
+                                    if ((strpos(strtolower($res['Message']), "locked for editing by user") !== false)) {
+                                        $is_synced = 0;
+                                        $this->session->set_flashdata('success', 'Document info saved successfully.');
+                                    } else {
+                                        $is_synced = 1;
+                                        $this->session->set_flashdata('error', $res['Message']);
+                                    }
                                     $updateData[] = [
-                                        'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
+                                        'is_synced' =>  $is_synced,
                                         'id' => $res['Id'],
                                         'reason' => $res['Message']
                                     ];
@@ -134,8 +143,8 @@ class FileUpload extends MX_Controller
                             'created_at' => date("Y-m-d H:i:s"),
                         );
                         $this->db->insert('pct_resware_log', $reswareData);
-                        $successMsg = 'Document info saved successfully.';
-                        $this->session->set_flashdata('success', $successMsg);
+                        // $successMsg = 'Document info saved successfully.';
+                        // $this->session->set_flashdata('success', $successMsg);
                         // echo "<pre>";
                         // print_r($response);die;
                         /* End add softpro api logs */
