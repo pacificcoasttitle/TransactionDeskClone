@@ -269,6 +269,7 @@ class SalesRep extends MX_Controller
 
     public function index()
     {
+        date_default_timezone_set('America/Los_Angeles');
         $userdata = $this->session->userdata('user');
         $name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
         $data['name'] = $name;
@@ -1091,6 +1092,7 @@ class SalesRep extends MX_Controller
     }
     public function getRevenueData()
     {
+        date_default_timezone_set('America/Los_Angeles');
         $sales_rep_id = $this->input->post('sales_rep_id');
         $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $sales_rep_id);
         $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
