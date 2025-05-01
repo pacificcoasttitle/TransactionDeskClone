@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '12';
+    private $version = '12.1';
 
     public function __construct()
     {
@@ -641,7 +641,15 @@ class SalesRep extends MX_Controller
 								</span>
 								<span class='text'>Review File</span>
 							</button>
-						</a>";
+						</a>
+                        <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
+                            <button type='button' class='btn btn-primary btn-icon-split'>
+                                <span class='icon text-white-50'>
+                                    <i class='fas fa-refresh'></i>
+                                </span>
+                                <span class='text'>Update Action</span>
+                            </button>
+                        </a>";
                 } else {
                     $action .= "<a href='javascript:void(0)'>
 						<button type='submit' class='btn btn-info btn-icon-split'>
