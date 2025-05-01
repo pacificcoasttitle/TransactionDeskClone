@@ -3322,6 +3322,8 @@ class Home_model extends CI_Model
             } else if ($params['orderColumn'] == 7) {
                 $this->db->order_by('updated_at', $params['orderDir']);
             }
+        } else {
+            $this->db->order_by('created_at', 'desc');
         }
         $query = $this->db->get('pct_manual_buyers');
         if ($query->num_rows() > 0) {

@@ -179,7 +179,15 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
         <p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;"><?php echo $sales_rep_name; ?></p>
 				
 				<p class="clienthead"  style="margin:0px; padding:0px;color:#000000; margin-top:10px; margin-bottom:10px;font-weight:bold;font-size:18px;">Buying Agent's Information:</p>
-        <p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;"><?php echo $buyer_name; ?><br>Office Name:<?php echo $buyer_office_name; ?><br>Phone:<?php echo $buyer_phone_no; ?><br>Email:<?php echo $buyer_email; ?></p>
+        <p class="client" style="color:#f26a2a; margin-top:12px; margin-bottom:12px;font-weight:font-size;15px;">
+          <?php echo $buyer_name; ?>
+          <br>Office Name:<?php echo $buyer_office_name; ?>
+          <?php if (!empty($buyer_office_address)) {?>
+            <br>Office Address:<?php echo $buyer_office_address . ', ' . $buyer_office_city; ?>
+          <?php } ?>
+          <br>Phone:<?php echo $buyer_phone_no; ?>
+          <br>Email:<?php echo $buyer_email; ?>
+        </p>
 
 				</div>
           </td>
