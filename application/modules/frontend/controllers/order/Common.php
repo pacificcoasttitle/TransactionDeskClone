@@ -678,6 +678,9 @@ class Common extends MX_Controller
                         $message = isset($response[0]['Message']) && !empty($response[0]['Message']) ? $response[0]['Message'] : '';
                         $errors[] = $message;
                     } else {
+                        $this->order->updateTaskStatus('update_prelim', $orderNumber);
+                        $taskIds = SOFTPRO_TASK_ID;
+                        $taskId = $taskIds[$taskType];
                         $notesData = array(
                             'is_softpro_notes' => 1,
                             'is_sync' => 0,
@@ -685,8 +688,8 @@ class Common extends MX_Controller
                             'note' => $body,
                             'user_id' => $userdata['id'],
                             'order_id' => $orderId,
-                            'task_type' => 'update_prelim',
-                            'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
+                            'task_type' => $taskId,
+                            'task_id' => $taskId,
                         );
                         $note_id = $this->note->insert($notesData);
                         if ($note_id) {
