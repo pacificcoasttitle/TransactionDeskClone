@@ -650,3 +650,10 @@ function fetchPrelimDocument(fileNumber = '') {
         }
     });
 }
+
+function updatePrelimAction(order_id) {
+    $('#order_id').val(order_id);
+    $('#note_information').modal('show');
+    let action = base_url + "update-prelim-action/" + order_id;
+    $('#prelim_add_note_form').attr('action', action);
+}

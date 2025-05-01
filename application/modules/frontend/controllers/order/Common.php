@@ -556,82 +556,14 @@ class Common extends MX_Controller
                 $this->session->set_userdata('error', $errorMsg);
                 $file_upload_error_msg = 1;
             } else {
-                // if (isset($result['Actions']) && !empty($result['Actions'])) {
-                //     $array_keymap = $this->order->array_recursive_search_key_map(126, $result['Actions']);
-                //     if (!empty($array_keymap)) {
-                //         $actionData = array(
-                //             'StartTask' => array(
-                //                 'CoordinatorTypeID' => 19,
-                //                 'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
-                //             ),
-                //         );
-                //         $endPoint = 'files/' . $fileId . '/actions/' . $result['Actions'][$array_keymap[0]]['FileActionID'];
-                //         $user_data['admin_api'] = 1;
-                //         $actionData = json_encode($actionData);
-                //         $logid = $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $fileId, 0);
-                //         $res = $this->resware->make_request('PUT', $endPoint, $actionData, $user_data);
-                //         $this->apiLogs->syncLogs(0, 'resware', 'update_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $fileId, $logid);
-                //         $result = json_decode($res, true);
-
-                //         if (!empty($result['FileActionID'])) {
-                //             $success = 'Prelim action updated successfully.';
-                //         } else {
-                //             $error = 'Something went wrong during update action prelim';
-                //         }
-
-                //     } else {
-                //         $actionData = array(
-                //             'ActionType' => array(
-                //                 'ActionTypeID' => 126,
-                //             ),
-                //             'Group' => array(
-                //                 'ActionGroupID' => 6,
-                //             ),
-                //             'StartTask' => array(
-                //                 'CoordinatorTypeID' => 19,
-                //                 'DueDate' => '/Date(' . (strtotime(date('Y-m-d H:i:s')) * 1000) . '-0000)/',
-                //             ),
-                //         );
-                //         $endPoint = 'files/' . $fileId . '/actions/';
-                //         $user_data['admin_api'] = 1;
-                //         $actionData = json_encode($actionData);
-                //         $logid = $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, array(), $fileId, 0);
-                //         $res = $this->resware->make_request('POST', $endPoint, $actionData, $user_data);
-                //         $this->apiLogs->syncLogs(0, 'resware', 'add_actions_for_order', env('RESWARE_ORDER_API') . $endPoint, $actionData, $res, $fileId, $logid);
-                //         $result = json_decode($res, true);
-
-                //         if (!empty($result['FileActionID'])) {
-                //             $success = 'Prelim action updated successfully. <br/>';
-                //         } else {
-                //             $errors = 'Something went wrong during update action prelim';
-                //         }
-                //     }
-                // }
+                
                 $subject = isset($_POST['note_subject']) && !empty($_POST['note_subject']) ? $_POST['note_subject'] : '';
                 $body = isset($_POST['note']) && !empty($_POST['note']) ? $_POST['note'] : '';
                 $params = [
                     'order_details.id' => $orderId,
                 ];
                 $orderDetails = $this->order->get_order_details($params);
-                // $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
-
-                // $request = array();
-                // $endPoint = 'files/' . $fileId . '/notes';
-                // $request['Subject'] = $subject;
-                // $request['Body'] = $body;
-                // $request['FileID'] = $fileId;
-                // $request['Expedite'] = true;
-                // $notes_data = json_encode($request);
-
-                // $notesData = [
-                //     "OrderNumber"  => $orderNumber,
-                //     "Text" => $orderNumber
-                // ];
-                // $reqData = json_encode($notesData);
-                // print_r($reqData);
-                // $this->order->updateTaskStatus('update_prelim', $orderNumber);
-
-
+                
 
                 $endPoint = 'add_note';
                 // $notes['Subject'] = $subject;
@@ -646,20 +578,7 @@ class Common extends MX_Controller
                 $result = $this->softpro->make_request('POST', $endPoint, $reqData);
                 $this->apiLogs->syncLogs($userdata['id'], 'softpro', $endPoint, $softproEndPoint, $reqData, $result, $orderId, $logid);
                 $response      = json_decode($result, true);
-                // echo "<pre>";
-                // print_r($response);die;
                 
-                // $softproLog = [
-                //     'request_type' => 'add_note_in_softpro',
-                //     'request_url'  => 'add_note',
-                //     'request'      => $reqData,
-                //     'response'     => $result,
-                //     'status'       => 'error',
-                //     'created_at'   => date("Y-m-d H:i:s"),
-                // ];
-
-                // $response = $this->softpro->make_request('POST', 'add_note', $reqData);
-                /* Start upload softpro api logs */
                 $softproLog = [
                     'request_type' => 'add_note_in_softpro',
                     'request_url'  => 'add_note',
@@ -672,7 +591,6 @@ class Common extends MX_Controller
                 $this->db->insert('pct_resware_log', $softproLog);
 
                 if (isset($response) && ! empty($response)) {
-                    // $response = $result, true);
 
                     if (isset($response[0]['status']) && $response[0]['status'] != 200) {
                         $message = isset($response[0]['Message']) && !empty($response[0]['Message']) ? $response[0]['Message'] : '';
@@ -699,34 +617,7 @@ class Common extends MX_Controller
                         }
                     }
                 }
-                // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, array(), $orderId, 0);
-                // $result = $this->resware->make_request('POST', $endPoint, $notes_data, $user_data);
-                // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_note', env('RESWARE_ORDER_API') . $endPoint, $notes_data, $result, $orderId, $logid);
-
-                // if (isset($result) && !empty($result)) {
-                //     $response = json_decode($result, true);
-
-                //     if (isset($response['ResponseStatus']) && !empty($response['ResponseStatus'])) {
-                //         $message = isset($response['ResponseStatus']['Message']) && !empty($response['ResponseStatus']['Message']) ? $response['ResponseStatus']['Message'] : '';
-                //         $errors[] = $message;
-                //     } else {
-                //         $noteId = isset($response['Note']['NoteID']) && !empty($response['Note']['NoteID']) ? $response['Note']['NoteID'] : '';
-                //         $notesData = array(
-                //             'resware_note_id' => $noteId,
-                //             'subject' => $subject,
-                //             'note' => $body,
-                //             'user_id' => $userdata['id'],
-                //             'order_id' => $orderId,
-                //             'task_id' => isset($_POST['task_id']) ? $_POST['task_id'] : 0,
-                //         );
-                //         $id = $this->note->insert($notesData);
-                //         if ($noteId && $id) {
-                //             $success .= 'Note created successfully.';
-                //         } else {
-                //             $errors .= 'Something went wrong. Please try again.';
-                //         }
-                //     }
-                // }
+                
 
                 $data = $this->upload->data();
                 $contents = file_get_contents($data['full_path']);
@@ -808,31 +699,6 @@ class Common extends MX_Controller
                 $this->db->insert('pct_resware_log', $softproLog);
                 /* End upload softpro api logs */
 
-                // $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, array(), $orderId, 0);
-                // $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-                // $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderId, $logid);
-                // $res = json_decode($result);
-                // if (!empty($res->Document->DocumentID)) {
-                //     $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-                //     $success .= "Document uploaded successfully";
-                // } else {
-                //     $errors .= " Something went wrong.Please try again";
-                // }
-
-                // $orderDetails = $this->order->get_order_details($fileId);
-
-                /* Start add resware api logs */
-                // $reswareLogData = array(
-                //     'request_type' => 'upload_prelim_document_to_resware',
-                //     'request_url' => env('RESWARE_ORDER_API') . $endPoint,
-                //     'request' => $document_api_data,
-                //     'response' => $result,
-                //     'status' => 'success',
-                //     'created_at' => date("Y-m-d H:i:s"),
-                // );
-                // $this->db->insert('pct_resware_log', $reswareLogData);
-                /* End add resware api logs */
-
                 $data = array(
                     "error" => $errors,
                     "success" => $success,
@@ -843,7 +709,8 @@ class Common extends MX_Controller
             }
         }
         // redirect(base_url() . 'review-file/' . $orderId);
-        redirect(base_url() . 'prelim-files');
+        redirect($_SERVER['HTTP_REFERER']);
+        // redirect(base_url() . 'prelim-files');
     }
 
     public function get_partners()
