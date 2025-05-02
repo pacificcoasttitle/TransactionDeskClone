@@ -2861,11 +2861,11 @@ class Common extends MX_Controller
 							</button>
 						</a>
                         <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
-						<button type='button' class='btn btn-primary btn-icon-split'>
+						<button type='button' class='btn btn-secondary update-prelim-btn btn-icon-split'>
 							<span class='icon text-white-50'>
 								<i class='fas fa-refresh'></i>
 							</span>
-							<span class='text'>Update Action</span>
+							<span class='text'>Update Prelim</span>
 						</button></a>
                     </div>";
                 } else {
