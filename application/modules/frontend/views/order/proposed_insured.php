@@ -144,6 +144,7 @@
 									<div class="modal-body search-result">
 
 										<input type="hidden" name="orderId" value="" id="orderId">
+										<input type="hidden" name="fileNumber" value="" id="fileNumber">
 										<input type="hidden" name="property_id" value="" id="property_id">
 										<input type="hidden" name="transaction_id" value="" id="transaction_id">
 										<input type="hidden" name="fileId" value="" id="fileId">
@@ -615,6 +616,7 @@
 									<div class="modal-body search-result">
 
 										<input type="hidden" name="orderId" value="" id="edit_orderId">
+										<input type="hidden" name="fileNumber" value="" id="edit_fileNumber">
 										<input type="hidden" name="property_id" value="" id="edit_property_id">
 										<input type="hidden" id="edit_transaction_id" value="" name="transaction_id">
 										<input type="hidden" name="fileId" value="" id="edit_fileId">

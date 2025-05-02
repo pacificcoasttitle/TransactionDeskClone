@@ -1802,7 +1802,7 @@ class Common extends MX_Controller
 
                 if ($generateCplResponse['success']) {
                     $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
-                    $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
+                    $document_name = "fnf_". $orderDetails['file_number'] . '_' . $cplCount . ".pdf";
                     if (!is_dir('uploads/documents')) {
                         mkdir('./uploads/documents', 0777, true);
                     }
@@ -2583,8 +2583,8 @@ class Common extends MX_Controller
                 }
                 $pdfData['property_address'] = implode(', ', $new_property_address);
                 $pdfData['sales_amount'] = isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']) ? $orderDetails['sales_amount'] : '';
-                $pdfData['loan_amount'] = isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
-                $pdfData['loan_number'] = isset($orderDetails['loan_number']) && !empty($orderDetails['loan_number']) ? $orderDetails['loan_number'] : '';
+                $pdfData['loan_amount'] = $loan_amount; //isset($orderDetails['loan_amount']) && !empty($orderDetails['loan_amount']) ? $orderDetails['loan_amount'] : '';
+                $pdfData['loan_number'] = $loan_number; //isset($orderDetails['loan_number']) && !empty($orderDetails['loan_number']) ? $orderDetails['loan_number'] : '';
 
                 if (isset($orderDetails['title_officer']) && !empty($orderDetails['title_officer'])) {
                     if (preg_match('/\\d/', $orderDetails['title_officer']) > 0) {
