@@ -115,7 +115,8 @@ $(document).ready(function () {
 				var preliminary_report_date = $('#preliminary_report_date').val();
 				var new_existing_lender = $('input[name="new_existing_lender"]:checked').val();
 				var branch = $('#branch').val();
-
+				let fileNumber = $('#fileNumber').val();
+				let file_name = 'PPI-' + fileNumber + ".pdf";
 				$.ajax({
 					url: base_url + "add-order-details",
 					type: "post",
@@ -153,7 +154,7 @@ $(document).ready(function () {
 							$('#lender_information').modal('hide');
 							if (res.data) {
 								var binaryData = res.data;
-								downloadFile(binaryData);
+								downloadFile(binaryData, file_name);
 							}
 							location.reload(true);
 						} else if (res.status == 'error') {
@@ -422,6 +423,8 @@ $(document).ready(function () {
 				var preliminary_report_date = $('#edit_preliminary_report_date').val();
 				var new_existing_lender = $('input[name="edit_new_existing_lender"]:checked').val();
 				var branch = $('#edit_branch').val();
+				let fileNumber = $('#edit_fileNumber').val();
+				let file_name = 'PPI-' + fileNumber + ".pdf";
 
 				$.ajax({
 					url: base_url + "add-order-details",
@@ -460,7 +463,7 @@ $(document).ready(function () {
 							$('#edit-data-result').html('<div class="alert alert-success">Data updated successfully</div>');
 							if (res.data) {
 								var binaryData = res.data;
-								downloadFile(binaryData);
+								downloadFile(binaryData, file_name);
 							}
 
 							location.reload(true);
@@ -556,9 +559,9 @@ function generateProposedInsured(orderId) {
 				}
 
 				$('#page-preloader').css('display', 'none');
-
 				$('#LenderId').val(res.orderDetails.lender_id);
 				$('#orderId').val(res.orderDetails.orderId);
+				$('#fileNumber').val(res.orderDetails.order_number);
 				$('#transaction_id').val(res.orderDetails.transaction_id);
 				$('#property_id').val(res.orderDetails.property_id);
 				// $('#orderId').val(res.orderDetails.id);
@@ -667,7 +670,8 @@ function editInformation(orderId) {
 						// $('input[name=new_existing_lender]').attr("disabled",false);	
 						$("#edit_add_lender").prop("checked", true);
 					}
-					$('#edit_orderId').val(res.orderDetails.orderId);
+
+					$('#edit_fileNumber').val(res.orderDetails.order_number);
 					$('#edit_transaction_id').val(res.orderDetails.transaction_id);
 					$('#edit_property_id').val(res.orderDetails.property_id);
 					$('#edit_orderId').val(res.orderDetails.orderId);
@@ -682,13 +686,13 @@ function editInformation(orderId) {
 	}
 }
 
-function downloadFile(binaryData) {
+function downloadFile(binaryData, file_name = 'ProposedInsured.pdf') {
 	if (navigator.msSaveBlob) {
 		var csvData = base64toBlob(binaryData, 'application/octet-stream');
-		var csvURL = navigator.msSaveBlob(csvData, 'ProposedInsured.pdf');
+		var csvURL = navigator.msSaveBlob(csvData, file_name);
 		var element = document.createElement('a');
 		element.setAttribute('href', csvURL);
-		element.setAttribute('download', 'ProposedInsured.pdf');
+		element.setAttribute('download', file_name);
 		element.style.display = 'none';
 		document.body.appendChild(element);
 		document.body.removeChild(element);
@@ -697,7 +701,7 @@ function downloadFile(binaryData) {
 		var csvURL = 'data:application/octet-stream;base64,' + binaryData;
 		var element = document.createElement('a');
 		element.setAttribute('href', csvURL);
-		element.setAttribute('download', 'ProposedInsured.pdf');
+		element.setAttribute('download', file_name);
 		element.style.display = 'none';
 		document.body.appendChild(element);
 		element.click();
