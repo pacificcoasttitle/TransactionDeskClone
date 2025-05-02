@@ -284,3 +284,8 @@ th {
     text-decoration: underline;
     color: #d35411
 }
+
+.update-prelim-btn {
+    background-color: #B0BEC5 !important;
+    border-color: #B0BEC5 !important;
+}
