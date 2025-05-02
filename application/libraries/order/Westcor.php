@@ -508,7 +508,7 @@ class Westcor
 
                 if (!empty($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64'])) {
                     $cplDocumentCount = $this->CI->document->countCplDocument($orderDetails['order_id']);
-                    $document_name = "westcor_" . $cplDocumentCount . "_" . $orderId . ".pdf";
+                    $document_name = "westcor_" . $orderDetails['file_number'] . '_'. $cplDocumentCount . ".pdf";
                     if (!is_dir('uploads/documents')) {
                         mkdir('./uploads/documents', 0777, true);
                     }
