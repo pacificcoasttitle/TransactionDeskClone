@@ -2111,30 +2111,21 @@ class Home extends MX_Controller
 
     public function deleteCompany()
     {
-        $partner_id = $this->input->post('partner_id');
-        if ($partner_id) {
-            $this->db->select('*');
-            $this->db->from('pct_order_partner_company_info');
-            $this->db->where('partner_id', $partner_id);
-            $query  = $this->db->get();
-            $result = $query->row_array();
-
-            if (!empty($result)) {
-                $customerData = [
-                    'status' => 0,
-                ];
-                $condition = ['partner_id' => trim($partner_id)];
-                $update    = $this->home_model->update($customerData, $condition, 'pct_order_partner_company_info');
-                if ($update) {
-                    $activity = 'Company: ' . $result['partner_name'] . ' deleted successfully';
-                    $this->order->logAdminActivity($activity);
-                    echo json_encode(['status' => 'success', 'message' => 'Company: ' . $result['partner_name'] . ' deleted successfully']);exit;
-                } else {
-                    echo json_encode(['status' => 'failed', 'message' => 'Something went wrong, Please contact administrative']);exit;
-                }
+        $lookup_code = $this->input->post('lookup_code');
+        if ($lookup_code) {
+            $customerData = [
+                'status' => 0,
+            ];
+            $condition = ['lookup_code' => trim($lookup_code)];
+            $update    = $this->home_model->update($customerData, $condition, 'sp_company');
+            if ($update) {
+                $activity = 'Company: ' . $lookup_code . ' deleted successfully';
+                $this->order->logAdminActivity($activity);
+                echo json_encode(['status' => 'success', 'message' => 'Company: ' . $lookup_code . ' deleted successfully']);exit;
             } else {
-                echo json_encode(['status' => 'failed', 'message' => 'Recored not found']);exit;
+                echo json_encode(['status' => 'failed', 'message' => 'Something went wrong, Please contact administrative']);exit;
             }
+            
         } else {
             echo json_encode(['status' => 'failed', 'message' => 'Invalide details provided']);exit;
         }
@@ -8189,7 +8180,7 @@ class Home extends MX_Controller
                 } else {
                     $nestedData[] = "<a href='javascript:void(0)' onclick='addOrUpdateSPCompanyDeliverables(" . '"' . $lookupCode . '"' . ")'><i class='fas fa-plus-circle'></i></a>";
                 }
-                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteCompany(" . '"' . $lookupCode . '"' . ")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteSPCompany(" . '"' . $lookupCode . '"' . ")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
                 $data[]       = $nestedData;
                 $i++;
             }

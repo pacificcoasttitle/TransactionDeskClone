@@ -2994,7 +2994,7 @@ class Home_model extends CI_Model
                     ->or_like('zip', $keyword)
                     ->group_end();
             }
-            // $this->db->where('status', 1);
+            $this->db->where('status', 1);
             $this->db->from('sp_company');
             $filter_total_records = $this->db->count_all_results();
 
@@ -3012,20 +3012,20 @@ class Home_model extends CI_Model
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            // $this->db->where('status', 1);
+            $this->db->where('status', 1);
             $query = $this->db->get('sp_company');
             if ($query->num_rows() > 0) {
                 $customer_lists = $query->result_array();
             }
         } else {
             $this->db->from('sp_company');
-            // $this->db->where('status', 1);
+            $this->db->where('status', 1);
             $filter_total_records = $this->db->count_all_results();
 
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            // $this->db->where('status', 1);
+            $this->db->where('status', 1);
             $query = $this->db->get('sp_company');
 
             if ($query->num_rows() > 0) {

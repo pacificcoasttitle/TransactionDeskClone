@@ -2147,6 +2147,86 @@ class Common extends MX_Controller
         echo json_encode($userInfo);
     }
 
+    public function getSoftproCompanyByName()
+    {
+        $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
+        $is_master_search = isset($_POST['is_master_search']) && !empty($_POST['is_master_search']) ? $_POST['is_master_search'] : 0;
+        $condition = array(
+            'name' => $searchTerm,
+        );
+
+        if (isset($_POST['is_escrow_company'])) {
+            $isEscrow = $_POST['is_escrow_company'];
+            $condition['is_escrow_company'] = $isEscrow;
+        }
+        if (isset($_POST['is_lender'])) {
+            $isEscrow = $_POST['is_lender'];
+            $condition['is_lender'] = $isEscrow;
+        }
+
+        if (isset($_POST['is_mortgage_broker'])) {
+            $isEscrow = $_POST['is_mortgage_broker'];
+            $condition['is_mortgage_broker'] = $isEscrow;
+        }
+
+        if (isset($_POST['is_selling_agent'])) {
+            $isEscrow = $_POST['is_selling_agent'];
+            $condition['is_selling_agent'] = $isEscrow;
+        }
+
+        $compnayDetails = $this->home_model->get_sp_companies($condition, $is_master_search);
+        // echo "<pre>";
+        // print_r($compnayDetails);die;
+        $userInfo = array();
+
+        if (isset($compnayDetails) && !empty($compnayDetails)) {
+            foreach ($compnayDetails as $key => $value) {
+                $data['id'] = isset($value['id']) && !empty($value['id']) ? $value['id'] : '';
+                $data['value'] = isset($value['value']) && !empty($value['value']) ? $value['value'] : '';
+                $data['lookup_code'] = isset($value['lookup_code']) && !empty($value['lookup_code']) ? $value['lookup_code'] : '';
+                $data['flookup_code'] = isset($value['flookup_code']) && !empty($value['flookup_code']) ? $value['flookup_code'] : '';
+                $data['name'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+                $data['email_address'] = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
+                $data['telephone_no'] = isset($value['phone']) && !empty($value['phone']) ? $value['phone'] : '';
+                $data['company'] = isset($value['full_name']) && !empty($value['full_name']) ? $value['full_name'] : '';
+                $data['address'] = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
+                // $data['address'] = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+                $data['city'] = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
+                $data['state'] = isset($value['state']) && !empty($value['state']) ? $value['state'] : '';
+                $data['zip_code'] = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
+                $data['is_escrow_company'] = isset($value['is_escrow_company']) && !empty($value['is_escrow_company']) ? $value['is_escrow_company'] : '';
+                $data['is_lender'] = isset($value['is_lender']) && !empty($value['is_lender']) ? $value['is_lender'] : '';
+                $data['is_selling_agent'] = isset($value['is_selling_agent']) && !empty($value['is_selling_agent']) ? $value['is_selling_agent'] : '';
+                $data['is_mortgage_broker'] = isset($value['is_mortgage_broker']) && !empty($value['is_mortgage_broker']) ? $value['is_mortgage_broker'] : '';
+                $data['assignment_clause'] = isset($value['assignment_clause']) && !empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
+                // $data['title_officer_id'] = isset($value['title_officer_id']) && !empty($value['title_officer_id']) ? $value['title_officer_id'] : '';
+                // $data['sales_rep_id'] = isset($value['sales_rep_id']) && !empty($value['sales_rep_id']) ? $value['sales_rep_id'] : '';
+                $data['client_type'] = '';
+                $clientTypeOption = '';
+                if (!empty($data['is_escrow_company'])) {
+                    $data['client_type'] = 'EscrowCompany';
+                    $clientTypeOption .= '<option value="EscrowCompany"> Escrow Company </option>';
+                } 
+                if (!empty($data['is_lender'])) {
+                    $data['client_type'] = 'Lender';
+                    $clientTypeOption .= '<option value="Lender"> Lender </option>';
+                } 
+                if (!empty($data['is_selling_agent'])) {
+                    $data['client_type'] = 'ListingAgentBroker';
+                    $clientTypeOption .= '<option value="ListingAgentBroker"> Listing Agent Broker </option>';
+                }
+                if (!empty($data['is_mortgage_broker'])) {
+                    $data['client_type'] = 'MortgageBroker';
+                    $clientTypeOption .= '<option value="MortgageBroker"> Mortgage Broker </option>';
+                }
+                $data['client_type_option'] = $clientTypeOption;
+                // array_push($userInfo, $data);
+                $userInfo[] = $data;
+            }
+        }
+        echo json_encode($userInfo);
+    }
+
     public function getDetailsFromLookup()
     {
         $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
@@ -2851,9 +2931,10 @@ class Common extends MX_Controller
                 $nestedData[] = $order['full_address'];
 
                 if ($order['prelim_summary_id'] != 0) {
-                    $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+                    // $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+                    $class = isset($order['is_doc_updated']) && !empty($order['is_doc_updated']) ? 'updated-prelim-btn' : 'btn-success';
                     $nestedData[] = "<div style='display: flex;justify-content: space-between;'><a href='" . base_url() . "review-file/" . $order['id'] . "'>
-							<button type='submit' class='btn btn-$class btn-icon-split'>
+							<button type='submit' class='btn $class btn-icon-split'>
 								<span class='icon text-white-50'>
 									<i class='fas fa-file'></i>
 								</span>
