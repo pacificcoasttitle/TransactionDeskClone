@@ -2,6 +2,13 @@
 	.update-prelim-btn {
 		background-color: #B0BEC5 !important;
     	border-color: #B0BEC5 !important;
+		color: #fff !important;
+	}
+
+	.updated-prelim-btn {
+		background-color: #F26B2B !important;
+		border-color: #F26B2B !important;
+		color: #fff !important;
 	}
 </style>
 

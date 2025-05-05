@@ -582,7 +582,8 @@ class SalesRep extends MX_Controller
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
             $order_lists = $this->order->get_orders($params);
         }
-
+        // echo "<pre>";
+        // print_r($order_lists['data']);die;
         if (isset($order_lists['data']) && !empty($order_lists['data'])) {
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order) {
@@ -634,8 +635,9 @@ class SalesRep extends MX_Controller
                         $prelimUrl = base_url() . 'uploads/documents/' . $prelimDoc['document_name'];
                     }
                     $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+                    $class = isset($order['is_doc_updated']) && !empty($order['is_doc_updated']) ? 'updated-prelim-btn' : 'btn-success';
                     $action .= "<a href='" . $prelimUrl . "' target='_blank'>
-							<button type='submit' class='btn btn-$class btn-icon-split'>
+							<button type='submit' class='btn $class btn-icon-split'>
 								<span class='icon text-white-50'>
 									<i class='fas fa-file'></i>
 								</span>

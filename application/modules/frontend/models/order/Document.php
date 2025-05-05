@@ -102,4 +102,18 @@ class Document extends CI_Model
             return 1;
         }         
     }
+
+    public function countPrelimDocument($orderId)
+    {
+        $this->db->select('*')
+            ->from('pct_order_documents');
+        $this->db->where('is_prelim_document', 1);
+        $this->db->where('order_id', $orderId);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0)  {
+            return $query->num_rows()+1;
+        } else {
+            return 1;
+        }         
+    }
 }

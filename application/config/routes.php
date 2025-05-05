@@ -252,7 +252,7 @@ $route['order/admin/generate-lookupcode']          = 'admin/order/home/generateL
 
 $route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
 $route['order/admin/softpro-add-company']                   = 'admin/order/home/spAddCompany';
-
+$route['getSoftproCompanyByName']                    = 'frontend/order/common/getSoftproCompanyByName';
 $route['order/admin/softpro-title-officers']                = 'admin/order/title/spAdminTitleOfficer';
 $route['order/admin/get-sp-title-officer-list']        = 'admin/order/title/get_sp_title_officer_list';
 // $route['order/admin/add-softpro-title-officer']             = 'admin/order/title/add_sp_title_officer';
