@@ -4964,4 +4964,35 @@ class Order
             }
         }
     }
+
+    public function sendPrelimUpdateEmail($orderDetails) {
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->helper('sendemail');
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = 'Update has been request for file ' . $orderDetails['file_number'];
+        $to = "rudy@pct.com";
+        // $to = 'piyush.j@crestinfosystems.com';
+        $cc = array('ghernandez@pct.com');
+
+        $data['note_subject'] = $orderDetails['note_subject'];
+        $data['note_text'] = $orderDetails['note_text'];
+        $data['file_number'] = $orderDetails['file_number'];
+        $file[] = $orderDetails['file_link'];
+        $message = $this->CI->load->view('emails/update_prelim_email.php', $data, true);
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'file' => $file,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        //$to = 'ghernandez@pct.com';
+        //$cc = array();
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_update_prelim', '', $mailParams, array(), 0, 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc);
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_update_prelim', '', $mailParams, array('status' => $mail_result), 0, $logid);
+    }
 }
