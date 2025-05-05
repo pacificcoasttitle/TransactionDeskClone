@@ -231,7 +231,7 @@ class Westcor
                 $buyerBorrowerName = $orderDetails['borrowers_vesting'];
 
                 if (!empty($orderDetails['secondary_borrower'])) {
-                    $buyerBorrowerName .= " and " . $orderDetails['secondary_borrower'];
+                    // $buyerBorrowerName .= " and " . $orderDetails['secondary_borrower'];
                 }
 
                 $buyers[] = array(
