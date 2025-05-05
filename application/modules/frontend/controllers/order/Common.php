@@ -567,7 +567,8 @@ class Common extends MX_Controller
 
                 $endPoint = 'add_note';
                 // $notes['Subject'] = $subject;
-                $notes['Text'] = $body;
+                $orderDetails['note_subject'] = $subject;
+                $notes['Text'] = $orderDetails['note_text'] = $body;
                 $notes['OrderNumber'] = $orderNumber = $orderDetails['file_number'];
                 $notesReq[] = $notes;
                 $reqData = json_encode($notesReq);
@@ -610,6 +611,7 @@ class Common extends MX_Controller
                             'task_id' => $taskId,
                         );
                         $note_id = $this->note->insert($notesData);
+
                         if ($note_id) {
                             $success .= 'Note added successfully.';
                         } else {
@@ -644,7 +646,7 @@ class Common extends MX_Controller
                     "FolderName" => 'prelim',
                     "FileURL"    => env('AWS_PATH') . "prelim-upload-doc/" . $document_name,
                 ];
-
+                $orderDetails['file_link'] = env('AWS_PATH') . "prelim-upload-doc/" . $document_name;
                 $logData = [
                     'order_number' => $orderNumber,
                     'document_name' => $document_name,
@@ -677,6 +679,9 @@ class Common extends MX_Controller
                             ];
                             $this->db->where_in('id', $documentIds);
                             $this->db->update('pct_order_documents', ['is_sync' => 1]);
+
+                            /** Send email to Ruby for prelim action update */
+                        $this->order->sendPrelimUpdateEmail($orderDetails);
                         }
                     }
                 }
