@@ -62,7 +62,7 @@ class Order
             property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
             order_details.created_at, order_details.softpro_status, order_details.is_softpro_order, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
             pct_order_prelim_summary.is_updated,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, 
-            pct_order_documents.created as document_created_date, p.created as proposed_document_created_date,  property_details.primary_owner';
+            pct_order_documents.created as document_created_date, pct_order_prelim_summary.is_doc_updated, p.created as proposed_document_created_date,  property_details.primary_owner';
 
         /*if ($userdata['is_sales_rep_manager'] == 1) {
             $salesUsers = $this->CI->home_model->get_user(array('id' => $salesUser));

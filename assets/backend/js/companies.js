@@ -118,7 +118,7 @@ function addOrUpdateSPCompanyDeliverables(lookup_code) {
     });
 }
 
-function deleteSPCompany(lookup_coce) {
+function deleteSPCompany(lookup_code) {
     let confirm_msg = confirm('Are you sure to want to delete this record?');
     if (confirm_msg) {
         $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
@@ -128,16 +128,18 @@ function deleteSPCompany(lookup_coce) {
             url: base_url + "order/admin/delete-company",
             type: "POST",
             data: {
-                lookup_coce: lookup_coce,
+                lookup_code: lookup_code,
             },
             async: false,
             success: function (result) {
                 $('#page-preloader').css('display', 'none');
                 $('#borrower_page').css('opacity', '1');
                 var res = jQuery.parseJSON(result);
-                console.log('res ===', res);
                 if (res.status === 'success') {
-                    location.reload();
+                    console.log('res ===', res);
+                    // location.reload();
+                    $('#companies_success_msg').text(res.message).show();
+                    companies_list.ajax.reload(null, false);
                 }
             },
             error: function () {
