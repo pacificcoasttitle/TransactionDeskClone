@@ -12,6 +12,7 @@ class Agent extends MX_Controller {
         $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/agent_model');
+        $this->load->model('order/home_model');
         $this->load->library('order/common');
         $this->common->is_admin();
     }
@@ -258,6 +259,7 @@ class Agent extends MX_Controller {
 
     public function edit()
     {
+        $this->load->library('order/softPro');
         $id = $this->uri->segment(4);        
         $data = array();
         $data['title'] = 'PCT Order: Edit Agent';
@@ -267,74 +269,111 @@ class Agent extends MX_Controller {
             if(isset($_POST) && !empty($_POST))
             {
                 // Validations
-                $this->form_validation->set_rules('name', 'Name', 'required',array('required'=> 'Enter your name'));
-                $this->form_validation->set_rules('email_address', 'Email Address', 'required',array('required'=> 'Enter your email address'));
-                $this->form_validation->set_rules('telephone_no', 'Telephone', 'required',array('required'=> 'Enter your telephone no'));
-                $this->form_validation->set_rules('company', 'Company', 'required',array('required'=> 'Enter your company name'));
-                $this->form_validation->set_rules('address', 'Address', 'required',array('required'=> 'Enter your address'));
-                $this->form_validation->set_rules('city', 'City', 'required',array('required'=> 'Enter your city'));
-                $this->form_validation->set_rules('zipcode', 'Zipcode', 'required',array('required'=> 'Enter your zipcode'));
-                $this->form_validation->set_rules('list_unit', 'List Unit', 'required',array('required'=> 'Enter your list unit'));
-                $this->form_validation->set_rules('list_volume', 'List Volume', 'required',array('required'=> 'Enter your list volume'));
-                $this->form_validation->set_rules('selected_revenue', 'Selected Revenue', 'required',array('required'=> 'Enter your list unit'));
+                $this->form_validation->set_rules('first_name', 'First Name', 'required', ['required' => 'Please Enter First Name']);
+                $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
+                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
+                $this->form_validation->set_rules('company_name', 'Company Name', 'required', ['required' => 'Please Enter Company']);
+                $this->form_validation->set_rules('lookup_code', 'Lookup Code', 'required|min_length[10]', ['required' => 'Please Lookup Code']);
+                $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
+                $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
+                $this->form_validation->set_rules('address1', 'Address', 'required', ['required' => 'Please Enter Address']);
+                $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
+                $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
+                $this->form_validation->set_rules('zip', 'Zip', 'required', ['required' => 'Please Enter Zipcode']);
 
                 if($this->form_validation->run($this) == true)
                 {
-                    $agentData = array(
-                        'name' => isset($_POST['name']) && !empty($_POST['name']) ? $_POST['name'] : NULL,
-                        'email_address' => isset($_POST['email_address']) && !empty($_POST['email_address']) ? $_POST['email_address'] : NULL ,
-                        'telephone_no' => isset($_POST['telephone_no']) && !empty($_POST['telephone_no']) ? $_POST['telephone_no'] : NULL ,
-                        'company' => isset($_POST['company']) && !empty($_POST['company']) ? $_POST['company'] : NULL,
-                        'address' => $_POST['address'],
-                        'city' => $_POST['city'],
-                        'zipcode' => $_POST['zipcode'],
-                        'list_unit' => $_POST['list_unit'],
-                        'list_volume' => $_POST['list_volume'],
-                        'selected_revenue' => $_POST['selected_revenue'],
-                        'status' => 1
-                    );
+                    $userType  = $this->input->post('user_type');
+                    $is_escrow = $is_lender = $is_mortgage_broker = $is_realtor = 0;
+                    if ($userType == 'escrow') {
+                        $is_escrow = 1;
+                    } else if ($userType == 'lender') {
+                        $is_lender = 1;
+                    } else if ($userType == 'mortgage_broker') {
+                        $is_mortgage_broker = 1;
+                    } else if ($userType == 'realtor') {
+                        $is_realtor = 1;
+                    }
+                    $first_name   = $this->input->post('first_name');
+                    $last_name    = $this->input->post('last_name');
+                    $company_name = $this->input->post('company_name');
+                    $lookup_code = $this->input->post('lookup_code');
+                    $customerData = [
+                        'FirstName'         => $first_name,
+                        'LastName'          => $last_name,
+                        'Phone'             => $this->input->post('phone'),
+                        'Email'             => $this->input->post('email_address'),
+                        'ClientLookupCode'  => $lookup_code,
+                        'CompanyLookupCode' => $this->input->post('flookup_code'),
+                        'Address1'          => $this->input->post('address1'),
+                        'City'              => $this->input->post('city'),
+                        'State'             => $this->input->post('state'),
+                        'Zip'               => $this->input->post('zip'),
+                    ];
 
-                    $condition = array('id' => $id);
+                    $response = $this->softpro->updateUserToSoftpro($customerData, 'update_user');
+                    // echo "<pre>";
+                    // print_r($response);die;
+                    $customerData = [
+                        'first_name'         => $first_name,
+                        'last_name'          => $last_name,
+                        'phone'              => $this->input->post('phone'),
+                        'email_address'      => $this->input->post('email_address'),
+                        'lookup_code'        => $lookup_code,
+                        'flookup_code'       => $this->input->post('flookup_code'),
+                        'address1'           => $this->input->post('address1'),
+                        'city'               => $this->input->post('city'),
+                        'state'              => $this->input->post('state'),
+                        'zip'                => $this->input->post('zip'),
+                        'company_name'       => $company_name,
+                        'is_escrow'          => $is_escrow,
+                        'is_lender'          => $is_lender,
+                        'is_mortgage_broker' => $is_mortgage_broker,
+                        'is_selling_agent'   => $is_realtor,
+                        'is_new_user'        => 1,
+                        'status'             => 1,
+                    ];
 
-                    $update = $this->agent_model->update($agentData,$condition,'pctc_title_rates');
-                        
-                    if ($update) {
+                    if ($response['success']) {
+                        $this->load->library('order/order');
+                        $condition = array('lookup_code' => $lookup_code);
+                        $update = $this->home_model->update($customerData, $condition, 'pct_softpro_lookup_table');
                         /** Save user Activity */
-                        $activity = 'Agent details updated : '. $_POST['email_address'];
-                        $this->common->logAdminActivity($activity);
+                        $activity = 'New user created :- ' . $this->input->post('email_address');
+                        $this->order->logAdminActivity($activity);
                         /** End Save user activity */
-                        $data['success_msg'] = 'Agent details updated successfully.';
+                        $data['success_msg'] = 'New User updated successfully.';
+                        $this->form_validation->reset_validation();
+
                     } else {
-                        $data['error_msg'] = 'Error occurred while updating agent details.';
+                        $data['error_msg'] = $response['msg'];
                     }
                 }
                 else
                 {
-                    $data['name_error_msg'] = form_error('first_name');
+                    $data['name_error_msg']    = form_error('name');
                     $data['email_address_error_msg'] = form_error('email_address');
-                    $data['telephone_no_error_msg'] = form_error('telephone_no');
-                    $data['company_error_msg'] = form_error('company');
-                    $data['address_error_msg'] = form_error('address');
-                    $data['city_error_msg'] = form_error('city');
-                    $data['zipcode_error_msg'] = form_error('zipcode');
-                    $data['list_unit_error_msg'] = form_error('list_unit');
-                    $data['list_volume_error_msg'] = form_error('list_volume');
-                    $data['selected_revenue_error_msg'] = form_error('selected_revenue');
+                    $data['user_type_error_msg']     = form_error('user_type');
+                    $data['address_error_msg']       = form_error('address1');
+                    $data['phone_error_msg']       = form_error('phone');
+                    $data['city_error_msg']          = form_error('city');
+                    $data['state_error_msg']         = form_error('state');
+                    $data['zipcode_error_msg']       = form_error('zipcode');
                     
                 }
             }
+
             $con = array('id' => $id);
-            $data['agent_info'] = $this->agent_model->get_rows($con);
-            
+            $data['userDetails'] = $this->home_model->sp_get_rows($con);
+            // echo "<pre>";
+            // print_r($data['userDetails']);die;
         }
         else
         {
             redirect(base_url().'agents');
         }
+        $data['back_url'] = base_url().'order/admin/softpro-agents';
 
-        $this->admintemplate->show("order/agent", "edit-agent", $data);
-        // $this->load->view('order/layout/header', $data);
-        // $this->load->view('order/agent/edit-agent', $data);
-        // $this->load->view('order/layout/footer', $data);
+        $this->admintemplate->show("order/home", "edit_user", $data);
     }
 }
