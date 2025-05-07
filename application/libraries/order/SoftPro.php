@@ -175,4 +175,41 @@ class SoftPro
         print_r($response);die;
     }
 
+    public function updateUserToSoftpro($user, $apiType = 'create_user')
+    {
+        $this->CI->load->model('order/apiLogs');
+        $userdata = $this->CI->session->userdata('admin');
+
+        $userdata['email']     = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+        $newUserData           = json_encode($user);
+        $logid                 = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newUserData, [], 0, 0);
+        $response              = $this->make_request('POST', $apiType, $newUserData);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newUserData, json_encode($response), 0, $logid);
+
+        if (isset($response['status']) && $response['status'] == 'error') {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => false,
+            ];
+        } else {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => true,
+            ];
+        }
+        /* Start add resware api logs */
+        $softproLogData = [
+            'request_type' => 'add_new_user_to_softpro',
+            'request_url'  => $apiType,
+            'request'      => $newUserData,
+            'response'     => json_encode($response),
+            'status'       => $response['status'],
+            'created_at'   => date("Y-m-d H:i:s"),
+        ];
+        $this->CI->db->insert('pct_resware_log', $softproLogData);
+        /* End add resware api logs */
+        return $res;
+    }
+
 }
