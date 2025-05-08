@@ -7403,6 +7403,7 @@ class Cron extends MX_Controller
             $this->db->where('file_number', $response['OrderNumber']);
             $prelimSummaryDetails = $this->db->get()->row_array();
             if (empty($prelimSummaryDetails) && !empty($response['data']) && !empty($filesResult)) {
+                $orderId = $filesResult['id'];
                 $file_number = $response['OrderNumber'];
                 $prelimLink = $response['data'][0];
                 $prelimFetchedCount++;
@@ -7411,23 +7412,40 @@ class Cron extends MX_Controller
                 $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
                 if ($uploadStatus) {
                     $this->load->model('order/document');
-                    $documentData = array(
-                        'document_name' => $document_name,
-                        'original_document_name' => urldecode($documentName),
-                        'user_id' => $filesResult['customer_id'],
-                        'order_id' => $filesResult['id'],
-                        'description' => $documentName,
-                        'created' => date('Y-m-d H:i:s'),
-                        'is_sync' => 1,
-                        'is_prelim_document' => 1,
-                    );
-                    $documentId = $this->document->insert($documentData);
+                    $getPrelimCount = $this->order->countPrelimDocument($orderId);
+                    if ($getPrelimCount == 0) {
+                        $documentData = array(
+                            'document_name' => $document_name,
+                            'original_document_name' => urldecode($documentName),
+                            'user_id' => $filesResult['customer_id'],
+                            'order_id' => $orderId,
+                            'description' => $documentName,
+                            'created' => date('Y-m-d H:i:s'),
+                            'is_sync' => 1,
+                            'is_prelim_document' => 1,
+                        );
+                        $documentId = $this->document->insert($documentData);
 
-                    $summaryData = [
-                        'file_number' => $filesResult['file_number'],
-                        'created_at' => date('Y-m-d H:i:s'),
-                    ];
-                    $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                        $summaryData = [
+                            'file_number' => $filesResult['file_number'],
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                    } else {
+                        $documentData = array(
+                            'document_name' => $document_name,
+                            'original_document_name' => urldecode($documentName),
+                            'description' => $documentName,
+                            'is_sync' => 1,
+                            'is_doc_updated' => 1
+                        );
+                        $condition = [
+                            'order_id' => $orderId,
+                            'is_prelim_document' => 1,
+                        ];
+                        $documentId = $this->document->update($documentData, $condition);
+                    }
+
                     $condition = array(
                         'id' => $filesResult['id'],
                     );
