@@ -575,7 +575,7 @@ class Order extends MX_Controller
         {
             // Form field validation rules
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
-            $billCodeFilter = ['ESC', 'TPC', 'TPD', 'TPW', 'TSGC', 'TSGD', 'TSGW'];
+            $billCodeFilter = ['TPC', 'TPW'];
             // Validate submitted form data
             if($this->form_validation->run($this) == true)
             {
@@ -620,13 +620,21 @@ class Order extends MX_Controller
                                 $columnNames = $data;
                             } else {
                                 $rowData = array();
-                                if (in_array($data[8], $billCodeFilter) && strtolower($data[4]) == 'invoice') {
+                                if (in_array($data[8], $billCodeFilter) && str_contains(strtolower($data[4]), 'ledger transfer')) {
                                     $amount = (float) str_replace(['$', ','], '', $data[42]);
                                     $amount = round($amount, 2);
-                                    
                                     if (array_key_exists($data[2], $updateData)) { 
-                                        $updateData[$data[2]]['premium'] += $amount;
+                                        if ($data[8] == 'TPC') {
+                                            $updateData[$data[2]]['premium'] += ($amount/0.88);
+                                        } else if ($data[8] == 'TPW') {
+                                            $updateData[$data[2]]['premium'] += ($amount/0.9);
+                                        }
                                     } else {
+                                        if ($data[8] == 'TPC') {
+                                            $amt = $amount/0.88;
+                                        } else if ($data[8] == 'TPW') {
+                                            $amt = $amount/0.9;
+                                        }
                                         $updateData[$data[2]] = [
                                             'order_number' => $data[2],
                                             'transaction_date' => $data[3],
@@ -639,7 +647,7 @@ class Order extends MX_Controller
                                             'state' => $data[33],
                                             'zip' => $data[32],
                                             'country' => $data[35],
-                                            'premium' => $amount,
+                                            'premium' => $amt,
                                             'order_type' => trim($data[48]),
                                             'escrow_closed_date' => $data[17],
                                         ];
@@ -649,6 +657,8 @@ class Order extends MX_Controller
                             }
                         }
 
+                        // echo "<pre>";
+                        // print_r($updateData);die;
                         if (!empty($updateData)) {
                             foreach ($updateData as $key => $value) {
                                 // echo "<pre>";
