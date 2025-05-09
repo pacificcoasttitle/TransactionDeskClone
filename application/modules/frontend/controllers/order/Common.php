@@ -2552,7 +2552,7 @@ class Common extends MX_Controller
 
             if ($new_existing_lender == 'add_lender') {
                 // $lender_details['partner_id'] = $this->input->post('partner_id');
-                $lender_details['state'] = empty($this->input->post('state')) ? $this->input->post('state') : 'CA';
+                $lender_details['state'] = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : 'CA';
                 $lender_details['is_added_lender_by_cpl_proposed'] = 1;
                 $lender_details['is_escrow'] = 0;
                 $lender_details['is_lender'] = 1;
