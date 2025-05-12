@@ -238,6 +238,7 @@ $route['fetch-softpro-orders']         = 'frontend/order/cron/fetchSoftproOrders
 $route['fetch-bulk-prelim-report']         = 'frontend/order/cron/fetchBulkPrelimreport';
 $route['fetch-single-prelim-report']         = 'frontend/order/cron/fetchSinglePrelimreport';
 $route['post-prelim-report']         = 'frontend/order/cron/postPrelimreport';
+$route['post-policy-document']         = 'frontend/order/cron/postPolicyDocument';
 
 
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
