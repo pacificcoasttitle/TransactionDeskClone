@@ -112,6 +112,7 @@ define('TP_GEO_REQUEST_SUMMARY_URL', 'TpsService.asmx/GetRequestSummaries?');
 define('TP_GEO_GET_RESULT_URL', 'TpsService.asmx/GetResultByID3?');
 defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
     'create_order' => 'ordercreation/create',
+    'update_order' => 'ordercreation/updateOrder',
     'upload_document' => 'ordercreation/AddDocuments',
     'fetch_lookup_code' => 'lookup/GetLookuptable',
     'fetch_sales_reps' => 'ordercreation/GetOrderMarketingRep',

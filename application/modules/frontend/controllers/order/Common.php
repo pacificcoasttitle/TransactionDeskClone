@@ -1360,6 +1360,15 @@ class Common extends MX_Controller
         $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch'), 'is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
         $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 
+        if (!empty($loan_number)) {
+            $orderReq['orderNumber'] = $orderDetails['file_number'];
+            $orderReq['loanNumber'] = $loan_number;
+            $order_data = json_encode($orderReq);
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order', 'update_order', $order_data, [], 0, 0);
+            $response = $this->softpro->make_request('POST', 'update_order', $order_data, $userdata);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order', 'update_order', $order_data, json_encode($response), 0, $logid);
+        }
+
         // $this->home_model->update(array(), array('id' => $orderDetails['order_id']), 'order_details');
         if ($cplApi == 'fnf') {
             redirect(base_url() . "create-cpl-for-fnf/" . $order_id);
