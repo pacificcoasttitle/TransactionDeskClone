@@ -1026,6 +1026,20 @@ class Order
         }
     }
 
+    public function getPolicyDocuments($condition)
+    {
+        $this->CI->db->select('*')
+            ->from('pct_order_documents');
+
+        $this->CI->db->where($condition);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
+
     public function get_document_detail($order_id, $document_id)
     {
         $this->CI->db->select('*')
@@ -1618,6 +1632,47 @@ class Order
             unlink($filepath);
             return true;
         } else {
+            return false;
+        }
+    }
+
+    public function deleteDocumentOnAwsS3($filePath)
+    {
+        $bucket = env('AWS_BUCKET');
+        // if (!empty($folder)) {
+        //     $keyname = $folder . "/" . basename($fileName);
+        //     $filepath = "uploads/" . $folder . "/" . $fileName;
+        // } else {
+        //     if ($csv == 1) {
+        //         $keyname = "csv/" . basename($fileName);
+        //     } else {
+        //         $keyname = basename($fileName);
+        //     }
+        //     $filepath = "uploads/" . $fileName;
+        // }
+
+        try {
+            $s3Client = new Aws\S3\S3Client([
+                'region' => env('AWS_REGION'),
+                'version' => '2006-03-01',
+                'credentials' => [
+                    'key' => env('AWS_ACCESS_KEY_ID'),
+                    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                ],
+            ]);
+
+            $result = $s3Client->deleteObject([
+                'Bucket' => $bucket,
+                'Key' => $filePath
+            ]);
+
+            if ($result['DeleteMarker'] ?? false) {
+                echo "Object deleted (delete marker set).";
+            } else {
+                echo "Object deleted.";
+            }
+        } catch (Aws\Exception\AwsException $e) {
+            return $e->getMessage() . "\n";
             return false;
         }
     }
@@ -4994,5 +5049,36 @@ class Order
         $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_update_prelim', '', $mailParams, array(), 0, 0);
         $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc);
         $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_update_prelim', '', $mailParams, array('status' => $mail_result), 0, $logid);
+    }
+
+    public function sendPolicyEmail($orderDetails) {
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->helper('sendemail');
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = $orderDetails['doc_type'] . ' : ' . $orderDetails['file_number'];
+        $to = $orderDetails['email_to'];
+        // $to = 'piyush-crest@yopmail.com';
+        $cc = array('ghernandez@pct.com', 'piyush.j@crestinfosystems.com');
+
+        // $data['file_number'] = $orderDetails['file_number'];
+        // $data['doc_type'] = $orderDetails['doc_type'];
+        $file[] = $orderDetails['file_link'];
+        $message = $this->CI->load->view('emails/policy_document_email.php', $orderDetails, true);
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'file' => $file,
+            'message' => json_encode($orderDetails),
+            'cc' => $cc,
+        );
+        //$to = 'ghernandez@pct.com';
+        //$cc = array();
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_policy_document', '', $mailParams, array(), 0, 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_policy_document', '', $mailParams, array('status' => $mail_result), 0, $logid);
+        return $mail_result;
     }
 }

@@ -7506,15 +7506,17 @@ class Cron extends MX_Controller
         //         ]
         //     ]
         // ];
-        // echo "<pre>";
-        // print_r($response);die;
+        
         if (!empty($response) && $response['Status'] == 200) {
             
-            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status, p.escrow_lender_id, u.email_address');
             $this->db->from('order_details as o');
+            $this->db->join('property_details as p', 'o.property_id = p.id');
+            $this->db->join('pct_softpro_lookup_table as u', 'p.escrow_lender_id = u.id', 'left');
             $this->db->where('o.file_number', $response['OrderNumber']);
             $filesResult = $this->db->get()->row_array();
             // echo "<pre>";
+            // print_r($filesResult);die;
             if (!empty($response['data']) && !empty($filesResult)) {
                 // print_r($response['data']);die;
                 $orderId = $filesResult['id'];
@@ -7539,7 +7541,7 @@ class Cron extends MX_Controller
                                 'is_owner_policy' => $is_owner_policy,
                             ];
                             $policyDocumentsList = $this->order->getPolicyDocuments($condition);
-                            echo "<pre>";
+                            // echo "<pre>";
                             // print_r($policyDocumentsList);die;
                             if (empty($policyDocumentsList)) {
                                 $documentData = array(
@@ -7569,6 +7571,30 @@ class Cron extends MX_Controller
                             }
                             $status = 'success';
                             $msg = "Document uploaded sucecssfully.";
+                            if (!empty($filesResult['email_address'])) {
+                                $filesResult['email_to'] = $filesResult['email_address'];
+                                $filesResult['doc_type'] = $docType;
+                                $filesResult['file_link'] = env('AWS_PATH') . "documents/" . $document_name;
+                                // echo "<pre>";
+                                // print_r($filesResult);die;
+                                $email_status = $this->order->sendPolicyEmail($filesResult);
+                                if ($email_status) {
+                                    $condition = [
+                                        'id' => $orderId,
+                                    ];
+                                    if ($is_lender_policy) {
+                                        $updateRecord = [
+                                            'lender_policy_sent' => 1,
+                                        ];
+                                    }
+                                    if ($is_owner_policy) {
+                                        $updateRecord = [
+                                            'owner_policy_sent' => 1,
+                                        ];
+                                    }
+                                    $this->order->update($updateRecord, $condition);
+                                }
+                            }
                         } else {
                             $status = 'error';
                             $msg = "Error while uploading.";
