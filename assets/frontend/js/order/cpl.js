@@ -154,8 +154,44 @@ $("#LenderCompany, #LenderName").focusin(function () {
         });
     } else {
         if ($('.ui-widget.ui-autocomplete').length > 0) {
-            $('#LenderCompany').autocomplete("disable");
+            $('#LenderCompany').autocomplete("enable");
         }
+
+        $("#LenderCompany").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: base_url + 'getSoftproCompanyByName',
+                    data: {
+                        term: request.term,//the value of the input is here
+                        is_lender: 1
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.length > 0) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        } else {
+                            response([{ label: 'No results found.', val: -1 }]);
+                        }
+                    }
+                });
+            },
+            delay: 0,
+            minLength: 3,
+            select: function (event, ui) {
+                event.preventDefault();
+                $("#LenderCompany").val(ui.item.company);
+                $("#LenderCompanyLookupCode").val(ui.item.lookup_code);
+            },
+            change: function (event, ui) {
+                if (ui.item == null) {
+                    $("#LenderCompany").val('').parent().removeClass('state-success').addClass('state-error');
+                    $("#LenderCompanyLookupCode").val('');
+                }
+            }
+        });
     }
 });
 /* Lender autocomplete */
