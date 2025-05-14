@@ -130,6 +130,7 @@ if (!empty($errors)) {
 													<label for="LenderCompany" class="col-form-label">Lender Company</label>
 													<input type="text" name="LenderCompany" id="LenderCompany" class="form-control gui-input ui-autocomplete-input" placeholder="Lender Company Name" required="required">
 													<input type="hidden" name="LenderId" id="LenderId" value="">
+													<input type="hidden" name="LenderCompanyLookupCode" id="LenderCompanyLookupCode" value="">
 													<input type="hidden" name="file_id" id="file_id" value="">
 													<input type="hidden" name="order_id" id="order_id" value="">
 													<input type="hidden" name="partner_id" id="partner_id" value="">
