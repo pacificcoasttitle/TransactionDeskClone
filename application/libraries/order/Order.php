@@ -3130,7 +3130,7 @@ class Order
                     'random_number' => $randomString,
                     'resware_closed_status_date' => $completed_date,
                     'softpro_status' => strtolower($res['Status']['Name']),
-                    'sent_to_accounting_date' => $completed_date,
+                    // 'sent_to_accounting_date' => $completed_date,
                 );
                 $this->CI->home_model->insert($orderData, 'order_details');
                 return $this->CI->db->insert_id();

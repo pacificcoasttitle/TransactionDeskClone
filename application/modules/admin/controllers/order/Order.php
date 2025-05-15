@@ -684,7 +684,7 @@ class Order extends MX_Controller
                                         'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
                                         'softpro_status' => 'closed',
                                         'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
-                                        'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
+                                        // 'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
                                         'updated_at'                 => date("Y-m-d H:i:s")
                                     ];
 // echo "<pre>";
