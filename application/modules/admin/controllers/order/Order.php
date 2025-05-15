@@ -690,7 +690,7 @@ class Order extends MX_Controller
 // echo "<pre>";
 // print_r($updateOrderDetails);die;
                                     $id = $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
-                                    $activity  = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'];
+                                    $activity  = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'] . 'Transaction Date: ' . $value['transaction_date'];
                                     $this->order_model->logAdminActivity($activity);
                                     $updateCount++;
                                     // echo 'id ==' . $id;
