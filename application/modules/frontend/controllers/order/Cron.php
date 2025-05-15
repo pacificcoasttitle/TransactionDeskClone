@@ -3661,7 +3661,7 @@ class Cron extends MX_Controller
                         'softpro_status'             => strtolower($fileStatus),
                         'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                         // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
-                        'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                        // 'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                         'updated_at'                 => date('Y-m-d H:i:s'),
                     ];
                 }
@@ -7104,7 +7104,7 @@ class Cron extends MX_Controller
                             'random_number'              => $randomString,
                             'resware_closed_status_date' => $completed_date,
                             'softpro_status'             => strtolower($orderStatus),
-                            'sent_to_accounting_date'    => $completed_date,
+                            // 'sent_to_accounting_date'    => $completed_date,
                             'is_softpro_order'          => 1
                         ];
                         
@@ -7117,7 +7117,7 @@ class Cron extends MX_Controller
                         ];
                         if ($orderStatus == 'closed') {
                             $orderData['resware_closed_status_date'] = $completed_date;
-                            $orderData['sent_to_accounting_date'] = $completed_date;
+                            // $orderData['sent_to_accounting_date'] = $completed_date;
                         }
                         $condition = [
                             'file_number' => $file_number
