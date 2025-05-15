@@ -1288,15 +1288,25 @@ class Common extends MX_Controller
         $order_id = $this->input->post('order_id');
         $LenderId = $this->input->post('LenderId');
         $loan_number = $this->input->post('loan_number');
-        $first_name = $this->input->post('first_name');
-        $last_name = $this->input->post('last_name');
         $vesting = $this->input->post('vesting');
         $new_existing_lender = $this->input->post('new_existing_lender');
         $borrowers_vesting = $this->input->post('borrowers_vesting');
-        $name = explode(" ", $this->input->post('LenderName'));
+        // $name = explode(" ", $this->input->post('LenderName'));
+        $lenderFullName = $this->input->post('LenderName');
+        $name = $this->order->splitFullName($lenderFullName);
+        $lenderCompanyName = !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "";
+        $lenderCompanyLookupCode = !empty($this->input->post('LenderCompanyLookupCode')) ? $this->input->post('LenderCompanyLookupCode') : "";
+        $lenderAddress = !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "";
+        $lenderCity = !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "";
+        $lenderState = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "";
+        $lenderZipcode = !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "";
+        $assignmentClause = !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "";
         $editFlag = $this->input->post('editFlag');
         $loan_amount = $this->input->post('loan_amount');
         $sales_amount = $this->input->post('sales_amount');
+        $first_name = $name['first_name'];
+        $middle_name = $name['middle_name'];
+        $last_name = $name['last_name'];
         $params = [
             'order_details.id' => $order_id,
         ];
@@ -1311,41 +1321,54 @@ class Common extends MX_Controller
             redirect(base_url() . 'cpl-dashboard');
         }
         $lender_details = array(
-            'first_name' => $name[0],
-            'last_name' => !empty($name[1]) ? $name[1] : '',
-            'lender_fullname' => $this->input->post('LenderName'),
-            'state' => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
-            'company_name' => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
-            'address1' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
-            'city' => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-            'zip' => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
-            'assignment_clause' => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "",
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'lender_fullname' => $lenderFullName,
+            'company_name' => $lenderCompanyName,
+            'address1' => $lenderAddress,
+            'city' => $lenderCity,
+            'state' => $lenderState,
+            'zip' => $lenderZipcode,
+            'assignment_clause' => $assignmentClause,
         );
 
         $this->session->set_userdata('lender_details', $lender_details);
         unset($lender_details['lender_fullname']);
-        // if ($orderDetails['is_softpro_order'] == 1) {
-        //     $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
-        //     $lenderUserDetails = $this->home_model->sp_get_user(array('id' => $LenderId));
-        // } else {
-            $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-            
-            if ($new_existing_lender == 'add_lender') {
-                // $lender_details['partner_id'] = $this->input->post('partner_id');
-                $lender_details['is_added_lender_by_cpl_proposed'] = 1;
-                $lender_details['is_escrow'] = 0;
-                $lender_details['status'] = 0;
-                $LenderId = $this->home_model->insert($lender_details, 'pct_softpro_lookup_table');
-            } else {
-                $condition = array(
-                    'id' => $LenderId,
-                );
-                $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
+        $lookup_code = $this->order->generateLookupCode($first_name, $last_name, $lenderCompanyName);
+        $orderReq['userModel'] = [
+            'CompanyLookUpCode' => $lenderCompanyLookupCode,
+            'FirstName'         => $first_name,
+            'LastName'          => $last_name,
+            'ClientLookupCode'  => $lookup_code,
+            'Address1'          => $lenderAddress,
+            'City'              => $lenderCity,
+            'State'             => $lenderState,
+            'Zip'               => $lenderZipcode,
+            'Phone'             => '9879543210'
+        ];
+        if ($new_existing_lender == 'add_lender') {
+            $orderUser = $this->home_model->get_user(array('lookup_code' => $lookup_code));
+            if (!empty($orderUser)) {
+                $errors[] = "Lender already exists.";
+                $data = array("errors" => $errors);
+                $this->session->set_flashdata($data);
+                redirect(base_url() . 'cpl-dashboard');
             }
-            $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
-        // }
-        
-
+            $lender_details['is_added_lender_by_cpl_proposed'] = 1;
+            $lender_details['is_lender'] = 1;
+            $lender_details['lookup_code'] = $lookup_code;
+            $lender_details['flookup_code'] = $flookup_code;
+            
+            $lender_details['status'] = 1;
+            $LenderId = $this->home_model->insert($lender_details, 'pct_softpro_lookup_table');
+            
+        } else {
+            $condition = array(
+                'id' => $LenderId,
+            );
+            $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
+        }
+        $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
 
         $propertyDetails = array(
             'cpl_lender_id' => $LenderId,
