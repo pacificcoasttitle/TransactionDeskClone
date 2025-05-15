@@ -325,11 +325,11 @@ form {
 							<div class="form-body">
 								<?php
                                     $prev_data = $this->session->flashdata('_previous_data');
-                                    if ($this->session->flashdata('error')):
+                                    if ($this->session->flashdata('revenue_error')):
                                     ?>
-								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('error'); ?></div>
-								<?php elseif ($this->session->flashdata('success')): ?>
-								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('success'); ?></div>
+								<div class="alert alert-danger" role="alert"><?php echo $this->session->flashdata('revenue_error'); ?></div>
+								<?php elseif ($this->session->flashdata('revenue_success')): ?>
+								<div class="alert alert-success" role="alert"><?php echo $this->session->flashdata('revenue_success'); ?></div>
 								<?php endif; ?>
 								<div class="frm-row">
 									<div class="row">

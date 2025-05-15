@@ -731,14 +731,14 @@ class Order extends MX_Controller
                         // print_r($updateData);die;
                         
                         unlink('uploads/' . $fileData['file_name']);
-                        $this->session->set_flashdata('success', 'Data updated for total ' . $updateCount . ' Orders');
+                        $this->session->set_flashdata('revenue_success', 'Data updated for total ' . $updateCount . ' Orders');
                     }
                 }
                 
             }
             else
             {
-                $this->session->set_flashdata('error', 'Invalid file, please select only CSV file.');
+                $this->session->set_flashdata('revenue_error', 'Invalid file, please select only CSV file.');
                 $data['error_msg'] = form_error('file');
                 // echo form_error('file');die;
             }
