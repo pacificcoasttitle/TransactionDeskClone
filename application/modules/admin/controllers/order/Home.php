@@ -8564,7 +8564,7 @@ class Home extends MX_Controller
             redirect(base_url().'agents');
         }
         $data['back_url'] = $this->session->userdata('back_url');
-
+        $this->admintemplate->addJS(base_url('assets/backend/js/add-new-user.js'));
         $this->admintemplate->show("order/home", "edit_user", $data);
     }
 
