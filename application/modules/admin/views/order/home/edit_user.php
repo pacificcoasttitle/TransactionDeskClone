@@ -42,7 +42,7 @@
                         <h6 class="m-0 font-weight-bold text-primary">Edit User</h6>
                     </div>
                     <div class="card-body">
-                        <form id="add-new-user" method="POST">
+                        <form id="edit-new-user" method="POST">
                             <div class="form-group">
                                 <label for="company" class="col-sm-2 col-form-label">Company Name<span class="required"> *</span></label>
                                 <div class="col-sm-6">
