@@ -153,6 +153,45 @@ jQuery(document).ready(function ($) {
         });
     }
 
+    if ($('#edit-new-user #company_name').length) {
+        console.log('edit test --');
+        $("#edit-new-user #company_name").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: base_url + "admin/order/home/get_sp_company_list",
+                    data: {
+                        term: request.term,
+                        is_master_search: 1
+                    },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log('data ===', data);
+                        if (data.length > 0) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        } else {
+                            response([{ label: 'No results found.', val: -1 }]);
+                        }
+                    }
+                });
+            },
+            delay: 0,
+            minLength: 3,
+            select: function (event, ui) {
+                event.preventDefault();
+                $("#edit-new-user #company_name").val(ui.item.name);
+                $("#edit-new-user #flookup_code").val(ui.item.flookup_code).parent().addClass('state-success');
+            },
+            change: function (event, ui) {
+                if (ui.item == null) {
+
+                }
+            }
+        });
+    }
+
 
 });
 
