@@ -54,7 +54,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="email_address" class="col-sm-2 col-form-label">Email Address<span class="required"> *</span></label>
+                                <label for="email_address" class="col-sm-2 col-form-label">Email Address</label>
                                 <div class="col-sm-6">
                                     <input type="email" value="<?php echo set_value('email_address'); ?>" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">
                                     <?php if (!empty($email_address_error_msg)) {?>
@@ -64,7 +64,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="phone" class="col-sm-2 col-form-label">Telephone<span class="required"> *</span></label>
+                                <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
                                 <div class="col-sm-6">
                                     <input type="text" value="<?php echo set_value('phone'); ?>" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
                                     <?php if (!empty($phone_error_msg)) {?>

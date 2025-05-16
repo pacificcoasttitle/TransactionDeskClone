@@ -1093,6 +1093,61 @@ class Order
         return $result;
     }
 
+    public function get_order_details_with_buyeragent($params)
+    {
+        $this->CI->db->select('
+            order_details.file_number,
+            order_details.customer_id,
+            order_details.id as order_id,
+            order_details.prod_type,
+            order_details.softpro_status,
+            property_details.address,
+            property_details.full_address,
+            property_details.property_type,
+            property_details.city as property_city,
+            property_details.state as property_state,
+            property_details.zip as property_zip,
+            property_details.county,
+            property_details.legal_description,
+            property_details.primary_owner,
+            property_details.secondary_owner,
+            property_details.buyer_agent_id,
+            property_details.apn,
+            transaction_details.id as transaction_id,
+            transaction_details.sales_representative,
+            transaction_details.title_officer,
+            transaction_details.sales_amount,
+            transaction_details.loan_amount,
+            transaction_details.loan_number,
+            transaction_details.transaction_type,
+            salerep.first_name as salerep_first_name,
+            salerep.last_name as salerep_last_name,
+            sales_manager.first_name as salerep_manager_first_name,
+            sales_manager.last_name as salerep_manager_last_name,
+            sales_manager.email_address as salerep_manager_email_address,
+            sp_agents.first_name as buyer_agent_first_name,
+            sp_agents.last_name as buyer_agent_last_name,
+            sp_agents.address1 as buyer_agent_address,
+            sp_agents.email_address as buyer_agent_email_address,
+            sp_agents.phone as buyer_agent_phone,
+            sp_agents.city as buyer_agent_city,
+            sp_agents.zip as buyer_agent_zipcode,
+            sp_agents.company_name as buyer_agent_company')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_softpro_lookup_table as sp_agents', 'property_details.buyer_agent_id = sp_agents.id', 'left')
+            ->join('pct_softpro_lookup_table as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
+            ->join('pct_softpro_lookup_table as sales_manager', 'sales_manager.is_sales_rep_manager = 1 AND FIND_IN_SET(salerep.id, sales_manager.sales_rep_users)', 'left');;
+            
+        foreach ($params as $key => $val) {
+            $this->CI->db->where($key, $val);
+        }
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->row_array();
+    }
+
     public function randomPassword()
     {
         $len = 8;

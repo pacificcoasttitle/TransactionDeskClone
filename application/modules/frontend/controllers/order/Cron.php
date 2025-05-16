@@ -3648,31 +3648,21 @@ class Cron extends MX_Controller
                     // echo "<pre>";
                     // print_r($completed_date);die;
     
-                    if (strtolower($fileStatus) == 'closed') {
-                        if (isset($completed_date) && (date('Y', strtotime($completed_date)) == date('Y')) && (date('m', strtotime($completed_date)) == date('m'))) {
-                            if (!in_array($file_number, $closedFileNumbers)) {
-                                $closedFileNumbers[] = $file_number;
-                            }
-                        }
+                    $orderCondition = array(
+                            'file_number' => $file_number
+                    );
+                    $orderDetails = $this->order->get_order_details_with_buyeragent($orderCondition);
+                    if (strtolower($orderDetails['softpro_status']) != strtolower($fileStatus)) {
+                        $updateArray = [
+                            'file_number'                => $file_number,
+                            'softpro_status'             => strtolower($fileStatus),
+                            'resware_closed_status_date' => (strtolower($fileStatus) == 'closed') ? $completed_date : null,
+                            // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                            // 'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
+                            'updated_at'                 => date('Y-m-d H:i:s'),
+                        ];
+
                     }
-    
-                    $updateArray[] = [
-                        'file_number'                => $file_number,
-                        'softpro_status'             => strtolower($fileStatus),
-                        'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
-                        // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
-                        // 'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
-                        'updated_at'                 => date('Y-m-d H:i:s'),
-                    ];
-                }
-                // echo "<pre>";
-                // print_r($updateArray);die;
-                if (!empty($updateArray)) {
-                    $chunk1 = array_chunk($updateArray, 100);
-                    for ($i = 0; $i < count($chunk1); $i++) {
-                        $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
-                    }
-                }
     
                 $updateData = ['softpro_status' => 'open'];
                 $this->db->set($updateData);
