@@ -1117,6 +1117,43 @@ class Home extends MX_Controller
         return $res;
     }
 
+    public function updateNewUserToSoftpro($newCompany, $apiType = 'update_company')
+    {
+        $this->load->library('order/softPro');
+        $userdata = $this->session->userdata('admin');
+
+        $userdata['email']     = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+        $newCompanyData        = json_encode($newCompany);
+        $logid                 = $this->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newCompanyData, [], 0, 0);
+        $response              = $this->softpro->make_request('POST', $apiType, $newCompanyData);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newCompanyData, json_encode($response), 0, $logid);
+
+        if (isset($response['status']) && $response['status'] == 'error') {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => false,
+            ];
+        } else {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => true,
+            ];
+        }
+        /* Start add resware api logs */
+        $reswareLogData = [
+            'request_type' => 'add_update_company_to_softpro',
+            'request_url'  => $apiType,
+            'request'      => $newCompanyData,
+            'response'     => json_encode($response),
+            'status'       => $response['status'],
+            'created_at'   => date("Y-m-d H:i:s"),
+        ];
+        $this->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+        return $res;
+    }
+
     public function addNewUserToResware($customerData)
     {
         $this->load->model('order/apiLogs');
@@ -8179,7 +8216,9 @@ class Home extends MX_Controller
                 } else {
                     $nestedData[] = "<a href='javascript:void(0)' onclick='addOrUpdateSPCompanyDeliverables(" . '"' . $lookupCode . '"' . ")'><i class='fas fa-plus-circle'></i></a>";
                 }
-                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='javascript:void(0);' onclick='deleteSPCompany(" . '"' . $lookupCode . '"' . ")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
+                $editUserUrl = base_url().'order/admin/edit-softpro-company/'.$value['id'];
+                    // $action = "<div style='display: flex;justify-content: space-evenly;'><a href='".$editUserUrl."' class='edit-agent' title ='Edit Agent Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
+                $nestedData[] = "<div style='display: flex;justify-content: space-evenly;'><a href='".$editUserUrl."' class='edit-company' title ='Edit Company Detail'><i class='fas fa-edit' aria-hidden='true'></i></a><a href='javascript:void(0);' onclick='deleteSPCompany(" . '"' . $lookupCode . '"' . ")' title='Delete Company'><i class='fas fa-trash' aria-hidden='true'></i></a> </div>";
                 $data[]       = $nestedData;
                 $i++;
             }
@@ -8288,6 +8327,117 @@ class Home extends MX_Controller
         $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-ui.min.js'));
         $this->admintemplate->addJS(base_url('assets/backend/js/companies.js'));
         $this->admintemplate->show("order/home", "add_sp_company", $data);
+    }
+
+    public function spEditCompany()
+    {
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $id = $this->uri->segment(4);        
+        $data = array();
+        $data['title'] = 'PCT Order: Edit Company';
+        if(isset($id) && !empty($id))
+        {
+
+            if(isset($_POST) && !empty($_POST))
+            {
+                // Validations
+                $this->form_validation->set_rules('name', 'Name', 'required', ['required' => 'Please Enter Name']);
+                $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
+                $this->form_validation->set_rules('address1', 'Address', 'required', ['required' => 'Please Enter Address']);
+                $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
+                $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
+                $this->form_validation->set_rules('zip', 'Zipcode', 'required', ['required' => 'Please Enter Zipcode']);
+
+                if($this->form_validation->run($this) == true)
+                {
+                    $userType  = $this->input->post('user_type');
+                    $companyType = '';
+                    $is_escrow = $is_lender = $is_mortgage_broker = $is_realtor = 0;
+                    if ($userType == 'escrow') {
+                        $is_escrow = 1;
+                        $companyType = 'Escrow Company';
+                    } else if ($userType == 'lender') {
+                        $is_lender = 1;
+                        $companyType = 'Lender';
+                    } else if ($userType == 'mortgage_broker') {
+                        $is_mortgage_broker = 1;
+                        $companyType = 'Mortgage Broker';
+                    } else if ($userType == 'realtor') {
+                        $is_realtor = 1;
+                        $companyType = 'Selling Agent/Broker';
+                    }
+                    $name   = $this->input->post('name');
+                    $address   = $this->input->post('address1');
+                    $companyLookup   = $this->input->post('lookup_code');
+                    // $companyLookup = $this->order->generateCompanyLookupCode($name, $address);
+                    // print_r($companyLookup);die;
+                    $companyData = [
+                        'Name'         => $name,
+                        'Phone'        => $this->input->post('phone'),
+                        'Email'        => $this->input->post('email_address'),
+                        'LookupCode'   => $companyLookup,
+                        'Address1'     => $address,
+                        'City'         => $this->input->post('city'),
+                        'State'        => $this->input->post('state'),
+                        'Zip'          => $this->input->post('zip'),
+                        'UserType' =>  $companyType
+                    ];
+                    // echo "<pre>";
+                    // print_r($companyData);die;
+                    $response = $this->updateNewUserToSoftpro($companyData, 'update_company');
+                    $companyData = [
+                        'name'         => $name,
+                        'phone'              => $this->input->post('phone'),
+                        'email_address'      => $this->input->post('email_address'),
+                        'lookup_code'        => $companyLookup,
+                        'address1'           => $address,
+                        'city'               => $this->input->post('city'),
+                        'state'              => $this->input->post('state'),
+                        'zip'                => $this->input->post('zipcode'),
+                        'is_escrow_company'  => $is_escrow,
+                        'is_lender'          => $is_lender,
+                        'is_mortgage_broker' => $is_mortgage_broker,
+                        'is_selling_agent'   => $is_realtor
+                    ];
+
+                    if ($response['success']) {
+                        $condition = array('lookup_code' => $companyLookup);
+                        $update = $this->home_model->update($companyData, $condition, 'sp_company');
+                        /** Save user Activity */
+                        $activity = 'Company update :- ' .$companyLookup;
+                        $this->order->logAdminActivity($activity);
+                        /** End Save user activity */
+                        $data['success_msg'] = 'Company updated successfully.';
+                        $this->form_validation->reset_validation();
+
+                    } else {
+                        $data['error_msg'] = $response['msg'];
+                    }
+                }
+                else
+                {
+                    $data['name_error_msg']    = form_error('name');
+                    $data['email_address_error_msg'] = form_error('email_address');
+                    $data['user_type_error_msg']     = form_error('user_type');
+                    $data['address1_error_msg']       = form_error('address1');
+                    $data['phone_error_msg']       = form_error('phone');
+                    $data['city_error_msg']          = form_error('city');
+                    $data['state_error_msg']         = form_error('state');
+                    $data['zip_error_msg']       = form_error('zip');
+                    
+                }
+            }
+
+            $con = array('id' => $id);
+            $data['userDetails'] = $this->home_model->sp_get_company($con);
+        }
+        else
+        {
+            redirect(base_url().'order/admin/softpro-companies');
+        }
+        $data['back_url'] = $this->session->userdata('back_url');
+        $this->admintemplate->show("order/home", "edit_company", $data);
     }
 
     public function spAdminAgent()

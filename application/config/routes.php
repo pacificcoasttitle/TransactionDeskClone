@@ -276,6 +276,7 @@ $route['order/admin/edit-softpro-title-production/:num'] = 'admin/order/home/edi
 $route['order/admin/delete-softpro-title-production']    = 'admin/order/home/deleteSpTitlePproduction';
 
 $route['order/admin/edit-user/:num']               = 'admin/order/home/editUser';
+$route['order/admin/edit-softpro-company/:num']             = 'admin/order/home/spEditCompany';
 
 $route['get-pay-off-orders']           = 'frontend/order/payOff/get_pay_off_orders';
 $route['get-transactees']              = 'frontend/order/payOff/get_transactees';
