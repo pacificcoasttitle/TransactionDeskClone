@@ -8464,11 +8464,11 @@ class Home extends MX_Controller
                 // Validations
                 $this->form_validation->set_rules('first_name', 'First Name', 'required', ['required' => 'Please Enter First Name']);
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
-                $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
+                // $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
                 $this->form_validation->set_rules('company_name', 'Company Name', 'required', ['required' => 'Please Enter Company']);
                 $this->form_validation->set_rules('lookup_code', 'Lookup Code', 'required|min_length[10]', ['required' => 'Please Lookup Code']);
                 $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
-                $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
+                // $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
                 $this->form_validation->set_rules('address1', 'Address', 'required', ['required' => 'Please Enter Address']);
                 $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
                 $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);

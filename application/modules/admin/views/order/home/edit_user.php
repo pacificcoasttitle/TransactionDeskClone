@@ -91,7 +91,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="email_address" class="col-sm-2 col-form-label">Email Address<span class="required"> *</span></label>
+                                <label for="email_address" class="col-sm-2 col-form-label">Email Address</label>
                                 <div class="col-sm-6">
                                 <?php $email_address = isset($userDetails['email_address']) ? $userDetails['email_address'] : set_value('email_address'); ?>
                                     <input type="email" value="<?php echo $email_address; ?>" class="form-control" name="email_address" id="email_address" class="form-control" placeholder="Email Address">
@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="phone" class="col-sm-2 col-form-label">Telephone<span class="required"> *</span></label>
+                                <label for="phone" class="col-sm-2 col-form-label">Telephone</label>
                                 <div class="col-sm-6">
                                 <?php $phone = isset($userDetails['phone']) ? $userDetails['phone'] : set_value('phone'); ?>
                                     <input type="text" value="<?php echo $phone; ?>" class="form-control" name="phone" id="phone" class="form-control" placeholder="Telephone">
