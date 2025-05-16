@@ -8200,10 +8200,10 @@ class Home extends MX_Controller
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('name', 'Name', 'required', ['required' => 'Please Enter Name']);
-            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
+            // $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
             $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
             $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
-            $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
+            // $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
             $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
             $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
             $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', ['required' => 'Please Enter Zipcode']);
