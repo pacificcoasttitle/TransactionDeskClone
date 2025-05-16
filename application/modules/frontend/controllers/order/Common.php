@@ -1296,7 +1296,7 @@ class Common extends MX_Controller
         $name = $this->order->splitFullName($lenderFullName);
         $lenderCompanyName = !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "";
         $lenderCompanyLookupCode = !empty($this->input->post('LenderCompanyLookupCode')) ? $this->input->post('LenderCompanyLookupCode') : "";
-        $lenderAddress = !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "";
+        $lenderAddress = !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "";
         $lenderCity = !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "";
         $lenderState = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "";
         $lenderZipcode = !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "";
