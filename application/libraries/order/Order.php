@@ -657,6 +657,7 @@ class Order
             property_details.secondary_owner,
             property_details.escrow_lender_id,
             property_details.cpl_lender_id,
+            property_details.cpl_lender_company_id,
             property_details.buyer_agent_id,
             property_details.listing_agent_id,
             property_details.borrowers_vesting,
@@ -4934,6 +4935,36 @@ class Order
         return $part1 . $part2;
     }
 
+    public function generateNewCompanyLookupCode($name, $address) {
+        $name = str_replace(' ', '', $name);
+        $part1 = ucfirst(substr($name, 0, 4));
+        // Extract numeric part from address
+        preg_match('/\d+/', $address, $matches);
+        $part2 = $matches[0] ?? '';
+        
+        // Base code
+        $baseCode = $part1 . $part2;
+        $code = $baseCode;
+        
+        // print_r($code);die;
+        // Check for uniqueness and append number if needed
+        $suffix = 1;
+        while ($this->isCodeExists($code)) {
+            // Replace or append 4-digit number
+            $code = substr($baseCode, 0, max(0, strlen($baseCode) - 4)) . str_pad($suffix, 4, '0', STR_PAD_LEFT);
+            $suffix++;
+        }
+
+        return $code;
+    }
+
+    private function isCodeExists($code) {
+        // Example using CodeIgniter:
+        return $this->CI->db->where('lookup_code', $code)
+                        ->from('sp_company')
+                        ->count_all_results() > 0;
+    }
+
     public function save_sp_file_upload_log($data) {
         $this->CI->db->insert('sp_file_upload_logs', $data);
         $documentId = $this->CI->db->insert_id();
@@ -5135,5 +5166,80 @@ class Order
         $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
         $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_policy_document', '', $mailParams, array('status' => $mail_result), 0, $logid);
         return $mail_result;
+    }
+
+    public function addNewUserToSoftpro($newUser, $apiType = 'create_user')
+    {
+        $this->CI->load->library('order/softPro');
+        $userdata = $this->CI->session->userdata('admin');
+
+        $userdata['email']     = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+        $newUserData           = json_encode($newUser);
+        $logid                 = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newUserData, [], 0, 0);
+        $response              = $this->CI->softpro->make_request('POST', $apiType, $newUserData);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newUserData, json_encode($response), 0, $logid);
+
+        if (isset($response['status']) && $response['status'] == 'error') {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => false,
+            ];
+        } else {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => true,
+            ];
+        }
+        /* Start add resware api logs */
+        $reswareLogData = [
+            'request_type' => 'add_new_user_to_softpro',
+            'request_url'  => $apiType,
+            'request'      => $newUserData,
+            'response'     => json_encode($response),
+            'status'       => $response['status'],
+            'created_at'   => date("Y-m-d H:i:s"),
+        ];
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+        return $res;
+    }
+
+    public function updateNewUserToSoftpro($newCompany, $apiType = 'update_company')
+    {
+        $this->CI->load->library('order/softPro');
+        $this->CI->load->model('order/apiLogs');
+        $userdata = $this->CI->session->userdata('admin');
+
+        $userdata['email']     = $userdata['email_address'];
+        $userdata['admin_api'] = 1;
+        $newCompanyData        = json_encode($newCompany);
+        $logid                 = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newCompanyData, [], 0, 0);
+        $response              = $this->CI->softpro->make_request('POST', $apiType, $newCompanyData);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', $apiType, $apiType, $newCompanyData, json_encode($response), 0, $logid);
+
+        if (isset($response['status']) && $response['status'] == 'error') {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => false,
+            ];
+        } else {
+            $res = [
+                'msg'     => $response['message'],
+                'success' => true,
+            ];
+        }
+        /* Start add resware api logs */
+        $reswareLogData = [
+            'request_type' => 'add_update_company_to_softpro',
+            'request_url'  => $apiType,
+            'request'      => $newCompanyData,
+            'response'     => json_encode($response),
+            'status'       => $response['status'],
+            'created_at'   => date("Y-m-d H:i:s"),
+        ];
+        $this->CI->db->insert('pct_resware_log', $reswareLogData);
+        /* End add resware api logs */
+        return $res;
     }
 }
