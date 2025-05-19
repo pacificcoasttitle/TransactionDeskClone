@@ -78,7 +78,8 @@ $("#LenderCompany, #LenderName").focusin(function () {
         $("#LenderCompany").autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: base_url + 'getDetailsByName',
+                    url: base_url + 'getSoftproCompanyByName',
+                    // url: base_url + 'getDetailsByName',
                     data: {
                         term: request.term,//the value of the input is here
                         is_escrow: 0
@@ -100,19 +101,20 @@ $("#LenderCompany, #LenderName").focusin(function () {
             minLength: 3,
             select: function (event, ui) {
                 event.preventDefault();
+                console.log('ui.item ===', ui.item);
                 $("#LenderCompany").val(ui.item.company);
-
+                $("#LenderCompanyLookupCode").val(ui.item.lookup_code);
                 if (ui.item.state) {
                     $("#LenderState").val(ui.item.state).parent().addClass('state-success');
                 } else {
                     $("#LenderState").val('').parent().removeClass('state-success').addClass('state-error');
                 }
 
-                if (ui.item.name) {
-                    $("#LenderName").val(ui.item.name).parent().addClass('state-success');
-                } else {
-                    $("#LenderName").val('').parent().removeClass('state-success').addClass('state-error');
-                }
+                // if (ui.item.name) {
+                //     $("#LenderName").val(ui.item.name).parent().addClass('state-success');
+                // } else {
+                //     $("#LenderName").val('').parent().removeClass('state-success').addClass('state-error');
+                // }
 
                 if (ui.item.address) {
                     $("#LenderAddress").val(ui.item.address).parent().addClass('state-success');
@@ -137,7 +139,7 @@ $("#LenderCompany, #LenderName").focusin(function () {
                 } else {
                     $("#assignment_clause").val('');
                 }
-                $("#LenderId").val(ui.item.id);
+                // $("#LenderId").val(ui.item.id);
 
             },
             change: function (event, ui) {
