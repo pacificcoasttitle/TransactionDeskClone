@@ -1296,10 +1296,10 @@ class Common extends MX_Controller
         $name = $this->order->splitFullName($lenderFullName);
         $lenderCompanyName = !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "";
         $lenderCompanyLookupCode = !empty($this->input->post('LenderCompanyLookupCode')) ? $this->input->post('LenderCompanyLookupCode') : "";
-        $lenderAddress = !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "";
-        $lenderCity = !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "";
-        $lenderState = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "";
-        $lenderZipcode = !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "";
+        $lenderCompanyAddress = !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "";
+        $lenderCompanyCity = !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "";
+        $lenderCompanyState = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "";
+        $lenderCompanyZipcode = !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "";
         $assignmentClause = !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "";
         $editFlag = $this->input->post('editFlag');
         $loan_amount = $this->input->post('loan_amount');
@@ -1325,61 +1325,39 @@ class Common extends MX_Controller
             'last_name' => $last_name,
             'lender_fullname' => $lenderFullName,
             'company_name' => $lenderCompanyName,
-            'address1' => $lenderAddress,
-            'city' => $lenderCity,
-            'state' => $lenderState,
-            'zip' => $lenderZipcode,
+            'address1' => $lenderCompanyAddress,
+            'city' => $lenderCompanyCity,
+            'state' => $lenderCompanyState,
+            'zip' => $lenderCompanyZipcode,
             'assignment_clause' => $assignmentClause,
         );
 
         $this->session->set_userdata('lender_details', $lender_details);
         unset($lender_details['lender_fullname']);
-        $lookup_code = $this->order->generateLookupCode($first_name, $last_name, $lenderCompanyName);
-        $orderReq['userModel'] = [
-            'CompanyLookUpCode' => $lenderCompanyLookupCode,
-            'FirstName'         => $first_name,
-            'LastName'          => $last_name,
-            'ClientLookupCode'  => $lookup_code,
-            'Address1'          => $lenderAddress,
-            'City'              => $lenderCity,
-            'State'             => $lenderState,
-            'Zip'               => $lenderZipcode,
-            'Phone'             => '9879543210'
-        ];
+        $flookup_code = $this->order->generateNewCompanyLookupCode($lenderCompanyName, $lenderCompanyAddress);
         if ($new_existing_lender == 'add_lender') {
-            $orderUser = $this->home_model->get_user(array('lookup_code' => $lookup_code));
-            if (!empty($orderUser)) {
-                $errors[] = "Lender already exists.";
-                $data = array("errors" => $errors);
-                $this->session->set_flashdata($data);
-                redirect(base_url() . 'cpl-dashboard');
-            }
-            $lender_details['is_added_lender_by_cpl_proposed'] = 1;
-            $lender_details['is_lender'] = 1;
-            $lender_details['lookup_code'] = $lookup_code;
-            $lender_details['flookup_code'] = $flookup_code;
-            
-            $lender_details['status'] = 1;
-            $LenderId = $this->home_model->insert($lender_details, 'pct_softpro_lookup_table');
+            $spResponse = $this->addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode);
             
         } else {
-            $condition = array(
-                'id' => $LenderId,
-            );
-            $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
+            // $condition = array(
+            //     'id' => $LenderId,
+            // );
+            // $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
+            $spResponse = $this->existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode);
         }
-        $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
-
+        $companyId = $spResponse['id'];
+        // $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
+        
         $propertyDetails = array(
-            'cpl_lender_id' => $LenderId,
+            'cpl_lender_company_id' => $companyId,
             'borrowers_vesting' => trim($borrowers_vesting),
             'cpl_proposed_property_address' => $this->input->post('property_address'),
             'cpl_proposed_property_city' => $this->input->post('property_city'),
             'cpl_proposed_property_state' => $this->input->post('property_state'),
             'cpl_proposed_property_zip' => $this->input->post('property_zipcode'),
         );
+        
         $this->home_model->update(array('loan_number' => $loan_number, 'loan_amount' => $loan_amount, 'sales_amount' => $sales_amount), array('id' => $orderDetails['transaction_id']), 'transaction_details');
-        // $this->home_model->update(array('loan_number' => $loan_number), array('id' => $orderDetails['transaction_id']), 'transaction_details');
         $this->home_model->update(array('fnf_agent_id' => $this->input->post('branch'), 'is_regenerate_cpl' => $editFlag), array('id' => $orderDetails['order_id']), 'order_details');
         $this->home_model->update($propertyDetails, array('id' => $orderDetails['property_id']), 'property_details');
 
@@ -1402,6 +1380,109 @@ class Common extends MX_Controller
         } else {
             redirect(base_url() . "create-cpl-for-natic/" . $order_id);
         }
+    }
+
+    private function addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode) {
+        $condition = [
+            "where" => array('name' => $lenderCompanyName)
+        ];
+        $checkCompanyExist = $this->home_model->get_sp_company($condition);
+        $companyData = [
+            'Name'         => $lenderCompanyName,
+            'LookupCode'   => $flookup_code,
+            'Address1'     => $lenderCompanyAddress,
+            'City'         => $lenderCompanyCity,
+            'State'        => $lenderCompanyState,
+            'Zip'          => $lenderCompanyZipcode,
+            'UserType' =>  'Lender'
+            // 'Phone'        => $this->input->post('phone'),
+            // 'Email'        => $this->input->post('email_address'),
+        ];
+        $companyTDData = [
+            'name'         => $lenderCompanyName,
+            'lookup_code'        => $flookup_code,
+            'address1'           => $lenderCompanyAddress,
+            'city'               => $lenderCompanyCity,
+            'state'              => $lenderCompanyState,
+            'zip'                => $lenderCompanyZipcode,
+            'is_escrow_company'  => 0,
+            'is_lender'          => 1,
+            'is_mortgage_broker' => 0,
+            'is_selling_agent'   => 0
+        ];
+        if (empty($checkCompanyExist)) {
+            // echo "<pre> if";
+            // print_r($checkCompanyExist);
+            // print_r($companyData);
+            // print_r($companyTDData);
+            // die;
+            $response = $this->order->addNewUserToSoftpro($companyData, 'add_company');
+            
+            if ($response['success']) {
+                
+                $data['id'] = $this->home_model->insert($companyTDData, 'sp_company');
+                /** Save user Activity */
+                $activity = 'New company created :- ' . $this->input->post('email_address');
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
+            } else {
+                $data['error_msg'] = $response['msg'];
+            }
+        } else if (!empty($checkCompanyExist)) {
+            $companyData['LookupCode'] = $companyTDData['lookup_code'] = $checkCompanyExist[0]['lookup_code'];
+            // echo "<pre> else if";
+            // print_r($checkCompanyExist);
+            // print_r($companyData);
+            // print_r($companyTDData);
+            // die;
+            $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
+
+            if ($response['success']) {
+                $update = $this->home_model->update($companyTDData, ['lookup_code' => $companyData['LookupCode']], 'sp_company');
+                /** Save user Activity */
+                $activity = 'Company update :- ' .$companyLookup;
+                $this->order->logAdminActivity($activity);
+                /** End Save user activity */
+                $data['id'] = $checkCompanyExist[0]['id'];
+            } else {
+                $data['error_msg'] = $response['msg'];
+            }
+        }
+        return $data;
+    }
+
+    private function existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode) {
+        $checkCompanyExist = $this->home_model->get_sp_company($condition);
+        $companyData = [
+            'Name'         => $lenderCompanyName,
+            'LookupCode'   => $checkCompanyExist[0]['lookup_code'],
+            'Address1'     => $lenderCompanyAddress,
+            'City'         => $lenderCompanyCity,
+            'State'        => $lenderCompanyState,
+            'Zip'          => $lenderCompanyZipcode,
+            'UserType'     =>  'Lender'
+        ];
+
+        $companyTDData = [
+            'name'      => $lenderCompanyName,
+            'address1'  => $lenderCompanyAddress,
+            'city'      => $lenderCompanyCity,
+            'state'     => $lenderCompanyState,
+            'zip'       => $lenderCompanyZipcode
+        ];
+        $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
+
+        if ($response['success']) {
+            $update = $this->home_model->update($companyTDData, ['lookup_code' => $checkCompanyExist[0]['lookup_code']], 'sp_company');
+            /** Save user Activity */
+            $activity = 'Company update :- ' .$companyLookup;
+            $this->order->logAdminActivity($activity);
+            /** End Save user activity */
+            $data['id'] = $checkCompanyExist[0]['id'];
+        } else {
+            $data['error_msg'] = $response['msg'];
+        }
+        return $data;
     }
 
     public function getOrderDetailsCpl()
