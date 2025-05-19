@@ -367,7 +367,7 @@ function lender_pop_up(lenderFlag, orderId) {
                     $("#property_city").val(res.orderDetails['property_city']);
                     $("#property_state").val(res.orderDetails['property_state']);
                     $("#property_zipcode").val(res.orderDetails['property_zipcode']);
-                    if (res.orderDetails['lender_id'] != '') {
+                    if (res.orderDetails['cpl_lender_company_id'] != '') {
                         $("#existing_lender").prop("checked", true);
                     } else {
                         $("#add_lender").prop("checked", true);
