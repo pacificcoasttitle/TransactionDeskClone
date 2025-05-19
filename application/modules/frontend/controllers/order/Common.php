@@ -1511,28 +1511,21 @@ class Common extends MX_Controller
         //     $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
         // }
         if ($orderUser['is_escrow'] == 1) {
-            if (!empty($orderDetails['cpl_lender_id'])) {
-                // if ($orderDetails['is_softpro_order']) {
-                    $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
-                    // print_r($orderUser);die;
-                    $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
-                    $orderDetails['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
-                // } else {
-                //     $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-                //     $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
-                //     $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-                // }
-                // $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
-                $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
-                $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
-                $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
-                $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
-                $orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+            if (!empty($orderDetails['cpl_lender_company_id'])) {
+                $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
+                // print_r($orderUser);die;
+                $orderDetails['lender_company_name'] = $lenderDetails['name'] ? $lenderDetails['name'] : '';
+                $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                 $orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+                $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+                $orderDetails['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
+                
+                // $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+                // $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+                $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
             } else {
-                // if ($orderDetails['is_softpro_order']) {
                     $orderDetails['lender_first_name'] = $orderDetails['sp_lender_first_name'] ? $orderDetails['sp_lender_first_name'] : '';
                     $orderDetails['lender_last_name'] = $orderDetails['sp_lender_last_name'] ? $orderDetails['sp_lender_last_name'] : '';
                     $orderDetails['lender_email'] = $orderDetails['sp_lender_email'] ? $orderDetails['sp_lender_email'] : '';
@@ -1543,37 +1536,17 @@ class Common extends MX_Controller
                     $orderDetails['lender_zipcode'] = $orderDetails['sp_lender_zipcode'] ? $orderDetails['sp_lender_zipcode'] : '';
                     $orderDetails['lender_assignment_clause'] = $orderDetails['sp_lender_assignment_clause'] ? $orderDetails['sp_lender_assignment_clause'] : '';
                     $orderDetails['lender_id'] = $orderDetails['sp_lender_id'] ? $orderDetails['sp_lender_id'] : '';
-                // } else {
-                //     $orderDetails['lender_first_name'] = $orderDetails['lender_first_name'] ? $orderDetails['lender_first_name'] : '';
-                //     $orderDetails['lender_last_name'] = $orderDetails['lender_last_name'] ? $orderDetails['lender_last_name'] : '';
-                //     $orderDetails['lender_email'] = $orderDetails['lender_email'] ? $orderDetails['lender_email'] : '';
-                //     $orderDetails['lender_state'] = $orderDetails['lender_state'] ? $orderDetails['lender_state'] : '';
-                //     $orderDetails['lender_company_name'] = $orderDetails['lender_company_name'] ? $orderDetails['lender_company_name'] : '';
-                //     $orderDetails['lender_address'] = $orderDetails['lender_address'] ? $orderDetails['lender_address'] : '';
-                //     $orderDetails['lender_city'] = $orderDetails['lender_city'] ? $orderDetails['lender_city'] : '';
-                //     $orderDetails['lender_zipcode'] = $orderDetails['lender_zipcode'] ? $orderDetails['lender_zipcode'] : '';
-                //     $orderDetails['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
-                //     $orderDetails['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['lender_id'] : '';
-                // }
+                
             }
         } else {
-            if (!empty($orderDetails['cpl_lender_id'])) {
-                // if ($orderDetails['is_softpro_order']) {
-                    $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
-                    $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
-                    $orderDetails['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
-                // } else {
-                //     $lenderDetails = $this->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
-                //     $orderDetails['lender_address'] = $lenderDetails['street_address'] ? $lenderDetails['street_address'] : '';
-                //     $orderDetails['lender_zipcode'] = $lenderDetails['zip_code'] ? $lenderDetails['zip_code'] : '';
-                // }
-                // $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
-                $orderDetails['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
-                $orderDetails['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
-                $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
-                $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
-                $orderDetails['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+            if (!empty($orderDetails['cpl_lender_company_id'])) {
+                $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
+                $orderDetails['lender_company_name'] = $lenderDetails['name'] ? $lenderDetails['name'] : '';
+                $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                 $orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+                $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
+                $orderDetails['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
+                $orderDetails['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
             } else {
