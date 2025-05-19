@@ -1453,6 +1453,7 @@ class Common extends MX_Controller
     }
 
     private function existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause) {
+        $condition = ['where' => ['name' => $lenderCompanyName]];
         $checkCompanyExist = $this->home_model->get_sp_company($condition);
         $companyData = [
             'Name'         => $lenderCompanyName,
