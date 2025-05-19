@@ -155,7 +155,9 @@ $("#LenderCompany, #LenderName").focusin(function () {
             }
         });
     } else {
-        $('#LenderCompany').autocomplete("disabled");
+        if ($('.ui-widget.ui-autocomplete').length > 0) {
+            $('#LenderCompany').autocomplete("disable");
+        }
 
         // $("#LenderCompany").autocomplete({
         //     source: function (request, response) {
