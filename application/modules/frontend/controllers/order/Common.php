@@ -1336,14 +1336,14 @@ class Common extends MX_Controller
         unset($lender_details['lender_fullname']);
         $flookup_code = $this->order->generateNewCompanyLookupCode($lenderCompanyName, $lenderCompanyAddress);
         if ($new_existing_lender == 'add_lender') {
-            $spResponse = $this->addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode);
+            $spResponse = $this->addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
             
         } else {
             // $condition = array(
             //     'id' => $LenderId,
             // );
             // $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
-            $spResponse = $this->existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode);
+            $spResponse = $this->existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
         }
         $companyId = $spResponse['id'];
         // $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
@@ -1382,7 +1382,7 @@ class Common extends MX_Controller
         }
     }
 
-    private function addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode) {
+    private function addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause) {
         $condition = [
             "where" => array('name' => $lenderCompanyName)
         ];
@@ -1405,6 +1405,7 @@ class Common extends MX_Controller
             'city'               => $lenderCompanyCity,
             'state'              => $lenderCompanyState,
             'zip'                => $lenderCompanyZipcode,
+            'assignment_clause'  => $assignmentClause,
             'is_escrow_company'  => 0,
             'is_lender'          => 1,
             'is_mortgage_broker' => 0,
@@ -1451,7 +1452,7 @@ class Common extends MX_Controller
         return $data;
     }
 
-    private function existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode) {
+    private function existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause) {
         $checkCompanyExist = $this->home_model->get_sp_company($condition);
         $companyData = [
             'Name'         => $lenderCompanyName,
@@ -1468,7 +1469,8 @@ class Common extends MX_Controller
             'address1'  => $lenderCompanyAddress,
             'city'      => $lenderCompanyCity,
             'state'     => $lenderCompanyState,
-            'zip'       => $lenderCompanyZipcode
+            'zip'       => $lenderCompanyZipcode,
+            'assignment_clause' => $assignmentClause
         ];
         $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
 
