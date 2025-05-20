@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $version = '05.02';
+    private $version = '5.03';
  
     public function __construct()
     {
@@ -1287,6 +1287,7 @@ class Common extends MX_Controller
         $file_id = $this->input->post('file_id');
         $order_id = $this->input->post('order_id');
         $LenderId = $this->input->post('LenderId');
+        $lenderCompanyId = $this->input->post('LenderCompanyId');
         $loan_number = $this->input->post('loan_number');
         $vesting = $this->input->post('vesting');
         $new_existing_lender = $this->input->post('new_existing_lender');
@@ -1331,21 +1332,22 @@ class Common extends MX_Controller
             'zip' => $lenderCompanyZipcode,
             'assignment_clause' => $assignmentClause,
         );
-
         $this->session->set_userdata('lender_details', $lender_details);
         unset($lender_details['lender_fullname']);
         $flookup_code = $this->order->generateNewCompanyLookupCode($lenderCompanyName, $lenderCompanyAddress);
         if ($new_existing_lender == 'add_lender') {
+            $lenderCompanyLookupCode = $flookup_code;
             $spResponse = $this->addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
-            
-        } else {
+            $companyId = $spResponse['id'];
+        }
+        else {
             // $condition = array(
             //     'id' => $LenderId,
             // );
             // $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
-            $spResponse = $this->existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
+            // $spResponse = $this->existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
+            $companyId = $lenderCompanyId;//$spResponse['id'];
         }
-        $companyId = $spResponse['id'];
         // $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
         
         $propertyDetails = array(
@@ -1364,6 +1366,9 @@ class Common extends MX_Controller
         if (!empty($loan_number)) {
             $orderReq['orderNumber'] = $orderDetails['file_number'];
             $orderReq['loanNumber'] = $loan_number;
+            $orderReq['userModel'] = [
+                'CompanyLookupCode' => $lenderCompanyLookupCode
+            ];
             $order_data = json_encode($orderReq);
             $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order', 'update_order', $order_data, [], 0, 0);
             $response = $this->softpro->make_request('POST', 'update_order', $order_data, $userdata);
@@ -1430,24 +1435,19 @@ class Common extends MX_Controller
                 $data['error_msg'] = $response['msg'];
             }
         } else if (!empty($checkCompanyExist)) {
-            $companyData['LookupCode'] = $companyTDData['lookup_code'] = $checkCompanyExist[0]['lookup_code'];
-            // echo "<pre> else if";
-            // print_r($checkCompanyExist);
-            // print_r($companyData);
-            // print_r($companyTDData);
-            // die;
-            $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
+            // $companyData['LookupCode'] = $companyTDData['lookup_code'] = $checkCompanyExist[0]['lookup_code'];
+            // $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
 
-            if ($response['success']) {
-                $update = $this->home_model->update($companyTDData, ['lookup_code' => $companyData['LookupCode']], 'sp_company');
-                /** Save user Activity */
-                $activity = 'Company update :- ' .$companyLookup;
-                $this->order->logAdminActivity($activity);
-                /** End Save user activity */
-                $data['id'] = $checkCompanyExist[0]['id'];
-            } else {
-                $data['error_msg'] = $response['msg'];
-            }
+            // if ($response['success']) {
+            //     $update = $this->home_model->update($companyTDData, ['lookup_code' => $companyData['LookupCode']], 'sp_company');
+            //     /** Save user Activity */
+            //     $activity = 'Company update :- ' .$companyLookup;
+            //     $this->order->logAdminActivity($activity);
+            //     /** End Save user activity */
+            // } else {
+            //     $data['error_msg'] = $response['msg'];
+            // }
+            $data['id'] = $checkCompanyExist[0]['id'];
         }
         return $data;
     }
@@ -1455,36 +1455,36 @@ class Common extends MX_Controller
     private function existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause) {
         $condition = ['where' => ['name' => $lenderCompanyName]];
         $checkCompanyExist = $this->home_model->get_sp_company($condition);
-        $companyData = [
-            'Name'         => $lenderCompanyName,
-            'LookupCode'   => $checkCompanyExist[0]['lookup_code'],
-            'Address1'     => $lenderCompanyAddress,
-            'City'         => $lenderCompanyCity,
-            'State'        => $lenderCompanyState,
-            'Zip'          => $lenderCompanyZipcode,
-            'UserType'     =>  'Lender'
-        ];
+        // $companyData = [
+        //     'Name'         => $lenderCompanyName,
+        //     'LookupCode'   => $checkCompanyExist[0]['lookup_code'],
+        //     'Address1'     => $lenderCompanyAddress,
+        //     'City'         => $lenderCompanyCity,
+        //     'State'        => $lenderCompanyState,
+        //     'Zip'          => $lenderCompanyZipcode,
+        //     'UserType'     =>  'Lender'
+        // ];
 
-        $companyTDData = [
-            'name'      => $lenderCompanyName,
-            'address1'  => $lenderCompanyAddress,
-            'city'      => $lenderCompanyCity,
-            'state'     => $lenderCompanyState,
-            'zip'       => $lenderCompanyZipcode,
-            'assignment_clause' => $assignmentClause
-        ];
-        $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
+        // $companyTDData = [
+        //     'name'      => $lenderCompanyName,
+        //     'address1'  => $lenderCompanyAddress,
+        //     'city'      => $lenderCompanyCity,
+        //     'state'     => $lenderCompanyState,
+        //     'zip'       => $lenderCompanyZipcode,
+        //     'assignment_clause' => $assignmentClause
+        // ];
+        // $response = $this->order->updateNewUserToSoftpro($companyData, 'update_company');
 
-        if ($response['success']) {
-            $update = $this->home_model->update($companyTDData, ['lookup_code' => $checkCompanyExist[0]['lookup_code']], 'sp_company');
-            /** Save user Activity */
-            $activity = 'Company update :- ' .$companyLookup;
-            $this->order->logAdminActivity($activity);
-            /** End Save user activity */
-            $data['id'] = $checkCompanyExist[0]['id'];
-        } else {
-            $data['error_msg'] = $response['msg'];
-        }
+        // if ($response['success']) {
+        //     $update = $this->home_model->update($companyTDData, ['lookup_code' => $checkCompanyExist[0]['lookup_code']], 'sp_company');
+        //     /** Save user Activity */
+        //     $activity = 'Company update :- ' .$companyLookup;
+        //     $this->order->logAdminActivity($activity);
+        //     /** End Save user activity */
+        // } else {
+        //     $data['error_msg'] = $response['msg'];
+        // }
+        $data['id'] = $checkCompanyExist[0]['id'];
         return $data;
     }
 
@@ -1518,6 +1518,8 @@ class Common extends MX_Controller
                 $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
                 // print_r($orderUser);die;
                 $orderDetails['lender_company_name'] = $lenderDetails['name'] ? $lenderDetails['name'] : '';
+                $orderDetails['lender_company_lookup_code'] = $lenderDetails['lookup_code'] ? $lenderDetails['lookup_code'] : '';
+                $orderDetails['lender_company_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
                 $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                 $orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
                 $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
@@ -1529,22 +1531,36 @@ class Common extends MX_Controller
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
             } else {
-                    $orderDetails['lender_first_name'] = $orderDetails['sp_lender_first_name'] ? $orderDetails['sp_lender_first_name'] : '';
-                    $orderDetails['lender_last_name'] = $orderDetails['sp_lender_last_name'] ? $orderDetails['sp_lender_last_name'] : '';
-                    $orderDetails['lender_email'] = $orderDetails['sp_lender_email'] ? $orderDetails['sp_lender_email'] : '';
-                    $orderDetails['lender_state'] = $orderDetails['sp_lender_state'] ? $orderDetails['sp_lender_state'] : '';
-                    $orderDetails['lender_company_name'] = $orderDetails['sp_lender_company_name'] ? $orderDetails['sp_lender_company_name'] : '';
-                    $orderDetails['lender_address'] = $orderDetails['sp_lender_address'] ? $orderDetails['sp_lender_address'] : '';
-                    $orderDetails['lender_city'] = $orderDetails['sp_lender_city'] ? $orderDetails['sp_lender_city'] : '';
-                    $orderDetails['lender_zipcode'] = $orderDetails['sp_lender_zipcode'] ? $orderDetails['sp_lender_zipcode'] : '';
-                    $orderDetails['lender_assignment_clause'] = $orderDetails['sp_lender_assignment_clause'] ? $orderDetails['sp_lender_assignment_clause'] : '';
-                    $orderDetails['lender_id'] = $orderDetails['sp_lender_id'] ? $orderDetails['sp_lender_id'] : '';
+                    // $orderDetails['lender_first_name'] = $orderDetails['sp_lender_first_name'] ? $orderDetails['sp_lender_first_name'] : '';
+                    // $orderDetails['lender_last_name'] = $orderDetails['sp_lender_last_name'] ? $orderDetails['sp_lender_last_name'] : '';
+                    // $orderDetails['lender_email'] = $orderDetails['sp_lender_email'] ? $orderDetails['sp_lender_email'] : '';
+                    // $orderDetails['lender_state'] = $orderDetails['sp_lender_state'] ? $orderDetails['sp_lender_state'] : '';
+                    // $orderDetails['lender_company_name'] = $orderDetails['sp_lender_company_name'] ? $orderDetails['sp_lender_company_name'] : '';
+                    // $orderDetails['lender_address'] = $orderDetails['sp_lender_address'] ? $orderDetails['sp_lender_address'] : '';
+                    // $orderDetails['lender_city'] = $orderDetails['sp_lender_city'] ? $orderDetails['sp_lender_city'] : '';
+                    // $orderDetails['lender_zipcode'] = $orderDetails['sp_lender_zipcode'] ? $orderDetails['sp_lender_zipcode'] : '';
+                    // $orderDetails['lender_assignment_clause'] = $orderDetails['sp_lender_assignment_clause'] ? $orderDetails['sp_lender_assignment_clause'] : '';
+                    // $orderDetails['lender_id'] = $orderDetails['sp_lender_id'] ? $orderDetails['sp_lender_id'] : '';
+                    $orderDetails['lender_first_name'] = '';
+                    $orderDetails['lender_last_name'] = '';
+                    $orderDetails['lender_email'] = '';
+                    $orderDetails['lender_state'] = '';
+                    $orderDetails['lender_company_name'] = '';
+                    $orderDetails['lender_company_lookup_code'] = '';
+                    $orderDetails['lender_company_id'] = '';
+                    $orderDetails['lender_address'] = '';
+                    $orderDetails['lender_city'] = '';
+                    $orderDetails['lender_zipcode'] = '';
+                    $orderDetails['lender_assignment_clause'] = '';
+                    $orderDetails['lender_id'] = '';
                 
             }
         } else {
             if (!empty($orderDetails['cpl_lender_company_id'])) {
                 $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
                 $orderDetails['lender_company_name'] = $lenderDetails['name'] ? $lenderDetails['name'] : '';
+                $orderDetails['lender_company_lookup_code'] = $lenderDetails['lookup_code'] ? $lenderDetails['lookup_code'] : '';
+                $orderDetails['lender_company_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
                 $orderDetails['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                 $orderDetails['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
                 $orderDetails['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
@@ -1559,22 +1575,36 @@ class Common extends MX_Controller
                     $orderDetails['lender_email'] = '';
                     $orderDetails['lender_state'] = '';
                     $orderDetails['lender_company_name'] = '';
+                    $orderDetails['lender_company_lookup_code'] = '';
+                    $orderDetails['lender_company_id'] = '';
                     $orderDetails['lender_address'] = '';
                     $orderDetails['lender_city'] = '';
                     $orderDetails['lender_zipcode'] = '';
                     $orderDetails['lender_assignment_clause'] = '';
                     $orderDetails['lender_id'] = '';
                 } else {
-                    $orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
-                    $orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
-                    $orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
-                    $orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
-                    $orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
-                    $orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
-                    $orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
-                    $orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
-                    $orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
-                    $orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+                    // $orderDetails['lender_first_name'] = $orderUser['first_name'] ? $orderUser['first_name'] : '';
+                    // $orderDetails['lender_last_name'] = $orderUser['last_name'] ? $orderUser['last_name'] : '';
+                    // $orderDetails['lender_email'] = $orderUser['email_address'] ? $orderUser['email_address'] : '';
+                    // $orderDetails['lender_state'] = $orderUser['state'] ? $orderUser['state'] : '';
+                    // $orderDetails['lender_company_name'] = $orderUser['company_name'] ? $orderUser['company_name'] : '';
+                    // $orderDetails['lender_address'] = $orderUser['street_address'] ? $orderUser['street_address'] : '';
+                    // $orderDetails['lender_city'] = $orderUser['city'] ? $orderUser['city'] : '';
+                    // $orderDetails['lender_zipcode'] = $orderUser['zip_code'] ? $orderUser['zip_code'] : '';
+                    // $orderDetails['lender_assignment_clause'] = $orderUser['assignment_clause'] ? $orderUser['assignment_clause'] : '';
+                    // $orderDetails['lender_id'] = $orderUser['id'] ? $orderUser['id'] : '';
+                    $orderDetails['lender_first_name'] = '';
+                    $orderDetails['lender_last_name'] = '';
+                    $orderDetails['lender_email'] = '';
+                    $orderDetails['lender_state'] = '';
+                    $orderDetails['lender_company_name'] = '';
+                    $orderDetails['lender_company_lookup_code'] = '';
+                    $orderDetails['lender_company_id'] = '';
+                    $orderDetails['lender_address'] = '';
+                    $orderDetails['lender_city'] = '';
+                    $orderDetails['lender_zipcode'] = '';
+                    $orderDetails['lender_assignment_clause'] = '';
+                    $orderDetails['lender_id'] = '';
                 }
             }
             // $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
