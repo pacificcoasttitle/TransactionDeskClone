@@ -360,7 +360,7 @@ class Fnf
             $orderDetails['lender_city'] = !empty($lenderFormData) ? $lenderFormData['city'] : $lenderDetails['city'];
             $orderDetails['lender_state'] = !empty($lenderFormData) ? $lenderFormData['state'] : $lenderDetails['state'];
             $orderDetails['lender_zipcode'] = !empty($lenderFormData) ? $lenderFormData['zip'] : $lenderDetails['zip'];
-            $lenderName = !empty($lenderFormData) ? $lenderFormData['company_name'] : $lenderDetails['company_name'];
+            $lenderName = !empty($lenderFormData) ? $lenderFormData['company_name'] : $lenderDetails['name'];
             $lenderAttnName = !empty($lenderFormData) ? $lenderFormData['lender_fullname'] : $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         }
         // echo "Outside if";die;
@@ -527,16 +527,17 @@ class Fnf
         $orderUser = $this->CI->home_model->get_user(array('id' => $orderDetails['customer_id']));
         $lenderName = $orderDetails['lender_company_name'];
         $lenderAttnName = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
-
         if (!empty($orderDetails['cpl_lender_company_id'])) {
             $lenderDetails = $this->CI->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
+            $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
             $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
             $orderDetails['lender_address'] = $lenderDetails['address1'];
             $orderDetails['lender_city'] = $lenderDetails['city'];
             $orderDetails['lender_state'] = $lenderDetails['state'];
             $orderDetails['lender_zipcode'] = $lenderDetails['zip'];
-            $lenderName = $lenderDetails['company_name'];
-            $lenderAttnName = $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
+            $lenderName = $lenderDetails['name'];
+            // $lenderAttnName = $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
+            $lenderAttnName = !empty($lenderFormData) ? $lenderFormData['lender_fullname'] : $lenderDetails['first_name'] . " " . $lenderDetails['last_name'];
         }
 
         $endPoint = 'v3/CPLManagement.svc';
