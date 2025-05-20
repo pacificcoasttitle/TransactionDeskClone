@@ -528,8 +528,8 @@ class Fnf
         $lenderName = $orderDetails['lender_company_name'];
         $lenderAttnName = $orderDetails['sp_lender_first_name'] . " " . $orderDetails['sp_lender_last_name'];
 
-        if (!empty($orderDetails['cpl_lender_id'])) {
-            $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+        if (!empty($orderDetails['cpl_lender_company_id'])) {
+            $lenderDetails = $this->CI->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
             $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
             $orderDetails['lender_address'] = $lenderDetails['address1'];
             $orderDetails['lender_city'] = $lenderDetails['city'];
