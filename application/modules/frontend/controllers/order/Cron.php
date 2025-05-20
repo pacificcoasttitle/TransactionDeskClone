@@ -7508,21 +7508,26 @@ class Cron extends MX_Controller
                     $documentList = $response['data'];
                     $this->load->model('order/document');
                     foreach ($documentList as $key => $doc) {
+                        $is_lender_policy = ($docType == "Lender's Policy") ? 1 : 0;
+                        $is_owner_policy = ($docType == "Owner's Policy") ? 1 : 0;
+                        $condition = [
+                            'order_id' => $orderId
+                        ];
+                        if ($is_lender_policy) {
+                            $condition['is_lender_policy'] = 1;
+                        } else if ($is_owner_policy) {
+                            $condition['is_owner_policy'] = 1;
+                        } else {
+                            continue;
+                        }
                         $docLink = $doc['FileUrl'];
                         // print_r($docLink);die;
                         $docType = $doc['FileName'];
                         $documentBaseName = basename($docLink);
                         $document_name = time() . "_policy_" . $docType . '_' . $file_number . '.pdf';
                         $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($docLink, $document_name, 'documents');
-                        $is_lender_policy = ($docType == "Lender's Policy") ? 1 : 0;
-                        $is_owner_policy = ($docType == "Owner's Policy") ? 1 : 0;
-                        
+
                         if ($uploadStatus) {
-                            $condition = [
-                                'order_id' => $orderId,
-                                'is_lender_policy' => $is_lender_policy,
-                                'is_owner_policy' => $is_owner_policy,
-                            ];
                             $policyDocumentsList = $this->order->getPolicyDocuments($condition);
                             // echo "<pre>";
                             // print_r($policyDocumentsList);die;
