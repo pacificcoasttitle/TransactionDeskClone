@@ -7514,8 +7514,8 @@ class Cron extends MX_Controller
                         $documentBaseName = basename($docLink);
                         $document_name = time() . "_policy_" . $docType . '_' . $file_number . '.pdf';
                         $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($docLink, $document_name, 'documents');
-                        $is_lender_policy = ($docType == 'Lenders Policy') ? 1 : 0;
-                        $is_owner_policy = ($docType == 'Owners Policy') ? 1 : 0;
+                        $is_lender_policy = ($docType == "Lender's Policy") ? 1 : 0;
+                        $is_owner_policy = ($docType == "Owner's Policy") ? 1 : 0;
                         
                         if ($uploadStatus) {
                             $condition = [
