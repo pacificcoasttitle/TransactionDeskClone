@@ -103,6 +103,7 @@ $("#LenderCompany, #LenderName").focusin(function () {
                 event.preventDefault();
                 console.log('ui.item ===', ui.item);
                 $("#LenderCompany").val(ui.item.company);
+                $("#LenderCompanyId").val(ui.item.id);
                 $("#LenderCompanyLookupCode").val(ui.item.lookup_code);
                 if (ui.item.state) {
                     $("#LenderState").val(ui.item.state).parent().addClass('state-success');
@@ -312,6 +313,8 @@ function lender_pop_up(lenderFlag, orderId) {
                     $("#LenderName").val(res.orderDetails['lender_name']);
                     $("#LenderState").val(res.orderDetails['lender_state']);
                     $("#LenderCompany").val(res.orderDetails['lender_company_name']);
+                    $("#LenderCompanyLookupCode").val(res.orderDetails['lender_company_lookup_code']);
+                    $("#LenderCompanyId").val(res.orderDetails['lender_company_id']);
                     $("#assignment_clause").val(res.orderDetails['lender_assignment_clause']);
                     $("#LenderAddress").val(res.orderDetails['lender_address']);
                     $("#LenderCity").val(res.orderDetails['lender_city']);

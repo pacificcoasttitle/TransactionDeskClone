@@ -350,9 +350,9 @@ class Fnf
         $lenderName = $orderDetails['lender_company_name'];
         $lenderAttnName = $orderDetails['lender_first_name'] . " " . $orderDetails['lender_last_name'];
 
-        if (!empty($orderDetails['cpl_lender_id'])) {
+        if (!empty($orderDetails['cpl_lender_company_id'])) {
             // echo "In if <pre>";
-            $lenderDetails = $this->CI->home_model->get_user(array('id' => $orderDetails['cpl_lender_id']));
+            $lenderDetails = $this->CI->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
             $lenderFormData = $this->CI->session->has_userdata('lender_details') ? $this->CI->session->userdata('lender_details') : [];
             // print_r($lenderFormData);die;
             $orderDetails['lender_assignment_clause'] = (!empty($lenderFormData) ? $lenderFormData['assignment_clause'] : ($lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : ''));
