@@ -3669,13 +3669,6 @@ class Cron extends MX_Controller
                 $this->db->where('lp_file_number IS NOT NULL');
                 $this->db->where('file_number', 0);
                 $this->db->update('order_details');
-    
-                if (! empty($closedFileNumbers)) {
-                    // $this->sendEmailForClosedOrder($closedFileNumbers);
-    
-                }
-                
-                $this->updateAllowDuplicationFlag();
                 
             }
         }

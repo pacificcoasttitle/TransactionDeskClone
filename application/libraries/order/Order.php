@@ -4938,9 +4938,11 @@ class Order
     public function generateNewCompanyLookupCode($name, $address) {
         $name = str_replace(' ', '', $name);
         $part1 = ucfirst(substr($name, 0, 4));
+        $address = str_replace(' ', '', $address);
+        $part2 = ucfirst(substr($address, 0, 4));
         // Extract numeric part from address
-        preg_match('/\d+/', $address, $matches);
-        $part2 = $matches[0] ?? '';
+        // preg_match('/\d+/', $address, $matches);
+        // $part2 = $matches[0] ?? '';
         
         // Base code
         $baseCode = $part1 . $part2;
@@ -4951,8 +4953,9 @@ class Order
         $suffix = 1;
         while ($this->isCodeExists($code)) {
             // Replace or append 4-digit number
-            $code = substr($baseCode, 0, max(0, strlen($baseCode) - 4)) . str_pad($suffix, 4, '0', STR_PAD_LEFT);
+            $code = substr($baseCode, 0, max(0, strlen($baseCode) - 0)) . str_pad($suffix, 1, '0', STR_PAD_LEFT);
             $suffix++;
+            
         }
 
         return $code;
