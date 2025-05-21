@@ -7504,6 +7504,7 @@ class Cron extends MX_Controller
                                 $document_name = time() . "_policy_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
                                 $is_lender_policy = 1;
                             } else {
+                                $document_name = time() . "_policy_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
                                 $is_owner_policy = 1;
                             }
                             $policyDocFlag = true;
