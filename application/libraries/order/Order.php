@@ -5140,7 +5140,7 @@ class Order
         $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_update_prelim', '', $mailParams, array('status' => $mail_result), 0, $logid);
     }
 
-    public function sendPolicyEmail($orderDetails) {
+    public function sendSuppPolicyEmail($orderDetails) {
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->helper('sendemail');
         $from_name = 'Pacific Coast Title Company';
@@ -5152,8 +5152,14 @@ class Order
 
         // $data['file_number'] = $orderDetails['file_number'];
         // $data['doc_type'] = $orderDetails['doc_type'];
-        $file[] = $orderDetails['file_link'];
-        $message = $this->CI->load->view('emails/policy_document_email.php', $orderDetails, true);
+        $file = $orderDetails['file_links'];
+        if (isset($orderDetails['doc_type']) && $orderDetails['doc_type'] == 'Supplement Statement Document') {
+            $to = 'ghernandez@pct.com';
+            $message = $this->CI->load->view('emails/supplement_document_email.php', $orderDetails, true);
+        } else {
+            $message = $this->CI->load->view('emails/policy_document_email.php', $orderDetails, true);
+        }
+        // $message = $this->CI->load->view('emails/policy_document_email.php', $orderDetails, true);
         $mailParams = array(
             'from_mail' => $from_mail,
             'from_name' => $from_name,
