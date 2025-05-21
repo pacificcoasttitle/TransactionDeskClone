@@ -1403,6 +1403,77 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
+    public function policy_document()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Grant Deed Documents';
+        $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
+        $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
+        $this->admintemplate->show("order/home", "policy_document", $data);
+    }
+
+    public function get_policy_document_list()
+    {
+        $params = [];
+
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow']   = 0;
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $grant_document_lists  = $this->home_model->get_policy_document_list($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $grant_document_lists  = $this->home_model->get_policy_document_list($params);
+        }
+
+        $data = [];
+
+        if (isset($grant_document_lists['data']) && !empty($grant_document_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($grant_document_lists['data'] as $key => $value) {
+                $nestedData   = [];
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'] ? $value['file_number'] : $value['lp_file_number'];
+                $nestedData[] = $value['document_name'];
+                $nestedData[] = $value['is_lender_policy'] ? 'Lender Policy' : 'Owner Policy';
+                $documentName = $value['document_name'];
+                if ($value['is_sync']) {
+                    $nestedData[] = 'Yes';
+                } else {
+                    $nestedData[] = 'No';
+                }
+                $nestedData[] = convertTimezone($value['created']);
+                // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created']));
+                if (env('AWS_ENABLE_FLAG') == 1) {
+                    $documentUrl = env('AWS_PATH') . "documents/" . $documentName;
+                    if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"grant_deed"' . ");'><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
+                } else {
+                    $documentUrl = base_url() . "uploads/documents/" . $documentName;
+                    if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+                        $nestedData[] = "<div style='display:flex;'><a href='$documentUrl' download><i class='fas fa-fw fa-download'></i></a>
+                        <a style='margin-left:10px;' target='_blank' href='$documentUrl'><i class='fas fa-fw fa-eye'></i></a></div>";
+                    }
+                }
+
+                $data[] = $nestedData;
+                $i++;
+            }
+        }
+        $json_data['recordsTotal']    = intval($grant_document_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($grant_document_lists['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
     public function get_lv_document_list()
     {
         $params = [];

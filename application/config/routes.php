@@ -355,6 +355,7 @@ $route['order/admin/export_lp_orders']              = 'admin/order/order/exportL
 $route['order/admin/new-users']                     = 'admin/order/home/newUsers';
 $route['order/admin/add-new-user']                  = 'admin/order/home/addNewUser';
 $route['order/admin/grant-deed-documents']          = 'admin/order/home/grant_deed_document';
+$route['order/admin/policy-documents']              = 'admin/order/home/policy_document';
 $route['order/admin/lv-documents']                  = 'admin/order/home/lv_document';
 $route['order/admin/master-users']                  = 'admin/order/home/masterUsers';
 $route['order/admin/add-new-master-user']           = 'admin/order/home/addNewMasterUser';
