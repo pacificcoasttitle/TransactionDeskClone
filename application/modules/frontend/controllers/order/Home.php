@@ -316,37 +316,37 @@ class Home extends MX_Controller
                 );
                 }*/
 
-                // if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
-                $lenderId = $_POST['LenderId'];
-                // $lenderId = 7948;
-                // $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
-                // print_r($lender_user_details);die;
-                $lenderName              = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
-                $lenderEmail             = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
-                $lenderTelephone         = $this->input->post('LenderTelephone');
-                $lenderCompany           = $this->input->post('LenderCompany');
-                $lenderCompanyLookUpCode = $this->input->post('LenderCompanyLookUpCode');
-                $lenderClientLookUpCode  = $this->input->post('LenderClientLookUpCode');
-                $lender_details          = ['name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany];
-                if (!empty($lenderEmail)) {
-                    // echo "Hello";die;
-                    $orderReq['lenderDetails'] = [
-                        'CompanyLookUpCode' => $lenderCompanyLookUpCode,
-                        'ClientLookUpCode'  => $lenderClientLookUpCode,
-                        'Name'              => $lenderName,
-                        'Email'             => $lenderEmail,
-                        'Telephone'         => $lenderTelephone,
-                        'CompanyName'       => $lenderCompany,
-                    ];
+                if (isset($_POST['LenderId']) && !empty($_POST['LenderId'])) {
+                    $lenderId = $_POST['LenderId'];
+                    // $lenderId = 7948;
+                    // $lender_user_details = $this->home_model->get_user(array('id' => $lenderId));
+                    // print_r($lender_user_details);die;
+                    $lenderName              = isset($_POST['LenderName']) && !empty($_POST['LenderName']) ? $_POST['LenderName'] : '';
+                    $lenderEmail             = isset($_POST['LenderEmailAddress']) && !empty($_POST['LenderEmailAddress']) ? $_POST['LenderEmailAddress'] : '';
+                    $lenderTelephone         = $this->input->post('LenderTelephone');
+                    $lenderCompany           = $this->input->post('LenderCompany');
+                    $lenderCompanyLookUpCode = $this->input->post('LenderCompanyLookUpCode');
+                    $lenderClientLookUpCode  = $this->input->post('LenderClientLookUpCode');
+                    $lender_details          = ['name' => $lenderName, 'email' => $lenderEmail, 'telephone' => $lenderTelephone, 'company' => $lenderCompany];
+                    if (!empty($lenderEmail)) {
+                        // echo "Hello";die;
+                        $orderReq['lenderDetails'] = [
+                            'CompanyLookUpCode' => $lenderCompanyLookUpCode,
+                            'ClientLookUpCode'  => $lenderClientLookUpCode,
+                            'Name'              => $lenderName,
+                            'Email'             => $lenderEmail,
+                            'Telephone'         => $lenderTelephone,
+                            'CompanyName'       => $lenderCompany,
+                        ];
+                    }
+                    $lender_details_api  = ['name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany];
+                    $lenderPartnerTypeID = '3';
+                    if ($orderUser['is_primary_mortgage_user'] == 1) {
+                        $cplLenderId = $lenderId;
+                    } else {
+                        $EscrowLenderId = $lenderId;
+                    }
                 }
-                $lender_details_api  = ['name' => $lenderName, 'email' => $lenderEmail, 'phone' => $lenderTelephone, 'company' => $lenderCompany];
-                $lenderPartnerTypeID = '3';
-                if ($orderUser['is_primary_mortgage_user'] == 1) {
-                    $cplLenderId = $lenderId;
-                } else {
-                    $EscrowLenderId = $lenderId;
-                }
-                // }
 
                 /*$secondaryLenderPartners = array();
                 if (isset($lenderId) && !empty($lenderId)) {
