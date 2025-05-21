@@ -127,7 +127,7 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
   <!-- blue-header -->
   <tbody><tr>
     <td align="center" class="img-responsive container-padding">
-      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/aca06648-4cdf-5e58-17d4-38fabbdc3d13.jpg" border="0" alt="picture">
+      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/ff1a17df-2bcc-1298-0414-cda12f09c4d7.jpg" border="0" alt="picture">
     </td>
   </tr>
   <!-- blue-header -->
@@ -153,24 +153,24 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
         </tr>
         <tr>
           <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:48px;line-height:54px;font-weight:900;font-style:normal;color:#222222;text-decoration:none;letter-spacing:0px;">
-                <div mc:edit="mczyhxraxal" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">POLICY DELIVERY</p></div>   
+                <div mc:edit="mczyhxraxal" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">SUPPLEMENT</p></div>   
           </td>
         </tr>
 		<tr>
           <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:24px;padding-top:10px;line-height:25px;font-weight:400;font-style:normal;color:#222222;text-decoration:none;letter-spacing:0px;">
               
-                <div mc:edit="mcrvl954f9r6t" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">Great News!<br>  Your Policies are ready.</p></div>
+                <div mc:edit="mcrvl954f9r6t" style="margin: 0px; padding: 0px;"><p style="margin: 0px; padding: 0px;">Great News!<br>  Your Supplement Is Attached.</p></div>
               
           </td>
         </tr>
 		  <tr>
 		  <td class="center-text" align="center" style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;font-weight:400;font-style:normal;color:#000000;text-decoration:none;letter-spacing:0.5px;">
-                <div mc:edit="mcrvl959r6tju" style="margin: 0px; padding: 0px;"><p style="margin-top:10px; padding:0px;"><br>We have attached your Owners & Lenders Policies for order:</p>
+                <div mc:edit="mcrvl959r6tju" style="margin: 0px; padding: 0px;"><p style="margin-top:10px; padding:0px;"><br>We have attached the supplement for:</p>
 				<p class="client"><?php echo $file_number; ?></p>
 				
 				<p style="margin:0px; padding:0px;">The address of the property is</p><p class="client"><?php echo $full_address; ?></p>
 				
-				<p style="margin:0px; padding:0px;">We look forward to assisting you with your next transaction. Thank you and appreciate your trust with your transactions.<br>
+				<p style="margin:0px; padding:0px;">If you have any questions regarding this please contact your sales rep. Thank you.<br>
 
 </p></div>
           </td>

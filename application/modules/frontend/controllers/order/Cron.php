@@ -2581,7 +2581,7 @@ class Cron extends MX_Controller
 
                             $completed_date = null;
                             if (!empty($closedDate)) {
-                                $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
+                                $myDateTime     = DateTime::createFromFormat('n/j/Y g:i:s A', $closedDate);
                                 $completed_date = $myDateTime->format('Y-m-d H:i:s');
                             }
 
@@ -7469,30 +7469,13 @@ class Cron extends MX_Controller
         
         $reqData     = file_get_contents("php://input");
         $logid =  $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, [], 0, 0);
-        
         $response    = json_decode($reqData, true);
-
-        // $response = [
-        //     "Status" => 200,
-        //     "Message" => "Success",
-        //     "OrderNumber" => "TEST-20001550-OCT",
-        //     "Id" => null,
-        //     "FileUploadedStatus" => 1,
-        //     "data" => [
-        //         [
-        //             "FileName" => "Lenders Policy",
-        //             "FileUrl" => "http://100.29.181.61/SoftProIntegrate/assets/Lenders%20Policy_092546.pdf"
-        //         ],
-        //         [
-        //             "FileName" => "Owners Policy",
-        //             "FileUrl" => "http://100.29.181.61/SoftProIntegrate/assets/Owners%20Policy_092547.pdf"
-        //         ]
-        //     ]
-        // ];
+        // echo "<pre>";
+        // print_r($response);die;
         
         if (!empty($response) && $response['Status'] == 200) {
             
-            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status, p.escrow_lender_id, u.email_address');
+            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status, p.full_address, p.address, p.city, p.state, p.zip, p.escrow_lender_id, u.email_address');
             $this->db->from('order_details as o');
             $this->db->join('property_details as p', 'o.property_id = p.id');
             $this->db->join('pct_softpro_lookup_table as u', 'p.escrow_lender_id = u.id', 'left');
@@ -7501,91 +7484,126 @@ class Cron extends MX_Controller
             // echo "<pre>";
             // print_r($filesResult);die;
             if (!empty($response['data']) && !empty($filesResult)) {
-                // print_r($response['data']);die;
                 $orderId = $filesResult['id'];
                 $file_number = $response['OrderNumber'];
                 if (!empty($response['data'])) {
                     $documentList = $response['data'];
                     $this->load->model('order/document');
+                    $updateOrderDetails = [];
+                    $policyDocFlag = $supplementDocFlag = false;
                     foreach ($documentList as $key => $doc) {
-                        $is_lender_policy = ($docType == "Lender's Policy") ? 1 : 0;
-                        $is_owner_policy = ($docType == "Owner's Policy") ? 1 : 0;
+                        $docType = $doc['FileName'];
+                        $docLink = $doc['FileUrl'];
+                        $documentBaseName = basename($docLink);
                         $condition = [
                             'order_id' => $orderId
                         ];
-                        if ($is_lender_policy) {
-                            $condition['is_lender_policy'] = 1;
-                        } else if ($is_owner_policy) {
-                            $condition['is_owner_policy'] = 1;
+                        $is_lender_policy = $is_owner_policy = $is_supplement_statement = false;
+                        if (strpos(strtolower($docType), 'policy') !== false) {
+                            if (strpos(strtolower($docType), 'lender') !== false) {
+                                $document_name = time() . "_policy_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
+                                $is_lender_policy = 1;
+                            } else {
+                                $is_owner_policy = 1;
+                            }
+                            $policyDocFlag = true;
+                        } else if (strpos(strtolower($docType), 'supplement') !== false) {
+                            // $condition['is_supplement_statement'] = 1;
+                            $document_name = time() . "_supplement_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
+                            $is_supplement_statement = 1;
+                            $supplementDocFlag = true;
                         } else {
                             continue;
                         }
-                        $docLink = $doc['FileUrl'];
+                        
+                        // $docLink = $doc['FileUrl'];
                         // print_r($docLink);die;
-                        $docType = $doc['FileName'];
-                        $documentBaseName = basename($docLink);
-                        $document_name = time() . "_policy_" . $docType . '_' . $file_number . '.pdf';
+                        // $documentBaseName = basename($docLink);
+                        // $document_name = time() . "_policy_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
+
+
                         $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($docLink, $document_name, 'documents');
 
+
+
+                        // print_r($condition);die;
+                        // if (true) {
                         if ($uploadStatus) {
-                            $policyDocumentsList = $this->order->getPolicyDocuments($condition);
+                            // $policyDocumentsList = $this->order->getPolicyDocuments($condition);
                             // echo "<pre>";
                             // print_r($policyDocumentsList);die;
-                            if (empty($policyDocumentsList)) {
-                                $documentData = array(
-                                    'document_name' => $document_name,
-                                    'original_document_name' => urldecode($documentBaseName),
-                                    'user_id' => $filesResult['customer_id'],
-                                    'order_id' => $orderId,
-                                    'description' => $documentBaseName,
-                                    'created' => date('Y-m-d H:i:s'),
-                                    'is_sync' => 1,
-                                    'is_lender_policy' => $is_lender_policy,
-                                    'is_owner_policy' => $is_owner_policy,
-                                );
-                                $documentId = $this->document->insert($documentData);
-                            } else {
-                                $existingLink = 'documents/' . $policyDocumentsList['document_name'];
-                                $this->order->deleteDocumentOnAwsS3($existingLink);
-                                $documentData = array(
-                                    'document_name' => $document_name,
-                                    'original_document_name' => urldecode($documentBaseName),
-                                    'description' => $documentBaseName,
-                                    'is_sync' => 1,
-                                    'is_lender_policy' => $is_lender_policy,
-                                    'is_owner_policy' => $is_owner_policy,
-                                );
-                                $documentId = $this->document->update($documentData, $condition);
+                            // if (empty($policyDocumentsList)) {
+                            $documentData = array(
+                                'document_name' => $document_name,
+                                'original_document_name' => urldecode($documentBaseName),
+                                'user_id' => $filesResult['customer_id'],
+                                'order_id' => $orderId,
+                                'description' => $documentBaseName,
+                                'created' => date('Y-m-d H:i:s'),
+                                'is_sync' => 1,
+                                'is_lender_policy' => $is_lender_policy,
+                                'is_owner_policy' => $is_owner_policy,
+                                'is_supplement_statement' => $is_supplement_statement,
+                            );
+                            $documentId = $this->document->insert($documentData);
+                            if ($documentId) {
+                                if ($policyDocFlag) {
+                                    $files['policy'][] = env('AWS_PATH') . "documents/" . $document_name;
+                                } else if ($supplementDocFlag) {
+                                    $files['supplement'][] = env('AWS_PATH') . "documents/" . $document_name;
+                                }
+                            }
+                            // $files[] = env('AWS_PATH') . "documents/" . $document_name;
+                            // } else {
+                            //     $existingLink = 'documents/' . $policyDocumentsList['document_name'];
+                            //     // $this->order->deleteDocumentOnAwsS3($existingLink);
+                            //     $documentData = array(
+                            //         'document_name' => $document_name,
+                            //         'original_document_name' => urldecode($documentBaseName),
+                            //         'description' => $documentBaseName,
+                            //         'is_sync' => 1,
+                            //         'is_lender_policy' => $is_lender_policy,
+                            //         'is_owner_policy' => $is_owner_policy,
+                            //     );
+                            //     $documentId = $this->document->update($documentData, $condition);
+                            // }
+                            if ($is_lender_policy) {
+                                $updateOrderDetails['lender_policy_sent'] = 1;
+                            }
+                            if ($is_owner_policy) {
+                                $updateOrderDetails['owner_policy_sent'] = 1;
+                            }
+                            if ($is_supplement_statement) {
+                                $updateOrderDetails['supplement_statement_sent'] = 1;
                             }
                             $status = 'success';
                             $msg = "Document uploaded sucecssfully.";
-                            if (!empty($filesResult['email_address'])) {
-                                $filesResult['email_to'] = $filesResult['email_address'];
-                                $filesResult['doc_type'] = $docType;
-                                $filesResult['file_link'] = env('AWS_PATH') . "documents/" . $document_name;
-                                // echo "<pre>";
-                                // print_r($filesResult);die;
-                                $email_status = $this->order->sendPolicyEmail($filesResult);
-                                if ($email_status) {
-                                    $condition = [
-                                        'id' => $orderId,
-                                    ];
-                                    if ($is_lender_policy) {
-                                        $updateRecord = [
-                                            'lender_policy_sent' => 1,
-                                        ];
-                                    }
-                                    if ($is_owner_policy) {
-                                        $updateRecord = [
-                                            'owner_policy_sent' => 1,
-                                        ];
-                                    }
-                                    $this->order->update($updateRecord, $condition);
-                                }
-                            }
+                            $policyDocFlag = $supplementDocFlag = false;
                         } else {
                             $status = 'error';
                             $msg = "Error while uploading.";
+                        }
+                    }
+                    if (!empty($filesResult['email_address'])) {
+                        $filesResult['email_to'] = $filesResult['email_address'];
+                        if(!empty($files['policy'])) {
+                            $filesResult['doc_type'] = "Policy Document";
+                            $filesResult['file_links'] = $files['policy'];
+                            $email_status = $this->order->sendSuppPolicyEmail($filesResult);
+                        } 
+                        
+                        if (!empty($files['supplement'])) {
+                            $filesResult['doc_type'] = "Supplement Statement Document";
+                            $filesResult['file_links'] = $files['supplement'];
+                            $email_status = $this->order->sendSuppPolicyEmail($filesResult);
+                        }
+                        
+                        if ($email_status && !empty($updateOrderDetails)) {
+                            $condition = [
+                                'id' => $orderId,
+                            ];
+                            
+                            $this->order->update($updateOrderDetails, $condition);
                         }
                     }
                 }
