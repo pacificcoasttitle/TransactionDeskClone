@@ -500,6 +500,103 @@ class Home_model extends CI_Model
         ];
     }
 
+    public function get_policy_document_list($params)
+    {
+        $this->db->from('order_details')
+            ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+        $this->db->where('order_details.is_softpro_order', 1);
+        $this->db->group_start()
+                ->where('pct_order_documents.is_owner_policy', 1)
+                ->or_where('pct_order_documents.is_lender_policy', 1)
+                ->group_end();
+        $total_records = $this->db->count_all_results();
+
+        $limit                = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset               = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $grant_document_lists = [];
+
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('order_details.is_softpro_order', 1);
+            $this->db->group_start()
+                ->where('pct_order_documents.is_owner_policy', 1)
+                ->or_where('pct_order_documents.is_lender_policy', 1)
+            ->group_end();
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like('order_details.file_number', $keyword)
+                    ->or_like('pct_order_documents.document_name', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.is_sync,pct_order_documents.is_owner_policy,pct_order_documents.is_lender_policy, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+                $this->db->where('order_details.is_softpro_order', 1);
+                $this->db->group_start()
+                    ->where('pct_order_documents.is_owner_policy', 1)
+                    ->or_where('pct_order_documents.is_lender_policy', 1)
+                ->group_end();
+                $this->db->order_by('pct_order_documents.id', 'desc');
+
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        } else {
+
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('order_details.is_softpro_order', 1);
+            $this->db->group_start()
+                ->where('pct_order_documents.is_owner_policy', 1)
+                ->or_where('pct_order_documents.is_lender_policy', 1)
+            ->group_end();
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->select('order_details.lp_file_number, order_details.file_number, pct_order_documents.is_sync,pct_order_documents.is_owner_policy,pct_order_documents.is_lender_policy, pct_order_documents.document_name, pct_order_documents.api_document_id, pct_order_documents.created');
+            $this->db->from('order_details')
+                ->join('pct_order_documents', 'order_details.id = pct_order_documents.order_id');
+            $this->db->where('order_details.is_softpro_order', 1);
+            $this->db->group_start()
+                ->where('pct_order_documents.is_owner_policy', 1)
+                ->or_where('pct_order_documents.is_lender_policy', 1)
+            ->group_end();
+            $this->db->order_by('pct_order_documents.id', 'desc');
+
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $query = $this->db->get();
+            // print_r($this->db->last_query());die;
+            if ($query->num_rows() > 0) {
+                $grant_document_lists = $query->result_array();
+            }
+        }
+
+        return [
+            'recordsTotal'    => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data'            => $grant_document_lists,
+        ];
+    }
+
     public function get_lv_document_list($params)
     {
         $this->db->from('order_details')

@@ -294,6 +294,21 @@ $(document).ready(function () {
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-grant-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
+                else if (this.context[0].sTableId == 'tbl-policy-documents-listing') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/home/get_policy_document_list",
+                        data: {
+                            keyword: $('#tbl-policy-documents-listing_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-policy-documents-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
                 else if (this.context[0].sTableId == 'tbl-lv-documents-listing') {
                     var jsonResult = $.ajax({
                         type: "POST",
@@ -2704,6 +2719,82 @@ $(document).ready(function () {
                     }
                     $("#tbl-grant-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#tbl-grant-documents-listing_processing").css("display", "none");
+
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                }
+            }
+        });
+    }
+
+    if ($('#tbl-policy-documents-listing').length) {
+        $('#tbl-policy-documents-listing').DataTable({
+            "paging": true,
+            "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
+            "columnDefs": [
+                { "searchable": false, "targets": [0, 1] }
+            ],
+            "language": {
+                searchPlaceholder: "#FileNumber, DocumentName",
+                paginate: {
+                    next: '<i class="fa fa-chevron-right" aria-hidden="true"></i>',
+                    previous: '<i class="fa fa-chevron-left" aria-hidden="true"></i>',
+                },
+                "emptyTable": "Record(s) not found.",
+            },
+            initComplete: function () {
+                var $buttons = jQuery('.dt-buttons').hide();
+                jQuery('#export_grant_documents').on('click', function () {
+                    var export_type = jQuery(this).attr('data-export-type');
+                    if (export_type) {
+                        var btnClass = '.buttons-' + export_type;
+                    }
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            dom: 'Blfrtip',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    title: 'Grant Deed Documents',
+                    exportOptions: {
+                        columns: [0, 1, 2],
+                        format: {
+                            body: function (data, row, column, node) {
+                                return (column === 1 || column === 2) ?
+                                    data.replace(/[$,]/g, '') :
+                                    data;
+                            }
+                        }
+                    }
+                },
+            ],
+            "drawCallback": function () {
+                $('.dataTables_paginate > .pagination li').addClass('page-item');
+                $('.dataTables_paginate > .pagination a').addClass('page-link');
+                $('.dataTables_paginate > .pagination li.previous a, .dataTables_paginate > .pagination li.next a').addClass('rounded');
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "admin/order/home/get_policy_document_list",
+                type: "post",
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#tbl-policy-documents-listing tbody").append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#tbl-policy-documents-listing_processing").css("display", "none");
 
                 },
                 complete: function () {
