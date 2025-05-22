@@ -227,7 +227,7 @@ class Home extends MX_Controller
                     ];
                 }
 
-                $escrowId           = $lenderId           = $lenderPartnerTypeID           = $escrowPartnerTypeID           = '';
+                $escrowId = $lenderId = $lenderPartnerTypeID = $escrowPartnerTypeID = $openUserCompanyId = 0;
                 $lender_details     = $escrow_details     = [];
                 $lender_details_api = $escrow_details_api = [];
 
@@ -239,6 +239,13 @@ class Home extends MX_Controller
                 } else {
                     $orderUser = $this->home_model->sp_get_user(['id' => $userdata['id']]);
                 }
+
+                if ($orderUser['is_escrow']) {
+                    $escrowId = $orderUser['id'];
+                } else if ($orderUser['is_lender']) {
+                    $lenderId = $orderUser['id'];
+                }
+                
 
                 $cplLenderId    = 0;
                 $EscrowLenderId = 0;
@@ -589,12 +596,25 @@ class Home extends MX_Controller
                     }
 
                 }
+
+                
+                $spCompanyCond = [
+                    "where" => array('lookup_code' => $CompanyLookupCode)
+                ];
+                $getCompanyDetails = $this->home_model->get_sp_company($spCompanyCond);
+                if (!empty($getCompanyDetails)) {
+                    $openUserCompanyId = $getCompanyDetails[0]['id'];
+                }
+
                 $propertyData = [
                     'customer_id'       => $customer_id,
                     'buyer_agent_id'    => $BuyerAgentId,
                     'listing_agent_id'  => $ListingAgentId,
                     'escrow_lender_id'  => $EscrowLenderId,
+                    'lender_id'         => $lenderId,
+                    'escrow_id'         => $escrowId,
                     'cpl_lender_id'     => $cplLenderId,
+                    'cpl_lender_company_id' => $openUserCompanyId,
                     'address'           => removeMultipleSpace($PropertyAddress),
                     'city'              => $PropertyCity,
                     'state'             => $PropertyState,
