@@ -20,6 +20,14 @@
                 </span>
                 <span class="text"> Add Buying Agent </span> 
             </a>
+			<?php  if (!in_array($roleName, ['CS Admin'])) : ?>
+                <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-file-export"></i>
+                    </span>
+                    <span class="text"> Export </span> 
+                </a>
+            <?php endif; ?>
 		</div>
 	</div>
 	<div class="card shadow mb-4">
@@ -48,6 +56,7 @@
 							<th>Order Number</th>
 							<th>Property Address</th>
 							<th>Name</th>
+							<th>Company</th>
 							<th>Email</th>
 							<th>Phone</th>
 							<th>Sales Rep</th>
@@ -99,6 +108,13 @@
 													<input name="buyer_name" required="" type="text" class="form-control" id="buyer_name" >
                                                     <?php if(!empty($buyer_name_error_msg)){ ?>
                                                             <div class="alert alert-danger"><?php echo $buyer_name_error_msg; ?></div>
+                                                    <?php } ?>
+												</div>
+												<div class="col-sm-12">
+													<label for="buyer_company_name" class="col-form-label">Buying Agent Company Name</label>
+													<input name="buyer_company_name" required="" type="text" class="form-control" id="buyer_company_name" >
+                                                    <?php if(!empty($buyer_company_name_error_msg)){ ?>
+                                                            <div class="alert alert-danger"><?php echo $buyer_company_name_error_msg; ?></div>
                                                     <?php } ?>
 												</div>
                                                 <div class="col-sm-12">
