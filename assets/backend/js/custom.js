@@ -5661,7 +5661,8 @@ $(document).ready(function () {
             "lengthMenu": [10, 20, 50, 100, 200, 500, 1000],
             "columnDefs": [
                 { "searchable": false, "targets": [0, 1, 2] },
-                { orderable: false, targets: [0] }
+                { orderable: false, targets: [0] },
+                { targets: [4, 6, 7], visible: false, searchable: false }
             ],
             "language": {
                 searchPlaceholder: "Search #",
@@ -5690,10 +5691,10 @@ $(document).ready(function () {
                     text: 'Export',
                     title: 'Buyers',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                         format: {
                             body: function (data, row, column, node) {
-                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8) ?
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11) ?
                                     data.replace(/[$,]/g, '') :
                                     data;
                             }
