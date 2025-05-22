@@ -3403,6 +3403,7 @@ class Home_model extends CI_Model
 				$this->db->like('order_number', $keyword);
                 $this->db->or_like('property_address', $keyword);
                 $this->db->or_like('buyer_name', $keyword);
+                $this->db->or_like('buyer_company_name', $keyword);
                 $this->db->or_like('sales_rep_name', $keyword);
                 $this->db->or_like('email_recipient', $keyword);
                 $this->db->group_end();
@@ -3416,6 +3417,7 @@ class Home_model extends CI_Model
 				$this->db->like('order_number', $keyword);
                 $this->db->or_like('property_address', $keyword);
                 $this->db->or_like('buyer_name', $keyword);
+                $this->db->or_like('buyer_company_name', $keyword);
                 $this->db->or_like('sales_rep_name', $keyword);
                 $this->db->or_like('email_recipient', $keyword);
                 $this->db->group_end();
@@ -3448,12 +3450,14 @@ class Home_model extends CI_Model
             } else if ($params['orderColumn'] == 3) {
                 $this->db->order_by('buyer_name', $params['orderDir']);
             } else if ($params['orderColumn'] == 4) {
-                $this->db->order_by('buyer_email', $params['orderDir']);
+                $this->db->order_by('buyer_company_name', $params['orderDir']);
             } else if ($params['orderColumn'] == 5) {
-                $this->db->order_by('buyer_phone_no', $params['orderDir']);
+                $this->db->order_by('buyer_email', $params['orderDir']);
             } else if ($params['orderColumn'] == 6) {
-                $this->db->order_by('sales_rep_name', $params['orderDir']);
+                $this->db->order_by('buyer_phone_no', $params['orderDir']);
             } else if ($params['orderColumn'] == 7) {
+                $this->db->order_by('sales_rep_name', $params['orderDir']);
+            } else if ($params['orderColumn'] == 8) {
                 $this->db->order_by('updated_at', $params['orderDir']);
             }
         } else {

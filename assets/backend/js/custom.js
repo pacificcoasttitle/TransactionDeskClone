@@ -176,7 +176,7 @@ $(document).ready(function () {
                 else if (this.context[0].sTableId == 'tbl-sp-escrow-listing') {
                     var jsonResult = $.ajax({
                         type: "POST",
-                        url: base_url + "admin/order/agent/get_sp_escrow_list",
+                        url: base_url + "admin/order/home/get_sp_escrow_list",
                         data: {
                             keyword: $('#tbl-sp-escrow-listing_filter input').val(),
                         },
@@ -515,6 +515,21 @@ $(document).ready(function () {
                     var data = jsonResult.responseText;
                     var res = jQuery.parseJSON(data);
                     return { body: res.data, header: $("#tbl-lp-xml-listing thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
+                }
+                else if (this.context[0].sTableId == 'tbl-manual-buyers') {
+                    var jsonResult = $.ajax({
+                        type: "POST",
+                        url: base_url + "admin/order/home/get_manual_buyer_list",
+                        data: {
+                            keyword: $('#tbl-manual-buyers_filter input').val(),
+                        },
+                        success: function (result) {
+                        },
+                        async: false
+                    });
+                    var data = jsonResult.responseText;
+                    var res = jQuery.parseJSON(data);
+                    return { body: res.data, header: $("#tbl-manual-buyers thead tr th:not(:last-child)").map(function () { return this.innerHTML; }).get() };
                 }
                 else {
                     var jsonResult = $.ajax({
@@ -5658,25 +5673,27 @@ $(document).ready(function () {
             },
             initComplete: function () {
                 var $buttons = jQuery('.dt-buttons').hide();
-                jQuery('#export_customer').on('click', function () {
+                jQuery('#export-csv').on('click', function () {
+
                     var export_type = jQuery(this).attr('data-export-type');
+                    console.log(export_type);
                     if (export_type) {
                         var btnClass = '.buttons-' + export_type;
                     }
                     if (btnClass) $buttons.find(btnClass).click();
                 })
             },
-            dom: '<"FilterCredentialListing">lfrtip',
+            dom: 'Blfrtip',
             buttons: [
                 {
                     extend: 'csvHtml5',
                     text: 'Export',
-                    title: 'Customers',
+                    title: 'Buyers',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8],
                         format: {
                             body: function (data, row, column, node) {
-                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9) ?
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8) ?
                                     data.replace(/[$,]/g, '') :
                                     data;
                             }
