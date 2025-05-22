@@ -8551,7 +8551,7 @@ class Home extends MX_Controller
         else
         {
             $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
-            $agent_lists = $this->agent_model->get_agents($params);
+            $agent_lists = $this->home_model->get_sp_admin_users_list($params);
         }
         
 
@@ -9135,6 +9135,7 @@ class Home extends MX_Controller
 			$this->form_validation->set_rules('order_number', 'Order Number', 'required', ['required' => 'Order Number is required']);
             $this->form_validation->set_rules('property_address', 'Property Address', 'required', ['required' => 'Property Address is required']);
             $this->form_validation->set_rules('buyer_name', 'Buyer Name', 'required', ['required' => 'Buyer Name is required']);
+            $this->form_validation->set_rules('buyer_company_name', 'Buyer Company Name', 'required', ['required' => 'Buyer Company is required']);
             $this->form_validation->set_rules('buyer_email', 'Buyer Email', 'required', ['required' => 'Buyer Email is required']);
             $this->form_validation->set_rules('buyer_phone_no', 'Buyer Phone Number', 'required', ['required' => 'Buyer Phone Number is required']);
             $this->form_validation->set_rules('buyer_office_name', 'Buyer Office Name', 'required', ['required' => 'Buyer Office Name is required']);
@@ -9146,6 +9147,7 @@ class Home extends MX_Controller
                     'order_number' => $this->input->post('order_number'),
                     'property_address' => $this->input->post('property_address'),
                     'buyer_name' => $this->input->post('buyer_name'),
+                    'buyer_company_name' => $this->input->post('buyer_company_name'),
                     'buyer_email' => $this->input->post('buyer_email'),
                     'buyer_phone_no' => $this->input->post('buyer_phone_no'),
                     'buyer_office_name' => $this->input->post('buyer_office_name'),
@@ -9162,6 +9164,7 @@ class Home extends MX_Controller
                 $data['order_number_error_msg']        = form_error('order_number');
                 $data['property_address_error_msg']    = form_error('property_address');
                 $data['buyer_name_error_msg']       = form_error('buyer_name');
+                $data['buyer_company_name_error_msg']       = form_error('buyer_company_name');
                 $data['buyer_email_error_msg']     = form_error('buyer_email');
                 $data['buyer_phone_no_error_msg']       = form_error('buyer_phone_no');
                 $data['buyer_office_name_error_msg'] = form_error('buyer_office_name');
@@ -9212,6 +9215,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['order_number'];
                 $nestedData[] = $value['property_address'];
                 $nestedData[] = $value['buyer_name'];
+                $nestedData[] = $value['buyer_company_name'];
                 $nestedData[] = $value['buyer_email'];
                 $nestedData[] = $value['buyer_phone_no'];
                 $nestedData[] = $value['sales_rep_name'];
