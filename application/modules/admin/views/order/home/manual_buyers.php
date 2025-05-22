@@ -57,6 +57,9 @@
 							<th>Property Address</th>
 							<th>Name</th>
 							<th>Company</th>
+							<th>Office Name</th>
+							<th>Office Address</th>
+							<th>Office City</th>
 							<th>Email</th>
 							<th>Phone</th>
 							<th>Sales Rep</th>
@@ -112,10 +115,7 @@
 												</div>
 												<div class="col-sm-12">
 													<label for="buyer_company_name" class="col-form-label">Buying Agent Company Name</label>
-													<input name="buyer_company_name" required="" type="text" class="form-control" id="buyer_company_name" >
-                                                    <?php if(!empty($buyer_company_name_error_msg)){ ?>
-                                                            <div class="alert alert-danger"><?php echo $buyer_company_name_error_msg; ?></div>
-                                                    <?php } ?>
+													<input name="buyer_company_name" type="text" class="form-control" id="buyer_company_name" >
 												</div>
                                                 <div class="col-sm-12">
 													<label for="buyer_email" class="col-form-label">Buying Agent Email</label>
