@@ -5156,7 +5156,7 @@ class Order
         // $data['doc_type'] = $orderDetails['doc_type'];
         $file = $orderDetails['file_links'];
         if (isset($orderDetails['doc_type']) && $orderDetails['doc_type'] == 'Supplement Statement Document') {
-            $to = 'ghernandez@pct.com';
+            // $to = 'ghernandez@pct.com';
             $message = $this->CI->load->view('emails/supplement_document_email.php', $orderDetails, true);
         } else {
             $message = $this->CI->load->view('emails/policy_document_email.php', $orderDetails, true);
@@ -5252,5 +5252,58 @@ class Order
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
         /* End add resware api logs */
         return $res;
+    }
+
+    public function fetchAndSyncContacts($fileNumber, $propertyId) {
+        $softproContacts = [];
+        if (!empty($fileNumber) && !empty($propertyId)) {
+            $this->CI->load->model('order/home_model');
+            $this->CI->load->model('order/apiLogs');
+            $this->CI->load->library('order/softPro');
+            $req['orderNumber'] = $fileNumber;
+            $apiEndPoints = SOFTPRO_API_END;
+            $queryParams = http_build_query($req);
+            $reqData     = json_encode($req);
+            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_order_contacts'] . '?'.$queryParams;
+            $logid = $this->CI->apiLogs->syncLogs(0, 'softpro', 'get_order_contacts', $reqUrl, $reqData, [], 0, 0);
+            $response    = $this->CI->softpro->make_request('GET', 'get_order_contacts', $reqData, $queryParams);
+            $this->CI->apiLogs->syncLogs(0, 'softpro', 'get_order_contacts', $reqUrl, $reqData, json_encode($response), 0, $logid);
+            if ($response['status'] == 'success' && !empty($response['data'])) {
+                $contacts = $response['data'];
+                $updateContacts = [];
+                if (!empty($contacts['EscrowCompanies']) && !empty($contacts['EscrowCompanies']['PersonLookupCode'])) {
+                    $escrow = $contacts['EscrowCompanies']['PersonLookupCode'];
+                    $escrowUser = $this->CI->home_model->sp_get_user(array('lookup_code' => $escrow));
+                    if (!empty($escrowUser)) {
+                        $softproContacts['escrow']['email_address'] = $escrowEmail = $escrowUser['email_address'];
+                        $softproContacts['escrow']['id'] = $updateContacts['escrow_id'] = $escrowUser['id'];
+                    }
+                }
+                
+                if (!empty($contacts['Lenders']) && !empty($contacts['Lenders']['PersonLookupCode'])) {
+                    $lender = $contacts['Lenders']['PersonLookupCode'];
+                    $lenderUser = $this->CI->home_model->sp_get_user(array('lookup_code' => $lender));
+                    if (!empty($lenderUser)) {
+                        $softproContacts['lender']['email_address'] = $lenderEmail = $lenderUser['email_address'];
+                        $softproContacts['lender']['id'] = $updateContacts['lender_id'] = $lenderId = $lenderUser['id'];
+                    }
+                }
+
+                if (!empty($contacts['ListingAgentBrokers']) && !empty($contacts['ListingAgentBrokers']['PersonLookupCode'])) {
+                    $listingAgent = $contacts['ListingAgentBrokers']['PersonLookupCode'];
+                    $listingAgentUser = $this->CI->home_model->sp_get_user(array('lookup_code' => $listingAgent));
+                    if (!empty($listingAgentUser)) {
+                        $softproContacts['listing_agent']['email_address'] = $listingAgentEmail = $listingAgentUser['email_address'];
+                        $softproContacts['listing_agent']['id'] = $updateContacts['listing_agent_id'] = $listingAgentId = $listingAgentUser['id'];
+                    }
+                }
+            }
+
+            if (!empty($updateContacts) && !empty($filesResult['property_id'])) {
+                $this->CI->db->where('id', $filesResult['property_id']);
+                $this->CI->db->update('property_details', $updateContacts);
+            }
+        }
+        return $softproContacts;
     }
 }
