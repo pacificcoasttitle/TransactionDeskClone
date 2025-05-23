@@ -147,8 +147,11 @@
 										<input type="hidden" name="fileNumber" value="" id="fileNumber">
 										<input type="hidden" name="property_id" value="" id="property_id">
 										<input type="hidden" name="transaction_id" value="" id="transaction_id">
-										<input type="hidden" name="fileId" value="" id="fileId">
-										<input type="hidden" name="LenderId" value="" id="LenderId">
+										<!-- <input type="hidden" name="fileId" value="" id="fileId"> -->
+										<!-- <input type="hidden" name="LenderId" value="" id="LenderId"> -->
+										<input type="hidden" name="LenderCompanyId" value="" id="LenderCompanyId">
+										<input type="hidden" name="LenderCompanyLookupCode" value="" id="LenderCompanyLookupCode">
+										
 										<input type="hidden" name="partner_id" id="partner_id" value="">
 										<input type="hidden" name="state" id="state" value="">
 										
@@ -195,12 +198,12 @@
 											</div>
 										</div>
 										
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<div class="col-sm-6" style="display: none;">
 												<label for="LenderName" class="col-form-label">Lender Name</label>
 												<input type="text" name="LenderName" id="LenderName" class="gui-input form-control" placeholder="Attention" autocomplete="off">
 											</div>
-										</div>
+										</div> -->
 
 										<div class="form-group">
 											<div class="row">
@@ -373,227 +376,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- <input type="hidden" name="orderId" value="" id="orderId">
-
-				<input type="hidden" name="property_id" value="" id="property_id">
-
-				<input type="hidden" name="transaction_id" value="" id="transaction_id">
-
-				<input type="hidden" name="fileId" value="" id="fileId">
-
-				<input type="hidden" name="LenderId" value="" id="LenderId">
-				<input type="hidden" name="partner_id" id="partner_id" value="">
-				<input type="hidden" name="state" id="state" value="">
-				<div class="smart-forms smart-container wrap-2" style="margin:30px">
-					<div class="modal-body search-result">
-						<div id="lender-details-fields" style="">
-							<div class="spacer-b20">
-								<div class="tagline"><span>Lender Details</span></div>
-							</div>
-							<div class="frm-row">	
-								<div class="section colm colm12">	
-									<label class="field prepend-icon">	
-										<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender		
-										<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender	
-									</label>	
-								</div>	
-							</div>
-							<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderCompany" id="LenderCompany" class="gui-input ui-autocomplete-input"
-										placeholder="Lender Company Name">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="assignment_clause" id="assignment_clause" class="gui-input ui-autocomplete-input"
-										placeholder="Assignment Clause">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-						<div class="frm-row" style="display: none;">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderName" id="LenderName" class="gui-input ui-autocomplete-input" placeholder="Loan Officer">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-									
-									
-								</label>
-							</div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderAddress" id="LenderAddress" class="gui-input"
-										placeholder="Lender Address" >
-									<span class="field-icon"><i class="fa fa-envelope"></i></span>
-								</label>
-							</div>
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderCity" id="LenderCity" class="gui-input"
-										placeholder="Lender City" >
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-						<div class="frm-row spacer-b15">
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderState" id="LenderState" class="gui-input"
-										placeholder="Lender State" >
-									<span class="field-icon"><i class="fa fa-envelope"></i></span>
-								</label>
-							</div>
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderZipcode" id="LenderZipcode" class="gui-input"
-										placeholder="Lender Zipcode" >
-									<span class="field-icon"><i class="fa fa-envelope"></i></span>
-								</label>
-							</div>
-						</div>
-						</div>
-						<div id="property-details-section">
-							<div class="spacer-b20">
-								<div class="tagline"><span>Property Details</span></div>
-							</div>
-
-							<div class="frm-row">
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_address" id="property_address" placeholder="Street Address">
-									</label>
-								</div>
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_city" id="property_city" placeholder="City">
-									</label>
-								</div>
-							</div>
-
-							<div class="frm-row">
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_state" id="property_state" placeholder="State">
-									</label>
-								</div>
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_zipcode" id="property_zipcode" placeholder="Zipcode">
-									</label>
-								</div>
-							</div>
-						</div>
-						<div id="title-officer-section">
-						<div class="spacer-b20">
-							<div class="tagline"><span>Title Officer Details</span></div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field select">
-									<select id="TitleOfficer" name="TitleOfficer">
-										<option value="">Title Officer</option>
-										<?php 
-										if(isset($titleOfficer) && !empty($titleOfficer))
-										{
-											foreach ($titleOfficer as $key => $value) 
-											{
-									?>
-												<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-									<?php
-											}
-										}
-									?>
-									</select>
-									<i class="arrow double"></i>                    
-								</label> 
-							</div>
-						</div>
-						</div>
-						<div id="loan-details-section">
-						<div class="spacer-b20">
-							<div class="tagline"><span>Loan Details</span></div>
-						</div>
-						<div class="frm-row spacer-b15">
-								<div class="section colm colm6">
-									<label class="field">
-										<input type="text" class="gui-input" name="loan_amount" id="loan_amount" placeholder="Loan Amount">
-									</label>
-								</div>
-								<div class="section colm colm6">
-									<label class="field">
-										<input type="text" class="gui-input" name="loan_number" id="loan_number" placeholder="Loan Number">
-									</label>
-								</div>
-							</div>
-						</div>
-						<div class="spacer-b20">
-								<div class="tagline"><span>Borrowers & Vesting</span></div>
-							</div>
-
-							<div class="frm-row spacer-b15">
-								<div class="section colm colm12">
-									<label class="field prepend-icon">
-										<input type="text" name="borrowers_vesting" id="borrowers_vesting" class="gui-input"
-											placeholder="Borrowers & Vesting"  required="required">
-										<span class="field-icon"><i class="fa fa-user"></i></span>
-									</label>
-								</div>
-							</div>
-						<div id="report-date-section">
-						<div class="spacer-b20">
-							<div class="tagline"><span>Report Date Section</span></div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12" id="s-date-section">
-								<label class="field prepend-icon">
-									<input type="text" name="supplemental_report_date" id="supplemental_report_date" class="gui-input" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
-									<span class="field-icon"><i class="fa fa-calendar"></i></span>
-								</label>
-							</div>
-							<div class="section colm colm6" id="p-date-section" style="display: none;">
-								<label class="field prepend-icon">
-									<input type="text" name="preliminary_report_date" id="preliminary_report_date" class="gui-input" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
-									<span class="field-icon"><i class="fa fa-calendar"></i></span>
-								</label>
-							</div>
-						</div>
-						
-						</div>
-						<div class="spacer-b20">
-							<div class="tagline"><span>Select Branch</span></div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field select">
-									<select id="branch" name="branch">
-										<option value="">Select Branch</option>
-										<?php 
-											if (isset($proposedBranches) && !empty($proposedBranches)) {
-												foreach ($proposedBranches as $proposedBranch) {
-										?>
-											<option value="<?php echo $proposedBranch['id']; ?>"><?php echo $proposedBranch['city']; ?></option>
-										<?php
-												}
-											}
-										?>
-									</select>
-									<i class="arrow double"></i>                    
-								</label> 
-							</div>
-						</div>
-					</div>
-					<div class="form-footer" style="margin: 0px 20px;">
-						<button type="submit" data-btntext-sending="Sending..." class="button btn-primary">Submit</button>
-						<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
-					</div>
-				</div> -->
 			</form>
 		</div>
 	</div>
@@ -619,8 +401,10 @@
 										<input type="hidden" name="fileNumber" value="" id="edit_fileNumber">
 										<input type="hidden" name="property_id" value="" id="edit_property_id">
 										<input type="hidden" id="edit_transaction_id" value="" name="transaction_id">
+										<input type="hidden" name="LenderCompanyId" value="" id="edit_LenderCompanyId">
+										<input type="hidden" name="LenderCompanyLookupCode" value="" id="edit_LenderCompanyLookupCode">
 										<input type="hidden" name="fileId" value="" id="edit_fileId">
-										<input type="hidden" name="LenderId" value="" id="edit_LenderId">
+										<!-- <input type="hidden" name="LenderId" value="" id="edit_LenderId"> -->
 										<input type="hidden" name="partner_id" id="edit_partner_id" value="">	
 										<input type="hidden" name="state" id="edit_state" value="">
 										
@@ -666,12 +450,12 @@
 											</div>
 										</div>
 										
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<div class="col-sm-6" style="display: none;">
 												<label for="edit_LenderName" class="col-form-label">Lender Name</label>
 												<input type="text" name="LenderName" id="edit_LenderName" class="gui-input form-control" placeholder="Attention" autocomplete="off">
 											</div>
-										</div>
+										</div> -->
 
 										<div class="form-group">
 											<div class="row">
@@ -844,230 +628,6 @@
 						</div>
 					</div>
 				</div>
-				
-				<!-- <input type="hidden" name="orderId" value="" id="edit_orderId">
-
-				<input type="hidden" name="property_id" value="" id="edit_property_id">
-
-				<input type="hidden" id="edit_transaction_id" value="" name="transaction_id">
-
-				<input type="hidden" name="fileId" value="" id="edit_fileId">
-
-				<input type="hidden" name="LenderId" value="" id="edit_LenderId">
-				<input type="hidden" name="partner_id" id="edit_partner_id" value="">	
-				<input type="hidden" name="state" id="edit_state" value="">
-				<div class="smart-forms smart-container wrap-2" style="margin:30px">
-					<div class="modal-body search-result">
-						<div id="edit-data-result" class="spacer-b20"></div>
-						<div id="lender-details-fields" style="">
-							<div class="spacer-b20">
-								<div class="tagline"><span>Lender Details</span></div>
-							</div>
-							<div class="frm-row">	
-								<div class="section colm colm12">	
-									<label class="field prepend-icon">	
-										<input class="radio" type="radio" name="edit_new_existing_lender" id="edit_add_lender" value="add_lender">New Lender		
-										<input class="radio" type="radio" name="edit_new_existing_lender" id="edit_existing_lender" value="existing_lender">Existing Lender	
-									</label>	
-								</div>	
-							</div>
-							<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderCompany" id="edit_LenderCompany" class="gui-input ui-autocomplete-input"
-										placeholder="Lender Company Name">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-									
-									
-								</label>
-							</div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="assignment_clause" id="edit_assignment_clause" class="gui-input ui-autocomplete-input"
-										placeholder="Assignment Clause">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-
-						<div class="frm-row" style="display: none;">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderName" id="edit_LenderName"
-										class="gui-input" placeholder="Loan Officer" autocomplete="off">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderAddress" id="edit_LenderAddress" class="gui-input"
-										placeholder="Lender Address" >
-									<span class="field-icon"><i class="fa fa-envelope"></i></span>
-								</label>
-							</div>
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderCity" id="edit_LenderCity" class="gui-input"
-										placeholder="Lender City" >
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-						<div class="frm-row spacer-b15">
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="tel" name="LenderState" id="edit_LenderState" class="gui-input"
-										placeholder="Lender State" >
-									<span class="field-icon"><i class="fa fa-envelope"></i></span>
-								</label>
-							</div>
-							<div class="section colm colm6">
-								<label class="field prepend-icon">
-									<input type="text" name="LenderZipcode" id="edit_LenderZipcode" class="gui-input"
-										placeholder="Lender Zipcode" >
-									<span class="field-icon"><i class="fa fa-envelope"></i></span>
-								</label>
-							</div>
-						</div>
-						</div>
-						<div id="property-details-section">
-							<div class="spacer-b20">
-								<div class="tagline"><span>Property Details</span></div>
-							</div>
-
-							<div class="frm-row">
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_address" id="edit_property_address" placeholder="Street Address">
-									</label>
-								</div>
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_city" id="edit_property_city" placeholder="City">
-									</label>
-								</div>
-							</div>
-
-							<div class="frm-row">
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_state" id="edit_property_state" placeholder="State">
-									</label>
-								</div>
-								<div class="section colm colm6">
-									<label class="field">
-										<input required="required" type="text" class="gui-input" name="property_zipcode" id="edit_property_zipcode" placeholder="Zipcode">
-									</label>
-								</div>
-							</div>
-						</div>
-						<div id="title-officer-section">
-						<div class="spacer-b20">
-							<div class="tagline"><span>Title Officer Details</span></div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field select">
-									<select id="edit_TitleOfficer" name="TitleOfficer">
-										<option value="">Title Officer</option>
-										<?php 
-										if(isset($titleOfficer) && !empty($titleOfficer))
-										{
-											foreach ($titleOfficer as $key => $value) 
-											{
-									?>
-												<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-									<?php
-											}
-										}
-									?>
-									</select>
-									<i class="arrow double"></i>                    
-								</label> 
-							</div>
-						</div>
-						</div>
-						<div id="loan-details-section">
-						<div class="spacer-b20">
-							<div class="tagline"><span>Loan Details</span></div>
-						</div>
-						<div class="frm-row spacer-b15">
-								<div class="section colm colm6">
-									<label class="field">
-										<input type="text" class="gui-input" name="loan_amount" id="edit_loan_amount" placeholder="Loan Amount">
-									</label>
-								</div>
-								<div class="section colm colm6">
-									<label class="field">
-										<input type="text" class="gui-input" name="loan_number" id="edit_loan_number" placeholder="Loan Number">
-									</label>
-								</div>
-							</div>
-						</div>
-						<div class="spacer-b20">
-							<div class="tagline"><span>Borrowers & Vesting</span></div>
-						</div>
-						<div class="frm-row spacer-b15">
-							<div class="section colm colm12">
-								<label class="field prepend-icon">
-									<input type="text" name="borrowers_vesting" id="edit_borrowers_vesting" class="gui-input"
-										placeholder="Borrowers & Vesting"  required="required">
-									<span class="field-icon"><i class="fa fa-user"></i></span>
-								</label>
-							</div>
-						</div>
-						<div id="report-date-section">
-						<div class="spacer-b20">
-							<div class="tagline"><span>Report Date Section</span></div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12" id="s-date-section">
-								<label class="field prepend-icon">
-									<input type="text" name="supplemental_report_date" id="edit_supplemental_report_date" class="gui-input" placeholder="Supplemental Report Date" value="<?php echo date('m/d/Y'); ?>">
-									<span class="field-icon"><i class="fa fa-calendar"></i></span>
-								</label>
-							</div>
-							<div class="section colm colm6" id="p-date-section" style="display: none;">
-								<label class="field prepend-icon">
-									<input type="text" name="preliminary_report_date" id="edit_preliminary_report_date" class="gui-input" placeholder="Preliminary Report Date" value="<?php echo date('m/d/Y'); ?>">
-									<span class="field-icon"><i class="fa fa-calendar"></i></span>
-								</label>
-							</div>
-						</div>
-						
-						</div>
-						<div class="spacer-b20">
-							<div class="tagline"><span>Select Branch</span></div>
-						</div>
-						<div class="frm-row">
-							<div class="section colm colm12">
-								<label class="field select">
-									<select id="edit_branch" name="edit_branch">
-										<option value="">Select Branch</option>
-										<?php 
-											if (isset($proposedBranches) && !empty($proposedBranches)) {
-												foreach ($proposedBranches as $proposedBranch) {
-										?>
-											<option value="<?php echo $proposedBranch['id']; ?>"><?php echo $proposedBranch['city']; ?></option>
-										<?php
-												}
-											}
-										?>
-									</select>
-									<i class="arrow double"></i>                    
-								</label> 
-							</div>
-						</div>
-					</div>
-					<div class="form-footer" style="margin: 0px 20px;">
-						<button type="submit" data-btntext-sending="Sending..." class="button btn-primary">Submit</button>
-						<button type="reset" data-dismiss="modal" aria-label="Close" class="button">Cancel</button>
-					</div>
-				</div> -->
 			</form>
 		</div>
 	</div>

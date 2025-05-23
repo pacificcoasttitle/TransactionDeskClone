@@ -1338,20 +1338,23 @@ class Common extends MX_Controller
         if ($new_existing_lender == 'add_lender') {
             $lenderCompanyLookupCode = $flookup_code;
             $spResponse = $this->addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
-            $companyId = $spResponse['id'];
-        }
-        else {
+            $lenderCompanyId = $spResponse['id'];
+        } else {
             // $condition = array(
             //     'id' => $LenderId,
             // );
             // $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
             // $spResponse = $this->existingLenderCPL($lenderCompanyName, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
-            $companyId = $lenderCompanyId;//$spResponse['id'];
+            // $companyId = $lenderCompanyId;//$spResponse['id'];
+            $updateData = [
+                'assignment_clause'  => $assignmentClause
+            ];
+            $this->home_model->update($updateData, array('id' => $lenderCompanyId), 'sp_company');
         }
         // $lenderUserDetails = $this->home_model->get_user(array('id' => $LenderId));
         
         $propertyDetails = array(
-            'cpl_lender_company_id' => $companyId,
+            'cpl_lender_company_id' => $lenderCompanyId,
             'borrowers_vesting' => trim($borrowers_vesting),
             'cpl_proposed_property_address' => $this->input->post('property_address'),
             'cpl_proposed_property_city' => $this->input->post('property_city'),
@@ -2551,72 +2554,85 @@ class Common extends MX_Controller
         $data['proposed_branch_id'] = $orderDetails['proposed_branch_id'];
 
         if ($customer_data['is_escrow'] == 1) {
-            if (!empty($orderDetails['cpl_lender_id'])) {
-                $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
-                $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
-                $data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
-                $data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
-                $data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
-                $data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+            if (!empty($orderDetails['cpl_lender_company_id'])) {
+                // $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
+                // $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+                // $data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+                // $data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+                // $data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+                $data['lender_company_name'] = $lenderDetails['name'] ? $lenderDetails['name'] : '';
+                $data['lender_company_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                $data['lender_company_lookup_code'] = $lenderDetails['lookup_code'] ? $lenderDetails['lookup_code'] : '';
                 $data['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
                 $data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
+                $data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
                 $data['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
                 $data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
-                $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                $data['cpl_lender_company_id'] = $orderDetails['cpl_lender_company_id'];
+                // $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
                 // $data['escrow_lender_id'] = '';
             } else {
                 // $data['escrow_lender_id'] = $orderDetails['escrow_lender_id'] ? $orderDetails['escrow_lender_id'] : '';
-                $data['lender_first_name'] = $orderDetails['sp_lender_first_name'] ? $orderDetails['sp_lender_first_name'] : '';
-                $data['lender_last_name'] = $orderDetails['sp_lender_last_name'] ? $orderDetails['sp_lender_last_name'] : '';
-                $data['lender_email'] = $orderDetails['sp_lender_email'] ? $orderDetails['sp_lender_email'] : '';
-                $data['lender_state'] = $orderDetails['sp_lender_state'] ? $orderDetails['sp_lender_state'] : '';
-                $data['lender_company_name'] = $orderDetails['sp_lender_company_name'] ? $orderDetails['sp_lender_company_name'] : '';
-                $data['lender_address'] = $orderDetails['sp_lender_address'] ? $orderDetails['sp_lender_address'] : '';
-                $data['lender_city'] = $orderDetails['sp_lender_city'] ? $orderDetails['sp_lender_city'] : '';
-                $data['lender_zipcode'] = $orderDetails['sp_lender_zipcode'] ? $orderDetails['sp_lender_zipcode'] : '';
-                $data['lender_assignment_clause'] = $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
-                $data['lender_id'] = $orderDetails['lender_id'] ? $orderDetails['sp_lender_id'] : '';
+                // $data['lender_first_name'] = $orderDetails['sp_lender_first_name'] ? $orderDetails['sp_lender_first_name'] : '';
+                // $data['lender_last_name'] = $orderDetails['sp_lender_last_name'] ? $orderDetails['sp_lender_last_name'] : '';
+                // $data['lender_email'] = ''; //$orderDetails['sp_lender_email'] ? $orderDetails['sp_lender_email'] : '';
+                $data['lender_company_name'] = '';//$orderDetails['sp_lender_company_name'] ? $orderDetails['sp_lender_company_name'] : '';
+                $data['lender_address'] = '';// $orderDetails['sp_lender_address'] ? $orderDetails['sp_lender_address'] : '';
+                $data['lender_city'] = '';// $orderDetails['sp_lender_city'] ? $orderDetails['sp_lender_city'] : '';
+                $data['lender_state'] = '';// $orderDetails['sp_lender_state'] ? $orderDetails['sp_lender_state'] : '';
+                $data['lender_zipcode'] = '';// $orderDetails['sp_lender_zipcode'] ? $orderDetails['sp_lender_zipcode'] : '';
+                $data['lender_assignment_clause'] = '';// $orderDetails['lender_assignment_clause'] ? $orderDetails['lender_assignment_clause'] : '';
+                // $data['lender_id'] = '';// $orderDetails['lender_id'] ? $orderDetails['sp_lender_id'] : '';
+                $data['cpl_lender_company_id'] = '';
             }
         } else {
-            if (!empty($orderDetails['cpl_lender_id'])) {
-                $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
+            if (!empty($orderDetails['cpl_lender_company_id'])) {
+                // $lenderDetails = $this->home_model->sp_get_user(array('id' => $orderDetails['cpl_lender_id']));
+                $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
 
-                $data['cpl_lender_id'] = $orderDetails['cpl_lender_id'];
-                $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
-                $data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
-                $data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
-                $data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
-                $data['lender_company_name'] = $lenderDetails['company_name'] ? $lenderDetails['company_name'] : '';
+                // $data['lender_first_name'] = $lenderDetails['first_name'] ? $lenderDetails['first_name'] : '';
+                // $data['lender_last_name'] = $lenderDetails['last_name'] ? $lenderDetails['last_name'] : '';
+                // $data['lender_email'] = $lenderDetails['email_address'] ? $lenderDetails['email_address'] : '';
+                $data['lender_company_name'] = $lenderDetails['name'] ? $lenderDetails['name'] : '';
+                $data['lender_company_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                $data['lender_company_lookup_code'] = $lenderDetails['lookup_code'] ? $lenderDetails['lookup_code'] : '';
                 $data['lender_address'] = $lenderDetails['address1'] ? $lenderDetails['address1'] : '';
+                $data['lender_state'] = $lenderDetails['state'] ? $lenderDetails['state'] : '';
                 $data['lender_city'] = $lenderDetails['city'] ? $lenderDetails['city'] : '';
                 $data['lender_zipcode'] = $lenderDetails['zip'] ? $lenderDetails['zip'] : '';
                 $data['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
-                $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                // $data['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
+                $data['cpl_lender_company_id'] = $orderDetails['cpl_lender_company_id'];
+                
             } else {
                 // $data['cpl_lender_id'] = $customer_data['id'];
-                $data['lender_first_name'] = $customer_data['first_name'] ? $customer_data['first_name'] : '';
-                $data['lender_last_name'] = $customer_data['last_name'] ? $customer_data['last_name'] : '';
-                $data['lender_email'] = $customer_data['email_address'] ? $customer_data['email_address'] : '';
-                $data['lender_state'] = $customer_data['state'] ? $customer_data['state'] : '';
-                $data['lender_company_name'] = $customer_data['company_name'] ? $customer_data['company_name'] : '';
-                $data['lender_address'] = $customer_data['address1'] ? $customer_data['address1'] : '';
-                $data['lender_city'] = $customer_data['city'] ? $customer_data['city'] : '';
-                $data['lender_zipcode'] = $customer_data['zip'] ? $customer_data['zip'] : '';
-                $data['lender_assignment_clause'] = $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
-                $data['lender_id'] = $customer_data['id'] ? $customer_data['id'] : '';
+                // $data['lender_first_name'] = $customer_data['first_name'] ? $customer_data['first_name'] : '';
+                // $data['lender_last_name'] = $customer_data['last_name'] ? $customer_data['last_name'] : '';
+                // $data['lender_email'] = '';// $customer_data['email_address'] ? $customer_data['email_address'] : '';
+                $data['lender_company_name'] = '';// $customer_data['company_name'] ? $customer_data['company_name'] : '';
+                $data['lender_company_id'] = '';
+                $data['lender_company_lookup_code'] = '';
+                $data['lender_address'] = '';// $customer_data['address1'] ? $customer_data['address1'] : '';
+                $data['lender_city'] = '';// $customer_data['city'] ? $customer_data['city'] : '';
+                $data['lender_state'] = '';// $customer_data['state'] ? $customer_data['state'] : '';
+                $data['lender_zipcode'] = '';// $customer_data['zip'] ? $customer_data['zip'] : '';
+                $data['lender_assignment_clause'] = '';// $customer_data['assignment_clause'] ? $customer_data['assignment_clause'] : '';
+                // $data['lender_id'] = '';// $customer_data['id'] ? $customer_data['id'] : '';
+                $data['lender_company_id'] = '';
             }
             $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
         }
 
-        if (empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
-            $data['lender_name'] = '';
-        } else if (empty($data['lender_first_name']) && !empty($data['lender_last_name'])) {
-            $data['lender_name'] = $data['lender_last_name'];
-        } else if (!empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
-            $data['lender_name'] = $data['lender_first_name'];
-        } else if (!empty($data['lender_first_name']) && !empty($data['lender_last_name'])) {
-            $data['lender_name'] = $data['lender_first_name'] . " " . $data['lender_last_name'];
-        }
+        // if (empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
+        //     $data['lender_name'] = '';
+        // } else if (empty($data['lender_first_name']) && !empty($data['lender_last_name'])) {
+        //     $data['lender_name'] = $data['lender_last_name'];
+        // } else if (!empty($data['lender_first_name']) && empty($data['lender_last_name'])) {
+        //     $data['lender_name'] = $data['lender_first_name'];
+        // } else if (!empty($data['lender_first_name']) && !empty($data['lender_last_name'])) {
+        //     $data['lender_name'] = $data['lender_first_name'] . " " . $data['lender_last_name'];
+        // }
 
         $response = array('status' => 'success', 'orderDetails' => $data);
         echo json_encode($response);exit;
@@ -2636,7 +2652,7 @@ class Common extends MX_Controller
             $titleOfficer = $this->input->post('titleOfficer');
             $loan_amount = $this->input->post('loan_amount');
             $loan_number = $this->input->post('loan_number');
-            $name = explode(" ", $this->input->post('LenderName'));
+            // $name = explode(" ", $this->input->post('LenderName'));
             $new_existing_lender = $this->input->post('new_existing_lender');
             $LenderId = $this->input->post('LenderId');
             $transaction_id = $this->input->post('transaction_id');
@@ -2647,6 +2663,14 @@ class Common extends MX_Controller
             $property_zipcode = $this->input->post('property_zipcode');
             $borrowers_vesting = $this->input->post('borrowers_vesting');
             $branch = $this->input->post('branch');
+            $lenderCompanyId = $this->input->post('LenderCompanyId');
+            $lenderCompanyName = !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "";
+            $lenderCompanyLookupCode = !empty($this->input->post('LenderCompanyLookupCode')) ? $this->input->post('LenderCompanyLookupCode') : "";
+            $lenderCompanyAddress = !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "";
+            $lenderCompanyCity = !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "";
+            $lenderCompanyState = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "";
+            $lenderCompanyZipcode = !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "";
+            $assignmentClause = !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "";
             // $fileId = $this->input->post('fileId');
             $s_report_date = $this->input->post('s_report_date');
             $p_report_date = $this->input->post('p_report_date');
@@ -2658,74 +2682,70 @@ class Common extends MX_Controller
             $orderDetails = $this->order->get_order_details($params);
             // if ($orderDetails['is_softpro_order'] != 1) {
             $lender_details = array(
-                'first_name' => $name[0],
-                'last_name' => !empty($name[1]) ? $name[1] : '',
-                'state' => !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : "",
-                'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
-                'company_name' => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",
-                'address1' => !empty($this->input->post('LenderAddress')) ? $this->input->post('LenderAddress') : "",
-                'city' => !empty($this->input->post('LenderCity')) ? $this->input->post('LenderCity') : "",
-                'zip' => !empty($this->input->post('LenderZipcode')) ? $this->input->post('LenderZipcode') : "",
-                'assignment_clause' => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "",
+                // 'first_name' => $name[0],
+                // 'last_name' => !empty($name[1]) ? $name[1] : '',
+                // 'email_address' => !empty($this->input->post('LenderEmailAddress')) ? $this->input->post('LenderEmailAddress') : "",
+                'company_name' => $lenderCompanyName,
+                'address1' => $lenderCompanyAddress,
+                'city' => $lenderCompanyCity,
+                'state' => $lenderCompanyState,
+                'zip' => $lenderCompanyZipcode,
+                'assignment_clause' => $assignmentClause,
             );
 
+            $flookup_code = $this->order->generateNewCompanyLookupCode($lenderCompanyName, $lenderCompanyAddress);
             if ($new_existing_lender == 'add_lender') {
-                // $lender_details['partner_id'] = $this->input->post('partner_id');
-                $lender_details['state'] = !empty($this->input->post('LenderState')) ? $this->input->post('LenderState') : 'CA';
-                $lender_details['is_added_lender_by_cpl_proposed'] = 1;
-                $lender_details['is_escrow'] = 0;
-                $lender_details['is_lender'] = 1;
-                $lender_details['status'] = 0;
-                $LenderId = $this->home_model->insert($lender_details, 'pct_softpro_lookup_table');
+                $lenderCompanyLookupCode = $flookup_code;
+                $spResponse = $this->addNewLenderCPL($lenderCompanyName, $flookup_code, $lenderCompanyAddress, $lenderCompanyCity, $lenderCompanyState, $lenderCompanyZipcode, $assignmentClause);
+                $lenderCompanyId = $spResponse['id'];
             } else {
-                $condition = array(
-                    'id' => $LenderId,
-                );
-                $this->home_model->update($lender_details, $condition, 'pct_softpro_lookup_table');
-                }
-            // }
+                $updateData = [
+                    'assignment_clause'  => $assignmentClause
+                ];
+                $this->home_model->update($updateData, array('id' => $lenderCompanyId), 'sp_company');
+            }
             $this->home_model->update(array('proposed_branch_id' => $branch), array('id' => $orderId), 'order_details');
 
-            if (empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
-                $lender_details['lender_name'] = '';
-            } else if (empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
-                $lender_details['lender_name'] = $lender_details['last_name'];
-            } else if (!empty($lender_details['first_name']) && empty($lender_details['last_name'])) {
-                $lender_details['lender_name'] = $lender_details['first_name'];
-            } else if (!empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
-                $lender_details['lender_name'] = $lender_details['first_name'] . " " . $lender_details['last_name'];
-            }
+            // if (empty($lender_details['first_name']) && empty($lender_details['lender_last_name'])) {
+            //     $lender_details['lender_name'] = '';
+            // } else if (empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+            //     $lender_details['lender_name'] = $lender_details['last_name'];
+            // } else if (!empty($lender_details['first_name']) && empty($lender_details['last_name'])) {
+            //     $lender_details['lender_name'] = $lender_details['first_name'];
+            // } else if (!empty($lender_details['first_name']) && !empty($lender_details['last_name'])) {
+            //     $lender_details['lender_name'] = $lender_details['first_name'] . " " . $lender_details['last_name'];
+            // }
             $lender_address = array();
-            $street_address = $this->input->post('LenderAddress');
+            // $street_address = $this->input->post('LenderAddress');
+            // $city = $this->input->post('LenderCity');
+            // $lendeUser = $this->home_model->sp_get_user(array('id' => $LenderId));
+            // $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
+            // $zip_code = $this->input->post('LenderZipcode');
 
-            if ($street_address) {
-                $lender_address[] = $street_address;
+            if ($lenderCompanyAddress) {
+                $lender_address[] = $lenderCompanyAddress;
             }
-            $city = $this->input->post('LenderCity');
 
-            if ($city) {
-                $lender_address[] = $city;
+            if ($lenderCompanyCity) {
+                $lender_address[] = $lenderCompanyCity;
             }
-            $lendeUser = $this->home_model->sp_get_user(array('id' => $LenderId));
-            $state = isset($lendeUser['state']) && !empty($lendeUser['state']) ? $lendeUser['state'] : '';
 
-            if ($state) {
-                $lender_address[] = $state;
+            if ($lenderCompanyState) {
+                $lender_address[] = $lenderCompanyState;
             }
-            $zip_code = $this->input->post('LenderZipcode');
 
-            if ($zip_code) {
-                $lender_address[] = $zip_code;
+            if ($lenderCompanyZipcode) {
+                $lender_address[] = $lenderCompanyZipcode;
             }
             $pdfData['lender'] = array(
-                'lender_name' => $lender_details['lender_name'],
+                // 'lender_name' => $lender_details['lender_name'],
                 'address' => implode(', ', $lender_address),
-                'company_name' => !empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",//$lender_details['company_name'],
-                'assignment_clause' => !empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "" //$lender_details['assignment_clause'],
+                'company_name' => $lenderCompanyName, //!empty($this->input->post('LenderCompany')) ? $this->input->post('LenderCompany') : "",//$lender_details['company_name'],
+                'assignment_clause' => $assignmentClause //!empty($this->input->post('assignment_clause')) ? $this->input->post('assignment_clause') : "" //$lender_details['assignment_clause'],
             );
             $orderUser = $this->home_model->sp_get_user(array('id' => $orderDetails['customer_id']));
             $propertyDetails = [
-                'cpl_lender_id' => $LenderId, 
+                'cpl_lender_company_id' => $lenderCompanyId, 
                 'cpl_proposed_property_address' => trim($property_address), 
                 'cpl_proposed_property_city' => trim($property_city), 
                 'cpl_proposed_property_state' => trim($property_state), 
@@ -2757,11 +2777,15 @@ class Common extends MX_Controller
                     $address[] = $street_address;
                 }
                 $city = isset($orderUser['city']) && !empty($orderUser['city']) ? $orderUser['city'] : '';
+                $state = isset($orderUser['state']) && !empty($orderUser['state']) ? $orderUser['state'] : '';
+                $zip_code = isset($orderUser['zip']) && !empty($orderUser['zip']) ? $orderUser['zip'] : '';
 
                 if ($city) {
                     $address[] = $city;
                 }
-                $zip_code = isset($orderUser['zip']) && !empty($orderUser['zip']) ? $orderUser['zip'] : '';
+                if ($state) {
+                    $address[] = $state;
+                }
 
                 if ($zip_code) {
                     $address[] = $zip_code;
