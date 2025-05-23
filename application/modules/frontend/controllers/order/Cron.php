@@ -7520,12 +7520,12 @@ class Cron extends MX_Controller
                         continue;
                     }
 
-                    // $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($docLink, $document_name, 'documents');
+                    $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($docLink, $document_name, 'documents');
 
                     // print_r($condition);die;
                     // if (true) {
-                    if (true) {
-                    // if ($uploadStatus) {
+                    // if (true) {
+                    if ($uploadStatus) {
                         // $policyDocumentsList = $this->order->getPolicyDocuments($condition);
                         // echo "<pre>";
                         // print_r($policyDocumentsList);die;
