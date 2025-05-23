@@ -86,10 +86,13 @@ $(document).ready(function () {
 				$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 				$('#page-preloader').css('display', 'block');
 				var LenderCompany = $('#LenderCompany').val();
+				var LenderCompanyId = $('#LenderCompanyId').val();
+				var LenderCompanyLookupCode = $('#LenderCompanyLookupCode').val();
+
 				var assignment_clause = $('#assignment_clause').val();
 				var LenderEmailAddress = $('#LenderEmailAddress').val();
 				var LenderState = $('#LenderState').val();
-				var LenderName = $('#LenderName').val();
+				// var LenderName = $('#LenderName').val();
 				var LenderAddress = $('#LenderAddress').val();
 				var LenderCity = $('#LenderCity').val();
 				var LenderZipcode = $('#LenderZipcode').val();
@@ -102,7 +105,7 @@ $(document).ready(function () {
 				// var secondary_last_name = $('#last_name').val();
 				// var vesting = $('#vesting').val();
 				var borrowers_vesting = $('#borrowers_vesting').val();
-				var LenderId = $('#LenderId').val();
+				// var LenderId = $('#LenderId').val();
 				var orderId = $('#orderId').val();
 				var transaction_id = $('#transaction_id').val();
 				var property_id = $('#property_id').val();
@@ -110,7 +113,7 @@ $(document).ready(function () {
 				var property_city = $('#property_city').val();
 				var property_state = $('#property_state').val();
 				var property_zipcode = $('#property_zipcode').val();
-				var fileId = $('#fileId').val();
+				// var fileId = $('#fileId').val();
 				var supplemental_report_date = $('#supplemental_report_date').val();
 				var preliminary_report_date = $('#preliminary_report_date').val();
 				var new_existing_lender = $('input[name="new_existing_lender"]:checked').val();
@@ -129,19 +132,21 @@ $(document).ready(function () {
 						property_city: property_city,
 						property_state: property_state,
 						property_zipcode: property_zipcode,
-						LenderId: LenderId,
+						// LenderId: LenderId,
 						LenderCompany: LenderCompany,
+						LenderCompanyId: LenderCompanyId,
+						LenderCompanyLookupCode: LenderCompanyLookupCode,
 						assignment_clause: assignment_clause,
 						LenderEmailAddress: LenderEmailAddress,
 						LenderState: LenderState,
-						LenderName: LenderName,
+						// LenderName: LenderName,
 						LenderAddress: LenderAddress,
 						LenderCity: LenderCity,
 						LenderZipcode: LenderZipcode,
 						orderId: orderId,
 						transaction_id: transaction_id,
 						property_id: property_id,
-						fileId: fileId,
+						// fileId: fileId,
 						s_report_date: supplemental_report_date,
 						p_report_date: preliminary_report_date,
 						new_existing_lender: new_existing_lender,
@@ -176,7 +181,7 @@ $(document).ready(function () {
 			$("#LenderCompany").autocomplete({
 				source: function (request, response) {
 					$.ajax({
-						url: base_url + 'getDetailsByName',
+						url: base_url + 'getSoftproCompanyByName',
 						data: {
 							term: request.term, //the value of the input is here
 							is_escrow: 0
@@ -201,26 +206,24 @@ $(document).ready(function () {
 				minLength: 3,
 				select: function (event, ui) {
 					event.preventDefault();
+					console.log('ui.item ===', ui.item);
+					$("#LenderCompanyId").val(ui.item.id);
+					$("#LenderCompanyLookupCode").val(ui.item.lookup_code);
 					$("#LenderCompany").val(ui.item.company).parent().addClass('state-success');
 
-					if (ui.item.email_address) {
-						$("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
+					// if (ui.item.email_address) {
+					// 	$("#LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
 
-					} else {
-						$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-					}
+					// } else {
+					// 	$("#LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					// }
 
-					if (ui.item.state) {
-						$("#LenderState").val(ui.item.state).parent().addClass('state-success');
-					} else {
-						$("#LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-					}
 
-					if (ui.item.name) {
-						$("#LenderName").val(ui.item.name).parent().addClass('state-success');
-					} else {
-						$("#LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-					}
+					// if (ui.item.name) {
+					// 	$("#LenderName").val(ui.item.name).parent().addClass('state-success');
+					// } else {
+					// 	$("#LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					// }
 
 					if (ui.item.address) {
 						$("#LenderAddress").val(ui.item.address).parent().addClass('state-success');
@@ -232,6 +235,12 @@ $(document).ready(function () {
 						$("#LenderCity").val(ui.item.city).parent().addClass('state-success');
 					} else {
 						$("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					}
+
+					if (ui.item.state) {
+						$("#LenderState").val(ui.item.state).parent().addClass('state-success');
+					} else {
+						$("#LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 					}
 
 					if (ui.item.zip_code) {
@@ -257,7 +266,8 @@ $(document).ready(function () {
 						$("#LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						$("#LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						$("#assignment_clause").val('');
-						$("#LenderId").val('');
+						$("#LenderCompanyId").val('');
+						$("#LenderCompanyLookupCode").val('');
 					}
 				}
 			});
@@ -276,7 +286,7 @@ $(document).ready(function () {
 			$("#edit_LenderCompany").autocomplete({
 				source: function (request, response) {
 					$.ajax({
-						url: base_url + 'getDetailsByName',
+						url: base_url + 'getSoftproCompanyByName',
 						data: {
 							term: request.term, //the value of the input is here
 							is_escrow: 0
@@ -301,27 +311,22 @@ $(document).ready(function () {
 				minLength: 3,
 				select: function (event, ui) {
 					event.preventDefault();
+					console.log('ui.item ===', ui.item);
+					$("#edit_LenderCompany").val(ui.item.company).parent().addClass('state-success');;
+					$("#edit_LenderCompanyId").val(ui.item.id);
+					$("#edit_LenderCompanyLookupCode").val(ui.item.lookup_code);
+					// if (ui.item.email_address) {
+					// 	$("#edit_LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
 
-					$("#edit_LenderCompany").val(ui.item.company).parent().addClass('state-success');
+					// } else {
+					// 	$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					// }
 
-					if (ui.item.email_address) {
-						$("#edit_LenderEmailAddress").val(ui.item.email_address).parent().addClass('state-success');
-
-					} else {
-						$("#edit_LenderEmailAddress").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-					}
-
-					if (ui.item.state) {
-						$("#edit_LenderState").val(ui.item.state).parent().addClass('state-success');
-					} else {
-						$("#edit_LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-					}
-
-					if (ui.item.name) {
-						$("#edit_LenderName").val(ui.item.name).parent().addClass('state-success');
-					} else {
-						$("#edit_LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
-					}
+					// if (ui.item.name) {
+					// 	$("#edit_LenderName").val(ui.item.name).parent().addClass('state-success');
+					// } else {
+					// 	$("#edit_LenderName").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					// }
 
 					if (ui.item.address) {
 						$("#edit_LenderAddress").val(ui.item.address).parent().addClass('state-success');
@@ -335,6 +340,12 @@ $(document).ready(function () {
 						$("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 					}
 
+					if (ui.item.state) {
+						$("#edit_LenderState").val(ui.item.state).parent().addClass('state-success');
+					} else {
+						$("#edit_LenderState").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
+					}
+
 					if (ui.item.zip_code) {
 						$("#edit_LenderZipcode").val(ui.item.zip_code).parent().addClass('state-success');
 					} else {
@@ -345,8 +356,6 @@ $(document).ready(function () {
 					} else {
 						$("#edit_assignment_clause").val('');
 					}
-
-					$("#edit_LenderId").val(ui.item.id);
 				},
 				change: function (event, ui) {
 					if (ui.item == null) {
@@ -357,7 +366,8 @@ $(document).ready(function () {
 						$("#edit_LenderCity").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						$("#edit_LenderZipcode").val('').removeAttr('readonly').parent().removeClass('state-success').addClass('state-error');
 						$("#edit_assignment_clause").val('');
-						$("#edit_LenderId").val('');
+						$("#edit_LenderCompanyId").val('');
+						$("#edit_LenderCompanyLookupCode").val('');
 					}
 				}
 			});
@@ -399,17 +409,19 @@ $(document).ready(function () {
 				$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 				$('#page-preloader').css('display', 'block');
 				var LenderCompany = $('#edit_LenderCompany').val();
-				var LenderEmailAddress = $('#edit_LenderEmailAddress').val();
-				var LenderState = $('#edit_LenderState').val();
-				var LenderName = $('#edit_LenderName').val();
+				var LenderCompanyId = $('#edit_LenderCompanyId').val();
+				var LenderCompanyLookupCode = $('#edit_LenderCompanyLookupCode').val();
+				// var LenderEmailAddress = $('#edit_LenderEmailAddress').val();
+				// var LenderName = $('#edit_LenderName').val();
 				var LenderAddress = $('#edit_LenderAddress').val();
 				var assignment_clause = $('#edit_assignment_clause').val();
 				var LenderCity = $('#edit_LenderCity').val();
+				var LenderState = $('#edit_LenderState').val();
 				var LenderZipcode = $('#edit_LenderZipcode').val();
 				var TitleOfficer = $('#edit_TitleOfficer').val();
 				var loan_amount = $('#edit_loan_amount').val();
 				var loan_number = $('#edit_loan_number').val();
-				var LenderId = $('#edit_LenderId').val();
+				// var LenderId = $('#edit_LenderId').val();
 				var orderId = $('#edit_orderId').val();
 				var transaction_id = $('#edit_transaction_id').val();
 				var property_id = $('#edit_property_id').val();
@@ -418,7 +430,7 @@ $(document).ready(function () {
 				var property_city = $('#edit_property_city').val();
 				var property_state = $('#edit_property_state').val();
 				var property_zipcode = $('#edit_property_zipcode').val();
-				var fileId = $('#edit_fileId').val();
+				// var fileId = $('#edit_fileId').val();
 				var supplemental_report_date = $('#edit_supplemental_report_date').val();
 				var preliminary_report_date = $('#edit_preliminary_report_date').val();
 				var new_existing_lender = $('input[name="edit_new_existing_lender"]:checked').val();
@@ -433,14 +445,16 @@ $(document).ready(function () {
 						titleOfficer: TitleOfficer,
 						loan_amount: loan_amount,
 						loan_number: loan_number,
-						LenderId: LenderId,
+						// LenderId: LenderId,
 						LenderCompany: LenderCompany,
+						LenderCompanyId: LenderCompanyId,
+						LenderCompanyLookupCode: LenderCompanyLookupCode,
 						assignment_clause: assignment_clause,
-						LenderEmailAddress: LenderEmailAddress,
-						LenderState: LenderState,
-						LenderName: LenderName,
+						// LenderEmailAddress: LenderEmailAddress,
+						// LenderName: LenderName,
 						LenderAddress: LenderAddress,
 						LenderCity: LenderCity,
+						LenderState: LenderState,
 						LenderZipcode: LenderZipcode,
 						orderId: orderId,
 						transaction_id: transaction_id,
@@ -450,7 +464,7 @@ $(document).ready(function () {
 						property_city: property_city,
 						property_state: property_state,
 						property_zipcode: property_zipcode,
-						fileId: fileId,
+						// fileId: fileId,
 						s_report_date: supplemental_report_date,
 						p_report_date: preliminary_report_date,
 						new_existing_lender: new_existing_lender,
@@ -517,17 +531,19 @@ function generateProposedInsured(orderId) {
 			},
 			success: function (response) {
 				var res = JSON.parse(response);
-				var dataRequired = 0;
+				console.log(res);
 				if (res.status == 'success') {
-					$("#LenderName").val(res.orderDetails['lender_name']);
-					$("#LenderEmailAddress").val(res.orderDetails['lender_email']);
-					$("#LenderState").val(res.orderDetails['lender_state']);
+					// $("#LenderName").val(res.orderDetails['lender_name']);
+					// $("#LenderEmailAddress").val(res.orderDetails['lender_email']);
 					$("#LenderCompany").val(res.orderDetails['lender_company_name']);
+					$("#LenderCompanyId").val(res.orderDetails['cpl_lender_company_id']);
+					$("#LenderCompanyLookupCode").val(res.orderDetails['lender_company_lookup_code']);
 					$("#assignment_clause").val(res.orderDetails['lender_assignment_clause']);
 					$("#LenderAddress").val(res.orderDetails['lender_address']);
 					$("#LenderCity").val(res.orderDetails['lender_city']);
+					$("#LenderState").val(res.orderDetails['lender_state']);
 					$("#LenderZipcode").val(res.orderDetails['lender_zipcode']);
-					$("#LenderId").val(res.orderDetails['lender_id']);
+					// $("#LenderId").val(res.orderDetails['lender_id']);
 					$("#property_address").val(res.orderDetails['street_address']);
 					$("#property_city").val(res.orderDetails['property_city']);
 					$("#property_state").val(res.orderDetails['property_state']);
@@ -548,7 +564,7 @@ function generateProposedInsured(orderId) {
 					/*$('#supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
 					$('#preliminary_report_date').val(res.orderDetails['preliminary_report_date']);*/
 					$("#borrowers_vesting").val(res.orderDetails['borrowers_vesting']);
-					if (res.orderDetails['lender_id'] != '') {
+					if (res.orderDetails['cpl_lender_company_id'] != '') {
 						$("#existing_lender").prop("checked", true);
 						// $('input[name=new_existing_lender]').attr("disabled",true);
 					} else {
@@ -559,7 +575,7 @@ function generateProposedInsured(orderId) {
 				}
 
 				$('#page-preloader').css('display', 'none');
-				$('#LenderId').val(res.orderDetails.lender_id);
+				// $('#LenderId').val(res.orderDetails.lender_id);
 				$('#orderId').val(res.orderDetails.orderId);
 				$('#fileNumber').val(res.orderDetails.order_number);
 				$('#transaction_id').val(res.orderDetails.transaction_id);
@@ -598,7 +614,7 @@ function base64toBlob(base64Data, contentType) {
 }
 
 function editInformation(orderId) {
-	if (fileId) {
+	if (orderId) {
 		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
 		$('#page-preloader').css('display', 'block');
 
@@ -623,15 +639,17 @@ function editInformation(orderId) {
 						{
 							$('#edit-order-details #lender-details-fields').hide();
 						}*/
-						$("#edit_LenderName").val(res.orderDetails['lender_name']);
+						// $("#edit_LenderName").val(res.orderDetails['lender_name']);
 						// $("#edit_LenderEmailAddress").val(res.orderDetails['lender_email']);
-						$("#edit_LenderState").val(res.orderDetails['lender_state']);
 						$("#edit_LenderCompany").val(res.orderDetails['lender_company_name']);
+						$("#edit_LenderCompanyId").val(res.orderDetails['cpl_lender_company_id']);
+						$("#edit_LenderCompanyLookupCode").val(res.orderDetails['lender_company_lookup_code']);
 						$("#edit_assignment_clause").val(res.orderDetails['lender_assignment_clause']);
 						$("#edit_LenderAddress").val(res.orderDetails['lender_address']);
 						$("#edit_LenderCity").val(res.orderDetails['lender_city']);
+						$("#edit_LenderState").val(res.orderDetails['lender_state']);
 						$("#edit_LenderZipcode").val(res.orderDetails['lender_zipcode']);
-						$("#edit_LenderId").val(res.orderDetails['lender_id']);
+						// $("#edit_LenderId").val(res.orderDetails['lender_id']);
 
 
 						$("#edit_property_address").val(res.orderDetails['street_address']);
@@ -662,8 +680,8 @@ function editInformation(orderId) {
 							$('#edit_supplemental_report_date').val(res.orderDetails['supplemental_report_date']);
 						}
 					}
-					$('#edit_LenderId').val(res.orderDetails.lender_id);
-					if (res.orderDetails['lender_id'] != '') {
+					// $('#edit_LenderId').val(res.orderDetails.lender_id);
+					if (res.orderDetails['cpl_lender_company_id'] != '') {
 						$("#edit_existing_lender").prop("checked", true);
 						// $('input[name=new_existing_lender]').attr("disabled",true);	
 					} else {
