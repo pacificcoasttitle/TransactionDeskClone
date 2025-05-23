@@ -656,6 +656,8 @@ class Order
             property_details.primary_owner,
             property_details.secondary_owner,
             property_details.escrow_lender_id,
+            property_details.escrow_id,
+            property_details.lender_id,
             property_details.cpl_lender_id,
             property_details.cpl_lender_company_id,
             property_details.buyer_agent_id,
@@ -731,7 +733,7 @@ class Order
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
             
             // ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left')
-            ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left')
+            ->join('pct_softpro_lookup_table', 'property_details.lender_id = pct_softpro_lookup_table.id', 'left')
 
             // ->join('customer_basic_details as cbd', 'order_details.customer_id = cbd.id', 'left')
             ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
