@@ -24,10 +24,10 @@ $(document).ready(function () {
             "drawCallback": function () {
 
             },
-            "fnInitComplete": function (oSettings, json) {               
-                $(".fa-info-circle").mouseenter(function() {
+            "fnInitComplete": function (oSettings, json) {
+                $(".fa-info-circle").mouseenter(function () {
                     $(this).closest('td').find('span.tooltiptext').css("visibility", "visible").css("border-radius", "3px");
-                }).mouseleave(function() {
+                }).mouseleave(function () {
                     $(this).closest('td').find('span.tooltiptext').css("visibility", "hidden").css("border-radius", "0px");
                 });
             },
@@ -67,8 +67,8 @@ $(document).ready(function () {
         });
 
         $("div#title_officer_orders_listing_filter").append(
-            '<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label><label><select style="width:auto;margin-left:10px;" name="order_type_filter" id="order_type_filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="open"> Select Order Type </option> <option value="resware_orders"> Resware Orders </option><option value="lp_orders">LP Orders</option></select></label>'
-            );
+            '<label><select style="width:auto;" name="month_filter" id="month_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="01"> January </option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></label><label><select style="width:auto;" name="orders_filter" id="orders_filter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="open"> Open </option><option value="closed">Closed</option><option value="cancelled">Cancelled</option></select></label><label><select style="width:auto;margin-left:10px;" name="order_type_filter" id="order_type_filter" class="custom-select custom-select-sm form-control form-control-sm"><option value="open"> Select Order Type </option> <option value="softpro_orders"> Softpro Orders </option><option value="lp_orders">LP Orders</option></select></label>'
+        );
 
         var d = new Date(),
 
@@ -178,15 +178,14 @@ $(document).ready(function () {
         title_officer_order_list.ajax.reload();
     });
 
-    $("#order_type_filter").on("change", function(){
+    $("#order_type_filter").on("change", function () {
         title_officer_order_list.ajax.reload();
     });
 
 
 });
 
-function getPartners(fileId) 
-{
+function getPartners(fileId) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
@@ -199,25 +198,21 @@ function getPartners(fileId)
         success: function (response) {
 
             var results = JSON.parse(response);
-            
+
             var table_data = '';
-            if(results.status == 'success')
-            {
-                if(!jQuery.isEmptyObject(results.partners))
-                {
-                    $.each(results.partners, function( key, value ) {
-                          table_data += '<tr><td>'+value.PartnerID+'</td><td>'+value.PartnerTypeID+'</td><td>'+value.PartnerType.PartnerTypeName+'</td><td>'+value.PartnerName+'</td></tr>';
+            if (results.status == 'success') {
+                if (!jQuery.isEmptyObject(results.partners)) {
+                    $.each(results.partners, function (key, value) {
+                        table_data += '<tr><td>' + value.PartnerID + '</td><td>' + value.PartnerTypeID + '</td><td>' + value.PartnerType.PartnerTypeName + '</td><td>' + value.PartnerName + '</td></tr>';
                     });
                 }
-                else
-                {
+                else {
                     table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
                 }
                 $('#tbl-partners-data tbody').html(table_data);
                 $('#partnersModal').modal('show');
             }
-            else if(results.status == 'error')
-            {
+            else if (results.status == 'error') {
                 alert(results.msg);
             }
             $('#page-preloader').css('display', 'none');
@@ -225,8 +220,7 @@ function getPartners(fileId)
     });
 }
 
-function downloadDocumentFromAws(url, documentType)
-{
+function downloadDocumentFromAws(url, documentType) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var fileNameIndex = url.lastIndexOf("/") + 1;
@@ -235,7 +229,7 @@ function downloadDocumentFromAws(url, documentType)
         url: base_url + "download-aws-file",
         type: "post",
         data: {
-            url : url
+            url: url
         },
         async: false,
         success: function (response) {
@@ -245,7 +239,7 @@ function downloadDocumentFromAws(url, documentType)
                     var csvURL = navigator.msSaveBlob(csvData, filename);
                     var element = document.createElement('a');
                     element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
+                    element.setAttribute('download', documentType + "_" + filename);
                     element.style.display = 'none';
                     document.body.appendChild(element);
                     document.body.removeChild(element);
@@ -254,7 +248,7 @@ function downloadDocumentFromAws(url, documentType)
                     var csvURL = 'data:application/octet-stream;base64,' + response;
                     var element = document.createElement('a');
                     element.setAttribute('href', csvURL);
-                    element.setAttribute('download', documentType+"_"+filename);
+                    element.setAttribute('download', documentType + "_" + filename);
                     element.style.display = 'none';
                     document.body.appendChild(element);
                     element.click();
@@ -262,6 +256,70 @@ function downloadDocumentFromAws(url, documentType)
                 }
             }
             $('#page-preloader').css('display', 'none');
+        }
+    });
+}
+
+function getRevenueData() {
+    $('#revenue_model').modal('show');
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    var user_id = $('#user_id').val();
+    $.ajax({
+        url: base_url + "get-revenue-data",
+        method: "POST",
+        data: {
+            user_id: user_id,
+            user_type: 'title_officer'
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            $('#page-preloader').css('display', 'none');
+            if (result.status == 'success') {
+                $('#revenue_container').html(result.data);
+                $('#revenue_model').modal('show');
+            } else {
+                $('#revenue_container').html(result.data);
+                $('#revenue_model').modal('show');
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            // $('#lp_order_error_msg').html('Something went wrong. Please try it again.').show();
+            // $([document.documentElement, document.body]).animate({
+            //     scrollTop: $("#lp_order_success_msg").offset().top
+            // }, 1000);
+
+            // setTimeout(function () {
+            //     $('#lp_order_error_msg').html('').hide();
+            // }, 5000);
+        }
+    });
+}
+
+function getRevenueDataBasedOnMonth(month) {
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    var sales_rep_id = $('#sales_user_production_filter').val();
+    $.ajax({
+        url: base_url + "get-revenue-data",
+        method: "POST",
+        data: {
+            sales_rep_id: sales_rep_id,
+            month: month
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            $('#page-preloader').css('display', 'none');
+            if (result.status == 'success') {
+                $('#revenue_container').html(result.data);
+                $('#revenue_model').modal('show');
+            } else {
+                $('#revenue_container').html(result.data);
+                $('#revenue_model').modal('show');
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+
         }
     });
 }

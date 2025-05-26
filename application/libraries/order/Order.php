@@ -2008,6 +2008,167 @@ class Order
         $query = $this->CI->db->get();
         return $query->row_array();
     }
+    
+    public function getOpenOrdersCountForRefiProductsForTO($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    {
+        $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders, sum(escrow_amount) as total_escrow_amount_for_refi_open_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        // $this->CI->db->where('order_details.prod_type', 'loan');
+        if (!empty($closedOrderNumbers)) {
+            $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
+        }
+        $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
+
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
+        } else {
+            $this->CI->db->where('MONTH(order_details.created_at)', $month);
+
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.created_at)', $year);
+            }
+
+        }
+
+        if (!empty($userId) & $userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+
+        if ($escrow_flag == 1) {
+            $this->CI->db->where('order_details.escrow_amount > 0');
+        }
+
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->row_array();
+    }
+
+    public function getOpenOrdersCountForSaleProductsForTO($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    {
+        $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders, sum(escrow_amount) as total_escrow_amount_for_sale_open_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        if (!empty($closedOrderNumbers)) {
+            $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
+        }
+        $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
+
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
+        } else {
+
+            $this->CI->db->where('MONTH(order_details.created_at)', $month);
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.created_at)', $year);
+            }
+        }
+
+        if (!empty($userId) & $userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+
+        if ($escrow_flag == 1) {
+            $this->CI->db->where('order_details.escrow_amount > 0');
+        }
+
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->row_array();
+    }
+
+    public function getClosedOrdersCountForRefiProductsForTO($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    {
+        // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
+        $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        // $this->CI->db->where('order_details.prod_type', 'loan');
+        $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
+        } else {
+            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            }
+
+        }
+
+        if (!empty($userId) & $userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+
+        if ($escrow_flag == 1) {
+            $this->CI->db->where('order_details.escrow_amount > 0');
+        }
+
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function getClosedOrdersCountForSaleProductsForTO($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    {
+        // $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders , '.$fieds_sum_str)
+        $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        // $this->CI->db->where('order_details.prod_type', 'sale');
+        $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        if ($dashboard_flag == 1) {
+            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+            $endDate = date('Y-m-d 23:59:59');
+            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
+        } else {
+
+            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            }
+        }
+
+        if (!empty($userId) & $userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+
+        if ($escrow_flag == 1) {
+            $this->CI->db->where('order_details.escrow_amount > 0');
+        }
+
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
 
     public function getOpenLPOrdersCountForRefiProducts($startDate, $endDate, $userId, $escrow_flag = 0)
     {
@@ -4750,7 +4911,7 @@ class Order
         return true;
     }
 
-    public function getRevenueData($month, $userId)
+    public function getRevenueData($month, $userId, $user_type='sales_rep')
     {
         $userdata = $this->CI->session->userdata('user');
         if (empty($userId)) {
@@ -4763,8 +4924,11 @@ class Order
 
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
-
-        $this->CI->db->where('transaction_details.sales_representative', $userId);
+        if ($user_type == 'title_officer') {
+            $this->CI->db->where('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative', $userId);
+        }
         $query = $this->CI->db->get();
         return $query->result_array();
     }

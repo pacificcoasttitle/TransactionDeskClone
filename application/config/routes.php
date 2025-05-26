@@ -239,6 +239,7 @@ $route['fetch-bulk-prelim-report']         = 'frontend/order/cron/fetchBulkPreli
 $route['fetch-single-prelim-report']         = 'frontend/order/cron/fetchSinglePrelimreport';
 $route['post-prelim-report']         = 'frontend/order/cron/postPrelimreport';
 $route['post-policy-document']         = 'frontend/order/cron/postPolicyDocument';
+$route['post-milestone']         = 'frontend/order/cron/postMileStone';
 
 
 $route['order/admin/softpro-agents']                = 'admin/order/home/spAdminAgent';
@@ -317,7 +318,7 @@ $route['sales-current-month-history']            = 'frontend/order/salesRep/sale
 $route['add-escrow-ins-order']                   = 'frontend/order/escrow/addEscrowInsOrder';
 $route['send-request-docs']                      = 'frontend/order/escrow/sendRequestDocs';
 $route['generate-all-document-from-title-point'] = 'frontend/order/home/generateAllDocumentFromTitlePoint';
-$route['get-revenue-data']                       = 'frontend/order/salesRep/getRevenueData';
+$route['get-revenue-data']                       = 'frontend/order/common/getRevenueData';
 $route['send-package/:any']                      = 'frontend/order/dashboardMail/sendPackage';
 $route['add-buyer-on-order-mail']                = 'frontend/order/dashboardMail/addBuyerOnOrder';
 $route['add-seller-on-order-mail']               = 'frontend/order/dashboardMail/addSellerOnOrder';
