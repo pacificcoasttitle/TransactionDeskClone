@@ -21,6 +21,8 @@
 												</select>
 											</label>
 										</div>
+									<?php } else { ?>
+										<input type="hidden" name="sales_user_filter" id="sales_user_filter" value="<?php echo $user_id;?>">
 									<?php } ?>
 								</div>
 							</div>

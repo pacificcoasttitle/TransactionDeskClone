@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '12.1';
+    private $version = '12.02';
 
     public function __construct()
     {
@@ -257,7 +257,7 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
@@ -813,7 +813,7 @@ class SalesRep extends MX_Controller
 
         }
         $data['salesHistory'] = $salesHistory;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->version));
         //$this->template->show("order", "sales_production_history", $data);
         $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
@@ -879,7 +879,7 @@ class SalesRep extends MX_Controller
         }
         $data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS(base_url('assets/plugins/chart/Chart.min.js'));
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-trends.css?v=' . $this->version));
         //$this->template->show("order", "sales_trends", $data);
         $this->salesdashboardtemplate->show("order", "sales_trends", $data);
@@ -958,7 +958,7 @@ class SalesRep extends MX_Controller
                 }
             }
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/escrow_tasks.css?v=05'));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-summary.css?v=05'));
         //$this->template->show("order", "sales_summary", $data);
@@ -1018,7 +1018,7 @@ class SalesRep extends MX_Controller
 
         }
         $data['commissionHistory'] = $commissionHistory;
-        $this->template->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=sales_dashboard_' . $this->version));
+        $this->template->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
         $this->template->show("order", "sales_commission_history", $data);
     }
 
@@ -1094,55 +1094,11 @@ class SalesRep extends MX_Controller
 
             $data['reports_data'] = $this->salesReport_model->getSalesAllReportData($report_condition);
 
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=sales_activity_1' . $this->version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=' . $this->version));
             $this->salesdashboardtemplate->show("order", "sales_report", $data);
         } else {
             redirect(base_url() . 'sales-dashboard/' . $userId);
         }
     }
-    public function getRevenueData()
-    {
-        date_default_timezone_set('America/Los_Angeles');
-        $sales_rep_id = $this->input->post('sales_rep_id');
-        $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $sales_rep_id);
-        $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
-            <thead>
-                <tr>
-                    <th>Sr No</th>
-                    <th>File Number</th>
-                    <th>Address</th>
-                    <th>Prod Type</th>
-                    <th>Revenue</th>
-                </tr>
-            </thead>
-        <tbody>";
-
-        $i = 1;
-        if (!empty($revenueData)) {
-            foreach ($revenueData as $revenue) {
-                $file_number = $revenue['file_number'];
-                $full_address = $revenue['full_address'];
-                $prod_type = $revenue['prod_type'];
-                $revenue = '$' . number_format($revenue['premium']);
-                $data .= "<tr>
-                                <td width='12%'>$i</td>
-                                <td width='12%'>$file_number</td>
-                                <td width='52%'>$full_address</td>
-                                <td width='12%'>$prod_type</td>
-                                <td width='12%'>$revenue</td>
-                            </tr>";
-                $i++;
-            }
-        } else {
-            $data .= "<tr><td colspan='5'>No records found.</td></tr>";
-        }
-        $data .= '</tbody></table>';
-        if (!empty($data)) {
-            $result = array('status' => 'success', 'data' => $data);
-        } else {
-            $result = array('status' => 'error', 'data' => $data);
-        }
-        echo json_encode($result);
-        exit;
-    }
+    
 }

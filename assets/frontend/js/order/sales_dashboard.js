@@ -537,7 +537,8 @@ function getRevenueData() {
         url: base_url + "get-revenue-data",
         method: "POST",
         data: {
-            sales_rep_id: sales_rep_id
+            user_id: sales_rep_id,
+            user_type: 'sales_rep'
         },
         success: function (data) {
             var result = jQuery.parseJSON(data);
