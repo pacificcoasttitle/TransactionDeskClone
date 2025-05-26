@@ -184,6 +184,17 @@ class Home extends MX_Controller
                 $agentDetailFlag      = $this->input->post('add-agent-details');
                 $escrowOfficerFlag    = $this->input->post('add-escrow-officer-details');
                 $escrowOfficer        = $this->input->post('escrow_officer');
+
+                $con = [
+                        'where'      => [
+                            'closer_examiner'   => $escrowOfficer,
+                            'is_escrow_officer'       => 1,
+                        ]
+                ];
+            
+                $escrowOfficerDetails = $this->order->get_rows($con, 'pct_softpro_lookup_table');
+                $escrowOfficerId       = isset($escrowOfficerDetails['id']) && !empty($escrowOfficerDetails['id']) ? $escrowOfficerDetails['id'] : '';
+
                 $escrowOfficerKey     = '';
                 $user_data            = [];
                 $orderReq             = [];
@@ -664,7 +675,7 @@ class Home extends MX_Controller
                     'transaction_id'    => $transactionId,
                     'created_by'        => $userdata['id'],
                     'random_number'     => $randomString,
-                    'escrow_officer_id' => $this->input->post('escrow_officer'),
+                    'escrow_officer_id' => $escrowOfficerId,
                     'prod_type'         => $TransactionType,
                     'softpro_status'    => ($lpOrderFlag == 1) ? 'open' : '',
                     'status'            => 1,

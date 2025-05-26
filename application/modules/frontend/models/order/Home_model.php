@@ -793,7 +793,7 @@ class Home_model extends CI_Model
     {
         // $this->db->select('*');
         $this->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name');
-        $this->db->from('sp_officers');
+        $this->db->from('pct_softpro_lookup_table');
         // $this->db->where('status', 1);
         $this->db->where('is_escrow_officer', 1);
         $query = $this->db->get();
