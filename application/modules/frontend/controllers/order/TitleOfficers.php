@@ -4,7 +4,7 @@
 
 class TitleOfficers extends MX_Controller 
 {
-	private $version = '03.01';
+	private $version = '03.02';
 	function __construct() 
     {
         parent::__construct();
@@ -151,15 +151,55 @@ class TitleOfficers extends MX_Controller
                 }
 
                 $action = '<div class="dropdown"><a class="btn dropdown-toggle click-action-type" type="button" data-toggle="dropdown" href="#">Click Action Type <span class="caret"></span></a><ul class="dropdown-menu">';
+                $action = "<div style='display: flex;justify-content: space-between;'>";
                 if ($order['prelim_summary_id'] != 0) {
-					$action .= "<li  class='text-center'><a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>Review File</button></a></li>";
+					// $action .= "<li  class='text-center'><a href='".base_url()."review-file/".$order['file_id']."'><button class='btn btn-grad-2a button-color' type='button'>Review File</button></a></li>";
+                    $prelimDoc = $this->order->get_prelim_document($order['id']);
+                    if (env('AWS_ENABLE_FLAG') == 1) {
+                        $prelimUrl = env('AWS_PATH') . "documents/" . $prelimDoc['document_name'];
+                    } else {
+                        $prelimUrl = base_url() . 'uploads/documents/' . $prelimDoc['document_name'];
+                    }
+                    $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
+                    $class = isset($order['is_doc_updated']) && !empty($order['is_doc_updated']) ? 'updated-prelim-btn' : 'btn-success';
+                    $action .= "<a href='" . $prelimUrl . "' target='_blank'>
+							<button type='submit' class='btn $class btn-icon-split'>
+								<span class='icon text-white-50'>
+									<i class='fas fa-file'></i>
+								</span>
+								<span class='text'>Review File</span>
+							</button>
+						</a>
+                        <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
+                            <button type='button' class='btn btn-secondary update-prelim-btn btn-icon-split'>
+                                <span class='icon text-white-50'>
+                                    <i class='fas fa-refresh'></i>
+                                </span>
+                                <span class='text'>Update Prelim</span>
+                            </button>
+                        </a>";
 				} else {
-					$action .= "<li class='text-center'><a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;padding: 5px 30px;' type='button'>Not Ready</button></a></li>";
+					// $action .= "<li class='text-center'><a href='javascript:void(0);'><button class='btn btn-grad-2a' style='background: #d35411;padding: 5px 30px;' type='button'>Not Ready</button></a></li>";
+                    $action .= "<a href='javascript:void(0)'>
+						<button type='submit' class='btn btn-info btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-tasks'></i>
+							</span>
+							<span class='text'>Not Ready</span>
+						</button></a>
+                    <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+						<button type='button' class='btn btn-primary btn-icon-split'>
+							<span class='icon text-white-50'>
+								<i class='fas fa-refresh'></i>
+							</span>
+							<span class='text'>Get Prelim Doc</span>
+						</button></a>
+                    ";
 				}
 
-                if (!empty($order['file_number'])) {
-                    $action .= "<li  class='text-center'><a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>View Partners</button></a></li>";
-                }
+                // if (!empty($order['file_number'])) {
+                //     $action .= "<li  class='text-center'><a href='javascript:void(0);'><button class='btn btn-grad-2a button-color' type='button' onclick='getPartners(".$order['file_id'].");'>View Partners</button></a></li>";
+                // }
 				
                 if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
                     $documentUrl = env('AWS_PATH')."pre-listing-doc/".$order['lp_file_number'].'.pdf';
