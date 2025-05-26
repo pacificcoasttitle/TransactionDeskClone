@@ -6450,10 +6450,12 @@ class Cron extends MX_Controller
                     $update_data[$key]['closer_examiner'] = $row['Title officer/Examiner'];
                     $update_data[$key]['lookup_code']     = $row['Office LookupCode'];
                     $update_data[$key]['officer_name']    = $row['Officer Name'];
+                    $update_data[$key]['email_address']    = $row['Email'];
                 } else {
                     $insert_data[$key]['closer_examiner']  = $row['Title officer/Examiner'];
                     $insert_data[$key]['lookup_code']      = $row['Office LookupCode'];
                     $insert_data[$key]['officer_name']     = $row['Officer Name'];
+                    $insert_data[$key]['email_address']     = $row['Email'];
                     $insert_data[$key]['is_title_officer'] = 1;
                 }
             }
@@ -6786,10 +6788,12 @@ class Cron extends MX_Controller
         $salesrepList = $this->db->select('lookup_code, email_address, id')
                                     ->from('pct_softpro_lookup_table')
                                     ->where(['status' => 1])
+                                    ->where(['is_title_officer' => 1])
                                     // ->where('password is null')
                                     ->get()
                                     ->result_array();
         // echo "<pre>";
+        $count = 0;
         foreach ($salesrepList as $key => $value) {
             // print_r($value);
             $pctSalesRep = $this->db->select('email_address, password, random_password, is_tmp_password, is_password_required, is_password_updated, id, is_sales_rep_manager, sales_rep_users')
@@ -6836,14 +6840,17 @@ class Cron extends MX_Controller
                 $this->db->where('id', $value['id']);
                 $this->db->update('pct_softpro_lookup_table', $updateData);
 
-                $updateOrder = [
-                    'created_by' => $value['id']
-                ];
-                $this->db->where(['created_by' => $pctSalesRep['id'], 'is_softpro_order' => 1]);
-                $this->db->update('order_details', $updateOrder);
+                // $updateOrder = [
+                //     'created_by' => $value['id']
+                // ];
+                // $this->db->where(['created_by' => $pctSalesRep['id'], 'is_softpro_order' => 1]);
+                // $this->db->update('order_details', $updateOrder);
+                $count++;
             }
         }
         // print_r($salesrepList);die;
+        $res = json_encode(['updated' => $count]);
+        print_r($res);die;
         
     }
 
