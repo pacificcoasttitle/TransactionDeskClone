@@ -412,6 +412,8 @@
 					</div>
 					<div class="card-body">
 						<div class="table-responsive">
+							<div id="listing_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+							<div id="listing_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
 							<table class="table table-bordered" id="title_officer_orders_listing" width="100%" cellspacing="0">
 								<thead>
 									<tr>

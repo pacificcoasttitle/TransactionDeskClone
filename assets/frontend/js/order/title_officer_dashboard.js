@@ -1,7 +1,7 @@
+var title_officer_order_list = '';
+var title_officer_notes = '';
+var title_officer_forms_listing = '';
 $(document).ready(function () {
-    var title_officer_order_list = '';
-    var title_officer_notes = '';
-    var title_officer_forms_listing = '';
     if ($('#title_officer_orders_listing').length) {
         title_officer_order_list = $('#title_officer_orders_listing').DataTable({
             "paging": true,
@@ -320,6 +320,57 @@ function getRevenueDataBasedOnMonth(month) {
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
 
+        }
+    });
+}
+
+function fetchPrelimDocument(fileNumber = '') {
+    $("#page-preloader").show();
+    let queryParams = '';
+    let url = '';
+    if (fileNumber != '') {
+        queryParams = `orderNumber=${fileNumber}`;
+        url = base_url + "fetch-single-prelim-report?" + queryParams;
+    }
+    $.ajax({
+        url: url,
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = result.message;
+                $('#listing_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#listing_success_msg").offset().top
+                }, 1000);
+                title_officer_order_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#listing_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#listing_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#listing_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#listing_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#listing_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#listing_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#listing_error_msg').html('').hide();
+            }, 10000);
         }
     });
 }
