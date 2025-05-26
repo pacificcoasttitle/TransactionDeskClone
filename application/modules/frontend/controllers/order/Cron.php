@@ -7622,6 +7622,15 @@ class Cron extends MX_Controller
         echo $res;exit;
     }
 
+    public function postMileStone() {
+        $this->load->model('order/apiLogs');
+        
+        $reqData     = file_get_contents("php://input");
+        $logid =  $this->apiLogs->syncLogs(0, 'softpro', 'received_milestone_update', 'received_milestone_update', $reqData, [], 0, 0);
+        $response    = json_decode($reqData, true);
+        
+    }
+
     public function updateOrderOfficers() {
         $this->db->select('order_details.id, file_number, t.title_officer, transaction_id, escrow_officer_id');
         $this->db->from('order_details');
