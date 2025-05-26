@@ -6034,7 +6034,7 @@ class Cron extends MX_Controller
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data            = $response['data'];
-            $existing_lookupcode = $this->db->select('closer_examiner')->from('sp_officers')->where('is_escrow_officer', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('closer_examiner')->from('pct_softpro_lookup_table')->where('is_escrow_officer', 1)->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'closer_examiner');
 
             // Separate data into updates and inserts
@@ -6058,13 +6058,13 @@ class Cron extends MX_Controller
                 foreach ($update_data as $update_row) {
                     $this->db->where('closer_examiner', $update_row['closer_examiner']);
                     $this->db->where('is_escrow_officer', 1);
-                    $this->db->update('sp_officers', $update_row);
+                    $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
             // Perform batch insert for new emails
             if (!empty($insert_data)) {
-                $this->db->insert_batch('sp_officers', $insert_data);
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
             }
 
             $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]);
@@ -6438,7 +6438,7 @@ class Cron extends MX_Controller
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data        = $response['data'];
-            $closer_examiner = $this->db->select('closer_examiner')->from('sp_officers')->where('is_title_officer', 1)->get()->result_array();
+            $closer_examiner = $this->db->select('closer_examiner')->from('pct_softpro_lookup_table')->where('is_title_officer', 1)->get()->result_array();
             $closer_examiner = array_column($closer_examiner, 'closer_examiner');
 
             // Separate data into updates and inserts
@@ -6463,13 +6463,13 @@ class Cron extends MX_Controller
                 foreach ($update_data as $update_row) {
                     $this->db->where('closer_examiner', $update_row['closer_examiner']);
                     $this->db->where('is_title_officer', 1);
-                    $this->db->update('sp_officers', $update_row);
+                    $this->db->update('pct_softpro_lookup_table', $update_row);
                 }
             }
 
             // Perform batch insert for new emails
             if (!empty($insert_data)) {
-                $this->db->insert_batch('sp_officers', $insert_data);
+                $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
             }
 
             $res = json_encode(['updated' => count($update_data), 'inserted' => count($insert_data)]);
