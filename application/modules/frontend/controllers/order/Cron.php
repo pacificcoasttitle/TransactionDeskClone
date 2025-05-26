@@ -7614,4 +7614,48 @@ class Cron extends MX_Controller
         $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
         echo $res;exit;
     }
+
+    public function updateOrderOfficers() {
+        $this->db->select('order_details.id, file_number, t.title_officer, transaction_id, escrow_officer_id');
+        $this->db->from('order_details');
+        $this->db->join('transaction_details as t', 'order_details.transaction_id = t.id', 'left');
+        $this->db->where('is_softpro_order', 1);
+        $this->db->where('t.title_officer is not null');
+        $this->db->order_by('order_details.id', 'DESC');
+        $orderList = $this->db->get()->result_array();
+        $titleOfficerMapping = [
+            5 => 14415, //'Clive Virata'
+            6 => 14416, // 'Eddie LasMarias'
+            7 => 14417, // 'Jim Jean' 
+            8 => 14418, // 'Kevin Cameron'
+            9 => 0,
+            10 => 14419, // 'Rachel Barcena'
+            11 => 14420 // 'Susan Dana'
+        ];
+        $count=0;
+        foreach ($orderList as $key => $list) {
+            $file_number = $list['file_number'];
+            $transactionId = $list['transaction_id'];
+            $titleOfficerId = $list['title_officer'];
+            
+            if (array_key_exists($titleOfficerId, $titleOfficerMapping)) {
+                $updateData = [
+                    'title_officer' => $titleOfficerMapping[$titleOfficerId],
+                ];
+                $condition = [
+                    'id' => $transactionId
+                ];
+                $this->home_model->update($updateData, $condition, 'transaction_details');
+                // echo "<pre>";
+                // print_r($updateData);
+                // print_r($list);die;
+                $count++;
+            } else {
+                // echo "Transaction ID not found for file number: " . $file_number;die;
+            }
+        }
+        $res = json_encode(['updated' => count($count)]);
+        echo "<pre>";
+        print_r($res);die;
+    }
 }
