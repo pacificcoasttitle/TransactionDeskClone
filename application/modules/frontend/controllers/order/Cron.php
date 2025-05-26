@@ -7654,8 +7654,7 @@ class Cron extends MX_Controller
                 // echo "Transaction ID not found for file number: " . $file_number;die;
             }
         }
-        $res = json_encode(['updated' => count($count)]);
-        echo "<pre>";
+        $res = json_encode(['updated' => $count]);
         print_r($res);die;
     }
 }
