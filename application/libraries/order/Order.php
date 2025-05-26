@@ -1059,10 +1059,8 @@ class Order
         }
     }
 
-    public function get_rows($params = array())
+    public function get_rows($params = array(), $table = 'order_details')
     {
-        $table = 'order_details';
-
         $this->CI->db->select('*');
         $this->CI->db->from($table);
 
@@ -4978,7 +4976,8 @@ class Order
 
     public function getTitleOfficerLookupDetails($params)
     {
-        $table = 'sp_officers';
+        // $table = 'sp_officers';
+        $table = 'pct_softpro_lookup_table';
         // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
         $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name');
         $this->CI->db->from($table);
