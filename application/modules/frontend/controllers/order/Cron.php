@@ -7513,13 +7513,15 @@ class Cron extends MX_Controller
                     if (strpos(strtolower($docType), 'policy') !== false) {
                         if (strpos(strtolower($docType), 'lender') !== false) {
                             $is_lender_policy = 1;
+                            $condition['is_lender_policy'] = 1;
                         } else {
                             $is_owner_policy = 1;
+                            $condition['is_owner_policy'] = 1;
                         }
                         $document_name = time() . "_policy_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
                         $policyDocFlag = true;
                     } else if (strpos(strtolower($docType), 'supplement') !== false) {
-                        // $condition['is_supplement_statement'] = 1;
+                        $condition['is_supplement_statement'] = 1;
                         $document_name = time() . "_supplement_" . str_replace(["'", " "], "", $docType) . '_' . $file_number . '.pdf';
                         $is_supplement_statement = 1;
                         $supplementDocFlag = true;
@@ -7533,23 +7535,37 @@ class Cron extends MX_Controller
                     // if (true) {
                     // if (true) {
                     if ($uploadStatus) {
-                        // $policyDocumentsList = $this->order->getPolicyDocuments($condition);
+                        $policyDocumentsList = $this->order->getPolicyDocuments($condition);
                         // echo "<pre>";
                         // print_r($policyDocumentsList);die;
-                        // if (empty($policyDocumentsList)) {
-                        $documentData = array(
-                            'document_name' => $document_name,
-                            'original_document_name' => urldecode($documentBaseName),
-                            'user_id' => $filesResult['customer_id'],
-                            'order_id' => $orderId,
-                            'description' => $documentBaseName,
-                            'created' => date('Y-m-d H:i:s'),
-                            'is_sync' => 1,
-                            'is_lender_policy' => $is_lender_policy,
-                            'is_owner_policy' => $is_owner_policy,
-                            'is_supplement_statement' => $is_supplement_statement,
-                        );
-                        $documentId = $this->document->insert($documentData);
+                        if (empty($policyDocumentsList)) {
+                            $documentData = array(
+                                'document_name' => $document_name,
+                                'original_document_name' => urldecode($documentBaseName),
+                                'user_id' => $filesResult['customer_id'],
+                                'order_id' => $orderId,
+                                'description' => $documentBaseName,
+                                'created' => date('Y-m-d H:i:s'),
+                                'is_sync' => 1,
+                                'is_lender_policy' => $is_lender_policy,
+                                'is_owner_policy' => $is_owner_policy,
+                                'is_supplement_statement' => $is_supplement_statement,
+                            );
+                            $documentId = $this->document->insert($documentData);
+                            
+                        } else {
+                            $existingLink = 'documents/' . $policyDocumentsList['document_name'];
+                            $this->order->deleteDocumentOnAwsS3($existingLink);
+                            $documentData = array(
+                                'document_name' => $document_name,
+                                'original_document_name' => urldecode($documentBaseName),
+                                'description' => $documentBaseName,
+                                'is_sync' => 1,
+                                'is_lender_policy' => $is_lender_policy,
+                                'is_owner_policy' => $is_owner_policy,
+                            );
+                            $documentId = $this->document->update($documentData, $condition);
+                        }
                         if ($documentId) {
                             if ($policyDocFlag) {
                                 $files['policy'][] = env('AWS_PATH') . "documents/" . $document_name;
@@ -7585,19 +7601,21 @@ class Cron extends MX_Controller
 
                 if (!empty($filesResult['email_address'])) {
                     $filesResult['email_to'] = $filesResult['email_address'];
-                    if(!empty($files['policy'])) {
-                        $filesResult['doc_type'] = "Policy Document";
-                        $filesResult['file_links'] = $files['policy'];
-                        $email_status = $this->order->sendSuppPolicyEmail($filesResult);
-                    } 
                     
                     if (!empty($files['supplement'])) {
-                        $filesResult['doc_type'] = "Supplement Statement Document";
-                        $filesResult['file_links'] = $files['supplement'];
-                        // echo "<pre>";
-                        // print_r($filesResult);die;
-                        $email_status = $this->order->sendSuppPolicyEmail($filesResult);
+                        $suppData = $filesResult; // Clone
+                        $suppData['doc_type'] = "Supplement Statement Document";
+                        $suppData['file_links'] = $files['supplement'];
+                        $email_status = $this->order->sendSuppPolicyEmail($suppData);
                     }
+
+                    if(!empty($files['policy'])) {
+                        $policyData = $filesResult; // Clone
+                        $policyData['doc_type'] = "Policy Document";
+                        $policyData['file_links'] = $files['policy'];
+                        $email_status = $this->order->sendSuppPolicyEmail($policyData);
+                    } 
+                    
                     
                     if ($email_status && !empty($updateOrderDetails)) {
                         $condition = ['id' => $orderId];
