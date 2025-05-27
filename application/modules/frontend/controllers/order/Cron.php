@@ -6959,7 +6959,7 @@ class Cron extends MX_Controller
         $salesRepList = array_column($query->result_array(), 'id', 'full_name');
 
         $query = $this->db->select('id, officer_name')
-                      ->from('sp_officers')
+                      ->from('pct_softpro_lookup_table')
                       ->where('is_title_officer', 1) 
                       ->get();
 

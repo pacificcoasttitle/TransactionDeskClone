@@ -170,10 +170,9 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
             $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
-                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
-                $this->CI->db->where('order_details.is_payoff_order', 1);
+                // $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                // $this->CI->db->join('pct_softpro_lookup_table as to', 'to.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
@@ -287,10 +286,9 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
             $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
-                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
-                $this->CI->db->where('order_details.is_payoff_order', 1);
+                // $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                // $this->CI->db->join('pct_softpro_lookup_table as to', 'to.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
@@ -412,10 +410,9 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
             $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
-                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
-                $this->CI->db->where('order_details.is_payoff_order', 1);
+                // $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                // $this->CI->db->join('pct_softpro_lookup_table as to', 'to.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
@@ -522,10 +519,9 @@ class Order
                 ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left');
             $this->CI->db->where('order_details.is_softpro_order', 1);
             if (isset($is_pay_off) && !empty($is_pay_off)) {
-                $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
-                $this->CI->db->join('sp_officers', 'sp_officers.id = transaction_details.title_officer', 'left');
-                // $this->CI->db->join('customer_basic_details', 'customer_basic_details.id = transaction_details.title_officer', 'left');
-                $this->CI->db->where('order_details.is_payoff_order', 1);
+                // $this->CI->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+                // $this->CI->db->join('pct_softpro_lookup_table as to', 'to.id = transaction_details.title_officer', 'left');
+                // $this->CI->db->where('order_details.is_payoff_order', 1);
             }
 
             if ($userdata['is_master'] == 0 && $userdata['is_sales_rep'] == 0 && $userdata['is_title_officer'] == 0 && $userdata['is_payoff_user'] == 0) {
@@ -739,7 +735,7 @@ class Order
             ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
 
             // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
-            ->join('sp_officers as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
+            ->join('pct_softpro_lookup_table as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
 
             // ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
@@ -5140,7 +5136,6 @@ class Order
 
     public function getTitleOfficerLookupDetails($params)
     {
-        // $table = 'sp_officers';
         $table = 'pct_softpro_lookup_table';
         // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
         $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name');

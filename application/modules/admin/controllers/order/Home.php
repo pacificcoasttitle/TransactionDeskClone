@@ -3424,8 +3424,8 @@ class Home extends MX_Controller
 
             $condition = ['id' => $id];
 
-            $companyDetails = $this->home_model->get_user($condition, 'sp_officers');
-            $update         = $this->home_model->update($escrowData, $condition, 'sp_officers');
+            $companyDetails = $this->home_model->get_user($condition, 'pct_softpro_lookup_table');
+            $update         = $this->home_model->update($escrowData, $condition, 'pct_softpro_lookup_table');
 
             if ($update) {
                 /** Save user Activity */
