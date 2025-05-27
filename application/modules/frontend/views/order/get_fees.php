@@ -71,7 +71,7 @@
                                                 <td class="bg-gray" colspan="2" style="width:60%"><b>Title Fees</b></td>
                                             </tr>
 
-                                            <?php  if ($calcResult['transactionType'] == 'Re-Finance') { ?>
+                                            <!-- <?php  if ($calcResult['transactionType'] == 'Re-Finance') { ?>
                                                 <tr>
                                                     <td>ALTA Residential Loan Policy</td>
                                                     <td class="aright">
@@ -101,6 +101,40 @@
                                                     <td><b>Total</b></td>
                                                     <td class="aright">
                                                         <b><?php echo $calcResult['title_total']; ?></b>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?> -->
+
+                                            <?php  if ($calcResult['transactionType'] == 'Re-Finance') { ?>
+                                                <tr>
+                                                    <td>ALTA Residential Loan Policy</td>
+                                                    <td class="aright">
+                                                        <?php echo '$' . $calcResult['owners_fees']; ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Total</b></td>
+                                                    <td class="aright">
+                                                        <b><?php echo '$' . $calcResult['loan_fees']; ?></b>
+                                                    </td>
+                                                </tr>
+                                            <?php } else { ?>
+                                                <tr>
+                                                    <td>Alta Homeowners Policy</td>
+                                                    <td class="aright">
+                                                        <?php echo '$' . $calcResult['owners_fees']; ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Alta Lenders Concurrent Loan Rate</td>
+                                                    <td class="aright">
+                                                        <?php echo '$' . $calcResult['loan_fees']; ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><b>Total</b></td>
+                                                    <td class="aright">
+                                                        <b><?php echo '$' . ($calcResult['owners_fees'] + $calcResult['loan_fees']); ?></b>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
@@ -222,9 +256,9 @@
             
         </div>
         <div class="clearfix" id="act_btns">
-                <br />
-                <a class="button small orange" id="download_estimate" data-closing-fee-id="<?php echo $closing_fee_estimate_id; ?>" href="javascript:void(0);">Download Fee Estimate</a>
-            </div>
+            <br />
+            <a class="button small orange" id="download_estimate" data-closing-fee-id="<?php echo $closing_fee_estimate_id; ?>" href="javascript:void(0);">Download Fee Estimate</a>
+        </div>
     </div>	
 </section>
 

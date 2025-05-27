@@ -391,6 +391,24 @@ class Dashboard extends MX_Controller
         // } else {
         //     $data['is_escrow_flag'] = 0;
         // }
+
+
+        $apiEndPoints = SOFTPRO_API_END;
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['orderNumber'] = $orderDetails['file_number'];
+        $queryParams = "orderNumber=" . urlencode($orderDetails['file_number']);
+        $reqData     = json_encode($req);
+        $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_fees'] . '?'.$queryParams;
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'get_fees', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
+        
+        if ($response['status'] == 'success' && !empty($response['data'])) {
+            $feesList = $response['data'];
+            $calcResult['owners_fees'] = $feesList['Owners']['Amount'];
+            $calcResult['loan_fees'] = $feesList['Loan']['Amount'];
+        }
         
         $data['calcResult'] = $calcResult;
         $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
