@@ -1713,18 +1713,18 @@ class Order
                 ],
             ]);
 
-            $result = $s3Client->deleteObject([
+            return $result = $s3Client->deleteObject([
                 'Bucket' => $bucket,
                 'Key' => $filePath
             ]);
 
-            if ($result['DeleteMarker'] ?? false) {
-                echo "Object deleted (delete marker set).";
-            } else {
-                echo "Object deleted.";
-            }
+            // if ($result['DeleteMarker'] ?? false) {
+            //     echo "Object deleted (delete marker set).";
+            // } else {
+            //     echo "Object deleted.";
+            // }
         } catch (Aws\Exception\AwsException $e) {
-            return $e->getMessage() . "\n";
+            // return $e->getMessage() . "\n";
             return false;
         }
     }
