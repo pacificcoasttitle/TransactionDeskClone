@@ -70,6 +70,9 @@ class Login extends MX_Controller
                 $email = $this->input->post('email_address');
                 // $user = $this->home_model->sp_get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
                 $user = $this->home_model->sp_get_user(array('email_address' => $email, 'status' => 1));
+                if ($user['is_title_officer']) {
+                    $user['first_name'] = $user['officer_name'];
+                }
                 // echo "<pre>";
                 // print_r($user);die;
                 if (!empty($user)) {
@@ -120,8 +123,8 @@ class Login extends MX_Controller
                                 echo json_encode($response);exit;
                             }
                         }
-                        // print_r($response);die;
                     } else {
+                        
                         $session_data = array(
                             "id" => isset($user['id']) && !empty($user['id']) ? $user['id'] : '',
                             "name" => isset($user['first_name']) && !empty($user['first_name']) ? $user['first_name'] . " " . $user['last_name'] : '',

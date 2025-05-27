@@ -479,7 +479,7 @@ class Order_model extends CI_Model
             ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
 
             // ->join('customer_basic_details as titleofficer', 'transaction_details.title_officer = titleofficer.id', 'left')
-            ->join('sp_officers as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
+            ->join('pct_softpro_lookup_table as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
 
             // ->join('customer_basic_details as salerep', 'transaction_details.sales_representative = salerep.id', 'left')
             ->join('pct_softpro_lookup_table as sp_salerep', 'transaction_details.sales_representative = sp_salerep.id', 'left')

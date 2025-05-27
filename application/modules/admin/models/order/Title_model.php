@@ -3,14 +3,14 @@ class Title_model extends CI_Model
 {
 
 	function __construct() {
-        $this->table = 'customer_basic_details';
+        $this->table = 'pct_softpro_lookup_table';
     }
 	
     public function get_title_officers($params)
     {
         $this->db->where('status', 1);
         $this->db->where('is_title_officer', 1);
-    	$this->db->from('customer_basic_details');
+    	$this->db->from('pct_softpro_lookup_table');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -30,7 +30,7 @@ class Title_model extends CI_Model
             }
             $this->db->where('status', 1);
             $this->db->where('is_title_officer', 1);
-	    	$this->db->from('customer_basic_details');
+	    	$this->db->from('pct_softpro_lookup_table');
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -49,7 +49,7 @@ class Title_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
+			$query = $this->db->get('pct_softpro_lookup_table');
 			
 			if ($query->num_rows() > 0) {
                 $title_officers_lists = $query->result_array();
@@ -57,7 +57,7 @@ class Title_model extends CI_Model
     	} else {    
             $this->db->where('status', 1);	
             $this->db->where('is_title_officer', 1);	
-	    	$this->db->from('customer_basic_details');
+	    	$this->db->from('pct_softpro_lookup_table');
 			$filter_total_records =  $this->db->count_all_results();
 
             $this->db->where('status', 1);
@@ -65,7 +65,7 @@ class Title_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('customer_basic_details');
+			$query = $this->db->get('pct_softpro_lookup_table');
 
 			if ($query->num_rows() > 0) {
 	            $title_officers_lists = $query->result_array();
@@ -116,7 +116,7 @@ class Title_model extends CI_Model
 
     public function update($data, $condition = array()) 
     {
-    	$table = 'sp_officers';
+    	$table = 'pct_softpro_lookup_table';
         if (!empty($data)) {          
             $data['updated_at'] = date("Y-m-d H:i:s");
             $update = $this->db->update($table, $data, $condition);
@@ -127,7 +127,7 @@ class Title_model extends CI_Model
 
     public function insert($data = array()) 
     {
-    	$table = 'sp_officers';//$this->table;
+    	$table = 'pct_softpro_lookup_table';//$this->table;
         if (!empty($data)) {
         	$data['created_at'] = date("Y-m-d H:i:s");
             $insert = $this->db->insert($table, $data);

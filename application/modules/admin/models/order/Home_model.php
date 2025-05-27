@@ -3309,7 +3309,7 @@ class Home_model extends CI_Model
             $this->db->where('is_escrow_officer', 1);
         }
         $this->db->where('status', 1);
-    	$this->db->from('sp_officers');
+    	$this->db->from('pct_softpro_lookup_table');
 		$total_records =  $this->db->count_all_results();
 		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -3330,7 +3330,7 @@ class Home_model extends CI_Model
                 $this->db->where('is_escrow_officer', 1);
             }
             $this->db->where('status', 1);
-	    	$this->db->from('sp_officers');
+	    	$this->db->from('pct_softpro_lookup_table');
 			$filter_total_records =  $this->db->count_all_results();
 
 			if (isset($keyword) && !empty($keyword)) {
@@ -3350,7 +3350,7 @@ class Home_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('sp_officers');
+			$query = $this->db->get('pct_softpro_lookup_table');
 			
 			if ($query->num_rows() > 0) {
                 $officers_lists = $query->result_array();
@@ -3362,7 +3362,7 @@ class Home_model extends CI_Model
                 $this->db->where('is_escrow_officer', 1);
             }
             $this->db->where('status', 1);
-	    	$this->db->from('sp_officers');
+	    	$this->db->from('pct_softpro_lookup_table');
 			$filter_total_records =  $this->db->count_all_results();
 
             if ($is_title_officer == 1) {
@@ -3374,7 +3374,7 @@ class Home_model extends CI_Model
 			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-			$query = $this->db->get('sp_officers');
+			$query = $this->db->get('pct_softpro_lookup_table');
 
 			if ($query->num_rows() > 0) {
 	            $officers_lists = $query->result_array();
