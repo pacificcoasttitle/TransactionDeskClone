@@ -17,6 +17,8 @@ if(!function_exists('send_email')){
         $config['validation']   = TRUE; 
 		$instance->email->initialize($config);
 		    
+        // Clear any previous email state (just in case)
+        $instance->email->clear(TRUE);
 
         $instance->email->initialize($config);
 		
