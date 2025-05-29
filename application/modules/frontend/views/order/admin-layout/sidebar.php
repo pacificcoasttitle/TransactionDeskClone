@@ -93,6 +93,13 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>File Upload</span>
 			</a>
 		</li>
+	<?php } else if (($userdata['is_title_officer'] == 1) && ($sidebar)) {?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'title-officer-dashboard') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Dashboard Home</span>
+			</a>
+		</li>
 	<?php } else if ($sidebar) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'dashboard' || $this->uri->segment(1) == 'title-officer-dashboard') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
@@ -137,21 +144,15 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Fee Estimate</span>
 			</a>
 		</li>
-		<!-- <li class="nav-item <?php if ($this->uri->segment(1) == 'policy-orders' || $this->uri->segment(1) == 'policy-order') {echo 'active';}?>">
-			<a class="nav-link" href="<?php echo base_url() . 'policy-orders'; ?>">
-				<i class="fa fa-shield "></i>
-				<span>Get Policy</span>
-			</a>
-		</li> -->
 		<?php }?>
 
 	<?php }?>
-		<li class="nav-item <?php if ($this->uri->segment(1) == 'logout') {echo 'active';}?>">
-			<a class="nav-link" href="<?php echo base_url() . 'logout'; ?>">
-				<i class="fa fa-sign-out"></i>
-				<span>Logout</span>
-			</a>
-		</li>
+	<li class="nav-item <?php if ($this->uri->segment(1) == 'logout') {echo 'active';}?>">
+		<a class="nav-link" href="<?php echo base_url() . 'logout'; ?>">
+			<i class="fa fa-sign-out"></i>
+			<span>Logout</span>
+		</a>
+	</li>
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 
