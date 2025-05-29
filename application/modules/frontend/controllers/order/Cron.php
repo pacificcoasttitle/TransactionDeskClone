@@ -6998,7 +6998,8 @@ class Cron extends MX_Controller
                 $closedDate = $list['CompletedDate'] ?? null;
                 $marketingRep = $list['MarketingRep'] ?? null;
                 if (!empty($closedDate)) {
-                    $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
+                    // $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
+                    $myDateTime = DateTime::createFromFormat('n/j/Y g:i:s A', trim($closedDate));
                     $completed_date = $myDateTime->format('Y-m-d H:i:s');
                 }
 
