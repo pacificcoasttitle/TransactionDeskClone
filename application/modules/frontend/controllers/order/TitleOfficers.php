@@ -41,7 +41,7 @@ class TitleOfficers extends MX_Controller
         $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
         $openRefiResult = $this->order->getOpenOrdersCountForRefiProductsForTO(date('m'), $userId);
         $data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $userId);
+        $openSaleResult = $this->order->getOpenOrdersCountForSaleProductsForTO(date('m'), $userId);
         $data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
         $data['total_open_count'] = $data['sale_open_count'] + $data['refi_open_count'];
 
