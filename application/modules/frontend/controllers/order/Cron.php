@@ -7592,7 +7592,7 @@ class Cron extends MX_Controller
                     }
                 }
 
-                $softproContacts = $this->order->fetchAndSyncContacts($fileNumber, $propertyId);
+                $softproContacts = $this->order->fetchAndSyncContacts($fileNumber);
                 if (!empty($softproContacts) && !empty($softproContacts['escrow'])) {
                     $filesResult['email_address'] = $softproContacts['escrow']['email_address'];
                 }
