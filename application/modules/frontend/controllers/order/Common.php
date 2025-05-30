@@ -748,6 +748,48 @@ class Common extends MX_Controller
         echo json_encode($res);
     }
 
+    public function get_contacts()
+    {
+        if (empty($this->session->userdata('user'))) {
+            redirect(base_url() . 'order');
+        }
+        $fileNumber = $this->input->post('fileNumber');
+        if ($fileNumber) {
+            // $userdata = $this->session->userdata('user');
+            // $params = [
+            //     'order_details.id' => $orderId,
+            // ];
+            // $orderDetails = $this->order->get_order_details($params, 1);
+            
+            $softproContacts = $this->order->fetchAndSyncContacts($fileNumber);
+            $res = array('status' => 'success', 'contacts' => $softproContacts);
+        } else {
+            $res = array('status' => 'error', 'msg' => "Please select file.");
+        }
+        echo json_encode($res);
+    }
+
+    public function get_fees_invoice()
+    {
+        if (empty($this->session->userdata('user'))) {
+            redirect(base_url() . 'order');
+        }
+        $fileNumber = $this->input->post('fileNumber');
+        if ($fileNumber) {
+            // $userdata = $this->session->userdata('user');
+            // $params = [
+            //     'order_details.id' => $orderId,
+            // ];
+            // $orderDetails = $this->order->get_order_details($params, 1);
+            
+            $softproContacts = $this->order->fetchAndSyncContacts($fileNumber);
+            $res = array('status' => 'success', 'contacts' => $softproContacts);
+        } else {
+            $res = array('status' => 'error', 'msg' => "Please select file.");
+        }
+        echo json_encode($res);
+    }
+
     public function uploadDocOrders()
     {
         if (empty($this->session->userdata('user'))) {
