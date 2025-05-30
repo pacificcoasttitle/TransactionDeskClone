@@ -165,25 +165,25 @@
 		</div>
 	</div>
 <!-- </section> -->
-<!-- Partners Modal -->
-<div class="modal" id="partnersModal">
+<!-- Contacts Modal -->
+<div class="modal" id="contactsModal">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="card shadow mb-4">
 				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary" >Partners</h6>
+					<h6 class="m-0 font-weight-bold text-primary" >Contacts</h6>
 				</div>
 				
 				<div class="card-body"> 
 					<div class="table-responsive">
-						<table class="table table-bordered" id="tbl-partners-data" width="100%" cellspacing="0">
+						<table class="table table-bordered" id="tbl-contacts-data" width="100%" cellspacing="0">
 							<thead>
 								<tr>
-									<th>PartnerID</th>
-									<th>PartnerTypeID</th>
-									<th>PartnerTypeName</th>
-									<th>PartnerName</th>
-									<!-- <th>EmailAddress</th> -->
+									<th>Type</th>
+									<th>Company Name</th>
+									<th>LookupCode</th>
+									<th>Name</th>
+									<th>Email Address</th>
 								</tr>
 							</thead>            
 							<tbody></tbody>
@@ -194,33 +194,12 @@
 							<span class="icon text-white-50">
 								<i class="fas fa-ban"></i>
 							</span>
-							<span class="text">Cancel</span>
+							<span class="text">Close</span>
 						</button>
 						<!-- <button type="button" class="btn btn-success" data-dismiss="modal" >Close</button> -->
 					</div>
 				</div>
 			</div>
-			<!-- <div class="modal-header">
-				<h4 class="modal-title">Partners</h4>
-			</div> -->
-
-			<!-- <div class="modal-body">
-				<table class="table table-striped" id="tbl-partners-data">
-					<thead>
-					<tr>
-						<th>PartnerID</th>
-						<th>PartnerTypeID</th>
-						<th>PartnerTypeName</th>
-						<th>PartnerName</th>
-						
-					</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" data-dismiss="modal" style="background: #d35411;">Close</button>
-			</div> -->
 		</div>
 	</div>
 </div>

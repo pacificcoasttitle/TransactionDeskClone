@@ -493,14 +493,14 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 
-function getPartners(fileId) {
+function getContacts(fileNumber) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     $.ajax({
-        url: base_url + "get-partners",
+        url: base_url + "get-contacts",
         type: "post",
         data: {
-            fileId: fileId
+            fileNumber: fileNumber
         },
         dataType: "html",
         success: function (response) {
@@ -509,16 +509,87 @@ function getPartners(fileId) {
 
             var table_data = '';
             if (results.status == 'success') {
-                if (!jQuery.isEmptyObject(results.partners)) {
-                    $.each(results.partners, function (key, value) {
-                        table_data += '<tr><td>' + value.PartnerID + '</td><td>' + value.PartnerTypeID + '</td><td>' + value.PartnerType.PartnerTypeName + '</td><td>' + value.PartnerName + '</td></tr>';
+                if (!jQuery.isEmptyObject(results.contacts)) {
+                    $.each(results.contacts, function (key, value) {
+                        console.log('key ==', key);
+                        console.log('value ==', value);
+                        let type = '';
+                        if (key == 'escrow') {
+                            type = 'Escrow';
+                        } else if (key == 'lender') {
+                            type = 'Lender';
+                        } else if (key == 'listing_agent') {
+                            type = 'Listing Agent';
+                        } else if (key == 'title_officer') {
+                            type = 'Title Company';
+                        } else if (key == 'underwritter') {
+                            type = 'Underwriter';
+                        }
+                        if (key == 'escrow' || key == 'lender' || key == 'listing_agent') {
+                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.lookup_code + '</td><td>' + value.name + '</td><td>' + value.email_address + '</td></tr>';
+                        } else if (key == 'title_officer' || key == 'underwritter') {
+                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.lookup_code + '</td><td></td><td></td></tr>';
+                        }
                     });
                 }
                 else {
                     table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
                 }
-                $('#tbl-partners-data tbody').html(table_data);
-                $('#partnersModal').modal('show');
+                $('#tbl-contacts-data tbody').html(table_data);
+                $('#contactsModal').modal('show');
+            }
+            else if (results.status == 'error') {
+                alert(results.msg);
+            }
+            $('#page-preloader').css('display', 'none');
+        }
+    });
+}
+
+function getInvoice(fileNumber) {
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    $.ajax({
+        url: base_url + "get-fees-invoice",
+        type: "post",
+        data: {
+            fileNumber: fileNumber
+        },
+        dataType: "html",
+        success: function (response) {
+
+            var results = JSON.parse(response);
+
+            var table_data = '';
+            if (results.status == 'success') {
+                if (!jQuery.isEmptyObject(results.contacts)) {
+                    $.each(results.contacts, function (key, value) {
+                        console.log('key ==', key);
+                        console.log('value ==', value);
+                        let type = '';
+                        if (key == 'escrow') {
+                            type = 'Escrow';
+                        } else if (key == 'lender') {
+                            type = 'Lender';
+                        } else if (key == 'listing_agent') {
+                            type = 'Listing Agent';
+                        } else if (key == 'title_officer') {
+                            type = 'Title Company';
+                        } else if (key == 'underwritter') {
+                            type = 'Underwriter';
+                        }
+                        if (key == 'escrow' || key == 'lender' || key == 'listing_agent') {
+                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.lookup_code + '</td><td>' + value.name + '</td><td>' + value.email_address + '</td></tr>';
+                        } else if (key == 'title_officer' || key == 'underwritter') {
+                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.lookup_code + '</td><td></td><td></td></tr>';
+                        }
+                    });
+                }
+                else {
+                    table_data += '<tr><td colspan="4" style="text-align: center;">No records found.</td></tr>';
+                }
+                $('#tbl-contacts-data tbody').html(table_data);
+                $('#contactsModal').modal('show');
             }
             else if (results.status == 'error') {
                 alert(results.msg);

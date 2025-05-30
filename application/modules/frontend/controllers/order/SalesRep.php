@@ -627,6 +627,7 @@ class SalesRep extends MX_Controller
                 }
                 $action .= "</ul></div>";*/
                 $action = "<div style='display: flex;justify-content: space-between;'>";
+                $fileNumber = !empty($order['file_number']) ? $order['file_number'] : '';
                 if ($order['prelim_summary_id'] != 0) {
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
                     if (env('AWS_ENABLE_FLAG') == 1) {
@@ -644,14 +645,37 @@ class SalesRep extends MX_Controller
 								<span class='text'>Review File</span>
 							</button>
 						</a>
-                        <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
-                            <button type='button' class='btn btn-secondary update-prelim-btn btn-icon-split'>
-                                <span class='icon text-white-50'>
-                                    <i class='fas fa-refresh'></i>
-                                </span>
-                                <span class='text'>Update Prelim</span>
-                            </button>
-                        </a>";
+                        <div class='dropdown'>
+                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
+                            <span class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
+                            <li>
+                                <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
+                                    <button type='button' class='btn btn-grad-2a button-color'>
+                                        <i class='fas fa-refresh' style='margin-right:5px;'></i>
+                                        <span class='text'>Update Prelim</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' onclick=getContacts('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Contacts
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' onclick='getInvoice('".$order['file_number']."');'>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Invoice
+                                    </button>
+                                </a>
+                            </li>
+                        </ul></div>
+                        ";
                 } else {
                     $action .= "<a href='javascript:void(0)'>
 						<button type='submit' class='btn btn-info btn-icon-split'>
@@ -660,35 +684,60 @@ class SalesRep extends MX_Controller
 							</span>
 							<span class='text'>Not Ready</span>
 						</button></a>
-                    <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
-						<button type='button' class='btn btn-primary btn-icon-split'>
-							<span class='icon text-white-50'>
-								<i class='fas fa-refresh'></i>
-							</span>
-							<span class='text'>Get Prelim Doc</span>
-						</button></a>
+                        <div class='dropdown'>
+                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
+                            <span class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
+                            <li>
+                                <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+                                    <button type='button' class='btn btn-grad-2a button-color'>
+                                        <i class='fas fa-refresh' style='margin-right:5px;'></i>
+                                        <span class='text'>Get Prelim Doc</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' onclick=getContacts('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Contacts
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' onclick='getInvoice('".$order['file_number']."');'>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Invoice
+                                    </button>
+                                </a>
+                            </li>
+                        </ul></div>
+                    
                     ";
                 }
+                
 
-                if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
-                    $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $order['lp_file_number'] . '.pdf';
-                    $reportDocumentUrl = env('AWS_PATH') . "pre-listing-doc/pre_listing_report_" . $order['lp_file_number'] . '.pdf';                    
-                    $action .= "<a href='".$documentUrl."' target='_blank'>
-						<button type='submit' class='btn btn-info btn-icon-split'>
-							<span class='icon text-white-50'>
-								<i class='fas fa-tasks'></i>
-							</span>
-							<span class='text'>View Pre List Doc</span>
-						</button></a>
-                    <a href='".$reportDocumentUrl."' target='_blank'>
-						<button type='button' class='btn btn-primary btn-icon-split'>
-							<span class='icon text-white-50'>
-								<i class='fas fa-refresh'></i>
-							</span>
-							<span class='text'>View LP Report</span>
-						</button></a>
-                    ";
-                }
+                // if ($order['file_number'] == 0 && !empty($order['lp_file_number']) && $order['lp_report_status'] == 'approved') {
+                //     $documentUrl = env('AWS_PATH') . "pre-listing-doc/" . $order['lp_file_number'] . '.pdf';
+                //     $reportDocumentUrl = env('AWS_PATH') . "pre-listing-doc/pre_listing_report_" . $order['lp_file_number'] . '.pdf';                    
+                //     $action .= "<a href='".$documentUrl."' target='_blank'>
+				// 		<button type='submit' class='btn btn-info btn-icon-split'>
+				// 			<span class='icon text-white-50'>
+				// 				<i class='fas fa-tasks'></i>
+				// 			</span>
+				// 			<span class='text'>View Pre List Doc</span>
+				// 		</button></a>
+                //     <a href='".$reportDocumentUrl."' target='_blank'>
+				// 		<button type='button' class='btn btn-primary btn-icon-split'>
+				// 			<span class='icon text-white-50'>
+				// 				<i class='fas fa-refresh'></i>
+				// 			</span>
+				// 			<span class='text'>View LP Report</span>
+				// 		</button></a>
+                //     ";
+                // }
                 $action .= "</div>";
 
 
