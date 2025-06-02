@@ -526,9 +526,9 @@ function getContacts(fileNumber) {
                             type = 'Underwriter';
                         }
                         if (key == 'escrow' || key == 'lender' || key == 'listing_agent') {
-                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.lookup_code + '</td><td>' + value.name + '</td><td>' + value.email_address + '</td></tr>';
+                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.name + '</td><td>' + value.email_address + '</td></tr>';
                         } else if (key == 'title_officer' || key == 'underwritter') {
-                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td>' + value.lookup_code + '</td><td></td><td></td></tr>';
+                            table_data += '<tr><td>' + type + '</td><td>' + value.company_name + '</td><td></td><td></td></tr>';
                         }
                     });
                 }
