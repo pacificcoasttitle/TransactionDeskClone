@@ -626,7 +626,7 @@ class SalesRep extends MX_Controller
                     $action .= "<li><a target='_blank' href='$documentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View Pre List Doc</button></a></li><li><a target='_blank' href='$reportDocumentUrl'><button class='btn btn-grad-2a button-color' type='button' style='margin-top:10px;'>View LP Report</button></a></li>";
                 }
                 $action .= "</ul></div>";*/
-                $action = "<div style='display: flex;justify-content: space-between;'>";
+                $action = "<div style='display: flex;justify-content: space-evenly;'>";
                 $fileNumber = !empty($order['file_number']) ? $order['file_number'] : '';
                 if ($order['prelim_summary_id'] != 0) {
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
@@ -642,12 +642,19 @@ class SalesRep extends MX_Controller
 								<span class='icon text-white-50'>
 									<i class='fas fa-file'></i>
 								</span>
-								<span class='text'>Review File</span>
+								<span class='text'>Review Prelim</span>
 							</button>
 						</a>
                         <div class='dropdown'>
-                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
-                            <span class='caret'></span>
+                        <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
+                            <button type='submit' class='btn btn-light btn-icon-split'>
+                                <span class='icon text-white-50'>
+                                    <i class='fas fa-tasks'></i>
+                                </span>
+                                <span class='text'>Click Action Type</span>
+                                <span class='caret'></span>
+                            </button>
+                            
                         </a>
                         <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
                             <li>
@@ -685,8 +692,14 @@ class SalesRep extends MX_Controller
 							<span class='text'>Not Ready</span>
 						</button></a>
                         <div class='dropdown'>
-                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>Click Action Type
-                            <span class='caret'></span>
+                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>
+                            <button type='submit' class='btn btn-light btn-icon-split'>
+                                <span class='icon text-white-50'>
+                                    <i class='fas fa-tasks'></i>
+                                </span>
+                                <span class='text'>Click Action Type</span>
+                                <span class='caret'></span>
+                            </button>
                         </a>
                         <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
                             <li>
