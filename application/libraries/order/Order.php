@@ -3412,7 +3412,7 @@ class Order
         return $property_info;
     }
 
-    public function sendDailyProductionReport($adminFlag = 0)
+    public function sendDailyProductionTOReport($adminFlag = 0)
     {
         $this->CI->load->model('order/apiLogs');
         $this->CI->db->select('*');
@@ -3487,7 +3487,7 @@ class Order
                     $subject = 'Daily Production';
                     $to = $officer['email_address'];
                     // $to = 'piyush.j@crestinfosystems.com';
-                    $cc = array('piyush.j@crestinfosystems.com', 'ghernandez@pct.com');
+                    $cc = array('ghernandez@pct.com');
                     // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
 
                     /** Get CC for daily email receiver */
@@ -3520,158 +3520,159 @@ class Order
             return true;
         }
     }
-    // public function sendDailyProductionReport($adminFlag = 0)
-    // {
-    //     $this->CI->load->model('order/apiLogs');
-    //     $this->CI->db->select('*');
-    //     $this->CI->db->from('pct_softpro_lookup_table');
-    //     $this->CI->db->where('is_sales_rep', 1);
-    //     $this->CI->db->where('is_sales_rep_manager', 1);
-    //     $this->CI->db->where('status', 1);
-    //     $this->CI->db->order_by('first_name', 'asc');
-    //     $query = $this->CI->db->get();
-    //     $salesMangers = $query->result_array();
 
-    //     if (!empty($salesMangers)) {
-    //         $data['max_resales_open_orders'] = 0;
-    //         $data['max_resales_open_orders_sales_name'] = '';
-    //         $data['max_resales_close_orders'] = 0;
-    //         $data['max_resales_close_orders_sales_name'] = '';
-    //         $data['max_refi_open_orders'] = 0;
-    //         $data['max_refi_open_orders_sales_name'] = '';
-    //         $data['max_refi_close_orders'] = 0;
-    //         $data['max_refi_close_orders_sales_name'] = '';
-    //         $data['total_sum_premium'] = 0;
+    public function sendDailyProductionReport($adminFlag = 0)
+    {
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_softpro_lookup_table');
+        $this->CI->db->where('is_sales_rep', 1);
+        $this->CI->db->where('is_sales_rep_manager', 1);
+        $this->CI->db->where('status', 1);
+        $this->CI->db->order_by('first_name', 'asc');
+        $query = $this->CI->db->get();
+        $salesMangers = $query->result_array();
 
-    //         foreach ($salesMangers as $salesManger) {
-    //             $data = array();
-    //             $total_premium = 0;
-    //             $salesUsers = array();
-    //             if (!empty($salesManger['sales_rep_users'])) {
-    //                 $salesRepUsers = explode(',', $salesManger['sales_rep_users']);
-    //                 if (!in_array($salesManger['id'], $salesRepUsers)) {
-    //                     $salesRepUsers[] = $salesManger['id'];
-    //                 }
-    //                 $salesUsers = $this->CI->order->get_sales_users($salesRepUsers);
-    //             } else {
-    //                 $salesUsers = $this->CI->order->get_sales_users();
-    //             }
-    //             $i = 0;
-    //             if (date('d') == '01') {
-    //                 $month = date('m', strtotime(date('Y-m') . " -1 month"));
-    //             } else {
-    //                 $month = date('m');
-    //             }
-    //             if (!empty($salesUsers)) {
-    //                 foreach ($salesUsers as $salesrep) {
-    //                     $data['salesHistory'][$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                     $openRefiResult = $this->CI->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id']);
-    //                     $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-    //                     $openSaleResult = $this->CI->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id']);
-    //                     $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-    //                     $data['salesHistory'][$i]['refi_open_count'] = $refi_open_count;
-    //                     $data['salesHistory'][$i]['sale_open_count'] = $sale_open_count;
-    //                     $data['salesHistory'][$i]['total_open_count'] = $sale_open_count + $refi_open_count;
+        if (!empty($salesMangers)) {
+            $data['max_resales_open_orders'] = 0;
+            $data['max_resales_open_orders_sales_name'] = '';
+            $data['max_resales_close_orders'] = 0;
+            $data['max_resales_close_orders_sales_name'] = '';
+            $data['max_refi_open_orders'] = 0;
+            $data['max_refi_open_orders_sales_name'] = '';
+            $data['max_refi_close_orders'] = 0;
+            $data['max_refi_close_orders_sales_name'] = '';
+            $data['total_sum_premium'] = 0;
 
-    //                     $closeRefiResult = $this->CI->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id']);
-    //                     $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-    //                     $closeSaleResult = $this->CI->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id']);
-    //                     $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-    //                     $data['salesHistory'][$i]['refi_close_count'] = $refi_close_count;
-    //                     $data['salesHistory'][$i]['sale_close_count'] = $sale_close_count;
-    //                     $data['salesHistory'][$i]['total_close_count'] = $refi_close_count + $sale_close_count;
+            foreach ($salesMangers as $salesManger) {
+                $data = array();
+                $total_premium = 0;
+                $salesUsers = array();
+                if (!empty($salesManger['sales_rep_users'])) {
+                    $salesRepUsers = explode(',', $salesManger['sales_rep_users']);
+                    if (!in_array($salesManger['id'], $salesRepUsers)) {
+                        $salesRepUsers[] = $salesManger['id'];
+                    }
+                    $salesUsers = $this->CI->order->get_sales_users($salesRepUsers);
+                } else {
+                    $salesUsers = $this->CI->order->get_sales_users();
+                }
+                $i = 0;
+                if (date('d') == '01') {
+                    $month = date('m', strtotime(date('Y-m') . " -1 month"));
+                } else {
+                    $month = date('m');
+                }
+                if (!empty($salesUsers)) {
+                    foreach ($salesUsers as $salesrep) {
+                        $data['salesHistory'][$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        $openRefiResult = $this->CI->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id']);
+                        $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                        $openSaleResult = $this->CI->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id']);
+                        $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                        $data['salesHistory'][$i]['refi_open_count'] = $refi_open_count;
+                        $data['salesHistory'][$i]['sale_open_count'] = $sale_open_count;
+                        $data['salesHistory'][$i]['total_open_count'] = $sale_open_count + $refi_open_count;
 
-    //                     $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-    //                     $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-    //                     //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-    //                     $refi_total_premium = $closeOrderRefiTotalPremium;
-    //                     $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-    //                     $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-    //                     //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-    //                     $sale_total_premium = $closeOrderSaleTotalPremium;
-    //                     $total_premium = $sale_total_premium + $refi_total_premium;
-    //                     $data['salesHistory'][$i]['total_premium'] = number_format($total_premium);
+                        $closeRefiResult = $this->CI->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id']);
+                        $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                        $closeSaleResult = $this->CI->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id']);
+                        $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                        $data['salesHistory'][$i]['refi_close_count'] = $refi_close_count;
+                        $data['salesHistory'][$i]['sale_close_count'] = $sale_close_count;
+                        $data['salesHistory'][$i]['total_close_count'] = $refi_close_count + $sale_close_count;
 
-    //                     if ($i == 0) {
-    //                         $data['max_resales_open_orders'] = $sale_open_count;
-    //                         $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         $data['max_resales_close_orders'] = $sale_close_count;
-    //                         $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         $data['max_refi_open_orders'] = $refi_open_count;
-    //                         $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         $data['max_refi_close_orders'] = $refi_close_count;
-    //                         $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                     } else {
-    //                         if ($data['max_resales_open_orders'] < $sale_open_count) {
-    //                             $data['max_resales_open_orders'] = $sale_open_count;
-    //                             $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         }
-    //                         if ($data['max_resales_close_orders'] < $sale_close_count) {
-    //                             $data['max_resales_close_orders'] = $sale_close_count;
-    //                             $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         }
-    //                         if ($data['max_refi_open_orders'] < $refi_open_count) {
-    //                             $data['max_refi_open_orders'] = $refi_open_count;
-    //                             $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         }
-    //                         if ($data['max_refi_close_orders'] < $refi_close_count) {
-    //                             $data['max_refi_close_orders'] = $refi_close_count;
-    //                             $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-    //                         }
-    //                     }
-    //                     $data['total_sum_premium'] += $total_premium;
-    //                     $i++;
-    //                 }
-    //                 $data['yesterday_month'] = date('F', strtotime("-1 days"));
-    //                 $data['yesterday_date'] = date('m/d/Y', strtotime("-1 days"));
-    //                 $data['start_date'] = date('m/01/Y', strtotime("-1 days"));
+                        $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+                        $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                        //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+                        $refi_total_premium = $closeOrderRefiTotalPremium;
+                        $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+                        $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                        //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+                        $sale_total_premium = $closeOrderSaleTotalPremium;
+                        $total_premium = $sale_total_premium + $refi_total_premium;
+                        $data['salesHistory'][$i]['total_premium'] = number_format($total_premium);
 
-    //                 $data['total_sum_premium'] = number_format($data['total_sum_premium']);
-    //                 $data['sales_name'] = $salesManger['first_name'] . " " . $salesManger['last_name'];
-    //                 //print_r($data);exit;
+                        if ($i == 0) {
+                            $data['max_resales_open_orders'] = $sale_open_count;
+                            $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            $data['max_resales_close_orders'] = $sale_close_count;
+                            $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            $data['max_refi_open_orders'] = $refi_open_count;
+                            $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            $data['max_refi_close_orders'] = $refi_close_count;
+                            $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                        } else {
+                            if ($data['max_resales_open_orders'] < $sale_open_count) {
+                                $data['max_resales_open_orders'] = $sale_open_count;
+                                $data['max_resales_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            }
+                            if ($data['max_resales_close_orders'] < $sale_close_count) {
+                                $data['max_resales_close_orders'] = $sale_close_count;
+                                $data['max_resales_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            }
+                            if ($data['max_refi_open_orders'] < $refi_open_count) {
+                                $data['max_refi_open_orders'] = $refi_open_count;
+                                $data['max_refi_open_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            }
+                            if ($data['max_refi_close_orders'] < $refi_close_count) {
+                                $data['max_refi_close_orders'] = $refi_close_count;
+                                $data['max_refi_close_orders_sales_name'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                            }
+                        }
+                        $data['total_sum_premium'] += $total_premium;
+                        $i++;
+                    }
+                    $data['yesterday_month'] = date('F', strtotime("-1 days"));
+                    $data['yesterday_date'] = date('m/d/Y', strtotime("-1 days"));
+                    $data['start_date'] = date('m/01/Y', strtotime("-1 days"));
 
-    //                 if ($adminFlag == 1) {
-    //                     $message = $this->CI->load->view('frontend/emails/daily_production.php', $data, true);
-    //                 } else {
-    //                     $message = $this->CI->load->view('emails/daily_production.php', $data, true);
-    //                 }
+                    $data['total_sum_premium'] = number_format($data['total_sum_premium']);
+                    $data['sales_name'] = $salesManger['first_name'] . " " . $salesManger['last_name'];
+                    //print_r($data);exit;
 
-    //                 $from_name = 'Pacific Coast Title Company';
-    //                 $from_mail = env('FROM_EMAIL');
-    //                 $subject = 'Daily Production';
-    //                 $to = $salesManger['email_address'];
-    //                 // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+                    if ($adminFlag == 1) {
+                        $message = $this->CI->load->view('frontend/emails/daily_production.php', $data, true);
+                    } else {
+                        $message = $this->CI->load->view('emails/daily_production.php', $data, true);
+                    }
 
-    //                 /** Get CC for daily email receiver */
-    //                 $this->CI->db->select('email')->from('pct_daily_email_receiver_list')->where('status', 1);
-    //                 if (strtolower($to) == 'ntorquato@pct.com') {
-    //                     $this->CI->db->where_in('branch', ['both', 'orange']);
-    //                 }
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $subject = 'Daily Production';
+                    $to = $salesManger['email_address'];
+                    // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
+
+                    /** Get CC for daily email receiver */
+                    $this->CI->db->select('email')->from('pct_daily_email_receiver_list')->where('status', 1);
+                    if (strtolower($to) == 'ntorquato@pct.com') {
+                        $this->CI->db->where_in('branch', ['both', 'orange']);
+                    }
                     
-    //                 if (strtolower($to) == 'teammeza@pct.com') {
-    //                     $this->CI->db->where_in('branch', ['both', 'glendale']);
-    //                 }
-    //                 $query = $this->CI->db->get();
-    //                 $cc = array_column($query->result_array(), 'email');
-    //                 $mailParams = array(
-    //                     'from_mail' => $from_mail,
-    //                     'from_name' => $from_name,
-    //                     'to' => $to,
-    //                     'subject' => $subject,
-    //                     'message' => json_encode($data),
-    //                     'cc' => $cc,
-    //                 );
-    //                 //$to = 'ghernandez@pct.com';
-    //                 //$cc = array();
-    //                 $this->CI->load->helper('sendemail');
-    //                 $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
-    //                 $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
-    //                 $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
-    //             }
-    //         }
-    //         return true;
-    //     }
-    // }
+                    if (strtolower($to) == 'teammeza@pct.com') {
+                        $this->CI->db->where_in('branch', ['both', 'glendale']);
+                    }
+                    $query = $this->CI->db->get();
+                    $cc = array_column($query->result_array(), 'email');
+                    $mailParams = array(
+                        'from_mail' => $from_mail,
+                        'from_name' => $from_name,
+                        'to' => $to,
+                        'subject' => $subject,
+                        'message' => json_encode($data),
+                        'cc' => $cc,
+                    );
+                    //$to = 'ghernandez@pct.com';
+                    //$cc = array();
+                    $this->CI->load->helper('sendemail');
+                    $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
+                    $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
+                }
+            }
+            return true;
+        }
+    }
 
     public function sendLPReports($adminFlag = 0)
     {
@@ -5415,8 +5416,8 @@ class Order
         $from_mail = env('FROM_EMAIL');
         $subject = $orderDetails['doc_type'] . ' : ' . $orderDetails['file_number'];
         $to = $orderDetails['email_to'];
-        // $to = 'piyush-crest@yopmail.com';
-        $cc = array('ghernandez@pct.com', 'piyush.j@crestinfosystems.com');
+        // $to = 'piyush-crest@yopmail.com'; piyush.j@crestinfosystems.com
+        $cc = array('ghernandez@pct.com');
 
         // $data['file_number'] = $orderDetails['file_number'];
         // $data['doc_type'] = $orderDetails['doc_type'];
@@ -5599,5 +5600,22 @@ class Order
             return $matches[1]; // This will return 20001602
         }
         return null; // No numeric ID found
+    }
+
+    public function updateRecords($data, $condition = array(), $table)
+    {
+        if (empty($table)) {
+            return;
+        }
+
+        if (!empty($data)) {
+            $data['updated_at'] = date("Y-m-d H:i:s");
+
+            // Update data
+            $update = $this->CI->db->update($table, $data, $condition);
+            // Return the status
+            return $update ? true : false;
+        }
+        return false;
     }
 }
