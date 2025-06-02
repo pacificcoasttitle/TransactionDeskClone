@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '12.02';
+    private $version = '12.03';
 
     public function __construct()
     {
@@ -647,7 +647,7 @@ class SalesRep extends MX_Controller
 						</a>
                         <div class='dropdown'>
                         <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
-                            <button type='submit' class='btn btn-light btn-icon-split'>
+                            <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
                                 <span class='icon text-white-50'>
                                     <i class='fas fa-tasks'></i>
                                 </span>
@@ -685,7 +685,7 @@ class SalesRep extends MX_Controller
                         ";
                 } else {
                     $action .= "<a href='javascript:void(0)'>
-						<button type='submit' class='btn btn-info btn-icon-split'>
+						<button type='submit' class='btn btn-info btn-icon-split info-prelim-btn'>
 							<span class='icon text-white-50'>
 								<i class='fas fa-tasks'></i>
 							</span>
@@ -693,7 +693,7 @@ class SalesRep extends MX_Controller
 						</button></a>
                         <div class='dropdown'>
                         <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>
-                            <button type='submit' class='btn btn-light btn-icon-split'>
+                            <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
                                 <span class='icon text-white-50'>
                                     <i class='fas fa-tasks'></i>
                                 </span>
