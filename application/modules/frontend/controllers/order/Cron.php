@@ -5402,6 +5402,12 @@ class Cron extends MX_Controller
         echo "Mails sent successfully to Sales Managers";exit;
     }
 
+    public function sendDailyProductionTOReport()
+    {
+        $result = $this->order->sendDailyProductionTOReport(0);
+        echo "Mails sent successfully to Sales Managers";exit;
+    }
+
     public function sendLPReports()
     {
         $result = $this->order->sendLPReports(0);
@@ -7427,14 +7433,21 @@ class Cron extends MX_Controller
                             'document_name' => $document_name,
                             'original_document_name' => urldecode($documentName),
                             'description' => $documentName,
-                            'is_sync' => 1,
-                            'is_doc_updated' => 1
+                            'is_sync' => 1
                         );
                         $condition = [
                             'order_id' => $orderId,
                             'is_prelim_document' => 1,
                         ];
                         $documentId = $this->document->update($documentData, $condition);
+
+                        $prelimData = array(
+                            'is_doc_updated' => 1
+                        );
+                        $prelimCondition = [
+                            'file_number' => $file_number
+                        ];
+                        $this->order->updateRecords($documentData, $condition, 'pct_order_prelim_summary');
                     }
 
                     $condition = array(
