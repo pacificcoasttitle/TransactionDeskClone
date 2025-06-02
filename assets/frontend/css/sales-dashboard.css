@@ -156,6 +156,7 @@ th {
 .dropdown .click-action-type {
     color: #222222;
     text-decoration: none;
+    padding: 0px;
 }
 
 .tooltiptext {
@@ -292,7 +293,21 @@ th {
 }
 
 .updated-prelim-btn {
-    background-color: #F26B2B !important;
-    border-color: #F26B2B !important;
+    background-color: #f26b2b  !important;
+    border-color: #f26b2b  !important;
     color: #fff !important;
+}
+
+.info-prelim-btn {
+    background-color: #03374f !important;
+    border-color: #03374f !important;
+    color: #fff !important;
+}
+
+.action-prelim-btn {
+    background-color: #ECEFF1 !important;
+    border-color: #ECEFF1 !important;
+    color: #000 !important;
+    display: flex;
+    align-items: center;
 }

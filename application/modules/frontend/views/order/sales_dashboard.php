@@ -181,7 +181,6 @@
 								<tr>
 									<th>Type</th>
 									<th>Company Name</th>
-									<th>LookupCode</th>
 									<th>Name</th>
 									<th>Email Address</th>
 								</tr>
