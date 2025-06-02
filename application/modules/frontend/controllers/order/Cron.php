@@ -5405,7 +5405,7 @@ class Cron extends MX_Controller
     public function sendDailyProductionTOReport()
     {
         $result = $this->order->sendDailyProductionTOReport(0);
-        echo "Mails sent successfully to Sales Managers";exit;
+        echo "Mails sent successfully to Title Officers";exit;
     }
 
     public function sendLPReports()
