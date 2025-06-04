@@ -327,4 +327,78 @@ class TitleOfficers extends MX_Controller
         $binaryData   = base64_encode(file_get_contents($url)); 
 		echo $binaryData;exit;
     }
+
+    public function productionHistory()
+    {
+        $userdata = $this->session->userdata('user');
+        $userId = $this->uri->segment(2);
+        $data['title_officer_id'] = $userId;
+        // $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+        
+        $data['title'] = 'Title Officer Production History | Pacific Coast Title Company';
+        
+        $salesHistory = array();
+        for ($iM = 1; $iM <= (int) date('m'); $iM++) {
+            $month = date("m", strtotime("$iM/12/10"));
+            $dateObj = DateTime::createFromFormat('!m', $iM);
+            $monthName = $dateObj->format('F');
+            $salesHistory[$iM - 1]['month'] = $monthName;
+            $salesHistory[$iM - 1]['month_val'] = $month;
+
+            $openRefiResult = $this->order->getOpenOrdersCountForRefiProductsForTO($month, $userId);
+            $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+            $openSaleResult = $this->order->getOpenOrdersCountForSaleProductsForTO($month, $userId);
+            $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+            $salesHistory[$iM - 1]['total_open_count'] = $sale_open_count + $refi_open_count;
+
+            $closeRefiResult = $this->order->getClosedOrdersCountForRefiProductsForTO($month, $userId);
+            $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+            $closeSaleResult = $this->order->getClosedOrdersCountForSaleProductsForTO($month, $userId);
+            $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+            $salesHistory[$iM - 1]['total_close_count'] = $refi_close_count + $sale_close_count;
+
+            $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+            $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+            //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+            $refi_total_premium = $closeOrderRefiTotalPremium;
+            $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+            $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+            //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+            $sale_total_premium = $closeOrderSaleTotalPremium;
+            $salesHistory[$iM - 1]['total_premium'] = $sale_total_premium + $refi_total_premium;
+
+            $totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
+            if ($totalCount > 0) {
+                $refi_close_order_percetage = round(($refi_close_count * 100) / $totalCount);
+                $sale_close_order_percetage = round(($sale_close_count * 100) / $totalCount);
+                $salesHistory[$iM - 1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
+            } else {
+                $refi_close_order_percetage = 0;
+                $sale_close_order_percetage = 0;
+                $salesHistory[$iM - 1]['close_order_percetage'] = 0;
+            }
+            if ($month == date('m')) {
+                if ($month == '01') {
+                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonthForPreviousYearForTO($userId);
+                } else {
+                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonthForTO($userId);
+                }
+                $salesHistory[$iM - 1]['trending'] = $previousCount['total_count'] >= $salesHistory[$iM - 1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
+            } else {
+                if ($month == '01') {
+                    $previousCount = $this->order->getOpenOrdersCountForLastMonthOfPreviousYearForTO($userId);
+                    $previousCount = $previousCount['total_count'];
+                } else {
+                    $previousCount = $salesHistory[$iM - 2]['total_open_count'];
+                }
+                $salesHistory[$iM - 1]['trending'] = $previousCount >= $salesHistory[$iM - 1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
+            }
+
+        }
+        $data['salesHistory'] = $salesHistory;
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->version));
+        //$this->template->show("order", "sales_production_history", $data);
+        $this->salesdashboardtemplate->show("order/title_officer", "title_officer_production_history", $data);
+    }
 }

@@ -64,6 +64,12 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Trends</span>
 			</a>
 		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'ranking') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>ranking">
+				<i class="fa fa-line-chart"></i>
+				<span>Ranking</span>
+			</a>
+		</li>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'sales-summary') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id']; ?>">
 				<i class="fa fa-list-alt"></i>
@@ -98,6 +104,12 @@ if ($userdata['is_sales_rep'] == 1) {
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">
 				<i class="fas fa fa-dashboard"></i>
 				<span>Dashboard Home</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'title-officer-production-history') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>title-officer-production-history/<?php echo $userdata['id']; ?>">
+				<i class="fas fa fa-history"></i>
+				<span>Production History</span>
 			</a>
 		</li>
 	<?php } else if ($sidebar) {?>

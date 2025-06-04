@@ -2924,6 +2924,57 @@ class Order
         return $query->row_array();
     }
 
+    public function getOpenOrdersCountForLastMonthOfPreviousYearForTO($userId)
+    {
+        $previousYear = (string) (date('Y') - 1);
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('MONTH(order_details.created_at)', '12');
+        $this->CI->db->where('YEAR(order_details.created_at)', $previousYear);
+        if ($userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function getCountBasedOnCurrentDayForPreviousMonthForPreviousYearForTO($userId)
+    {
+        $firstDate = date("Y", strtotime("-1 year")) . '-12-01';
+        $lastDate = date("Y", strtotime("-1 year")) . '-12-%d';
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where("(order_details.created_at BETWEEN  DATE_FORMAT(NOW() , '$firstDate') AND DATE_FORMAT(NOW() + INTERVAL 1 DAY , '$lastDate'))");
+        if ($userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function getCountBasedOnCurrentDayForPreviousMonthForTO($userId)
+    {
+        $firstDate = '%Y-' . date("m", strtotime("-1 month")) . '-01';
+        $lastDate = '%Y-' . date("m", strtotime("-1 month")) . '-%d';
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where("(order_details.created_at BETWEEN  DATE_FORMAT(NOW() , '$firstDate') AND DATE_FORMAT(NOW() + INTERVAL 1 DAY , '$lastDate'))");
+        if ($userId != 'all') {
+            $this->CI->db->where_in('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.title_officer is not null');
+        }
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
     public function getUsersInfo($emailAddresses)
     {
         $this->CI->db->select('*');
@@ -3512,9 +3563,9 @@ class Order
                     //$to = 'ghernandez@pct.com';
                     //$cc = array();
                     $this->CI->load->helper('sendemail');
-                    $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
+                    $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_title_officer', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
-                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
+                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_title_officer', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
                 }
             }
             return true;
@@ -3665,9 +3716,9 @@ class Order
                     //$to = 'ghernandez@pct.com';
                     //$cc = array();
                     $this->CI->load->helper('sendemail');
-                    $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array(), 0, 0);
+                    $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_sales_manager', '', $mailParams, array(), 0, 0);
                     $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
-                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
+                    $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_sales_manager', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
                 }
             }
             return true;
