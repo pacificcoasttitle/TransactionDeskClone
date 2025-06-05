@@ -64,12 +64,14 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Trends</span>
 			</a>
 		</li>
-		<li class="nav-item <?php if ($this->uri->segment(1) == 'ranking') {echo 'active';}?>">
-			<a class="nav-link" href="<?php echo base_url(); ?>ranking">
-				<i class="fa fa-line-chart"></i>
-				<span>Ranking</span>
-			</a>
-		</li>
+		<?php if ($userdata['is_sales_rep_manager'] == 1) {?>
+			<li class="nav-item <?php if ($this->uri->segment(1) == 'ranking') {echo 'active';}?>">
+				<a class="nav-link" href="<?php echo base_url(); ?>ranking">
+					<i class="fa fa-line-chart"></i>
+					<span>Ranking</span>
+				</a>
+			</li>
+		<?php }?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'sales-summary') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>sales-summary/<?php echo $userdata['id']; ?>">
 				<i class="fa fa-list-alt"></i>
