@@ -172,6 +172,102 @@ $(document).ready(function () {
             $(".custom__task_card .custom__task_collapse").collapse('hide');
         });
     }
+
+
+    if ($('#sales_ranking').length) {
+        var flag_val = localStorage.getItem("sales_rep_manager_flag");
+        sales_ranking = $('#sales_ranking').DataTable({
+            // "pageLength": 2,
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "language": {
+                searchPlaceholder: "Search sales rep name",
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            initComplete: function () {
+
+
+            },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+
+            },
+            // dom: 'Bfrtip',
+            "dom": 'lf<"sales_ranking_filter">rtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "fnInitComplete": function (oSettings, json) {
+                $(".fa-info-circle").mouseenter(function () {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "visible").css("border-radius", "3px");
+                }).mouseleave(function () {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "hidden").css("border-radius", "0px");
+                });
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "get-sales-ranking", // json datasource
+                type: "post", // method  , by default get
+                data: function (d) {
+                    d.year_month = $('#month_year').val();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    localStorage.removeItem("sales_rep_manager_flag");
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#sales_ranking tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#sales_ranking_processing").css("display", "none");
+
+                }
+            }
+        });
+
+        // $("div#sales_ranking_filter").append('<label><select style="width:auto;margin-left:10px;" name="month" id="month" class="custom-select custom-select-sm form-control form-control-sm"><option value="1"> January </option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">Octomber</option><option value="11">November</option><option value="12">Decembeer</option></select></label><label></label>');
+
+
+
+        // Create month-year dropdown
+        // var $monthSelect = $('<select name="month" id="month" style="width:auto;margin-left:10px;" class="custom-select custom-select-sm form-control form-control-sm"></select>');
+        // for (let m = 0; m < 12; m++) {
+        //     const date = new Date(2000, m); // year doesn't matter here
+        //     const monthName = date.toLocaleString('default', { month: 'long' });
+        //     const monthValue = String(m + 1).padStart(2, '0');
+        //     $monthSelect.append(`<option value="${monthValue}">${monthName}</option>`);
+        // }
+
+        // // Create year dropdown (from current year down to 2023)
+        // var $yearSelect = $('<select name="year" id="year" style="width:auto;margin-left:10px;" class="custom-select custom-select-sm form-control form-control-sm"></select>');
+        // const currentYear = new Date().getFullYear();
+        // for (let y = currentYear; y >= 2023; y--) {
+        //     $yearSelect.append(`<option value="${y}">${y}</option>`);
+        // }
+
+        // // Label + dropdown container
+        // var $wrapper = $('<label>')
+        //     .append('<span>Select Month & Year:</span>')
+        //     .append($monthSelect)
+        //     .append($yearSelect);
+
+        // // Append to the DataTable filter area
+        // $("div#sales_ranking_filter").append($wrapper);
+
+
+        $("#month_year").on("change", function () {
+            sales_ranking.ajax.reload();
+        });
+    }
+
 });
 
 if (typeof (salesData) != "undefined" && salesData !== null) {

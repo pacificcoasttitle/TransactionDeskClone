@@ -128,6 +128,8 @@ class Sales extends MX_Controller {
                             'email_address' => $_POST['email_address'],
                             'phone' =>  $_POST['telephone'],
                             'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
+                            'notify_disburse_funds' =>  isset($_POST['notify_disburse_funds']) ? 1 : 0,
+                            'notify_recording_confirm' =>  isset($_POST['notify_recording_confirm']) ? 1 : 0,
                             'status' => isset($_POST['status']) ? 0 : 1,
                             'is_sales_rep' => 1,
                             'is_sales_rep_manager' => isset($_POST['is_sales_rep_manager']) ? 1 : 0,

@@ -87,6 +87,20 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row ml-1">
+                                <label for="recording_confirmation_shut_off" class="col-sm-4 col-form-label">Recording Confirmation Notification Shut Off </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="recording_confirmation_shut_off" id="recording_confirmation_shut_off" <?php echo isset($recording_confirmation_shut_off) && !empty($recording_confirmation_shut_off) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>
+
+                            <div class="form-group row ml-1">
+                                <label for="disburse_funds_shut_off" class="col-sm-4 col-form-label">Disburse Funds Notification Shut Off </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="disburse_funds_shut_off" id="disburse_funds_shut_off" <?php echo isset($disburse_funds_shut_off) && !empty($disburse_funds_shut_off) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">

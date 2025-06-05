@@ -6514,6 +6514,24 @@ class Home extends MX_Controller
             ];
             $this->db->update('pct_configs', $underwrittenParnerAddFlag, ['slug' => 'add_underwriten_partner_via_api']);
 
+            $add_underwriten_partner_via_api = isset($input['add_underwriten_partner_via_api']) && !empty($input['add_underwriten_partner_via_api']) ? 1 : 0;
+            $underwrittenParnerAddFlag       = [
+                'is_enable' => $add_underwriten_partner_via_api,
+            ];
+            $this->db->update('pct_configs', $underwrittenParnerAddFlag, ['slug' => 'add_underwriten_partner_via_api']);
+
+            $recording_confirmation_shut_off = isset($input['recording_confirmation_shut_off']) && !empty($input['recording_confirmation_shut_off']) ? 1 : 0;
+            $recordingConfirmationFlag       = [
+                'is_enable' => $recording_confirmation_shut_off,
+            ];
+            $this->db->update('pct_configs', $recordingConfirmationFlag, ['slug' => 'recording_confirmation_shut_off']);
+
+            $disburse_funds_shut_off = isset($input['disburse_funds_shut_off']) && !empty($input['disburse_funds_shut_off']) ? 1 : 0;
+            $disburseFundsFlag       = [
+                'is_enable' => $disburse_funds_shut_off,
+            ];
+            $this->db->update('pct_configs', $disburseFundsFlag, ['slug' => 'disburse_funds_shut_off']);
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -6542,6 +6560,8 @@ class Home extends MX_Controller
         $res['enable_vesting_document_type_filter'] = $data['enable_vesting_document_type_filter']['is_enable'];
         $res['enable_create_order_submit_button']   = $data['enable_create_order_submit_button']['is_enable'];
         $res['add_underwriten_partner_via_api']     = $data['add_underwriten_partner_via_api']['is_enable'];
+        $res['recording_confirmation_shut_off']     = $data['recording_confirmation_shut_off']['is_enable'];
+        $res['disburse_funds_shut_off']             = $data['disburse_funds_shut_off']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
