@@ -264,6 +264,8 @@ $(document).ready(function () {
 
 
         $("#month_year").on("change", function () {
+            let selectedMonth = $("#month_year option:selected").text();
+            $('.month-name').text(selectedMonth);
             sales_ranking.ajax.reload();
         });
     }
