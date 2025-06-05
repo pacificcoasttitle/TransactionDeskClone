@@ -1167,63 +1167,76 @@ class SalesRep extends MX_Controller
 
     public function getSalesRanking()
     {
+        $userdata = $this->session->userdata('user');
         $data['salesHistory'] = array();
         $salesHistory = [];
-        $salesUsers = $this->order->get_sales_users();
+        // $salesUsers = $this->order->get_sales_users();
         // echo "<pre>";
         // print_r($salesUsers);die;
         $yearMonth = $this->input->post('year_month');
         list($year, $month) = explode('-', $yearMonth);
-        
-
-        $i = 0;
-        if (!empty($salesUsers)) {
-            foreach ($salesUsers as $salesrep) {
-                $salesHistory[$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id'], [], $year);
-                $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id'], [], $year);
-                $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-                $salesHistory[$i]['total_open_count'] = $sale_open_count + $refi_open_count;
-
-                $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id'], $year);
-                $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id'], $year);
-                $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-                $salesHistory[$i]['total_close_count'] = $refi_close_count + $sale_close_count;
-
-                $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-                $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-                //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-                $refi_total_premium = $closeOrderRefiTotalPremium;
-                $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-                $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-                //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-                $sale_total_premium = $closeOrderSaleTotalPremium;
-                $salesHistory[$i]['total_premium'] = round($sale_total_premium + $refi_total_premium, 2);
-                $i++;
-            }
-
-            // Sort descending by total_premium
-            usort($salesHistory, function ($a, $b) {
-                return $b['total_premium'] <=> $a['total_premium'];
-            });
-            $data = [];
-            $rank = 1;
-            $prevPremium = null;
-            foreach ($salesHistory as $key => $row) {
-                if ($prevPremium !== null && $row['total_premium'] != $prevPremium) {
-                    $rank = $key + 1;
+        $data = [];
+        if ($userdata['is_sales_rep_manager'] == 1) {
+            $salesUser = $this->home_model->get_user(array('id' => $userdata['id'], 'status' => 1));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
                 }
-                $salesHistory[$key]['rank'] = $rank;
-                $prevPremium = $row['total_premium'];
-                $nestedData = array();
-                $nestedData[] = $row['sales_rep'];
-                $nestedData[] = $row['total_open_count'];
-                $nestedData[] = $row['total_close_count'];
-                $nestedData[] = $row['total_premium'];
-                $nestedData[] = $rank;
-                $data[] = $nestedData;
+
+                $salesUsers = $this->order->get_sales_users($salesRepUsers);
+            } else {
+                $salesUsers = $this->order->get_sales_users();
+            }
+            $i = 0;
+            if (!empty($salesUsers)) {
+                foreach ($salesUsers as $salesrep) {
+                    $salesHistory[$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
+                    $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id'], [], $year);
+                    $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                    $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id'], [], $year);
+                    $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                    $salesHistory[$i]['total_open_count'] = $sale_open_count + $refi_open_count;
+
+                    $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id'], $year);
+                    $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                    $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id'], $year);
+                    $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                    $salesHistory[$i]['total_close_count'] = $refi_close_count + $sale_close_count;
+
+                    $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+                    $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                    //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+                    $refi_total_premium = $closeOrderRefiTotalPremium;
+                    $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+                    $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                    //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+                    $sale_total_premium = $closeOrderSaleTotalPremium;
+                    $salesHistory[$i]['total_premium'] = round($sale_total_premium + $refi_total_premium, 2);
+                    $i++;
+                }
+
+                // Sort descending by total_premium
+                usort($salesHistory, function ($a, $b) {
+                    return $b['total_premium'] <=> $a['total_premium'];
+                });
+                
+                $rank = 1;
+                $prevPremium = null;
+                foreach ($salesHistory as $key => $row) {
+                    if ($prevPremium !== null && $row['total_premium'] != $prevPremium) {
+                        $rank = $key + 1;
+                    }
+                    $salesHistory[$key]['rank'] = $rank;
+                    $prevPremium = $row['total_premium'];
+                    $nestedData = array();
+                    $nestedData[] = $row['sales_rep'];
+                    $nestedData[] = $row['total_open_count'];
+                    $nestedData[] = $row['total_close_count'];
+                    $nestedData[] = $row['total_premium'];
+                    $nestedData[] = $rank;
+                    $data[] = $nestedData;
+                }
             }
         }
         
