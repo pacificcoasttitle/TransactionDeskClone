@@ -440,7 +440,7 @@
                                                                             <tr style="height: 18px;">
                                                                                 <td
                                                                                     style="width: 40%; height: 18px; text-align: center; font-weight:bold; font-size:20px;border-color:#c2c2c2;">
-                                                                                    $<?php echo $total_sum_premium;?></td>
+                                                                                    $<?php echo $total_premium;?></td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
@@ -452,35 +452,29 @@
                                                                             <tr style="height: 18px;">
                                                                                 <td
                                                                                     style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;;background-color:#f2f2f2;">
-                                                                                    Top Resale Opener</td>
+                                                                                    Total Refi Open</td>
                                                                                 <td
                                                                                     style="width: 1%; height: 18px;background:#d35411;">
                                                                                     &nbsp;</td>
                                                                                 <td
                                                                                     style="width: 48.5%; height: 18px;text-align:center;border-color:#c2c2c2;;background-color:#f2f2f2;">
-                                                                                    Top Resale Closer</td>
+                                                                                    Total Refi Closed</td>
                                                                             </tr>
                                                                             <tr style="height: 18px;">
                                                                                 <td
                                                                                     style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_resales_open_orders_sales_name;?></td>
+                                                                                    <?php echo $total_refi_order;?></td>
                                                                                 <td
                                                                                     style="width: 1%; height: 18px; text-align: center;background:#d35411;">
                                                                                     &nbsp;</td>
                                                                                 <td
                                                                                     style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_resales_close_orders_sales_name;?></td>
+                                                                                    <?php echo $refi_close_count;?></td>
                                                                             </tr>
                                                                             <tr style="height: 18px;">
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_resales_open_orders;?></td>
-                                                                                <td
-                                                                                    style="width: 1%; height: 18px; text-align: center;border-color:#c2c2c2;background:#d35411;">
-                                                                                    &nbsp;</td>
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_resales_close_orders;?></td>
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;"></td>
+                                                                                <td style="width: 1%; height: 18px; text-align: center;border-color:#c2c2c2;background:#d35411;">&nbsp;</td>
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;"></td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
@@ -490,51 +484,32 @@
                                                                         border="1">
                                                                         <tbody>
                                                                             <tr style="height: 18px;">
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;;background-color:#f2f2f2;">
-                                                                                    Top Refi Opener</td>
-                                                                                <td
-                                                                                    style="width: 1%; height: 18px; text-align: center;background:#d35411;">
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;;background-color:#f2f2f2;">
+                                                                                    Total Sales Open</td>
+                                                                                <td style="width: 1%; height: 18px; text-align: center;background:#d35411;">
                                                                                     &nbsp;</td>
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;;background-color:#f2f2f2;">
-                                                                                    Top Refi Closer</td>
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;;background-color:#f2f2f2;">
+                                                                                    Total Sale Closed</td>
                                                                             </tr>
                                                                             <tr style="height: 18px;">
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_refi_open_orders_sales_name;?></td>
-                                                                                <td
-                                                                                    style="width: 1%; height: 18px; text-align: center;background:#d35411;">
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
+                                                                                    <?php echo $total_sale_order;?></td>
+                                                                                <td style="width: 1%; height: 18px; text-align: center;background:#d35411;">
                                                                                     &nbsp;</td>
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_refi_close_orders_sales_name;?></td>
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
+                                                                                    <?php echo $sale_close_count;?></td>
                                                                             </tr>
                                                                             <tr style="height: 18px;">
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_refi_open_orders;?></td>
-                                                                                <td
-                                                                                    style="width: 1%; height: 18px; text-align: center;background:#d35411;">
-                                                                                    &nbsp;</td>
-                                                                                <td
-                                                                                    style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $max_refi_close_orders;?></td>
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;"> </td>
+                                                                                <td style="width: 1%; height: 18px; text-align: center;background:#d35411;"> &nbsp;</td>
+                                                                                <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;"> </td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
                                                                     <p style="margin: 0px; padding: 0px;"><br></p>
                                                                     <p style="margin: 0px; padding: 0px;"><br></p>
-
-
-
-
                                                                 </td>
                                                             </tr>
-
-
-
                                                             <tr>
                                                                 <td>
                                                                     <table
@@ -544,7 +519,7 @@
                                                                             <tr>
                                                                                 <td
                                                                                     style="width: 31.333%;background-color:#032e42;color:#ffffff;font-weight:bold;font-family:arial;padding:5px; font-size:14px;">
-                                                                                    Rep Name</td>
+                                                                                    Title Officer Name</td>
                                                                                 <td
                                                                                     style="width: 13%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">
                                                                                     Refi Open</td>
@@ -561,18 +536,18 @@
                                                                                     style="width: 16.6667%;background-color:#032e42;color:#ffffff;font-weight:bold;text-align:center;font-family:arial;padding:5px; font-size:14px;">
                                                                                     Revenue</td>
                                                                             </tr>
-                                                                            <?php if (!empty($salesHistory)) {
-                                                                                foreach ($salesHistory as $sales) { ?>
+                                                                            <?php //if (!empty($salesHistory)) {
+                                                                                //foreach ($salesHistory as $sales) { ?>
                                                                                     <tr>
-                                                                                        <td style="width: 31.333%;color:#a1a1a1;"><?php echo $sales['sales_rep'];?></td>
-                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['refi_open_count'];?></td>
-                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['refi_close_count'];?></td>
-                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['sale_open_count'];?></td>
-                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sales['sale_close_count'];?></td>
-                                                                                        <td style="width: 16.6667%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;">$<?php echo $sales['total_premium'];?></td>
+                                                                                        <td style="width: 31.333%;color:#a1a1a1;"><?php echo $title_officer;?></td>
+                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $refi_open_count;?></td>
+                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $refi_close_count;?></td>
+                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sale_open_count;?></td>
+                                                                                        <td style="width: 13%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;"><?php echo $sale_close_count;?></td>
+                                                                                        <td style="width: 16.6667%;color:#a1a1a1;text-align:center;font-family:arial;padding:3px; font-size:15px;">$<?php echo $total_premium;?></td>
                                                                                     </tr>
-                                                                                <?php }
-                                                                            } ?>
+                                                                                <?php //}
+                                                                            //} ?>
                                                                             
                                                                         </tbody>
                                                                     </table>
@@ -613,23 +588,9 @@
                                         <tbody>
                                             <tr>
                                                 <td align="center" bgcolor="#0387EC" style="border-radius:0px;">
-                                                    <!--[if (gte mso 9)|(IE)]>
-        <table border="0" cellpadding="0" cellspacing="0" align="center">
-          <tr>
-            <td align="center" width="35"></td>
-            <td align="center" height="50" style="height:50px;">
-            <![endif]-->
-
-                                                    <a href="#" mc:edit="mct3nxlesjf"
+                                                    <a href="https://app.pctdesk.com/order/login" mc:edit="mct3nxlesjf"
                                                         style="font-family:'Barlow',Arial,Helvetica,sans-serif;font-size:16px;line-height:20px;font-weight:700;font-style:normal;color:#FFFFFF;text-decoration:none;letter-spacing:0px;padding:15px 35px 15px 35px;display:inline-block;"><span>LOG
                                                             IN TO DASHBOARD</span></a>
-
-                                                    <!--[if (gte mso 9)|(IE)]>
-            </td>
-            <td align="center" width="35"></td>
-          </tr>
-        </table>
-      <![endif]-->
                                                 </td>
                                             </tr>
                                         </tbody>
