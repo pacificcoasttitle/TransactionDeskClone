@@ -318,9 +318,19 @@ if (isset($imgThank) && !empty($imgThank)) {
 									<div id="notificationsInfo" class="collapse" role="tabpanel" aria-labelledby="notificationsTab" data-parent="#accordionEx">
 										<div class="card-body">
 											<div class="form-group">
-												<label for="telephone" class="col-sm-4 col-form-label">&nbsp;</label>
+												<label for="is_mail_notification" class="col-sm-4 col-form-label">&nbsp;</label>
 												<div class="col-sm-6">
 													<input type="checkbox" <?php echo ($sales_rep_info['is_mail_notification'] == 1) ? 'checked' : '' ?> class="" style="height:18px;width:18px;margin-right:10px;" name="is_mail_notification" id="is_mail_notification" class="form-control" placeholder="Mail Notification">Mail Notification
+												</div>
+
+												<label for="notify_recording_confirm" class="col-sm-4 col-form-label">&nbsp;</label>
+												<div class="col-sm-6">
+													<input type="checkbox" <?php echo ($sales_rep_info['notify_recording_confirm'] == 1) ? 'checked' : '' ?> class="" style="height:18px;width:18px;margin-right:10px;" name="notify_recording_confirm" id="notify_recording_confirm" class="form-control">Notify Recording Confirm
+												</div>
+
+												<label for="notify_disburse_funds" class="col-sm-4 col-form-label">&nbsp;</label>
+												<div class="col-sm-6">
+													<input type="checkbox" <?php echo ($sales_rep_info['notify_disburse_funds'] == 1) ? 'checked' : '' ?> class="" style="height:18px;width:18px;margin-right:10px;" name="notify_disburse_funds" id="notify_disburse_funds" class="form-control">Notify Disburse Funds
 												</div>
 											</div>
 										</div>
