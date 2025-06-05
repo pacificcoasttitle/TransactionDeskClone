@@ -19,7 +19,7 @@
 			<div class="card-body">
 				<div class="col-xs-12">
 					<div class="typography-section__inner align-wrapper">
-						<h4 class="ui-title-block_light">Production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
+						<h4 class="ui-title-block_light">Ranking based on production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
 						<div id="sales_user_listing">
 							<label>
 								<select style="width:auto;" name="month_year" id="month_year" class="custom-select custom-select-sm form-control form-control-sm"> 
