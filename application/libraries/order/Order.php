@@ -3528,9 +3528,9 @@ class Order
                     $data['start_date'] = date('m/01/Y', strtotime("-1 days"));
 
                     if ($adminFlag == 1) {
-                        $message = $this->CI->load->view('frontend/emails/daily_production.php', $data, true);
+                        $message = $this->CI->load->view('frontend/emails/title_officer_daily_production.php', $data, true);
                     } else {
-                        $message = $this->CI->load->view('emails/daily_production.php', $data, true);
+                        $message = $this->CI->load->view('emails/title_officer_daily_production.php', $data, true);
                     }
 
                     $from_name = 'Pacific Coast Title Company';
