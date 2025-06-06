@@ -67,7 +67,7 @@ if ($userdata['is_sales_rep'] == 1) {
 		<?php if ($userdata['is_sales_rep_manager'] == 1) {?>
 			<li class="nav-item <?php if ($this->uri->segment(1) == 'ranking') {echo 'active';}?>">
 				<a class="nav-link" href="<?php echo base_url(); ?>ranking">
-					<i class="fa fa-line-chart"></i>
+					<i class="fa fa-star"></i>
 					<span>Ranking</span>
 				</a>
 			</li>
