@@ -427,6 +427,77 @@ class Dashboard extends MX_Controller
         $this->salesdashboardtemplate->show("order", "get_fees", $data);
     }
 
+    public function get_softpro_fees()
+    {
+        $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $order_id = $this->uri->segment(2);
+        $params = [
+            'order_details.id' => $order_id,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
+        
+        $loanAmount = $orderDetails['loan_amount'];
+        $salesAmount = $orderDetails['sales_amount'];
+        
+        
+        $apiEndPoints = SOFTPRO_API_END;
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $req['orderNumber'] = $orderDetails['file_number'];
+        $queryParams = "orderNumber=" . urlencode($orderDetails['file_number']);
+        $reqData     = json_encode($req);
+        $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_fees'] . '?'.$queryParams;
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
+        $response = $this->softpro->make_request('GET', 'get_fees', $reqData, $queryParams);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
+        
+        if ($response['status'] == 'success' && !empty($response['data'])) {
+            $feesList  = $response['data'];
+
+            $uniqueFees = [];
+
+            foreach ($feesList as $invoice) {
+                foreach ($invoice['Fees'] as $fee) {
+                    $desc = $fee['Description'];
+                    if (!isset($uniqueFees[$desc])) {
+                        $uniqueFees[$desc] = $fee['Amount']; // Keep the first occurrence
+                    }
+                }
+            }
+
+            // Optional: re-index if you want a clean array
+            $result = [];
+            $totalAmount = 0;
+            foreach ($uniqueFees as $desc => $amount) {
+                $totalAmount += $amount;
+                $result[] = [
+                    'Description' => $desc,
+                    'Amount' => "$".number_format($amount , 2)
+                ];
+            }   
+        }
+
+        if (strtolower($orderDetails['transaction_type']) == 'purchase') {
+            $data['transactionType'] = 'Resale';
+        } else {
+            $data['transactionType'] = 'Re-Finance';
+        }
+        $data['calcResult'] = $result;
+        $data['totalAmount'] = $totalAmount;
+        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $data['sales_amount'] = $salesAmount;
+        $data['loan_amount'] = $loanAmount;
+        
+        $this->salesdashboardtemplate->addCSS(base_url('assets/front/css/style.css'));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jspdf.debug.js'));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2canvas.min.js'));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/html2pdf.bundle.js'));
+
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/order_fee.js?v=' . $this->version));
+        $this->salesdashboardtemplate->show("order", "get_softpro_fees", $data);
+    }
+
     public function get_fee_estimate_pdf()
     {
         $userdata = $this->session->userdata('user');
