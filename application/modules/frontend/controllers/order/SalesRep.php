@@ -1233,7 +1233,7 @@ class SalesRep extends MX_Controller
                     $nestedData[] = $row['sales_rep'];
                     $nestedData[] = $row['total_open_count'];
                     $nestedData[] = $row['total_close_count'];
-                    $nestedData[] = $row['total_premium'];
+                    $nestedData[] = "$".number_format($row['total_premium'], 2);
                     $nestedData[] = $rank;
                     $data[] = $nestedData;
                 }
