@@ -17,7 +17,8 @@
         /* .size_a4 { width: 8.3in; height: 11.7in; } */
         .size_letter { width: 11.5in; height: 15in; }
         .pdf_page {
-            margin: 0 auto;
+            margin: 0 50px;
+            /* margin: 0 auto; */
             box-sizing: border-box;
             background-color: #fff;
             color: #333;
@@ -55,7 +56,7 @@
         .pdf_body {
             position: absolute;
             top: 1in;
-            bottom: 1.2in;
+            bottom: 1in;
             left: 0;
             right: 0;
         }
