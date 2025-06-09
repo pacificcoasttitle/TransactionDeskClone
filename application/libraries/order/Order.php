@@ -5669,4 +5669,75 @@ class Order
         }
         return false;
     }
+
+    public function generateFeesEstimationPdf($order_id) {
+        
+        $params = [
+            'order_details.id' => $order_id,
+        ];
+        $orderDetails = $this->get_order_details($params);
+        $loanAmount = $orderDetails['loan_amount'];
+        $salesAmount = $orderDetails['sales_amount'];
+        $apiEndPoints = SOFTPRO_API_END;
+        $this->CI->load->library('order/softPro');
+        $this->CI->load->model('order/apiLogs');
+        $req['orderNumber'] = $orderDetails['file_number'];
+        $queryParams = "orderNumber=" . urlencode($orderDetails['file_number']);
+        $reqData     = json_encode($req);
+        $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_fees'] . '?'.$queryParams;
+        $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
+        $response = $this->CI->softpro->make_request('GET', 'get_fees', $reqData, $queryParams);
+        $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
+        
+        if ($response['status'] == 'success' && !empty($response['data'])) {
+            $feesList  = $response['data'];
+            $uniqueFees = [];
+            foreach ($feesList as $invoice) {
+                foreach ($invoice['Fees'] as $fee) {
+                    $desc = $fee['Description'];
+                    if (!isset($uniqueFees[$desc])) {
+                        $uniqueFees[$desc] = $fee['Amount'];
+                    }
+                }
+            }
+            $result = [];
+            $totalAmount = 0;
+            foreach ($uniqueFees as $desc => $amount) {
+                $totalAmount += $amount;
+                $result[] = [
+                    'Description' => $desc,
+                    'Amount' => "$".number_format($amount , 2)
+                ];
+            }   
+        }
+
+        if (strtolower($orderDetails['transaction_type']) == 'purchase') {
+            $data['transactionType'] = 'Resale';
+        } else {
+            $data['transactionType'] = 'Re-Finance';
+        }
+        $data['calcResult'] = $result;
+        $data['totalAmount'] = $totalAmount;
+        $data['order_number'] = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        $data['full_address'] = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $data['sales_amount'] = $salesAmount;
+        $data['loan_amount'] = $loanAmount;
+
+        $html = $this->CI->load->view("order/get_fees_pdf", $data, true);
+        // echo $html;die;
+        $this->CI->load->library('snappy_pdf');
+        // $this->CI->snappy_pdf->pdf->setOption('page-size', 'Letter');
+        $this->CI->snappy_pdf->pdf->setOption('zoom', '1');
+
+        if (!is_dir('uploads/fees-pdf')) {
+            mkdir('./uploads/fees-pdf', 0777, true);
+        }
+        $document_name = $orderDetails['file_number'] . '.pdf';
+        $pdfFilePath = FCPATH . '/uploads/fees-pdf/' . $document_name;
+        $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
+        $this->CI->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);
+        // die;
+        $this->uploadDocumentOnAwsS3($document_name, 'fees-pdf');
+        
+    }
 }

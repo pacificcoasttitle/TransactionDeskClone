@@ -846,6 +846,8 @@ class Home extends MX_Controller
                         
                         $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
                     }
+
+                    $this->order->generateFeesEstimationPdf($orderId);
                     
                 }
                 $params = [
@@ -927,6 +929,7 @@ class Home extends MX_Controller
                 $lvfilename          = $orderNumber . '.pdf';
                 $deedfilename        = $orderNumber . '.pdf';
                 $taxfilename         = $orderNumber . '.pdf';
+                $reportFileName      = $orderNumber . '.pdf';
                 $uploadFileToSoftPro = [];
                 $documentIds = [];
                 $this->load->model('order/document');
@@ -1017,6 +1020,28 @@ class Home extends MX_Controller
                         'is_sync'                => 0,
                         'is_prelim_document'     => 0,
                         'is_tax_doc'             => 1,
+                    ];
+                    $documentIds[] = $this->document->insert($documentData);
+                }
+
+                if ($this->order->fileExistOrNotOnS3('fees-pdf/' . $reportFileName)) {
+                    $file[] = env('AWS_PATH') . "fees-pdf/" . $reportFileName;
+                    $uploadFileToSoftPro[] = [
+                        "FolderName" => 'tax',
+                        "FileURL"    => env('AWS_PATH') . "fees-pdf/" . $reportFileName,
+                    ];
+                    $fileSize = filesize(env('AWS_PATH') . "fees-pdf/" . $reportFileName);
+                    $documentData = [
+                        'document_name'          => $reportFileName,
+                        'original_document_name' => $reportFileName,
+                        'document_type_id'       => 1037,
+                        'document_size'          => $fileSize,
+                        'user_id'                => $userdata['id'],
+                        'order_id'               => $orderId,
+                        'description'            => 'Fees estimation',
+                        'is_sync'                => 0,
+                        'is_prelim_document'     => 0,
+                        'is_tax_doc'             => 0,
                     ];
                     $documentIds[] = $this->document->insert($documentData);
                 }
