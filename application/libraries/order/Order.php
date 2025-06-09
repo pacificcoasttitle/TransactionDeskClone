@@ -5727,7 +5727,7 @@ class Order
         // echo $html;die;
         $this->CI->load->library('snappy_pdf');
         // $this->CI->snappy_pdf->pdf->setOption('page-size', 'Letter');
-        $this->CI->snappy_pdf->pdf->setOption('zoom', '1');
+        $this->CI->snappy_pdf->pdf->setOption('zoom', '0.9');
 
         if (!is_dir('uploads/fees-pdf')) {
             mkdir('./uploads/fees-pdf', 0777, true);
