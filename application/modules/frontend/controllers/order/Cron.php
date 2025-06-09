@@ -7705,4 +7705,8 @@ class Cron extends MX_Controller
         $res = json_encode(['updated' => $count]);
         print_r($res);die;
     }
+
+    public function createFeesPdf() {
+        $this->order->generateFeesEstimationPdf(153367);
+    }
 }
