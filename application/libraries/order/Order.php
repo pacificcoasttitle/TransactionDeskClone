@@ -5732,7 +5732,7 @@ class Order
         if (!is_dir('uploads/fees-pdf')) {
             mkdir('./uploads/fees-pdf', 0777, true);
         }
-        $document_name = $orderDetails['file_number'] . '.pdf';
+        $document_name = $orderDetails['file_number'] . '-Fees.pdf';
         $pdfFilePath = FCPATH . '/uploads/fees-pdf/' . $document_name;
         $pdfFilePath = str_replace('\\', '/', $pdfFilePath);
         $this->CI->snappy_pdf->pdf->generateFromHtml($html, $pdfFilePath);

@@ -1002,6 +1002,17 @@ class Home extends MX_Controller
         echo json_encode($res);
     }
 
+    public function generateCompanyLookupCode() {
+        $company_name = $this->input->post('company_name');
+        $address1   = $this->input->post('address1');
+        $code = '';
+        if (!empty($company_name) && !empty($address1)) {
+            $code = $this->order->generateNewCompanyLookupCode($company_name, $address1);
+        }
+        $res = ['code' => $code];
+        echo json_encode($res);
+    }
+
     public function get_company_list()
     {
         $searchTerm = isset($_POST['term']) && !empty($_POST['term']) ? $_POST['term'] : '';
@@ -8332,8 +8343,8 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('name', 'Name', 'required', ['required' => 'Please Enter Name']);
             // $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
             $this->form_validation->set_rules('user_type', 'User type', 'required', ['required' => 'Please Select User Type']);
-            $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
-            // $this->form_validation->set_rules('phone', 'Phone', 'required', ['required' => 'Please Enter Telephone']);
+            $this->form_validation->set_rules('address1', 'Address', 'required', ['required' => 'Please Enter Address']);
+            $this->form_validation->set_rules('lookup_code', 'Lookup Code', 'required', ['required' => 'Please Lookup Code']);
             $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
             $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
             $this->form_validation->set_rules('zipcode', 'Zipcode', 'required', ['required' => 'Please Enter Zipcode']);
@@ -8358,8 +8369,9 @@ class Home extends MX_Controller
                     $companyType = 'Selling Agent/Broker';
                 }
                 $name   = $this->input->post('name');
-                $address   = $this->input->post('address');
-                $companyLookup = $this->order->generateCompanyLookupCode($name, $address);
+                $address = $this->input->post('address1');
+                $companyLookup = $this->input->post('lookup_code');
+                // $companyLookup = $this->order->generateCompanyLookupCode($name, $address);
                 // print_r($companyLookup);die;
                 $customerData = [
                     'Name'         => $name,
@@ -8405,7 +8417,7 @@ class Home extends MX_Controller
                 $data['name_error_msg']    = form_error('name');
                 $data['email_address_error_msg'] = form_error('email_address');
                 $data['user_type_error_msg']     = form_error('user_type');
-                $data['address_error_msg']       = form_error('address');
+                $data['address_error_msg']       = form_error('address1');
                 $data['phone_error_msg']       = form_error('phone');
                 $data['city_error_msg']          = form_error('city');
                 $data['state_error_msg']         = form_error('state');
@@ -8414,8 +8426,8 @@ class Home extends MX_Controller
         }
         $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css'));
         $this->admintemplate->addCSS(base_url('assets/frontend/css/jquery-ui.css'));
-        $this->admintemplate->addJS(base_url('assets/libs/jquery-1.12.4.min.js'));
-        $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-ui.min.js'));
+        // $this->admintemplate->addJS(base_url('assets/libs/jquery-1.12.4.min.js'));
+        // $this->admintemplate->addJS(base_url('assets/frontend/js/jquery-ui.min.js'));
         $this->admintemplate->addJS(base_url('assets/backend/js/companies.js'));
         $this->admintemplate->show("order/home", "add_sp_company", $data);
     }
@@ -8528,6 +8540,7 @@ class Home extends MX_Controller
             redirect(base_url().'order/admin/softpro-companies');
         }
         $data['back_url'] = $this->session->userdata('back_url');
+        $this->admintemplate->addJS(base_url('assets/backend/js/companies.js'));
         $this->admintemplate->show("order/home", "edit_company", $data);
     }
 

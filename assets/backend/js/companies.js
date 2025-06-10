@@ -1,14 +1,16 @@
 jQuery(document).ready(function ($) {
 
-    $('#clone-email-address').cloneya({
-        maximum: 5
-    }).on('after_append.cloneya', function (event, toclone, newclone) {
-        var name = $(newclone).find("input[type='email']").attr('id');
-    }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
-        $(clone).slideToggle('slow', function () {
-            $(clone).remove();
-        })
-    });
+    if ($('#clone-email-address').length) {
+        $('#clone-email-address').cloneya({
+            maximum: 5
+        }).on('after_append.cloneya', function (event, toclone, newclone) {
+            var name = $(newclone).find("input[type='email']").attr('id');
+        }).off('remove.cloneya').on('remove.cloneya', function (event, clone) {
+            $(clone).slideToggle('slow', function () {
+                $(clone).remove();
+            })
+        });
+    }
 });
 
 function addOrUpdateDeliverables(partner_id) {
@@ -149,3 +151,43 @@ function deleteSPCompany(lookup_code) {
     }
 
 }
+
+$('#edit-company #name, #edit-company #address1, #add-company #name, #add-company #address1').on('focusout', function (e) {
+    let company_name = '';
+    let address1 = '';
+    if ($('#edit-company').length) {
+        company_name = $('#edit-company #name').val();
+        address1 = $('#edit-company #address1').val();
+    }
+
+    if ($('#add-company').length) {
+        company_name = $('#add-company #name').val();
+        address1 = $('#add-company #address1').val();
+    }
+
+    console.log('company_name ==', company_name);
+    console.log('address1 ==', address1);
+    if (company_name && address1) {
+        $.ajax({
+            url: base_url + "order/admin/generate-company-lookupcode",
+            data: {
+                company_name: company_name,
+                address1: address1
+            },
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if ($('#edit-company').length) {
+                    $("#edit-company #new_lookup_code").val(data.code);
+                    $("#edit-company #new_lookup_code").prop("disabled", false);
+                }
+
+                if ($('#add-company').length) {
+                    $("#add-company #lookup_code").val(data.code);
+                    $("#add-company #lookup_code").prop("disabled", false);
+                }
+            }
+        });
+    }
+});
