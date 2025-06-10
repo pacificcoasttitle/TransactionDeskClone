@@ -929,7 +929,7 @@ class Home extends MX_Controller
                 $lvfilename          = $orderNumber . '.pdf';
                 $deedfilename        = $orderNumber . '.pdf';
                 $taxfilename         = $orderNumber . '.pdf';
-                $reportFileName      = $orderNumber . '.pdf';
+                $reportFileName      = $orderNumber . '-Fees.pdf';
                 $uploadFileToSoftPro = [];
                 $documentIds = [];
                 $this->load->model('order/document');

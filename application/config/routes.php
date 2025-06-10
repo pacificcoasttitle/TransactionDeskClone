@@ -252,7 +252,8 @@ $route['order/admin/softpro-mortgage-brokers']      = 'admin/order/home/spAdminM
 $route['is-softpro-mortgage-primary-user']          = 'admin/order/home/isSPMortgagePrimaryUser';
 $route['order/admin/softpro-new-users']             = 'admin/order/home/spNewUsers';
 $route['order/admin/add-softpro-new-user']          = 'admin/order/home/addSoftProNewUser';
-$route['order/admin/generate-lookupcode']          = 'admin/order/home/generateLookupCode';
+$route['order/admin/generate-lookupcode']           = 'admin/order/home/generateLookupCode';
+$route['order/admin/generate-company-lookupcode']   = 'admin/order/home/generateCompanyLookupCode';
 
 $route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
 $route['order/admin/softpro-add-company']                   = 'admin/order/home/spAddCompany';

@@ -90,9 +90,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
+                                <label for="address1" class="col-sm-2 col-form-label">Address1<span class="required"> *</span></label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="address" id="address" value="<?php echo set_value('address'); ?>" class="form-control" placeholder="Address">
+                                    <input type="text" class="form-control" name="address1" id="address1" value="<?php echo set_value('address1'); ?>" class="form-control" placeholder="Address">
                                     <?php if (!empty($address_error_msg)) {?>
                                         <span class="error"><?php echo $address_error_msg; ?></span>
                                     <?php }?>
@@ -125,6 +125,16 @@
                                     <input type="text" class="form-control" name="zipcode" id="zipcode" value="<?php echo set_value('zipcode'); ?>" class="form-control" placeholder="Zipcode">
                                     <?php if (!empty($zipcode_error_msg)) {?>
                                         <span class="error"><?php echo $zipcode_error_msg; ?></span>
+                                    <?php }?>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lookup_code" class="col-sm-2 col-form-label">Lookup Code</label>
+                                <div class="col-sm-6">
+                                    <input type="text" value="<?php echo set_value('lookup_code'); ?>" class="form-control" name="lookup_code" id="lookup_code" class="form-control" placeholder="Lookup Code">
+                                    <?php if (!empty($lookup_code_error_msg)) {?>
+                                        <span class="error"><?php echo $lookup_code_error_msg; ?></span>
                                     <?php }?>
                                 </div>
                             </div>
