@@ -6543,6 +6543,12 @@ class Home extends MX_Controller
             ];
             $this->db->update('pct_configs', $disburseFundsFlag, ['slug' => 'disburse_funds_shut_off']);
 
+            $fees_pdf_confirmation_email_shut_off = isset($input['fees_pdf_confirmation_email_shut_off']) && !empty($input['fees_pdf_confirmation_email_shut_off']) ? 1 : 0;
+            $feesPdfConfirmationEmailShutOff       = [
+                'is_enable' => $fees_pdf_confirmation_email_shut_off,
+            ];
+            $this->db->update('pct_configs', $feesPdfConfirmationEmailShutOff, ['slug' => 'fees_pdf_confirmation_email_shut_off']);
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -6573,6 +6579,7 @@ class Home extends MX_Controller
         $res['add_underwriten_partner_via_api']     = $data['add_underwriten_partner_via_api']['is_enable'];
         $res['recording_confirmation_shut_off']     = $data['recording_confirmation_shut_off']['is_enable'];
         $res['disburse_funds_shut_off']             = $data['disburse_funds_shut_off']['is_enable'];
+        $res['fees_pdf_confirmation_email_shut_off'] = $data['fees_pdf_confirmation_email_shut_off']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);

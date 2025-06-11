@@ -101,6 +101,13 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row ml-1">
+                                <label for="fees_pdf_confirmation_email_shut_off" class="col-sm-4 col-form-label">Fees Pdf Confirmation Email Shut Off </label>
+                                <div class="col-sm-2">
+                                    <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="fees_pdf_confirmation_email_shut_off" id="fees_pdf_confirmation_email_shut_off" <?php echo isset($fees_pdf_confirmation_email_shut_off) && !empty($fees_pdf_confirmation_email_shut_off) ? 'Checked' : ''; ?>>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-6">
                                     <button type="submit" class="btn btn-info btn-icon-split">
