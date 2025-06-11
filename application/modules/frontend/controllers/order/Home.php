@@ -342,6 +342,7 @@ class Home extends MX_Controller
 
                 $isEnable          = $configData['escrow_commission']['is_enable'];
                 $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
+                $feesPdfConfirmationEmailShutOff = $configData['fees_pdf_confirmation_email_shut_off']['is_enable'];
 
                 /** End Get config value to check Lp Enable or not */
                 $underWriter = '';
@@ -847,7 +848,9 @@ class Home extends MX_Controller
                         $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
                     }
 
-                    $this->order->generateFeesEstimationPdf($orderId);
+                    if (empty($feesPdfConfirmationEmailShutOff) || $feesPdfConfirmationEmailShutOff == 0) {
+                        $this->order->generateFeesEstimationPdf($orderId);
+                    }
                     
                 }
                 $params = [
