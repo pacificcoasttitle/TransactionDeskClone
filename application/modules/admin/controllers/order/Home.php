@@ -6417,6 +6417,54 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
+    public function smsLogs()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: SMS Logs';
+        $this->admintemplate->show("order/home", "sms_logs", $data);
+    }
+
+    public function get_sms_logs()
+    {
+        $params = [];
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $params['is_escrow']   = 0;
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $admin_logs_list       = $this->home_model->get_sms_logs($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $admin_logs_list       = $this->home_model->get_sms_logs($params);
+        }
+
+        $data = [];
+
+        if (isset($admin_logs_list['data']) && !empty($admin_logs_list['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($admin_logs_list['data'] as $key => $value) {
+                $nestedData   = [];
+                $nestedData[] = $i;
+                $nestedData[] = $value['message'];
+                $nestedData[] = $value['sent_to'];
+                $nestedData[] = $value['status'];
+                $nestedData[] = $value['error_message'];
+                $nestedData[] = convertTimezone($value['created_at']);
+                $data[]       = $nestedData;
+                $i++;
+            }
+        }
+        $json_data['recordsTotal']    = intval($admin_logs_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($admin_logs_list['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
 
     public function storeLpDocumentInfo()
     {
