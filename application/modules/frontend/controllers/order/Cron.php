@@ -7656,10 +7656,161 @@ class Cron extends MX_Controller
 
     public function postMileStone() {
         $this->load->model('order/apiLogs');
-        
+        $this->load->model('order/twilioMessage');
         $reqData     = file_get_contents("php://input");
+
+        // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"TEST-20001614-OCT","Id":"04-035","FileUploadedStatus":false,"data":null}';
         $logid =  $this->apiLogs->syncLogs(0, 'softpro', 'received_milestone_update', 'received_milestone_update', $reqData, [], 0, 0);
         $response    = json_decode($reqData, true);
+        
+        // echo "<pre>";
+        // print_r($response);die;
+        
+
+        if (!empty($response) && $response['Status'] == 200 && !empty($response['Id'])) {
+            $taskId = $response['Id'];
+            $configData                  = $this->order->getConfigData();
+            $recordingConfirmationShutOff = $configData['recording_confirmation_shut_off']['is_enable'];
+            $disburseFundsShutOff = $configData['disburse_funds_shut_off']['is_enable'];
+
+            if ($taskId == '03-020' && $recordingConfirmationShutOff == 1) {
+                $res = "Admin has disabled recording confirmation notification.";
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
+                echo $res; exit;
+            }
+
+            if ($taskId == '04-035' && $disburseFundsShutOff == 1) {
+                $res = "Admin has disabled Disburse Funds notification.";
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
+                echo $res; exit; 
+            }
+
+            $this->load->library('order/softPro');
+            $this->db->select('o.id, o.file_number, p.full_address, p.address, p.city, p.state, p.zip, p.id as property_id, u.id as sales_rep_id, u.email_address, u.phone, u.first_name, u.last_name, u.notify_disburse_funds, u.notify_recording_confirm');
+            $this->db->from('order_details as o');
+            $this->db->join('property_details as p', 'o.property_id = p.id');
+            $this->db->join('transaction_details as t', 'o.transaction_id = t.id');
+            $this->db->join('pct_softpro_lookup_table as u', 't.sales_representative = u.id', 'left');
+            $this->db->where('o.file_number', $response['OrderNumber']);
+            $filesResult = $this->db->get()->row_array();
+            $fileNumber = $response['OrderNumber'];
+            $from        = env('TWILIO_FROM');
+            
+            
+            // if (true) {
+            if (!empty($response['data']) && !empty($filesResult) && !empty($filesResult['phone'])) {
+                if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
+                    $twilio['message'] = $reqData;
+                    $twilio['sent_from'] = $from;
+                    $twilio['status'] = $status = 'error';
+                    $twilio['error_message'] = $res = "Sales Rep has disabled recording confirmation notification.";
+                    $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
+                    // echo $res; exit;
+                } else if ($taskId == '04-035' && $filesResult['notify_disburse_funds'] == 0) {
+                    $twilio['message'] = $reqData;
+                    $twilio['sent_from'] = $from;
+                    $twilio['status'] = $status = 'error';
+                    $twilio['error_message'] = $res = "Sales Rep has disabled Disburse Funds notification.";
+                    $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
+                    // echo $res; exit; 
+                } else {
+                    $this->load->library('order/twilio');
+                    $this->load->library('order/common');
+                    $orderId = $filesResult['id'];
+                    $file_number = $response['OrderNumber'];
+                    $phoneNumber = "2133097286"; //$filesResult['phone'];
+                    // $phoneNumber = "13322767084"; //$filesResult['phone'];
+                    $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
+                    $propertyAddress = $filesResult['full_address'];
+                    $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
+                    
+                    $message = "";
+                    if ($taskId == '03-020') {
+                        // $message = "Hi " . $filesResult['first_name'] . " " . $filesResult['last_name'] . ", \n i. Recording Confirmation: " . $file_number . " \n ii. Property Address: " . $filesResult['full_address'] . " \n iii. @ " . $timestamp;
+                        $message = "Hi {$filesResult['first_name']} {$filesResult['last_name']},\n"
+                        . "i. Recording Confirmation: {$file_number}\n"
+                        . "ii. Property Address: {$filesResult['full_address']}\n"
+                        . "iii. @ {$timestamp}";
+                    } 
+
+                    if ($taskId == '04-035') {
+                        // $message = "Hi " . $filesResult['first_name'] . " " . $filesResult['last_name'] . ", \n i. Disbursement Completed: " . $file_number . " \n ii. Property Address: " . $filesResult['full_address'] . " \n iii. @ " . $timestamp;
+                        $message = "Hi {$filesResult['first_name']} {$filesResult['last_name']},\n"
+                            . "i. Disbursement Completed: {$file_number}\n"
+                            . "ii. Property Address: {$filesResult['full_address']}\n"
+                            . "iii. @ {$timestamp}";
+                    }
+                    // echo "<pre>";
+                    // print_r($message);die;
+                    $sid         = env('TWILIO_SID');
+                    $token       = env('TWILIO_TOKEN');
+                    
+                    $data        = [
+                        'message'     => $message,
+                        'account_sid' => $sid,
+                        'token'       => $token,
+                        'to'          => $phoneNumber,
+                        'from'        => $from,
+                    ];
+
+                    $logid = $this->apiLogs->syncLogs(0, 'twilio', 'twilio_send_message', 'twilio_send_message', $data, [], 0, 0);
+
+                    try {
+                        $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
+                        $res = $result->toArray();
+                        $res['msg_status'] = 'success';
+                    } catch (\Twilio\Exceptions\RestException $e) {
+                        $res['msg_status'] = 'error';
+                        $res['errorCode'] = $e->getCode();
+                        $res['errorMessage'] = $e->getMessage();
+                    } catch (Exception $e) {
+                        $res['msg_status'] = 'error';
+                        $res['errorCode'] = $e->getCode();
+                        $res['errorMessage'] = $e->getMessage();
+                    }
+
+                    // echo "<pre>";
+                    // print_r($res);
+                    $this->apiLogs->syncLogs(0, 'twilio', 'twilio_send_message', 'twilio_send_message', $data, $res, 0, $logid);
+                    $twilio['message'] = $resMsg = $res['body'] ?? $message;
+                    $twilio['sent_from'] = $res['from'] ?? $from;
+                    $twilio['sent_to'] = $res['to'] ?? $phoneNumber;
+                    $twilio['status'] = $status = $res['msg_status'];
+                    $twilio['message_sid'] = $res['sid'] ?? $sid;
+                    $twilio['error_code'] = $res['errorCode'];
+                    $twilio['error_message'] = $res['errorMessage'];
+                    // if($res['msg_status'] == 'success') {
+
+                    //     $data['message'] = array(
+                    //         'message' => $res['body'] ?? $message,
+                    //         'sent_from' => $res['from'] ?? $from,
+                    //         'sent_to' => $res['to'] ?? $phoneNumber,
+                    //         'status' => $res['msg_status'],
+                    //         'message_sid' => $res['sid'] ?? $sid,
+                    //         'error_code' => $res['errorCode'],
+                    //         'error_message' => $res['errorMessage'],
+                    //     );
+                    //     $this->twilioMessage->insert($data);
+                    // }
+                }
+
+            } else {
+                $twilio['message'] = $message;
+                $twilio['sent_from'] = $from;
+                $twilio['status'] = $status = 'error';
+                $twilio['error_message'] = $resMsg = "Order number not exist or Sales rep phone number not linked.";
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $resMsg, 0, $logid);
+            }
+        } else {
+            $twilio['message'] = $reqData;
+            $twilio['sent_from'] = $from;
+            $twilio['status'] = $status = 'error';
+            $twilio['error_message'] = $resMsg = "Invalid request or order number not found.";
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $resMsg, 0, $logid);
+        }
+        $this->twilioMessage->insert($twilio);
+        $res = json_encode(['status' => $status, 'message' => $resMsg]);
+        echo $res;exit;
         
     }
 

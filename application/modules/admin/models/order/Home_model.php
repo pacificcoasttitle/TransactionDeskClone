@@ -2334,6 +2334,74 @@ class Home_model extends CI_Model
         ];
     }
 
+    public function get_sms_logs($params)
+    {
+        // $this->db->from('admin')
+        $this->db->select('*')->from('pct_order_twilio_message_records');
+        //          ->join('pct_admin_activity_logs', 'pct_admin_activity_logs.user_id = admin.id');
+        $total_records = $this->db->count_all_results();
+
+        $limit           = isset($params['length']) && ! empty($params['length']) ? $params['length'] : '';
+        $offset          = isset($params['start']) && ! empty($params['start']) ? $params['start'] : '';
+        $admin_logs_list = [];
+
+        if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like('message', $keyword)
+                    ->or_like('sent_to', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->select('*');
+            $this->db->from('pct_order_twilio_message_records');
+            $filter_total_records = $this->db->count_all_results();
+
+            if (isset($keyword) && ! empty($keyword)) {
+                $this->db->group_start()
+                    ->like('message', $keyword)
+                    ->or_like('sent_to', $keyword)
+                    ->group_end();
+            }
+
+            $this->db->select('*');
+            $this->db->from('pct_order_twilio_message_records');
+            $this->db->order_by('id', 'desc');
+
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $admin_logs_list = $query->result_array();
+            }
+        } else {
+            $this->db->select('*');
+            $this->db->from('pct_order_twilio_message_records');
+            $filter_total_records = $this->db->count_all_results();
+
+            $this->db->select('*');
+            $this->db->from('pct_order_twilio_message_records');
+            $this->db->order_by('id', 'desc');
+            if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
+                $this->db->limit($limit, $offset);
+            }
+
+            $query = $this->db->get();
+            if ($query->num_rows() > 0) {
+                $admin_logs_list = $query->result_array();
+            }
+        }
+
+        return [
+            'recordsTotal'    => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data'            => $admin_logs_list,
+        ];
+    }
+
     public function get_lp_document_list($params)
     {
         $orderColumnList = [

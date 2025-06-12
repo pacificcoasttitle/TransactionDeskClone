@@ -480,6 +480,7 @@ $route['order/admin/update-lp-report-status']    = 'admin/order/home/updateLpRep
 $route['order/admin/update-doc-section']         = 'admin/order/home/updateDocumentSection';
 $route['order/admin/admin-user-logs']            = 'admin/order/home/adminUserLogs';
 $route['order/admin/cron-logs']            = 'admin/order/home/cronLogs';
+$route['order/admin/sms-logs']            = 'admin/order/home/smsLogs';
 $route['order/admin/get-instrument-data']        = 'admin/order/home/getInstrumentData';
 $route['order/admin/store-lp-document-info']     = 'admin/order/home/storeLpDocumentInfo';
 $route['order/admin/lp-document-types']          = 'admin/order/home/lpDocumentTypes';
