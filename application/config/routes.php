@@ -240,6 +240,7 @@ $route['fetch-softpro-orders']         = 'frontend/order/cron/fetchSoftproOrders
 $route['fetch-bulk-prelim-report']         = 'frontend/order/cron/fetchBulkPrelimreport';
 $route['fetch-single-prelim-report']         = 'frontend/order/cron/fetchSinglePrelimreport';
 $route['post-prelim-report']         = 'frontend/order/cron/postPrelimreport';
+$route['post-prelim-summary']         = 'frontend/order/cron/postPrelimSummary';
 $route['post-policy-document']         = 'frontend/order/cron/postPolicyDocument';
 $route['post-milestone']         = 'frontend/order/cron/postMileStone';
 

@@ -7485,6 +7485,14 @@ class Cron extends MX_Controller
         echo $res;exit;
     }
 
+    public function postPrelimSummary() {
+        $this->load->model('order/apiLogs');
+        
+        $reqData     = file_get_contents("php://input");
+        $logid =  $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, [], 0, 0);
+        
+    }
+
     public function postPolicyDocument() {
         $this->load->model('order/apiLogs');
         
@@ -7675,13 +7683,13 @@ class Cron extends MX_Controller
 
             if ($taskId == '03-020' && $recordingConfirmationShutOff == 1) {
                 $res = "Admin has disabled recording confirmation notification.";
-                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                 echo $res; exit;
             }
 
             if ($taskId == '04-035' && $disburseFundsShutOff == 1) {
                 $res = "Admin has disabled Disburse Funds notification.";
-                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                 echo $res; exit; 
             }
 
