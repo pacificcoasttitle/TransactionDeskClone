@@ -5379,14 +5379,18 @@ class Order
     }
 
     function splitFullName($fullName) {
-        // Trim and split the full name into an array
-        $nameParts = explode(' ', trim($fullName));
-    
-        // Assign values based on the number of parts
+        $nameParts = preg_split('/\s+/', trim($fullName));
+
         $firstName = $nameParts[0] ?? '';
-        $middleName = count($nameParts) > 2 ? $nameParts[1] : '';
-        $lastName = count($nameParts) > 2 ? $nameParts[2] : ($nameParts[1] ?? '');
-    
+        $lastName = $nameParts[count($nameParts) - 1] ?? '';
+        
+        if (count($nameParts) > 2) {
+            // Middle name is everything in between
+            $middleName = implode(' ', array_slice($nameParts, 1, -1));
+        } else {
+            $middleName = '';
+        }
+
         return [
             'first_name' => $firstName,
             'middle_name' => $middleName,
