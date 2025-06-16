@@ -1334,6 +1334,7 @@ class Common extends MX_Controller
         $vesting = $this->input->post('vesting');
         $new_existing_lender = $this->input->post('new_existing_lender');
         $borrowers_vesting = $this->input->post('borrowers_vesting');
+        $primaryBorrowerArray = $this->order->splitFullName($borrowers_vesting);
         // $name = explode(" ", $this->input->post('LenderName'));
         $lenderFullName = $this->input->post('LenderName');
         $name = $this->order->splitFullName($lenderFullName);
@@ -1411,6 +1412,9 @@ class Common extends MX_Controller
         if (!empty($loan_number)) {
             $orderReq['orderNumber'] = $orderDetails['file_number'];
             $orderReq['loanNumber'] = $loan_number;
+            $orderReq['PrimaryBorrowerFirstName'] = $primaryBorrowerArray['first_name'];
+            $orderReq['PrimaryBorrowerMiddleName'] = $primaryBorrowerArray['middle_name'];
+            $orderReq['PrimaryBorrowerLastName'] = $primaryBorrowerArray['last_name'];
             $orderReq['userModel'] = [
                 'CompanyLookupCode' => $lenderCompanyLookupCode
             ];
