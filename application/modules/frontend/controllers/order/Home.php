@@ -848,7 +848,7 @@ class Home extends MX_Controller
                         $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
                     }
 
-                    if (empty($feesPdfConfirmationEmailShutOff) || $feesPdfConfirmationEmailShutOff == 0) {
+                    if ((empty($feesPdfConfirmationEmailShutOff) || $feesPdfConfirmationEmailShutOff == 0) && (strtolower($ProductTypeTxt) != 'full alta' && strtolower($ProductTypeTxt) != 'hard money') && (empty($SalesAmount) || (!empty($SalesAmount) && $SalesAmount >= 10)) && (empty($LoanAmount) || (!empty($LoanAmount) && $LoanAmount >= 10))) {
                         $this->order->generateFeesEstimationPdf($orderId);
                     }
                     
