@@ -7485,6 +7485,14 @@ class Cron extends MX_Controller
         echo $res;exit;
     }
 
+    public function postPrelimSummary() {
+        $this->load->model('order/apiLogs');
+        
+        $reqData     = file_get_contents("php://input");
+        $logid =  $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, [], 0, 0);
+        
+    }
+
     public function postPolicyDocument() {
         $this->load->model('order/apiLogs');
         
@@ -7660,6 +7668,7 @@ class Cron extends MX_Controller
         $reqData     = file_get_contents("php://input");
 
         // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"TEST-20001614-OCT","Id":"04-035","FileUploadedStatus":false,"data":null}';
+        // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"20000881-OCT","Id":"03-020","FileUploadedStatus":false,"data":null}';
         $logid =  $this->apiLogs->syncLogs(0, 'softpro', 'received_milestone_update', 'received_milestone_update', $reqData, [], 0, 0);
         $response    = json_decode($reqData, true);
         
@@ -7675,13 +7684,13 @@ class Cron extends MX_Controller
 
             if ($taskId == '03-020' && $recordingConfirmationShutOff == 1) {
                 $res = "Admin has disabled recording confirmation notification.";
-                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                 echo $res; exit;
             }
 
             if ($taskId == '04-035' && $disburseFundsShutOff == 1) {
                 $res = "Admin has disabled Disburse Funds notification.";
-                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_policy_document', 'received_policy_document', $reqData, $res, 0, $logid);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                 echo $res; exit; 
             }
 
@@ -7696,21 +7705,22 @@ class Cron extends MX_Controller
             $fileNumber = $response['OrderNumber'];
             $from        = env('TWILIO_FROM');
             
-            
-            // if (true) {
-            if (!empty($response['data']) && !empty($filesResult) && !empty($filesResult['phone'])) {
-                if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
+            // if (!empty($filesResult) && !empty($filesResult['phone'])) {
+            if (!empty($filesResult)) {
+                // if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
+                if (false) {
                     $twilio['message'] = $reqData;
                     $twilio['sent_from'] = $from;
                     $twilio['status'] = $status = 'error';
-                    $twilio['error_message'] = $res = "Sales Rep has disabled recording confirmation notification.";
+                    $twilio['error_message'] = $resMsg = $res = "Sales Rep has disabled recording confirmation notification.";
                     $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                     // echo $res; exit;
-                } else if ($taskId == '04-035' && $filesResult['notify_disburse_funds'] == 0) {
+                // } else if ($taskId == '04-035' && $filesResult['notify_disburse_funds'] == 0) {
+                } else if (false) {
                     $twilio['message'] = $reqData;
                     $twilio['sent_from'] = $from;
                     $twilio['status'] = $status = 'error';
-                    $twilio['error_message'] = $res = "Sales Rep has disabled Disburse Funds notification.";
+                    $twilio['error_message'] = $resMsg = $res = "Sales Rep has disabled Disburse Funds notification.";
                     $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                     // echo $res; exit; 
                 } else {
@@ -7719,7 +7729,7 @@ class Cron extends MX_Controller
                     $orderId = $filesResult['id'];
                     $file_number = $response['OrderNumber'];
                     $phoneNumber = "2133097286"; //$filesResult['phone'];
-                    // $phoneNumber = "13322767084"; //$filesResult['phone'];
+                    // $phoneNumber = $filesResult['phone'];
                     $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
                     $propertyAddress = $filesResult['full_address'];
                     $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
@@ -7762,11 +7772,11 @@ class Cron extends MX_Controller
                     } catch (\Twilio\Exceptions\RestException $e) {
                         $res['msg_status'] = 'error';
                         $res['errorCode'] = $e->getCode();
-                        $res['errorMessage'] = $e->getMessage();
+                        $res['errorMessage'] = $resMsg = $e->getMessage();
                     } catch (Exception $e) {
                         $res['msg_status'] = 'error';
                         $res['errorCode'] = $e->getCode();
-                        $res['errorMessage'] = $e->getMessage();
+                        $res['errorMessage'] = $resMsg = $e->getMessage();
                     }
 
                     // echo "<pre>";
