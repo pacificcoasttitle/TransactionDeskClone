@@ -6522,19 +6522,21 @@ class Cron extends MX_Controller
                     // $update_data[$key]['last_name']    = $row['LastName'];
                     $update_data[$key]['full_name']    = $row['FullName'];
                     $update_data[$key]['email_address']    = $row['Email'];
+                    $update_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
                     $update_data[$key]['is_sales_rep'] = 1;
                     $update_data[$key]['status'] = 1;
                 } else {
                     $insert_data[$key]['lookup_code'] = $row['LookUpCode'];
                     // $insert_data[$key]['first_name']    = $row['FirstName'];
                     // $insert_data[$key]['last_name']    = $row['LastName'];
-                    $update_data[$key]['full_name']    = $row['FullName'];
+                    $insert_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
+                    $insert_data[$key]['full_name']    = $row['FullName'];
                     $insert_data[$key]['email_address']    = $row['Email'];
                     $insert_data[$key]['is_sales_rep'] = 1;
                     $insert_data[$key]['status'] = 1;
                 }
             }
-            
+
             // Perform batch update for existing emails
             if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
