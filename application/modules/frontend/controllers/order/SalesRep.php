@@ -666,7 +666,7 @@ class SalesRep extends MX_Controller
                                 </a>
                             </li>
                             <li>
-                                <a href='#' onclick=getContacts('".$order['file_number']."');>
+                                <a href='javascript:void(0)' onclick=getContacts('".$order['file_number']."');>
                                     <button class='btn btn-grad-2a button-color' type='button'>
                                         <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
                                         View Contacts
@@ -674,7 +674,7 @@ class SalesRep extends MX_Controller
                                 </a>
                             </li>
                             <li>
-                                <a href='#' onclick='getInvoice('".$order['file_number']."');'>
+                                <a href='javascript:void(0)' onclick=getInvoice('".$order['id']."');>
                                     <button class='btn btn-grad-2a button-color' type='button'>
                                         <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
                                         View Invoice
@@ -719,7 +719,7 @@ class SalesRep extends MX_Controller
                                 </a>
                             </li>
                             <li>
-                                <a href='#' onclick='getInvoice('".$order['file_number']."');'>
+                                <a href='#' onclick=getInvoice('".$order['id']."');>
                                     <button class='btn btn-grad-2a button-color' type='button'>
                                         <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
                                         View Invoice

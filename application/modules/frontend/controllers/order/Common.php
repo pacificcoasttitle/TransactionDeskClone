@@ -774,16 +774,20 @@ class Common extends MX_Controller
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
         }
-        $fileNumber = $this->input->post('fileNumber');
-        if ($fileNumber) {
-            // $userdata = $this->session->userdata('user');
-            // $params = [
-            //     'order_details.id' => $orderId,
-            // ];
-            // $orderDetails = $this->order->get_order_details($params, 1);
+        $orderId = $this->input->post('orderId');
+        if ($orderId) {
+            $params = [
+                'order_details.id' => $orderId,
+            ];
+            $orderDetails = $this->order->get_order_details($params, 1);
             
-            $softproContacts = $this->order->fetchAndSyncContacts($fileNumber);
-            $res = array('status' => 'success', 'contacts' => $softproContacts);
+            $this->order->generateFeesEstimationPdf($orderId);
+            $reportFileName      = $orderDetails['file_number'] . '-Fees.pdf';
+            $file = '';
+            if ($this->order->fileExistOrNotOnS3('fees-pdf/' . $reportFileName)) {
+                $file = env('AWS_PATH') . "fees-pdf/" . $reportFileName;
+            }
+            $res = array('status' => 'success', 'pdf_url' => $file);
         } else {
             $res = array('status' => 'error', 'msg' => "Please select file.");
         }
