@@ -463,7 +463,7 @@
                                                                             <tr style="height: 18px;">
                                                                                 <td
                                                                                     style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $total_refi_order;?></td>
+                                                                                    <?php echo $refi_open_count;?></td>
                                                                                 <td
                                                                                     style="width: 1%; height: 18px; text-align: center;background:#d35411;">
                                                                                     &nbsp;</td>
@@ -493,7 +493,7 @@
                                                                             </tr>
                                                                             <tr style="height: 18px;">
                                                                                 <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
-                                                                                    <?php echo $total_sale_order;?></td>
+                                                                                    <?php echo $sale_open_count;?></td>
                                                                                 <td style="width: 1%; height: 18px; text-align: center;background:#d35411;">
                                                                                     &nbsp;</td>
                                                                                 <td style="width: 48.5%; height: 18px; text-align: center;border-color:#c2c2c2;">
