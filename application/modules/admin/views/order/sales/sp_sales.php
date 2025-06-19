@@ -20,7 +20,7 @@
                 <span class="icon text-white-50">
                     <i class="fas fa-refresh"></i>
                 </span>
-                <span class="text"> Refresh </span> 
+                <span class="text"> Sync Sales Reps </span> 
             </a>
             <!-- <a href="<?php echo base_url()?>order/admin/add-sales-rep"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
