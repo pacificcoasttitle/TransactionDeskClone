@@ -164,7 +164,7 @@ class PayOff extends MX_Controller
                 $nestedData[] = $order['account_number'];
                 $nestedData[] = $order['aba'];
                 $nestedData[] = $order['bank_name'];
-                $nestedData[] = $createdBy . ' ' . date("m/d/Y", strtotime($order['submitted']));
+                $nestedData[] = $createdBy . ' ' . convertTimezone($order['submitted'], "m/d/Y");
                 $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . $this->common->convertTimezone($order['approved_date'], 'm/d/Y @ g:i a', 'America/Los_Angeles') : '';
                 // $nestedData[] = $order['first_name'] . ' ' . $order['last_name'];
                 $isApproved = $order['is_approved'];
