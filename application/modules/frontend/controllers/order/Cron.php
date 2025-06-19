@@ -7709,16 +7709,16 @@ class Cron extends MX_Controller
             
             // if (!empty($filesResult) && !empty($filesResult['phone'])) {
             if (!empty($filesResult)) {
-                // if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
-                if (false) {
+                if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
+                // if (false) {
                     $twilio['message'] = $reqData;
                     $twilio['sent_from'] = $from;
                     $twilio['status'] = $status = 'error';
                     $twilio['error_message'] = $resMsg = $res = "Sales Rep has disabled recording confirmation notification.";
                     $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                     // echo $res; exit;
-                // } else if ($taskId == '04-035' && $filesResult['notify_disburse_funds'] == 0) {
-                } else if (false) {
+                } else if ($taskId == '04-035' && $filesResult['notify_disburse_funds'] == 0) {
+                // } else if (false) {
                     $twilio['message'] = $reqData;
                     $twilio['sent_from'] = $from;
                     $twilio['status'] = $status = 'error';
@@ -7730,8 +7730,8 @@ class Cron extends MX_Controller
                     $this->load->library('order/common');
                     $orderId = $filesResult['id'];
                     $file_number = $response['OrderNumber'];
-                    $phoneNumber = "2133097286"; //$filesResult['phone'];
-                    // $phoneNumber = $filesResult['phone'];
+                    // $phoneNumber = "2133097286"; //$filesResult['phone'];
+                    $phoneNumber = $filesResult['phone'];
                     $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
                     $propertyAddress = $filesResult['full_address'];
                     $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
