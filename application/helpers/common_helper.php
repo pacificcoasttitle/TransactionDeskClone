@@ -39,9 +39,9 @@ if (!function_exists('convertTimezone')) {
     {
         $default_timezone = $to_timezone = 'America/Los_Angeles';
         $to_timezone = 'America/Los_Angele';
-        if (!empty($_COOKIE['user_timezone'])) {
+        /*if (!empty($_COOKIE['user_timezone'])) {
             $to_timezone = $_COOKIE['user_timezone'];
-        }
+        }*/
         $date = new DateTime($dateTime);
         try {
             $date->setTimezone(new DateTimeZone($to_timezone));
