@@ -6597,6 +6597,18 @@ class Home extends MX_Controller
             ];
             $this->db->update('pct_configs', $feesPdfConfirmationEmailShutOff, ['slug' => 'fees_pdf_confirmation_email_shut_off']);
 
+            $enable_fees_email_for_refinance = isset($input['enable_fees_email_for_refinance']) && !empty($input['enable_fees_email_for_refinance']) ? 1 : 0;
+            $enableFeesEmailForRefinance       = [
+                'is_enable' => $enable_fees_email_for_refinance,
+            ];
+            $this->db->update('pct_configs', $enableFeesEmailForRefinance, ['slug' => 'enable_fees_email_for_refinance']);
+
+            $enable_fees_email_for_resale = isset($input['enable_fees_email_for_resale']) && !empty($input['enable_fees_email_for_resale']) ? 1 : 0;
+            $enableFeesEmailForResale       = [
+                'is_enable' => $enable_fees_email_for_resale,
+            ];
+            $this->db->update('pct_configs', $enableFeesEmailForResale, ['slug' => 'enable_fees_email_for_resale']);
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -6628,6 +6640,8 @@ class Home extends MX_Controller
         $res['recording_confirmation_shut_off']     = $data['recording_confirmation_shut_off']['is_enable'];
         $res['disburse_funds_shut_off']             = $data['disburse_funds_shut_off']['is_enable'];
         $res['fees_pdf_confirmation_email_shut_off'] = $data['fees_pdf_confirmation_email_shut_off']['is_enable'];
+        $res['enable_fees_email_for_refinance'] = $data['enable_fees_email_for_refinance']['is_enable'];
+        $res['enable_fees_email_for_resale'] = $data['enable_fees_email_for_resale']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);

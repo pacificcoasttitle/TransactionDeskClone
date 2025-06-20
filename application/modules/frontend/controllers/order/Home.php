@@ -343,6 +343,8 @@ class Home extends MX_Controller
                 $isEnable          = $configData['escrow_commission']['is_enable'];
                 $titlePointShutOff = $configData['title_point_shut_off']['is_enable'];
                 $feesPdfConfirmationEmailShutOff = $configData['fees_pdf_confirmation_email_shut_off']['is_enable'];
+                $enableFeesEmailForRefinance = $configData['enable_fees_email_for_refinance']['is_enable'];
+                $enableFeesEmailForResale = $configData['enable_fees_email_for_resale']['is_enable'];
 
                 /** End Get config value to check Lp Enable or not */
                 $underWriter = '';
@@ -848,7 +850,14 @@ class Home extends MX_Controller
                         $this->titlepoint->generateGrantDeed($instrumentNumber, $recordedDate, $fips, $orderNumber, $orderId);
                     }
 
-                    if ((empty($feesPdfConfirmationEmailShutOff) || $feesPdfConfirmationEmailShutOff == 0) && (strtolower($ProductTypeTxt) != 'full alta' && strtolower($ProductTypeTxt) != 'hard money') && (empty($SalesAmount) || (!empty($SalesAmount) && $SalesAmount >= 10)) && (empty($LoanAmount) || (!empty($LoanAmount) && $LoanAmount >= 10))) {
+                    if (
+                        (empty($feesPdfConfirmationEmailShutOff) || $feesPdfConfirmationEmailShutOff == 0) && 
+                        (strtolower($ProductTypeTxt) != 'full alta' && strtolower($ProductTypeTxt) != 'hard money') && 
+                        (empty($SalesAmount) || (!empty($SalesAmount) && $SalesAmount >= 10)) && 
+                        (empty($LoanAmount) || (!empty($LoanAmount) && $LoanAmount >= 10)) && 
+                        (($TransactionType == 'Purchase' && $enableFeesEmailForResale == 1) || 
+                            ($TransactionType == 'Refinance' && $enableFeesEmailForRefinance == 1))
+                        ) {
                         $this->order->generateFeesEstimationPdf($orderId);
                     }
                     
