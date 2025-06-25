@@ -152,6 +152,7 @@ $route['get-orders-prelim']                   = 'frontend/order/common/get_order
 $route['review-file/:num']                    = 'frontend/order/common/review_file';
 $route['import-orders-all-users']             = 'frontend/order/cron/import_orders_all_users';
 $route['summary']                             = 'frontend/order/common/summary';
+$route['get-prelim-summary']                  = 'frontend/order/common/getPrelimSummary';
 $route['prelim']                              = 'frontend/order/dashboard/prelim';
 $route['load-doc']                            = 'frontend/order/common/load_doc';
 $route['legal-vesting']                       = 'frontend/order/common/legal_vesting';

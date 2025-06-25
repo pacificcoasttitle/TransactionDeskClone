@@ -10,6 +10,12 @@
 			<h1 class="h3 text-gray-800">Softpro Escrow Officers </h1>
 		</div>
 		<div class="col-sm-6">
+            <a href="javascript:void" onclick="syncSoftProEscrowOfficer();"  class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-refresh"></i>
+                </span>
+                <span class="text"> Sync Escrow Officers </span> 
+            </a>
             <a href="<?php echo base_url()?>order/admin/add-escrow-officer"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>

@@ -16,19 +16,25 @@
 			<h1 class="h3 text-gray-800">Lenders </h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="<?php echo base_url()?>order/admin/import-lenders"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="javascript:void" onclick="syncSoftProOpenContacts('lender');"  class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-refresh"></i>
+                </span>
+                <span class="text"> Sync Lender </span> 
+            </a>
+            <!-- <a href="<?php echo base_url()?>order/admin/import-lenders"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-file-import"></i>
                 </span>
                 <span class="text"> Import </span> 
-            </a>
+            </a> -->
             <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-                <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
+                <!-- <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
                     </span>
                     <span class="text"> Export </span> 
-                </a>
+                </a> -->
             <?php endif; ?>
 		</div>
 	</div>
