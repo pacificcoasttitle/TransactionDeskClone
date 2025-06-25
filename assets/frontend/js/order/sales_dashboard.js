@@ -688,6 +688,26 @@ function getInvoice(orderId) {
     });
 }
 
+function getPrelimSummary(fileNumber) {
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    $.ajax({
+        url: base_url + "get-prelim-summary",
+        type: "post",
+        data: {
+            fileNumber: fileNumber
+        },
+        dataType: "html",
+        success: function (response) {
+
+            var results = JSON.parse(response);
+            $('.prelim_summary').html(results);
+            $('#aiPrelimSummary').modal('show');
+            $('#page-preloader').css('display', 'none');
+        }
+    });
+}
+
 function getRevenueData() {
     $('#revenue_model').modal('show');
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');

@@ -8045,6 +8045,307 @@ function syncSoftProSalesReps() {
     });
 }
 
+function syncSoftProOpenContacts(userType) {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-open-contact-lookup-code",
+        method: "POST",
+        success: async function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            console.log('status code: ' + result.status);
+            if (result.status == 'success') {
+                if (userType == 'agent') {
+                    await syncSoftProAgents();
+                } else if (userType == 'escrow') {
+                    await syncSoftProEscrowContacts();
+                } else if (userType == 'lender') {
+                    await syncSoftProLenderContacts();
+                } else if (userType == 'mortgage') {
+                    await syncSoftProMortgage();
+                }
+            } else {
+                alert('Something went wrong. Please try it again.');
+            }
+            // $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert('Something went wrong. Please try it again.');
+        }
+    });
+}
+
+function syncSoftProAgents() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-selling-agent-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Agents synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#agent_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#agent_success_msg").offset().top
+                }, 1000);
+                agent_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#agent_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#agent_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#agent_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#agent_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#agent_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#agent_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#agent_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
+function syncSoftProEscrowContacts() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-escrow-company-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Escrow contacts synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#customer_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_success_msg").offset().top
+                }, 1000);
+                customer_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#customer_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#customer_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#customer_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#customer_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#customer_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
+function syncSoftProLenderContacts() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-lender-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Lender synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#customer_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_success_msg").offset().top
+                }, 1000);
+                customer_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#customer_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#customer_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#customer_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#customer_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#customer_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
+function syncSoftProMortgage() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-mortgage-broker-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Mortgage broker synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#customer_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_success_msg").offset().top
+                }, 1000);
+                customers_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#customer_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#customer_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#customer_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#customer_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#customer_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
+function syncSoftProEscrowOfficer() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-escrow-officer-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Escrow Officer synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#escrow_officer_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#escrow_officer_success_msg").offset().top
+                }, 1000);
+                escrow_officers_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#escrow_officer_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#escrow_officer_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#escrow_officer_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#escrow_officer_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#escrow_officer_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#escrow_officer_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#escrow_officer_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
+function syncSoftProTitleOfficer() {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "fetch-title-officer-lookup-code",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = "Title Officer synced successfully, Inserted : " + result.inserted + ", Updated : " + result.updated;
+                $('#title_officer_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#title_officer_success_msg").offset().top
+                }, 1000);
+                title_officer_list.ajax.reload(null, false);
+                setTimeout(function () {
+                    $('#title_officer_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#title_officer_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#title_officer_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#title_officer_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#title_officer_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#title_officer_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#title_officer_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
+
 function formatDate(date) {
     let dd = String(date.getDate()).padStart(2, '0');
     let mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based

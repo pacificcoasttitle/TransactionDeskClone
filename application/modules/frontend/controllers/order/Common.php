@@ -134,6 +134,7 @@ class Common extends MX_Controller
         $data = json_decode($prelim_details['resware_json'], true);
 
         if (isset($data) && !empty($data)) {
+            $this->load->library('order/parsedown');
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
             $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
             $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
@@ -151,8 +152,14 @@ class Common extends MX_Controller
                 'parcel_id' => $parcelID,
                 'policy_type' => $policy_type,
             );
-            $prelim_details = $summaryData;
+            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content received.';
+            $summaryData['html'] = $this->parsedown->text($markdown);
+            // $prelim_details = $summaryData;
+        } else {
+            $summaryData['html'] = 'No content found.';
         }
+        $prelim_details = $summaryData;
 
         $data['prelim_details'] = array();
         if (isset($prelim_details) && !empty($prelim_details)) {
@@ -162,6 +169,59 @@ class Common extends MX_Controller
         $data['prelim_details']['property_type'] = $property_type;
         
         $results = $this->load->view('order/review_file_summary', $data, true);
+        echo json_encode($results, true);
+    }
+
+    public function getPrelimSummary()
+    {
+        if (empty($this->session->userdata('user'))) {
+            redirect(base_url() . 'order');
+        }
+        $fileNumber = $this->input->post('fileNumber');
+        // $params = [
+        //     'order_details.id' => $orderId,
+        // ];
+        // $orderDetails = $this->order->get_order_details($params);
+        
+        // $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        // $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        // $property_type = isset($orderDetails['property_type']) && !empty($orderDetails['property_type']) ? $orderDetails['property_type'] : '';
+
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            ),
+        );
+
+        $prelim_details = $this->reviewPrelimData->get_rows($condition);
+
+        $data = json_decode($prelim_details['chatgpt_json'], true);
+
+        if (isset($data) && !empty($data)) {
+            $this->load->library('order/parsedown');
+            $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
+            $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
+            $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
+            $summaryData = array(
+                'file_number' => $file_number,
+                'resware_json' => $prelim_details['resware_json'],
+            );
+            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+            $summaryData['html'] = $this->parsedown->text($markdown);
+        } else {
+            $summaryData['html'] = 'No content found.';
+        }
+        $prelim_details = $summaryData;
+
+        $data['prelim_details'] = array();
+        if (isset($prelim_details) && !empty($prelim_details)) {
+            $data['prelim_details'] = $prelim_details;
+        }
+        // $data['prelim_details']['address'] = $address;
+        // $data['prelim_details']['property_type'] = $property_type;
+        
+        $results = $this->load->view('order/ai_prelim_summary', $data, true);
         echo json_encode($results, true);
     }
 
