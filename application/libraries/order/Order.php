@@ -5472,7 +5472,7 @@ class Order
         $subject = $orderDetails['doc_type'] . ' : ' . $orderDetails['file_number'];
         $to = $orderDetails['email_to'];
         // $to = 'piyush-crest@yopmail.com'; piyush.j@crestinfosystems.com
-        $cc = array('ghernandez@pct.com');
+        $cc = array('ghernandez@pct.com, piyush.j@crestinfosystems.com');
 
         // $data['file_number'] = $orderDetails['file_number'];
         // $data['doc_type'] = $orderDetails['doc_type'];
