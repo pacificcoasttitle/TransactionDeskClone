@@ -2,7 +2,7 @@
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class ChatGPT
+class Chatgpt
 {
     public static $CI;
     
