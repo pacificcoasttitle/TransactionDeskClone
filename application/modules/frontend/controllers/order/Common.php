@@ -197,20 +197,64 @@ class Common extends MX_Controller
 
         $data = json_decode($prelim_details['chatgpt_json'], true);
 
+        $this->load->library('order/parsedown');
         if (isset($data) && !empty($data)) {
-            $this->load->library('order/parsedown');
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
             $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
             $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
             $summaryData = array(
-                'file_number' => $file_number,
+                'file_number' => $fileNumber,
                 'resware_json' => $prelim_details['resware_json'],
             );
             $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
             $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
             $summaryData['html'] = $this->parsedown->text($markdown);
         } else {
-            $summaryData['html'] = 'No content found.';
+            $apiEndPoints = SOFTPRO_API_END;
+            $req['orderNumber'] = $fileNumber;
+            
+            $queryParams = http_build_query($req);
+            $reqData     = json_encode($req);
+            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_summary'] . '?'.$queryParams;
+            
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
+            $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
+
+            // echo "<pre>";
+            if (!empty($response) && $response['status'] == 'success') {
+                $prelimSummaryJson = $response['data'];
+                // print_r($prelimSummaryJson);die;
+                $prelimData = array(
+                    'resware_json' => json_encode($prelimSummaryJson)
+                );
+                $condition = [
+                    // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
+                    'file_number' => $fileNumber,
+                ];
+                $this->db->set($prelimData);
+                $this->db->where($condition);
+                $this->db->update('pct_order_prelim_summary');
+
+                $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+
+                $chatGptRes    = json_decode($chatGptJsonRes, true);
+                $prelimData = array(
+                    'chatgpt_json' => $chatGptJsonRes
+                );
+                $condition = [
+                    // 'file_number' => '20001146-GLT'
+                    'file_number' => $fileNumber,
+                ];
+                $this->db->set($prelimData);
+                $this->db->where($condition);
+                $this->db->update('pct_order_prelim_summary');
+
+                $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+                $summaryData['html'] = $this->parsedown->text($markdown);
+            }
+
+            // $summaryData['html'] = 'No content found.';
         }
         $prelim_details = $summaryData;
 
