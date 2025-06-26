@@ -334,3 +334,25 @@
 	</div>
 </div>
 
+<div class="modal fade" width="800px" id="aiPrelimSummary" tabindex="-1" role="dialog"
+	aria-labelledby="Ai Prelim Summary" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:65%; max-width: 1200px">
+		<div class="modal-content">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card shadow">
+						<!-- <div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary" >Prelim Summary</h6>
+						</div> -->
+						<div class="card-body"> 
+							<div class="smart-forms smart-container prelim_summary">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

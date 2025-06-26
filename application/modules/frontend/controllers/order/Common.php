@@ -134,6 +134,7 @@ class Common extends MX_Controller
         $data = json_decode($prelim_details['resware_json'], true);
 
         if (isset($data) && !empty($data)) {
+            $this->load->library('order/parsedown');
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
             $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
             $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
@@ -151,8 +152,14 @@ class Common extends MX_Controller
                 'parcel_id' => $parcelID,
                 'policy_type' => $policy_type,
             );
-            $prelim_details = $summaryData;
+            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content received.';
+            $summaryData['html'] = $this->parsedown->text($markdown);
+            // $prelim_details = $summaryData;
+        } else {
+            $summaryData['html'] = 'No content found.';
         }
+        $prelim_details = $summaryData;
 
         $data['prelim_details'] = array();
         if (isset($prelim_details) && !empty($prelim_details)) {
@@ -162,6 +169,103 @@ class Common extends MX_Controller
         $data['prelim_details']['property_type'] = $property_type;
         
         $results = $this->load->view('order/review_file_summary', $data, true);
+        echo json_encode($results, true);
+    }
+
+    public function getPrelimSummary()
+    {
+        if (empty($this->session->userdata('user'))) {
+            redirect(base_url() . 'order');
+        }
+        $fileNumber = $this->input->post('fileNumber');
+        // $params = [
+        //     'order_details.id' => $orderId,
+        // ];
+        // $orderDetails = $this->order->get_order_details($params);
+        
+        // $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
+        // $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        // $property_type = isset($orderDetails['property_type']) && !empty($orderDetails['property_type']) ? $orderDetails['property_type'] : '';
+
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            ),
+        );
+
+        $prelim_details = $this->reviewPrelimData->get_rows($condition);
+
+        $data = json_decode($prelim_details['chatgpt_json'], true);
+
+        $this->load->library('order/parsedown');
+        if (isset($data) && !empty($data)) {
+            $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
+            $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
+            $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
+            $summaryData = array(
+                'file_number' => $fileNumber,
+                'resware_json' => $prelim_details['resware_json'],
+            );
+            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+            $summaryData['html'] = $this->parsedown->text($markdown);
+        } else {
+            $apiEndPoints = SOFTPRO_API_END;
+            $req['orderNumber'] = $fileNumber;
+            
+            $queryParams = http_build_query($req);
+            $reqData     = json_encode($req);
+            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_summary'] . '?'.$queryParams;
+            
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
+            $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
+
+            // echo "<pre>";
+            if (!empty($response) && $response['status'] == 'success') {
+                $prelimSummaryJson = $response['data'];
+                // print_r($prelimSummaryJson);die;
+                $prelimData = array(
+                    'resware_json' => json_encode($prelimSummaryJson)
+                );
+                $condition = [
+                    // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
+                    'file_number' => $fileNumber,
+                ];
+                $this->db->set($prelimData);
+                $this->db->where($condition);
+                $this->db->update('pct_order_prelim_summary');
+
+                $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+
+                $chatGptRes    = json_decode($chatGptJsonRes, true);
+                $prelimData = array(
+                    'chatgpt_json' => $chatGptJsonRes
+                );
+                $condition = [
+                    // 'file_number' => '20001146-GLT'
+                    'file_number' => $fileNumber,
+                ];
+                $this->db->set($prelimData);
+                $this->db->where($condition);
+                $this->db->update('pct_order_prelim_summary');
+
+                $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+                $summaryData['html'] = $this->parsedown->text($markdown);
+            }
+
+            // $summaryData['html'] = 'No content found.';
+        }
+        $prelim_details = $summaryData;
+
+        $data['prelim_details'] = array();
+        if (isset($prelim_details) && !empty($prelim_details)) {
+            $data['prelim_details'] = $prelim_details;
+        }
+        // $data['prelim_details']['address'] = $address;
+        // $data['prelim_details']['property_type'] = $property_type;
+        
+        $results = $this->load->view('order/ai_prelim_summary', $data, true);
         echo json_encode($results, true);
     }
 

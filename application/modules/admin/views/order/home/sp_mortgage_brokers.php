@@ -9,6 +9,14 @@
 		<div class="col-sm-6">
 			<h1 class="h3 text-gray-800"> Mortgage Users </h1>
 		</div>
+        <div class="col-sm-6">
+            <a href="javascript:void" onclick="syncSoftProOpenContacts('mortgage');"  class="btn btn-success btn-icon-split float-right mr-2"> 
+                <span class="icon text-white-50">
+                    <i class="fas fa-refresh"></i>
+                </span>
+                <span class="text"> Sync Mortgage </span> 
+            </a>
+		</div>
 	</div>
 
     <div class="card shadow mb-4">

@@ -2,10 +2,32 @@
 .l-main-contenta {
 	padding-top: 0px !important;
 }
+
+.l-main-contenta p{
+	font-size: 20px;
+}
+
 .prelim_title {
 	padding-left: 7px;
     padding-top: 5px;
 	font-size: 18px;
+}
+.l-main-contenta h3 {
+	color: #2c3e50;
+	margin-top: 30px;
+	font-size: 18px;
+}
+.l-main-contenta ul {
+	margin-left: 20px;
+	list-style-type: disc;
+	font-size: 18px;
+}
+.l-main-contenta strong {
+	color: #000;
+	font-size: 18px;
+}
+.prelim_summary {
+	font-size: 1.75rem !important;
 }
 </style>
 <div class="typography-section__inner">
@@ -81,11 +103,12 @@
 			</div>
 		</div>
 
-		<div class="typography-section__inner hide">
-			<h3 class="ui-title-block_light">Prelim Hot Items</h3>
+		<div class="typography-section__inner">
+			<h3 class="ui-title-block_light prelim_summary">Prelim Summary</h3>
 			<div style="border-bottom: 4px solid #D35411;"></div>
 		</div>
-		<?php
+		<?= $prelim_details['html'] ?>
+		<!-- <?php
 			$count = 1;
 			if(isset($prelim_details['tax']) && !empty($prelim_details['tax']))
 			{				
@@ -95,8 +118,6 @@
 						<div class="alert alert-1">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall2">Property Taxes</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
 							</div>
 						</div>
 					</div>
@@ -144,8 +165,6 @@
 						<div class="alert alert-6">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall3">Easements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
 							</div>
 						</div>
 					</div>
@@ -189,8 +208,6 @@
 						<div class="alert alert-4">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall1">Liens & Judgements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
 							</div>
 						</div>
 					</div>
@@ -237,8 +254,6 @@
 						<div class="alert alert-7">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall4">Requirements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
 							</div>
 						</div>
 					</div>
@@ -281,8 +296,6 @@
 						<div class="alert alert-6">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall3">Easements</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
 							</div>
 						</div>
 					</div>
@@ -326,8 +339,6 @@
 						<div class="alert alert-8">
 							<div class="alert__inner">
 								<h3 class="alert-titlesmall5">Restrictions</h3>
-								<!-- <div class="alert-text">If there are any urgent Items they
-									will appear below.</div> -->
 							</div>
 						</div>
 					</div>
@@ -360,6 +371,6 @@
 				</div>
 		<?php
 			}
-		?>
+		?> -->
 	</article>
 </div>

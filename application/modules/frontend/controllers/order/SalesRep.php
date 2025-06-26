@@ -681,6 +681,14 @@ class SalesRep extends MX_Controller
                                     </button>
                                 </a>
                             </li>
+                            <li>
+                                <a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-file-alt' aria-hidden='true' style='margin-right:5px;'></i>
+                                        Ai Prelim Summary
+                                    </button>
+                                </a>
+                            </li>
                         </ul></div>
                         ";
                 } else {

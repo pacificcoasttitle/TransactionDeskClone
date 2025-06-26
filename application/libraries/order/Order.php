@@ -5744,4 +5744,32 @@ class Order
         $this->uploadDocumentOnAwsS3($document_name, 'fees-pdf');
         
     }
+
+    public function getPrelimAISummary($request) {
+        $this->CI->load->library('order/chatgpt');
+        $reportJson = json_encode($request, JSON_PRETTY_PRINT);
+        // print_r($reportJson);die;
+        $prompt = "You're assisting a new real estate agent by summarizing a property title report in a way that's easy to understand and visually ready for display in a modern web or PDF interface.\n\n";
+        $prompt .= "Below is the title report JSON data:\n\n";
+        $prompt .= $reportJson . "\n\n";
+        $prompt .= "Please explain the key information under the following categories using headings and bullet points:\n";
+        $prompt .= "1. Requirements\n";
+        $prompt .= "2. Liens\n";
+        $prompt .= "3. Easements\n";
+        $prompt .= "4. Exceptions\n";
+        $prompt .= "5. Restrictions\n";
+        $prompt .= "6. Grantee\n";
+        $prompt .= "7. Grantor\n\n";
+        $prompt .= "Format and clarity guidelines:\n";
+        $prompt .= "- Start each section with a short 1-sentence summary if applicable.\n";
+        $prompt .= "- Use clean headings (e.g., **### Requirements**) and bullet points.\n";
+        $prompt .= "- If a category has no data, say “None recorded” or “Not provided”.\n";
+        $prompt .= "- Keep language simple for someone with no legal or title background.\n";
+        $prompt .= "- Avoid legal terms unless absolutely necessary.\n";
+        $prompt .= "- Nest sub-bullets for grouped documents or steps.\n";
+        $prompt .= "- Use formatting that renders cleanly in Markdown or HTML environments.\n\n";
+        $prompt .= "- Do not include any closing notes, formatting tips, or reader guidance. Only return the formatted summary content..\n\n";
+        $prompt .= "Goal: Output should be easy to scan and ready for rendering in a web dashboard or client-facing PDF report. ";
+        return $this->CI->chatgpt->make_request($prompt);
+    }
 }
