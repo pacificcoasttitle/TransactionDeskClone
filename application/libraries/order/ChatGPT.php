@@ -36,7 +36,6 @@ class Chatgpt
         curl_close($ch);
 
         return $response;
-    
     }
     
 }
