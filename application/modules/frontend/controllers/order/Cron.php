@@ -7740,6 +7740,9 @@ class Cron extends MX_Controller
                 $softproContacts = $this->order->fetchAndSyncContacts($fileNumber);
                 if (!empty($softproContacts) && !empty($softproContacts['escrow'])) {
                     $filesResult['email_address'] = $softproContacts['escrow']['email_address'];
+                } else {
+                    $status = 'error';
+                    $msg = "Escrow not found or escrow email not exist.";
                 }
                 // echo "<pre>";
                 // print_r($softproContacts);
