@@ -7644,12 +7644,16 @@ class Cron extends MX_Controller
                     if (strpos(strtolower($docType), 'policy') !== false) {
                         if (strpos(strtolower($docType), 'lender') !== false) {
                             if ($filesResult['lender_policy_sent'] == 1) {
+                                $status = 'error';
+                                $msg = "Email already sent.";
                                 continue; // Skip if lender policy already sent
                             }
                             $is_lender_policy = 1;
                             $condition['is_lender_policy'] = 1;
                         } else {
                             if ($filesResult['owner_policy_sent'] == 1) {
+                                $status = 'error';
+                                $msg = "Email already sent.";
                                 continue; // Skip if owner policy already sent
                             }
                             $is_owner_policy = 1;
@@ -7659,6 +7663,8 @@ class Cron extends MX_Controller
                         $policyDocFlag = true;
                     } else if (strpos(strtolower($docType), 'supplement') !== false) {
                         if ($filesResult['supplement_statement_sent'] == 1) {
+                            $status = 'error';
+                            $msg = "Email already sent.";
                             continue; // Skip if supplement statement already sent
                         }
                         $condition['is_supplement_statement'] = 1;
@@ -7734,6 +7740,9 @@ class Cron extends MX_Controller
                 $softproContacts = $this->order->fetchAndSyncContacts($fileNumber);
                 if (!empty($softproContacts) && !empty($softproContacts['escrow'])) {
                     $filesResult['email_address'] = $softproContacts['escrow']['email_address'];
+                } else {
+                    $status = 'error';
+                    $msg = "Escrow not found or escrow email not exist.";
                 }
                 // echo "<pre>";
                 // print_r($softproContacts);
