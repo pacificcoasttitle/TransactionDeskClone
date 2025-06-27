@@ -178,13 +178,13 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $fileNumber = $this->input->post('fileNumber');
-        // $params = [
-        //     'order_details.id' => $orderId,
-        // ];
-        // $orderDetails = $this->order->get_order_details($params);
+        $params = [
+            'order_details.file_number' => $fileNumber,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
         
         // $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
-        // $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         // $property_type = isset($orderDetails['property_type']) && !empty($orderDetails['property_type']) ? $orderDetails['property_type'] : '';
 
         $condition = array(
@@ -220,7 +220,7 @@ class Common extends MX_Controller
             $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
             $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
             $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
-
+            
             // echo "<pre>";
             if (!empty($response) && $response['status'] == 'success') {
                 $prelimSummaryJson = $response['data'];
@@ -262,9 +262,35 @@ class Common extends MX_Controller
         if (isset($prelim_details) && !empty($prelim_details)) {
             $data['prelim_details'] = $prelim_details;
         }
-        // $data['prelim_details']['address'] = $address;
-        // $data['prelim_details']['property_type'] = $property_type;
+        $data['prelim_details']['address'] = $address;
+        $data['prelim_details']['file_number'] = $fileNumber;
         
+        $emailData['html'] = $this->parsedown->text($markdown);
+        $emailData['file_number'] = $fileNumber;
+        
+
+        $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $to = 'ghernandez@pct.com';
+        $subject = 'Prelim Summary : '. $response['OrderNumber'];
+        $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => $response['OrderNumber'],
+            'cc' => $cc,
+        );
+        //$to = 'ghernandez@pct.com';
+        //$cc = array();
+        $this->load->helper('sendemail');
+        $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array(), 0, 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], $cc, []);
+        $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array('status' => $mail_result), 0, $logid);
+
+
         $results = $this->load->view('order/ai_prelim_summary', $data, true);
         echo json_encode($results, true);
     }
