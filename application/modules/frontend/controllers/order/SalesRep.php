@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '12.03';
+    private $version = '12.03.01';
 
     public function __construct()
     {
@@ -645,6 +645,14 @@ class SalesRep extends MX_Controller
 								<span class='text'>Review Prelim</span>
 							</button>
 						</a>
+                        <a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
+							<button type='submit' class='btn $class btn-icon-split'>
+								<span class='icon text-white-50'>
+									<i class='fas fa-file-alt'></i>
+								</span>
+								<span class='text'>Ai Prelim Summary</span>
+							</button>
+						</a>
                         <div class='dropdown'>
                         <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
                             <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
@@ -678,14 +686,6 @@ class SalesRep extends MX_Controller
                                     <button class='btn btn-grad-2a button-color' type='button'>
                                         <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
                                         View Invoice
-                                    </button>
-                                </a>
-                            </li>
-                            <li>
-                                <a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
-                                    <button class='btn btn-grad-2a button-color' type='button'>
-                                        <i class='fas fa-file-alt' aria-hidden='true' style='margin-right:5px;'></i>
-                                        Ai Prelim Summary
                                     </button>
                                 </a>
                             </li>

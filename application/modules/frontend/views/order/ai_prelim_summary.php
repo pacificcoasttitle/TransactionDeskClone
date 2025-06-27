@@ -26,9 +26,9 @@
 	color: #000;
 	font-size: 18px;
 }
-.prelim_summary {
+/* .prelim_summary {
 	font-size: 1.75rem !important;
-}
+} */
 .disclaimer {
 	font-size: 10px !important;
 }
@@ -38,11 +38,18 @@
 	<div class="ui-decor-1a bg-accent"></div>
 </div> -->
 <div class="l-main-contenta">
-	<article class="b-post b-post-full clearfix ">
-		<div class="typography-section__inner">
-			<h3 class="ui-title-block_light prelim_summary">Prelim Summary</h3>
-			<div style="border-bottom: 4px solid #D35411;"></div>
+	<div class="row mt-1">
+		<div class="col-md-8">
+			<span><strong>Property Address:</strong> <?= $prelim_details['address'] ?></span>
 		</div>
+		<div class="col-md-4">
+			<span><strong>File Name:</strong> <?= $prelim_details['file_number'] ?></span>
+		</div>
+	</div>
+	<article class="b-post b-post-full clearfix ">
+		<!-- <div class="typography-section__inner">
+			<div style="border-bottom: 4px solid #D35411;"></div>
+		</div> -->
 		<?= $prelim_details['html'] ?>
 		<hr>
 	</article>
