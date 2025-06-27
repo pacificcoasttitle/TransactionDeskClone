@@ -7601,9 +7601,9 @@ class Cron extends MX_Controller
             $message = $this->load->view('emails/prelim_summary.php', $data, true);
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
-            $to = 'piyush.j@crestinfosystems.com';
+            $to = 'ghernandez@pct.com';
             $subject = 'Prelim Summary : '. $response['OrderNumber'];
-            $cc = ['piyush-crest@yopmail.com'];
+            $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
