@@ -341,10 +341,16 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<div class="card shadow">
-						<!-- <div class="card-header py-3">
-							<h6 class="m-0 font-weight-bold text-primary" >Prelim Summary</h6>
-						</div> -->
+						<div class="modal-header">
+							<h4 class="modal-title">Prelim Summary</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
 						<div class="card-body"> 
+							<div class="typography-section__inner">
+								<div style="border-bottom: 4px solid #D35411;"></div>
+							</div>
 							<div class="smart-forms smart-container prelim_summary">
 								
 							</div>

@@ -5761,8 +5761,8 @@ class Order
         $prompt .= "6. Grantee\n";
         $prompt .= "7. Grantor\n\n";
         $prompt .= "Format and clarity guidelines:\n";
+        $prompt .= "- Header must be in format like (e.g. **### Requirements**) and bullet points.\n";
         $prompt .= "- Start each section with a short 1-sentence summary if applicable.\n";
-        $prompt .= "- Use clean headings (e.g., **### Requirements**) and bullet points.\n";
         $prompt .= "- If a category has no data, say “None recorded” or “Not provided”.\n";
         $prompt .= "- Keep language simple for someone with no legal or title background.\n";
         $prompt .= "- Avoid legal terms unless absolutely necessary.\n";

@@ -186,7 +186,7 @@ th {
 }
 
 .btn-icon-split .text {
-    font-size: 13px;
+    font-size: 11px;
     padding: .375rem;
 }
 
@@ -310,4 +310,14 @@ th {
     color: #000 !important;
     display: flex;
     align-items: center;
+}
+
+.modal-close-btn span{
+    float: right;
+    margin: 10px 10px 0px 0px;
+}
+
+#aiPrelimSummary .modal-header {
+    border: none;
+    padding: 1rem 1rem 0;
 }
