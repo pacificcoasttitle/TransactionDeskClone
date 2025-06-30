@@ -6609,6 +6609,20 @@ class Home extends MX_Controller
             ];
             $this->db->update('pct_configs', $enableFeesEmailForResale, ['slug' => 'enable_fees_email_for_resale']);
 
+
+            $enable_prelim_summary_email = isset($input['enable_prelim_summary_email']) && !empty($input['enable_prelim_summary_email']) ? 1 : 0;
+            $enablePrelimSummaryEmail       = [
+                'is_enable' => $enable_prelim_summary_email,
+            ];
+            $this->db->update('pct_configs', $enablePrelimSummaryEmail, ['slug' => 'enable_prelim_summary_email']);
+
+
+            $prelim_summary_shut_off = isset($input['prelim_summary_shut_off']) && !empty($input['prelim_summary_shut_off']) ? 1 : 0;
+            $prelimSummaryShutOff       = [
+                'is_enable' => $prelim_summary_shut_off,
+            ];
+            $this->db->update('pct_configs', $prelimSummaryShutOff, ['slug' => 'prelim_summary_shut_off']);
+
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
