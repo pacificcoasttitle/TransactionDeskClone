@@ -6656,6 +6656,8 @@ class Home extends MX_Controller
         $res['fees_pdf_confirmation_email_shut_off'] = $data['fees_pdf_confirmation_email_shut_off']['is_enable'];
         $res['enable_fees_email_for_refinance'] = $data['enable_fees_email_for_refinance']['is_enable'];
         $res['enable_fees_email_for_resale'] = $data['enable_fees_email_for_resale']['is_enable'];
+        $res['enable_prelim_summary_email'] = $data['enable_prelim_summary_email']['is_enable'];
+        $res['prelim_summary_shut_off'] = $data['prelim_summary_shut_off']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
