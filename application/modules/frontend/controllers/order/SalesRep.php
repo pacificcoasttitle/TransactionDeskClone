@@ -585,6 +585,9 @@ class SalesRep extends MX_Controller
         // echo "<pre>";
         // print_r($order_lists['data']);die;
         if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $configData                  = $this->order->getConfigData();
+            $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
+            $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order) {
 
@@ -644,16 +647,18 @@ class SalesRep extends MX_Controller
 								</span>
 								<span class='text'>Review Prelim</span>
 							</button>
-						</a>
-                        <a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
-							<button type='submit' class='btn $class btn-icon-split'>
-								<span class='icon text-white-50'>
-									<i class='fas fa-file-alt'></i>
-								</span>
-								<span class='text'>Ai Prelim Summary</span>
-							</button>
-						</a>
-                        <div class='dropdown'>
+						</a>";
+                    if ($prelimSummaryShutOffFlag == 0) {
+                        $action .= "<a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
+                                <button type='submit' class='btn $class btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-file-alt'></i>
+                                    </span>
+                                    <span class='text'>Ai Prelim Summary</span>
+                                </button>
+                            </a>;";
+                    }
+                    $action .= "<div class='dropdown'>
                         <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
                             <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
                                 <span class='icon text-white-50'>
