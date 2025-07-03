@@ -187,9 +187,17 @@ th {
 
 .btn-icon-split .text {
     font-size: 11px;
-    padding: .375rem;
+    padding: .375rem 3px;
 }
 
+.btn-icon-split .icon {
+    padding: .375rem .45rem;
+}
+
+#aiPrelimSummary .card-body {
+    padding: 0.5px 1.25rem;
+}
+ 
 /* .btn {
     display: inline-block;
     margin-bottom: 0;

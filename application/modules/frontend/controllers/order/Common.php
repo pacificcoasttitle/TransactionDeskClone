@@ -295,7 +295,9 @@ class Common extends MX_Controller
             $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', 'send_mail_for_prelim_summary', $reqData, $res, 0, $logid);
         }
 
-        $results = $this->load->view('order/ai_prelim_summary', $data, true);
+        $results['summary_view'] = $this->load->view('order/ai_prelim_summary', $data, true);
+        $results['file_number'] = $fileNumber;
+        $results['address'] = $address;
         echo json_encode($results, true);
     }
 

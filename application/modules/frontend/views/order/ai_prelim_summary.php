@@ -38,14 +38,6 @@
 	<div class="ui-decor-1a bg-accent"></div>
 </div> -->
 <div class="l-main-contenta">
-	<div class="row mt-1">
-		<div class="col-md-8">
-			<span><strong>Property Address:</strong> <?= $prelim_details['address'] ?></span>
-		</div>
-		<div class="col-md-4">
-			<span><strong>File Name:</strong> <?= $prelim_details['file_number'] ?></span>
-		</div>
-	</div>
 	<article class="b-post b-post-full clearfix ">
 		<!-- <div class="typography-section__inner">
 			<div style="border-bottom: 4px solid #D35411;"></div>
