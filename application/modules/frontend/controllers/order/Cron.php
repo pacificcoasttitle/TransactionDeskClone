@@ -7496,7 +7496,7 @@ class Cron extends MX_Controller
         $logid =  $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, [], 0, 0);
         // print_r($logid);exit;
         $response    = json_decode($reqData, true);
-        $configData                  = $this->order->getConfigData();
+        $configData  = $this->order->getConfigData();
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
         
@@ -7507,17 +7507,30 @@ class Cron extends MX_Controller
         }
         if (!empty($response) && $response['Status'] == 200 && !empty($response['data'])) {
             $responseData = $response['data'];
-            $prelimData = array(
-                'resware_json' => $reqData,
-                'updated_at' => date('Y-m-d H:i:s')
-            );
             $condition = [
                 // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
                 'file_number' => $response['OrderNumber']
             ];
-            $this->db->set($prelimData);
-            $this->db->where($condition);
-            $this->db->update('pct_order_prelim_summary');
+
+            $prelimRow = $this->order->get_row($condition, 'pct_order_prelim_summary');
+            // echo "<pre> test it";
+            // print_r($prelimRow);die;
+            if (empty($prelimRow)) {
+                $prelimData = array(
+                    'file_number' => $response['OrderNumber'],
+                    'resware_json' => $reqData,
+                    'created_at' => date('Y-m-d H:i:s')
+                );
+                $this->db->insert('pct_order_prelim_summary', $prelimData);
+            } else {
+                $prelimData = array(
+                    'resware_json' => $reqData,
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                $this->db->set($prelimData);
+                $this->db->where($condition);
+                $this->db->update('pct_order_prelim_summary');
+            }
 
             $this->load->library('order/order');
             $chatGptJsonRes = $this->order->getPrelimAISummary($responseData);
