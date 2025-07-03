@@ -1090,6 +1090,18 @@ class Order
         return $result;
     }
 
+    public function get_row($condition, $table = 'order_details') {
+        if (empty($condition) || !is_array($condition)) {
+            return false; // Invalid condition
+        }
+        $this->CI->db->select('*');
+        $this->CI->db->from($table);
+        $this->CI->db->where($condition);
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->row_array();
+    }
+
     public function get_order_details_with_buyeragent($params)
     {
         $this->CI->db->select('

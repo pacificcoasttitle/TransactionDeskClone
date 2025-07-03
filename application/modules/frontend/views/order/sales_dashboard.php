@@ -342,12 +342,20 @@
 				<div class="col-lg-12">
 					<div class="card shadow">
 						<div class="modal-header">
-							<h4 class="modal-title">Prelim Summary</h4>
+							<h4 class="modal-title"><strong>Prelim Summary</strong></h4>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="card-body"> 
+							<div class="row mb-1">
+								<div class="col-md-8">
+									<span><strong>Property Address:</strong> <span id="prelim_property" ></span></span>
+								</div>
+								<div class="col-md-4">
+									<span><strong>File Name:</strong> <span id="prelim_file_number" ></span></span>
+								</div>
+							</div>
 							<div class="typography-section__inner">
 								<div style="border-bottom: 4px solid #D35411;"></div>
 							</div>

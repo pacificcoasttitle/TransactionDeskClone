@@ -656,7 +656,7 @@ class SalesRep extends MX_Controller
                                     <span class='icon text-white-50'>
                                         <i class='fas fa-file-alt'></i>
                                     </span>
-                                    <span class='text'>Ai Prelim Summary</span>
+                                    <span class='text'>Prelim Summary</span>
                                 </button>
                             </a>;";
                     }

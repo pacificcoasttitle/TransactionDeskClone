@@ -701,7 +701,9 @@ function getPrelimSummary(fileNumber) {
         success: function (response) {
 
             var results = JSON.parse(response);
-            $('.prelim_summary').html(results);
+            $('#prelim_property').text(results.address);
+            $('#prelim_file_number').text(results.file_number);
+            $('.prelim_summary').html(results.summary_view);
             $('#aiPrelimSummary').modal('show');
             $('#page-preloader').css('display', 'none');
         }

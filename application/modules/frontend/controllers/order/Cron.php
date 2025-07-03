@@ -7496,7 +7496,7 @@ class Cron extends MX_Controller
         $logid =  $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, [], 0, 0);
         // print_r($logid);exit;
         $response    = json_decode($reqData, true);
-        $configData                  = $this->order->getConfigData();
+        $configData  = $this->order->getConfigData();
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
         
@@ -7507,17 +7507,31 @@ class Cron extends MX_Controller
         }
         if (!empty($response) && $response['Status'] == 200 && !empty($response['data'])) {
             $responseData = $response['data'];
-            $prelimData = array(
-                'resware_json' => $reqData,
-                'updated_at' => date('Y-m-d H:i:s')
-            );
             $condition = [
                 // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
                 'file_number' => $response['OrderNumber']
             ];
-            $this->db->set($prelimData);
-            $this->db->where($condition);
-            $this->db->update('pct_order_prelim_summary');
+
+            $prelimRow = $this->order->get_row($condition, 'pct_order_prelim_summary');
+            // echo "<pre> test it";
+            // print_r($prelimRow);die;
+
+            if (empty($prelimRow)) {
+                $prelimData = array(
+                    'file_number' => $response['OrderNumber'],
+                    'resware_json' => json_encode($response['data']),
+                    'created_at' => date('Y-m-d H:i:s')
+                );
+                $this->db->insert('pct_order_prelim_summary', $prelimData);
+            } else {
+                $prelimData = array(
+                    'resware_json' => json_encode($response['data']),
+                    'updated_at' => date('Y-m-d H:i:s')
+                );
+                $this->db->set($prelimData);
+                $this->db->where($condition);
+                $this->db->update('pct_order_prelim_summary');
+            }
 
             $this->load->library('order/order');
             $chatGptJsonRes = $this->order->getPrelimAISummary($responseData);
@@ -8005,5 +8019,65 @@ class Cron extends MX_Controller
 
     public function createFeesPdf() {
         $this->order->generateFeesEstimationPdf(153367);
+    }
+    public function automatePrelimSammary() {
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $this->db->select('id, file_number, chatgpt_json, resware_json');
+        $this->db->from('pct_order_prelim_summary');
+        $this->db->where('chatgpt_json is null');
+        $this->db->order_by('id', 'desc');
+        $query = $this->db->get();
+        // echo $this->CI->db->last_query();exit;
+        $prelimData = $query->result_array();
+        // echo "<pre>";
+        // print_r($prelimData);die;
+        foreach($prelimData as $key => $value) {
+            $fileNumber = $value['file_number'];
+            if (empty($value['resware_json'])) {
+                $apiEndPoints = SOFTPRO_API_END;
+                $req['orderNumber'] = $fileNumber;
+                
+                $queryParams = http_build_query($req);
+                $reqData     = json_encode($req);
+                $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_summary'] . '?'.$queryParams;
+                
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
+                $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
+                if (!empty($response) && $response['status'] == 'success') {
+                    $prelimSummaryJson = $response['data'];
+                    // print_r($prelimSummaryJson);die;
+                    $prelimData = array(
+                        'resware_json' => json_encode($prelimSummaryJson)
+                    );
+                    $condition = [
+                        // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
+                        'file_number' => $fileNumber,
+                    ];
+                    $this->db->set($prelimData);
+                    $this->db->where($condition);
+                    $this->db->update('pct_order_prelim_summary');
+
+                }
+            }
+            $prelimSummaryJson = json_decode($value['resware_json'], true);
+            
+            $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+
+            $chatGptRes    = json_decode($chatGptJsonRes, true);
+            $prelimData = array(
+                'chatgpt_json' => $chatGptJsonRes
+            );
+            $condition = [
+                'file_number' => $fileNumber,
+            ];
+            $this->db->set($prelimData);
+            $this->db->where($condition);
+            $this->db->update('pct_order_prelim_summary');
+            // echo "<pre>";
+            // print_r($value);die;
+        }
+        
     }
 }
