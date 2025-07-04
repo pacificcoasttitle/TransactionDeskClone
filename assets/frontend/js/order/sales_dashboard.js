@@ -710,6 +710,28 @@ function getPrelimSummary(fileNumber) {
     });
 }
 
+function regeneratePrelimSummary(fileNumber) {
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    $.ajax({
+        url: base_url + "regenerate-prelim-summary",
+        type: "post",
+        data: {
+            fileNumber: fileNumber
+        },
+        dataType: "html",
+        success: function (response) {
+
+            var results = JSON.parse(response);
+            $('#prelim_property').text(results.address);
+            $('#prelim_file_number').text(results.file_number);
+            $('.prelim_summary').html(results.summary_view);
+            $('#aiPrelimSummary').modal('show');
+            $('#page-preloader').css('display', 'none');
+        }
+    });
+}
+
 function getRevenueData() {
     $('#revenue_model').modal('show');
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');

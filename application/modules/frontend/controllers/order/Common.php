@@ -269,7 +269,131 @@ class Common extends MX_Controller
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
 
-        if ($prelimSummaryShutOffFlag == 0) {
+        if ($prelimSummaryEmailFlag == 1) {
+            $emailData['html'] = $this->parsedown->text($markdown);
+            $emailData['file_number'] = $fileNumber;
+            $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $to = 'ghernandez@pct.com';
+            $subject = 'Prelim Summary : '. $response['OrderNumber'];
+            $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+            $mailParams = array(
+                'from_mail' => $from_mail,
+                'from_name' => $from_name,
+                'to' => $to,
+                'subject' => $subject,
+                'message' => $response['OrderNumber'],
+                'cc' => $cc,
+            );
+            $this->load->helper('sendemail');
+            $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array(), 0, 0);
+            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], $cc, []);
+            $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array('status' => $mail_result), 0, $logid);
+        } else {
+            $res = "Prelim Summary Email is disabled by Admin.";
+            $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', 'send_mail_for_prelim_summary', $reqData, $res, 0, $logid);
+        }
+
+        $results['summary_view'] = $this->load->view('order/ai_prelim_summary', $data, true);
+        $results['file_number'] = $fileNumber;
+        $results['address'] = $address;
+        echo json_encode($results, true);
+    }
+
+    public function regeneratePrelimSummary()
+    {
+        $fileNumber = $this->input->post('fileNumber');
+        $params = [
+            'order_details.file_number' => $fileNumber,
+        ];
+        $orderDetails = $this->order->get_order_details($params);
+        
+        $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
+        
+        $condition = array(
+            'where' => array(
+                'file_number' => $fileNumber,
+            ),
+        );
+
+        // $prelim_details = $this->reviewPrelimData->get_rows($condition);
+
+        // $data = json_decode($prelim_details['chatgpt_json'], true);
+
+        $this->load->library('order/parsedown');
+        // if (isset($data) && !empty($data)) {
+        //     $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
+        //     $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
+        //     $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
+        //     $summaryData = array(
+        //         'file_number' => $fileNumber,
+        //         'resware_json' => $prelim_details['resware_json'],
+        //     );
+        //     $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+        //     $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+        //     $summaryData['html'] = $this->parsedown->text($markdown);
+        // } else {
+            $apiEndPoints = SOFTPRO_API_END;
+            $req['orderNumber'] = $fileNumber;
+            
+            $queryParams = http_build_query($req);
+            $reqData     = json_encode($req);
+            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_summary'] . '?'.$queryParams;
+            
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
+            $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
+            
+            // echo "<pre>";
+        if (!empty($response) && $response['status'] == 'success') {
+            $prelimSummaryJson = $response['data'];
+            // print_r($prelimSummaryJson);die;
+            $prelimData = array(
+                'resware_json' => json_encode($prelimSummaryJson)
+            );
+            $condition = [
+                // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
+                'file_number' => $fileNumber,
+            ];
+            $this->db->set($prelimData);
+            $this->db->where($condition);
+            $this->db->update('pct_order_prelim_summary');
+
+            $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+
+            $chatGptRes    = json_decode($chatGptJsonRes, true);
+            $prelimData = array(
+                'chatgpt_json' => $chatGptJsonRes
+            );
+            $condition = [
+                // 'file_number' => '20001146-GLT'
+                'file_number' => $fileNumber,
+            ];
+            $this->db->set($prelimData);
+            $this->db->where($condition);
+            $this->db->update('pct_order_prelim_summary');
+
+            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+            $summaryData['html'] = $this->parsedown->text($markdown);
+        }
+
+            // $summaryData['html'] = 'No content found.';
+        // }
+        $prelim_details = $summaryData;
+
+        $data['prelim_details'] = array();
+        if (isset($prelim_details) && !empty($prelim_details)) {
+            $data['prelim_details'] = $prelim_details;
+        }
+        $data['prelim_details']['address'] = $address;
+        $data['prelim_details']['file_number'] = $fileNumber;
+        
+        $configData                  = $this->order->getConfigData();
+        $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
+        $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
+
+        if ($prelimSummaryEmailFlag == 1) {
             $emailData['html'] = $this->parsedown->text($markdown);
             $emailData['file_number'] = $fileNumber;
             $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
