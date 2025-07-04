@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '12.03.02';
+    private $version = '12.03.03';
 
     public function __construct()
     {
@@ -658,7 +658,7 @@ class SalesRep extends MX_Controller
                                     </span>
                                     <span class='text'>Prelim Summary</span>
                                 </button>
-                            </a>;";
+                            </a>";
                     }
                     $action .= "<div class='dropdown'>
                         <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
@@ -693,6 +693,14 @@ class SalesRep extends MX_Controller
                                     <button class='btn btn-grad-2a button-color' type='button'>
                                         <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
                                         View Invoice
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='javascript:void(0)' onclick=regeneratePrelimSummary('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fa fa-refresh' aria-hidden='true' style='margin-right:5px;'></i>
+                                        Regenerate Summary
                                     </button>
                                 </a>
                             </li>

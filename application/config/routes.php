@@ -153,6 +153,8 @@ $route['review-file/:num']                    = 'frontend/order/common/review_fi
 $route['import-orders-all-users']             = 'frontend/order/cron/import_orders_all_users';
 $route['summary']                             = 'frontend/order/common/summary';
 $route['get-prelim-summary']                  = 'frontend/order/common/getPrelimSummary';
+$route['regenerate-prelim-summary']           = 'frontend/order/common/regeneratePrelimSummary';
+
 $route['prelim']                              = 'frontend/order/dashboard/prelim';
 $route['load-doc']                            = 'frontend/order/common/load_doc';
 $route['legal-vesting']                       = 'frontend/order/common/legal_vesting';
