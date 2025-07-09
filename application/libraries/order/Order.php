@@ -767,6 +767,159 @@ class Order
         return $query->row_array();
     }
 
+    public function get_all_order_details($params)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        $this->CI->db->select('
+            order_details.lp_file_number,
+            order_details.file_number,
+            order_details.customer_id,
+            order_details.id as order_id,
+            order_details.file_id,
+            order_details.random_number,
+            order_details.westcor_order_id,
+            order_details.westcor_cpl_id,
+            order_details.westcor_buyer_id,
+            order_details.westcor_seller_id,
+            order_details.westcor_secondary_buyer_id,
+            order_details.westcor_secondary_seller_id,
+            order_details.westcor_lender_id,
+            order_details.westcor_file_id,
+            order_details.is_regenerate_cpl,
+            order_details.created_at as opened_date,
+            order_details.resware_closed_status_date as closed_date,
+            order_details.fnf_agent_id,
+            order_details.fnf_document_id,
+            order_details.cpl_document_name,
+            order_details.proposed_insured_document_name,
+            order_details.verification_code,
+            order_details.verification_code_for_seller,
+            order_details.code_created_at,
+            order_details.code_created_at_for_seller,
+            order_details.borrower_mobile_number,
+            order_details.borrower_mobile_number_for_seller,
+            order_details.proposed_branch_id,
+            order_details.escrow_officer_id,
+            order_details.premium,
+            order_details.is_create_order_on_safewire,
+            order_details.safewire_action_link,
+            order_details.prod_type,
+            order_details.softpro_status,
+            order_details.is_softpro_order,
+            order_details.borrower_email,
+            property_details.id as property_id,
+            property_details.address,
+            property_details.full_address,
+            property_details.property_type,
+            property_details.city as property_city,
+            property_details.state as property_state,
+            property_details.zip as property_zip,
+            property_details.county,
+            property_details.westcor_property_id,
+            property_details.legal_description,
+            property_details.primary_owner,
+            property_details.secondary_owner,
+            property_details.escrow_lender_id,
+            property_details.escrow_id,
+            property_details.lender_id,
+            property_details.cpl_lender_id,
+            property_details.cpl_lender_company_id,
+            property_details.buyer_agent_id,
+            property_details.listing_agent_id,
+            property_details.borrowers_vesting,
+            property_details.cpl_proposed_property_address,
+            property_details.cpl_proposed_property_city,
+            property_details.cpl_proposed_property_state,
+            property_details.cpl_proposed_property_zip,
+            property_details.unit_number,
+            property_details.apn,
+            transaction_details.id as transaction_id,
+            transaction_details.sales_representative,
+            transaction_details.title_officer,
+            transaction_details.sales_amount,
+            transaction_details.loan_amount,
+            transaction_details.loan_number,
+            transaction_details.transaction_type,
+            transaction_details.purchase_type,
+            transaction_details.supplemental_report_date,
+            transaction_details.preliminary_report_date,
+            transaction_details.borrower,
+            transaction_details.secondary_borrower,
+            transaction_details.vesting,
+            transaction_details.escrow_number,
+            transaction_details.additional_email,
+
+            pct_softpro_lookup_table.id as sp_lender_id,
+            pct_softpro_lookup_table.address1 as sp_lender_address,
+            pct_softpro_lookup_table.city as sp_lender_city,
+            pct_softpro_lookup_table.state as sp_lender_state,
+            pct_softpro_lookup_table.zip as sp_lender_zipcode,
+            pct_softpro_lookup_table.company_name as sp_lender_company_name,
+            pct_softpro_lookup_table.first_name as sp_lender_first_name,
+            pct_softpro_lookup_table.last_name as sp_lender_last_name,
+            pct_softpro_lookup_table.email_address as sp_lender_email,
+            pct_softpro_lookup_table.is_escrow as sp_is_escrow,
+            pct_softpro_lookup_table.phone as sp_lender_telephone_no,
+            pct_softpro_lookup_table.assignment_clause as lender_assignment_clause,
+
+
+            splt.first_name as sp_cust_first_name,
+            splt.last_name as sp_cust_last_name,
+            splt.company_name as sp_cust_company_name,
+            splt.address1 as sp_cust_address,
+            splt.city as sp_cust_city,
+            splt.state as sp_cust_state,
+            splt.zip as sp_cust_zipcode,
+            splt.is_escrow as sp_is_client_escrow,
+
+            sp_to.officer_name as sp_title_officer_name,
+            sp_to.closer_examiner as sp_title_officer_email,
+
+
+            sp_agents.first_name as sp_agent_name,
+            sp_agents.address1 as sp_agent_address,
+            sp_agents.email_address as sp_agent_email_address,
+            sp_agents.city as sp_agent_city,
+            sp_agents.zip as sp_agent_zipcode,
+            sp_agents.phone as sp_agent_telephone_no,
+            sp_agents.company_name as sp_agent_company,
+
+            pct_order_fnf_agents.agent_number,
+            pct_order_fnf_agents.underwriter_code,
+            pct_order_fnf_agents.underwriter,
+            pct_softpro_product_type.product_type as product_type_name,
+            pct_softpro_product_type.product_type as sp_product_type_name,
+            pct_softpro_order_type.order_type,
+            pct_order_documents.created,
+            p.created as proposed_document_created_date')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            
+            ->join('pct_softpro_lookup_table', 'property_details.lender_id = pct_softpro_lookup_table.id', 'left')
+
+            ->join('pct_softpro_lookup_table as splt', 'order_details.customer_id = splt.id', 'left')
+
+            ->join('pct_softpro_lookup_table as sp_to', 'transaction_details.title_officer = sp_to.id', 'left')
+
+            ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+            ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+            ->join('pct_softpro_lookup_table as sp_agents', 'property_details.buyer_agent_id = sp_agents.id', 'left')
+
+            ->join('pct_order_fnf_agents', 'order_details.fnf_agent_id = pct_order_fnf_agents.id', 'left')
+
+            ->join('pct_softpro_product_type', 'transaction_details.product_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left')
+
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+        foreach ($params as $key => $val) {
+            $this->CI->db->where($key, $val);
+        }
+        
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->result_array();
+    }
+
     public function is_user()
     {
         $userdata = $this->CI->session->userdata('user');
