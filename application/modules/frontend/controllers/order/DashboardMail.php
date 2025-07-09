@@ -2604,8 +2604,9 @@ class DashboardMail extends MX_Controller
         }
 
         if ($this->input->post()) {
+            $orderId = $this->input->post('order_id');
             $borrowerBuyerInfoData = array(
-                'order_id' => $this->input->post('order_id'),
+                'order_id' => $orderId,
                 'property_address' => $this->input->post('property_address'),
                 'property_address2' => $this->input->post('property_address2'),
                 'property_city' => $this->input->post('property_city'),
@@ -2647,7 +2648,7 @@ class DashboardMail extends MX_Controller
             $this->home_model->insert($borrowerBuyerInfoData, 'pct_order_borrower_buyer_packet_info');
 
             $borrowerBuyerEscrowInsData = array(
-                'order_id' => $this->input->post('order_id'),
+                'order_id' => $orderId,
                 'is_mortgage' => $this->input->post('is_mortgage'),
                 'is_liens' => $this->input->post('is_liens'),
                 'is_condominium' => $this->input->post('is_condominium'),
@@ -2687,7 +2688,7 @@ class DashboardMail extends MX_Controller
             $this->home_model->insert($borrowerBuyerEscrowInsData, 'pct_order_borrower_buyer_escrow_instructions');
 
             $borrowerBuyerStatementInfoData = array(
-                'order_id' => $this->input->post('order_id'),
+                'order_id' => $orderId,
                 'first_name' => $this->input->post('first_name'),
                 'middle_name' => $this->input->post('middle_name'),
                 'last_name' => $this->input->post('last_name'),
@@ -2766,7 +2767,7 @@ class DashboardMail extends MX_Controller
             $this->home_model->insert($borrowerBuyerStatementInfoData, 'pct_order_borrower_buyer_statement_of_info');
 
             $borrowerBuyerPreliminaryInfoData = array(
-                'order_id' => $this->input->post('order_id'),
+                'order_id' => $orderId,
                 'assessors_parcel_number' => $this->input->post('assessors_parcel_number'),
                 'transferor' => $this->input->post('transferor'),
                 'buyer_daytime_phone_number' => $this->input->post('buyer_daytime_phone_number'),
@@ -2784,7 +2785,7 @@ class DashboardMail extends MX_Controller
             $this->home_model->insert($borrowerBuyerPreliminaryInfoData, 'pct_order_borrower_buyer_preliminary_change_info');
 
             $borrowerBuyerTransferInfoData = array(
-                'order_id' => $this->input->post('order_id'),
+                'order_id' => $orderId,
                 'is_transfer_between_spouses' => $this->input->post('is_transfer_between_spouses'),
                 'is_transfer_between_domestic_partners' => $this->input->post('is_transfer_between_domestic_partners'),
                 'is_transfer' => $this->input->post('is_transfer'),
@@ -2828,7 +2829,7 @@ class DashboardMail extends MX_Controller
             $this->home_model->insert($borrowerBuyerTransferInfoData, 'pct_order_borrower_buyer_transfer_info');
 
             $borrowerBuyerPurchaseSaleInfoData = array(
-                'order_id' => $this->input->post('order_id'),
+                'order_id' => $orderId,
                 'total_purchase_price' => $this->input->post('total_purchase_price'),
                 'cash_down_payment' => $this->input->post('cash_down_payment'),
                 'first_deed_of_trust_interest' => $this->input->post('first_deed_of_trust_interest') ? $this->input->post('first_deed_of_trust_interest') : null,
@@ -2851,7 +2852,7 @@ class DashboardMail extends MX_Controller
                 'property_purchase_via_name' => $this->input->post('property_purchase_via_name') ? $this->input->post('property_purchase_via_name') : null,
                 'broker_name' => $this->input->post('broker_name') ? $this->input->post('broker_name') : null,
                 'other_through' => $this->input->post('other_through') ? $this->input->post('other_through') : null,
-                'types_of_property_transferred' => implode(',', $this->input->post('types_of_property_transferred')),
+                'types_of_property_transferred' => $this->input->post('types_of_property_transferred') ? implode(',', $this->input->post('types_of_property_transferred')) : null,
                 'num_of_units' => $this->input->post('num_of_units') ? $this->input->post('num_of_units') : null,
                 'is_personal_property' => $this->input->post('is_personal_property'),
                 'peronal_property_value' => $this->input->post('peronal_property_value') ? $this->input->post('peronal_property_value') : null,
@@ -2883,7 +2884,7 @@ class DashboardMail extends MX_Controller
 
             $this->load->model('order/document');
             $borrowerDocumentCount = $this->document->countBorrowerDocument($data['orderDetails']['id']);
-            $document_name = "borrower_buyer_" . date('YmdHis') . "_" . $order[0]['file_id'] . ".pdf";
+            $document_name = "borrower_buyer_" . date('YmdHis') . "_" . $orderId . ".pdf";
             if (!is_dir('uploads/borrower')) {
                 mkdir('./uploads/borrower', 0777, true);
             }
@@ -2907,14 +2908,14 @@ class DashboardMail extends MX_Controller
                 echo $e->getMessage();
             }
 
-            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('file_id' => $data['orderDetails']['file_id']), 'order_details');
+            $this->home_model->update(array('borrower_information_document_name' => $document_name), array('id' => $orderId), 'order_details');
             $documentData = array(
                 'document_name' => $document_name,
                 'original_document_name' => $document_name,
                 'document_type_id' => 1041,
                 'document_size' => 0,
                 'user_id' => 0,
-                'order_id' => $data['orderDetails']['order_id'],
+                'order_id' => $orderId,
                 'task_id' => 4,
                 'description' => 'Borrower Buyer Document',
                 'is_sync' => 1,

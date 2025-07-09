@@ -94,10 +94,10 @@ class Escrow extends MX_Controller
                                     <a href="'.base_url().'order/escrow/order-tasks/'.$order['id'].'" title="Tasks" >
                                     <i class="fas fa-tasks" aria-hidden="true"></i>
                                     </a>
-                                    <a style="margin-left:5px;" href="'.base_url().'get-notes/'.$order['file_id'].'" title="Notes">
+                                    <a style="margin-left:5px;" href="'.base_url().'get-notes/'.$order['id'].'" title="Notes">
                                         <i class="fas fa-sticky-note"></i>
                                     </a>
-                                    <a style="margin-left:5px;" href="'.base_url().'upload-documents/'.$order['file_id'].'" title="Documents">
+                                    <a style="margin-left:5px;" href="'.base_url().'upload-documents/'.$order['id'].'" title="Documents">
                                         <i class="fas fa-file"></i>
                                     </a>
                                 </div>';

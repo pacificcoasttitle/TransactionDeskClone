@@ -53,7 +53,7 @@
                                 }?>
                         </div>
                     <?php } ?>
-                    <form action="<?php echo base_url().'borrower-buyer-form/'.$orderDetails['file_id']; ?>" method="post" name="borrower_buyer_form" id="borrower_buyer_form">
+                    <form action="<?php echo base_url().'borrower-buyer-form/'.$orderDetails['order_id']; ?>" method="post" name="borrower_buyer_form" id="borrower_buyer_form">
                         <h2 class="blue_title">Buyer Opening Package<br><span style="font-size:16px; padding-top:15px;">Property Address: <?php echo $orderDetails['full_address'];?></span><br><span style="font-size:16px; padding-top:15px;">APN:<?php echo $orderDetails['apn'];?></span></h2>
                         <div class="accordion" id="accordionExample">
                             <div class="accordion-item">
@@ -100,7 +100,7 @@
                                     </div>    
                                 </div>
                             </div>
-                            <div class="accordion-item d-none">
+                            <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThirteen">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">(2) Buyer Information</button>
                                 </h2>
@@ -113,7 +113,7 @@
                                         <h4 class="text-center my-4"><strong>PLEASE FILL OUT THIS FORM COMPLETELY AND RETURN TO OUR OFFICE AS SOON AS POSSIBLE <br> AS IT WILL ASSIST US IN THE ADMINISTRATION OF YOUR TRANSACTION.</strong></h4>
 
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="buyer_full_name" class="mb-2"><b></b></label>
                                             <input type="text" class="form-control" id="buyer_full_name" name="buyer_full_name" value="<?php echo $buyerInfo['buyer_full_name'] ? $buyerInfo['buyer_full_name'] : '';?>" required data-error="#buyer_full_name-error">
                                             <small class="small_label">Buyer(s):</small>
                                         </div>
@@ -122,7 +122,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="buyer_home_number" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="buyer_home_number" name="buyer_home_number" value="<?php echo $buyerInfo['buyer_home_number'] ? $buyerInfo['buyer_home_number'] : '';?>" required data-error="#buyer_home_number-error">
                                                     <small class="small_label">Home Phone Number:</small>
                                                 </div>
@@ -131,7 +131,7 @@
                                             
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="buyer_work_number" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="buyer_work_number" name="buyer_work_number" value="<?php echo $buyerInfo['buyer_work_number'] ? $buyerInfo['buyer_work_number'] : '';?>" required data-error="#buyer_work_number-error">
                                                     <small class="small_label">Work Phone Number:</small>
                                                 </div>
@@ -140,18 +140,18 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <!-- <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="buyer_email_address" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="buyer_email_address" name="buyer_email_address" value="<?php echo $buyerInfo['buyer_email_address'] ? $buyerInfo['buyer_email_address'] : '';?>" required data-error="#buyer_email_address-error">
                                                     <small class="small_label">E-Mail Address:</small>
                                                 </div>
                                                 <label id="buyer_email_address-error" class="error text-danger" for="buyer_email_address"></label>
-                                            </div>
+                                            </div> -->
 
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="buyer_fax_number" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="buyer_fax_number" name="buyer_fax_number" value="<?php echo $buyerInfo['buyer_fax_number'] ? $buyerInfo['buyer_fax_number'] : '';?>" required data-error="#buyer_fax_number-error">
                                                     <small class="small_label">Fax Number:</small>
                                                 </div>
@@ -162,7 +162,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="buyer_ssn" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="buyer_ssn" name="buyer_ssn" value="<?php echo $buyerInfo['buyer_ssn'] ? $buyerInfo['buyer_ssn'] : '';?>" required data-error="#buyer_ssn-error">
                                                     <small class="small_label">Social Security #:</small>
                                                 </div>
@@ -171,28 +171,28 @@
                                         </div>
 
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="buyer_current_mailing_address" class="mb-2"><b></b></label>
                                             <textarea rows="2" class="form-control" style="height:auto;" id="buyer_current_mailing_address" name="buyer_current_mailing_address" required data-error="#buyer_current_mailing_address-error"><?php echo $buyerInfo['buyer_current_mailing_address'] ? $buyerInfo['buyer_current_mailing_address'] : '';?></textarea>
                                             <small class="small_label">Buyer(s) Current Mailing Address:</small>
                                         </div>
                                         <label id="buyer_current_mailing_address-error" class="error text-danger" for="buyer_current_mailing_address"></label>
 
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="buyer_mailing_address_after_close" class="mb-2"><b></b></label>
                                             <textarea rows="2" class="form-control" style="height:auto;" id="buyer_mailing_address_after_close" name="buyer_mailing_address_after_close" required data-error="#buyer_mailing_address_after_close-error"><?php echo $buyerInfo['buyer_mailing_address_after_close'] ? $buyerInfo['buyer_mailing_address_after_close'] : '';?></textarea>
                                             <small class="small_label">Buyer(s) Mailing Address After Close Of Escrow:</small>
                                         </div>
                                         <label id="buyer_mailing_address_after_close-error" class="error text-danger" for="buyer_mailing_address_after_close"></label>
 
                                         <div class="form-group position-relative mb-3 mt-5">
-                                            <label for="" class="mb-2"><b>New Loan(s) Buyer(s) Are Applying For:</b></label>
+                                            <label for="lender_name" class="mb-2"><b>New Loan(s) Buyer(s) Are Applying For:</b></label>
                                             <input type="text" class="form-control" id="lender_name" name="lender_name" value="<?php echo $buyerInfo['lender_name'] ? $buyerInfo['lender_name'] : '';?>" required data-error="#lender_name-error">
                                             <small class="small_label">Name Of Lender:</small>
                                         </div>
                                         <label id="lender_name-error" class="error text-danger" for="lender_name"></label>
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="lender_address" class="mb-2"><b></b></label>
                                             <textarea rows="2" class="form-control" style="height:auto;" id="lender_address" name="lender_address" required data-error="#property_address-error"><?php echo $buyerInfo['lender_address'] ? $buyerInfo['lender_address'] : '';?></textarea>
                                             <small class="small_label">Address:</small>
                                         </div>
@@ -201,7 +201,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="agent_name" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="agent_name" name="agent_name" value="<?php echo $buyerInfo['agent_name'] ? $buyerInfo['agent_name'] : '';?>" required data-error="#agent_name-error">
                                                     <small class="small_label">Agent's Name:</small>
                                                 </div>
@@ -209,7 +209,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="agent_phone_number" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="agent_phone_number" name="agent_phone_number" value="<?php echo $buyerInfo['agent_phone_number'] ? $buyerInfo['agent_phone_number'] : '';?>" required data-error="#agent_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
@@ -218,14 +218,14 @@
                                         </div>
 
                                         <div class="form-group position-relative mb-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="second_lender_name" class="mb-2"><b></b></label>
                                             <input type="text" class="form-control" id="second_lender_name" name="second_lender_name" value="<?php echo $buyerInfo['second_lender_name'] ? $buyerInfo['second_lender_name'] : '';?>">
                                             <small class="small_label">Name Of Seond Lender:</small>
                                         </div>
                                         
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="seond_lender_address" class="mb-2"><b></b></label>
                                             <textarea rows="2" class="form-control" style="height:auto;" id="seond_lender_address" name="seond_lender_address" ><?php echo $buyerInfo['seond_lender_address'] ? $buyerInfo['seond_lender_address'] : '';?></textarea>
                                             <small class="small_label">Address:</small>
                                         </div>
@@ -233,14 +233,14 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="second_agent_name" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="second_agent_name" name="second_agent_name" value="<?php echo $buyerInfo['second_agent_name'] ? $buyerInfo['second_agent_name'] : '';?>">
                                                     <small class="small_label">Second Agent's Name:</small>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b></b></label>
+                                                    <label for="seond_agent_phone_number" class="mb-2"><b></b></label>
                                                     <input type="text" class="form-control" id="seond_agent_phone_number" name="seond_agent_phone_number" value="<?php echo $buyerInfo['seond_agent_phone_number'] ? $buyerInfo['seond_agent_phone_number'] : '';?>">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
@@ -250,7 +250,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b>New Insurance:</b></label>
+                                                    <label for="insurance_name" class="mb-2"><b>New Insurance:</b></label>
                                                     <input type="text" class="form-control" id="insurance_name" name="insurance_name" value="<?php echo $buyerInfo['insurance_name'] ? $buyerInfo['insurance_name'] : '';?>" required data-error="#insurance_name-error">
                                                     <small class="small_label">Insurance's Name:</small>
                                                 </div>
@@ -258,7 +258,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group position-relative mb-3 mt-3">
-                                                    <label for="" class="mb-2"><b>&nbsp;</b></label>
+                                                    <label for="insurance_phone_number" class="mb-2"><b>&nbsp;</b></label>
                                                     <input type="text" class="form-control" id="insurance_phone_number" name="insurance_phone_number" value="<?php echo $buyerInfo['insurance_phone_number'] ? $buyerInfo['insurance_phone_number'] : '';?>" required data-error="#insurance_phone_number-error">
                                                     <small class="small_label">Phone Number:</small>
                                                 </div>
@@ -267,14 +267,14 @@
                                         </div>
 
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="insurance_address" class="mb-2"><b></b></label>
                                             <textarea rows="2" class="form-control" style="height:auto;" id="insurance_address" name="insurance_address" required data-error="#insurance_address-error"><?php echo $buyerInfo['insurance_address'] ? $buyerInfo['insurance_address'] : '';?></textarea>
                                             <small class="small_label">Insurance's Address:</small>
                                         </div>
                                         <label id="insurance_address-error" class="error text-danger" for="insurance_address"></label>
                                         
                                         <div class="form-group position-relative mb-3 mt-3">
-                                            <label for="" class="mb-2"><b></b></label>
+                                            <label for="insurance_company" class="mb-2"><b></b></label>
                                             <input type="text" class="form-control" id="insurance_company" name="insurance_company" value="<?php echo $buyerInfo['insurance_company'] ? $buyerInfo['insurance_company'] : '';?>" required data-error="#insurance_company-error">
                                             <small class="small_label">Insurance Company:</small>
                                         </div>
@@ -297,12 +297,12 @@
                         
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">(2) Escrow Instructions</button>
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">(3) Escrow Instructions</button>
                                 </h2>
                                 <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="form-group mb-4">
-                                            <label for="" class="mb-2"><b>Is there a Mortgage or equity line on the Property?</b></label>
+                                            <label for="is_mortgage" class="mb-2"><b>Is there a Mortgage or equity line on the Property?</b></label>
                                             <ul class="list-inline mb-0">
                                                 <li class="list-inline-item me-md-5">
                                                     <input type="radio" id="yesMortgage" value="yes" name="is_mortgage" required data-error="#is_mortgage-error"> 
@@ -714,7 +714,7 @@
 
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (3) Statement of Information</button>
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">   (4) Statement of Information</button>
                                 </h2>
                                 <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
@@ -735,7 +735,7 @@
                                     <h4 class="text-center"><b>NAME AND PERSONAL INFORMATION</b></h4>
 
                                     <div class="row mt-5">
-                                        <div class="col-md-9">	
+                                        <div class="col-md-9">
                                             <div class="row">
                                                 <div class="col-lg-3 col-md-6">
                                                     <div class="form-group position-relative mb-3">
@@ -1383,7 +1383,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEight">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                       (4) Vesting Form
+                                       (5) Vesting Form
                                     </button>
                                 </h2>
                                 <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#accordionExample">
@@ -1540,7 +1540,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingNine">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-                                       (5) Preliminary Change of Ownership
+                                       (6) Preliminary Change of Ownership
                                     </button>
                                 </h2>
                                 <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="headingNine" data-bs-parent="#accordionExample">
@@ -2218,7 +2218,7 @@
                                                     <div class="row mt-3">
                                                         <div class="col-md-4">
                                                             <div class="d-flex">
-                                                                <input type="checkbox" class="mt-2 me-2" id="single" name="types_of_property_transferred[]" value="single">
+                                                                <input type="checkbox" required data-error="#types_of_property_transferred-error" class="mt-2 me-2" id="single" name="types_of_property_transferred[]" value="single">
                                                                 <label for="single"> Single-family residence</label>
                                                             </div>
                                                         </div>
@@ -2276,6 +2276,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <label id="types_of_property_transferred-error" class="error text-danger d-flex" for="types_of_property_transferred"></label>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2422,7 +2424,7 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTen">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
-                                       (6) Preliminary Report Approval
+                                       (7) Preliminary Report Approval
                                     </button>
                                 </h2>
                                 <div id="collapseTen" class="accordion-collapse collapse" aria-labelledby="headingTen" data-bs-parent="#accordionExample">
@@ -2493,7 +2495,7 @@
 							<div class="accordion-item">
                                 <h2 class="accordion-header" id="headingEleven">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
-                                        (7) NHD Receipt
+                                        (8) NHD Receipt
                                     </button>
                                 </h2>
                                 <div id="collapseEleven" class="accordion-collapse collapse" aria-labelledby="headingEleven" data-bs-parent="#accordionExample">

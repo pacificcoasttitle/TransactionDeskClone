@@ -652,7 +652,7 @@ class SalesRep extends MX_Controller
 						</a>";
                     if ($prelimSummaryShutOffFlag == 0) {
                         $action .= "<a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
-                                <button type='submit' class='btn $class btn-icon-split'>
+                                <button type='submit' class='btn prelim-summary-btn btn-icon-split'>
                                     <span class='icon text-white-50'>
                                         <i class='fas fa-file-alt'></i>
                                     </span>

@@ -8020,6 +8020,91 @@ class Cron extends MX_Controller
     public function createFeesPdf() {
         $this->order->generateFeesEstimationPdf(153367);
     }
+
+    public function borrowerEmailAutomation() {
+        $this->load->model('order/apiLogs');
+        $reqData     = file_get_contents("php://input");
+        // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"TEST-20001146-GLT","Id":null,"FileUploadedStatus":true,"data":{"Requirements":[{"description":"A Statement of Information is needed from all parties involved. This statement is crucial for completing the title search and helps identify and eliminate confusion related to names. The information will remain confidential."}],"Liens":[{"description":"None recorded"}],"Easements":[{"description":"None recorded"}],"Exceptions":[{"description":"Property taxes that are not yet due for the fiscal year 2025-2026. Tax Identification No.: 6144-019-015"},{"description":"Property taxes for the fiscal year 2024-2025 are paid. Tax Identification No.: 6144-019-015, 1st Installment: $4,445.62, 2nd Installment: $4,445.62, Exemption: $0.00, Land Value: $271,804.00, Improvements Value: $118,473.00, Personal Property Value: $0.00, Code Area: 11252"},{"description":"Liens or assessments from local projects or special districts."},{"description":"Supplemental taxes according to California law."},{"description":"Water rights or claims to water."},{"description":"Easements:\nSingle channel easement for Compton Creek (Recorded: March 3, 1923).\nUtility easement (Unlocated, Book 3208, Page 173).\nPublic street easement affecting the southerly 25 feet of specific lots (Book 3208, Page 1)."},{"description":"Deed of Trust to secure a loan of $296,250.00.\nTrustor/Grantor: Iris Yolanda Martinez\nTrustee: Fidelity National Title\nBeneficiary: Metwest Commercial Lender, Inc.\nRecording Date: June 29, 2007"},{"description":"Assignment of rental moneys for additional security.\nAssigned to: Bayview Loan Servicing LLC\nRecording Date: February 26, 2008"},{"description":"Assignment of beneficial interest under the deed of trust.\nAssignee: Bayview Loan Servicing LLC\nLoan No.: 214228
+        $from = date('Y-m-d 00:00:00', strtotime('-1 day'));
+        $to   = date('Y-m-d 23:59:59', strtotime('-1 day'));
+        // echo "From: $from, To: $to";die;
+        
+        // $orders = $this->db->get('order_details')->result_array();
+        $params = [
+            'order_details.created_at >=' => $from,
+            'order_details.created_at <=' => $to,
+        ];
+        $orderDetails = $this->order->get_all_order_details($params);
+
+        // echo "<pre>";
+        // print_r($orderDetails);die;
+        foreach ($orderDetails as $order) {
+            $file_number = $order['file_number'];
+            $borrower_email = 'ghernandez@pct.com';
+            $cc = array('piyush.j@crestinfosystems.com');
+            $package_type = (strtolower($order['prod_type']) == 'refinance') ? 'buyer' : 'seller';
+            
+            $escrowOffCond = array(
+                'where' => array(
+                    'id' => $order['escrow_officer_id'],
+                ),
+            );
+
+            $escrowOffDetails = $this->order->get_rows($escrowOffCond, 'pct_softpro_lookup_table');
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $order_id = $order['order_id'];
+            $this->home_model->update(array('borrower_email' => $borrower_email), array('id' => $order_id), 'order_details');
+            
+            if ($package_type == 'seller') {
+                $form_url = base_url().'borrower-seller-form/'.$order['random_number'];
+                $subject = $order['file_number']. ' - Seller: Required Info Needed';
+            } else {
+                $form_url = base_url().'borrower-buyer-form/'.$order['random_number'];
+                $subject = $order['file_number']. ' - Buyer: Required Info Needed';
+            }
+            
+            $email_data = array(
+                'file_number'=> $order['file_number'],
+                'property_address'=> $order['full_address'],
+                'random_number'=>  $order['random_number'],
+                'borrrower'=> $order['primary_owner'],
+                'form_url' => $form_url,
+                'escrow_officer' => (!empty($$escrowOffDetails)) ? $escrowOffDetails['officer_name'] : '',
+                'is_seller_flag' => $package_type == 'seller' ? 1 : 0
+            );
+            
+            if ($package_type == 'seller') {
+                $borrower_message_body = $this->load->view('emails/borrower_seller.php', $email_data, TRUE);
+            } else {
+                $borrower_message_body = $this->load->view('emails/borrower_buyer.php', $email_data, TRUE);
+            }
+            $message_body = $borrower_message_body;
+            
+            $mailParams = array(
+                'from_mail' => $from_mail, 
+                'from_name' => $from_name, 
+                'subject' => $subject,
+                'message'=>json_encode($email_data)
+            );
+            
+            if (!empty($borrower_email)) {
+                $to = $borrower_email;
+                $mailParams['to'] = $to;
+                $this->load->helper('sendemail');
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_borrower', 'send_mail_to_borrower', $mailParams, array(), $order_id, 0);
+                $borrower_mail_result = send_email($from_mail,$from_name, $to, $subject, $message_body,[], $cc, []);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_borrower', 'send_mail_to_borrower', $mailParams, array('status'=>$borrower_mail_result), $order_id, $logid);
+            }
+        }
+        
+        // $params = [
+        //     'order_details.file_number' => $file_number,
+        // ];
+        // $orderDetails = $this->order->get_order_details($params);
+        
+    }  
+    
     public function automatePrelimSammary() {
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');

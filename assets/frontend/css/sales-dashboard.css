@@ -187,7 +187,7 @@ th {
 
 .btn-icon-split .text {
     font-size: 11px;
-    padding: .375rem 3px;
+    padding: .575rem 3px;
 }
 
 .btn-icon-split .icon {
@@ -196,6 +196,15 @@ th {
 
 #aiPrelimSummary .card-body {
     padding: 0.5px 1.25rem;
+}
+
+.prelim-summary-btn {
+    background: #FF8A65;
+    color: #fff;
+}
+
+.prelim-summary-btn:hover {
+    color: #FF7043
 }
  
 /* .btn {
