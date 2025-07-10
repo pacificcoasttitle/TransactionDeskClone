@@ -59,7 +59,7 @@
 			</div>
 			<?php } ?>
 			<form method="POST" id="signup-form" class="signup-form"
-				action="<?php echo base_url().'seller-info/'.$orderDetails['file_id']; ?>">
+				action="<?php echo base_url().'seller-info/'.$orderDetails['random_number']; ?>">
 				<div>
 
 					<h3>About You</h3>

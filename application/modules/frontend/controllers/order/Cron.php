@@ -8057,10 +8057,10 @@ class Cron extends MX_Controller
             $this->home_model->update(array('borrower_email' => $borrower_email), array('id' => $order_id), 'order_details');
             
             if ($package_type == 'seller') {
-                $form_url = base_url().'borrower-seller-form/'.$order['random_number'];
+                $form_url = base_url().'seller-info/'.$order['random_number'];
                 $subject = $order['file_number']. ' - Seller: Required Info Needed';
             } else {
-                $form_url = base_url().'borrower-buyer-form/'.$order['random_number'];
+                $form_url = base_url().'buyer-info/'.$order['random_number'];
                 $subject = $order['file_number']. ' - Buyer: Required Info Needed';
             }
             
