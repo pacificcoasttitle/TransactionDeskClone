@@ -3061,6 +3061,7 @@ class DashboardMail extends MX_Controller
             $inserted_wizard_id = $this->home_model->insert($borrowerBuyerInfoData, 'pct_order_borrower_buyer_info_wizard');
 
             $buyerInfo2Data = array(
+                'order_id' => $this->input->post('order_id'),
                 'is_used_another_last_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
                 'another_last_name' => $this->input->post('another_last_name') ? $this->input->post('another_last_name') : null,
                 'is_married_or_domestic_partner' => $this->input->post('is_married_or_domestic_partner') ? $this->input->post('is_married_or_domestic_partner') : null,
@@ -3544,6 +3545,7 @@ class DashboardMail extends MX_Controller
             $this->home_model->insert($sellerInfoData, 'pct_order_borrower_seller_packet_info');
 
             $sellerInfo2Data = array(
+                'order_id' => $this->input->post('order_id'),
                 'is_used_another_last_name' => $this->input->post('is_used_another_last_name') ? $this->input->post('is_used_another_last_name') : null,
                 'another_last_name' => $this->input->post('another_last_name') ? $this->input->post('another_last_name') : null,
                 'is_married_or_domestic_partner' => $this->input->post('is_married_or_domestic_partner') ? $this->input->post('is_married_or_domestic_partner') : null,
