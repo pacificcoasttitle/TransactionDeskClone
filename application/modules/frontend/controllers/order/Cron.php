@@ -7265,7 +7265,8 @@ class Cron extends MX_Controller
                                         'file_number' => $filesResult['file_number'],
                                         'created_at' => date('Y-m-d H:i:s'),
                                     ];
-                                    $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                                    // $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                                    $id = $this->home_model->insert($summaryData, 'pct_order_prelim_summary');
                                     $condition = array(
                                         'id' => $filesResult['id'],
                                     );
@@ -7523,7 +7524,8 @@ class Cron extends MX_Controller
                     'resware_json' => json_encode($response['data']),
                     'created_at' => date('Y-m-d H:i:s')
                 );
-                $prelimSumaryId = $this->db->insert('pct_order_prelim_summary', $prelimData);
+                $prelimSumaryId = $this->home_model->insert($prelimData, 'pct_order_prelim_summary');
+                // $prelimSumaryId = $this->db->insert('pct_order_prelim_summary', $prelimData);
                 
                 $condition = array(
                     'file_number' => $response['OrderNumber'],
