@@ -7401,7 +7401,8 @@ class Cron extends MX_Controller
             $this->db->from('pct_order_prelim_summary as s');
             $this->db->where('file_number', $response['OrderNumber']);
             $prelimSummaryDetails = $this->db->get()->row_array();
-            if (empty($prelimSummaryDetails) && !empty($response['data']) && !empty($filesResult)) {
+            // if (empty($prelimSummaryDetails) && !empty($response['data']) && !empty($filesResult)) {
+            if (!empty($response['data']) && !empty($filesResult)) {
                 $orderId = $filesResult['id'];
                 $file_number = $response['OrderNumber'];
                 $prelimLink = $response['data'][0];
@@ -7425,18 +7426,21 @@ class Cron extends MX_Controller
                         );
                         $documentId = $this->document->insert($documentData);
 
-                        $summaryData = [
-                            'file_number' => $filesResult['file_number'],
-                            'created_at' => date('Y-m-d H:i:s'),
-                        ];
-                        $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
-                        $condition = array(
-                            'id' => $filesResult['id'],
-                        );
-                        $data = array(
-                            'prelim_summary_id' => $id,
-                        );
-                        $this->order->update($data, $condition);
+                        if (empty($prelimSummaryDetails)) {
+                            $summaryData = [
+                                'file_number' => $filesResult['file_number'],
+                                'created_at' => date('Y-m-d H:i:s'),
+                            ];
+                            $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+
+                            $condition = array(
+                                'id' => $filesResult['id'],
+                            );
+                            $data = array(
+                                'prelim_summary_id' => $id,
+                            );
+                            $this->order->update($data, $condition);
+                        }
                     } else {
                         $documentData = array(
                             'document_name' => $document_name,
@@ -8280,7 +8284,7 @@ class Cron extends MX_Controller
                         );
                         $documentId = $this->document->insert($documentData);
                         $count++;
-                        print_r($documentId);die;
+                        // print_r($documentId);die;
                         // $summaryData = [
                         //     'file_number' => $filesResult['file_number'],
                         //     'created_at' => date('Y-m-d H:i:s'),
@@ -8294,7 +8298,7 @@ class Cron extends MX_Controller
                         // );
                         // $this->order->update($data, $condition);
 
-                        // $res = json_encode(['prelim inserted' => 1, 'orders_inserted' => $file_number]);
+                        $res = json_encode(['prelim inserted' => 1, 'orders_inserted' => $file_number]);
 
                     }
                 } else {
@@ -8310,8 +8314,8 @@ class Cron extends MX_Controller
             $this->order->syncLogs('softpro', 'get_single_prelim_report', $url, $reqData, $res, 0, 0);
             /** Cron log end */
 
-            // echo json_encode(['status' => 'success','message' => $prelimFetchedCount . ' Orders prelim document updated successfully']);
         }
+        echo json_encode(['status' => 'success','message' => $count . ' Orders prelim document updated successfully']);
         
     }
 }
