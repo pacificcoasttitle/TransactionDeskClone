@@ -113,7 +113,7 @@ class Document extends CI_Model
         if ($query->num_rows() > 0)  {
             return $query->num_rows()+1;
         } else {
-            return 1;
+            return 0;
         }         
     }
 }
