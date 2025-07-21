@@ -64,6 +64,7 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('TransactionType', 'Transaction Type', 'required', ['required' => 'Please select Transaction Type']);
             $this->form_validation->set_rules('OrderTypeID', 'Order Type ID', 'required', ['required' => 'Please select Order Type']);
             $this->form_validation->set_rules('ProductType', 'Product Type', 'required', ['required' => 'Please select Product Type']);
+            $this->form_validation->set_rules('SalesRep', 'Sales Rep', 'required', ['required' => 'Please select Sales Rep']);
             // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
             // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
 
@@ -1329,7 +1330,8 @@ class Home extends MX_Controller
                 $data['TransactionType_error_msg'] = form_error('TransactionType');
                 $data['sendermessage_error_msg']   = form_error('sendermessage');
                 $data['EscrowOfficer_error_msg']   = form_error('escrow_officer');
-                $errMsg                            = form_error('OpenName') . ' ' . form_error('OpenLastName') . ' ' . form_error('OpenName') . ' ' . form_error('OpenEmail') . ' ' . form_error('ProductType') . ' ' . form_error('OrderType') . ' ' . form_error('TransactionType') . ' ' . form_error('sendermessage') . ' ' . form_error('escrow_officer');
+                $data['SalesRep_error_msg']   = form_error('SalesRep');
+                $errMsg = form_error('OpenName') . ' ' . form_error('OpenLastName') . ' ' . form_error('OpenName') . ' ' . form_error('OpenEmail') . ' ' . form_error('ProductType') . ' ' . form_error('OrderType') . ' ' . form_error('TransactionType') . ' ' . form_error('sendermessage') . ' ' . form_error('escrow_officer'). ' ' . form_error('SalesRep');
 
                 $response = ['status' => 'error', 'message' => $errMsg];
                 echo json_encode($response);
