@@ -637,19 +637,22 @@ class SalesRep extends MX_Controller
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
                     if (env('AWS_ENABLE_FLAG') == 1) {
                         $prelimUrl = env('AWS_PATH') . "documents/" . $prelimDoc['document_name'];
-                    } else {
-                        $prelimUrl = base_url() . 'uploads/documents/' . $prelimDoc['document_name'];
-                    }
+                    } 
+                    // else {
+                    //     $prelimUrl = base_url() . 'uploads/documents/' . $prelimDoc['document_name'];
+                    // }
                     $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
                     $class = isset($order['is_doc_updated']) && !empty($order['is_doc_updated']) ? 'updated-prelim-btn' : 'btn-success';
-                    $action .= "<a href='" . $prelimUrl . "' target='_blank'>
-							<button type='submit' class='btn $class btn-icon-split'>
-								<span class='icon text-white-50'>
-									<i class='fas fa-file'></i>
-								</span>
-								<span class='text'>Review Prelim</span>
-							</button>
-						</a>";
+                    if (!empty($prelimDoc['document_name'])) {
+                        $action .= "<a href='" . $prelimUrl . "' target='_blank'>
+                                <button type='submit' class='btn $class btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-file'></i>
+                                    </span>
+                                    <span class='text'>Review Prelim</span>
+                                </button>
+                            </a>";
+                    }
                     if ($prelimSummaryShutOffFlag == 0) {
                         $action .= "<a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
                                 <button type='submit' class='btn prelim-summary-btn btn-icon-split'>
@@ -669,10 +672,19 @@ class SalesRep extends MX_Controller
                                 <span class='text'>Click Action Type</span>
                                 <span class='caret'></span>
                             </button>
-                            
                         </a>
-                        <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
-                            <li>
+                        <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>";
+                    if (!$this->order->fileExistOrNotOnS3('documents/' . $prelimDoc['document_name'])) {
+                        $action .= "<li>
+                                    <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+                                        <button type='button' class='btn btn-grad-2a button-color'>
+                                            <i class='fas fa-refresh' style='margin-right:5px;'></i>
+                                            <span class='text'>Get Prelim Doc</span>
+                                        </button>
+                                    </a>
+                                </li>";
+                    }
+                    $action .= "<li>
                                 <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
                                     <button type='button' class='btn btn-grad-2a button-color'>
                                         <i class='fas fa-refresh' style='margin-right:5px;'></i>
@@ -1120,7 +1132,6 @@ class SalesRep extends MX_Controller
                 if (!in_array($userdata['id'], $salesRepUsers)) {
                     $salesRepUsers[] = $userdata['id'];
                 }
-
                 $salesUsers = $this->order->get_sales_users($salesRepUsers);
             } else {
                 $salesUsers = $this->order->get_sales_users();
