@@ -7251,7 +7251,7 @@ class Cron extends MX_Controller
                                 
                                 if ($uploadStatus) {
                                     $this->load->model('order/document');
-                                    $getPrelimCount = $this->order->countPrelimDocument($orderId);
+                                    $getPrelimCount = $this->document->countPrelimDocument($orderId);
                                     if ($getPrelimCount == 0) {
                                         $documentData = array(
                                             'document_name' => $document_name,
@@ -7370,7 +7370,7 @@ class Cron extends MX_Controller
 
                 if ($uploadStatus) {
                     $this->load->model('order/document');
-                    $getPrelimCount = $this->order->countPrelimDocument($orderId);
+                    $getPrelimCount = $this->document->countPrelimDocument($orderId);
                     if ($getPrelimCount == 0) {
                         $documentData = array(
                             'document_name' => $document_name,
@@ -7467,7 +7467,7 @@ class Cron extends MX_Controller
                 $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
                 if ($uploadStatus) {
                     $this->load->model('order/document');
-                    $getPrelimCount = $this->order->countPrelimDocument($orderId);
+                    $getPrelimCount = $this->document->countPrelimDocument($orderId);
                     if ($getPrelimCount == 0) {
                         $documentData = array(
                             'document_name' => $document_name,
