@@ -7330,7 +7330,8 @@ class Cron extends MX_Controller
             $this->db->where('file_number', $response['OrderNumber']);
             $prelimSummaryDetails = $this->db->get()->row_array();
 
-            if (empty($prelimSummaryDetails) && !empty($response['data'])) {
+            // if (empty($prelimSummaryDetails) && !empty($response['data'])) {
+            if (!empty($response['data']) && !empty($filesResult)) {
                 $file_number = $response['OrderNumber'];
                 $prelimLink = $response['data'][0];
                 $prelimFetchedCount++;
@@ -7351,19 +7352,20 @@ class Cron extends MX_Controller
                         'is_prelim_document' => 1,
                     );
                     $documentId = $this->document->insert($documentData);
-
-                    $summaryData = [
-                        'file_number' => $filesResult['file_number'],
-                        'created_at' => date('Y-m-d H:i:s'),
-                    ];
-                    $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
-                    $condition = array(
-                        'id' => $filesResult['id'],
-                    );
-                    $data = array(
-                        'prelim_summary_id' => $id,
-                    );
-                    $this->order->update($data, $condition);
+                    if (empty($prelimSummaryDetails)) {
+                        $summaryData = [
+                            'file_number' => $filesResult['file_number'],
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        $id = $this->db->insert('pct_order_prelim_summary', $summaryData);
+                        $condition = array(
+                            'id' => $filesResult['id'],
+                        );
+                        $data = array(
+                            'prelim_summary_id' => $id,
+                        );
+                        $this->order->update($data, $condition);
+                    }
 
                     $res = json_encode(['prelim inserted' => 1, 'orders_inserted' => $file_number]);
                 }
