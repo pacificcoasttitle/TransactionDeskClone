@@ -674,7 +674,7 @@ class SalesRep extends MX_Controller
                             </button>
                         </a>
                         <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>";
-                    if (!empty($prelimDoc['document_name'])) {
+                    if (empty($prelimDoc['document_name'])) {
                         $action .= "<li>
                                     <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
                                         <button type='button' class='btn btn-grad-2a button-color'>
