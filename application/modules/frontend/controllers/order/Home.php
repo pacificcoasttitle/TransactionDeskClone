@@ -58,13 +58,18 @@ class Home extends MX_Controller
             }
             // echo "<pre>";
             // print_r($_POST);die;
-            $this->form_validation->set_rules('OpenName', 'Open Name', 'required', ['required' => 'Enter your first name']);
+            $this->form_validation->set_rules('OpenName', 'Open Name' , 'required', ['required' => 'Enter your first name']);
             $this->form_validation->set_rules('OpenLastName', 'Open Last Name', 'required', ['required' => 'Enter your last name']);
             $this->form_validation->set_rules('OpenEmail', 'Open Email', 'required', ['required' => 'Enter your email address']);
             $this->form_validation->set_rules('TransactionType', 'Transaction Type', 'required', ['required' => 'Please select Transaction Type']);
             $this->form_validation->set_rules('OrderTypeID', 'Order Type ID', 'required', ['required' => 'Please select Order Type']);
             $this->form_validation->set_rules('ProductType', 'Product Type', 'required', ['required' => 'Please select Product Type']);
             $this->form_validation->set_rules('SalesRep', 'Sales Rep', 'required', ['required' => 'Please select Sales Rep']);
+            // echo "<pre>";
+            // print_r($_POST);die;
+            if ($this->input->post('IsOrganization')) {
+                $this->form_validation->set_rules('OrganizationType', 'Organization Type', 'required', ['required' => 'Please select Organization Type.']);
+            }
             // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
             // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
 
@@ -104,6 +109,8 @@ class Home extends MX_Controller
                 $ClientLookupCode  = $this->input->post('ClientLookupCode');
                 $CompanyLookupCode = $this->input->post('CompanyLookupCode');
                 $ClientType        = $this->input->post('ClientType');
+                $OrganizationType        = $this->input->post('OrganizationType');
+                $IsOrganization        = $this->input->post('IsOrganization');
 
                 $PropertyAddress      = $this->input->post('Property');
                 $SplitPropertyAddress = explode(' ', $PropertyAddress);
@@ -154,6 +161,7 @@ class Home extends MX_Controller
                 $titleOfficerLookupCode = isset($titleOfficerDetails['lookup_code']) && !empty($titleOfficerDetails['lookup_code']) ? $titleOfficerDetails['lookup_code'] : '';
 
                 $LoanAmount   = $this->input->post('loanAmount');
+                $coverageAmount   = $this->input->post('coverageAmount');
                 // print_r($LoanAmount);die;
                 $LoanNumber   = $this->input->post('loanNumber');
                 $EscrowNumber = $this->input->post('escrowNumber');
@@ -161,6 +169,7 @@ class Home extends MX_Controller
                 $SalesAmount  = $this->input->post('salesAmount');
                 $SalesAmount  = str_replace(',', '', $SalesAmount);
                 $LoanAmount   = str_replace(',', '', $LoanAmount);
+                $coverageAmount   = str_replace(',', '', $coverageAmount);
                 // $LoanAmount = 25000;
                 // $SalesAmount = 11000;
                 $ProductTypeTxt       = $this->input->post('ProductType');
@@ -467,11 +476,17 @@ class Home extends MX_Controller
                         // $place_order['Buyers'][] = $borrowers; //
                         // $place_order['SalesPrice'] = $SalesAmount; //
                     }
+                    $orderReq['sellerDetails']['OrganizationType'] = $OrganizationType;
+                    $orderReq['sellerDetails']['IsOrganization'] = $IsOrganization;
+
                     // $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = [];
                     if (isset($LoanAmount) && !empty($LoanAmount)) {
                         $loan['LoanAmount']                  = $LoanAmount;
                         $transactionDetailsReq['LoanAmount'] = $LoanAmount;
+                        if (strtolower($softproProductType) == 'full alta') {
+                            $transactionDetailsReq['coverageAmount'] = $coverageAmount;
+                        }
                     }
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
@@ -1331,7 +1346,9 @@ class Home extends MX_Controller
                 $data['sendermessage_error_msg']   = form_error('sendermessage');
                 $data['EscrowOfficer_error_msg']   = form_error('escrow_officer');
                 $data['SalesRep_error_msg']   = form_error('SalesRep');
-                $errMsg = form_error('OpenName') . ' ' . form_error('OpenLastName') . ' ' . form_error('OpenName') . ' ' . form_error('OpenEmail') . ' ' . form_error('ProductType') . ' ' . form_error('OrderType') . ' ' . form_error('TransactionType') . ' ' . form_error('sendermessage') . ' ' . form_error('escrow_officer'). ' ' . form_error('SalesRep');
+                $data['OrganizationType_error_msg']   = form_error('OrganizationType');
+                
+                $errMsg = form_error('OpenName') . ' ' . form_error('OpenLastName') . ' ' . form_error('OpenName') . ' ' . form_error('OpenEmail') . ' ' . form_error('ProductType') . ' ' . form_error('OrderType') . ' ' . form_error('TransactionType') . ' ' . form_error('sendermessage') . ' ' . form_error('escrow_officer'). ' ' . form_error('SalesRep') . ' ' . form_error('OrganizationType');
 
                 $response = ['status' => 'error', 'message' => $errMsg];
                 echo json_encode($response);

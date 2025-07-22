@@ -325,6 +325,15 @@ $(document).ready(function () {
         }
     });
 
+    $('#IsOrganization').change(function () {
+        if (this.checked) {
+            $('#organization-type-fields').show();
+        } else {
+            $("#OrganizationType").val("");
+            $('#organization-type-fields').hide();
+        }
+    });
+
     $("#BuyerAgentName").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -547,17 +556,45 @@ $(document).ready(function () {
     $('#ProductTypeID').change(function () {
         var selectedText = $(this).find('option:selected').text();
         $('#ProductType').val(selectedText);
+        if (selectedText.toLowerCase() == 'full alta') {
+            $('.coverage-field').show();
+            $("#coverageAmount").prop('required', true);
+        } else {
+            $('.coverage-field').hide();
+            $("#coverageAmount").prop('required', false);
+        }
     });
 
+    $("#sales-loan-amount-fields #loanAmount").focusout(function () {
+        var selectedText = $(this).find('option:selected').text();
+        $('#ProductType').val(selectedText);
+        if (selectedText.toLowerCase() == 'full alta') {
+            $("#coverageAmount").prop('required', true);
+        } else {
+            $("#coverageAmount").prop('required', false);
+        }
+        let loanAmt = $('#sales-loan-amount-fields #loanAmount').val();
+        loanAmt = parseInt(loanAmt.replace(/,/g, ''), 10);
+        if (isNaN(loanAmt)) {
+            loanAmt = 0;
+        }
+        var num2 = (loanAmt * 1.25).toString().split(/(?=(?:\d{3})+$)/).join(",");
+        $("#coverageAmount").val(num2);
+
+    });
+    $("div").focus(function () {
+
+    })
     $('#TransactionType').change(function () {
         var selectedText = $(this).find('option:selected').text();
         console.log('selectedText ==', selectedText);
         if (selectedText == 'Refinance') {
             $('#sales-loan-amount-fields').show();
             // $('#sales-loan-amount-fields').hide();
-            $('#sales-loan-amount-fields #salesAmount').hide();
-            $('#sales-loan-amount-fields #primaryBorrower').hide();
-            $('#sales-loan-amount-fields #secondaryBorrower').hide();
+            $('#sales-loan-amount-fields #salesAmount').val('').hide();
+            $('#sales-loan-amount-fields #primaryBorrower').val('').hide();
+            $('#sales-loan-amount-fields #secondaryBorrower').val('').hide();
+
             // if (selectedText == 'Refinance') {
             $('#sales-loan-amount-fields #loanAmount').show();
             // }
@@ -573,6 +610,7 @@ $(document).ready(function () {
             $('#sales-loan-amount-fields #loanAmount').hide();
             $('#sales-loan-amount-fields #primaryBorrower').hide();
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
+            $('#sales-loan-amount-fields input').val('');
         }
     });
 

@@ -187,6 +187,14 @@ jQuery(document).ready(function ($) {
 						return ($("select[name=OrderTypeID]").val() == "2" || $("select[name=OrderTypeID]").val() == "3");
 					},
 				},
+			},
+			OrganizationType: {
+				required: {
+					depends: function (element) {
+						// return ($("input[name=OrderType]").val() == "Title & Escrow" || $("input[name=OrderType]").val() == "Escrow only");
+						return ($("#IsOrganization").is(":checked"));
+					},
+				},
 			}
 		},
 
@@ -299,6 +307,9 @@ jQuery(document).ready(function ($) {
 			},
 			escrow_officer: {
 				required: 'Escrow Officer is required for Escrow order',
+			},
+			OrganizationType: {
+				required: 'Organization Type is required for Organization'
 			}
 		},
 
