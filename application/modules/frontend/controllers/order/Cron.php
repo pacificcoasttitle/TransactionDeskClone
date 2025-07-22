@@ -7245,14 +7245,14 @@ class Cron extends MX_Controller
                                 $orderId = $filesResult['id'];
                                 $file_number = $data['OrderNumber'];
                                 $prelimFetchedCount++;
-                                $documentName = basename($prelimLink);
-                                $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
-                                $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
-                                
-                                if ($uploadStatus) {
-                                    $this->load->model('order/document');
-                                    $getPrelimCount = $this->document->countPrelimDocument($orderId);
-                                    if ($getPrelimCount == 0) {
+                                $getPrelimCount = $this->document->countPrelimDocument($orderId);
+                                if ($getPrelimCount == 0) {
+                                    $documentName = basename($prelimLink);
+                                    $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
+                                    $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
+                                    
+                                    if ($uploadStatus) {
+                                        $this->load->model('order/document');
                                         $documentData = array(
                                             'document_name' => $document_name,
                                             'original_document_name' => urldecode($documentName),
@@ -7264,21 +7264,8 @@ class Cron extends MX_Controller
                                             'is_prelim_document' => 1,
                                         );
                                         $this->document->insert($documentData);
-                                    } else {
-                                        $documentData = array(
-                                            'document_name' => $document_name,
-                                            'original_document_name' => urldecode($documentName),
-                                            'description' => $documentName,
-                                            'is_sync' => 1
-                                        );
-                                        $condition = [
-                                            'order_id' => $orderId,
-                                            'is_prelim_document' => 1,
-                                        ];
-                                        $this->document->update($documentData, $condition);
+                                        $newSyncedFile[] = $file_number;
                                     }
-                                    
-                                    $newSyncedFile[] = $file_number;
                                 }
 
                                 if (empty($prelimSummaryDetails)) {
@@ -7295,15 +7282,16 @@ class Cron extends MX_Controller
                                         'prelim_summary_id' => $id,
                                     );
                                     $this->order->update($data, $condition);
-                                } else {
-                                    $prelimData = array(
-                                        'is_doc_updated' => 1
-                                    );
-                                    $prelimCondition = [
-                                        'file_number' => $file_number
-                                    ];
-                                    $this->order->updateRecords($prelimData, $prelimCondition, 'pct_order_prelim_summary');
                                 }
+                                // else {
+                                //     $prelimData = array(
+                                //         'is_doc_updated' => 1
+                                //     );
+                                //     $prelimCondition = [
+                                //         'file_number' => $file_number
+                                //     ];
+                                //     $this->order->updateRecords($prelimData, $prelimCondition, 'pct_order_prelim_summary');
+                                // }
                             }
                         }
                     }
@@ -7383,19 +7371,20 @@ class Cron extends MX_Controller
                             'is_prelim_document' => 1,
                         );
                         $this->document->insert($documentData);
-                    } else {
-                        $documentData = array(
-                            'document_name' => $document_name,
-                            'original_document_name' => urldecode($documentName),
-                            'description' => $documentName,
-                            'is_sync' => 1
-                        );
-                        $condition = [
-                            'order_id' => $orderId,
-                            'is_prelim_document' => 1,
-                        ];
-                        $this->document->update($documentData, $condition);
-                    }
+                    } 
+                    // else {
+                    //     $documentData = array(
+                    //         'document_name' => $document_name,
+                    //         'original_document_name' => urldecode($documentName),
+                    //         'description' => $documentName,
+                    //         'is_sync' => 1
+                    //     );
+                    //     $condition = [
+                    //         'order_id' => $orderId,
+                    //         'is_prelim_document' => 1,
+                    //     ];
+                    //     $this->document->update($documentData, $condition);
+                    // }
                     
                     $res = json_encode(['prelim inserted' => 1, 'orders_inserted' => $file_number]);
                 }
@@ -7413,15 +7402,16 @@ class Cron extends MX_Controller
                         'prelim_summary_id' => $id,
                     );
                     $this->order->update($data, $condition);
-                } else {
-                    $prelimData = array(
-                        'is_doc_updated' => 1
-                    );
-                    $prelimCondition = [
-                        'file_number' => $file_number
-                    ];
-                    $this->order->updateRecords($prelimData, $prelimCondition, 'pct_order_prelim_summary');
-                }
+                } 
+                // else {
+                //     $prelimData = array(
+                //         'is_doc_updated' => 1
+                //     );
+                //     $prelimCondition = [
+                //         'file_number' => $file_number
+                //     ];
+                //     $this->order->updateRecords($prelimData, $prelimCondition, 'pct_order_prelim_summary');
+                // }
             } else {
                 $res = "Prelim summury details not exist for order number: " . $req['orderNumber'];
             }
