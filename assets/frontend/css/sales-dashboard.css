@@ -204,7 +204,8 @@ th {
 }
 
 .prelim-summary-btn:hover {
-    color: #FF7043
+    background: #FF7043;
+    color: #fff;
 }
  
 /* .btn {
