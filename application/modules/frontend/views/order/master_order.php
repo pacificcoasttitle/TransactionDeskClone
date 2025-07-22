@@ -222,6 +222,31 @@
 									<input type="text" name="SecondaryOwner" id="SecondaryOwner" class="form-control" placeholder="Secondary Owner">
 								</div>
 							</div>
+							<div class="row form-group">
+								<div class="col-sm-3 align-display">
+									<input type="checkbox" class="form-control w-20 mr-5" name="IsOrganization" id="IsOrganization" value="1">
+									<span>Is Organization</span>
+								</div>
+							</div>
+
+							<div id="organization-type-fields" style="display: none;">
+								<div class="row form-group">
+									<div class="col-sm-12">
+										<select id="OrganizationType" name="OrganizationType" class="form-control">
+											<option value="">Select Organization Type</option>
+											<option value="Corporation"> Corporation  </option>
+											<option value="Limited Liability Corp"> Limited Liability Corp  </option>
+											<option value="Limited Liability Company"> Limited Liability Company  </option>
+											<option value="Limited Partnership"> Limited Partnership  </option>
+											<option value="Partnership"> Partnership  </option>
+											<option value="Trust"> Trust  </option>
+											<option value="Estate"> Estate  </option>
+											<option value="Other"> Other  </option>
+										</select>
+									</div>
+								</div>
+							</div>
+
 
 							<div class="row form-grp-title">
 								<div class="col-sm-12">
@@ -290,7 +315,7 @@
 									</select>
 								</div>
 							</div>
-
+							
 							<div class="row form-group">
 								<div class="col-sm-12">
 									<select id="TransactionType" name="TransactionType" class="form-control">
@@ -314,6 +339,12 @@
 								<div class="row form-group">
 									<div class="col-sm-12">
 										<input type="text" class="form-control" data-type="number"  name="loanAmount" id="loanAmount" placeholder="Loan Amount">
+									</div>
+								</div>
+
+								<div class="row form-group coverage-field" style="display:none;">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" data-type="number"  name="coverageAmount" id="coverageAmount" placeholder="Coverage Amount">
 									</div>
 								</div>
 
