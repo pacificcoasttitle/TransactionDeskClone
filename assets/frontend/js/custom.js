@@ -566,7 +566,7 @@ $(document).ready(function () {
     });
 
     $("#sales-loan-amount-fields #loanAmount").focusout(function () {
-        var selectedText = $(this).find('option:selected').text();
+        var selectedText = $("#ProductTypeID").find('option:selected').text();
         $('#ProductType').val(selectedText);
         if (selectedText.toLowerCase() == 'full alta') {
             $("#coverageAmount").prop('required', true);
@@ -582,9 +582,7 @@ $(document).ready(function () {
         $("#coverageAmount").val(num2);
 
     });
-    $("div").focus(function () {
 
-    })
     $('#TransactionType').change(function () {
         var selectedText = $(this).find('option:selected').text();
         console.log('selectedText ==', selectedText);
