@@ -477,7 +477,7 @@ class Home extends MX_Controller
                         // $place_order['SalesPrice'] = $SalesAmount; //
                     }
                     $orderReq['sellerDetails']['OrganizationType'] = $OrganizationType;
-                    $orderReq['sellerDetails']['IsOrganization'] = $IsOrganization;
+                    $orderReq['sellerDetails']['IsOrganization'] = ($IsOrganization) ? "true" : "false";
 
                     // $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = [];
@@ -668,8 +668,10 @@ class Home extends MX_Controller
                     'title_officer'        => $TitleOfficer,
                     'sales_amount'         => $SalesAmount,
                     'loan_amount'          => $LoanAmount,
+                    'coverage_amount'      => $coverageAmount,
                     'loan_number'          => $LoanNumber,
                     'transaction_type'     => $TransactionType,
+                    'organization_type'    => $OrganizationType,
                     'purchase_type'        => $softproProductTypeId,
                     'product_type'         => $softproProductTypeId,
                     'order_type'           => $softproOrderTypeId,
