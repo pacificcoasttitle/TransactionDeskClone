@@ -5,7 +5,7 @@
 class Home extends MX_Controller
 {
 
-    private $version  = '06';
+    private $version  = '06.01';
     private $custom_js_version = '07';
 
     public function __construct()
@@ -1405,7 +1405,7 @@ class Home extends MX_Controller
             // $this->template->addJS(base_url('assets/frontend/js/order.js?v=' . $this->version));
             $this->salesdashboardtemplate->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/additional-methods.min.js'));
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/smart-form.js?v=1'));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/smart-form.js?v=' . $this->version));
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/custom.js?v=' . $this->version));
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order.js?v=' . $this->version));
