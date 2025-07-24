@@ -6051,10 +6051,12 @@ class Cron extends MX_Controller
                     $update_data[$key]['closer_examiner'] = $row['Escrow officer/Closer'];
                     $update_data[$key]['lookup_code']     = $row['Office LookupCode'];
                     $update_data[$key]['officer_name']    = $row['Officer Name'];
+                    $update_data[$key]['email_address']    = $row['Email'];
                 } else {
                     $insert_data[$key]['closer_examiner']   = $row['Escrow officer/Closer'];
                     $insert_data[$key]['lookup_code']       = $row['Office LookupCode'];
                     $insert_data[$key]['officer_name']      = $row['Officer Name'];
+                    $insert_data[$key]['email_address']    = $row['Email'];
                     $insert_data[$key]['is_escrow_officer'] = 1;
                 }
             }
