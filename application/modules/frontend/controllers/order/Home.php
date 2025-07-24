@@ -338,6 +338,10 @@ class Home extends MX_Controller
                 if (isset($lenderEmail) && !empty($lenderEmail)) {
                     $parties_email[] = $lenderEmail;
                 }
+                
+                if (isset($escrowOfficerDetails) && !empty($escrowOfficerDetails) && !empty($escrowOfficerDetails['email_address'])) {
+                    $parties_email[] = $escrowOfficerDetails['email_address'];
+                } 
 
                 $AdditionalEmails = $this->input->post('AdditionalEmail');
                 if (isset($AdditionalEmails) && !empty($AdditionalEmails)) {
