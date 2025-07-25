@@ -5536,7 +5536,7 @@ class Order
                     'created_at'    => date("Y-m-d H:i:s"),
                 ];
                 // print_r($softproLog);die;
-                $this->db->insert('pct_failed_api_logs', $failedApiLog);
+                $this->CI->db->insert('pct_failed_api_logs', $failedApiLog);
                 /* End add softpro api logs */
             } else {
                 /* Start add softpro api logs */
