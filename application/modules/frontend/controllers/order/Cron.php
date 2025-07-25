@@ -1851,6 +1851,11 @@ class Cron extends MX_Controller
 
         $this->db->where("DATE(created) < (curdate() - INTERVAL " . getenv('NO_OF_DAYS_TO_KEEP_API_LOGS') . " DAY)");
         $this->db->delete('pct_order_cron_logs');
+
+        $this->db->where("DATE(created_at) < (curdate() - INTERVAL 1 DAY)");
+        $this->db->where("is_synced", 1);
+        $this->db->delete('sp_file_upload_logs');
+        $this->db->query('OPTIMIZE TABLE sp_file_upload_logs');
     }
 
     public function exportUsers()
@@ -7881,7 +7886,8 @@ class Cron extends MX_Controller
         $this->load->model('order/twilioMessage');
         $reqData     = file_get_contents("php://input");
 
-        // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"TEST-20001614-OCT","Id":"04-035","FileUploadedStatus":false,"data":null}';
+        // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"TEST-20001696-OCT","Id":"04-035","FileUploadedStatus":false,"data":null}';
+        // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"TEST-20001696-OCT","Id":"03-020","FileUploadedStatus":false,"data":null}';
         // $reqData = '{"Status":200,"Message":"Success","OrderNumber":"20000881-OCT","Id":"03-020","FileUploadedStatus":false,"data":null}';
         $logid =  $this->apiLogs->syncLogs(0, 'softpro', 'received_milestone_update', 'received_milestone_update', $reqData, [], 0, 0);
         $response    = json_decode($reqData, true);
@@ -7909,18 +7915,21 @@ class Cron extends MX_Controller
             }
 
             $this->load->library('order/softPro');
-            $this->db->select('o.id, o.file_number, p.full_address, p.address, p.city, p.state, p.zip, p.id as property_id, u.id as sales_rep_id, u.email_address, u.phone, u.first_name, u.last_name, u.notify_disburse_funds, u.notify_recording_confirm');
+            $this->db->select('o.id, o.file_number, p.full_address, p.address, p.city, p.state, p.zip, p.id as property_id, u.id as sales_rep_id, u.email_address, u.phone, u.first_name, u.last_name, u.notify_disburse_funds, u.notify_recording_confirm, escrow.email_address as escrow_email, escrow.first_name as escrow_first_name, escrow.last_name as escrow_last_name, escrow.notify_disburse_funds as escrow_notify_disburse_funds, escrow.notify_recording_confirm as escrow_notify_recording_confirm, lender.email_address as lender_email, lender.first_name as lender_first_name, lender.last_name as lender_last_name, lender.notify_disburse_funds as lender_notify_disburse_funds, lender.notify_recording_confirm as lender_notify_recording_confirm');
             $this->db->from('order_details as o');
             $this->db->join('property_details as p', 'o.property_id = p.id');
             $this->db->join('transaction_details as t', 'o.transaction_id = t.id');
             $this->db->join('pct_softpro_lookup_table as u', 't.sales_representative = u.id', 'left');
+            $this->db->join('pct_softpro_lookup_table as lender', 'p.lender_id = lender.id', 'left');
+            $this->db->join('pct_softpro_lookup_table as escrow', 'p.escrow_id = escrow.id', 'left');
             $this->db->where('o.file_number', $response['OrderNumber']);
             $filesResult = $this->db->get()->row_array();
             $fileNumber = $response['OrderNumber'];
             $from        = env('TWILIO_FROM');
-            
-            // if (!empty($filesResult) && !empty($filesResult['phone'])) {
-            if (!empty($filesResult)) {
+            // echo "<pre>";
+            // print_r($filesResult);die;
+            if (!empty($filesResult) && !empty($filesResult['phone'])) {
+            // if (!empty($filesResult)) {
                 if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
                 // if (false) {
                     $twilio['message'] = $reqData;
@@ -7946,7 +7955,7 @@ class Cron extends MX_Controller
                     $phoneNumber = $filesResult['phone'];
                     $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
                     $propertyAddress = $filesResult['full_address'];
-                    $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
+                    $filesResult['timestamp'] = $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
                     
                     $message = "";
                     if ($taskId == '03-020') {
@@ -8003,27 +8012,21 @@ class Cron extends MX_Controller
                     $twilio['message_sid'] = $res['sid'] ?? $sid;
                     $twilio['error_code'] = $res['errorCode'];
                     $twilio['error_message'] = $res['errorMessage'];
-                    // if($res['msg_status'] == 'success') {
-
-                    //     $data['message'] = array(
-                    //         'message' => $res['body'] ?? $message,
-                    //         'sent_from' => $res['from'] ?? $from,
-                    //         'sent_to' => $res['to'] ?? $phoneNumber,
-                    //         'status' => $res['msg_status'],
-                    //         'message_sid' => $res['sid'] ?? $sid,
-                    //         'error_code' => $res['errorCode'],
-                    //         'error_message' => $res['errorMessage'],
-                    //     );
-                    //     $this->twilioMessage->insert($data);
-                    // }
-                }
-
+                }    
             } else {
                 $twilio['message'] = $message;
                 $twilio['sent_from'] = $from;
                 $twilio['status'] = $status = 'error';
                 $twilio['error_message'] = $resMsg = "Order number not exist or Sales rep phone number not linked.";
                 $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $resMsg, 0, $logid);
+            }
+            
+            if ($taskId == '03-020' && ($filesResult['lender_notify_disburse_funds'] == 1 || $filesResult['escrow_notify_disburse_funds'] == 1)) {
+                // $this->order->sendRecordingConfirmationEmail($filesResult, 'recording_confirmation');
+            }
+            
+            if ($taskId == '04-035' && ($filesResult['lender_notify_recording_confirm'] == 1 || $filesResult['escrow_notify_recording_confirm'] == 1)) {
+                // $this->order->sendRecordingConfirmationEmail($filesResult, 'disburse_funds');
             }
         } else {
             $twilio['message'] = $reqData;
@@ -8365,5 +8368,35 @@ class Cron extends MX_Controller
         }
         echo json_encode(['status' => 'success','message' => $count . ' Orders prelim document updated successfully']);
         
+    }
+
+    public function recallFailedAPI() {
+        
+        $records = $this->db->select('id, request_type, request_url, request_data')
+                            ->from('pct_failed_api_logs')
+                            ->where('status', 0)
+                            ->limit(20)
+                            ->order_by('id', 'asc')
+                            // ->group_by('order_number')
+                            ->get()->result_array();
+        if (!empty($records)) {
+            foreach ($records as $key => $value) {
+                $this->load->library('order/softPro');
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', $value['request_type'], $value['request_url'], $value['request_data'], [], 0, 0);
+                $result = $this->softpro->make_request('POST', $value['request_type'], $value['request_data']);
+                $response = json_decode($result, true);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', $value['request_type'], $value['request_url'], $value['request_data'], json_encode($response), 0, $logid);
+                
+                if (isset($response) && !empty($response)) {
+                    foreach ($response as $key => $res) {
+                        if ($response[0]['Status'] == 200) {
+                            $this->db->where('id', $value['id']);
+                            $this->db->update('pct_failed_api_logs', ['status' => 1]);
+                        }
+                    }
+                }
+            }
+        }
+    
     }
 }

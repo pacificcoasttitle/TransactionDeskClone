@@ -258,6 +258,7 @@ $route['order/admin/softpro-new-users']             = 'admin/order/home/spNewUse
 $route['order/admin/add-softpro-new-user']          = 'admin/order/home/addSoftProNewUser';
 $route['order/admin/generate-lookupcode']           = 'admin/order/home/generateLookupCode';
 $route['order/admin/generate-company-lookupcode']   = 'admin/order/home/generateCompanyLookupCode';
+$route['update-users-mail-flag']                    = 'admin/order/home/updateUsersMailFlag';
 
 $route['order/admin/softpro-companies']             = 'admin/order/home/softproCompanies';
 $route['order/admin/softpro-add-company']                   = 'admin/order/home/spAddCompany';
