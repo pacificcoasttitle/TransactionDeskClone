@@ -5526,6 +5526,17 @@ class Order
                 ];
 
                 $this->CI->db->insert('pct_resware_log', $softproLog);
+
+                $failedApiLog = [
+                    'request_type'  => 'update_task',
+                    'request_url'   => getSoftproAPIUrl('update_task'),
+                    'request_data'  => $taskData,
+                    'response_data' => json_encode($taskResponse),
+                    'status'        => 0,
+                    'created_at'    => date("Y-m-d H:i:s"),
+                ];
+                // print_r($softproLog);die;
+                $this->db->insert('pct_failed_api_logs', $failedApiLog);
                 /* End add softpro api logs */
             } else {
                 /* Start add softpro api logs */
