@@ -5938,4 +5938,59 @@ class Order
         $prompt .= "Goal: Output should be easy to scan and ready for rendering in a web dashboard or client-facing PDF report. ";
         return $this->CI->chatgpt->make_request($prompt);
     }
+
+    public function sendRecordingConfirmationEmail($orderDetails, $emailType = 'recording_confirmation') {
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->helper('sendemail');
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $to = [];
+        if ($emailType == 'recording_confirmation') {
+            $subject = 'Recording Confirmation for File Number ' . $orderDetails['file_number'];
+            if ($orderDetails['lender_notify_recording_confirm'] == 1 && !empty($orderDetails['lender_email'])) {
+                $to[] = [$orderDetails['lender_email']];
+            }
+            if ($orderDetails['escrow_notify_recording_confirm'] == 1 && !empty($orderDetails['escrow_email'])) {
+                $to[] = [$orderDetails['escrow_email']];
+            }
+        } else if ($emailType == 'disburse_funds') {
+            $subject = 'Disburse Funds for File Number ' . $orderDetails['file_number'];
+            if ($orderDetails['lender_notify_disburse_funds'] == 1 && !empty($orderDetails['lender_email'])) {
+                $to[] = [$orderDetails['lender_email']];
+            }
+            if ($orderDetails['escrow_notify_disburse_funds'] == 1 && !empty($orderDetails['escrow_email'])) {
+                $to[] = [$orderDetails['escrow_email']];
+            }
+        }
+        // $to = $orderDetails['email_to'];
+        // $to = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+        // $cc = array('ghernandez@pct.com');
+        // $cc = array('ghernandez@pct.com', 'piyush.j@crestinfosystems.com', 'piyush-crest@yopmail.com');
+
+        if ($emailType == 'recording_confirmation') {
+            // $to = 'ghernandez@pct.com';
+            $message = $this->CI->load->view('emails/confirmation_recording_email.php', $orderDetails, true);
+        } else {
+            $message = $this->CI->load->view('emails/disburse_funds_email.php', $orderDetails, true);
+        }
+
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'file' => $file,
+            'message' => json_encode($orderDetails),
+            'cc' => $cc,
+        );
+        //$to = 'ghernandez@pct.com';
+        //$cc = array();
+        if (!empty($to)) {
+            $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_' . $emailType , '', $mailParams, array(), 0, 0);
+            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
+            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_' . $emailType, '', $mailParams, array('status' => $mail_result), 0, $logid);
+            return $mail_result;
+        }
+        return false;
+    }
 }

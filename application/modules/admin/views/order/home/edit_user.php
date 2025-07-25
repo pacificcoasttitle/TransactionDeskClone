@@ -24,7 +24,7 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-sm-6">
-                <h1 class="h3 text-gray-800">Add New User</h1>
+                <h1 class="h3 text-gray-800">Edit User</h1>
             </div>
             <div class="col-sm-6">
                 <a href="<?php echo $back_url ?>" class="btn btn-info btn-icon-split float-right mr-2">
