@@ -8463,6 +8463,59 @@ function updateMailNotificationReps() {
     });
 }
 
+function updateMailNotificationUsers() {
+    $('input[type="checkbox"]').on('change', function () {
+        $('body').animate({ opacity: 0.5 }, "slow");
+        var id = $(this).attr('id');
+        if ($(this).is(":checked")) {
+            var flag = 1;
+        } else {
+            var flag = 0;
+        }
+        $.ajax({
+            url: base_url + "update-users-mail-flag",
+            method: "POST",
+            data: {
+                id: id,
+                flag: flag
+            },
+            success: function (data) {
+                var result = jQuery.parseJSON(data);
+                if (result.status == 'success') {
+                    $('body').animate({ opacity: 1.0 }, "slow");
+                    $('#customer_success_msg').html(result.msg).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#customer_success_msg").offset().top
+                    }, 1000);
+                    sales_rep_list.ajax.reload(null, false);
+                    setTimeout(function () {
+                        $('#customer_success_msg').html('').hide();
+                    }, 4000);
+                } else {
+                    $('#customer_error_msg').html(result.message).show();
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#customer_error_msg").offset().top
+                    }, 1000);
+
+                    setTimeout(function () {
+                        $('#customer_error_msg').html('').hide();
+                    }, 4000);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                $('#customer_error_msg').html('Something went wrong. Please try it again.').show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#customer_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#customer_error_msg').html('').hide();
+                }, 4000);
+            }
+        });
+    });
+}
+
 function syncSoftProOrdersStatus() {
     $("#page-preloader").show();
 

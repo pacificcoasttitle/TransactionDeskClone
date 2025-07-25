@@ -8951,6 +8951,12 @@ class Home extends MX_Controller
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['company_name'];
                 $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
+                if ($value['notify_recording_confirm'] == 1) {
+                    $checked = 'checked';
+                } else {
+                    $checked = '';
+                }
+                $nestedData[] = "<input $checked onclick='updateMailNotificationUsers();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 // if ($value['is_mortgage_user'] == 1) {
                 //     $checked = 'checked';
                 // } else {
@@ -9383,6 +9389,25 @@ class Home extends MX_Controller
         
         $this->session->set_flashdata('success', 'Mail sent successfully to '. $buyerRecipientEmail);
         redirect(base_url() . 'order/admin/manual-buyers');
+    }
+
+    public function updateUsersMailFlag()
+    {
+        $userId             = $this->input->post('id');
+        $flag     = $this->input->post('flag');
+        $data['notify_recording_confirm'] = $flag;
+        $data['notify_disburse_funds'] = $flag;
+        $data['updated_at']  = date("Y-m-d H:i:s");
+        $condition           = [
+            'id' => $userId,
+        ];
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
+        $data = ['status' => 'success', 'msg' => 'Email flag updated successfully for user.'];
+        /** Save user Activity */
+        $activity  = 'Recording confirmation email notification value: ' . $flag . ' updated successfully for user id : ' . $user_id;
+        $this->order->logAdminActivity($activity);
+        /** End Save user activity */
+        echo json_encode($data);
     }
     
 }
