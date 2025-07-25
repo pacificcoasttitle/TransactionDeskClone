@@ -1851,6 +1851,11 @@ class Cron extends MX_Controller
 
         $this->db->where("DATE(created) < (curdate() - INTERVAL " . getenv('NO_OF_DAYS_TO_KEEP_API_LOGS') . " DAY)");
         $this->db->delete('pct_order_cron_logs');
+
+        $this->db->where("DATE(created_at) < (curdate() - INTERVAL 1 DAY)");
+        $this->db->where("is_synced", 1);
+        $this->db->delete('sp_file_upload_logs');
+        $this->db->query('OPTIMIZE TABLE sp_file_upload_logs');
     }
 
     public function exportUsers()
@@ -8363,5 +8368,35 @@ class Cron extends MX_Controller
         }
         echo json_encode(['status' => 'success','message' => $count . ' Orders prelim document updated successfully']);
         
+    }
+
+    public function recallFailedAPI() {
+        
+        $records = $this->db->select('id, request_type, request_url, request_data')
+                            ->from('pct_failed_api_logs')
+                            ->where('status', 0)
+                            ->limit(20)
+                            ->order_by('id', 'asc')
+                            // ->group_by('order_number')
+                            ->get()->result_array();
+        if (!empty($records)) {
+            foreach ($records as $key => $value) {
+                $this->load->library('order/softPro');
+                $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', $value['request_type'], $value['request_url'], $value['request_data'], [], 0, 0);
+                $result = $this->softpro->make_request('POST', $value['request_type'], $value['request_data']);
+                $response = json_decode($result, true);
+                $this->apiLogs->syncLogs($userdata['id'], 'softpro', $value['request_type'], $value['request_url'], $value['request_data'], json_encode($response), 0, $logid);
+                
+                if (isset($response) && !empty($response)) {
+                    foreach ($response as $key => $res) {
+                        if ($response[0]['Status'] == 200) {
+                            $this->db->where('id', $value['id']);
+                            $this->db->update('pct_failed_api_logs', ['status' => 1]);
+                        }
+                    }
+                }
+            }
+        }
+    
     }
 }
