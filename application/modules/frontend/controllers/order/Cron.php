@@ -7668,7 +7668,7 @@ class Cron extends MX_Controller
             $from_mail = env('FROM_EMAIL');
             $to = 'ghernandez@pct.com';
             $subject = 'Prelim Summary : '. $response['OrderNumber'];
-            $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+            $cc = ['piyush-crest@yopmail.com'];
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
@@ -8022,7 +8022,7 @@ class Cron extends MX_Controller
             }
             
             if ($taskId == '03-020' && ($filesResult['lender_notify_disburse_funds'] == 1 || $filesResult['escrow_notify_disburse_funds'] == 1)) {
-                // $this->order->sendRecordingConfirmationEmail($filesResult, 'recording_confirmation');
+                $this->order->sendRecordingConfirmationEmail($filesResult, 'recording_confirmation');
             }
             
             if ($taskId == '04-035' && ($filesResult['lender_notify_recording_confirm'] == 1 || $filesResult['escrow_notify_recording_confirm'] == 1)) {
