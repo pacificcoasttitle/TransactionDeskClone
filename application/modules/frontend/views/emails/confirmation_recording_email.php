@@ -127,7 +127,9 @@ u + #body a {color:inherit;text-decoration:none;font-size:inherit;font-family:in
   <!-- blue-header -->
   <tbody><tr>
     <td align="center" class="img-responsive container-padding">
-      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/aca06648-4cdf-5e58-17d4-38fabbdc3d13.jpg" border="0" alt="picture">
+      <!-- <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="https://mcusercontent.com/3f123598483b787fa180fff0f/images/aca06648-4cdf-5e58-17d4-38fabbdc3d13.jpg" border="0" alt="picture"> -->
+      <img class="auto-width" style="display:block;width:100%;max-width:100%;border:0px;" width="640" src="<?php echo base_url() . 'assets/frontend/images/email/ea34db70-85fd-442d-8305-d93773dde1ff.jpg'; ?>" border="0" alt="picture">
+      
     </td>
   </tr>
   <!-- blue-header -->
