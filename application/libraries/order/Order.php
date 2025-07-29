@@ -3703,7 +3703,7 @@ class Order
                     $subject = 'Daily Production';
                     $to = $officer['email_address'];
                     // $to = 'piyush.j@crestinfosystems.com';
-                    $cc = array('ghernandez@pct.com');
+                    // $cc = array('ghernandez@pct.com');
                     // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
 
                     /** Get CC for daily email receiver */
