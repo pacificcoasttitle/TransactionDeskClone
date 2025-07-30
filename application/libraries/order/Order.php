@@ -6000,7 +6000,13 @@ class Order
             $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_' . $emailType , '', $mailParams, array(), 0, 0);
             $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
             $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_' . $emailType, '', $mailParams, array('status' => $mail_result), 0, $logid);
+            if ($mail_result) {
+                $updateOrderDetails['recording_confirmation_sent'] = 1;
+                $condition = ['id' => $orderDetails['id']];
+                $this->update($updateOrderDetails, $condition);
+            }
             return $mail_result;
+
         }
         return false;
     }
