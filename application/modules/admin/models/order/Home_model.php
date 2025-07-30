@@ -2334,6 +2334,83 @@ class Home_model extends CI_Model
         ];
     }
 
+    public function get_recording_email_logs($params)
+    {
+        $limit  = isset($params['length']) ? (int) $params['length'] : null;
+        $offset = isset($params['start']) ? (int) $params['start'] : null;
+        $keyword = isset($params['searchvalue']) ? trim($params['searchvalue']) : null;
+
+        // Common FROM and JOIN setup
+        $base_from = function () {
+            $this->db->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('pct_softpro_lookup_table as u', 
+                    'property_details.lender_id = u.id OR property_details.escrow_id = u.id', 'left');
+        };
+
+        // Common WHERE clause
+        $apply_common_filters = function () {
+            $this->db->where('order_details.recording_confirmation_sent', 1);
+            $this->db->where('order_details.is_softpro_order', 1);
+        };
+
+        // Count total records
+        $this->db->select('order_details.id');
+        $base_from();
+        $apply_common_filters();
+        $total_records = $this->db->count_all_results();
+
+        // Apply search filter if any
+        if (!empty($keyword)) {
+            $this->db->select('order_details.id');
+            $base_from();
+            $apply_common_filters();
+            $this->db->group_start()
+                ->like('order_details.file_number', $keyword)
+                ->or_like('u.first_name', $keyword)
+                ->or_like('u.last_name', $keyword)
+                ->group_end();
+            $filter_total_records = $this->db->count_all_results();
+        } else {
+            $filter_total_records = $total_records;
+        }
+
+        // Fetch final result
+        $this->db->select('
+            order_details.id,
+            order_details.file_number,
+            order_details.recording_confirmation_sent,
+            property_details.full_address,
+            CONCAT(u.first_name, " ", u.last_name) as full_name,
+            u.email_address as client_email,
+            u.company_name as company_name
+        ');
+        $base_from();
+        $apply_common_filters();
+        if (!empty($keyword)) {
+            $this->db->group_start()
+                ->like('order_details.file_number', $keyword)
+                ->or_like('u.first_name', $keyword)
+                ->or_like('u.last_name', $keyword)
+                ->group_end();
+        }
+
+        $this->db->order_by('order_details.id', 'desc');
+
+        if (!is_null($limit)) {
+            $this->db->limit($limit, $offset);
+        }
+
+        $query = $this->db->get();
+        $admin_logs_list = $query->num_rows() > 0 ? $query->result_array() : [];
+
+        return [
+            'recordsTotal'    => $total_records,
+            'recordsFiltered' => $filter_total_records,
+            'data'            => $admin_logs_list,
+        ];
+    }
+
     public function get_sms_logs($params)
     {
         // $this->db->from('admin')

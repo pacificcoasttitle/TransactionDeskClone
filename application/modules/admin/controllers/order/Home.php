@@ -6417,6 +6417,53 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
+    public function recordingEmailLogs()
+    {
+        $data          = [];
+        $data['title'] = 'PCT Order: Recording Email Logs';
+        $this->admintemplate->show("order/home", "recording_email_logs", $data);
+    }
+
+    public function get_recording_email_logs()
+    {
+        $params = [];
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length']      = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 10;
+            $params['start']       = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir']    = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno                = ($params['start'] / $params['length']) + 1;
+            $admin_logs_list       = $this->home_model->get_recording_email_logs($params);
+            $json_data['draw']     = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $admin_logs_list       = $this->home_model->get_recording_email_logs($params);
+        }
+
+        $data = [];
+        // echo "<pre>";
+        // print_r($admin_logs_list);die;
+        if (isset($admin_logs_list['data']) && !empty($admin_logs_list['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($admin_logs_list['data'] as $key => $value) {
+                $nestedData   = [];
+                $nestedData[] = $i;
+                $nestedData[] = $value['file_number'];
+                $nestedData[] = $value['full_name'];
+                $nestedData[] = $value['company_name'];
+                $nestedData[] = $value['recording_confirmation_sent'] ? 'Yes' : 'No';
+                $data[]       = $nestedData;
+                $i++;
+            }
+        }
+        $json_data['recordsTotal']    = intval($admin_logs_list['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($admin_logs_list['recordsFiltered']);
+        $json_data['data']            = $data;
+        echo json_encode($json_data);
+    }
+
     public function smsLogs()
     {
         $data          = [];
