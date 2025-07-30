@@ -5513,7 +5513,7 @@ class Order
         $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', getSoftproAPIUrl('update_task'), $taskData, json_encode($taskResponse), 0, $logid);
 
         if (isset($taskResponse) && !empty($taskResponse)) {
-            if (isset($taskResponse['status']) && $taskResponse['status'] == 'error') {
+            if (isset($taskResponse['Status']) && ($taskResponse['Status'] == 400 || $taskResponse['Status'] == 'error')) {
                 // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
                 /* Start add softpro api logs */
                 $softproLog = [
