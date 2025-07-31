@@ -5511,7 +5511,9 @@ class Order
         $logid = $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', getSoftproAPIUrl('update_task'), $taskData, [], 0, 0);
         $taskResponse = $this->CI->softpro->make_request('POST', 'update_task', $taskData);
         $this->CI->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_task', getSoftproAPIUrl('update_task'), $taskData, json_encode($taskResponse), 0, $logid);
-
+        $taskResponse = json_decode($taskResponse, true);
+        $taskResponse = $taskResponse[0];
+        
         if (isset($taskResponse) && !empty($taskResponse)) {
             if (isset($taskResponse['Status']) && ($taskResponse['Status'] == 400 || $taskResponse['Status'] == 'error')) {
                 // $message = isset($response['message']) && !empty($response['message']) ? $response['message'] : '';
