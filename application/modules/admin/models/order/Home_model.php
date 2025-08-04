@@ -2345,7 +2345,9 @@ class Home_model extends CI_Model
             $this->db->from('order_details')
                 ->join('property_details', 'order_details.property_id = property_details.id')
                 ->join('pct_softpro_lookup_table as u', 
-                    'property_details.lender_id = u.id OR property_details.escrow_id = u.id', 'left');
+                    'property_details.lender_id = u.id  AND u.notify_recording_confirm = 1', 'left')
+                ->join('pct_softpro_lookup_table as eu', 
+                    'property_details.escrow_id = eu.id  AND eu.notify_recording_confirm = 1', 'left');
         };
 
         // Common WHERE clause
@@ -2369,6 +2371,8 @@ class Home_model extends CI_Model
                 ->like('order_details.file_number', $keyword)
                 ->or_like('u.first_name', $keyword)
                 ->or_like('u.last_name', $keyword)
+                ->or_like('eu.first_name', $keyword)
+                ->or_like('eu.last_name', $keyword)
                 ->group_end();
             $filter_total_records = $this->db->count_all_results();
         } else {
@@ -2381,9 +2385,12 @@ class Home_model extends CI_Model
             order_details.file_number,
             order_details.recording_confirmation_sent,
             property_details.full_address,
-            CONCAT(u.first_name, " ", u.last_name) as full_name,
-            u.email_address as client_email,
-            u.company_name as company_name
+            CONCAT(u.first_name, " ", u.last_name) as lender_full_name,
+            u.email_address as lender_email,
+            u.company_name as lender_company_name,
+            CONCAT(eu.first_name, " ", eu.last_name) as escrow_full_name,
+            eu.email_address as escrow_email,
+            eu.company_name as escrow_company_name
         ');
         $base_from();
         $apply_common_filters();
@@ -2392,6 +2399,8 @@ class Home_model extends CI_Model
                 ->like('order_details.file_number', $keyword)
                 ->or_like('u.first_name', $keyword)
                 ->or_like('u.last_name', $keyword)
+                ->or_like('eu.first_name', $keyword)
+                ->or_like('eu.last_name', $keyword)
                 ->group_end();
         }
 
