@@ -6450,12 +6450,12 @@ class Home extends MX_Controller
             foreach ($admin_logs_list['data'] as $key => $value) {
                 $name = '';
                 $companyName = '';
-                if (!isset($value['lender_full_name']) || empty($value['lender_full_name'])) {
+                if (isset($value['lender_full_name']) && !empty($value['lender_full_name'])) {
                     $name = $value['lender_full_name'];
                     $companyName = $value['lender_company_name'];
                 }
 
-                if (!isset($value['escrow_full_name']) || empty($value['escrow_full_name'])) {
+                if (isset($value['escrow_full_name']) && !empty($value['escrow_full_name'])) {
                     if (empty($name)) {
                         $name = $value['escrow_full_name'];
                         $companyName = $value['escrow_company_name'];
