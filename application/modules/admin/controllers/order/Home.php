@@ -6448,11 +6448,27 @@ class Home extends MX_Controller
         if (isset($admin_logs_list['data']) && !empty($admin_logs_list['data'])) {
             $i = $params['start'] + 1;
             foreach ($admin_logs_list['data'] as $key => $value) {
+                $name = '';
+                $companyName = '';
+                if (!isset($value['lender_full_name']) || empty($value['lender_full_name'])) {
+                    $name = $value['lender_full_name'];
+                    $companyName = $value['lender_company_name'];
+                }
+
+                if (!isset($value['escrow_full_name']) || empty($value['escrow_full_name'])) {
+                    if (empty($name)) {
+                        $name = $value['escrow_full_name'];
+                        $companyName = $value['escrow_company_name'];
+                    } else {
+                        $name = $name . ' & ' . $value['escrow_full_name'];
+                        $companyName = $companyName . ' & ' . $value['escrow_company_name'];
+                    }
+                }
                 $nestedData   = [];
                 $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
-                $nestedData[] = $value['full_name'];
-                $nestedData[] = $value['company_name'];
+                $nestedData[] = $name;
+                $nestedData[] = $companyName;
                 $nestedData[] = $value['recording_confirmation_sent'] ? 'Yes' : 'No';
                 $data[]       = $nestedData;
                 $i++;
