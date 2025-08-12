@@ -3641,8 +3641,8 @@ class Cron extends MX_Controller
                     $closedDate  = '';
     
                     $file_number = $order['OrderNumber'];
-                    $fileStatus  = $order['OrderStatus'];
-                    $closedDate  = $order['LastModifiedOn'];
+                    $fileStatus  = strtolower($order['OrderStatus']);
+                    $closedDate  = $order['CompletedDate'] ?? '';
     
                     // print_r($order);die;
                     $completed_date = null;
@@ -3661,7 +3661,7 @@ class Cron extends MX_Controller
                         $updateArray = [
                             'file_number'                => $file_number,
                             'softpro_status'             => strtolower($fileStatus),
-                            'resware_closed_status_date' => (strtolower($fileStatus) == 'closed') ? $completed_date : null,
+                            'resware_closed_status_date' => (strtolower($fileStatus) == 'completed') ? $completed_date : null,
                             // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                             // 'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                             'updated_at'                 => date('Y-m-d H:i:s'),
@@ -7121,7 +7121,7 @@ class Cron extends MX_Controller
                         $orderData = [
                             'softpro_status' => $orderStatus,
                         ];
-                        if ($orderStatus == 'closed') {
+                        if ($orderStatus == 'completed') {
                             $orderData['resware_closed_status_date'] = $completed_date;
                             // $orderData['sent_to_accounting_date'] = $completed_date;
                         }
