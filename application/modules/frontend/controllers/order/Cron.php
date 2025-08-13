@@ -3667,16 +3667,35 @@ class Cron extends MX_Controller
                             'updated_at'                 => date('Y-m-d H:i:s'),
                         ];
 
+                        $this->home_model->update($updateArray, $orderCondition, 'order_details');
                     }
+
+                    
+                    
+                    // if (!empty($orderDetails) && $orderDetails['softpro_status'] != 'closed' && true) {
+                        // if (!empty($orderDetails) && $orderDetails['softpro_status'] != 'closed' && strtolower($fileStatus) == 'closed' && $orderDetails['transaction_type'] == 'Purchase') {
+                        // $this->sendEmailToBuyerAgent($orderDetails);
+                    // }
+                }
+                // echo "<pre>";
+                // print_r($closedFileNumbers);die;
+                // if (!empty($updateArray)) {
+                //     $chunk1 = array_chunk($updateArray, 100);
+                //     for ($i = 0; $i < count($chunk1); $i++) {
+                //         $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
+                //     }
+                // }
     
-                $updateData = ['softpro_status' => 'open'];
-                $this->db->set($updateData);
-                $this->db->where('lp_file_number IS NOT NULL');
-                $this->db->where('file_number', 0);
-                $this->db->update('order_details');
+                
+                // $this->updateAllowDuplicationFlag();
                 
             }
         }
+        $updateData = ['softpro_status' => 'open'];
+        $this->db->set($updateData);
+        $this->db->where('lp_file_number IS NOT NULL');
+        $this->db->where('file_number', 0);
+        $this->db->update('order_details');
         echo json_encode(['status' => 'success','message' => 'All orders status updated successfully']);exit;
 
 
@@ -3750,6 +3769,7 @@ class Cron extends MX_Controller
         // }
 
     }
+
 
     public function removeDocServer()
     {
@@ -8399,5 +8419,145 @@ class Cron extends MX_Controller
             }
         }
     
+    }
+
+    public function generateAndSendReport()
+    {
+        $today = date('Y-m-d');
+        $dayOfWeek = date('N'); // 1=Monday, 7=Sunday
+        
+        // Determine date range based on day of week
+        if ($dayOfWeek == 3) { // Wednesday
+            $startDate = date('Y-m-d', strtotime('last monday'));
+            $endDate = date('Y-m-d'); // Today (Wednesday)
+            $reportName = 'Mon-Wed Orders Report';
+        } elseif ($dayOfWeek == 5) { // Friday
+            $startDate = date('Y-m-d', strtotime('last thursday'));
+            $endDate = date('Y-m-d'); // Today (Friday)
+            $reportName = 'Thu-Fri Orders Report';
+        } else {
+            echo "Today is not Wednesday or Friday. No report generated.";
+            return;
+        }
+        // echo $startDate . " to " . $endDate . "<br>";
+        // Get closed orders within date range
+        $orders = $this->getClosedOrders($startDate, $endDate);
+        // echo "<pre>";
+        // print_r($orders);die;
+        if (empty($orders)) {
+            echo "No closed orders found for the period.";
+            return;
+        }
+
+        // Generate CSV
+        $csvPath = $this->generateCSV($orders, $reportName);
+        
+        // Send email
+        $this->sendEmail($csvPath, $reportName, $startDate, $endDate);
+        
+        echo "Report generated and sent successfully.";
+    }
+
+    private function getClosedOrders($startDate, $endDate)
+    {
+        $this->db->select('
+            DATE(o.sent_to_accounting_date) as transaction_date,
+            o.softpro_status,
+            o.file_number as order_number,
+            CONCAT(p.address, ", ", p.city, ", ", p.state, " ", p.zip) as property_address,
+            p.city,
+            p.state,
+            p.zip,
+            CONCAT(u.first_name, " ", u.last_name) as sales_rep
+        ');
+        $this->db->from('order_details o');
+        $this->db->join('property_details p', 'o.property_id = p.id', 'left');
+        $this->db->join('transaction_details t', 'o.transaction_id = t.id', 'left');
+        $this->db->join('pct_softpro_lookup_table u', 't.sales_representative = u.id', 'left');
+        $this->db->where('o.softpro_status', 'closed');
+        // $this->db->where('o.is_imported', 1);
+        $this->db->where('DATE(o.sent_to_accounting_date) >=', $startDate);
+        $this->db->where('DATE(o.sent_to_accounting_date) <=', $endDate);
+        $this->db->order_by('o.sent_to_accounting_date', 'Desc');
+        
+        return $this->db->get()->result_array();
+    }
+
+    private function generateCSV($orders, $reportName)
+    {
+        $filename = $reportName . '_' . date('Ymd') . '.csv';
+        $filepath = FCPATH . 'uploads/reports/' . $filename;
+        
+        // Create directory if not exists
+        if (!is_dir(FCPATH . 'uploads/reports')) {
+            mkdir(FCPATH . 'uploads/reports', 0777, true);
+        }
+        
+        $file = fopen($filepath, 'w');
+        
+        // Add CSV headers
+        fputcsv($file, [
+            'Transaction Date',
+            'Order Number',
+            'Property Address',
+            'City',
+            'State',
+            'Zip',
+            'Sales Rep'
+        ]);
+        // echo "<pre>";
+        // print_r($orders);die;
+        // Add order data
+        foreach ($orders as $order) {
+            fputcsv($file, [
+                $order['transaction_date'],
+                $order['order_number'],
+                $order['property_address'],
+                $order['city'],
+                $order['state'],
+                $order['zip'],
+                $order['sales_rep']
+            ]);
+        }
+        
+        fclose($file);
+        
+        return $filepath;
+    }
+
+    private function sendEmail($csvPath, $reportName, $startDate, $endDate)
+    {
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $to = 'shuklap871@gmail.com';
+        // $cc = ['piyush.j@crestinfosystems.com'];
+        $cc = ['piyush.j@crestinfosystems.com', 'ghernandez@pct.com'];
+        $subject = $reportName . ' (' . date('M j, Y') . ')';
+        
+        $data['startDate'] = $startDate;
+        $data['endDate'] = $endDate;
+
+        $message    = $this->load->view('emails/weekly_completed_order.php', $data, true);
+        
+        $mailParams = [
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'cc' => $cc,
+            'subject' => $subject,
+            'message' => $message,
+            'attachment' => $csvPath
+        ];
+        
+        $this->load->helper('sendemail');
+        $logid = $this->apiLogs->syncLogs(0, 'weekly_order_report', 'send_email', '', $mailParams, [], 0, 0);
+        // $result = send_email($from_mail, $from_name, $to, $subject, $message, [], [], [$csvPath]);
+        $result = send_email($from_mail, $from_name, $to, $subject, $message, [$csvPath], $cc, []);
+        $this->apiLogs->syncLogs(0, 'weekly_order_report', 'send_email', '', $mailParams, ['status' => $result], 0, $logid);
+        
+        // Delete CSV after sending
+        if (file_exists($csvPath)) {
+            unlink($csvPath);
+        }
     }
 }
