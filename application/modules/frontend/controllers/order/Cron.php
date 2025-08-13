@@ -8475,7 +8475,7 @@ class Cron extends MX_Controller
         $this->db->join('transaction_details t', 'o.transaction_id = t.id', 'left');
         $this->db->join('pct_softpro_lookup_table u', 't.sales_representative = u.id', 'left');
         $this->db->where('o.softpro_status', 'closed');
-        // $this->db->where('o.is_imported', 1);
+        $this->db->where('o.is_imported', 1);
         $this->db->where('DATE(o.sent_to_accounting_date) >=', $startDate);
         $this->db->where('DATE(o.sent_to_accounting_date) <=', $endDate);
         $this->db->order_by('o.sent_to_accounting_date', 'Desc');
@@ -8532,7 +8532,7 @@ class Cron extends MX_Controller
         $to = 'shuklap871@gmail.com';
         // $cc = ['piyush.j@crestinfosystems.com'];
         $cc = ['piyush.j@crestinfosystems.com', 'ghernandez@pct.com'];
-        $subject = $reportName . ' (' . date('M j, Y') . ')';
+        $subject = 'Weekly closed order report ' . ' (' . date('M j, Y') . ')';
         
         $data['startDate'] = $startDate;
         $data['endDate'] = $endDate;
