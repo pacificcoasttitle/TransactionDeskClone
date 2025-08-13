@@ -3631,9 +3631,10 @@ class Cron extends MX_Controller
             $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_all_order_status', $reqUrl, $reqData, json_encode($response), 0, $logid);
             
             // $response = json_decode($result, true);
-            if ($response['status'] == 'success') {
+            if ($response['status'] == 'success' && isset($response['data']) && !empty($response['data'])) {
                 // Get existing emails from the database
                 $orderData   = $response['data'];
+                
                 $updateArray = [];
                 foreach ($orderData as $key => $order) {
                     $file_number = '';
@@ -3657,39 +3658,32 @@ class Cron extends MX_Controller
                             'file_number' => $file_number
                     );
                     $orderDetails = $this->order->get_order_details_with_buyeragent($orderCondition);
-                    if (strtolower($orderDetails['softpro_status']) != strtolower($fileStatus)) {
+                    if (strtolower($orderDetails['softpro_status']) != $fileStatus) {
                         $updateArray = [
                             'file_number'                => $file_number,
-                            'softpro_status'             => strtolower($fileStatus),
-                            'resware_closed_status_date' => (strtolower($fileStatus) == 'completed') ? $completed_date : null,
+                            'softpro_status'             => $fileStatus,
+                            'resware_closed_status_date' => ($fileStatus == 'completed') ? $completed_date : null,
                             // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                             // 'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                             'updated_at'                 => date('Y-m-d H:i:s'),
                         ];
 
                         $this->home_model->update($updateArray, $orderCondition, 'order_details');
+                        if (!in_array($file_number, $closedFileNumbers) && ($fileStatus == 'closed')) {
+                            $closedFileNumbers[] = $file_number;
+                        }
                     }
 
                     
-                    
                     // if (!empty($orderDetails) && $orderDetails['softpro_status'] != 'closed' && true) {
                         // if (!empty($orderDetails) && $orderDetails['softpro_status'] != 'closed' && strtolower($fileStatus) == 'closed' && $orderDetails['transaction_type'] == 'Purchase') {
-                        // $this->sendEmailToBuyerAgent($orderDetails);
-                    // }
+                            // $this->sendEmailToBuyerAgent($orderDetails);
+                            // }
                 }
-                // echo "<pre>";
-                // print_r($closedFileNumbers);die;
-                // if (!empty($updateArray)) {
-                //     $chunk1 = array_chunk($updateArray, 100);
-                //     for ($i = 0; $i < count($chunk1); $i++) {
-                //         $this->db->update_batch('order_details', $chunk1[$i], 'file_number') . "<br>";
-                //     }
-                // }
-    
-                
-                // $this->updateAllowDuplicationFlag();
-                
             }
+        }
+        if (!empty($closedFileNumbers)) {
+            $this->sendEmailForClosedOrder($closedFileNumbers);
         }
         $updateData = ['softpro_status' => 'open'];
         $this->db->set($updateData);
@@ -5045,7 +5039,7 @@ class Cron extends MX_Controller
 
     public function sendEmailForClosedOrder($fileNumbers)
     {
-        $this->db->select('order_details.file_id,
+        $this->db->select('
             order_details.file_number,
             order_details.id as order_id,
             order_details.resware_status,
@@ -5055,33 +5049,48 @@ class Cron extends MX_Controller
             client.last_name,
             client.email_address as sales_email,
             client.sales_rep_profile_thank_you_img,
+            property_details.id,
+            property_details.apn,
             property_details.full_address,
-            property_details.escrow_lender_id,
+            property_details.address,
+            property_details.city,
+            property_details.state,
+            property_details.county,
+            property_details.zip,
             escrow_details.email_address as escrow_email,
+            lender_details.email_address as lender_email,
+            title_officer.email_address as title_officer_email,
             listing_agent.email_address as listing_agent_email,
             buyer_agent.email_address as buyer_agent_email,
             sales_details.email_address as sales_rep_email,
+            escrow_officer.email_address as escrow_officer_email,
             transaction_details.sales_representative');
         $this->db->from('order_details');
         $this->db->where_in('order_details.file_number', $fileNumbers);
-        //$this->db->where('order_details.is_thank_you_email_sent', 0);
         $this->db->where('order_details.customer_id > 0');
         // $this->db->where('property_details.escrow_lender_id != ""');
         // $this->db->where('transaction_details.sales_representative != ""');
         $this->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
         $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
-        $this->db->join('customer_basic_details as client ', 'client.id = order_details.customer_id', 'inner');
-        $this->db->join('customer_basic_details as sales_details ', 'sales_details.id = transaction_details.sales_representative', 'inner');
-        $this->db->join('customer_basic_details as escrow_details', 'escrow_details.id = property_details.escrow_lender_id', 'left');
-        $this->db->join('agents as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id', 'left');
-        $this->db->join('agents as listing_agent', 'listing_agent.id = property_details.listing_agent_id', 'left');
+        $this->db->join('pct_softpro_lookup_table as client ', 'client.id = order_details.customer_id', 'inner');
+        $this->db->join('pct_softpro_lookup_table as sales_details ', 'sales_details.id = transaction_details.sales_representative', 'inner');
+        $this->db->join('pct_softpro_lookup_table as escrow_details', 'escrow_details.id = property_details.escrow_id', 'left');
+        $this->db->join('pct_softpro_lookup_table as lender_details', 'lender_details.id = property_details.lender_id', 'left');
+        $this->db->join('pct_softpro_lookup_table as title_officer', 'title_officer.id = transaction_details.title_officer', 'left');
+        $this->db->join('pct_softpro_lookup_table as buyer_agent', 'buyer_agent.id = property_details.buyer_agent_id', 'left');
+        $this->db->join('pct_softpro_lookup_table as listing_agent', 'listing_agent.id = property_details.listing_agent_id', 'left');
+        $this->db->join('pct_softpro_lookup_table as escrow_officer', 'escrow_officer.id = order_details.escrow_officer_id', 'left');
         // $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc');
         $query  = $this->db->get();
         $result = $query->result_array();
-
         $configData               = $this->order->getConfigData();
         $loanOrderEmailSendStatus = $configData['loan_order_closed_email_send_off']['is_enable'];
         $saleOrderEmailSendStatus = $configData['sale_order_closed_email_send_off']['is_enable'];
+        $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
+        // echo "<pre>";
+        // print_r($result);
+        // print_r($configData);
+        // die;
 
         if (!empty($result)) {
             $checkFlag = 0;
@@ -5130,13 +5139,17 @@ class Cron extends MX_Controller
                         'message'   => json_encode($data),
                         'cc'        => $cc,
                     ];
-                    $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+                    // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
                     // $cc = array();
                     $this->load->helper('sendemail');
                     $logid              = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, [], $res['order_id'], 0);
                     $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], $cc);
                     $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, ['status' => $escrow_mail_result], $res['orderId'], $logid);
                     echo "Mails sent successfully for Order Number : " . $res['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
+                }
+                
+                if (($enableSurveyEmailFlag == 1) && !empty($res['escrow_officer_email'])) {
+                    $this->sendSurvayEmail($res);
                 }
 
             }
@@ -8559,5 +8572,53 @@ class Cron extends MX_Controller
         if (file_exists($csvPath)) {
             unlink($csvPath);
         }
+    }
+
+    public function sendSurvayEmail($data) {
+        if (!empty($data['title_officer_email'])) {
+            $data['title_officer_email'] = strtolower($data['title_officer_email']);
+            if ($data['title_officer_email'] == 'unit66@pct.com') { 
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W?order_id=' . $data['order_id']; // Clive - 143260
+            } else if ($data['title_officer_email'] == 'jjean@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/P3X7KX8?order_id=' . $data['order_id']; // Jim
+            } else if ($data['title_officer_email'] == 'unit33@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/PG7SJRG?order_id=' . $data['order_id']; // Eddie
+            } else if ($data['title_officer_email'] == 'unit88@pct.com') {
+                $data['survey_link'] = 'https://www.surveymonkey.com/r/6BJZ79Y?order_id=' . $data['order_id']; // Rachel
+            } else {
+                exit;
+            }
+        }
+        $message = $this->load->view('emails/surveymonkey_email.php', $data, true);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        // $subject = 'Thank You!';
+        // $to = 'piyush-crest@yopmail.com';
+        $to = $data['escrow_officer_email'];
+
+        // $to = array('piyush.j@crestinfosystems.com', 'ghernandez@pct.com');
+        $cc = array('piyush.j@crestinfosystems.com');
+
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = "We'd Love Your Feedback";
+        // $to = $escrow_email_address;
+        // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+        // $cc = array('piyush.j@crestinfosystems.com');
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+        // $cc = array();
+        $this->load->helper('sendemail');
+        $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array(), $data['order_id'], 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
+        echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
     }
 }
