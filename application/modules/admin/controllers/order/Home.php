@@ -6686,6 +6686,12 @@ class Home extends MX_Controller
             ];
             $this->db->update('pct_configs', $prelimSummaryShutOff, ['slug' => 'prelim_summary_shut_off']);
 
+            $enable_survey_email = isset($input['enable_survey_email']) && !empty($input['enable_survey_email']) ? 1 : 0;
+            $enableSurveyEmailFlag = array(
+                'is_enable' => $enable_survey_email,
+            );
+            $this->db->update('pct_configs', $enableSurveyEmailFlag, array('slug' => 'enable_survey_email'));
+            
             $msg = 'Setting updated';
             /** Save user Activity */
             $this->order->logAdminActivity($msg);
@@ -6706,21 +6712,22 @@ class Home extends MX_Controller
             $data[$row['slug']] = $row;
         }
 
-        $res['escrow_commission']                   = $data['escrow_commission']['is_enable'];
-        $res['title_point_shut_off']                = $data['title_point_shut_off']['is_enable'];
-        $res['sale_order_closed_email_send_off']    = $data['sale_order_closed_email_send_off']['is_enable'];
-        $res['loan_order_closed_email_send_off']    = $data['loan_order_closed_email_send_off']['is_enable'];
-        $res['enable_lv_with_address_apn']          = $data['enable_lv_with_address_apn']['is_enable'];
-        $res['enable_vesting_document_type_filter'] = $data['enable_vesting_document_type_filter']['is_enable'];
-        $res['enable_create_order_submit_button']   = $data['enable_create_order_submit_button']['is_enable'];
-        $res['add_underwriten_partner_via_api']     = $data['add_underwriten_partner_via_api']['is_enable'];
-        $res['recording_confirmation_shut_off']     = $data['recording_confirmation_shut_off']['is_enable'];
-        $res['disburse_funds_shut_off']             = $data['disburse_funds_shut_off']['is_enable'];
+        $res['escrow_commission']                    = $data['escrow_commission']['is_enable'];
+        $res['title_point_shut_off']                 = $data['title_point_shut_off']['is_enable'];
+        $res['sale_order_closed_email_send_off']     = $data['sale_order_closed_email_send_off']['is_enable'];
+        $res['loan_order_closed_email_send_off']     = $data['loan_order_closed_email_send_off']['is_enable'];
+        $res['enable_lv_with_address_apn']           = $data['enable_lv_with_address_apn']['is_enable'];
+        $res['enable_vesting_document_type_filter']  = $data['enable_vesting_document_type_filter']['is_enable'];
+        $res['enable_create_order_submit_button']    = $data['enable_create_order_submit_button']['is_enable'];
+        $res['add_underwriten_partner_via_api']      = $data['add_underwriten_partner_via_api']['is_enable'];
+        $res['recording_confirmation_shut_off']      = $data['recording_confirmation_shut_off']['is_enable'];
+        $res['disburse_funds_shut_off']              = $data['disburse_funds_shut_off']['is_enable'];
         $res['fees_pdf_confirmation_email_shut_off'] = $data['fees_pdf_confirmation_email_shut_off']['is_enable'];
-        $res['enable_fees_email_for_refinance'] = $data['enable_fees_email_for_refinance']['is_enable'];
-        $res['enable_fees_email_for_resale'] = $data['enable_fees_email_for_resale']['is_enable'];
-        $res['enable_prelim_summary_email'] = $data['enable_prelim_summary_email']['is_enable'];
-        $res['prelim_summary_shut_off'] = $data['prelim_summary_shut_off']['is_enable'];
+        $res['enable_fees_email_for_refinance']      = $data['enable_fees_email_for_refinance']['is_enable'];
+        $res['enable_fees_email_for_resale']         = $data['enable_fees_email_for_resale']['is_enable'];
+        $res['enable_prelim_summary_email']          = $data['enable_prelim_summary_email']['is_enable'];
+        $res['prelim_summary_shut_off']              = $data['prelim_summary_shut_off']['is_enable'];
+        $res['enable_survey_email']                  = $data['enable_survey_email']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
