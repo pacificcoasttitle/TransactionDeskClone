@@ -54,6 +54,11 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#submitNotesBtn").click(function () {
+        $(this).prop('disabled', true);
+        $(this).closest('form').submit();
+    });
 });
 
 function fetchPrelimDocument(fileNumber = '') {
