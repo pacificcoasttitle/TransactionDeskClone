@@ -268,7 +268,6 @@ class Common extends MX_Controller
         $configData                  = $this->order->getConfigData();
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
-
         if ($prelimSummaryEmailFlag == 1) {
             $emailData['html'] = $this->parsedown->text($markdown);
             $emailData['file_number'] = $fileNumber;
@@ -276,14 +275,14 @@ class Common extends MX_Controller
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
             $to = 'ghernandez@pct.com';
-            $subject = 'Prelim Summary : '. $response['OrderNumber'];
-            $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+            $subject = 'Prelim Summary : '. $fileNumber;
+            $cc = ['piyush.j@crestinfosystems.com'];
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
                 'to' => $to,
                 'subject' => $subject,
-                'message' => $response['OrderNumber'],
+                'message' => $fileNumber,
                 'cc' => $cc,
             );
             $this->load->helper('sendemail');
