@@ -5098,7 +5098,7 @@ class Cron extends MX_Controller
             $i         = 0;
             foreach ($result as $res) {
                 // echo 'res ===';
-                if (((empty($loanOrderEmailSendStatus) || $loanOrderEmailSendStatus == 0) && $res['prod_type'] === 'loan') || ((empty($saleOrderEmailSendStatus) || $saleOrderEmailSendStatus == 0) && $res['prod_type'] === 'sale')) {
+                if (((empty($loanOrderEmailSendStatus) || $loanOrderEmailSendStatus == 0) && $res['prod_type'] === 'Refinance') || ((empty($saleOrderEmailSendStatus) || $saleOrderEmailSendStatus == 0) && $res['prod_type'] === 'Purchase')) {
                     $sales_email = !empty($res['sales_rep_email']) ? $res['sales_rep_email'] : '';
 
                     $to = [];
@@ -8620,5 +8620,24 @@ class Cron extends MX_Controller
         $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
         $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
         echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
+    }
+
+    public function sendQueuedEmail() {
+        $this->db->from('pct_email_queue');
+        $this->db->where('status', 0);
+        
+        $query  = $this->db->get();
+        $result = $query->result_array();
+        
+        foreach ($result as $order) {
+            $closedFileNumbers[] = $order['file_number'];
+            $this->sendEmailForClosedOrder($closedFileNumbers);
+            $updateData = ['status' => 1];
+
+            $this->db->set($updateData);
+            $this->db->where('file_number', $order['file_number']);
+            $this->db->update('pct_email_queue');
+
+        }
     }
 }
