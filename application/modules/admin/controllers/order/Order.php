@@ -660,11 +660,12 @@ class Order extends MX_Controller
                         // echo "<pre>";
                         // print_r($updateData);die;
                         if (!empty($updateData)) {
+                            $closedOrderFileNumbers = [];
                             foreach ($updateData as $key => $value) {
                                 // echo "<pre>";
                                 // print_r($value);
                                 // $value['order_number'] = "TEST-20001451-OCT";
-                                $orderDetails = $this->db->select('id, property_id, transaction_id')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
+                                $orderDetails = $this->db->select('id, property_id, transaction_id, escrow_officer_id, softpro_status')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
                                 if (!empty($orderDetails)) {
                                     $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
 
@@ -687,8 +688,7 @@ class Order extends MX_Controller
                                         // 'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
                                         'updated_at'                 => date("Y-m-d H:i:s")
                                     ];
-// echo "<pre>";
-// print_r($updateOrderDetails);die;
+
                                     $id = $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
                                     $activity  = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'] . ' Transaction Date: ' . $value['transaction_date'] . ' Bill Code: ' . $value['bill_code'];
                                     $this->order_model->logAdminActivity($activity);
@@ -706,6 +706,14 @@ class Order extends MX_Controller
                                     }
                                     if (!empty($updateTransactionDetails)) {
                                         $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
+                                    }
+                                    
+                                    if (($orderDetails['softpro_status'] != 'closed' && $orderDetails['softpro_status'] != 'completed')) {
+                                        $emailQueueData = [
+                                            'file_number' => $value['order_number'],
+                                            'email_type' => 'closed_order'
+                                        ];
+                                        $this->db->insert('pct_email_queue', $emailQueueData);
                                     }
     
                                     // if (!empty($value['full_address'])) {
