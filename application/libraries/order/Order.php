@@ -3035,6 +3035,7 @@ class Order
         }
         $this->CI->db->order_by('first_name', 'asc');
         $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
         return $query->result_array();
     }
 

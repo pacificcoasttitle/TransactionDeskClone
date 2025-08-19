@@ -8477,7 +8477,8 @@ class Cron extends MX_Controller
             DATE(o.sent_to_accounting_date) as transaction_date,
             o.softpro_status,
             o.file_number as order_number,
-            CONCAT(p.address, ", ", p.city, ", ", p.state, " ", p.zip) as property_address,
+            CONCAT(p.address, ", ", p.city, ", ", p.state) as property_address,
+            p.address,
             p.city,
             p.state,
             p.zip,
@@ -8523,9 +8524,9 @@ class Cron extends MX_Controller
         // Add order data
         foreach ($orders as $order) {
             fputcsv($file, [
-                $order['transaction_date'],
+                convertTimezone($order['transaction_date'], 'm/d/Y'),
                 $order['order_number'],
-                $order['property_address'],
+                $order['address'] . ", " . $order['city'] . ", " . $order['state'] . ", " . $order['zip'],
                 $order['city'],
                 $order['state'],
                 $order['zip'],
