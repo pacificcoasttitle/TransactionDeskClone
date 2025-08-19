@@ -6555,11 +6555,11 @@ class Cron extends MX_Controller
             $update_data = [];
             $insert_data = [];
             foreach ($new_data as $key => $row) {
-                // print_r($row);
+                $spliteFullName = $this->order->splitFullName($row['FullName']);
                 if (in_array($row['LookUpCode'], $existingLookupcode)) {
                     $update_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    // $update_data[$key]['first_name']    = $row['FirstName'];
-                    // $update_data[$key]['last_name']    = $row['LastName'];
+                    $update_data[$key]['first_name']    = $spliteFullName['first_name'];
+                    $update_data[$key]['last_name']    = $spliteFullName['last_name'];
                     $update_data[$key]['full_name']    = $row['FullName'];
                     $update_data[$key]['email_address']    = $row['Email'];
                     $update_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
@@ -6567,8 +6567,8 @@ class Cron extends MX_Controller
                     $update_data[$key]['status'] = 1;
                 } else {
                     $insert_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    // $insert_data[$key]['first_name']    = $row['FirstName'];
-                    // $insert_data[$key]['last_name']    = $row['LastName'];
+                    $insert_data[$key]['first_name']    = $spliteFullName['first_name'];
+                    $insert_data[$key]['last_name']    = $spliteFullName['last_name'];
                     $insert_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
                     $insert_data[$key]['full_name']    = $row['FullName'];
                     $insert_data[$key]['email_address']    = $row['Email'];
