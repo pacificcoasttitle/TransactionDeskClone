@@ -6555,11 +6555,11 @@ class Cron extends MX_Controller
             $update_data = [];
             $insert_data = [];
             foreach ($new_data as $key => $row) {
-                // print_r($row);
+                $spliteFullName = $this->order->splitFullName($row['FullName']);
                 if (in_array($row['LookUpCode'], $existingLookupcode)) {
                     $update_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    // $update_data[$key]['first_name']    = $row['FirstName'];
-                    // $update_data[$key]['last_name']    = $row['LastName'];
+                    $update_data[$key]['first_name']    = $spliteFullName['first_name'];
+                    $update_data[$key]['last_name']    = $spliteFullName['last_name'];
                     $update_data[$key]['full_name']    = $row['FullName'];
                     $update_data[$key]['email_address']    = $row['Email'];
                     $update_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
@@ -6567,8 +6567,8 @@ class Cron extends MX_Controller
                     $update_data[$key]['status'] = 1;
                 } else {
                     $insert_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    // $insert_data[$key]['first_name']    = $row['FirstName'];
-                    // $insert_data[$key]['last_name']    = $row['LastName'];
+                    $insert_data[$key]['first_name']    = $spliteFullName['first_name'];
+                    $insert_data[$key]['last_name']    = $spliteFullName['last_name'];
                     $insert_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
                     $insert_data[$key]['full_name']    = $row['FullName'];
                     $insert_data[$key]['email_address']    = $row['Email'];
@@ -8440,19 +8440,19 @@ class Cron extends MX_Controller
         $dayOfWeek = date('N'); // 1=Monday, 7=Sunday
         
         // Determine date range based on day of week
-        if ($dayOfWeek == 3) { // Wednesday
-            $startDate = date('Y-m-d', strtotime('last monday'));
-            $endDate = date('Y-m-d'); // Today (Wednesday)
-            $reportName = 'Mon-Wed Orders Report';
-        } elseif ($dayOfWeek == 5) { // Friday
-            $startDate = date('Y-m-d', strtotime('last thursday'));
-            $endDate = date('Y-m-d'); // Today (Friday)
-            $reportName = 'Thu-Fri Orders Report';
+        if ($dayOfWeek == 2) { // Wednesday
+            $startDate = date('Y-m-d', strtotime('last friday'));
+            $endDate = date('Y-m-d'); // Today (Tuesday)
+            $reportName = 'Fri-Tuesday Orders Report';
+        } elseif ($dayOfWeek == 4) { // Thursday
+            $startDate = date('Y-m-d', strtotime('last wednesday'));
+            $endDate = date('Y-m-d'); // Today (Thursday)
+            $reportName = 'Wed-Thursday Orders Report';
         } else {
-            echo "Today is not Wednesday or Friday. No report generated.";
+            echo "Today is not Tuesday or Thursday. No report generated.";
             return;
         }
-        // echo $startDate . " to " . $endDate . "<br>";
+        // echo $startDate . " to " . $endDate . "<br>";die;
         // Get closed orders within date range
         $orders = $this->getClosedOrders($startDate, $endDate);
         // echo "<pre>";
@@ -8488,8 +8488,8 @@ class Cron extends MX_Controller
         $this->db->join('property_details p', 'o.property_id = p.id', 'left');
         $this->db->join('transaction_details t', 'o.transaction_id = t.id', 'left');
         $this->db->join('pct_softpro_lookup_table u', 't.sales_representative = u.id', 'left');
-        $this->db->where('o.softpro_status', 'closed');
-        $this->db->where('o.is_imported', 1);
+        // $this->db->where('o.softpro_status', 'closed');
+        // $this->db->where('o.is_imported', 1);
         $this->db->where('DATE(o.sent_to_accounting_date) >=', $startDate);
         $this->db->where('DATE(o.sent_to_accounting_date) <=', $endDate);
         $this->db->order_by('o.sent_to_accounting_date', 'Desc');
@@ -8544,8 +8544,9 @@ class Cron extends MX_Controller
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $to = 'shuklap871@gmail.com';
-        // $cc = ['piyush.j@crestinfosystems.com'];
         $cc = ['piyush.j@crestinfosystems.com', 'ghernandez@pct.com'];
+        // $to = 'piyush.j@crestinfosystems.com';
+        // $cc = ['piyush.j@crestinfosystems.com'];
         $subject = 'Weekly closed order report ' . ' (' . date('M j, Y') . ')';
         
         $data['startDate'] = $startDate;
