@@ -1263,6 +1263,7 @@ class Order
             order_details.id as order_id,
             order_details.prod_type,
             order_details.softpro_status,
+            order_details.resware_closed_status_date,
             property_details.address,
             property_details.full_address,
             property_details.property_type,
