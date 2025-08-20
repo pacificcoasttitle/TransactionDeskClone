@@ -3640,16 +3640,24 @@ class Cron extends MX_Controller
                     $file_number = '';
                     $fileStatus  = '';
                     $closedDate  = '';
+                    $completedDate  = '';
     
                     $file_number = $order['OrderNumber'];
                     $fileStatus  = strtolower($order['OrderStatus']);
-                    $closedDate  = $order['CompletedDate'] ?? '';
+                    $completedDate  = $order['CompletedDate'] ?? '';
+                    $closedDate  = ($fileStatus == 'closed') ? $order['LastModifiedOn'] : '';
     
                     // print_r($order);die;
                     $completed_date = null;
+                    $order_closed_date = null;
+                    if (!empty($completedDate)) {
+                        $myDateTime     = DateTime::createFromFormat('m/d/Y h:i:s A', $completedDate);
+                        $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                    }
+
                     if (!empty($closedDate)) {
                         $myDateTime     = DateTime::createFromFormat('m/d/Y h:i:s A', $closedDate);
-                        $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                        $order_closed_date = $myDateTime->format('Y-m-d H:i:s');
                     }
                     // echo "<pre>";
                     // print_r($completed_date);die;
@@ -3662,11 +3670,23 @@ class Cron extends MX_Controller
                         $updateArray = [
                             'file_number'                => $file_number,
                             'softpro_status'             => $fileStatus,
-                            'resware_closed_status_date' => ($fileStatus == 'completed') ? $completed_date : null,
+                            'order_completed_date' => ($fileStatus == 'completed') ? $completed_date : null,
                             // 'resware_closed_status_date' => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                             // 'sent_to_accounting_date'    => strtolower($fileStatus) == 'closed' ? $completed_date : null,
                             'updated_at'                 => date('Y-m-d H:i:s'),
                         ];
+
+                        if ($orderDetails['softpro_status'] != 'closed' && $fileStatus == 'closed') {
+                            $updateArray['resware_closed_status_date'] = $order_closed_date;
+                        }
+
+                        if (($orderDetails['softpro_status'] == 'closed' && $fileStatus == 'closed' && empty($orderDetails['resware_closed_status_date']))) {
+                            $updateArray['resware_closed_status_date'] = $order_closed_date;
+                        }
+
+                        if ($orderDetails['softpro_status'] == 'completed' && empty($orderDetails['resware_closed_status_date'])) {
+                            $updateArray['resware_closed_status_date'] = $completed_date;
+                        }
 
                         $this->home_model->update($updateArray, $orderCondition, 'order_details');
                         if (!in_array($file_number, $closedFileNumbers) && ($fileStatus == 'closed')) {
