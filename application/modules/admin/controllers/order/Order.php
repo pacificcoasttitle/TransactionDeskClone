@@ -683,7 +683,7 @@ class Order extends MX_Controller
                                         'premium' => $value['premium'],
                                         'bill_code' => $value['bill_code'],
                                         'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
-                                        'softpro_status' => 'closed',
+                                        // 'softpro_status' => 'closed',
                                         'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
                                         // 'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
                                         'updated_at'                 => date("Y-m-d H:i:s")
@@ -708,13 +708,13 @@ class Order extends MX_Controller
                                         $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
                                     }
                                     
-                                    if (($orderDetails['softpro_status'] != 'closed' && $orderDetails['softpro_status'] != 'completed')) {
-                                        $emailQueueData = [
-                                            'file_number' => $value['order_number'],
-                                            'email_type' => 'closed_order'
-                                        ];
-                                        $this->db->insert('pct_email_queue', $emailQueueData);
-                                    }
+                                    // if (($orderDetails['softpro_status'] != 'closed' && $orderDetails['softpro_status'] != 'completed')) {
+                                    //     $emailQueueData = [
+                                    //         'file_number' => $value['order_number'],
+                                    //         'email_type' => 'closed_order'
+                                    //     ];
+                                    //     $this->db->insert('pct_email_queue', $emailQueueData);
+                                    // }
     
                                     // if (!empty($value['full_address'])) {
                                     //     $updatePropertyDetails = [
