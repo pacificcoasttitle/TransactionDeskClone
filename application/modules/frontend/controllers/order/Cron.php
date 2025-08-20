@@ -8475,14 +8475,14 @@ class Cron extends MX_Controller
         $dayOfWeek = date('N'); // 1=Monday, 7=Sunday
         
         // Determine date range based on day of week
-        if ($dayOfWeek == 2) { // Wednesday
-            $startDate = date('Y-m-d', strtotime('last friday'));
+        if ($dayOfWeek == 3) { // Wednesday
+            $startDate = date('Y-m-d', strtotime('last monday'));
             $endDate = date('Y-m-d'); // Today (Tuesday)
-            $reportName = 'Fri-Tuesday Orders Report';
-        } elseif ($dayOfWeek == 4) { // Thursday
-            $startDate = date('Y-m-d', strtotime('last wednesday'));
+            $reportName = 'Monday-Wednesday Orders Report';
+        } elseif ($dayOfWeek == 5) { // Thursday
+            $startDate = date('Y-m-d', strtotime('last thursday'));
             $endDate = date('Y-m-d'); // Today (Thursday)
-            $reportName = 'Wed-Thursday Orders Report';
+            $reportName = 'Thurs-Friday Orders Report';
         } else {
             echo "Today is not Tuesday or Thursday. No report generated.";
             return;
