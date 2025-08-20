@@ -2081,6 +2081,7 @@ class Order
     public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
     {
         // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
+        // $this->CI->db->select('order_details.file_number, order_details.id, order_details.softpro_status, order_details.resware_closed_status_date, order_details.order_completed_date, order_details.created_at')
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
@@ -2090,14 +2091,14 @@ class Order
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.resware_closed_status_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
             if ($year == 0) {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
             } else {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', $year);
             }
 
         }
@@ -2121,6 +2122,9 @@ class Order
         }
 
         $query = $this->CI->db->get();
+        // if ($dashboard_flag == 1) {
+        //     echo $this->CI->db->last_query();exit;
+        // }
         return $query->row_array();
     }
 
@@ -2136,16 +2140,16 @@ class Order
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.resware_closed_status_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
 
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
 
             if ($year == 0) {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
             } else {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', $year);
             }
         }
 
@@ -2267,14 +2271,14 @@ class Order
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.resware_closed_status_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
             if ($year == 0) {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
             } else {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', $year);
             }
 
         }
@@ -2305,16 +2309,16 @@ class Order
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.resware_closed_status_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
 
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+            $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
 
             if ($year == 0) {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
             } else {
-                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', $year);
             }
         }
 
