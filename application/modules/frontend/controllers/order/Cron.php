@@ -7050,8 +7050,10 @@ class Cron extends MX_Controller
             $orderList = $response['data'];
             foreach ($orderList as $key => $list) {
                 $completed_date = null;
+                $closed_date = null;
                 $file_number = $list['OrderNumber'] ?? null;
                 $orderStatus = $list['OrderStatus'] ?? null;
+                $orderStatus = strtolower($orderStatus);
                 $marketingSource = $list['MarketingSource'] ?? null;
                 $orderType = $list['OrderType'] ?? null;
                 $address = $list['Address'] ?? null;
@@ -7063,12 +7065,19 @@ class Cron extends MX_Controller
                 $transactionType = $list['TransactionType'] ?? null;
                 $productType = $list['ProductType'] ?? null;
                 $receivedDate = $list['ReceivedDate'] ?? null;
-                $closedDate = $list['CompletedDate'] ?? null;
+                $completedDate = $list['CompletedDate'] ?? null;
+                $closedDate = ($orderStatus == 'closed') ? $list['ModifiedDate'] : null;
                 $marketingRep = $list['MarketingRep'] ?? null;
+                if (!empty($completedDate)) {
+                    // $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
+                    $myDateTime = DateTime::createFromFormat('n/j/Y g:i:s A', trim($completedDate));
+                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                }
+
                 if (!empty($closedDate)) {
                     // $myDateTime     = DateTime::createFromFormat('M d, Y', $closedDate);
                     $myDateTime = DateTime::createFromFormat('n/j/Y g:i:s A', trim($closedDate));
-                    $completed_date = $myDateTime->format('Y-m-d H:i:s');
+                    $closed_date = $myDateTime->format('Y-m-d H:i:s');
                 }
 
                 if (!empty($file_number)) {
@@ -7161,8 +7170,9 @@ class Cron extends MX_Controller
                             'is_imported'                => 1,
                             // 'is_sales_rep_order'         => 1,
                             'random_number'              => $randomString,
-                            'resware_closed_status_date' => $completed_date,
-                            'softpro_status'             => strtolower($orderStatus),
+                            'resware_closed_status_date' => $closed_date,
+                            'order_completed_date' => $completed_date,
+                            'softpro_status'             => $orderStatus,
                             // 'sent_to_accounting_date'    => $completed_date,
                             'is_softpro_order'          => 1
                         ];
@@ -7170,14 +7180,19 @@ class Cron extends MX_Controller
                         $orderId = $this->home_model->insert($orderData, 'order_details');
                         
                     } else {
-                        $orderStatus = strtolower($orderStatus);
+                        // $orderStatus = strtolower($orderStatus);
                         $orderData = [
                             'softpro_status' => $orderStatus,
                         ];
                         if ($orderStatus == 'completed') {
-                            $orderData['resware_closed_status_date'] = $completed_date;
+                            $orderData['order_completed_date'] = $completed_date;
                             // $orderData['sent_to_accounting_date'] = $completed_date;
                         }
+
+                        if ($orderStatus == 'closed' && $order['softpro_status'] != 'closed') {
+                            $orderData['resware_closed_status_date'] = $closed_date;
+                        }
+                        
                         $condition = [
                             'file_number' => $file_number
                         ];
@@ -8460,14 +8475,14 @@ class Cron extends MX_Controller
         $dayOfWeek = date('N'); // 1=Monday, 7=Sunday
         
         // Determine date range based on day of week
-        if ($dayOfWeek == 2) { // Wednesday
-            $startDate = date('Y-m-d', strtotime('last friday'));
+        if ($dayOfWeek == 3) { // Wednesday
+            $startDate = date('Y-m-d', strtotime('last monday'));
             $endDate = date('Y-m-d'); // Today (Tuesday)
-            $reportName = 'Fri-Tuesday Orders Report';
-        } elseif ($dayOfWeek == 4) { // Thursday
-            $startDate = date('Y-m-d', strtotime('last wednesday'));
+            $reportName = 'Monday-Wednesday Orders Report';
+        } elseif ($dayOfWeek == 5) { // Thursday
+            $startDate = date('Y-m-d', strtotime('last thursday'));
             $endDate = date('Y-m-d'); // Today (Thursday)
-            $reportName = 'Wed-Thursday Orders Report';
+            $reportName = 'Thurs-Friday Orders Report';
         } else {
             echo "Today is not Tuesday or Thursday. No report generated.";
             return;
