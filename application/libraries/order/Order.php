@@ -5249,6 +5249,7 @@ class Order
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
 
+        $this->CI->db->where('order_details.is_softpro_order', 1);
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
         if ($user_type == 'title_officer') {
