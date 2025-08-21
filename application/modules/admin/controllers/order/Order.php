@@ -665,7 +665,7 @@ class Order extends MX_Controller
                                 // echo "<pre>";
                                 // print_r($value);
                                 // $value['order_number'] = "TEST-20001451-OCT";
-                                $orderDetails = $this->db->select('id, property_id, transaction_id, escrow_officer_id, softpro_status')->from('order_details')->where('file_number', $value['order_number'])->get()->row_array();
+                                $orderDetails = $this->db->select('id, property_id, transaction_id, escrow_officer_id, softpro_status, file_number, is_softpro_order')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
                                 if (!empty($orderDetails)) {
                                     $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
 
@@ -690,7 +690,7 @@ class Order extends MX_Controller
                                     ];
 
                                     $id = $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
-                                    $activity  = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'] . ' Transaction Date: ' . $value['transaction_date'] . ' Bill Code: ' . $value['bill_code'];
+                                    $activity  = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'] . ' Sales reps: ' . $value['sales_rep'] . ' Transaction Date: ' . $value['transaction_date'] . ' Bill Code: ' . $value['bill_code'];
                                     $this->order_model->logAdminActivity($activity);
                                     $updateCount++;
                                     // echo 'id ==' . $id;

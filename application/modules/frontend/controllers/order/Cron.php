@@ -7201,14 +7201,14 @@ class Cron extends MX_Controller
 
                         $salesPrice = $list['SalesPrice'] ?? null;
                         
-                        $result = $this->db->select('id')->from('order_details')->where($condition)->get()->row_array();
-                        if (isset($result['id'])) {
+                        $result = $this->db->select('transaction_id')->from('order_details')->where($condition)->get()->row_array();
+                        if (isset($result['transaction_id'])) {
                             $updateDate = ['sales_amount' => $salesPrice];
                             if (!empty($salesRepId)) {
                                 $updateDate['sales_representative'] = $salesRepId;
                             }
                             $updatedOrderCount++;
-                            $this->home_model->update($updateDate, ['id' => $result['id']], 'transaction_details');
+                            $this->home_model->update($updateDate, ['id' => $result['transaction_id']], 'transaction_details');
                         }
                     }
                 }
