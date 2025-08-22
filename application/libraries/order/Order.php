@@ -2092,6 +2092,7 @@ class Order
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
             $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
             $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
@@ -2141,6 +2142,7 @@ class Order
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
             $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
 
