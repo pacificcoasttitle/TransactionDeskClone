@@ -2092,6 +2092,7 @@ class Order
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
             $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
             $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
@@ -2141,6 +2142,7 @@ class Order
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
             $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
         } else {
 
@@ -5982,12 +5984,14 @@ class Order
                 $to[] = [$orderDetails['escrow_email']];
             }
         }
+        
         // $to = $orderDetails['email_to'];
         // $to = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
         // $cc = array('ghernandez@pct.com');
-        // $cc = array('ghernandez@pct.com', 'piyush.j@crestinfosystems.com', 'piyush-crest@yopmail.com');
+        $cc = array('piyush.j@crestinfosystems.com');
 
         if ($emailType == 'recording_confirmation') {
+            $to[] = 'processing@lendingxpress.com';
             // $to = 'ghernandez@pct.com';
             $message = $this->CI->load->view('emails/confirmation_recording_email.php', $orderDetails, true);
         } else {
