@@ -5984,12 +5984,14 @@ class Order
                 $to[] = [$orderDetails['escrow_email']];
             }
         }
+        
         // $to = $orderDetails['email_to'];
         // $to = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
         // $cc = array('ghernandez@pct.com');
-        // $cc = array('ghernandez@pct.com', 'piyush.j@crestinfosystems.com', 'piyush-crest@yopmail.com');
+        $cc = array('piyush.j@crestinfosystems.com');
 
         if ($emailType == 'recording_confirmation') {
+            $to[] = 'processing@lendingxpress.com';
             // $to = 'ghernandez@pct.com';
             $message = $this->CI->load->view('emails/confirmation_recording_email.php', $orderDetails, true);
         } else {
