@@ -113,7 +113,7 @@ class Login extends MX_Controller
                                     "is_payoff_user" => $user['is_payoff_user'],
                                     "is_title_production" => $user['is_title_production'],
                                     "is_escrow_officer" => $user['is_escrow_officer'],
-                                    "is_escrow_assistant" => $user['is_escrow_assistant'],
+                                    "is_escrow_assistant" => $user['is_escrow_assistant'] ?? '',
                                     "lookup_code" => $user['lookup_code'],
                                     "is_special_lender" => isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
                                 );

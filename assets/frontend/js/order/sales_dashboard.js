@@ -270,6 +270,12 @@ $(document).ready(function () {
         });
     }
 
+    $(".prelim_add_note_form_submit").on("click", function () {
+        // Show loader
+        $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+        $('#page-preloader').css('display', 'block');
+    });
+
 });
 
 if (typeof (salesData) != "undefined" && salesData !== null) {

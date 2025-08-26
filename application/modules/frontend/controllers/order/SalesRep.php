@@ -799,7 +799,7 @@ class SalesRep extends MX_Controller
 
                 $datediff = $datetime1->diff($datetime2)->format("%a");
 
-                if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0 && strtolower($order['resware_status']) == 'open'))) {
+                if ((!empty($order['lp_file_number']) && empty($order['file_number'])) || (!empty($order['file_number']) && ($order['prelim_summary_id'] == 0 && strtolower($order['softpro_status']) == 'open'))) {
                     foreach ($lpAlertRange as $key => $val) {
                         if (((count($val['range']) == 1) && $datediff >= $val['range'][0]) || in_array($datediff, $val['range'])) {
                             if ((!empty($order['lp_file_number']) && empty($order['file_number']))) {

@@ -858,7 +858,7 @@ class Common extends MX_Controller
                     } else {
                         $this->order->updateTaskStatus('update_prelim', $orderNumber);
                         $taskIds = SOFTPRO_TASK_ID;
-                        $taskId = $taskIds[$taskType];
+                        $taskId = $taskIds['update_prelim'];
                         $notesData = array(
                             'is_softpro_notes' => 1,
                             'is_sync' => 0,
