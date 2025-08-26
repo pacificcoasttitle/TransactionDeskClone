@@ -3710,6 +3710,9 @@ class Order
                     $from_mail = env('FROM_EMAIL');
                     $subject = 'Daily Production';
                     $to = $officer['email_address'];
+                    if (strtolower($to) == 'unit88@pct.com') {
+                        $to = 'rbarcena@pct.com';
+                    }
                     // $to = 'piyush.j@crestinfosystems.com';
                     // $cc = array('ghernandez@pct.com');
                     // $cc = array('ghernandez@pct.com', 'aleida@pct.com', 'rudy@pct.com', 'haguilar@pct.com');
@@ -5507,6 +5510,7 @@ class Order
     }
 
     public function updateTaskStatus($taskType, $orderNumber) {
+        $userdata = $this->CI->session->userdata('user');
         $taskIds = SOFTPRO_TASK_ID;
         $taskReq[] = [
             "OrderNumber" => $orderNumber,

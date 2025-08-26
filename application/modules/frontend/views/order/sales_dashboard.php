@@ -309,7 +309,7 @@
 									</div>
 
 									<div class="form-footer" style="padding: 0px 1rem !important;">
-										<button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm">
+										<button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm prelim_add_note_form_submit">
 											<span class="icon text-white-50">
 												<i class="fas fa-check"></i>
 											</span>
