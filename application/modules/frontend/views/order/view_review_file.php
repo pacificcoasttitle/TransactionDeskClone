@@ -168,10 +168,10 @@
 														href="javascript:void(0)">Borrower Name</a><br><?php echo $orderDetails['primary_owner'];?></li>
 												<div class="ui-decor-3"></div>
 												<li class="widget-list__itema"><a class="widget-list__link fs-20"
-														href="javascript:void(0)">Transaction Type</a><br><?php echo $orderDetails['product_type']; ?></li>
+														href="javascript:void(0)">Transaction Type</a><br><?php echo $orderDetails['prod_type']; ?></li>
 												<div class="ui-decor-3"></div>
 												<?php
-													if(strpos($orderDetails['product_type'], 'Sale') !== false)
+													if(strpos($orderDetails['prod_type'], 'refinance') !== false)
 													{
 														if(isset($orderDetails['sales_amount']) && !empty($orderDetails['sales_amount']))
 														{

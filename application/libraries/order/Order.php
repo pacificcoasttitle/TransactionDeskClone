@@ -1528,9 +1528,8 @@ class Order
 
     public function get_order($params)
     {
-        $this->CI->db->select('*');
+        $this->CI->db->select('id, customer_id,file_number,status,transaction_id,prod_type,is_softpro_order,is_imported,softpro_status,resware_closed_status_date,created_by,created_at,updated_at,order_completed_date,sent_to_accounting_date,loan_amount,sales_amount,is_seller_packet_mail_sent,is_buyer_packet_mail_sent,lender_policy_sent,owner_policy_sent,supplement_statement_sent,recording_confirmation_sent');
         $this->CI->db->from('order_details');
-
         if (array_key_exists("where", $params)) {
             foreach ($params['where'] as $key => $val) {
                 $this->CI->db->where($key, $val);
@@ -4611,7 +4610,7 @@ class Order
      */
     public function curl_post($end_point, $requestParams)
     {
-
+        $post_array_string = '';
         foreach ($requestParams as $key => $value) {
             $post_array_string .= $key . '=' . $value . '&';
         }
@@ -5867,7 +5866,7 @@ class Order
     }
 
     public function generateFeesEstimationPdf($order_id) {
-        
+        $userdata = $this->CI->session->userdata('user');
         $params = [
             'order_details.id' => $order_id,
         ];
@@ -6026,5 +6025,64 @@ class Order
 
         }
         return false;
+    }
+
+    public function sendSurveySampleEmail($data) {
+        $this->CI->load->model('order/apiLogs');
+        $this->CI->load->helper('sendemail');
+        $message = $this->CI->load->view('frontend/emails/surveymonkey_email.php', $data, true);
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        // $subject = 'Thank You!';
+        // $to = $data['escrow_officer_email'];
+        $to = array($data['email_address']);
+        $cc = array('piyush.j@crestinfosystems.com');
+        // print_r($message);die;
+
+        $from_name = 'Pacific Coast Title Company';
+        $from_mail = env('FROM_EMAIL');
+        $subject = "We'd Love Your Feedback";
+        // $to = $escrow_email_address;
+        // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+        // $cc = array('piyush.j@crestinfosystems.com');
+        $mailParams = array(
+            'from_mail' => $from_mail,
+            'from_name' => $from_name,
+            'to' => $to,
+            'subject' => $subject,
+            'message' => json_encode($data),
+            'cc' => $cc,
+        );
+        // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+        // $cc = array();
+        $this->CI->load->helper('sendemail');
+        $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'survay_sample_email_sent_mail', '', $mailParams, array(), $data['order_id'], 0);
+        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+        // print_r($mail_result);die;
+        $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'survay_sample_email_sent_mail', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
+        return $mail_result;
+    }
+
+    public function getSalesRepForOrder($orderId) {
+        $this->CI->db->select('order_details.file_number, customer_basic_details.first_name, customer_basic_details.last_name')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative and customer_basic_details.is_sales_rep = 1');
+        $this->CI->db->where('order_details.id', $orderId);
+
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function surveyReportCards($data) {
+        // echo "<pre>";
+        // print_r($this->salesdashboardtemplate->show("order/common/survey", "survey_report_cards", ['value' => $data]));die;
+        // $results = $this->load->view('order/review_file_summary', $data, true);
+        return $this->CI->load->view('frontend/order/common/survey/survey_report_cards', $data, true);
+        // echo $this->salesdashboardtemplate->show("order/common/survey", "survey_report_cards", ['value' => $data]);
+    }
+
+    public function surveyReportRating($data) {
+        return $this->CI->load->view('frontend/order/common/survey/survey_report_rating_details', $data, true);
     }
 }

@@ -2,7 +2,7 @@
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Pma extends MX_Controller {
     private $user;
-    private $pma_js_version = '01';
+    private $js_version = '01';
 	function __construct() 
     {
         parent::__construct();
@@ -26,13 +26,13 @@ class Pma extends MX_Controller {
         // $this->template->addJS('https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
         // // $this->template->addJS('http://code.jquery.com/ui/1.10.3/jquery-ui.js');
         // $this->template->addJS('assets/frontend/js/jquery.tablesorter.min.js');
-        // $this->template->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->pma_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->js_version));
 		// $this->template->show("pma", "list", $data);
 
         $this->salesdashboardtemplate->addCSS( base_url('assets/frontend/css/tablesorter-blue.css'));
         $this->salesdashboardtemplate->addJS( 'https://maps.googleapis.com/maps/api/js?key='.env('GOOGLE_MAP_KEY').'&libraries=places&sensor=false');
         $this->salesdashboardtemplate->addJS('assets/frontend/js/jquery.tablesorter.min.js');
-        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->pma_js_version));
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/pma.js?v=pma_'.$this->js_version));
 		$this->salesdashboardtemplate->show("pma", "list", $data);
     }
 

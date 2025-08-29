@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $version = '12.03.03';
+    private $js_version = '12.03.03';
 
     public function __construct()
     {
@@ -257,8 +257,8 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->js_version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
         // $this->salesdashboardtemplate->addCSS(base_url('assets/css/theme.css'));
@@ -454,8 +454,8 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->js_version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
         // $this->salesdashboardtemplate->addCSS(base_url('assets/css/theme.css'));
@@ -910,8 +910,8 @@ class SalesRep extends MX_Controller
 
         }
         $data['salesHistory'] = $salesHistory;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->js_version));
         //$this->template->show("order", "sales_production_history", $data);
         $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
     }
@@ -976,8 +976,8 @@ class SalesRep extends MX_Controller
         }
         $data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS(base_url('assets/plugins/chart/Chart.min.js'));
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-trends.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-trends.css?v=' . $this->js_version));
         //$this->template->show("order", "sales_trends", $data);
         $this->salesdashboardtemplate->show("order", "sales_trends", $data);
     }
@@ -1055,7 +1055,7 @@ class SalesRep extends MX_Controller
                 }
             }
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/escrow_tasks.css?v=05'));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-summary.css?v=05'));
         //$this->template->show("order", "sales_summary", $data);
@@ -1115,7 +1115,7 @@ class SalesRep extends MX_Controller
 
         }
         $data['commissionHistory'] = $commissionHistory;
-        $this->template->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        $this->template->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
         $this->template->show("order", "sales_commission_history", $data);
     }
 
@@ -1183,7 +1183,7 @@ class SalesRep extends MX_Controller
                 $prevPremium = $row['total_premium'];
             }
             $data['salesHistory'] = $salesHistory;
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
             $this->salesdashboardtemplate->show("order", "sales_current_month_production_history", $data);
             // $this->template->show("order", "sales_current_month_production_history", $data);
         } else {
@@ -1197,7 +1197,7 @@ class SalesRep extends MX_Controller
         $data['title'] = 'Sales Production Ranking | Pacific Coast Title Company';
         $data['salesHistory'] = array();
 
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->show("order", "sales_ranking", $data);        
     }
 
@@ -1300,7 +1300,7 @@ class SalesRep extends MX_Controller
 
             $data['reports_data'] = $this->salesReport_model->getSalesAllReportData($report_condition);
 
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=' . $this->version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/report.js?v=' . $this->js_version));
             $this->salesdashboardtemplate->show("order", "sales_report", $data);
         } else {
             redirect(base_url() . 'sales-dashboard/' . $userId);

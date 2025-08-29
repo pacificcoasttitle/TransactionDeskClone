@@ -78,6 +78,14 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Summary</span>
 			</a>
 		</li>
+		<?php if (($userdata['is_sales_rep_manager'] == 1)) {?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'survey-result') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>survey-result">
+				<i class="fas fa-poll-h"></i>
+				<span>Survey Result</span>
+			</a>
+		</li>
+		<?php }?>
 
 	<?php } else if (($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) && ($sidebar)) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'escrow-dashboard' || $this->uri->segment(1) == 'pay-off-dashboard' || $this->uri->segment(1) == 'special-lender-dashboard') {echo 'active';}?>">

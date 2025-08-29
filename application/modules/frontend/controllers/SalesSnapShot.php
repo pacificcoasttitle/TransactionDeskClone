@@ -4,7 +4,7 @@ class SalesSnapShot extends MX_Controller
 {
 
     private $user;
-    private $sales_snap_shot_js_version = '01';
+    private $js_version = '01';
 
     public function __construct()
     {

@@ -139,9 +139,9 @@ class Login extends MX_Controller
                             "is_payoff_user" => $user['is_payoff_user'],
                             "is_title_production" => $user['is_title_production'],
                             "is_escrow_officer" => $user['is_escrow_officer'],
-                            "is_escrow_assistant" => $user['is_escrow_assistant'],
+                            "is_escrow_assistant" => $user['is_escrow_assistant'] ?? '',
                             "lookup_code" => $user['lookup_code'],
-                            "is_special_lender" => isset($user['is_special_lender']) && !empty($user['is_special_lender']) ? $user['is_special_lender'] : '',
+                            "is_special_lender" => $user['is_special_lender'] ?? '',
                         );
                         $this->session->set_userdata('user', $session_data);
                     }
@@ -152,11 +152,11 @@ class Login extends MX_Controller
                         $response = array('status' => 'success', 'message' => '', 'url' => 'title-officer-dashboard');
                     } else if ($user['is_sales_rep'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'sales-dashboard/' . $user['id']);
-                    } else if ($user['is_special_lender'] == 1) {
+                    } else if (isset($user['is_special_lender']) && $user['is_special_lender'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'special-lender-dashboard');
                     } else if ($user['is_payoff_user'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'pay-off-dashboard');
-                    } else if ($user['is_escrow_officer'] == 1 || $user['is_escrow_assistant'] == 1) {
+                    } else if ($user['is_escrow_officer'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-dashboard');
                     } else if ($user['is_title_production'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'file-upload');

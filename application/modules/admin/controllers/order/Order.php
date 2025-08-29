@@ -849,7 +849,7 @@ class Order extends MX_Controller
             $nestedData[] = $value['first_name'] . " " . $value['last_name'];
             $nestedData[] = $value['email_sent_status'] ? 'Sent' : 'Not sent';
             //$nestedData[] = $value['document_name'];
-            $lp_report_status = $value['lp_report_status'];
+            $lp_report_status = $value['lp_report_status'] ?? '';
             $disabled         = '';
             $orderId          = $value['id'];
             if (empty($value['document_name'])) {

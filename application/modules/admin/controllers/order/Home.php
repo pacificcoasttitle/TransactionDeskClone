@@ -8756,7 +8756,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['phone'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['address1']." ".$value['city']." ".$value['zipcode'];
+                $nestedData[] = $value['address1']." ".$value['city']." ".$value['zip'];
                 
                 if(isset($_POST['draw']) && !empty($_POST['draw']))
                 {
@@ -9478,6 +9478,157 @@ class Home extends MX_Controller
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
         echo json_encode($data);
+    }
+
+    public function surveys()
+    {
+        $userdata      = $this->session->userdata('admin');
+        $data = array();
+        $data['title'] = 'PCT Order: Surveys';
+        
+        $this->load->library('order/survey');
+        $this->load->model('order/apiLogs');
+        $endPoint = 'surveys';
+        // $userdata['email'] = $userdata['email_address'];
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), array(), 0, 0);
+        $result = $this->survey->make_request('GET', $endPoint, '', $userdata);
+        $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
+        $survey = [];
+        $titleOfficerList = [];
+
+        // if (isset($result) && !empty($result)) {
+        if ($result && is_string($result)) {
+            $response = json_decode($result, true);
+            // echo "<pre>";
+            // print_r($response);die;
+            if (isset($response['data']) && !empty($response['data'])) {
+                foreach ($response['data'] as $key => $value) {
+                    $arr = [];
+                    $arr['id'] = $value['id'];
+                    $arr['title'] = $value['title'];
+                    $arr['nickname'] = $value['nickname'];
+                    $arr['href'] = $value['href'];
+                    $titleOfficerList[] = $arr;
+                    // break;
+                }
+            } else {
+                // Handle empty or invalid JSON response
+                $survey['error'] = 'No survey data available';
+                $survey['title_officer_list'] = [];
+            }
+        } else {
+            // Handle API request failure
+            $survey['error'] = 'Failed to fetch survey data';
+            $survey['title_officer_list'] = [];
+        }
+        $ratingData = [];
+        if (!empty($titleOfficerList)) {
+            // $titleOffSurveyId = "417131721"; 
+            $titleOffSurveyId = $titleOfficerList['0']['id']; 
+            $endPoint = 'surveys/' . $titleOffSurveyId . '/responses/bulk';
+            $result = $this->survey->make_request('GET', $endPoint);
+            // if (isset($result) && !empty($result)) {
+            if ($result && is_string($result)) {
+                $response = json_decode($result, true);
+                
+                if (isset($response['data'])) {
+                    // Process the response data
+                    $questionAverages = [];
+                    $textComment = [];
+                    $ratingArray = [];
+
+                    foreach ($response['data'] as $res) {
+                        $ratingArr = [];
+                        $ratingArr['sales_rep'] = '-';
+
+                        if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
+                            $orderId = $res['custom_variables']['order_id'];
+                            $salesRepDetails = $this->order->getSalesRepForOrder($orderId);
+                            
+                            $ratingArr['sales_rep'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
+                        }
+
+                        $ratingData['titleOfficer'] = $titleOfficerList['0']['title'];
+
+                        foreach ($res['pages'] as $page) {
+                            foreach ($page['questions'] as $key => $question) {
+                                $questionId = $question['id'];
+                                foreach ($question['answers'] as $answer) {
+                                    if (isset($answer['choice_metadata']['weight'])) {
+                                        $ratingArr[$questionId] = (int)$answer['choice_metadata']['weight'];
+                                        // $ratingArr['Q'.($key+1)] = (int)$answer['choice_metadata']['weight'];
+                                        $questionAverages[$questionId][] = (int)$answer['choice_metadata']['weight'];
+                                    }
+                                    if (isset($answer['text']) && !empty($answer['text'])) {
+                                        $ratingArr['comment'] = $answer['text'];
+                                        $textComment[] = $answer['text'];
+                                    }
+                                }
+                            }
+                        }
+                        $ratingArray[] = $ratingArr;
+                    }
+                    // Calculate average for each question
+                    $finalAverages = [];
+                    $i = 1;
+                    foreach ($questionAverages as $questionId => $weights) {
+                        $finalAverages['Q'.$i] = number_format(array_sum($weights) / count($weights), 2);
+                        $i++;
+                    }
+                    $ratingData['rating'] = $ratingArray;
+                    // print_r($page);die;
+                    $ratingData['avg'] = $finalAverages;
+                    $ratingData['textComment'] = $textComment;
+                    $survey['survey_cards'] = $this->order->surveyReportCards($ratingData);
+                    $survey['survey_rating_details'] = $this->order->surveyReportRating($ratingData);
+                }else {
+                    // Handle empty response data
+                    $survey['error'] = 'No survey response data available';
+                    $survey['survey_cards'] = [];
+                    $survey['survey_rating_details'] = [];
+                }
+            } else {
+                // Handle API failure for responses
+                $survey['error'] = 'Failed to fetch survey responses';
+                $survey['survey_cards'] = [];
+                $survey['survey_rating_details'] = [];
+            }
+        } else {
+            // Handle failure to get title officer list
+            $survey['error'] = 'Failed to fetch survey data';
+            $survey['title_officer_list'] = [];
+            $survey['survey_cards'] = [];
+            $survey['survey_rating_details'] = [];
+        }
+        $survey['title_officer_list'] = $titleOfficerList;
+        
+        // echo "<pre>";
+        // print_r($ratingData);
+        // print_r($survey);die;
+        // $data['survey'] = $survey;
+        
+        // $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=' . $this->version));
+        $this->admintemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
+        // $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        // $this->salesdashboardtemplate->show("order/common", "survey_result", $survey);
+        $this->admintemplate->addJS(base_url('assets/backend/js/survey.js?v=' . $this->version));
+        $this->admintemplate->show("order/home", "surveys", $survey);
+    }
+
+    public function sendSurveySampleEmail()
+    {
+        $input = $this->input->post();
+        $data['email_address'] = 'piyush.j@crestinfosystems.com';//$input['email_address'];
+        $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W';
+        $mail_result = $this->order->sendSurveySampleEmail($data);
+        
+        if ($mail_result) {
+            echo json_encode(['status' => 'success', 'message' => 'Mail sent successfully to : ' . $input['email_address']]);
+            exit;
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Something went wrong, Please try later']);
+            exit;
+        }
     }
     
 }

@@ -80,46 +80,46 @@
 							</div>
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['company_name']; ?>" type="text" name="CompanyName" id="CompanyName" class="form-control" placeholder="Company Name">
+									<input value="<?php echo $customer_data['company_name'] ?? ''; ?>" type="text" name="CompanyName" id="CompanyName" class="form-control" placeholder="Company Name">
                                 </div>
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['email_address']; ?>" type="email" name="OpenEmail" id="OpenEmail" class="form-control" placeholder="Email address">
+									<input value="<?php echo $customer_data['email_address'] ?? ''; ?>" type="email" name="OpenEmail" id="OpenEmail" class="form-control" placeholder="Email address">
                                 </div>
                             </div>
 
                             <div class="row form-group">
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['first_name']; ?>" type="text" name="OpenName" id="OpenName" class="form-control" placeholder=" First Name">
-									<input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_data['id']; ?>">
+									<input value="<?php echo $customer_data['first_name'] ?? ''; ?>" type="text" name="OpenName" id="OpenName" class="form-control" placeholder=" First Name">
+									<input type="hidden" name="id" id="CustomerId" value="<?php echo $customer_data['id'] ?? ''; ?>">
                                 </div>
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['last_name']; ?>" type="text" name="OpenLastName" id="OpenLastName" class="form-control" placeholder="Last Name">
+									<input value="<?php echo $customer_data['last_name'] ?? ''; ?>" type="text" name="OpenLastName" id="OpenLastName" class="form-control" placeholder="Last Name">
                                 </div>
                             </div>
 
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['telephone_no']; ?>" type="tel" name="Opentelephone" id="Opentelephone" class="form-control" placeholder="Telephone">
+									<input value="<?php echo $customer_data['telephone_no'] ?? ''; ?>" type="tel" name="Opentelephone" id="Opentelephone" class="form-control" placeholder="Telephone">
                                 </div>
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['street_address']; ?>" type="text" name="StreetAddress" id="StreetAddress" class="form-control" placeholder="Street Address">
+									<input value="<?php echo $customer_data['street_address'] ?? ''; ?>" type="text" name="StreetAddress" id="StreetAddress" class="form-control" placeholder="Street Address">
 								</div>
                             </div>
 
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['city']; ?>" type="text" name="City" id="City" class="form-control" placeholder="City">
+									<input value="<?php echo $customer_data['city'] ?? ''; ?>" type="text" name="City" id="City" class="form-control" placeholder="City">
                                 </div>
 								<div class="col-sm-6">
-									<input value="<?php echo $customer_data['zip_code']; ?>" type="text" name="Zipcode" id="Zipcode" class="form-control" placeholder="Zipcode">
-									<input value="<?php echo $customer_data['lookup_code']; ?>" type="hidden" name="ClientLookupCode" id="ClientLookupCode" class="form-control" placeholder="ClientLookupCode">
-									<input value="<?php echo $customer_data['flookup_code']; ?>" type="hidden" name="CompanyLookupCode" id="CompanyLookupCode" class="form-control" placeholder="ClientLookupCode">
+									<input value="<?php echo $customer_data['zip_code'] ?? ''; ?>" type="text" name="Zipcode" id="Zipcode" class="form-control" placeholder="Zipcode">
+									<input value="<?php echo $customer_data['lookup_code'] ?? ''; ?>" type="hidden" name="ClientLookupCode" id="ClientLookupCode" class="form-control" placeholder="ClientLookupCode">
+									<input value="<?php echo $customer_data['flookup_code'] ?? ''; ?>" type="hidden" name="CompanyLookupCode" id="CompanyLookupCode" class="form-control" placeholder="ClientLookupCode">
 									<!-- <input value="<?php echo $customer_data['client_type']; ?>" type="hidden" name="ClientType" id="ClientType" class="form-control" placeholder="ClientLookupCode"> -->
                                 </div>
                             </div>
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<select id="ClientType" name="ClientType" class="form-control" placeholder="ClientType"><option>Select Client Type</option> </select>
+									<select id="ClientType" name="ClientType" class="form-control" placeholder="ClientType"><option value="">Select Client Type</option> </select>
                                 </div>
                             </div>
 
