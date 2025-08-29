@@ -4,7 +4,7 @@
 }
 </style>
 <div class="typography-section__inner">
-	<a class="btn-success btn-icon-split btn-sm" onclick="download_document(<?php echo $api_document_id;?>, <?php echo $order_id;?>, '<?php echo $document_name;?>');" href="javascript:void(0);">
+	<a class="btn-success btn-icon-split btn-sm" onclick="download_document(<?php echo $api_document_id ?? 0;?>, <?php echo $order_id;?>, '<?php echo $document_name;?>');" href="javascript:void(0);">
 		<span class="icon text-white-50">
 			<i class="fa fa-download"></i>
 		</span>

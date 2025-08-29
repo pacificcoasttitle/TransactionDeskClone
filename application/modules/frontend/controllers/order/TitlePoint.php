@@ -73,6 +73,7 @@ class TitlePoint extends MX_Controller
             $lotSize = isset($_POST['lotSize']) && !empty($_POST['lotSize']) ? $_POST['lotSize'] : '';
             $zoning = isset($_POST['zoning']) && !empty($_POST['zoning']) ? $_POST['zoning'] : '';
             $buildingArea = isset($_POST['buildingArea']) && !empty($_POST['buildingArea']) ? $_POST['buildingArea'] : '';
+            $unitinfo = '';
             if ($unit_no) {
                 $unitinfo = 'UnitNumber ' . $unit_no . ', ';
             }
@@ -408,7 +409,7 @@ class TitlePoint extends MX_Controller
         } else {
             $responseStatus = isset($result['ReturnStatus']) && !empty($result['ReturnStatus']) ? $result['ReturnStatus'] : '';
             $session_data = array();
-
+            $error = '';
             if ($methodId == 4) {
                 if ($responseStatus == 'Success') {
                     $briefLegal = isset($result['Result']['BriefLegal']) && !empty($result['Result']['BriefLegal']) ? $result['Result']['BriefLegal'] : '';

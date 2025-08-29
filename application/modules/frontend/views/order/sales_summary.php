@@ -58,11 +58,11 @@
 											</label>
 										</div>
 										<div class="col-md-2 text-right" style="padding-left: 40px;margin-top: 15px;">
-											<a href="#collapseCard_<?php echo $summary['company_id']; ?>" class="custom__collapse_arrow collapsed" data-toggle="collapse"
-												role="button" aria-expanded="false" aria-controls="collapseCard_<?php echo $summary['company_id']; ?>">
+											<!-- <a href="#collapseCard" class="custom__collapse_arrow collapsed" data-toggle="collapse"
+												role="button" aria-expanded="false" aria-controls="collapseCard">
 												<i class="fa fa-angle-down"></i>
 												<i class="fa fa-angle-up"></i>
-											</a>
+											</a> -->
 										</div>
 									</div>
 								</div>

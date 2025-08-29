@@ -198,6 +198,8 @@ $route['code-verification']                   = 'frontend/order/dashboardMail/co
 $route['borrower-details']                    = 'frontend/order/dashboardMail/borrowerDetails';
 $route['borrower-info-submit']                = 'frontend/order/dashboardMail/borrowerInfoSubmit';
 $route['generic-landing-page']                = 'frontend/order/dashboardMail/genericLandingPage';
+$route['survey-result'] = 'frontend/order/common/surveysResult';
+$route['get-survey-details'] = 'frontend/order/common/getSurveyDetails';
 $route['get-order-information/:any']          = 'frontend/order/cron/getOrderInformation';
 $route['update-order-status']                 = 'frontend/order/cron/updateOrderStatus';
 $route['create-order-safewire']               = 'frontend/order/dashboardMail/createOrderSafewire';
@@ -498,6 +500,8 @@ $route['order/admin/lp-alert']                   = 'admin/order/home/lpAlert';
 $route['order/admin/add-lp-alert']               = 'admin/order/home/addLpAlert';
 $route['order/admin/delete-lp-alert']            = 'admin/order/home/deleteLpAlert';
 $route['order/admin/edit-lp-alert/:num']         = 'admin/order/home/editLpAlert';
+$route['order/admin/surveys'] = 'admin/order/home/surveys';
+$route['send-survey-sample-email'] = 'admin/order/home/sendSurveySampleEmail';
 
 $route['order/admin/daily-email-control']     = 'admin/order/home/dailyEmailControl';
 $route['order/admin/get-daily-emailer']       = 'admin/order/home/getDailyEmailer';

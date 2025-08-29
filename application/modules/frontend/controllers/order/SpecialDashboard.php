@@ -4,7 +4,7 @@
 
 class SpecialDashboard extends MX_Controller {
 
-	private $special_lender_js_version = '01';
+	private $js_version = '01';
 	function __construct() {
         parent::__construct();
 		$this->load->helper(
@@ -31,9 +31,9 @@ class SpecialDashboard extends MX_Controller {
 		$data['is_sales_rep'] = isset($userdata['is_sales_rep']) && !empty($userdata['is_sales_rep']) ? 1 : 0;
 		$data['order_lists'] = $this->order->get_recent_orders();
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-		// $this->template->addJS( base_url('assets/frontend/js/order/special_lender.js?v=special_lender_'.$this->special_lender_js_version));
+		// $this->template->addJS( base_url('assets/frontend/js/order/special_lender.js?v=special_lender_'.$this->js_version));
 		// $this->template->show("order", "special_lender_dashboard", $data);
-		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/special_lender.js?v=special_lender_'.$this->special_lender_js_version));
+		$this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/special_lender.js?v=special_lender_'.$this->js_version));
 		$this->salesdashboardtemplate->show("order", "special_lender_dashboard", $data);
     } 
     

@@ -1985,7 +1985,7 @@ class Home_model extends CI_Model
     {
         $this->db->select('count(id) as total_files');
         $this->db->from('order_details');
-        $this->db->where('is_softpro_order', 1);+
+        $this->db->where('is_softpro_order', 1);
         $this->db->group_start()
             ->where('prelim_flag', 0)
             ->or_where('prelim_flag is null')
@@ -3369,7 +3369,8 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('is_escrow', $is_escrow);if ($is_escrow == 1) {
+            $this->db->where('is_escrow', $is_escrow);
+            if ($is_escrow == 1) {
                 $this->db->where('is_escrow', $is_escrow);
             } else if ($is_lender == 1) {
                 $this->db->where('is_lender', $is_lender);
@@ -3424,7 +3425,7 @@ class Home_model extends CI_Model
             $this->db->where('status', 1);
             $this->db->from('pct_softpro_lookup_table');
 
-            $filter_total_records = $this->db->count_all_results();
+            $total_records = $filter_total_records = $this->db->count_all_results();
 
             if ($is_escrow == 1) {
                 $this->db->where('is_escrow', $is_escrow);

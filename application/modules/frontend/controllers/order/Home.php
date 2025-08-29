@@ -5,8 +5,7 @@
 class Home extends MX_Controller
 {
 
-    private $version  = '06.01';
-    private $custom_js_version = '07';
+    private $js_version = '06.02';
 
     public function __construct()
     {
@@ -1405,15 +1404,15 @@ class Home extends MX_Controller
             // $this->template->addJS(base_url('assets/frontend/js/additional-methods.min.js'));
             // $this->template->addJS(base_url('assets/frontend/js/smart-form.js'));
             // $this->template->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
-            // $this->template->addJS(base_url('assets/frontend/js/custom.js?v=' . $this->version));
-            // $this->template->addJS(base_url('assets/frontend/js/order.js?v=' . $this->version));
+            // $this->template->addJS(base_url('assets/frontend/js/custom.js?v=' . $this->$js_version));
+            // $this->template->addJS(base_url('assets/frontend/js/order.js?v=' . $this->$js_version));
             $this->salesdashboardtemplate->addJS('https://maps.googleapis.com/maps/api/js?key=' . env('GOOGLE_MAP_KEY') . '&libraries=places&sensor=false');
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/additional-methods.min.js'));
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/smart-form.js?v=' . $this->version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/smart-form.js?v=' . $this->js_version));
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js'));
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/custom.js?v=' . $this->version));
-            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order.js?v=' . $this->version));
-            $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/custom.css?v=' . $this->version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/custom.js?v=' . $this->js_version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order.js?v=' . $this->js_version));
+            $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/custom.css?v=' . $this->js_version));
             // $this->salesdashboardtemplate->addCss( base_url('assets/libs/bootstrap/bootstrap.css'));
             if ($is_master) {
             $this->salesdashboardtemplate->show("order", "master_order", $data);
@@ -1598,9 +1597,9 @@ class Home extends MX_Controller
         $data['lpFileNumber']  = $lpFileNumber;
         $data['lpFileStatus']  = $titlePointDetails[0]['lv_file_status'];
         $data['taxFileStatus'] = $titlePointDetails[0]['tax_file_status'];
-        // $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-1.9.1.min.js?v=' . $this->version) );
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js?v=' . $this->version));
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order.js?v=' . $this->version));
+        // $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-1.9.1.min.js?v=' . $this->js_version) );
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/jquery-cloneya.min.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->show("order", "order-submission", $data);
         // $this->load->view('layout/head', $data);
         // $this->load->view('order/order-submission', $data);
@@ -1788,10 +1787,10 @@ class Home extends MX_Controller
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
         if (env('AWS_ENABLE_FLAG') == 1) {
-            $fileSize = filesize(env('AWS_PATH') . "legal-vesting/" . $document_name);
+            $fileSize = getRemoteFileSize(env('AWS_PATH') . "legal-vesting/" . $document_name);
             $contents = file_get_contents(env('AWS_PATH') . "legal-vesting/" . $document_name);
         } else {
-            $fileSize = filesize(FCPATH . 'uploads/legal-vesting/' . $document_name);
+            $fileSize = getRemoteFileSize(FCPATH . 'uploads/legal-vesting/' . $document_name);
             $contents = file_get_contents(base_url() . 'uploads/legal-vesting/' . $document_name);
         }
         $binaryData = base64_encode($contents);
@@ -1856,10 +1855,10 @@ class Home extends MX_Controller
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
         if (env('AWS_ENABLE_FLAG') == 1) {
-            $fileSize = filesize(env('AWS_PATH') . "grant-deed/" . $document_name);
+            $fileSize = getRemoteFileSize(env('AWS_PATH') . "grant-deed/" . $document_name);
             $contents = file_get_contents(env('AWS_PATH') . "grant-deed/" . $document_name);
         } else {
-            $fileSize = filesize(FCPATH . 'uploads/grant-deed/' . $document_name);
+            $fileSize = getRemoteFileSize(FCPATH . 'uploads/grant-deed/' . $document_name);
             $contents = file_get_contents(base_url() . 'uploads/grant-deed/' . $document_name);
         }
         $binaryData = base64_encode($contents);
@@ -1925,10 +1924,10 @@ class Home extends MX_Controller
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
         if (env('AWS_ENABLE_FLAG') == 1) {
-            $fileSize = filesize(env('AWS_PATH') . "tax/" . $document_name);
+            $fileSize = getRemoteFileSize(env('AWS_PATH') . "tax/" . $document_name);
             $contents = file_get_contents(env('AWS_PATH') . "tax/" . $document_name);
         } else {
-            $fileSize = filesize(FCPATH . 'uploads/tax/' . $document_name);
+            $fileSize = getRemoteFileSize(FCPATH . 'uploads/tax/' . $document_name);
             $contents = file_get_contents(base_url() . 'uploads/tax/' . $document_name);
         }
 
@@ -1995,7 +1994,7 @@ class Home extends MX_Controller
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
         $userdata   = $this->session->userdata('user');
-        $fileSize   = filesize(env('AWS_PATH') . "pre-listing-doc/" . $document_name);
+        $fileSize   = getRemoteFileSize(env('AWS_PATH') . "pre-listing-doc/" . $document_name);
         $contents   = file_get_contents(env('AWS_PATH') . "pre-listing-doc/" . $document_name);
         $binaryData = base64_encode($contents);
 

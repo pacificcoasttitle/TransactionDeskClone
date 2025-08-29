@@ -150,3 +150,13 @@ if (!function_exists('getExtraCommission')) {
         }
     }
 }
+
+if (!function_exists('getRemoteFileSize')) {
+    function getRemoteFileSize($url) {
+        $headers = get_headers($url, 1);
+        if (isset($headers['Content-Length'])) {
+            return (int) $headers['Content-Length'];
+        }
+        return false;
+    }
+}

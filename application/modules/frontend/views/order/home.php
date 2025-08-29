@@ -2,6 +2,10 @@
 	.typography-section__inner {
         margin-left: 10%;
     }
+	.ui-autocomplete {
+		max-height: 300px !important;
+		overflow: hidden !important;
+	}
 	.progress {
 		height: auto;
 		margin-bottom: 0px;
@@ -47,20 +51,23 @@
 		height: 50px;
 		padding: 0.375rem 0.75rem;
 	}
+	.main-wrapper {
+		scale: 95%;
+	}
 </style>
 
 <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container-fluid">
+	<div class="container-fluid main-wrapper">
         <div class="row mb-3">
             <div class="col-sm-12">
-                <h1 class="h3 text-gray-800 text-center">Helping Get Your Transaction Started.</h1>
+                <h1 class="h3 text-gray-800 text-center">Open Order Form</h1>
             </div>
         </div>
         <div class="row ">
-            <div class="col-md-10 center-wrapper">
+            <div class="col-md-11 center-wrapper">
                 <div class="card shadow mb-4 smart-forms">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add your details below.</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Helping Get Your Transaction Started.</h6>
                     </div>
                     <div class="card-body">
                         <form id="smart-form" method="POST"  enctype="multipart/form-data">
@@ -108,8 +115,35 @@
                                 </div>
 								<div class="col-sm-6">
 									<input value="<?php echo $customer_data['zip_code']; ?>" type="text" name="Zipcode" id="Zipcode" class="form-control" placeholder="Zipcode">
+									<input value="<?php echo $customer_data['lookup_code'] ?? ''; ?>" type="hidden" name="ClientLookupCode" id="ClientLookupCode" class="form-control" placeholder="ClientLookupCode">
+									<input value="<?php echo $customer_data['flookup_code'] ?? ''; ?>" type="hidden" name="CompanyLookupCode" id="CompanyLookupCode" class="form-control" placeholder="ClientLookupCode">
+
+                                </div>
+
+                            </div>
+
+							<div class="row form-group">
+								<div class="col-sm-6">
+									<select id="ClientType" name="ClientType" class="form-control" placeholder="ClientType">
+										<?php if (!empty($customer_data['is_escrow'])) { ?>
+											<option value="EscrowCompany"> Escrow Company </option>;
+										 <?php } if (!empty($customer_data['is_lender'])) { ?>
+											<option value="Lender"> Lender </option>
+										<?php } if (!empty($customer_data['is_selling_agent'])) { ?>
+											<option value="ListingAgentBroker"> Listing Agent Broker </option>
+										<?php } if (!empty($customer_data['is_mortgage_broker'])) { ?>
+											<option value="MortgageBroker"> Mortgage Broker </option>
+										<?php } ?> 
+									</select>
                                 </div>
                             </div>
+
+							<div class="row form-group">
+								<div class="col-sm-3 align-display">
+									<input type="checkbox" class="form-control w-20 mr-3" name="email_notification" id="email-notification">
+									<span>Email Notification</span>
+								</div>
+							</div>
 
 							<div class="row form-grp-title">
 								<div class="col-sm-12">
@@ -178,6 +212,7 @@
 									<input type="text" name="apn" id="apn" class="form-control" placeholder="APN">
 								</div>
 							</div>
+							<input type="hidden" id="unit_number" name="unit_number" value="">
 
 							<div class="row form-group">
 								<div class="col-sm-6">
@@ -186,7 +221,6 @@
 								<div class="col-sm-6">
 									<input type="text" name="LegalDescription" id="LegalDescription" class="form-control" placeholder="Brief Legal Desription">
 								</div>
-								<input type="hidden" id="unit_number" name="unit_number" value="">
 							</div>
 
 							<div class="row form-grp-title">
@@ -204,6 +238,38 @@
 								</div>
 							</div>
 
+							<div class="row form-group">
+
+								<div class="col-sm-3 align-display">
+
+									<input type="checkbox" class="form-control w-20 mr-5" name="IsOrganization" id="IsOrganization" value="1">
+
+									<span>Is Organization</span>
+
+								</div>
+
+							</div>
+
+
+
+							<div id="organization-type-fields" style="display: none;">
+								<div class="row form-group">
+									<div class="col-sm-12">
+										<select id="OrganizationType" name="OrganizationType" class="form-control">
+											<option value="">Select Organization Type</option>
+											<option value="Corporation"> Corporation  </option>
+											<option value="Limited Liability Corp"> Limited Liability Corp  </option>
+											<option value="Limited Liability Company"> Limited Liability Company  </option>
+											<option value="Limited Partnership"> Limited Partnership  </option>
+											<option value="Partnership"> Partnership  </option>
+											<option value="Trust"> Trust  </option>
+											<option value="Estate"> Estate  </option>
+											<option value="Other"> Other  </option>
+										</select>
+									</div>
+								</div>
+							</div>
+
 							<div class="row form-grp-title">
 								<div class="col-sm-12">
 									<div class="tagline"><span>Transaction Details</span></div>
@@ -215,16 +281,16 @@
 									<select id="SalesRep" name="SalesRep" class="form-control">
 										<option value="">Sales Rep...</option>
 										<?php
-if (isset($salesRep) && !empty($salesRep)) {
-    foreach ($salesRep as $k => $v) {
-        $name = array($v['first_name'], $v['last_name']);
-        $full_name = implode(' ', $name);
-        ?>
-													<option value="<?php echo $v['id']; ?>"  <?php echo ($v['id'] == $customer_data['sales_rep_id']) ? "selected" : '' ?> ><?php echo $full_name; ?></option>
-										<?php
-}
-}
-?>
+										if (isset($salesRep) && ! empty($salesRep)) {
+											foreach ($salesRep as $k => $v) {
+												// $name      = [$v['first_name'], $v['last_name']];
+												// $full_name = implode(' ', $name);
+												$full_name = $v['full_name'];
+											?>
+													<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+											<?php
+												}}
+											?>
 									</select>
 								</div>
 							</div>
@@ -233,15 +299,13 @@ if (isset($salesRep) && !empty($salesRep)) {
 									<select id="TitleOfficer" name="TitleOfficer" class="form-control">
 										<option value="">Title Officer</option>
 										<?php
-
-if (isset($titleOfficer) && !empty($titleOfficer)) {
-    foreach ($titleOfficer as $key => $value) {
-        ?>
-													<option value="<?php echo $value['id']; ?>" <?php echo ($value['id'] == $customer_data['title_officer_id']) ? "selected" : '' ?> ><?php echo $value['name']; ?></option>
-										<?php
-}
-}
-?>
+                                            if (isset($titleOfficer) && ! empty($titleOfficer)) {
+											foreach ($titleOfficer as $key => $value) {
+											?>
+												<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+											<?php
+												}}
+											?>
 									</select>
 								</div>
 							</div>
@@ -250,7 +314,35 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 								<div class="col-sm-12">
 									<input type="hidden" name="ProductType" id="ProductType">
 									<select id="ProductTypeID" name="ProductTypeID" class="form-control">
-										<option value="">Select Product</option>
+										<option value="">Select Product Type</option>
+										<?php foreach ($productType as $key => $type) {?>
+											<option value="<?php echo $type['id'] ?>"><?php echo $type['product_type'] ?></option>
+											<?php }?>
+									</select>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-sm-12">
+									<input type="hidden" id="OrderType" name="OrderType">
+									<select id="OrderTypeID" name="OrderTypeID" class="form-control">
+										<option value="">Select Order Type</option>
+										<?php foreach ($orderType as $key => $type) {?>
+										<option value="<?php echo $type['id'] ?>"><?php echo $type['order_type'] ?></option>
+										<?php }?>
+									</select>
+								</div>
+							</div>
+							
+							<div class="row form-group">
+								<div class="col-sm-12">
+									<select id="TransactionType" name="TransactionType" class="form-control">
+										<option value="">Select Transaction Type</option>
+										<option value="Purchase">Purchase</option>
+										<option value="Refinance">Refinance</option>
+										<option value="Equity">Equity</option>
+										<option value="Other">Other</option>
+
 									</select>
 								</div>
 							</div>
@@ -259,12 +351,18 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 							<div id="sales-loan-amount-fields" style="display:none;">
 								<div class="row form-group">
 									<div class="col-sm-12">
-										<input type="text" data-type="number" class="form-control" name="salesAmount" id="salesAmount" placeholder="Sales Amount">
+										<input type="text" class="form-control" data-type="number"  name="salesAmount" id="salesAmount" placeholder="Sales Amount">
 									</div>
 								</div>
 								<div class="row form-group">
 									<div class="col-sm-12">
-										<input type="text" data-type="number" class="form-control" name="loanAmount" id="loanAmount" placeholder="Loan Amount">
+										<input type="text" class="form-control" data-type="number"  name="loanAmount" id="loanAmount" placeholder="Loan Amount">
+									</div>
+								</div>
+
+								<div class="row form-group coverage-field" style="display:none;">
+									<div class="col-sm-12">
+										<input type="text" class="form-control" data-type="number"  name="coverageAmount" id="coverageAmount" placeholder="Coverage Amount">
 									</div>
 								</div>
 
@@ -340,18 +438,18 @@ if (isset($titleOfficer) && !empty($titleOfficer)) {
 								</div>
 
 								<?php
-
-$is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
-
-if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
-										<div class="col-sm-3 align-display">
+$is_escrow                = isset($customer_data['is_escrow']) && ! empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
+$is_lender                = isset($customer_data['is_lender']) && ! empty($customer_data['is_lender']) ? $customer_data['is_lender'] : 0;
+$is_selling_agent                = isset($customer_data['is_selling_agent']) && ! empty($customer_data['is_selling_agent']) ? $customer_data['is_selling_agent'] : 0;
+$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && ! empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
+    if ($is_escrow == 1 || $is_primary_mortgage_user == 1 || $is_selling_agent == 1) {
+?>
+										<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
 											<span >Add Lender</span>
 										</div>
-
-									<?php }if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
-										<div class="col-sm-3 align-display">
+<?php } if ($is_lender == 1 || $is_primary_mortgage_user == 1 || $is_selling_agent == 1) {?>
+										<div class="col-sm-3 align-display" id="add-escrow-section" style="display: none;">
 											<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
 											<span >Add Escrow</span>
 										</div>
@@ -385,12 +483,16 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 									<div class="col-sm-6">
 										<input type="text" name="BuyerAgentName" id="BuyerAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
+										<input type="hidden" name="BuyerAgentCompanyLookupCode" id="BuyerAgentCompanyLookupCode" value="">
+										<input type="hidden" name="BuyerAgentClientLookUpCode" id="BuyerAgentClientLookUpCode" value="">
 										<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
 									</div>
 
 									<div class="col-sm-6">
 										<input type="text" name="ListingAgentName" id="ListingAgentName" class="form-control" placeholder="Agent Name">
 										<input type="hidden" name="ListingAgentId" id="ListingAgentId" value="">
+										<input type="hidden" name="ListingAgentCompanyLookupCode" id="ListingAgentCompanyLookupCode" value="">
+										<input type="hidden" name="ListingAgentClientLookUpCode" id="ListingAgentClientLookUpCode" value="">
 										<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
 									</div>
 								</div>
@@ -433,7 +535,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 							</div>
 
 							<div id="lender-details-fields" style="display: none;">
-								<div class="row spacer-b30 spacer-t30">
+								<div class="row mb-5">
 									<div class="col-sm-12">
 										<div class="tagline"><span> Add Lender Details </span></div>
 									</div>
@@ -446,6 +548,8 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<input type="text" name="LenderName" id="LenderName" class="form-control" placeholder="Lender Name">
 									</div>
 									<input type="hidden" name="LenderId" id="LenderId" value="">
+									<input type="hidden" name="LenderCompanyLookUpCode" id="LenderCompanyLookUpCode" value="">
+									<input type="hidden" name="LenderClientLookUpCode" id="LenderClientLookUpCode" value="">
 								</div>
 
 								<div class="row form-group">
@@ -473,6 +577,8 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<input type="text" name="EscrowName" id="EscrowName" class="form-control" placeholder="Escrow Name">
 									</div>
 									<input type="hidden" name="EscrowId" id="EscrowId" value="">
+									<input type="hidden" name="EscrowCompanyLookUpCode" id="EscrowCompanyLookUpCode" value="">
+									<input type="hidden" name="EscrowClientLookUpCode" id="EscrowClientLookUpCode" value="">
 								</div>
 
 								<div class="row form-group">
@@ -487,7 +593,7 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 							</div>
 
 							<div class="spacer-b30" id="escrow-officer-field" style="display: none;">
-								<div class="row spacer-b30 spacer-t30">
+								<div class="row spacer-b30 spacer-t30 form-grp-title">
 									<div class="col-sm-12">
 										<div class="tagline"><span> Select Escrow Officer </span></div>
 									</div>
@@ -497,14 +603,12 @@ if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
 										<select id="escrow_officer" name="escrow_officer" class="form-control">
 											<option value="">----Select Escrow Officer----</option>
 											<?php
-if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-    foreach ($escrowOfficers as $escrowOfficer) {
-        ?>
-													<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-											<?php
-}
-}
-?>
+                                                if (isset($escrowOfficers) && ! empty($escrowOfficers)) {
+                                                foreach ($escrowOfficers as $escrowOfficer) {?>
+														<option value="<?php echo $escrowOfficer['closer_examiner']; ?>"><?php echo $escrowOfficer['name']; ?></option>
+												<?php
+													}
+												}?>
 										</select>
 									</div>
 								</div>
@@ -586,710 +690,6 @@ if (isset($escrowOfficers) && !empty($escrowOfficers)) {
             </div>
         </div>
     </div>
-	<!-- <div class="container">
-		<div class="row">
-			<div class="typography-section__inner">
-				<h2 class="ui-title-block ui-title-block_light"></h2>
-				<div class="ui-decor-1a bg-accent"></div>
-				<h3 class="ui-title-block_light">Helping Get Your Transaction Started.</h3>
-			</div>
-			<div class="col-md-12">
-				<div class="smart-wrap">
-					<div class="smart-forms smart-container wrap-0">
-
-						<form method="POST" id="smart-form" enctype="multipart/form-data">
-							<div class="form-body">
-								<div class="spacer-b30 spacer-t30">
-									<div class="tagline"><span>Your Details (Will Be AutoFilled) </span></div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['first_name']; ?>" type="text" name="OpenName" id="OpenName" class="gui-input" placeholder=" First Name">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-											<input type="hidden" name="id" id="CustomerId"
-												value="<?php echo $customer_data['id']; ?>">
-										</label>
-									</div>
-
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['last_name']; ?>" type="text"
-												name="OpenLastName" id="OpenLastName" class="gui-input"
-												placeholder="Last Name">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['telephone_no']; ?>" type="tel"
-												name="Opentelephone" id="Opentelephone" class="gui-input"
-												placeholder="Telephone">
-											<span class="field-icon"><i class="fa fa-phone-square"></i></span>
-										</label>
-									</div>
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['email_address']; ?>"
-												type="email" name="OpenEmail" id="OpenEmail" class="gui-input"
-												placeholder="Email address">
-											<span class="field-icon"><i class="fa fa-envelope"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['company_name']; ?>" type="text"
-												name="CompanyName" id="CompanyName" class="gui-input"
-												placeholder="Company Name">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['street_address']; ?>"
-												type="text" name="StreetAddress" id="StreetAddress"
-												class="gui-input" placeholder="Street Address">
-											<span class="field-icon"><i class="fa fa-envelope"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['city']; ?>" type="text"
-												name="City" id="City" class="gui-input" placeholder="City">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input value="<?php echo $customer_data['zip_code']; ?>" type="text"
-												name="Zipcode" id="Zipcode" class="gui-input" placeholder="Zipcode">
-											<span class="field-icon"><i class="fa fa-envelope"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="spacer-b30 spacer-t30">
-									<div class="tagline">
-										<span>Find Your Property</span>
-									</div>
-								</div>
-
-								<input type="hidden" name="property-state" id="property-state" value="">
-								<input type="hidden" name="property-city" id="property-city" value="">
-								<input type="hidden" name="neighbourhood" id="neighbourhood" value="">
-								<input type="hidden" name="property-fips" id="property-fips" value="">
-								<input type="hidden" name="property-full-address"
-									id="property-full-address" value="">
-								<input type="hidden" name="property-type" id="property-type" value="">
-								<input type="hidden" name="property-zip" id="property-zip" value="">
-								<input type="hidden" name="random_number" id="random_number" value="">
-
-								<div id="address_container">
-									<div class="frm-row">
-										<div class="section colm colm12">
-											<label class="field prepend-icon">
-												<input type="text" name="Property" id="property-search"
-													class="gui-input" placeholder="Property Address">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm3">
-											<a class="button btn-primary search-property search-property-button"
-												href="javascript:void(0);" id="search-btn">Property Search</a>
-										</div>
-										<div class="section colm colm4">
-											<a class="button switch-apn-button search-property-button"
-												href="javascript:void(0);" id="switch-apn-btn">Switch To APN Search</a>
-										</div>
-									</div>
-								</div>
-
-								<div id="apn_container" style="display:none;">
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="text" name="apn_num" id="apn_num"
-													class="gui-input" placeholder="APN">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-
-											</label>
-										</div>
-
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="text" name="apn_county" id="apn_county"
-													class="gui-input" placeholder="County">
-												<span class="field-icon"><i class="fa fa-envelope"></i></span>
-											</label>
-										</div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm3" style="width:auto !important;">
-											<a class="button btn-primary search-apn search-apn-button"
-												href="javascript:void(0);" id="search-apn-btn">APN Search</a>
-										</div>
-										<div class="section colm colm5">
-											<a class="button switch-property-button search-apn-button"
-												href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
-										</div>
-									</div>
-								</div>
-
-
-								<div class="pma-error alert alert-danger" style="display:none;"></div>
-								<div class="search-loader hidden"></div>
-
-								<div class="spacer-b30 spacer-t30">
-									<div class="tagline"><span> Property Details (Will Be AutoFilled) </span></div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm12">
-										<label class="field prepend-icon">
-											<input type="text" name="FullProperty" id="FullProperty"
-												class="gui-input" placeholder="Full Street Address">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input type="text" name="apn" id="apn" class="gui-input"
-												placeholder="APN">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-
-									<div class="section colm colm6">
-										<label class="field prepend-icon">
-											<input type="text" name="County" id="County" class="gui-input"
-												placeholder="County">
-											<span class="field-icon"><i class="fa fa-envelope"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<input type="hidden" id="unit_number" name="unit_number" value="">
-								<div class="frm-row">
-									<div class="section colm colm12">
-										<label class="field prepend-icon">
-											<input type="text" name="LegalDescription" id="LegalDescription"
-												class="gui-input" placeholder="Brief Legal Desription">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="spacer-b30 spacer-t30">
-									<div class="tagline"><span>Seller Details (Will Be AutoFilled)</span></div>
-
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm12">
-										<label class="field prepend-icon">
-											<input type="text" name="PrimaryOwner" id="PrimaryOwner"
-												class="gui-input" placeholder="Primary Owner">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-
-									<div class="section colm colm12">
-										<label class="field prepend-icon">
-											<input type="text" name="SecondaryOwner" id="SecondaryOwner"
-												class="gui-input" placeholder="Secondary Owner">
-											<span class="field-icon"><i class="fa fa-user"></i></span>
-										</label>
-									</div>
-								</div>
-
-								<div class="spacer-b30 spacer-t30">
-									<div class="tagline"><span> Transaction Details </span></div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm6">
-										<label class="field select">
-											<select id="SalesRep" name="SalesRep">
-												<option value="">Sales Rep...</option>
-												<?php
-if (isset($salesRep) && !empty($salesRep)) {
-    foreach ($salesRep as $k => $v) {
-        $name = array($v['first_name'], $v['last_name']);
-        $full_name = implode(' ', $name);
-        ?>
-															<option value="<?php
-echo $v['id']; ?>"><?php
-echo $full_name; ?></option>
-												<?php
-}
-}
-?>
-											</select>
-											<i class="arrow double"></i>
-										</label>
-									</div>
-
-									<div class="section colm colm6">
-										<label class="field select">
-											<select id="TitleOfficer" name="TitleOfficer">
-												<option value="">Title Officer</option>
-												<?php
-
-if (isset($titleOfficer) && !empty($titleOfficer)) {
-    foreach ($titleOfficer as $key => $value) {
-        ?>
-															<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-												<?php
-}
-}
-?>
-											</select>
-											<i class="arrow double"></i>
-										</label>
-									</div>
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm12">
-										<label class="field select">
-											<input type="hidden" name="ProductType" id="ProductType">
-											<select id="ProductTypeID" name="ProductTypeID">
-												<option value="">Select Product</option>
-											</select>
-											<i class="arrow double"></i>
-										</label>
-									</div>
-								</div>
-
-								<div class="frm-row" id="sales-loan-amount-fields" style="display: none;">
-									<div class="section colm colm12">
-										<label class="field">
-											<input type="text" class="gui-input" name="salesAmount" id="salesAmount"
-												placeholder="Sales Amount">
-										</label>
-										<div class="spacer-b10"></div>
-										<label class="field">
-											<input type="text" class="gui-input" name="loanAmount" id="loanAmount"
-												placeholder="Loan Amount">
-										</label>
-										<div class="spacer-b10"></div>
-										<label class="field">
-											<input type="text" class="gui-input" name="primaryBorrower" id="primaryBorrower"
-												placeholder="Primary Borrower">
-										</label>
-										<div class="spacer-b10"></div>
-										<label class="field">
-											<input type="text" class="gui-input" name="secondaryBorrower" id="secondaryBorrower"
-												placeholder="Secondary Borrower">
-										</label>
-									</div>
-								</div>
-								<label class="field">
-									<input type="text" class="gui-input" name="escrowNumber" id="escrowNumber"
-										placeholder="Escrow Number">
-								</label>
-								<div class="spacer-b10"></div>
-								<label class="field">
-									<input type="text" class="gui-input" name="loanNumber" id="loanNumber"
-										placeholder="Loan Number">
-								</label>
-
-								<div class="spacer-b30 spacer-t30">
-									<div class="tagline"><span>Add Deliverables</span></div>
-
-								</div>
-
-								<div class="frm-row">
-									<div class="section colm colm12" id="clone-email-address">
-										<?php if (!empty($deliverables)) {
-    $i = 0;
-    foreach ($deliverables as $deliverable) {?>
-													<div class="toclone clone-widget">
-														<div class="spacer-b10">
-															<label class="field">
-																<?php if ($i == 0) {?>
-																	<input type="email" class="gui-input" name="AdditionalEmail[]"
-																	id="AdditionalEmail" placeholder="Email Address" value="<?php echo $deliverable; ?>">
-																<?php } else {?>
-																	<input type="email" class="gui-input" name="AdditionalEmail[]"
-																	id="AdditionalEmail<?php echo $i; ?>" placeholder="Email Address" value="<?php echo $deliverable; ?>">
-																<?php }?>
-
-															</label>
-														</div>
-														<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
-														<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
-													</div>
-
-												<?php $i++;}
-} else {?>
-											<div class="toclone clone-widget">
-												<div class="spacer-b10">
-													<label class="field">
-														<input type="email" class="gui-input" name="AdditionalEmail[]"
-															id="AdditionalEmail" placeholder="Email Address">
-													</label>
-												</div>
-												<a href="#" class="clone button btn-primary"><i class="fa fa-plus"></i></a>
-												<a href="#" class="delete button"><i class="fa fa-minus"></i></a>
-											</div>
-										<?php }?>
-									</div>
-
-								</div>
-
-
-								<div class="spacer-t30">
-									<div class="tagline"><span> Add Parties</span></div>
-								</div>
-								<div class="frm-row">
-									<div class="section colm colm4">
-										<div class="option-group field">
-											<label class="option block spacer-t10">
-												<input type="checkbox" name="add-agent-details"
-													id="add-agent-details">
-												<span class="checkbox"></span> Add Agent Details
-											</label>
-										</div>
-									</div>
-									<?php
-
-$is_escrow = isset($customer_data['is_escrow']) && !empty($customer_data['is_escrow']) ? $customer_data['is_escrow'] : 0;
-$is_primary_mortgage_user = isset($customer_data['is_primary_mortgage_user']) && !empty($customer_data['is_primary_mortgage_user']) ? $customer_data['is_primary_mortgage_user'] : 0;
-
-if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {?>
-											<div class="section colm colm4" id="add-lender-section">
-												<div class="option-group field">
-													<label class="option block spacer-t10">
-														<input type="checkbox" name="add-lender-details"
-															id="add-lender-details">
-														<span class="checkbox"></span> Add Lender
-													</label>
-												</div>
-											</div>
-
-										<?php }if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
-											<div class="section colm colm4" id="add-escrow-section">
-												<div class="option-group field">
-													<label class="option block spacer-t10">
-														<input type="checkbox" name="add-escrow-details"
-															id="add-escrow-details">
-														<span class="checkbox"></span> Add Escrow
-													</label>
-												</div>
-											</div>
-									<?php }?>
-
-									<div class="section colm colm4" id="add-escrow-officer-section" style="display:none;">
-										<div class="option-group field">
-											<label class="option block spacer-t10">
-												<input type="checkbox" name="add-escrow-officer-details"
-													id="add-escrow-officer-details">
-												<span class="checkbox"></span> Add Escrow Officer
-											</label>
-										</div>
-									</div>
-								</div>
-
-								<div id="agent-details-fields" style="display: none;">
-									<div class="frm-row">
-										<div class="spacer-b10"></div>
-										<div class="section colm colm6 tagline">
-											<div class="tagline">
-												<span>
-													Buyers Agent
-												</span>
-											</div>
-										</div>
-										<div class="section colm colm6 tagline">
-											<div class="tagline">
-												<span>
-													Listing Agent
-												</span>
-											</div>
-										</div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="text" name="BuyerAgentName" id="BuyerAgentName"
-													class="gui-input" placeholder="Agent Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="BuyerAgentId" id="BuyerAgentId" value="">
-												<input type="hidden" name="buyer_agent_partner_id" id="buyer_agent_partner_id" value="">
-											</label>
-										</div>
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="text" name="ListingAgentName" id="ListingAgentName"
-													class="gui-input" placeholder="Agent Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="ListingAgentId" id="ListingAgentId"
-													value="">
-												<input type="hidden" name="listing_agent_partner_id" id="listing_agent_partner_id" value="">
-											</label>
-										</div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="email" name="BuyerAgentEmailAddress"
-													id="BuyerAgentEmailAddress" class="gui-input"
-													placeholder="Agent Email address">
-												<span class="field-icon"><i class="fa fa-envelope"></i></span>
-											</label>
-										</div>
-
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="email" name="ListingAgentEmailAddress"
-													id="ListingAgentEmailAddress" class="gui-input"
-													placeholder="Agent Email address">
-												<span class="field-icon"><i class="fa fa-envelope"></i></span>
-											</label>
-										</div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="tel" name="BuyerAgentTelephone"
-													id="BuyerAgentTelephone" class="gui-input"
-													placeholder="Agent Telephone">
-												<span class="field-icon"><i class="fa fa-phone-square"></i></span>
-											</label>
-										</div>
-
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="tel" name="ListingAgentTelephone"
-													id="ListingAgentTelephone" class="gui-input"
-													placeholder="Agent Telephone">
-												<span class="field-icon"><i class="fa fa-phone-square"></i></span>
-											</label>
-										</div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="text" name="BuyerAgentCompany" id="BuyerAgentCompany"
-													class="gui-input" placeholder="Agent Company Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div>
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="text" name="ListingAgentCompany"
-													id="ListingAgentCompany" class="gui-input"
-													placeholder="Agent Company Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div>
-									</div>
-									<div style="display: none;" class="alert notification alert-error" id="required-agent-details">Enter Buyers Agent or Listing Agent details</div>
-								</div>
-
-								<div id="lender-details-fields" style="display: none;">
-
-									<div class="spacer-b30">
-										<div class="tagline"><span> Add Lender Details</span></div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm12">
-											<label class="field prepend-icon">
-												<input type="text" name="LenderCompany" id="LenderCompany"
-													class="gui-input" placeholder="Lender Company Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm12">
-											<label class="field prepend-icon">
-												<input type="text" name="LenderName" id="LenderName"
-													class="gui-input" placeholder="Lender Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="LenderId" id="LenderId" value="">
-											</label>
-										</div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="email" name="LenderEmailAddress"
-													id="LenderEmailAddress" class="gui-input"
-													placeholder="Lender Email address">
-												<span class="field-icon"><i class="fa fa-envelope"></i></span>
-											</label>
-										</div>
-
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="tel" name="LenderTelephone" id="LenderTelephone"
-													class="gui-input" placeholder="Lender Telephone">
-												<span class="field-icon"><i class="fa fa-phone-square"></i></span>
-											</label>
-										</div>
-									</div>
-
-
-
-								</div>
-
-								<div id="escrow-details-fields" style="display: none;">
-
-									<div class="spacer-b30">
-										<div class="tagline"><span> Add Escrow Details</span></div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm12">
-											<label class="field prepend-icon">
-												<input type="text" name="EscrowCompany" id="EscrowCompany"
-													class="gui-input" placeholder="Escrow Company Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-											</label>
-										</div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm12">
-											<label class="field prepend-icon">
-												<input type="text" name="EscrowName" id="EscrowName"
-													class="gui-input" placeholder="Escrow Name">
-												<span class="field-icon"><i class="fa fa-user"></i></span>
-												<input type="hidden" name="EscrowId" id="EscrowId" value="">
-											</label>
-										</div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="email" name="EscrowEmailAddress"
-													id="EscrowEmailAddress" class="gui-input"
-													placeholder="Escrow Email address">
-												<span class="field-icon"><i class="fa fa-envelope"></i></span>
-											</label>
-										</div>
-
-										<div class="section colm colm6">
-											<label class="field prepend-icon">
-												<input type="tel" name="EscrowTelephone" id="EscrowTelephone"
-													class="gui-input" placeholder="Escrow Telephone"
-													readonly="readonly">
-												<span class="field-icon"><i class="fa fa-phone-square"></i></span>
-											</label>
-										</div>
-									</div>
-
-								</div>
-
-								<div class="spacer-b30" id="escrow-officer-field" style="display: none;">
-									<div class="spacer-b30">
-										<div class="tagline"><span> Select Escrow Officer</span></div>
-									</div>
-
-									<div class="frm-row">
-										<div class="section colm colm12">
-											<label class="field select">
-												<select id="escrow_officer" name="escrow_officer">
-													<option value="">----Select Escrow Officer----</option>
-													<?php
-if (isset($escrowOfficers) && !empty($escrowOfficers)) {
-    foreach ($escrowOfficers as $escrowOfficer) {
-        ?>
-															<option value="<?php echo $escrowOfficer['partner_id']; ?>"><?php echo $escrowOfficer['partner_name']; ?></option>
-													<?php
-}
-}
-?>
-												</select>
-												<i class="arrow double"></i>
-											</label>
-										</div>
-									</div>
-								</div>
-
-								<?php if ($is_escrow == 0) {?>
-									<div class="spacer-b20 spacer-t30">
-										<div class="tagline"><span> Upload Curative Documenttt</span></div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm12" id="upload_1003">
-											<div class="option-group field">
-												<div class="spacer-t20">
-													<label class="button btn-primary search-file-btn">
-														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload 1003</span>
-													</label>
-													<span></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								<?php }?>
-
-								<?php if ($is_escrow == 1) {?>
-									<div class="spacer-b20 spacer-t30">
-										<div class="tagline"><span> Upload Curative Documentoo</span></div>
-									</div>
-									<div class="frm-row">
-										<div class="section colm colm12" id="upload_rpa">
-											<div class="option-group field">
-												<div class="spacer-t20">
-													<label class="button btn-primary search-file-btn">
-														<input name="upload_curative" id="upload_curative" type="file" style="display:None;"> <span>Upload RPA</span>
-													</label>
-													<span></span>
-												</div>
-											</div>
-										</div>
-									</div>
-								<?php }?>
-
-								<div class="result spacer-b10"></div>
-
-
-								<div class='' id="progressDivId">
-									<div class='' id='progressBar'></div>
-									<div class='' id='percent'>0%</div>
-								</div>
-								<div style="height: 10px;"></div>
-
-							</div>
-							<div class="form-footer">
-								<button type="submit" data-btntext-sending="Sending..."
-									class="button btn-primary" id="btn-place-order">Submit</button>
-								<button type="reset" class="button">Cancel</button>
-								<a style="border: 0;height: 42px;color: #243140;line-height: 1;font-size: 15px;cursor: pointer;padding: 0 18px;text-align: center;vertical-align: top;background: #bdc3c7;display: inline-block;-webkit-user-drag: none;text-shadow: 0 1px rgba(255, 255, 255, 0.2);margin-right: 10px;margin-bottom: 5px;text-decoration: none;border-radius: 3px;padding-top: 13px;"
-									href="http://www.pct.com">Homepage</a>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section> -->
 </section>
 <br><br>
 
