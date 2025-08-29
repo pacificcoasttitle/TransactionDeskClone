@@ -4,7 +4,7 @@
 
 class TitleOfficers extends MX_Controller 
 {
-	private $version = '03.02';
+	private $js_version = '03.02';
 	function __construct() 
     {
         parent::__construct();
@@ -108,7 +108,7 @@ class TitleOfficers extends MX_Controller
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
-		$this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->version));
+		$this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->js_version));
 		$this->salesdashboardtemplate->show("order/title_officer", "dashboard", $data);
 	}
 
@@ -239,9 +239,9 @@ class TitleOfficers extends MX_Controller
 	function notes()
     {
         $data['title'] = 'Notes | Pacific Coast Title Company';
-		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->version) );
+		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->js_version) );
 		// $this->template->show("order/title_officer", "notes", $data);
-        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->version) );
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->js_version) );
 		$this->salesdashboardtemplate->show("order/title_officer", "notes", $data);
     }
 
@@ -284,9 +284,9 @@ class TitleOfficers extends MX_Controller
     function uploadFileDocument() 
 	{
 		$data['title'] = 'Smart Dashboard | Upload FIle';
-		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->version) );
+		// $this->template->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->js_version) );
 		// $this->template->show("order/title_officer", "attach_files", $data);
-        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->version) );
+        $this->salesdashboardtemplate->addJS( base_url('assets/frontend/js/order/title_officer_dashboard.js?v='.$this->js_version) );
 		$this->salesdashboardtemplate->show("order/title_officer", "attach_files", $data);
 	}
 
@@ -396,8 +396,8 @@ class TitleOfficers extends MX_Controller
 
         }
         $data['salesHistory'] = $salesHistory;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->js_version));
         //$this->template->show("order", "sales_production_history", $data);
         $this->salesdashboardtemplate->show("order/title_officer", "title_officer_production_history", $data);
     }

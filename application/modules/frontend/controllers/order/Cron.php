@@ -3685,7 +3685,7 @@ class Cron extends MX_Controller
                         }
 
                         if ($orderDetails['softpro_status'] == 'completed' && empty($orderDetails['resware_closed_status_date'])) {
-                            $updateArray['resware_closed_status_date'] = $completed_date;
+                            $updateArray['order_completed_date'] = $completed_date;
                         }
 
                         $this->home_model->update($updateArray, $orderCondition, 'order_details');
@@ -8487,7 +8487,7 @@ class Cron extends MX_Controller
             // $endDate = date('Y-m-d'); // Today (Thursday)
             $reportName = 'Thurs-Friday Orders Report';
         } else {
-            echo "Today is not Tuesday or Thursday. No report generated.";
+            echo "Today is not Wednesday or Friday. No report generated.";
             return;
         }
         // echo $startDate . " to " . $endDate . "<br>";die;

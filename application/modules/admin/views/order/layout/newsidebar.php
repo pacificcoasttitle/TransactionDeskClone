@@ -13,6 +13,7 @@ if (
     $this->uri->uri_string() == 'order/admin/rules-manager' ||
     $this->uri->uri_string() == 'order/admin/notifications' ||
     $this->uri->uri_string() == 'order/admin/settings' ||
+	$this->uri->uri_string() == 'order/admin/surveys' ||
     $this->uri->uri_string() == 'order/admin/manual-report' ||
     $this->uri->uri_string() == 'order/admin/manual-buyers' ||
     preg_match('/order\/admin\/([a-z\-])*lp-document-type*/', $this->uri->uri_string()) ||
@@ -440,6 +441,9 @@ if (
 							</a>
 							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/manual-buyers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/manual-buyers'; ?>">
 								Manual Buyer
+							</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/surveys') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/surveys'; ?>">
+								Surveys
 							</a>
 						<?php endif;?>
 					</div>

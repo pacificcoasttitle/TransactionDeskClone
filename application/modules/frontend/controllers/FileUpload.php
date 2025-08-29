@@ -4,7 +4,7 @@ class FileUpload extends MX_Controller
 {
     private $user;
     private $sorting_fields;
-    private $version = '02';
+    private $js_version = '02';
 
     public function __construct()
     {
@@ -189,7 +189,7 @@ class FileUpload extends MX_Controller
             }
 
         }
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=pma_' . $this->version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=pma_' . $this->js_version));
         $this->salesdashboardtemplate->show("file-upload", "index", $data);
     }
 

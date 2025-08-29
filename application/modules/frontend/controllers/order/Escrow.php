@@ -4,7 +4,7 @@
 
 class Escrow extends MX_Controller 
 {
-    private $escrow_js_version = '03';
+    private $js_version = '03';
 	function __construct() 
     {
         parent::__construct();
@@ -41,10 +41,10 @@ class Escrow extends MX_Controller
 		$data['name'] = $name;
 		$data['user_email'] = $userdata['email'];
 		$data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
-        // $this->template->addJS( base_url('assets/frontend/js/order/escrow.js?v=escrow_'.$this->escrow_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/escrow.js?v='.$this->js_version));
 
-        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/order/escrow.js?v=escrow_'.$this->escrow_js_version));
-        // $this->escrowdashboardtemplate->addCss( base_url('assets/frontend/css/sales-dashboard.css?v='.$this->sales_dashboard_js_version) );
+        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/order/escrow.js?v='.$this->js_version));
+        // $this->escrowdashboardtemplate->addCss( base_url('assets/frontend/css/sales-dashboard.css?v='.$this->js_version) );
 
         $this->escrowdashboardtemplate->show("order/escrow", "dashboard", $data);
 		// $this->template->show("order/escrow", "dashboard", $data);
@@ -262,10 +262,10 @@ class Escrow extends MX_Controller
         // $this->template->addJS( base_url('assets/plugins/ckeditor/ckeditor.js') );
 		// $this->template->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=09') );
         // $this->template->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js') );
-        $this->escrowdashboardtemplate->addCss( base_url('assets/frontend/css/escrow_tasks.css?v='.$this->sales_dashboard_js_version) );
-        $this->escrowdashboardtemplate->addJS( base_url('assets/plugins/ckeditor/ckeditor.js?v=escrow_'.$this->escrow_js_version));
-        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=escrow_'.$this->escrow_js_version));
-        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js?v=escrow_'.$this->escrow_js_version));
+        $this->escrowdashboardtemplate->addCss( base_url('assets/frontend/css/escrow_tasks.css?v='.$this->js_version) );
+        $this->escrowdashboardtemplate->addJS( base_url('assets/plugins/ckeditor/ckeditor.js?v=escrow_'.$this->js_version));
+        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/escrow_tasks.js?v=escrow_'.$this->js_version));
+        $this->escrowdashboardtemplate->addJS( base_url('assets/frontend/js/jquery-cloneya.min.js?v=escrow_'.$this->js_version));
         
         $this->escrowdashboardtemplate->show("order/escrow", "order_tasks", $data);
 		// $this->template->show("order/escrow", "order_tasks", $data);

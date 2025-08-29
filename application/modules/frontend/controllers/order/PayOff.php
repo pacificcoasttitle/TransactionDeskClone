@@ -4,7 +4,7 @@
 
 class PayOff extends MX_Controller
 {
-    private $payoff_js_version = '01';
+    private $js_version = '01';
     public function __construct()
     {
         parent::__construct();
@@ -42,11 +42,11 @@ class PayOff extends MX_Controller
         $data['user_email'] = $userdata['email'];
         $data['title'] = 'Payoff Dashboard | Pacific Coast Title Company';
         $data['pageTitle'] = 'Pacific Coast Title - Approved Wire List';
-        // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->payoff_js_version));
+        // $this->template->addJS( base_url('assets/frontend/js/order/payoff.js?v=payoff_'.$this->js_version));
         // $this->template->show("order/pay_off", "pay_off_dashboard", $data);
-        $this->transacteetemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->payoff_js_version));
+        $this->transacteetemplate->addJS(base_url('assets/frontend/js/order/payoff.js?v=payoff_' . $this->js_version));
 
-        $this->transacteetemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        $this->transacteetemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->js_version));
         $this->transacteetemplate->show("order/transactee", "transactee_dashboard", $data);
     }
 
@@ -495,7 +495,7 @@ class PayOff extends MX_Controller
                 $data['notes_error_msg'] = form_error('notes');
             }
         }
-        $this->transacteetemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->payoff_js_version));
+        $this->transacteetemplate->addCSS(base_url('assets/backend/css/transactee.css?v=payoff_' . $this->js_version));
         $this->transacteetemplate->show("order/transactee", "add_transactee", $data);
         // $this->load->view('order/transactee/add_transactee', $data);
     }

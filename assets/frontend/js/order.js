@@ -169,7 +169,40 @@ $(document).ready(function () {
         var num2 = num.split(/(?=(?:\d{3})+$)/).join(",");
         $this.val(num2);
     });
+
+    $('#ClientType').change(function () {
+        var selectedText = $(this).val();
+        updateOpenFormContacts(selectedText);
+    });
+
+    if ($('#smart-form #ClientType').length && $('#smart-form #ClientType').val() != '') {
+        console.log('---------', $('#smart-form #ClientType').val());
+        var selectedText = $('#smart-form #ClientType').val();
+        updateOpenFormContacts(selectedText);
+    }
 });
+
+function updateOpenFormContacts(selectedText) {
+    if (selectedText == 'MortgageBroker' || selectedText == 'ListingAgentBroker') {
+        $('#add-lender-section').show();
+        $('#add-escrow-section').show();
+        $('#email-notification-section').show();
+    } else {
+        if (selectedText == 'EscrowCompany') {
+            $('#add-lender-section').show();
+            $('#add-escrow-section').hide();
+            $('#escrow-details-fields').hide();
+            $("#add-escrow-details").prop("checked", false);
+            $('#email-notification-section').hide();
+        } else {
+            $('#add-lender-section').hide();
+            $('#lender-details-fields').hide();
+            $("#add-lender-details").prop("checked", false);
+            $('#add-escrow-section').show();
+            $('#email-notification-section').show();
+        }
+    }
+}
 
 
 function createService4(fipCode, address, city, unit_no, apn, random_number, properyData = '') {
