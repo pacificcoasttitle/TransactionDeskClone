@@ -13,10 +13,10 @@
 <div class="container-fluid">
     <div class="row mb-3">
 		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Escrow user Listing</h1>
+			<h1 class="h3 text-gray-800">Escrow Users Listing</h1>
 		</div>
 		<div class="col-sm-6">
-            <a href="javascript:void" onclick="syncSoftProOpenContacts('agent');"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <a href="javascript:void" onclick="syncSoftProOpenContacts('escrow');"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-refresh"></i>
                 </span>
