@@ -3069,6 +3069,18 @@ class Order
         return $query->result_array();
     }
 
+    public function get_title_officer()
+    {
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_softpro_lookup_table');
+        $this->CI->db->where('is_title_officer', 1);
+        $this->CI->db->where('status', 1);
+        $this->CI->db->order_by('first_name', 'asc');
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->result_array();
+    }
+
     public function getOpenOrdersCountForLastMonthOfPreviousYear($userId)
     {
         $previousYear = (string) (date('Y') - 1);

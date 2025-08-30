@@ -3713,6 +3713,9 @@ class Common extends MX_Controller
 
     public function surveysResult()
     {
+        if (empty($this->session->userdata('user'))) {
+            redirect(base_url() . 'order');
+        }
         $survey = [];
         $survey['title'] = 'PCT Order: Surveys';
         
@@ -3845,6 +3848,10 @@ class Common extends MX_Controller
     }
 
     public function getSurveyDetails() {
+        if (empty($this->session->userdata('user'))) {
+            $res = array('status' => 'error', 'msg' => "Authentication required.");
+            echo json_encode($res);exit;
+        }
         $titleOffSurveyId = $this->input->post('title_officer_survey_id');
         $titleOffSurveyName = $this->input->post('title_officer_survey_name');
         if (!empty($titleOffSurveyId)) {

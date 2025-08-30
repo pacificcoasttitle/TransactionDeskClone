@@ -217,11 +217,11 @@
 								</div>
 								<div class="clearfix small z-1 viewDetails text-primary projected_goal_section">
 									Projected = <span id="projected_open_section"><?Php echo $projected_open_count;?></span>
-									<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
-										<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
-									<?php } else { ?>
+									<?php // if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
+										<!-- <div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div> -->
+									<?php // } else { ?>
 										<div class="projected_goal_section">&nbsp;</div>
-									<?php } ?>
+									<?php //} ?>
 								</div>
 							</div>
 						</div>
@@ -240,11 +240,11 @@
 								</div>
 								<div class="clearfix small z-1 viewDetails text-success projected_goal_section">
 									Projected = <span id="projected_close_section"><?Php echo $projected_close_count;?></span>
-									<?php if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
-										<div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div>
-									<?php } else { ?>
+									<?php // if($sales_rep_info['sales_rep_no_of_open_orders'] > 0) { ?>
+										<!-- <div class="projected_goal_section">Goal = <span id="goal_open_section"><?Php echo round($sales_rep_info['sales_rep_no_of_open_orders']/12);?></span></div> -->
+									<?php // } else { ?>
 										<div class="projected_goal_section">&nbsp;</div>
-									<?php } ?>
+									<?php // } ?>
 								</div>
 							</div>
 						</div>
@@ -263,11 +263,11 @@
 								</div>
 								<div class="clearfix small z-1 viewDetails text-info projected_goal_section">
 									Projected = $<span id="projected_revenue_section"><?Php echo number_format($projected_revenue);?></span>
-									<?php if($sales_rep_info['sales_rep_premium'] > 0) { ?>
-										<div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div>
-									<?php } else { ?>
+									<?php // if($sales_rep_info['sales_rep_premium'] > 0) { ?>
+										<!-- <div class="projected_goal_section">Goal = $<span id="goal_revenue_section"><?Php echo number_format(round($sales_rep_info['sales_rep_premium']/12));?></span></div> -->
+									<?php // } else { ?>
 										<div class="projected_goal_section">&nbsp;</div>
-									<?php } ?>
+									<?php // } ?>
 								</div>
 							</div>
 						</div>

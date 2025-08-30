@@ -200,6 +200,7 @@ $route['borrower-info-submit']                = 'frontend/order/dashboardMail/bo
 $route['generic-landing-page']                = 'frontend/order/dashboardMail/genericLandingPage';
 $route['survey-result'] = 'frontend/order/common/surveysResult';
 $route['get-survey-details'] = 'frontend/order/common/getSurveyDetails';
+
 $route['get-order-information/:any']          = 'frontend/order/cron/getOrderInformation';
 $route['update-order-status']                 = 'frontend/order/cron/updateOrderStatus';
 $route['create-order-safewire']               = 'frontend/order/dashboardMail/createOrderSafewire';
@@ -288,6 +289,10 @@ $route['order/admin/delete-softpro-title-production']    = 'admin/order/home/del
 
 $route['order/admin/edit-user/:num']               = 'admin/order/home/editUser';
 $route['order/admin/edit-softpro-company/:num']             = 'admin/order/home/spEditCompany';
+
+$route['order/admin/mapped-report'] = 'admin/order/reports/mappedReport';
+$route['order/admin/mapped-title-officer-report'] = 'admin/order/reports/mappedTitleOfficerReport';
+$route['order/admin/branch-analytics-report'] = 'admin/order/reports/branchAnalyticsReport';
 
 $route['get-pay-off-orders']           = 'frontend/order/payOff/get_pay_off_orders';
 $route['get-transactees']              = 'frontend/order/payOff/get_transactees';
