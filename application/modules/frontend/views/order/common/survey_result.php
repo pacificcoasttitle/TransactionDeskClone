@@ -81,7 +81,7 @@
                         //foreach ($survey as $key => $value) { 
                         ?>
                         <div class="row survey-cards">
-                        <?php if ($error) {
+                        <?php if (isset($error) && $error) {
                             
                         } else {
                             echo $survey_cards; 
@@ -178,16 +178,12 @@
                 <div class="card shadow mb-4">
                     <div class="card-body">
                         <div class="table-responsive survey-table">
-                            <?php 
-                                if ($error) { ?>
+                                <?php if (isset($error) && $error) { ?>
                                     <p class="survey-error"><?php echo $error; ?></p>
-                                <?php } else {
-                                    echo $survey_rating_details; 
-                                }
-                            ?>
+                                <?php } else { echo $survey_rating_details; }?>
                             <!-- <table class="table table-bordered" id="tbl-surveys-listing" width="100%" cellspacing="0">
                                 <thead>
-                                    <tr align="center">
+                                    <tr align="center">0
                                         <th width="10%">Recipiente</th>
                                         <th width="25%">Sales rep</th>
                                         <th width="9%">Service</th>

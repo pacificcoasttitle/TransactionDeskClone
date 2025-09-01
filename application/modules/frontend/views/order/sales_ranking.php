@@ -48,6 +48,7 @@
 											<th>Total Openings</th>
 											<th>Total Closings</th>
 											<th>Total Revenue</th>
+											<th>Closing Ratio</th>
 											<th>Rank</th>
 										</tr>
 									</thead>

@@ -2443,7 +2443,7 @@ $(document).ready(function () {
                 data: function (d) {
                     d.sales_rep = $('#FilterOrderListing').val();
                     d.created_by = $('#FilterCreatedBy').val();
-                    d.product_type = product_type;
+                    // d.product_type = product_type;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {
@@ -2558,8 +2558,8 @@ $(document).ready(function () {
             }
         });
 
-        if (lp_sales_rep) {
-            var obj = jQuery.parseJSON(lp_sales_rep);
+        if (sales_rep) {
+            var obj = jQuery.parseJSON(sales_rep);
             var options = '';
             $.each(obj, function (key, value) {
                 options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
@@ -5769,7 +5769,7 @@ $(document).ready(function () {
             "columnDefs": [
                 { "searchable": false, "targets": [0, 1, 2] },
                 { orderable: false, targets: [0] },
-                { targets: [4, 6, 7], visible: false, searchable: false }
+                { targets: [4, 6, 7, 11], visible: false, searchable: false }
             ],
             "language": {
                 searchPlaceholder: "Search #",
@@ -5798,10 +5798,10 @@ $(document).ready(function () {
                     text: 'Export',
                     title: 'Buyers',
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                         format: {
                             body: function (data, row, column, node) {
-                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11) ?
+                                return (column === 0 || column === 1 || column === 2 || column === 3 || column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11 || column === 12) ?
                                     data.replace(/[$,]/g, '') :
                                     data;
                             }
