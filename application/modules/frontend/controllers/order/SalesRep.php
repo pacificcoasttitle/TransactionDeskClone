@@ -446,7 +446,8 @@ class SalesRep extends MX_Controller
             
             $data['refi_close_order_percetage'] = (!empty($refiClsCount)) ? round(($refiClsCount * 100) / $refiOpnCount) : 0;
             $data['sale_close_order_percetage'] = (!empty($saleClsCount)) ? (round(($saleClsCount * 100) / $saleOpnCount)) : 0;
-            $data['close_order_percetage'] = round((($saleClsCount + $refiClsCount) * 100) / ($saleOpnCount + $refiOpnCount));
+            $totalOpen = (($saleOpnCount + $refiOpnCount) > 0) ? ($saleOpnCount + $refiOpnCount) : 1;
+            $data['close_order_percetage'] = round((($saleClsCount + $refiClsCount) * 100) / ($totalOpen));
             /** End last 4 month calculations */
 
         } else {
@@ -1249,6 +1250,28 @@ class SalesRep extends MX_Controller
                     //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
                     $sale_total_premium = $closeOrderSaleTotalPremium;
                     $salesHistory[$i]['total_premium'] = round($sale_total_premium + $refi_total_premium, 2);
+
+                    /** For last 4 months calculations */
+                    $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id'], $year, 0, 1);
+                    $refiClsCount = !empty($clseRefiResult['refi_count']) ? $clseRefiResult['refi_count'] : 0;
+                    
+                    $clsSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id'], $year, 0, 1);
+                    $saleClsCount = !empty($clsSaleResult['sale_count']) ? $clsSaleResult['sale_count'] : 0;
+                    
+                    $opnRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id'], [], $year, 0, 1);
+                    $refiOpnCount = !empty($opnRefiResult['refi_count']) ? $opnRefiResult['refi_count'] : 0;
+                    
+                    $opnSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id'], [], $year, 0, 1);
+                    $saleOpnCount = !empty($opnSaleResult['sale_count']) ? $opnSaleResult['sale_count'] : 
+                     0;
+                    
+                    // $data['refi_close_order_percetage'] = (!empty($refiClsCount)) ? round(($refiClsCount * 100) / $refiOpnCount) : 0;
+                    // $data['sale_close_order_percetage'] = (!empty($saleClsCount)) ? (round(($saleClsCount * 100) / $saleOpnCount)) : 0;
+                    $totalOpen = (($saleOpnCount + $refiOpnCount) > 0) ? ($saleOpnCount + $refiOpnCount) : 1;
+                    $salesHistory[$i]['close_order_percetage'] =  round((($saleClsCount + $refiClsCount) * 100) / ($totalOpen));
+                    /** End last 4 month calculations */
+
+
                     $i++;
                 }
 
@@ -1270,6 +1293,7 @@ class SalesRep extends MX_Controller
                     $nestedData[] = $row['total_open_count'];
                     $nestedData[] = $row['total_close_count'];
                     $nestedData[] = "$".number_format($row['total_premium'], 2);
+                    $nestedData[] = number_format($row['close_order_percetage'], 2) . "%";
                     $nestedData[] = $rank;
                     $data[] = $nestedData;
                 }
