@@ -8,6 +8,12 @@
         width: 100% !important;
     }
 </style>
+<?php 
+    $userdata = $this->session->userdata('admin');
+	$roleList = $this->common->getRoleList();
+	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+	$roleName = $roleList[$role_id];
+?>
 <div class="container-fluid">
 	<div class="row mb-3">
 		<div class="col-sm-6">
@@ -63,6 +69,7 @@
 							<th>Email</th>
 							<th>Phone</th>
 							<th>Sales Rep</th>
+							<th>Created Date</th>
 							<th>Email Sent Time</th>
 							<th>Action</th>
                         </tr>

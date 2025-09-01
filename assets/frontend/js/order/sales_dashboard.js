@@ -212,8 +212,14 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "get-sales-ranking", // json datasource
                 type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
                 data: function (d) {
                     d.year_month = $('#month_year').val();
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     localStorage.removeItem("sales_rep_manager_flag");
