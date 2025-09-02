@@ -3051,7 +3051,7 @@ class Home extends MX_Controller
                     } else {
                         $nestedData[] = 'Sales Rep';
                     }
-                } else if ($value['is_special_lender'] == 1) {
+                } else if (isset($value['is_special_lender']) && $value['is_special_lender'] == 1) {
                     $nestedData[] = 'Special Lender';
                 } else if ($value['is_payoff_user'] == 1) {
                     $nestedData[] = 'Payoff User';
@@ -8853,8 +8853,8 @@ class Home extends MX_Controller
                 // $cnt++;
             }
         }
-        $json_data['recordsTotal']    = intval($customer_lists['recordsTotal']);
-        $json_data['recordsFiltered'] = intval($customer_lists['recordsFiltered']);
+        $json_data['recordsTotal']    = intval($escrowLists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($escrowLists['recordsFiltered']);
         $json_data['data']            = $data;
         echo json_encode($json_data);
     }
@@ -9108,7 +9108,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip_code'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
                 // if ($value['is_primary_mortgage_user'] == 1) {
                 //     $checked = 'checked';
                 // } else {

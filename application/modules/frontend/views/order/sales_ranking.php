@@ -3,11 +3,12 @@
 	th {
 		text-align: center;
 	}
-	.month-name {
+	.month-name, .year-name {
 		text-decoration: underline;
-		color: #d35411
+		color: #d35411;
+		margin-left: 10px;
 	}
-		.align-wrapper {
+	.align-wrapper {
 		display: flex;
 		align-items: center;
 		flex-direction: row;
@@ -19,10 +20,27 @@
 			<div class="card-body">
 				<div class="col-xs-12">
 					<div class="typography-section__inner align-wrapper">
-						<h4 class="ui-title-block_light">Ranking based on production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
-						<div id="sales_user_listing">
+						<h4 class="ui-title-block_light month-title align-wrapper">Ranking based on production figures for <b class="month-name"><?php echo date('F');?></b></h3>
+						<h4 class="ui-title-block_light year-title" style="display: none;">Ranking based on production figures for the year <b class="year-name"><?php echo date('Y');?></b></h3>
+						<div id="year_listing">
+							<label>
+								<select style="width:auto;" name="year" id="year" class="custom-select custom-select-sm form-control form-control-sm"> 								
+									<option value="">Select Year</option>
+									<?php 
+                                    $currentYear = date("Y");
+                                    for ($i = 0; $i < 5; $i++) { 
+										$date = strtotime("-$i year");
+										$value = date("Y", $date); // for option value (e.g., 2024-07)
+									?>
+										<option value="<?php echo $value;?>"><?php echo $value;?></option>
+									<?php }?>
+								</select>
+							</label>
+						</div>
+						<div id="month_listing">
 							<label>
 								<select style="width:auto;" name="month_year" id="month_year" class="custom-select custom-select-sm form-control form-control-sm"> 
+									<option value="">Select Month</option>
 									<?php 
                                     $currentMonth = date("Y-m");
                                     for ($i = 0; $i < 12; $i++) { 

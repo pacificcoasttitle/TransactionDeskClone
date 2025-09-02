@@ -5,7 +5,7 @@ if (!defined('BASEPATH')) {
 
 class Order
 {
-    public static $CI;
+    protected  $CI;
 
     public function __construct($params = array())
     {
@@ -13,7 +13,7 @@ class Order
         $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-        self::$CI = $this->CI;
+        // self::$CI = $this->CI;
     }
 
     public function get_recent_orders()
@@ -1977,7 +1977,7 @@ class Order
         return $query->result_array();
 
     }
-    public function getOpenOrdersCountForRefiProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    public function getOpenOrdersCountForRefiProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
         $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_open_orders, sum(escrow_amount) as total_escrow_amount_for_refi_open_orders')
             ->from('order_details')
@@ -1989,20 +1989,24 @@ class Order
         }
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
 
-        if ($dashboard_flag == 1) {
-            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
-            $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-
+        if ($yearly_flag == 1) {
+            $this->CI->db->where('YEAR(order_details.created_at)', $year);
         } else {
-            $this->CI->db->where('MONTH(order_details.created_at)', $month);
-
-            if ($year == 0) {
-                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+    
             } else {
-                $this->CI->db->where('YEAR(order_details.created_at)', $year);
+                $this->CI->db->where('MONTH(order_details.created_at)', $month);
+    
+                if ($year == 0) {
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('YEAR(order_details.created_at)', $year);
+                }
+    
             }
-
         }
 
         if (is_array($userId)) {
@@ -2028,7 +2032,7 @@ class Order
         return $query->row_array();
     }
 
-    public function getOpenOrdersCountForSaleProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    public function getOpenOrdersCountForSaleProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders, sum(escrow_amount) as total_escrow_amount_for_sale_open_orders')
             ->from('order_details')
@@ -2039,18 +2043,22 @@ class Order
         }
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
 
-        if ($dashboard_flag == 1) {
-            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
-            $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-
+        if ($yearly_flag == 1) { 
+            $this->CI->db->where('YEAR(order_details.created_at)', $year);
         } else {
-
-            $this->CI->db->where('MONTH(order_details.created_at)', $month);
-            if ($year == 0) {
-                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+    
             } else {
-                $this->CI->db->where('YEAR(order_details.created_at)', $year);
+    
+                $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                if ($year == 0) {
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('YEAR(order_details.created_at)', $year);
+                }
             }
         }
 
@@ -2077,7 +2085,7 @@ class Order
         return $query->row_array();
     }
 
-    public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    public function getClosedOrdersCountForRefiProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
         // $this->CI->db->select('count(*) as refi_count, sum(premium) as total_premium_for_refi_close_orders, sum(escrow_amount) as total_escrow_amount_for_refi_close_orders, '.$fieds_sum_str)
         // $this->CI->db->select('order_details.file_number, order_details.id, order_details.softpro_status, order_details.resware_closed_status_date, order_details.order_completed_date, order_details.created_at')
@@ -2087,20 +2095,27 @@ class Order
         $this->CI->db->where('order_details.is_softpro_order', 1);
         // $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
-        if ($dashboard_flag == 1) {
-            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
-            $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-
-        } else {
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        if ($yearly_flag == 1) { 
             if ($year == 0) {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
             } else {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
             }
-
+        } else {
+            if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+    
+            } else {
+                $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+                if ($year == 0) {
+                    $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                } else {
+                    $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                }
+            }
         }
 
         if (is_array($userId)) {
@@ -2128,7 +2143,7 @@ class Order
         return $query->row_array();
     }
 
-    public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0)
+    public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
         // $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders , '.$fieds_sum_str)
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders')
@@ -2137,20 +2152,29 @@ class Order
         // $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
         $this->CI->db->where('order_details.is_softpro_order', 1);
-        if ($dashboard_flag == 1) {
-            $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
-            $endDate = date('Y-m-d 23:59:59');
-            $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
-            $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
 
-        } else {
-
-            $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-
+        if ($yearly_flag == 1) { 
             if ($year == 0) {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
             } else {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            }
+        } else {
+            if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+
+            } else {
+
+                $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+
+                if ($year == 0) {
+                    $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                } else {
+                    $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                }
             }
         }
 
