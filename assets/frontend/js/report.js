@@ -1,6 +1,6 @@
-$(document).ready(function(){
+$(document).ready(function () {
     $('#report_listing').DataTable({
-         "aaSorting": [],
+        "aaSorting": [],
         "language": {
             // searchPlaceholder: "Search File# or Address",
             paginate: {
