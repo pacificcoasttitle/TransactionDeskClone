@@ -38,7 +38,7 @@ class PayOff extends MX_Controller
         $userdata = $this->session->userdata('admin');
         $name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
         $data['name'] = $name;
-        $data['user_email'] = $userdata['email'];
+        $data['user_email'] = $userdata['email_address'];
         $data['title'] = 'Payoff Admin Dashboard | Pacific Coast Title Company';
         $data['pageTitle'] = 'Pacific Coast Title - Approved Wire List';
 
