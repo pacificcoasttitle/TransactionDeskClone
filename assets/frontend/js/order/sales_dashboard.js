@@ -176,6 +176,7 @@ $(document).ready(function () {
 
     if ($('#sales_ranking').length) {
         var flag_val = localStorage.getItem("sales_rep_manager_flag");
+        var filter_type = 'month';
         sales_ranking = $('#sales_ranking').DataTable({
             // "pageLength": 2,
             "paging": false,
@@ -217,6 +218,8 @@ $(document).ready(function () {
                 },
                 data: function (d) {
                     d.year_month = $('#month_year').val();
+                    d.filter_type = filter_type;
+                    d.year = $('#year').val();;
                 },
                 complete: function () {
                     $("#page-preloader").hide();
@@ -269,9 +272,42 @@ $(document).ready(function () {
         // $("div#sales_ranking_filter").append($wrapper);
 
 
-        $("#month_year").on("change", function () {
+        $("#month_listing #month_year").on("change", function () {
+            let $dropdown = $(this);
+            let selectedValue = $dropdown.val();
+
+            // If empty value selected → set first non-empty option
+            if (!selectedValue) {
+                let firstNonEmpty = $dropdown.find("option[value!='']").first().val();
+                $dropdown.val(firstNonEmpty);
+            }
+
+            // Update related UI
+            $("#year_listing #year").val('');
             let selectedMonth = $("#month_year option:selected").text();
+            filter_type = 'month';
             $('.month-name').text(selectedMonth);
+            $('.month-title').css('display', 'block');
+            $('.year-title').css('display', 'none');
+            sales_ranking.ajax.reload();
+        });
+
+        $("#year_listing #year").on("change", function () {
+            let $dropdown = $(this);
+            let selectedValue = $dropdown.val();
+
+            if (!selectedValue) {
+                let firstNonEmpty = $dropdown.find("option[value!='']").first().val();
+                $dropdown.val(firstNonEmpty);
+            }
+
+            $("#month_listing #month_year").val('');
+            filter_type = 'year';
+            let selectedYear = $("#year_listing #year").val();
+            console.log(selectedYear);
+            $('.year-name').text(selectedYear);
+            $('.month-title').css('display', 'none');
+            $('.year-title').css('display', 'block');
             sales_ranking.ajax.reload();
         });
     }
