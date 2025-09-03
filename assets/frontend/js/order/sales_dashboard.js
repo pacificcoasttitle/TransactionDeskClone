@@ -942,3 +942,10 @@ function updatePrelimAction(order_id) {
     let action = base_url + "update-prelim-action/" + order_id;
     $('#prelim_add_note_form').attr('action', action);
 }
+
+function displayComment(comments) {
+    if (comments.length > 0) {
+        $("#commentList").html(comments);
+        $("#commentModal").modal("show");
+    }
+}
