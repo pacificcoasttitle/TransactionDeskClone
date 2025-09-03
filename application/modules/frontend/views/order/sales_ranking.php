@@ -31,6 +31,9 @@
                                     for ($i = 0; $i < 5; $i++) { 
 										$date = strtotime("-$i year");
 										$value = date("Y", $date); // for option value (e.g., 2024-07)
+										if ((int)$value < 2025) {
+											break; // Skip years before 2025
+										}
 									?>
 										<option value="<?php echo $value;?>"><?php echo $value;?></option>
 									<?php }?>
@@ -47,6 +50,9 @@
 										$date = strtotime("-$i month");
 										$value = date("Y-m", $date); // for option value (e.g., 2024-07)
 										$label = date("F Y", $date); // for display (e.g., July 2024)
+										if ((int)date('Y', $date) < 2025) {
+											break; // Skip years before 2025
+										}
 									?>
 										<option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
 									<?php }?>
