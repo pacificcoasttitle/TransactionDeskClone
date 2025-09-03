@@ -70,7 +70,7 @@ class Login extends MX_Controller
                 $email = $this->input->post('email_address');
                 // $user = $this->home_model->sp_get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
                 $user = $this->home_model->sp_get_user(array('email_address' => $email, 'status' => 1));
-                if ($user['is_title_officer']) {
+                if (isset($user['is_title_officer']) && $user['is_title_officer']) {
                     $user['first_name'] = $user['officer_name'];
                 }
                 // echo "<pre>";
