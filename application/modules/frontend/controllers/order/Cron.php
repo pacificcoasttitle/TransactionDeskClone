@@ -6737,20 +6737,29 @@ class Cron extends MX_Controller
                             ->get()->result_array();
         if (!empty($records)) {
             foreach ($records as $key => $value) {
-                $fileData = [
-                    "Id" => $value['id'],
-                    "OrderNumber"  => $value['order_number'],
-                    "DocumentName" => $value['document_name'],
-                    "FileList"     => json_decode($value['file_list']),
-                ];
-                $fileUploadReq[] = $fileData;
+                if (empty($value['document_name'])) {
+                    $update_row = [
+                        'is_synced' => 1,
+                        'reason' => 'Document name is required'
+                    ];
+                    $this->db->where('id', $value['id']);
+                    $this->db->update('sp_file_upload_logs', $update_row);
+                } else {
+                    $fileData = [
+                        "Id" => $value['id'],
+                        "OrderNumber"  => $value['order_number'],
+                        "DocumentName" => $value['document_name'],
+                        "FileList"     => json_decode($value['file_list']),
+                    ];
+                    $fileUploadReq[] = $fileData;
+                }
             }
             $reqData = json_encode($fileUploadReq);
             $this->load->library('order/softPro');
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document_cron', 'upload_document', $reqData, [], 0, 0);
+            $logid = $this->apiLogs->syncLogs(0, 'softpro', 'upload_document_cron', 'upload_document', $reqData, [], 0, 0);
             $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
             $response = json_decode($result, true);
-            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document_cron', 'upload_document', $reqData, json_encode($response), 0, $logid);
+            $this->apiLogs->syncLogs(0, 'softpro', 'upload_document_cron', 'upload_document', $reqData, json_encode($response), 0, $logid);
 
             if (isset($response) && !empty($response)) {
                 foreach ($response as $key => $res) {
@@ -6775,9 +6784,11 @@ class Cron extends MX_Controller
                     }
                 }
             }
-            foreach ($updateData as $key => $update_row) {
-                $this->db->where('id', $update_row['id']);
-                $this->db->update('sp_file_upload_logs', $update_row);
+            if (!empty($updateData)) {
+                foreach ($updateData as $key => $update_row) {
+                    $this->db->where('id', $update_row['id']);
+                    $this->db->update('sp_file_upload_logs', $update_row);
+                }
             }
         }
     }
