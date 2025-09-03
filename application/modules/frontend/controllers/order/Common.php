@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $js_version = '5.07';
+    private $js_version = '5.08';
  
     public function __construct()
     {
@@ -3713,8 +3713,8 @@ class Common extends MX_Controller
 
     public function surveysResult()
     {
-        $data = array();
-        $data['title'] = 'PCT Order: Surveys';
+        $survey = [];
+        $survey['title'] = 'PCT Order: Surveys';
         
         $this->load->library('order/survey');
         $this->load->model('order/apiLogs');
@@ -3725,7 +3725,6 @@ class Common extends MX_Controller
         $result = $this->survey->make_request('GET', $endPoint, '');
         // print_r($result);die;
         $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey', env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
-        $survey = [];
         $titleOfficerList = [];
 
         // if (isset($result) && !empty($result)) {
