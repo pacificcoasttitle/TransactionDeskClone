@@ -5682,7 +5682,7 @@ class Order
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->helper('sendemail');
         $from_name = 'Pacific Coast Title Company';
-        $from_mail = env('FROM_EMAIL');
+        $from_mail = env('FROM_POLICY_EMAIL');
         $subject = $orderDetails['doc_type'] . ' : ' . $orderDetails['file_number'];
         $to = $orderDetails['email_to'];
         // $to = 'piyush-crest@yopmail.com'; piyush.j@crestinfosystems.com
