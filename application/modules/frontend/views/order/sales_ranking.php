@@ -53,6 +53,10 @@
 										if ((int)date('Y', $date) < 2025) {
 											break; // Skip years before 2025
 										}
+
+										if (((int)date('m', $date) < 3) && ((int)date('Y', $date) == 2025)) {
+											break; // Skip years before 2025
+										}
 									?>
 										<option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
 									<?php }?>
