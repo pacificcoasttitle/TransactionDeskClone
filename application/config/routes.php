@@ -291,8 +291,11 @@ $route['order/admin/edit-user/:num']               = 'admin/order/home/editUser'
 $route['order/admin/edit-softpro-company/:num']             = 'admin/order/home/spEditCompany';
 
 $route['order/admin/mapped-report'] = 'admin/order/reports/mappedReport';
+$route['get-sales-mapped-report'] = 'admin/order/reports/getSalesMappedReport';
 $route['order/admin/mapped-title-officer-report'] = 'admin/order/reports/mappedTitleOfficerReport';
+$route['get-mapped-title-officer-report'] = 'admin/order/reports/getMappedTitleOfficerReport';
 $route['order/admin/branch-analytics-report'] = 'admin/order/reports/branchAnalyticsReport';
+$route['get-branch-analytics-report'] = 'admin/order/reports/getBranchAnalyticsReport';
 
 $route['get-pay-off-orders']           = 'frontend/order/payOff/get_pay_off_orders';
 $route['get-transactees']              = 'frontend/order/payOff/get_transactees';

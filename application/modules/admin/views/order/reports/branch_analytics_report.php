@@ -180,12 +180,15 @@
     color: #1F4E79;
 }
 
-.controls select {
+.controls select, #monthSelect {
     font-size: 11pt;
     padding: 5px 10px;
     border: 1px solid #D4D4D4;
     border-radius: 3px;
     background: white;
+}
+#monthSelect, .d-sm-inline-block {
+    width: 170px;
 }
 </style>
 
@@ -194,13 +197,29 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Branch Analytics Report</h1>
         <div class="d-sm-inline-block">
-            <select id="monthSelect" class="form-control" onchange="changeMonth()">
-                <option value="August 2025" selected>August 2025</option>
+            <select id="monthSelect" class="form-control" onchange="changeMonth()" data-filter="branch_analytics">
+                <?php
+                $currentMonth = date("Y-m");
+                for ($i = 0; $i < 5; $i++) { 
+                    $date = strtotime("-$i month");
+                    $value = date("Y-m", $date); // for option value (e.g., 2024-07)
+                    $label = date("F Y", $date); // for display (e.g., July 2024)
+                    // if ((int)date('Y', $date) < 2025) {
+                    //     break; // Skip years before 2025
+                    // }
+
+                    if (((int)date('m', $date) < 3) && ((int)date('Y', $date) == 2025)) {
+                        break; // Skip years before 2025
+                    }
+                ?>
+                    <option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
+                <?php }?>
+                <!-- <option value="August 2025" selected>August 2025</option>
                 <option value="July 2025">July 2025</option>
                 <option value="June 2025">June 2025</option>
                 <option value="May 2025">May 2025</option>
                 <option value="April 2025">April 2025</option>
-                <option value="March 2025">March 2025</option>
+                <option value="March 2025">March 2025</option> -->
             </select>
         </div>
     </div>
@@ -212,14 +231,14 @@
         <strong>4-Month Closing Ratio:</strong> Calculated as (Closings ÷ Openings) × 100 over the past 4 months.
     </div> -->
 
-    <div id="branchSummarySections">
+    <!-- <div id="branchSummarySections">
         <?php if (isset($error) && $error) {
                             
         } else {
             echo $summary_reports; 
         }
         ?>
-    </div>
+    </div> -->
 
     <!-- Branch sections will be dynamically loaded here -->
     <div id="branchSections">
@@ -249,12 +268,12 @@ function toggleSection(sectionId) {
 }
 
 function changeMonth() {
-    const monthSelect = document.getElementById('monthSelect');
-    const selectedMonth = monthSelect.value;
+    // const monthSelect = document.getElementById('monthSelect');
+    // const selectedMonth = monthSelect.value;
     
-    if (selectedMonth !== 'August 2025') {
-        alert('Data loading for ' + selectedMonth + ' would be implemented here.');
-    }
+    // if (selectedMonth !== 'August 2025') {
+    //     alert('Data loading for ' + selectedMonth + ' would be implemented here.');
+    // }
 }
 
 // Load branch data when page loads

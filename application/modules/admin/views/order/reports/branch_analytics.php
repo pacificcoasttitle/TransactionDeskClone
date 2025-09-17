@@ -1,9 +1,75 @@
 <!-- Glendale Branch -->
-<div class="branch-header" onclick="toggleSection('glendale')">
-    <span>🏢 Glendale Branch</span>
-    <span class="toggle-icon" id="glendale-icon">▼</span>
+<?php
+$today = new DateTime();
+
+// Get total days in current month
+$totalDaysInMonth = $today->format('t');
+
+// Get current day of month
+$currentDay = $today->format('j');
+
+// Days remaining in month (excluding today)
+$daysRemaining = $totalDaysInMonth - $currentDay;
+
+// Total days passed including today
+$daysPassed = $currentDay;
+
+// echo "Today's Day of Month: " . $currentDay . PHP_EOL;
+// echo "Days Remaining (excluding today): " . $daysRemaining . PHP_EOL;
+// echo "Total Days Passed (including today): " . $daysPassed . PHP_EOL;die;
+
+?>
+<div class="executive-summary">
+    <div class="summary-title">📊 Company Production Totals - All Branches</div>
+        <table class="branch-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Today</th>
+                    <th>Month to Date</th>
+                    <th>Avg Per Day</th>
+                    <th>Projected Month</th>
+                    <th>Prior Month</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Total Openings</strong></td>.
+                    <td class="number"><?php echo $summaryData['todayTotalOpen'];?></td>
+                    <td class="number"><?php echo $summaryData['mtdTotalOpen'];?></td>
+                    <td class="number"><?php echo round($summaryData['mtdTotalOpen']/$daysPassed, 2);?></td>
+                    <td class="number"><?php echo round(($summaryData['mtdTotalOpen']/$daysPassed)*$totalDaysInMonth, 2);?></td>
+                    <td class="number"><?php echo $summaryData['priorTotalOpen'];?></td>
+                </tr>
+                <tr>
+                    <td><strong>Total Closings</strong></td>
+                    <td class="number"><?php echo $summaryData['todayTotalClose'];?></td>
+                    <td class="number"><?php echo $summaryData['mtdTotalClose'];?></td>
+                    <td class="number"><?php echo round($summaryData['mtdTotalClose']/$daysPassed, 2);?></td>
+                    <td class="number"><?php echo round(($summaryData['mtdTotalClose']/$daysPassed)*$totalDaysInMonth, 2);?></td>
+                    <td class="number"><?php echo $summaryData['priorTotalClose'];?></td>
+                </tr>
+                <tr>
+                    <td><strong>Total Title Premiums</strong></td>
+                    <td class="currency">$<?php echo $summaryData['todayTotalRev'];?></td>
+                    <td class="currency">$<?php echo $summaryData['mtdTotalRev'];?></td>
+                    <td class="currency">$<?php echo round($summaryData['mtdTotalRev']/$daysPassed, 2);?></td>
+                    <td class="currency">$<?php echo round(($summaryData['mtdTotalRev']/$daysPassed)*$totalDaysInMonth, 2);?></td>
+                    <td class="currency">$<?php echo $summaryData['priorTotalRev'];?></td>
+                </tr>
+            </tbody>
+        </table>
+    
 </div>
-<div class="branch-content" id="glendale-content">
+<?php
+foreach ($branchData as $branchName => $data) {
+?>
+<div class="branch-header" onclick="toggleSection('<?php echo $branchName; ?>')">
+    <span>🏢 <?php echo $branchName; ?> Branch</span>
+    <span class="toggle-icon" id="<?php echo $branchName; ?>-icon">▼</span>
+</div>
+
+<div class="branch-content" id="<?php echo $branchName; ?>-content">
     
     <div class="metric-header">📈 Openings Analysis</div>
     <table class="branch-table">
@@ -19,36 +85,36 @@
         </thead>
         <tbody>
             <tr>
-                <td><strong>🏢 Glendale TOTAL OPENINGS</strong></td>
-                <td class="number">19.05</td>
-                <td class="number">381</td>
-                <td class="number">19.05</td>
-                <td class="number">762.0</td>
-                <td class="number">323.85</td>
+                <td><strong>🏢 <?php echo $branchName; ?> TOTAL OPENINGS</strong></td>
+                <td class="number"><?php echo ($data['today_escrow_open_cnt'] + $data['today_purchase_open_cnt'] + $data['today_refi_open_cnt']); ?></td>
+                <td class="number"><?php echo ($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt']); ?></td>
+                <td class="number"><?php echo round(($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round((($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo ($data['prior_escrow_open_cnt'] + $data['prior_purchase_open_cnt'] + $data['prior_refi_open_cnt']); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
-                <td class="number">0.45</td>
-                <td class="number">9</td>
-                <td class="number">0.45</td>
-                <td class="number">18.0</td>
-                <td class="number">7.65</td>
+                <td class="number"><?php echo $data['today_escrow_open_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_escrow_open_cnt']; ?></td>
+                <td class="number"><?php echo round($data['mtd_escrow_open_cnt']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_escrow_open_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo $data['prior_escrow_open_cnt']; ?></td>
             </tr>
             <tr class="service-title-resale">
                 <td>📋 Title Only - Resale</td>
-                <td class="number">12.45</td>
-                <td class="number">249</td>
-                <td class="number">12.45</td>
-                <td class="number">498.0</td>
-                <td class="number">211.65</td>
+                <td class="number"><?php echo $data['today_purchase_open_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_purchase_open_cnt']; ?></td>
+                <td class="number"><?php echo round($data['mtd_purchase_open_cnt']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_purchase_open_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo $data['prior_purchase_open_cnt']; ?></td>
             </tr>
             <tr class="service-title-refi">
                 <td>📋 Title Only - Refinance</td>
-                <td class="number">6.15</td>
-                <td class="number">123</td>
-                <td class="number">6.15</td>
-                <td class="number">246.0</td>
-                <td class="number">104.55</td>
+                <td class="number"><?php echo $data['today_refi_open_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_refi_open_cnt']; ?></td>
+                <td class="number"><?php echo round($data['mtd_refi_open_cnt']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_refi_open_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo $data['prior_refi_open_cnt']; ?></td>
             </tr>
         </tbody>
     </table>
@@ -67,36 +133,36 @@
         </thead>
         <tbody>
             <tr>
-                <td><strong>🏢 Glendale TOTAL CLOSINGS</strong></td>
-                <td class="number">9.3</td>
-                <td class="number">186</td>
-                <td class="number">9.3</td>
-                <td class="number">372.0</td>
-                <td class="number">158.1</td>
+                <td><strong>🏢 <?php echo $branchName; ?> TOTAL CLOSINGS</strong></td>
+                <td class="number"><?php echo ($data['today_escrow_close_cnt'] + $data['today_purchase_close_cnt'] + $data['today_refi_close_cnt']); ?></td>
+                <td class="number"><?php echo ($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt']); ?></td>
+                <td class="number"><?php echo round(($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round((($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed) * $totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo ($data['prior_escrow_close_cnt'] + $data['prior_purchase_close_cnt'] + $data['prior_refi_close_cnt']); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
-                <td class="number">0.05</td>
-                <td class="number">1</td>
-                <td class="number">0.05</td>
-                <td class="number">2.0</td>
-                <td class="number">0.85</td>
+                <td class="number"><?php echo $data['today_escrow_close_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_escrow_close_cnt']; ?></td>
+                <td class="number"><?php echo round($data['mtd_escrow_close_cnt']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_escrow_close_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo $data['prior_escrow_close_cnt']; ?></td>
             </tr>
             <tr class="service-title-resale">
                 <td>📋 Title Only - Resale</td>
-                <td class="number">6.15</td>
-                <td class="number">123</td>
-                <td class="number">6.15</td>
-                <td class="number">246.0</td>
-                <td class="number">104.55</td>
+                <td class="number"><?php echo $data['today_purchase_close_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_purchase_close_cnt']; ?></td>
+                <td class="number"><?php echo round($data['mtd_purchase_close_cnt']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_purchase_close_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo $data['prior_purchase_close_cnt']; ?></td>
             </tr>
             <tr class="service-title-refi">
                 <td>📋 Title Only - Refinance</td>
-                <td class="number">3.1</td>
-                <td class="number">62</td>
-                <td class="number">3.1</td>
-                <td class="number">124.0</td>
-                <td class="number">52.7</td>
+                <td class="number"><?php echo $data['today_refi_close_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_refi_close_cnt']; ?></td>
+                <td class="number"><?php echo round($data['mtd_refi_close_cnt']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_refi_close_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo $data['prior_refi_close_cnt']; ?></td>
             </tr>
         </tbody>
     </table>
@@ -115,42 +181,45 @@
         </thead>
         <tbody>
             <tr>
-                <td><strong>🏢 Glendale TOTAL REVENUE</strong></td>
-                <td class="currency">$8,360.37</td>
-                <td class="currency">$167,207.32</td>
-                <td class="currency">$8,360.37</td>
-                <td class="currency">$334,414.64</td>
-                <td class="currency">$142,126.22</td>
+                <td><stryong>🏢 <?php echo $branchName; ?> TOTAL REVENUE</strong></td>
+                <td class="number"><?php echo ($data['today_escrow_rev'] + $data['today_purchase_rev'] + $data['today_refi_rev']); ?></td>
+                <td class="number"><?php echo ($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev']); ?></td>
+                <td class="number"><?php echo round(($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round((($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed) * $totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo ($data['prior_escrow_rev'] + $data['prior_purchase_rev'] + $data['prior_refi_rev']); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
-                <td class="currency">$7.63</td>
-                <td class="currency">$152.60</td>
-                <td class="currency">$7.63</td>
-                <td class="currency">$305.20</td>
-                <td class="currency">$129.71</td>
+                <td class="number"><?php echo round($data['today_escrow_rev'], 2); ?></td>
+                <td class="number"><?php echo round($data['mtd_escrow_rev'], 2); ?></td>
+                <td class="number"><?php echo round($data['mtd_escrow_rev']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_escrow_rev']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo round($data['prior_escrow_rev']); ?></td>
             </tr>
             <tr class="service-title-resale">
                 <td>📋 Title Only - Resale</td>
-                <td class="currency">$6,461.68</td>
-                <td class="currency">$129,233.64</td>
-                <td class="currency">$6,461.68</td>
-                <td class="currency">$258,467.28</td>
-                <td class="currency">$109,848.59</td>
+                <td class="number"><?php echo round($data['today_purchase_rev'], 2); ?></td>
+                <td class="number"><?php echo round($data['mtd_purchase_rev'], 2); ?></td>
+                <td class="number"><?php echo round($data['mtd_purchase_rev']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_purchase_rev']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo round($data['prior_purchase_rev'], 2); ?></td>
             </tr>
             <tr class="service-title-refi">
                 <td>📋 Title Only - Refinance</td>
-                <td class="currency">$1,891.05</td>
-                <td class="currency">$37,821.08</td>
-                <td class="currency">$1,891.05</td>
-                <td class="currency">$75,642.16</td>
-                <td class="currency">$32,147.92</td>
+                <td class="number"><?php echo round($data['today_refi_rev'], 2); ?></td>
+                <td class="number"><?php echo round($data['mtd_refi_rev'], 2); ?></td>
+                <td class="number"><?php echo round($data['mtd_refi_rev']/$daysPassed, 2); ?></td>
+                <td class="number"><?php echo round(($data['mtd_refi_rev']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo round($data['prior_refi_rev'], 2); ?></td>
             </tr>
         </tbody>
     </table>
 </div>
-<!-- Orange Branch -->
-<div class="branch-header" onclick="toggleSection('orange')">
+<?php
+}
+?>
+
+<!-- <div class="branch-header" onclick="toggleSection('orange')">
     <span>🏢 Orange Branch</span>
     <span class="toggle-icon" id="orange-icon">▼</span>
 </div>
@@ -300,7 +369,7 @@
         </tbody>
     </table>
 </div>
-<!-- Inland Empire Branch -->
+
 <div class="branch-header" onclick="toggleSection('inland-empire')">
     <span>🏢 Inland Empire Branch</span>
     <span class="toggle-icon" id="inland-empire-icon">▼</span>
@@ -451,7 +520,7 @@
         </tbody>
     </table>
 </div>
-<!-- Porterville Branch -->
+
 <div class="branch-header" onclick="toggleSection('porterville')">
     <span>🏢 Porterville Branch</span>
     <span class="toggle-icon" id="porterville-icon">▼</span>
@@ -602,7 +671,7 @@
         </tbody>
     </table>
 </div>
-<!-- TSG Branch -->
+
 <div class="branch-header" onclick="toggleSection('tsg')">
     <span>🏢 TSG Branch</span>
     <span class="toggle-icon" id="tsg-icon">▼</span>
@@ -753,7 +822,7 @@
         </tbody>
     </table>
 </div>
-<!-- Production Branch -->
+
 <div class="branch-header" onclick="toggleSection('production')">
     <span>🏢 Production Branch</span>
     <span class="toggle-icon" id="production-icon">▼</span>
@@ -903,4 +972,4 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div> -->

@@ -135,6 +135,11 @@
     font-size: 9pt;
     color: #6C757D;
 }
+
+#monthSelect, .d-sm-inline-block {
+    width: 170px;
+}
+
 </style>
 
 <div class="container-fluid">
@@ -142,13 +147,23 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Pacific Coast Title - Title Officer Report</h1>
         <div class="d-sm-inline-block">
-            <select id="monthSelect" class="form-control" onchange="changeMonth()">
-                <option value="August 2025" selected>August 2025</option>
-                <option value="July 2025">July 2025</option>
-                <option value="June 2025">June 2025</option>
-                <option value="May 2025">May 2025</option>
-                <option value="April 2025">April 2025</option>
-                <option value="March 2025">March 2025</option>
+            <select id="monthSelect" class="form-control" data-filter="title_officer">
+                <?php
+                $currentMonth = date("Y-m");
+                for ($i = 0; $i < 12; $i++) { 
+                    $date = strtotime("-$i month");
+                    $value = date("Y-m", $date); // for option value (e.g., 2024-07)
+                    $label = date("F Y", $date); // for display (e.g., July 2024)
+                    // if ((int)date('Y', $date) < 2025) {
+                    //     break; // Skip years before 2025
+                    // }
+
+                    if (((int)date('m', $date) < 3) && ((int)date('Y', $date) == 2025)) {
+                        break; // Skip years before 2025
+                    }
+                ?>
+                    <option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
+                <?php }?>
             </select>
         </div>
     </div>
@@ -185,14 +200,14 @@ function toggleBranch(branchId) {
     }
 }
 
-function changeMonth() {
-    const monthSelect = document.getElementById('monthSelect');
-    const selectedMonth = monthSelect.value;
+// function changeMonth() {
+//     const monthSelect = document.getElementById('monthSelect');
+//     const selectedMonth = monthSelect.value;
     
-    if (selectedMonth !== 'August 2025') {
-        alert('Data loading for ' + selectedMonth + ' would be implemented here.');
-    }
-}
+//     if (selectedMonth !== 'August 2025') {
+//         alert('Data loading for ' + selectedMonth + ' would be implemented here.');
+//     }
+// }
 
 // Load branch data when page loads
 $(document).ready(function() {
