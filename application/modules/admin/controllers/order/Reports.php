@@ -135,9 +135,9 @@ class Reports extends MX_Controller
         $branches = [];
         foreach ($records as $row) {
             $profile = $row['profile'];
-            if (empty($profile)) {
-                continue;
-            }
+            // if (empty($profile)) {
+            //     continue;
+            // }
             if (strpos($row['file_number'], 'GLT') !== false) {
                 $branchName = 'Glendale';
             } elseif (strpos($row['file_number'], 'OCT') !== false) {
