@@ -650,6 +650,7 @@ class Order extends MX_Controller
                                             'premium' => $amt,
                                             'order_type' => trim($data[48]),
                                             'escrow_closed_date' => $data[17],
+                                            'profile' => $data[1],
                                         ];
 
                                     }
@@ -680,6 +681,7 @@ class Order extends MX_Controller
                                     // print_r($value);
                                     // $transactionDate = date('Y-m-d', strtotime($value['transaction_date']));
                                     $updateOrderDetails = [
+                                        'profile' => $value['profile'],
                                         'premium' => $value['premium'],
                                         'bill_code' => $value['bill_code'],
                                         'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),

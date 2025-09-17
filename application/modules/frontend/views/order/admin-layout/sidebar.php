@@ -85,6 +85,24 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Survey Result</span>
 			</a>
 		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'mapped-report') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>mapped-report">
+				<i class="fas fa-poll-h"></i>
+				<span>Mapped Report</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'mapped-title-officer-report') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>mapped-title-officer-report">
+				<i class="fas fa-poll-h"></i>
+				<span>Mapped Title Officer Report</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'branch-analytics-report') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>branch-analytics-report">
+				<i class="fas fa-poll-h"></i>
+				<span>Branch Analytics Report</span>
+			</a>
+		</li>
 		<?php }?>
 
 	<?php } else if (($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) && ($sidebar)) {?>

@@ -3,7 +3,7 @@ $userdata = $this->session->userdata('admin');
 $roleList = $this->common->getRoleList();
 $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 $roleName = $roleList[$role_id];
-$settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $payoffSectionLink = $spUsersTabLinks = $spClientTabLinks = false;
+$settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $payoffSectionLink = $spUsersTabLinks = $spClientTabLinks = $spReportTabLinks = false;
 
 if (
     $this->uri->uri_string() == 'order/admin/roles' ||
@@ -134,6 +134,14 @@ if (
 }
 
 if (
+    $this->uri->uri_string() == 'order/admin/branch-analytics-report' ||
+    $this->uri->uri_string() == 'order/admin/mapped-title-officer-report' ||
+    $this->uri->uri_string() == 'order/admin/mapped-report'
+) {
+    $spReportTabLinks = true;
+}
+
+if (
 	$this->uri->uri_string() == 'order/admin/admin_users' ||
     $this->uri->uri_string() == 'order/admin/master-users' ||
     $this->uri->uri_string() == 'order/admin/add-new-master-user' ||
@@ -201,8 +209,7 @@ if (
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
 		<?php if ($role_id != 3 && $role_id != 5): ?>
-			<li class="nav-item <?php if ($this->uri->uri_string() == 'order/admin/dashboard' ||
-    $this->uri->segment(3) == 'order-details') {echo 'active';}?>">
+			<li class="nav-item <?php if ($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->segment(3) == 'order-details') {echo 'active';}?>">
 				<a class="nav-link" href="<?php echo base_url() . 'order/admin/dashboard'; ?>">
 					<i class="fas fa fa-dashboard"></i>
 					<span>Dashboard</span>
@@ -219,8 +226,7 @@ if (
 				</a>
 				<div class="collapse <?php if ($orderTabLinks) {echo 'show';}?>" aria-labelledby="ordersDropdown" id="ordersDropdown_list">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/orders' ||
-    $this->uri->segment(3) == 'order-details' || $this->uri->segment(4) == 'loan' || $this->uri->segment(4) == 'sale') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/orders'; ?>">
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/orders' || $this->uri->segment(3) == 'order-details' || $this->uri->segment(4) == 'loan' || $this->uri->segment(4) == 'sale') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/orders'; ?>">
 							Orders
 						</a>
 						<?php if ($role_id != 3): ?>
@@ -315,6 +321,20 @@ if (
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-production' || $this->uri->segment(3) == 'edit-softpro-title-production' || $this->uri->segment(3) == 'add-softpro-title-production') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-production'; ?>">Title Production</a>
+					</div>
+				</div>
+			</li>
+
+			<li class="nav-item <?php if ($spReportTabLinks) {echo 'active';}?>">
+				<a class="nav-link <?php if (!$spReportTabLinks) {echo 'collapsed';}?>" href="#" id="spReportDropdown" role="button" data-toggle="collapse" data-target="#spReport" aria-haspopup="true" aria-expanded="false">
+					<i class="fa fa-solid fa-file-alt"></i>
+					<span>Report</span>
+				</a>
+				<div class="collapse <?php if ($spReportTabLinks) {echo 'show';}?>" aria-labelledby="spReportDropdown" id="spReport">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mapped-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mapped-report'; ?>">R-14 Mapped Report</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mapped-title-officer-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mapped-title-officer-report'; ?>">Title Officer Report</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/branch-analytics-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/branch-analytics-report'; ?>">Branch Analytics Report</a>
 					</div>
 				</div>
 			</li>

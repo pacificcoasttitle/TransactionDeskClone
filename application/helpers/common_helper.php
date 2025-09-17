@@ -160,3 +160,11 @@ if (!function_exists('getRemoteFileSize')) {
         return false;
     }
 }
+
+if (!function_exists('pr')) {
+    function pr($data) {
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";die;
+    }
+}
