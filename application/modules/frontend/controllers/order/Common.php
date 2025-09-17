@@ -1531,7 +1531,7 @@ class Common extends MX_Controller
                 $nestedData[] = !empty($order['document_created_date']) ? convertTimezone($order['document_created_date'], 'm/d/Y') : '';
                 $order_id = $order['id'];
                 if (!empty($order['cpl_document_name'])) {
-                    $file_id = $order['file_id'];
+                    $file_id = $order['file_number'];
                     $documentName = $order['cpl_document_name'];
                     if (env('AWS_ENABLE_FLAG') == 1) {
                         $documentUrl = env('AWS_PATH') . "documents/" . $documentName;
@@ -1544,12 +1544,12 @@ class Common extends MX_Controller
                     }
 
                 } else if (!empty($order['westcor_file_id'])) {
-                    $file_id = $order['file_id'];
+                    $file_id = $order['file_number'];
                     $westcorFileId = $order['westcor_file_id'];
                     $westcorOrderId = $order['westcor_order_id'];
                     $nestedData[] = "<div style='display:flex;justify-content: space-around;'><a onclick='download_for_pdf($westcorFileId, $westcorOrderId);' href='javascript:void(0);' title='Download' title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a><a onclick='return lender_pop_up(0, $order_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
                 } else {
-                    $file_id = $order['file_id'];
+                    $file_id = $order['file_number'];
                     $nestedData[] = "<div style='display:flex;justify-content: space-around;'><form onclick='return lender_pop_up(0, $order_id);' action='" . base_url() . "create-cpl/" . $order['id'] . "' method='POST'><a href='javascript:void(0);'  title='Generate' type='submit' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-seedling'></i></span><span class='text'>Generate</span></a></form><a onclick='return lender_pop_up(0, $order_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
                 }
                 $data[] = $nestedData;
@@ -1826,7 +1826,7 @@ class Common extends MX_Controller
         // } else {
         //     $orderUser = $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
         // }
-        if ($orderUser['is_escrow'] == 1) {
+        if (!empty($orderUser) && $orderUser['is_escrow'] == 1) {
             if (!empty($orderDetails['cpl_lender_company_id'])) {
                 $lenderDetails = $this->home_model->get_sp_company(array('id' => $orderDetails['cpl_lender_company_id']));
                 // print_r($orderUser);die;
@@ -1882,7 +1882,7 @@ class Common extends MX_Controller
                 $orderDetails['lender_assignment_clause'] = $lenderDetails['assignment_clause'] ? $lenderDetails['assignment_clause'] : '';
                 $orderDetails['lender_id'] = $lenderDetails['id'] ? $lenderDetails['id'] : '';
             } else {
-                if ($orderDetails['is_softpro_order'] && $orderUser['is_mortgage_broker'] == 1) {
+                if ($orderDetails['is_softpro_order'] && !empty($orderUser) && $orderUser['is_mortgage_broker'] == 1) {
                     $orderDetails['lender_first_name'] = '';
                     $orderDetails['lender_last_name'] = '';
                     $orderDetails['lender_email'] = '';
@@ -3713,6 +3713,9 @@ class Common extends MX_Controller
 
     public function surveysResult()
     {
+        if (empty($this->session->userdata('user'))) {
+            redirect(base_url() . 'order');
+        }
         $survey = [];
         $survey['title'] = 'PCT Order: Surveys';
         
@@ -3845,6 +3848,10 @@ class Common extends MX_Controller
     }
 
     public function getSurveyDetails() {
+        if (empty($this->session->userdata('user'))) {
+            $res = array('status' => 'error', 'msg' => "Authentication required.");
+            echo json_encode($res);exit;
+        }
         $titleOffSurveyId = $this->input->post('title_officer_survey_id');
         $titleOffSurveyName = $this->input->post('title_officer_survey_name');
         if (!empty($titleOffSurveyId)) {

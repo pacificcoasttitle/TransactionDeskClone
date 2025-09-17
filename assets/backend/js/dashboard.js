@@ -79,4 +79,68 @@ function getDashboardCountBasedOnFilter(manager_id, user_id, month) {
 	});
 }
 
+$("#monthSelect").on("change", function () {
+	let $dropdown = $(this);
+	let selectedValue = $dropdown.val();
+	let reportType = $('#monthSelect').data('filter');
+	let url = base_url + "get-sales-mapped-report";
+	console.log('reportType ==', reportType);
+	if (reportType == 'sales_rep') {
+		url = base_url + "get-sales-mapped-report";
+	} else if (reportType == 'title_officer') {
+		url = base_url + "get-mapped-title-officer-report";
+	} else if (reportType == 'branch_analytics') {
+		url = base_url + "get-branch-analytics-report";
+	}
+	// console.log(reportType);
+	// Update related UI\
+
+	if (selectedValue) {
+		$('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+		$('#page-preloader').css('display', 'block');
+		$.ajax({
+			url: url,
+			type: "post",
+			data: {
+				month_year: selectedValue,
+				report_type: reportType
+			},
+			dataType: "html",
+			success: function (response) {
+
+				var results = JSON.parse(response);
+				// console.log(results);
+				if (results.status == 'success') {
+
+					$('#branchSections').html(results.report.html);
+				}
+				else if (results.status == 'error') {
+					alert(results.msg);
+				}
+				$('#page-preloader').css('display', 'none');
+			}
+		});
+	}
+});
+
+// $("#month_listing #month_year").on("change", function () {
+// 	let $dropdown = $(this);
+// 	let selectedValue = $dropdown.val();
+
+// 	// If empty value selected → set first non-empty option
+// 	if (!selectedValue) {
+// 		let firstNonEmpty = $dropdown.find("option[value!='']").first().val();
+// 		$dropdown.val(firstNonEmpty);
+// 	}
+
+// 	// Update related UI
+// 	$("#year_listing #year").val('');
+// 	let selectedMonth = $("#month_year option:selected").text();
+// 	filter_type = 'month';
+// 	$('.month-name').text(selectedMonth);
+// 	$('.month-title').css('display', 'block');
+// 	$('.year-title').css('display', 'none');
+// 	sales_ranking.ajax.reload();
+// });
+
 
