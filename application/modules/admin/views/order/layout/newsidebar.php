@@ -324,7 +324,7 @@ if (
 					</div>
 				</div>
 			</li>
-
+			<?php if ($role_id == 1):?>
 			<li class="nav-item <?php if ($spReportTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$spReportTabLinks) {echo 'collapsed';}?>" href="#" id="spReportDropdown" role="button" data-toggle="collapse" data-target="#spReport" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-solid fa-file-alt"></i>
@@ -338,6 +338,7 @@ if (
 					</div>
 				</div>
 			</li>
+			<?php endif;?>
 
 			<li class="nav-item <?php if ($logTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$logTabLinks) {echo 'collapsed';}?>" href="#" id="logsDropDown" role="button" data-toggle="collapse" data-target="#logs" aria-haspopup="true" aria-expanded="false">
