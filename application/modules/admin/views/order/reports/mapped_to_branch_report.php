@@ -57,7 +57,8 @@
                     ?>
                 <tr>
                     <td class="title-officer-name"><?php echo $titleOfficerDetails['officer_name'] ?></td>
-                    <td class="percentage low-performance"><?php echo $titleOfficerDetails['closing_ratio'] ?>%</td>
+                    <!-- <td class="percentage low-performance"><?php echo $titleOfficerDetails['closing_ratio'] ?>%</td> -->
+                    <td class="percentage low-performance"><?php echo 0; ?>%</td>
                     
                     <td class="number"><?php echo $titleOfficerDetails['today_purchase_cnt'] ?></td>
                     <td class="number"><?php echo $titleOfficerDetails['mtd_purchase_cnt'] ?></td>
