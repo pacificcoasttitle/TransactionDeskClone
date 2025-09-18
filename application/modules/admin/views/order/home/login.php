@@ -20,6 +20,10 @@
             padding-top: 1.25rem !important;
             padding-bottom: .25rem !important;
         }
+        .card-header2{
+            text-align: center;
+            font-size: 20px;
+        }
     </style>
     <script>
         var base_url = "<?php echo base_url(); ?>";
