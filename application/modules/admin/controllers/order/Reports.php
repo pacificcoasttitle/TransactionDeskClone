@@ -17,39 +17,59 @@ class Reports extends MX_Controller
         $this->common->is_admin();
     }
 
-    public function get_all_sp_order_data($fromDate, $toDate) {
-        return $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.full_name as sales_rep, o.created_at, ot.order_type')
+    public function get_all_sp_order_data($fromDate, $toDate, $closedFromDate) {
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.full_name as sales_rep, o.created_at, ot.order_type')
         // $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.full_name as sales_rep, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
             ->join('pct_softpro_lookup_table u', 't.sales_representative = u.id', 'left')
-            ->join('pct_softpro_order_type ot', 't.order_type = ot.id', 'left')
-            ->where('o.created_at >=', $fromDate)
-            ->where('o.created_at <=', $toDate)
-            // ->where('t.sales_representative', 12694)
+            ->join('pct_softpro_order_type ot', 't.order_type = ot.id', 'left');
+            // ->where('o.created_at >=', $fromDate)
+            // ->where('o.created_at <=', $toDate)
+            $this->db->group_start();
+                $this->db->group_start();
+                    $this->db->where('o.sent_to_accounting_date >=', $closedFromDate);
+                    $this->db->where('o.sent_to_accounting_date <=', $toDate);
+                $this->db->group_end();
+                $this->db->or_group_start();
+                    $this->db->where('o.created_at >=', $fromDate);
+                    $this->db->where('o.created_at <=', $toDate);    
+                $this->db->group_end();
+            $this->db->group_end();
+            // $this->db->where('t.sales_representative', 12685);
             // ->where('o.prod_type', 'Refinance')
             // ->where('o.sent_to_accounting_date is not null')
-            ->get()
+           return  $this->db->get()
             // echo $this->db->last_query();exit;
             ->result_array();
     }
 
-    public function get_all_to_order_data($fromDate, $toDate) {
-        return $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.officer_name, o.created_at, ot.order_type')
+    public function get_all_to_order_data($fromDate, $toDate, $closedFromDate) {
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.officer_name, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
             ->join('pct_softpro_lookup_table u', 't.title_officer = u.id', 'left')
-            ->join('pct_softpro_order_type ot', 't.order_type = ot.id', 'left')
-            ->where('o.created_at >=', $fromDate)
-            ->where('o.created_at <=', $toDate)
-            // ->where('o.profile is not null')
-            ->get()
+            ->join('pct_softpro_order_type ot', 't.order_type = ot.id', 'left');
+            $this->db->group_start();
+                $this->db->group_start();
+                    $this->db->where('o.sent_to_accounting_date >=', $closedFromDate);
+                    $this->db->where('o.sent_to_accounting_date <=', $toDate);
+                $this->db->group_end();
+                $this->db->or_group_start();
+                    $this->db->where('o.created_at >=', $fromDate);
+                    $this->db->where('o.created_at <=', $toDate);    
+                $this->db->group_end();
+            $this->db->group_end();
+            // $this->db->where('t.title_officer', 14415);
+            // $this->db->get();
             // echo $this->db->last_query();exit;
-            ->result_array();
+            return $this->db->get()->result_array();
+            
     }
 
     public function get_all_order_data($fromDate, $toDate) {
         return $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
+        // $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
             // ->join('pct_softpro_lookup_table u', 't.title_officer = u.id', 'left')
@@ -88,28 +108,34 @@ class Reports extends MX_Controller
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
             $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01', strtotime('-3 months', $selectedDate));
-            $endDate = date('Y-m-t', $selectedDate);
+            // $startMonth = date('Y-m-01', strtotime('-3 months', $selectedDate));
+            // $endDate = date('Y-m-t', $selectedDate);
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
             $today = 0;
             $monthName = date("F", strtotime($endDate));
             
             $priorMonth = date('m', strtotime('-1 months', $selectedDate));
             $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
             // die;
+            // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
+            // die;
             
         } else {
-            $startMonth = date('Y-m-01', strtotime('-3 months'));  // June 1, 2025
-            $endDate    = date('Y-m-d');                      // June 30, 2025
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+            $endDate    = date('Y-m-d 23:59:59');
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
             $priorMonth = date('m', strtotime('-1 month'));
             $priorYear  = date('Y', strtotime('-1 month'));
-            $today = 0;
+            $today = date('d');
             $month = date('m');
             $year = date('Y');
             $monthName = date("F");
         }
         
         // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . date('d') . '<br>';
-
+        // die;
         $data = [];
         $branchMap = [
             'Glendale Escrow'      => 'Glendale',
@@ -127,14 +153,13 @@ class Reports extends MX_Controller
         // $ratioMonth = date('m', strtotime('-3 month'));
         // $ratioYear  = date('Y', strtotime('-3 month'));
         
-        $records = $this->get_all_sp_order_data($startMonth, $endDate);
+        $records = $this->get_all_sp_order_data($startMonth, $endDate, $closedStartMonth);
         // echo "<pre>";
         // print_r($records);
         // die;
 
         $branches = [];
         foreach ($records as $row) {
-            $profile = $row['profile'];
             // if (empty($profile)) {
             //     continue;
             // }
@@ -314,9 +339,9 @@ class Reports extends MX_Controller
                     return ($created >= $startMonth && $created <= $endDate && $record['sales_representative'] == $salesId);
                 });
                 $closedCount = array_filter($records, function ($record) use ($startMonth, $endDate, $salesId) {
-                    // $created = date('Y-m-d', strtotime($record['created_at']));
+                    $created = date('Y-m-d', strtotime($record['created_at']));
                     $rev_date = date('Y-m-d', strtotime($record['sent_to_accounting_date']));
-                    return ($rev_date >= $startMonth && $rev_date <= $endDate && $record['sales_representative'] == $salesId);
+                    return ($created >= $startMonth && $created <= $endDate && $rev_date >= $startMonth && $rev_date <= $endDate && $record['sales_representative'] == $salesId);
                 });
                 $salesClosingFigure[$salesId] = [
                     'created' => count($createdCount),
@@ -379,19 +404,24 @@ class Reports extends MX_Controller
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
             $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01', strtotime('-3 months', $selectedDate));
-            $endDate = date('Y-m-t', $selectedDate);
+            // $startMonth = date('Y-m-01', strtotime('-3 months', $selectedDate));
+            // $endDate = date('Y-m-t', $selectedDate);
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
             $today = 0;
             $monthName = date("F", strtotime($endDate));
             
             $priorMonth = date('m', strtotime('-1 months', $selectedDate));
             $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // echo $startMonth . ' - ' . $endDate . ' -- ' . $priorMonth . ' - ' . $priorYear ;
             // die;
-
+            // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
+            // die;
+            
         } else {
-            $startMonth = date('Y-m-01', strtotime('-3 months'));  // June 1, 2025
-            $endDate    = date('Y-m-d');                      // June 30, 2025
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+            $endDate    = date('Y-m-d 23:59:59');
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
             $priorMonth = date('m', strtotime('-1 month'));
             $priorYear  = date('Y', strtotime('-1 month'));
             $today = date('d');
@@ -420,14 +450,14 @@ class Reports extends MX_Controller
         // $ratioMonth = date('m', strtotime('-3 month'));
         // $ratioYear  = date('Y', strtotime('-3 month'));
         
-        $records = $this->get_all_to_order_data($startMonth, $endDate);
+        $records = $this->get_all_to_order_data($startMonth, $endDate, $closedStartMonth);
         // echo "<pre>";
         // print_r($records);
         // die;
 
         $branches = [];
         foreach ($records as $row) {
-            $profile = $row['profile'];
+            // $profile = $row['profile'];
             if (empty($row['title_officer'])) {
                 continue;
             }
@@ -534,6 +564,7 @@ class Reports extends MX_Controller
             // }
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
+                // print_r ($row['file_number']); echo "<br>";
                 if (strtolower($row['order_type']) == 'title only') {
                     if ($row['prod_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
@@ -682,8 +713,8 @@ class Reports extends MX_Controller
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
             $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01', strtotime('-1 months', $selectedDate));
-            $endDate = date('Y-m-t', $selectedDate);
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            $endDate = date('Y-m-t 23:59:59', $selectedDate);
             $today = 0;
             $monthName = date("F", strtotime($endDate));
             
@@ -693,8 +724,8 @@ class Reports extends MX_Controller
             // die;
 
         } else {
-            $startMonth = date('Y-m-01', strtotime('-1 months'));  // June 1, 2025
-            $endDate    = date('Y-m-d');                      // June 30, 2025
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));  // June 1, 2025
+            $endDate    = date('Y-m-d 23:59:59');                      // June 30, 2025
             $priorMonth = date('m', strtotime('-1 month'));
             $priorYear  = date('Y', strtotime('-1 month'));
             $today = date('d');
