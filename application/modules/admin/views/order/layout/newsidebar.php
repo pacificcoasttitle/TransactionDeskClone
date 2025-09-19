@@ -4,7 +4,8 @@ $roleList = $this->common->getRoleList();
 $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 $roleName = $roleList[$role_id];
 $settingLinks = $orderTabLinks = $usersTabLinks = $clientTabLinks = $logTabLinks = $documentTabLinks = $branchTabLinks = $payoffSectionLink = $spUsersTabLinks = $spClientTabLinks = $spReportTabLinks = false;
-
+$reportPermission = $payoffPermission = $orderPermission = $allAdminPermission = $escrowAdminPermission = false;
+// print_r($roleName);die;
 if (
     $this->uri->uri_string() == 'order/admin/roles' ||
     $this->uri->uri_string() == 'order/admin/send-password' ||
@@ -72,6 +73,10 @@ if ($this->uri->uri_string() == 'order/admin/transactees-list' ||
     $this->uri->uri_string(3) == 'order/admin/edit-payoff-user'
 ) {
     $payoffSectionLink = true;
+}
+
+if (in_array($roleName, ['Payoff Admin', 'Super Admin', 'Payoff Super Admin'])) {
+	$payoffPermission = true;
 }
 
 if ($this->uri->uri_string() == 'order/admin/orders' || 
@@ -164,6 +169,16 @@ if (
     $spUsersTabLinks = true;
 }
 
+if (in_array($roleName, ['Executive', 'Super Admin'])) {
+	$reportPermission = true;
+}
+
+if (in_array($roleName, ['Admin', 'Super Admin', 'CS Admin'])) {
+	$allAdminPermission = true;
+}
+
+
+
 
 ?>
 
@@ -208,7 +223,7 @@ if (
 
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
-		<?php if ($role_id != 3 && $role_id != 5): ?>
+		<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($this->uri->uri_string() == 'order/admin/dashboard' || $this->uri->segment(3) == 'order-details') {echo 'active';}?>">
 				<a class="nav-link" href="<?php echo base_url() . 'order/admin/dashboard'; ?>">
 					<i class="fas fa fa-dashboard"></i>
@@ -217,7 +232,7 @@ if (
 			</li>
 		<?php endif;?>
 
-		<?php if ($role_id != 5): ?>
+		<?php if ($allAdminPermission || $escrowAdminPermission): ?>
 
 			<li class="nav-item <?php if ($orderTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$orderTabLinks) {echo 'collapsed';}?>" href="#" id="ordersDropdown" role="button" data-toggle="collapse" data-target="#ordersDropdown_list" aria-haspopup="true" aria-expanded="false">
@@ -242,28 +257,31 @@ if (
 			</li>
 		<?php endif;?>
 
-		<?php if ($role_id != 3 && $role_id != 5): ?>
-			<li class="nav-item hide <?php if ($clientTabLinks) {echo 'active';}?>">
-				<a class="nav-link <?php if (!$clientTabLinks) {echo 'collapsed';}?>" href="#" id="clientsDropdown" role="button" data-toggle="collapse" data-target="#clients" aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-fw fa-users"></i>
-					<span>Clients</span>
-				</a>
-				<div class="collapse <?php if ($clientTabLinks) {echo 'show';}?>" aria-labelledby="clientsDropdown" id="clients">
-					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/agents'; ?>">Agents</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/import') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow'; ?>">Escrow</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lenders'; ?>">Lenders</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mortgage-brokers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mortgage-brokers'; ?>">Mortgage Brokers</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/companies'; ?>">Companies</a>
-						<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/incorrect-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/incorrect-users'; ?>">Incorrect Users</a> -->
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/client-users-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/client-users-list'; ?>">Client Type</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/new-users'; ?>">New Clients</a>
+		<?php //if ($role_id != 3 && $role_id != 5 && $roleName != 'Executive'): ?>
+			<?php if ($allAdminPermission): ?>
+				<li class="nav-item hide <?php if ($clientTabLinks) {echo 'active';}?>">
+					<a class="nav-link <?php if (!$clientTabLinks) {echo 'collapsed';}?>" href="#" id="clientsDropdown" role="button" data-toggle="collapse" data-target="#clients" aria-haspopup="true" aria-expanded="false">
+						<i class="fas fa-fw fa-users"></i>
+						<span>Clients</span>
+					</a>
+					<div class="collapse <?php if ($clientTabLinks) {echo 'show';}?>" aria-labelledby="clientsDropdown" id="clients">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/agents' || $this->uri->uri_string() == 'order/admin/import-agents' || $this->uri->segment(3) == 'edit-agent') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/agents'; ?>">Agents</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow' || $this->uri->uri_string() == 'order/admin/import') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow'; ?>">Escrow</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/lenders' || $this->uri->uri_string() == 'order/admin/import-lenders' || $this->uri->segment(3) == 'edit-lender') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/lenders'; ?>">Lenders</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mortgage-brokers') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mortgage-brokers'; ?>">Mortgage Brokers</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/companies' || $this->uri->uri_string() == 'order/admin/add-company') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/companies'; ?>">Companies</a>
+							<!-- <a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/incorrect-users') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/incorrect-users'; ?>">Incorrect Users</a> -->
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/client-users-list') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/client-users-list'; ?>">Client Type</a>
+							<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/new-users' || $this->uri->uri_string() == 'order/admin/add-new-user') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/new-users'; ?>">New Clients</a>
 
 
+						</div>
 					</div>
-				</div>
-			</li>
+				</li>
+			<?php endif;?>
 
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($spClientTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$spClientTabLinks) {echo 'collapsed';}?>" href="#" id="spClientsDropdown" role="button" data-toggle="collapse" data-target="#spClients" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-users"></i>
@@ -280,7 +298,9 @@ if (
 					</div>
 				</div>
 			</li>
+			<?php endif;?>
 
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item hide <?php if ($usersTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$usersTabLinks) {echo 'collapsed';}?>" href="#" id="usersDropdown" role="button" data-toggle="collapse" data-target="#users" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-users"></i>
@@ -303,7 +323,9 @@ if (
 					</div>
 				</div>
 			</li>
+			<?php endif;?>
 
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($spUsersTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$spUsersTabLinks) {echo 'collapsed';}?>" href="#" id="spUsersDropdown" role="button" data-toggle="collapse" data-target="#spUsers" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-users"></i>
@@ -324,7 +346,9 @@ if (
 					</div>
 				</div>
 			</li>
-			<?php if ($role_id == 1):?>
+			<?php endif;?>
+
+			<?php if ($reportPermission):?>
 			<li class="nav-item <?php if ($spReportTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$spReportTabLinks) {echo 'collapsed';}?>" href="#" id="spReportDropdown" role="button" data-toggle="collapse" data-target="#spReport" aria-haspopup="true" aria-expanded="false">
 					<i class="fa fa-solid fa-file-alt"></i>
@@ -339,7 +363,8 @@ if (
 				</div>
 			</li>
 			<?php endif;?>
-
+			
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($logTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$logTabLinks) {echo 'collapsed';}?>" href="#" id="logsDropDown" role="button" data-toggle="collapse" data-target="#logs" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-book"></i>
@@ -365,7 +390,9 @@ if (
 					</div>
 				</div>
 			</li>
+			<?php endif;?>
 
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($documentTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$documentTabLinks) {echo 'collapsed';}?>" href="#" id="documentDropDown" role="button" data-toggle="collapse" data-target="#documents" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-file"></i>
@@ -385,7 +412,9 @@ if (
 					</div>
 				</div>
 			</li>
+			<?php endif;?>
 
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($branchTabLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$branchTabLinks) {echo 'collapsed';}?>" href="#" id="cpl_branches" role="button" data-toggle="collapse" data-target="#cpl_branches_section" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-sitemap"></i>
@@ -401,7 +430,9 @@ if (
 					</div>
 				</div>
 			</li>
+			<?php endif;?>
 
+			<?php if ($allAdminPermission): ?>
 			<li class="nav-item <?php if ($settingLinks) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$settingLinks) {echo 'collapsed';}?>" href="#" id="li_settings" role="button" data-toggle="collapse" aria-haspopup="true" data-target="#li_settings_list" aria-expanded="false">
 					<i class="fas fa-fw fa-gear"></i>
@@ -470,9 +501,10 @@ if (
 					</div>
 				</div>
 			</li>
-		<?php endif;?>
+			<?php endif;?>
+		<?php // endif;?>
 
-		<?php if ($role_id == 1 || $role_id == 5) {?>
+		<?php if ($payoffPermission) {?>
 			<li class="nav-item <?php if ($payoffSectionLink) {echo 'active';}?>">
 				<a class="nav-link <?php if (!$payoffSectionLink) {echo 'collapsed';}?>" href="#" id="li_transactees" role="button" data-toggle="collapse" data-target="#li_transactees_list"  aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-fw fa-gear"></i>
@@ -491,6 +523,14 @@ if (
 			</li>
 
 		<?php }?>
+
+		<li class="nav-item">
+			<a class="nav-link" href="<?php echo base_url() . 'order/admin/logout'; ?>" >
+				<i class="fas fa-sign-out-alt"></i>
+				<span>Logout</span>
+			</a>
+		</li>
+
 
 
 		<!-- Divider -->

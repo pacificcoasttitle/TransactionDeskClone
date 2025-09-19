@@ -24,6 +24,37 @@
             text-align: center;
             font-size: 20px;
         }
+        .bg-dark {
+            background: url(http://www.pct.com/assets/media/content/bg/adminBG3.jpg) no-repeat 0 0;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .card-login {
+            max-width: 25rem;
+            max-height: 27rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 12px;
+        }
+        
+        .card-header2 {
+            padding: 1.50rem 1.50rem;
+            margin-bottom: 0;
+            background-color: none;
+            color: #ffffff;
+            text-align: center;
+            font-size: 22px;
+        }
+
+        .card-body {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 10px 25px 40px 25px;
+            color: #a8a8a8;
+            font-size: 20px;
+        }
     </style>
     <script>
         var base_url = "<?php echo base_url(); ?>";
