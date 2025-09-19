@@ -69,6 +69,7 @@
                     <td class="number"><?php echo $titleOfficerDetails['prior_refi_cnt'] ?></td>
                     
                     <td class="number">0</td>
+                    <!-- <td class="number"><?php echo $titleOfficerDetails['mtd_escrow_cnt'] ?></td> -->
                     <td class="number">0</td>
                     <td class="number">0</td>
                     
@@ -81,6 +82,7 @@
                     <td class="currency">$<?php echo round($titleOfficerDetails['prior_refi_rev'], 2); ?></td>
                     
                     <td class="currency">$0</td>
+                    <!-- <td class="currency">$<?php echo round($titleOfficerDetails['mtd_escrow_rev'], 2); ?></td> -->
                     <td class="currency">$0</td>
                     <td class="currency">$0</td>
                 </tr>
