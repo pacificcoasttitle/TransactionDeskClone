@@ -722,16 +722,27 @@ class Reports extends MX_Controller
             $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
             // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
             // die;
+            if ($month == date('m') && $year == date('Y')) {
+                $workedDays = $this->order->countWorkedDaysOfMonth();
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            } else {
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = 0;
+            }
+            
 
         } else {
             $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));  // June 1, 2025
-            $endDate    = date('Y-m-d 23:59:59');                      // June 30, 2025
+            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));                      // June 30, 2025
             $priorMonth = date('m', strtotime('-1 month'));
             $priorYear  = date('Y', strtotime('-1 month'));
-            $today = date('d');
-            $month = date('m');
-            $year = date('Y');
-            $monthName = date("F");
+            $today = date('d', strtotime('-1 day'));
+            $month = date('m', strtotime('-1 day'));
+            $year = date('Y', strtotime('-1 day'));
+            $monthName = date("F", strtotime('-1 day'));
+            $workedDays = $this->order->countWorkedDaysOfMonth();
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            
         }
         // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
         // die;
@@ -958,6 +969,9 @@ class Reports extends MX_Controller
             'todayTotalRev' => $todayTotalRev,
             'mtdTotalRev' => $mtdTotalRev,
             'priorTotalRev' => $priorTotalRev,
+            'workedDays' => $workedDays,
+            'workingDaysRemaining' => $workingDaysRemaining,
+            'todayDate' => date("m-d-Y", strtotime('-1 day'))
         ];
         if ($this->input->is_ajax_request()) {
             $dataRes['html'] = $this->load->view('order/reports/branch_analytics', $analysis, true);

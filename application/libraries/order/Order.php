@@ -2632,6 +2632,41 @@ class Order
         return $count;
     }
 
+    public function countDaysOfMonth($month, $year)
+    {
+        // Get the last day of the given month
+        $lastDay = date("t", strtotime("$year-$month-01"));
+
+        $count = 0;
+        $counter = mktime(0, 0, 0, $month, $lastDay, $year);
+
+        // Loop through days of the month backwards
+        while (date("n", $counter) == $month) {
+            if (!in_array(date("w", $counter), [0, 6])) { // Exclude weekends
+                $count++;
+            }
+            $counter = strtotime("-1 day", $counter);
+        }
+
+        // Subtract holidays (from your `pct_holidays` table)
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');
+        $this->CI->db->where('holiday_date >=', "$year-$month-01");
+        $this->CI->db->where('holiday_date <=', "$year-$month-$lastDay");
+        $query = $this->CI->db->get();
+        $holidays = $query->result_array();
+
+        foreach ($holidays as $holiday) {
+            $holidayDay = date('N', strtotime($holiday['holiday_date']));
+            if ($holidayDay < 6) { // Only subtract if it's not Saturday (6) or Sunday (7)
+                $count--;
+            }
+        }
+
+        return $count;
+    }
+
+
     public function get_order_notes($orderId, $user_id = 0)
     {
         $this->CI->db->select('pct_order_notes.*, pct_escrow_tasks.name')
