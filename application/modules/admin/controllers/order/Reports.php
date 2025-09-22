@@ -108,8 +108,42 @@ class Reports extends MX_Controller
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
             $selectedDate = strtotime($yearMonth . "-01");
-            // $startMonth = date('Y-m-01', strtotime('-3 months', $selectedDate));
-            // $endDate = date('Y-m-t', $selectedDate);
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            $today = 0;
+            $monthName = date("F", strtotime($endDate));
+            
+            $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+            $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
+            // die;
+            if ($month == date('m') && $year == date('Y')) {
+                $workedDays = $this->order->countWorkedDaysOfMonth();
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            } else {
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = 0;
+            }
+        } else {
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            $priorMonth = date('m', strtotime('-1 month'));
+            $priorYear  = date('Y', strtotime('-1 month'));
+            $today = date('d', strtotime('-1 day'));
+            $month = date('m', strtotime('-1 day'));
+            $year = date('Y', strtotime('-1 day'));
+            $monthName = date("F", strtotime('-1 day'));
+            $workedDays = $this->order->countWorkedDaysOfMonth();
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+        }
+
+        /*if ($this->input->is_ajax_request()) {
+            $filterType = $this->input->post('report_type');
+            $yearMonth = $this->input->post('month_year');
+            list($year, $month) = explode('-', $yearMonth);
+            $selectedDate = strtotime($yearMonth . "-01");
             $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
             $endDate = date('Y-m-t 23:59:59', $selectedDate);
             $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
@@ -132,7 +166,7 @@ class Reports extends MX_Controller
             $month = date('m');
             $year = date('Y');
             $monthName = date("F");
-        }
+        }*/
         
         // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . date('d') . '<br>';
         // die;
@@ -163,6 +197,11 @@ class Reports extends MX_Controller
             // if (empty($profile)) {
             //     continue;
             // }
+            $repId = $row['sales_representative'];
+            $repName = $row['sales_rep'];
+            if (empty($repName)) {
+                continue;
+            }
             if (strpos($row['file_number'], 'GLT') !== false) {
                 $branchName = 'Glendale';
             } elseif (strpos($row['file_number'], 'OCT') !== false) {
@@ -172,14 +211,12 @@ class Reports extends MX_Controller
                 // $branchName = 'Unknown';
             }
             // $branchName = $branchMap[$profile] ?? 'Other';
-            $repId = $row['sales_representative'];
-
             if (!isset($branches[$branchName])) {
                 $branches[$branchName] = ['sales_reps' => []];
             }
 
-            if (!isset($branches[$branchName]['sales_reps'][$repId])) {
-                $branches[$branchName]['sales_reps'][$repId] = [
+            if (!isset($branches[$branchName]['sales_reps'][$repName])) {
+                $branches[$branchName]['sales_reps'][$repName] = [
                     'sales_rep'   => $row['sales_rep'] ?? 'Unassigned',
                     // 'today'       => 0,
                     // 'mtd'         => 0,
@@ -216,7 +253,7 @@ class Reports extends MX_Controller
                 ];
             }
 
-            $rep =&$branches[$branchName]['sales_reps'][$repId];
+            $rep =&$branches[$branchName]['sales_reps'][$repName];
 
             $created_date = date('Y-m-d', strtotime($row['created_at']));
             // $closed_date = date('Y-m-d', strtotime($row['resware_closed_status_date']));
@@ -313,19 +350,19 @@ class Reports extends MX_Controller
 
             
 
-            if ($created_date >= $startMonth && $created_date <= $endDate) {
+            /*if ($created_date >= $startMonth && $created_date <= $endDate) {
                 $rep['created_4m']++;
                 // echo $repId . ' - ' . $created_date . ' - ' . $rev_date . '<br>';
                 // Among them, check if closed also in the range
                 if (!empty($rev_date) && $rev_date >= $startMonth && $rev_date <= $endDate) {
                     $rep['closed_4m']++;
                 }
-            }
+            }*/
 
             $rep['total_orders']++;
-            if ($row['softpro_status'] == 'closed') {
+            /*if ($row['softpro_status'] == 'closed') {
                 $rep['closed_orders']++;
-            }
+            }*/
         }
         // die;
         $salesUsers = $this->order->get_sales_users();
@@ -355,20 +392,13 @@ class Reports extends MX_Controller
 
         
         // Finalize closing %
-        foreach ($branches as &$branch) {
-            foreach ($branch['sales_reps'] as $key => &$rep) {
-                // echo "<pre>";
-                // print_r($salesClosingFigure);die;
-
-                $rep['closing_ratio'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? round(($salesClosingFigure[$key]['closed'] / $salesClosingFigure[$key]['created']) * 100, 1) : 0;
-                $rep['created_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? $salesClosingFigure[$key]['created'] : 0;
-                $rep['closed_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['closed'] > 0 ? $salesClosingFigure[$key]['closed'] : 0;
-                // $rep['closing_ratio'] = $rep['created_4m'] > 0
-                // ? round(($rep['closed_4m'] / $rep['created_4m']) * 100, 1)
-                // : 0;
+        foreach ($branches as $branch => &$branchData) {
+            if (isset($branchData['sales_reps'])) {
+                ksort($branchData['sales_reps']);  // Sort by key (sales_rep name)
             }
         }
-        
+        unset($branchData); // avoid reference issues
+        ksort($branches);
         // echo "<pre>";
         // print_r($branches);die;
         if ($this->input->is_ajax_request()) {
@@ -729,8 +759,6 @@ class Reports extends MX_Controller
                 $workedDays = $this->order->countDaysOfMonth($month, $year);
                 $workingDaysRemaining = 0;
             }
-            
-
         } else {
             $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));  // June 1, 2025
             $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));                      // June 30, 2025
@@ -742,7 +770,6 @@ class Reports extends MX_Controller
             $monthName = date("F", strtotime('-1 day'));
             $workedDays = $this->order->countWorkedDaysOfMonth();
             $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
-            
         }
         // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
         // die;
