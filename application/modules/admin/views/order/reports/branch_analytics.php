@@ -13,7 +13,9 @@ $daysRemaining = $totalDaysInMonth - $currentDay;
 
 // Total days passed including today
 $daysPassed = $currentDay;
-
+$daysPassed = $summaryData['workedDays'];
+$daysRemaining = $summaryData['workingDaysRemaining'];
+$totalDaysInMonth = $daysPassed + $daysRemaining;
 // echo "Today's Day of Month: " . $currentDay . PHP_EOL;
 // echo "Days Remaining (excluding today): " . $daysRemaining . PHP_EOL;
 // echo "Total Days Passed (including today): " . $daysPassed . PHP_EOL;die;
@@ -25,7 +27,7 @@ $daysPassed = $currentDay;
             <thead>
                 <tr>
                     <th>Metric</th>
-                    <th>Today</th>
+                    <th><?php echo $summaryData['todayDate'];?></th>
                     <th>Month to Date</th>
                     <th>Avg Per Day</th>
                     <th>Projected Month</th>
@@ -76,7 +78,7 @@ foreach ($branchData as $branchName => $data) {
         <thead>
             <tr>
                 <th>Service Type</th>
-                <th>Count for Day</th>
+                <th><?php echo $summaryData['todayDate'];?></th>
                 <th>Count for Month</th>
                 <th>Average Per Day</th>
                 <th>Projected For Month</th>
@@ -124,14 +126,14 @@ foreach ($branchData as $branchName => $data) {
         <thead>
             <tr>
                 <th>Service Type</th>
-                <th>Count for Day</th>
+                <th><?php echo $summaryData['todayDate'];?></th>
                 <th>Count for Month</th>
                 <th>Average Per Day</th>
                 <th>Projected For Month</th>
                 <th>Prior Month Total</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody >
             <tr>
                 <td><strong>🏢 <?php echo $branchName; ?> TOTAL CLOSINGS</strong></td>
                 <td class="number"><?php echo ($data['today_escrow_close_cnt'] + $data['today_purchase_close_cnt'] + $data['today_refi_close_cnt']); ?></td>
@@ -172,7 +174,7 @@ foreach ($branchData as $branchName => $data) {
         <thead>
             <tr>
                 <th>Service Type</th>
-                <th>Count for Day</th>
+                <th><?php echo $summaryData['todayDate'];?></th>
                 <th>Count for Month</th>
                 <th>Average Per Day</th>
                 <th>Projected For Month</th>
