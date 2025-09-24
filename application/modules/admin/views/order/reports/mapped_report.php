@@ -134,7 +134,7 @@
 <div class="container-fluid">
     <!-- Report Header -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">R-14 Mapped Report</h1>
+        <h1 class="h3 mb-0 text-gray-800">R-14 Mapped Report as of : <?php echo date('m-d-Y', strtotime('-1 day')) ?></h1>
         <div class="d-sm-inline-block">
             <select id="monthSelect" class="form-control" data-filter="sales_rep">
                 <?php
