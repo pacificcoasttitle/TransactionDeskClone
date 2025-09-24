@@ -206,10 +206,15 @@ class Reports extends MX_Controller
                 $branchName = 'Glendale';
             } elseif (strpos($row['file_number'], 'OCT') !== false) {
                 $branchName = 'Orange';
+            } elseif (strpos($row['file_number'], 'ONT') !== false) {
+                $branchName = 'Inland Empire';
+            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+                $branchName = 'TSG';
             } else {
                 continue;
                 // $branchName = 'Unknown';
             }
+            
             // $branchName = $branchMap[$profile] ?? 'Other';
             if (!isset($branches[$branchName])) {
                 $branches[$branchName] = ['sales_reps' => []];
@@ -370,6 +375,7 @@ class Reports extends MX_Controller
         if (!empty($salesUsers)) {
             foreach ($salesUsers as $row) {
                 $salesId = $row['id'];
+                $salesRepName = $row['full_name'];
                 $createdCount = array_filter($records, function ($record) use ($startMonth, $endDate, $salesId) {
                     $created = date('Y-m-d', strtotime($record['created_at']));
                     // $rev_date = date('Y-m-d', strtotime($record['sent_to_accounting_date']));
@@ -380,7 +386,7 @@ class Reports extends MX_Controller
                     $rev_date = date('Y-m-d', strtotime($record['sent_to_accounting_date']));
                     return ($created >= $startMonth && $created <= $endDate && $rev_date >= $startMonth && $rev_date <= $endDate && $record['sales_representative'] == $salesId);
                 });
-                $salesClosingFigure[$salesId] = [
+                $salesClosingFigure[$salesRepName] = [
                     'created' => count($createdCount),
                     'closed' => count($closedCount),
                 ];
@@ -393,20 +399,40 @@ class Reports extends MX_Controller
         
         // Finalize closing %
         foreach ($branches as $branch => &$branchData) {
+            foreach ($branchData['sales_reps'] as $key => &$rep) {
+                $rep['closing_ratio'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? round(($salesClosingFigure[$key]['closed'] / $salesClosingFigure[$key]['created']) * 100, 1) : 0;
+                $rep['created_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? $salesClosingFigure[$key]['created'] : 0;
+                $rep['closed_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['closed'] > 0 ? $salesClosingFigure[$key]['closed'] : 0;
+                
+                // echo "<pre>";
+                // print_r($rep);die;
+                if ($rep['today_purchase_cnt'] == 0 && $rep['today_refi_cnt'] == 0 && $rep['today_escrow_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['prior_purchase_cnt'] == 0 && $rep['mtd_purchase_cnt'] == 0 && $rep['mtd_refi_rev'] == 0 && $rep['mtd_escrow_rev'] == 0 && $rep['prior_refi_cnt'] == 0) {
+                    unset($branchData['sales_reps'][$key]);
+                }
+                // $rep['closing_ratio'] = $rep['created_4m'] > 0
+                // ? round(($rep['closed_4m'] / $rep['created_4m']) * 100, 1)
+                // : 0;
+            }
             if (isset($branchData['sales_reps'])) {
                 ksort($branchData['sales_reps']);  // Sort by key (sales_rep name)
             }
         }
         unset($branchData); // avoid reference issues
         ksort($branches);
+        $daysDetails = [
+            'workedDays' => $workedDays,
+            'workingDaysRemaining' => $workingDaysRemaining,
+            'todayDate' => date("m-d-Y", strtotime('-1 day')),
+            'monthName' => $monthName
+        ];
         // echo "<pre>";
         // print_r($branches);die;
         if ($this->input->is_ajax_request()) {
-            $dataRes['html'] = $this->load->view('order/reports/mapped_branch_report', ['branches' => $branches, 'monthName' => $monthName], true);
+            $dataRes['html'] = $this->load->view('order/reports/mapped_branch_report', ['branches' => $branches, 'daysDetails' => $daysDetails], true);
             $res = array('status' => 'success', 'report' => $dataRes);
             echo json_encode($res);exit;
         } else {
-            return $this->load->view('order/reports/mapped_branch_report', ['branches' => $branches, 'monthName' => $monthName], true);
+            return $this->load->view('order/reports/mapped_branch_report', ['branches' => $branches, 'daysDetails' => $daysDetails], true);
         }
     }
 
@@ -434,8 +460,41 @@ class Reports extends MX_Controller
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
             $selectedDate = strtotime($yearMonth . "-01");
-            // $startMonth = date('Y-m-01', strtotime('-3 months', $selectedDate));
-            // $endDate = date('Y-m-t', $selectedDate);
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            $today = 0;
+            $monthName = date("F", strtotime($endDate));
+            
+            $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+            $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
+            // die;
+            if ($month == date('m') && $year == date('Y')) {
+                $workedDays = $this->order->countWorkedDaysOfMonth();
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            } else {
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = 0;
+            }
+        } else {
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            $priorMonth = date('m', strtotime('-1 month'));
+            $priorYear  = date('Y', strtotime('-1 month'));
+            $today = date('d', strtotime('-1 day'));
+            $month = date('m', strtotime('-1 day'));
+            $year = date('Y', strtotime('-1 day'));
+            $monthName = date("F", strtotime('-1 day'));
+            $workedDays = $this->order->countWorkedDaysOfMonth();
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+        }
+        /*if ($this->input->is_ajax_request()) {
+            $filterType = $this->input->post('report_type');
+            $yearMonth = $this->input->post('month_year');
+            list($year, $month) = explode('-', $yearMonth);
+            $selectedDate = strtotime($yearMonth . "-01");
             $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
             $endDate = date('Y-m-t 23:59:59', $selectedDate);
             $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
@@ -458,18 +517,18 @@ class Reports extends MX_Controller
             $month = date('m');
             $year = date('Y');
             $monthName = date("F");
-        }
+        }*/
 
-        // $branchMap = [
-        //     'Glendale Escrow'      => 'Glendale',
-        //     'Glendale Title'       => 'Glendale',
-        //     'Orange Escrow'        => 'Orange',
-        //     'Orange Title'         => 'Orange',
-        //     'Porterville Escrow'   => 'Porterville',
-        //     'Production\Payoff'    => 'Production',
-        //     'TSG'                  => 'TSG',
-        //     'Inland Empire Escrow' => 'Inland Empire',
-        // ];
+        /*$branchMap = [
+            'Glendale Escrow'      => 'Glendale',
+            'Glendale Title'       => 'Glendale',
+            'Orange Escrow'        => 'Orange',
+            'Orange Title'         => 'Orange',
+            'Porterville Escrow'   => 'Porterville',
+            'Production\Payoff'    => 'Production',
+            'TSG'                  => 'TSG',
+            'Inland Empire Escrow' => 'Inland Empire',
+        ];*/
 
         // $fromDate = date('Y-m-d', strtotime('-4 months')); // we need last 4 months data
         // $toDate   = date('Y-m-d');
@@ -488,7 +547,7 @@ class Reports extends MX_Controller
         $branches = [];
         foreach ($records as $row) {
             // $profile = $row['profile'];
-            if (empty($row['title_officer'])) {
+            if (empty($row['title_officer']) || empty($row['officer_name'])) {
                 continue;
             }
 
@@ -496,19 +555,24 @@ class Reports extends MX_Controller
                 $branchName = 'Glendale';
             } elseif (strpos($row['file_number'], 'OCT') !== false) {
                 $branchName = 'Orange';
+            } elseif (strpos($row['file_number'], 'ONT') !== false) {
+                $branchName = 'Inland Empire';
+            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+                $branchName = 'TSG';
             } else {
                 continue;
                 // $branchName = 'Unknown';
             }
 
             $repId = $row['title_officer'];
+            $titleOfficerName = $row['officer_name'];
 
             if (!isset($branches[$branchName])) {
                 $branches[$branchName] = ['title_officer' => []];
             }
 
-            if (!isset($branches[$branchName]['title_officer'][$repId])) {
-                $branches[$branchName]['title_officer'][$repId] = [
+            if (!isset($branches[$branchName]['title_officer'][$titleOfficerName])) {
+                $branches[$branchName]['title_officer'][$titleOfficerName] = [
                     'officer_name'   => $row['officer_name'] ?? 'Unassigned',
                     'today_purchase_cnt' => 0,
                     'today_purchase_rev' => 0,
@@ -540,7 +604,7 @@ class Reports extends MX_Controller
                 ];
             }
 
-            $rep =&$branches[$branchName]['title_officer'][$repId];
+            $rep =&$branches[$branchName]['title_officer'][$titleOfficerName];
 
             $created_date = date('Y-m-d', strtotime($row['created_at']));
             // $closed_date = date('Y-m-d', strtotime($row['resware_closed_status_date']));
@@ -595,7 +659,7 @@ class Reports extends MX_Controller
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
                 // print_r ($row['file_number']); echo "<br>";
-                if (strtolower($row['order_type']) == 'title only') {
+                if (strtolower($row['order_type']) == ' title only') {
                     if ($row['prod_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
                         $rep['mtd_purchase_cnt'] += 1;
@@ -636,21 +700,21 @@ class Reports extends MX_Controller
                 }
             }
 
-            // if ($rev_month == $priorMonth && $rev_year == $priorYear && !empty($row['sent_to_accounting_date'])) {
-            //     if ($row['prod_type'] == 'Purchase') {
-            //         $rep['prior_purchase_cnt']++;
-            //     } elseif ($row['prod_type'] == 'Refinance') {
-            //         $rep['prior_refi_cnt']++;
-            //     }
-            // }
+            /*if ($rev_month == $priorMonth && $rev_year == $priorYear && !empty($row['sent_to_accounting_date'])) {
+                if ($row['prod_type'] == 'Purchase') {
+                    $rep['prior_purchase_cnt']++;
+                } elseif ($row['prod_type'] == 'Refinance') {
+                    $rep['prior_refi_cnt']++;
+                }
+            }
 
-            // if ($rev_month == $priorMonth && $rev_year == $priorYear) {
-            //     if ($row['prod_type'] == 'Purchase') {
-            //         $rep['prior_purchase_rev'] += $row['premium'];
-            //     } elseif ($row['prod_type'] == 'Refinance') {
-            //         $rep['prior_refi_rev'] += $row['premium'];
-            //     }
-            // }
+            if ($rev_month == $priorMonth && $rev_year == $priorYear) {
+                if ($row['prod_type'] == 'Purchase') {
+                    $rep['prior_purchase_rev'] += $row['premium'];
+                } elseif ($row['prod_type'] == 'Refinance') {
+                    $rep['prior_refi_rev'] += $row['premium'];
+                }
+            }
 
             if ($created_date >= $startMonth && $created_date <= $endDate) {
                 $rep['created_4m']++;
@@ -659,7 +723,7 @@ class Reports extends MX_Controller
                 if (!empty($rev_date) && $rev_date >= $startMonth && $rev_date <= $endDate) {
                     $rep['closed_4m']++;
                 }
-            }
+            }*/
 
             $rep['total_orders']++;
             if ($row['softpro_status'] == 'closed') {
@@ -692,27 +756,35 @@ class Reports extends MX_Controller
         // echo "<pre>";
         // print_r($titleOffierClosingFigure);die;
 
-        
-        // Finalize closing %
-        foreach ($branches as &$branch) {
-            foreach ($branch['title_officer'] as $key => &$rep) {
-                
-                $rep['closing_ratio'] = isset($titleOffierClosingFigure[$key]) && $titleOffierClosingFigure[$key]['created'] > 0 ? round(($titleOffierClosingFigure[$key]['closed'] / $titleOffierClosingFigure[$key]['created']) * 100, 1) : 0;
-                $rep['created_4m'] = isset($titleOffierClosingFigure[$key]) && $titleOffierClosingFigure[$key]['created'] > 0 ? $titleOffierClosingFigure[$key]['created'] : 0;
-                $rep['closed_4m'] = isset($titleOffierClosingFigure[$key]) && $titleOffierClosingFigure[$key]['closed'] > 0 ? $titleOffierClosingFigure[$key]['closed'] : 0;
-                // $rep['closing_ratio'] = $rep['created_4m'] > 0
-                // ? round(($rep['closed_4m'] / $rep['created_4m']) * 100, 1)
-                // : 0;
+        foreach ($branches as $branch => &$branchData) {
+            if (isset($branchData['title_officer'])) {
+                ksort($branchData['title_officer']);  // Sort by key (title officer name)
+            }
+            foreach($branchData['title_officer'] as $titleOfficerId => &$titleOfficerData) {
+                if ($titleOfficerData['today_purchase_cnt'] == 0 && $titleOfficerData['today_refi_cnt'] == 0 && $titleOfficerData['prior_purchase_cnt'] == 0 && $titleOfficerData['mtd_purchase_cnt'] == 0 && $titleOfficerData['mtd_refi_rev'] == 0 && $titleOfficerData['prior_refi_cnt'] == 0) {
+                    unset($branchData['title_officer'][$titleOfficerId]);
+                }
             }
         }
+        
+        unset($branchData);
+        ksort($branches);
+        // echo "<pre>";
+        // print_r($branches);die;
+        $daysDetails = [
+            'workedDays' => $workedDays,
+            'workingDaysRemaining' => $workingDaysRemaining,
+            'todayDate' => date("m-d-Y", strtotime('-1 day')),
+            'monthName' => $monthName
+        ];
         // echo "<pre>";
         // print_r($branches);die;
         if ($this->input->is_ajax_request()) {
-            $dataRes['html'] = $this->load->view('order/reports/mapped_to_branch_report', ['branches' => $branches, 'monthName' => $monthName], true);
+            $dataRes['html'] = $this->load->view('order/reports/mapped_to_branch_report', ['branches' => $branches, 'daysDetails' => $daysDetails], true);
             $res = array('status' => 'success', 'report' => $dataRes);
             echo json_encode($res);exit;
         } else {
-            return $this->load->view('order/reports/mapped_to_branch_report', ['branches' => $branches, 'monthName' => $monthName], true);
+            return $this->load->view('order/reports/mapped_to_branch_report', ['branches' => $branches, 'daysDetails' => $daysDetails], true);
         }
     }
 
@@ -796,19 +868,19 @@ class Reports extends MX_Controller
         
         $branches = [];
         foreach ($records as $row) {
-            $profile = $row['profile'];
-            // if (empty($profile) || empty($row['title_officer'])) {
-            //     continue;
-            // }
+            // $profile = $row['profile'];
             if (strpos($row['file_number'], 'GLT') !== false) {
                 $branchName = 'Glendale';
             } elseif (strpos($row['file_number'], 'OCT') !== false) {
                 $branchName = 'Orange';
+            } elseif (strpos($row['file_number'], 'ONT') !== false) {
+                $branchName = 'Inland Empire';
+            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+                $branchName = 'TSG';
             } else {
                 continue;
-                // $branchName = 'Unknown';
             }
-            $repId = $row['title_officer'];
+            // $repId = $row['title_officer'];
 
             if (!isset($branches[$branchName])) {
                 $branches[$branchName] = [

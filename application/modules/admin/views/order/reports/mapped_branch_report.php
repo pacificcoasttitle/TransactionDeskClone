@@ -17,8 +17,8 @@
                 <tr>
                     <th rowspan="3">Sales Representative</th>
                     <th rowspan="3">4-Month<br>Closing Ratio</th>
-                    <th colspan="9">Closings by Production (<?php echo $monthName; ?>)</th>
-                    <th colspan="9">Revenue by Production (<?php echo $monthName; ?>)</th>
+                    <th colspan="9">Closings by Production (<?php echo $daysDetails['monthName']; ?>)</th>
+                    <th colspan="9">Revenue by Production (<?php echo $daysDetails['monthName']; ?>)</th>
                 </tr>
                 <tr>
                     <th colspan="3">Title Only - Resale</th>
