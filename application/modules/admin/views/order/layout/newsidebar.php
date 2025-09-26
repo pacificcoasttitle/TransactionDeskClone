@@ -140,8 +140,10 @@ if (
 
 if (
     $this->uri->uri_string() == 'order/admin/branch-analytics-report' ||
-    $this->uri->uri_string() == 'order/admin/mapped-title-officer-report' ||
-    $this->uri->uri_string() == 'order/admin/mapped-report'
+    $this->uri->uri_string() == 'order/admin/title-officer-production-report' ||
+    $this->uri->uri_string() == 'order/admin/sales-rep-branch-report' ||
+    $this->uri->uri_string() == 'order/admin/sales-ranking-report' ||
+    $this->uri->uri_string() == 'order/admin/escrow-branch-report'
 ) {
     $spReportTabLinks = true;
 }
@@ -356,9 +358,11 @@ if (in_array($roleName, ['Admin', 'Super Admin', 'CS Admin'])) {
 				</a>
 				<div class="collapse <?php if ($spReportTabLinks) {echo 'show';}?>" aria-labelledby="spReportDropdown" id="spReport">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mapped-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mapped-report'; ?>">R-14 Mapped Report</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/mapped-title-officer-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/mapped-title-officer-report'; ?>">Title Officer Report</a>
-						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/branch-analytics-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/branch-analytics-report'; ?>">Branch Analytics Report</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/branch-analytics-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/branch-analytics-report'; ?>">Daily Revenue</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/sales-rep-branch-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/sales-rep-branch-report'; ?>">R-14 Branches</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/sales-ranking-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/sales-ranking-report'; ?>">R-14 ranking</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/title-officer-production-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/title-officer-production-report'; ?>">Title Officer Production</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/escrow-branch-report') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/escrow-branch-report'; ?>">Escrow</a>
 					</div>
 				</div>
 			</li>
