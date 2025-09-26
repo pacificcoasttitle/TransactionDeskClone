@@ -45,7 +45,7 @@ class Reports extends MX_Controller
     }
 
     public function get_all_to_order_data($fromDate, $toDate, $closedFromDate) {
-        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.officer_name, o.created_at, ot.order_type')
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date,t.transaction_type, t.sales_representative, t.title_officer, u.officer_name, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
             ->join('pct_softpro_lookup_table u', 't.title_officer = u.id', 'left')
@@ -918,6 +918,8 @@ class Reports extends MX_Controller
             $workedDays = $this->order->countWorkedDaysOfMonth();
             $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
         }
+        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
+        // die;
         /*if ($this->input->is_ajax_request()) {
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
@@ -931,8 +933,6 @@ class Reports extends MX_Controller
             
             $priorMonth = date('m', strtotime('-1 months', $selectedDate));
             $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // die;
-            // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
             // die;
             
         } else {
@@ -1086,16 +1086,16 @@ class Reports extends MX_Controller
             // }
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
-                // print_r ($row['file_number']); echo "<br>";
-                if (strtolower($row['order_type']) == ' title only') {
-                    if ($row['prod_type'] == 'Purchase') {
+                
+                if (strtolower($row['order_type']) == 'title only') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
                         $rep['mtd_purchase_cnt'] += 1;
                         if ($rev_day == $today) {
                             $rep['today_purchase_rev'] += $row['premium'];
                             $rep['today_purchase_cnt'] += 1;
                         }
-                    } elseif ($row['prod_type'] == 'Refinance') {
+                    } else if ($row['transaction_type'] == 'Refinance') {
                         $rep['mtd_refi_rev'] += $row['premium'];
                         $rep['mtd_refi_cnt'] += 1;
                         if ($rev_day == $today) {
@@ -1115,10 +1115,10 @@ class Reports extends MX_Controller
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $priorMonth && $rev_year == $priorYear) {
                 if (strtolower($row['order_type']) == 'title only') {
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_cnt']++;
                         $rep['prior_purchase_rev'] += $row['premium'];
-                    } elseif ($row['prod_type'] == 'Refinance') {
+                    } elseif ($row['transaction_type'] == 'Refinance') {
                         $rep['prior_refi_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
@@ -1129,17 +1129,17 @@ class Reports extends MX_Controller
             }
 
             /*if ($rev_month == $priorMonth && $rev_year == $priorYear && !empty($row['sent_to_accounting_date'])) {
-                if ($row['prod_type'] == 'Purchase') {
+                if ($row['transaction_type'] == 'Purchase') {
                     $rep['prior_purchase_cnt']++;
-                } elseif ($row['prod_type'] == 'Refinance') {
+                } elseif ($row['transaction_type'] == 'Refinance') {
                     $rep['prior_refi_cnt']++;
                 }
             }
 
             if ($rev_month == $priorMonth && $rev_year == $priorYear) {
-                if ($row['prod_type'] == 'Purchase') {
+                if ($row['transaction_type'] == 'Purchase') {
                     $rep['prior_purchase_rev'] += $row['premium'];
-                } elseif ($row['prod_type'] == 'Refinance') {
+                } elseif ($row['transaction_type'] == 'Refinance') {
                     $rep['prior_refi_rev'] += $row['premium'];
                 }
             }
