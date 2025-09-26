@@ -83,12 +83,16 @@ $("#monthSelect").on("change", function () {
 	let $dropdown = $(this);
 	let selectedValue = $dropdown.val();
 	let reportType = $('#monthSelect').data('filter');
-	let url = base_url + "get-sales-mapped-report";
+	let url = base_url + "get-sales-rep-branch-report";
 	console.log('reportType ==', reportType);
 	if (reportType == 'sales_rep') {
-		url = base_url + "get-sales-mapped-report";
+		url = base_url + "get-sales-rep-branch-report";
+	} else if (reportType == 'sales_rep_ranking') {
+		url = base_url + "get-sales-ranking-report";
+	} else if (reportType == 'escrow') {
+		url = base_url + "get-escrow-branch-report";
 	} else if (reportType == 'title_officer') {
-		url = base_url + "get-mapped-title-officer-report";
+		url = base_url + "get-title-officer-production-report";
 	} else if (reportType == 'branch_analytics') {
 		url = base_url + "get-branch-analytics-report";
 	}

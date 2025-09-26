@@ -290,10 +290,17 @@ $route['order/admin/delete-softpro-title-production']    = 'admin/order/home/del
 $route['order/admin/edit-user/:num']               = 'admin/order/home/editUser';
 $route['order/admin/edit-softpro-company/:num']             = 'admin/order/home/spEditCompany';
 
-$route['order/admin/mapped-report'] = 'admin/order/reports/mappedReport';
-$route['get-sales-mapped-report'] = 'admin/order/reports/getSalesMappedReport';
-$route['order/admin/mapped-title-officer-report'] = 'admin/order/reports/mappedTitleOfficerReport';
-$route['get-mapped-title-officer-report'] = 'admin/order/reports/getMappedTitleOfficerReport';
+$route['order/admin/sales-rep-branch-report'] = 'admin/order/reports/salesRepBranchReport';
+$route['get-sales-rep-branch-report'] = 'admin/order/reports/getSalerepBranchReport';
+$route['order/admin/title-officer-production-report'] = 'admin/order/reports/titleOfficerProductionReport';
+$route['get-title-officer-production-report'] = 'admin/order/reports/getTitleOfficerProductionReport';
+
+$route['order/admin/sales-ranking-report'] = 'admin/order/reports/salesRankingReport';
+$route['get-sales-ranking-report'] = 'admin/order/reports/getsalesRankingReport';
+
+$route['order/admin/escrow-branch-report'] = 'admin/order/reports/escrowBranchReport';
+$route['get-escrow-branch-report'] = 'admin/order/reports/getEscrowBranchReport';
+
 $route['order/admin/branch-analytics-report'] = 'admin/order/reports/branchAnalyticsReport';
 $route['get-branch-analytics-report'] = 'admin/order/reports/getBranchAnalyticsReport';
 
