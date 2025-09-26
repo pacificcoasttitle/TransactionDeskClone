@@ -77,16 +77,16 @@
                     <td class="number">0</td>
                     <td class="number">0</td>
                     
-                    <td class="currency">$<?php echo round($titleOfficerDetails['today_purchase_rev'], 2); ?></td>
-                    <td class="currency">$<?php echo round($titleOfficerDetails['mtd_purchase_rev'], 2); ?></td>
-                    <td class="currency">$<?php echo round($titleOfficerDetails['prior_purchase_rev'], 2); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['today_purchase_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_purchase_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['prior_purchase_rev'])); ?></td>
                     
-                    <td class="currency">$<?php echo round($titleOfficerDetails['today_refi_rev'], 2); ?></td>
-                    <td class="currency">$<?php echo round($titleOfficerDetails['mtd_refi_rev'], 2); ?></td>
-                    <td class="currency">$<?php echo round($titleOfficerDetails['prior_refi_rev'], 2); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['today_refi_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_refi_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['prior_refi_rev'])); ?></td>
                     
                     <td class="currency">$0</td>
-                    <!-- <td class="currency">$<?php echo round($titleOfficerDetails['mtd_escrow_rev'], 2); ?></td> -->
+                    <!-- <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_escrow_rev'])); ?></td> -->
                     <td class="currency">$0</td>
                     <td class="currency">$0</td>
                 </tr>
@@ -132,13 +132,13 @@
                         <td class="number">0</td>
                         <td class="number">0</td>
                         
-                        <td class="currency">$<?php echo round($totalTodayPurchaseRev, 2); ?></td>
-                        <td class="currency">$<?php echo round($totalMtdPurchaseRev, 2); ?></td>
-                        <td class="currency">$<?php echo round($totalPriorPurchaseRev, 2); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalTodayPurchaseRev)); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalMtdPurchaseRev)); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalPriorPurchaseRev)); ?></td>
                         
-                        <td class="currency">$<?php echo round($totalTodayRefiRev, 2); ?></td>
-                        <td class="currency">$<?php echo round($totalMtdRefiRev, 2); ?></td>
-                        <td class="currency">$<?php echo round($totalPriorRefiRev, 2); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalTodayRefiRev)); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalMtdRefiRev)); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalPriorRefiRev)); ?></td>
                         
                         <td class="currency">$0</td>
                         <td class="currency">$0</td>
@@ -152,6 +152,6 @@
 <?php }?>
 
 <!-- <div class="report-footer">
-    <p>Report generated on August 21, 2025 at 03:21 PM | Pacific Coast Title Company</p>
+    <p>Report generated on August 21025 at 03:21 PM | Pacific Coast Title Company</p>
     <p>Title Officer Performance Analysis - Mapping File ONLY (No Cross-Branch)</p>
 </div> -->

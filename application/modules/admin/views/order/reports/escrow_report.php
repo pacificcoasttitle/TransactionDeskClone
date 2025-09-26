@@ -1,5 +1,5 @@
 <style>
-/* Branch sections - matching Branch Analytics */
+/* R-14 Report Styling - Adapted for Dashboard */
 .branch-section {
     margin: 20px 0;
     border: 1px solid #D4D4D4;
@@ -44,45 +44,44 @@
     display: none;
 }
 
-/* Tables - matching Branch Analytics */
-.title-table {
+.salesrep-table {
     border-collapse: collapse;
     width: 100%;
     margin: 0 0 20px 0;
     border: 1px solid #D4D4D4;
-    font-size: 10pt;
+    font-size: 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.title-table th {
+.salesrep-table th {
     background: linear-gradient(to bottom, #F8F9FA, #E9ECEF);
     border: 1px solid #D4D4D4;
     padding: 12px 8px;
     text-align: center;
     font-weight: bold;
     color: #495057;
-    font-size: 9pt;
+    font-size: 13px;
     white-space: nowrap;
 }
 
-.title-table td {
+.salesrep-table td {
     border: 1px solid #D4D4D4;
     padding: 8px 6px;
     text-align: center;
     vertical-align: middle;
     background-color: #ffffff;
-    font-size: 9pt;
+    font-size: 13px;
 }
 
-.title-table tr:nth-child(even) td {
+.salesrep-table tr:nth-child(even) td {
     background-color: #F8F9FA;
 }
 
-.title-table tr:hover td {
+.salesrep-table tr:hover td {
     background-color: #E3F2FD;
 }
 
-.title-officer-name {
+.salesrep-name {
     text-align: left !important;
     font-weight: bold;
     color: #1F4E79;
@@ -91,20 +90,20 @@
 
 .currency {
     text-align: right;
-    font-family: "Courier New", monospace;
+    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-weight: bold;
     color: #0066CC;
 }
 
 .number {
     text-align: right;
-    font-family: "Courier New", monospace;
+    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-weight: bold;
 }
 
 .percentage {
     text-align: right;
-    font-family: "Courier New", monospace;
+    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-weight: bold;
 }
 
@@ -127,30 +126,20 @@
     font-size: 11pt;
 }
 
-.report-footer {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 2px solid #E9ECEF;
-    text-align: center;
-    font-size: 9pt;
-    color: #6C757D;
-}
-
 #monthSelect, .d-sm-inline-block {
     width: 170px;
 }
-
 </style>
 
 <div class="container-fluid">
     <!-- Report Header -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Title Officer Report as of : <?php echo date('m-d-Y', strtotime('-1 day')) ?></h1>
+        <h1 class="h3 mb-0 text-gray-800">R-14 Mapped Report as of : <?php echo date('m-d-Y', strtotime('-1 day')) ?></h1>
         <div class="d-sm-inline-block">
-            <select id="monthSelect" class="form-control" data-filter="title_officer">
+            <select id="monthSelect" class="form-control" data-filter="escrow">
                 <?php
                 $currentMonth = date("Y-m");
-                for ($i = 0; $i < 12; $i++) { 
+                for ($i = 0; $i < 5; $i++) { 
                     $date = strtotime("-$i month");
                     $value = date("Y-m", $date); // for option value (e.g., 2024-07)
                     $label = date("F Y", $date); // for display (e.g., July 2024)
@@ -165,16 +154,17 @@
                     <option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
                 <?php }?>
             </select>
+            <input type="hidden" id="reportType" value="">
         </div>
     </div>
 
     <!-- Mapping Logic Explanation -->
-    <!-- <div class="mapping-note">
-        <strong>📋 Title Officer Assignment:</strong> Title Officers are displayed ONLY in their assigned branch from the mapping file. 
-        <strong>No cross-branch transactions shown.</strong> Each officer appears only where they are officially assigned.
-        <strong>Quality Rating:</strong> Calculated based on revenue per policy and overall performance metrics.
-    </div> -->
-
+    <div class="mapping-note">
+        <strong>📋 Sales Rep Mapping Logic:</strong> Sales representatives are displayed in their assigned branch from the mapping file (including zero production). 
+        Additionally, reps appear in other branches where they have actual transactions. 
+        <strong>4-Month Closing Ratio:</strong> Calculated as (Closings ÷ Openings) × 100 over the past 4 months.
+    </div>
+    
     <!-- Branch sections will be dynamically loaded here -->
     <div id="branchSections">
         <?php if (isset($error) && $error) {
