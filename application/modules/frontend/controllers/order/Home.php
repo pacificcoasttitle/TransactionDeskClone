@@ -491,6 +491,11 @@ class Home extends MX_Controller
                             $transactionDetailsReq['coverageAmount'] = $coverageAmount;
                         }
                     }
+                    $underWriter = 'westcor';
+                    if (strtolower($softproProductType) == 'full alta') {
+                        $underWriter = 'commonwealth';
+                    }
+                    $transactionDetailsReq['underWriter'] = $underWriter;
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
                         $loan['LoanNumber']                  = $LoanNumber;
@@ -702,8 +707,9 @@ class Home extends MX_Controller
                     'escrow_officer_id' => $escrowOfficerId,
                     'prod_type'         => $TransactionType,
                     'softpro_status'    => ($lpOrderFlag == 1) ? 'open' : '',
+                    'underwriter'       => $underWriter,
                     'status'            => 1,
-                    'is_softpro_order' => 1
+                    'is_softpro_order'  => 1
                 ];
 
                 $orderId = $this->home_model->insert($orderData, 'order_details');
