@@ -495,7 +495,7 @@ class Home extends MX_Controller
                     if (strtolower($softproProductType) == 'full alta') {
                         $underWriter = 'commonwealth';
                     }
-                    $transactionDetailsReq['underWriter'] = $underWriter;
+                    $transactionDetailsReq['UnderWriter'] = $underWriter;
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
                         $loan['LoanNumber']                  = $LoanNumber;
