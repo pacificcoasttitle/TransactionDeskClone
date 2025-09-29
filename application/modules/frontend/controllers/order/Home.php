@@ -492,10 +492,12 @@ class Home extends MX_Controller
                         }
                     }
                     $underWriter = 'westcor';
+                    $underWriterLookup = 'WC';
                     if (strtolower($softproProductType) == 'full alta') {
                         $underWriter = 'commonwealth';
+                        $underWriterLookup = 'CW';
                     }
-                    $transactionDetailsReq['UnderWriter'] = $underWriter;
+                    $transactionDetailsReq['UnderWriter'] = $underWriterLookup;
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
                         $loan['LoanNumber']                  = $LoanNumber;
