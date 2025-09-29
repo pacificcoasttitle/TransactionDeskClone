@@ -18,16 +18,16 @@
                 <tr>
                     <th rowspan="3">Title Officer</th>
                     <!-- <th rowspan="3">Quality<br>Rating</th> -->
-                    <th colspan="9">Closings by Production (<?php echo $daysDetails['monthName']; ?>)</th>
-                    <th colspan="9">Revenue by Production (<?php echo $daysDetails['monthName']; ?>)</th>
+                    <th colspan="6">Closings by Production (<?php echo $daysDetails['monthName']; ?>)</th>
+                    <th colspan="6">Revenue by Production (<?php echo $daysDetails['monthName']; ?>)</th>
                 </tr>
                 <tr>
                     <th colspan="3">Resale</th>
                     <th colspan="3">Refinance</th>
-                    <th colspan="3">Commercial</th>
+                    <!-- <th colspan="3">Commercial</th> -->
                     <th colspan="3">Resale</th>
                     <th colspan="3">Refinance</th>
-                    <th colspan="3">Commercial</th>
+                    <!-- <th colspan="3">Commercial</th> -->
                 </tr>
                 <tr>
                     <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
@@ -36,18 +36,18 @@
                     <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
                     <th>MTD</th>
                     <th>Prior</th>
+                    <!-- <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
+                    <th>MTD</th>
+                    <th>Prior</th> -->
                     <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
                     <th>MTD</th>
                     <th>Prior</th>
                     <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
                     <th>MTD</th>
                     <th>Prior</th>
-                    <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
+                    <!-- <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
                     <th>MTD</th>
-                    <th>Prior</th>
-                    <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
-                    <th>MTD</th>
-                    <th>Prior</th>
+                    <th>Prior</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -72,10 +72,10 @@
                     <td class="number"><?php echo $titleOfficerDetails['mtd_refi_cnt'] ?></td>
                     <td class="number"><?php echo $titleOfficerDetails['prior_refi_cnt'] ?></td>
                     
-                    <td class="number">0</td>
+                    <!-- <td class="number">0</td> -->
                     <!-- <td class="number"><?php echo $titleOfficerDetails['mtd_escrow_cnt'] ?></td> -->
-                    <td class="number">0</td>
-                    <td class="number">0</td>
+                    <!-- <td class="number">0</td>
+                    <td class="number">0</td> -->
                     
                     <td class="currency">$<?php echo number_format(round($titleOfficerDetails['today_purchase_rev'])); ?></td>
                     <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_purchase_rev'])); ?></td>
@@ -85,10 +85,10 @@
                     <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_refi_rev'])); ?></td>
                     <td class="currency">$<?php echo number_format(round($titleOfficerDetails['prior_refi_rev'])); ?></td>
                     
-                    <td class="currency">$0</td>
+                    <!-- <td class="currency">$0</td> -->
                     <!-- <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_escrow_rev'])); ?></td> -->
-                    <td class="currency">$0</td>
-                    <td class="currency">$0</td>
+                    <!-- <td class="currency">$0</td>
+                    <td class="currency">$0</td> -->
                 </tr>
                 <?php
                         
@@ -128,9 +128,9 @@
                         <td class="number"><?php echo $totalMtdRefiCnt; ?></td>
                         <td class="number"><?php echo $totalPriorRefiCnt; ?></td>
                         
+                        <!-- <td class="number">0</td>
                         <td class="number">0</td>
-                        <td class="number">0</td>
-                        <td class="number">0</td>
+                        <td class="number">0</td> -->
                         
                         <td class="currency">$<?php echo number_format(round($totalTodayPurchaseRev)); ?></td>
                         <td class="currency">$<?php echo number_format(round($totalMtdPurchaseRev)); ?></td>
@@ -140,9 +140,9 @@
                         <td class="currency">$<?php echo number_format(round($totalMtdRefiRev)); ?></td>
                         <td class="currency">$<?php echo number_format(round($totalPriorRefiRev)); ?></td>
                         
+                        <!-- <td class="currency">$0</td>
                         <td class="currency">$0</td>
-                        <td class="currency">$0</td>
-                        <td class="currency">$0</td>
+                        <td class="currency">$0</td> -->
                     </tr>
                 
             </tbody>
