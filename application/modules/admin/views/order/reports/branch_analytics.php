@@ -39,25 +39,25 @@ $totalDaysInMonth = $daysPassed + $daysRemaining;
                     <td><strong>Total Openings</strong></td>.
                     <td class="number"><?php echo $summaryData['todayTotalOpen'];?></td>
                     <td class="number"><?php echo $summaryData['mtdTotalOpen'];?></td>
-                    <td class="number"><?php echo round($summaryData['mtdTotalOpen']/$daysPassed, 2);?></td>
-                    <td class="number"><?php echo round(($summaryData['mtdTotalOpen']/$daysPassed)*$totalDaysInMonth, 2);?></td>
-                    <td class="number"><?php echo $summaryData['priorTotalOpen'];?></td>
+                    <td class="number"><?php echo number_format(round($summaryData['mtdTotalOpen']/$daysPassed));?></td>
+                    <td class="number"><?php echo number_format(round(($summaryData['mtdTotalOpen']/$daysPassed)*$totalDaysInMonth));?></td>
+                    <td class="number"><?php echo number_format(round($summaryData['priorTotalOpen']));?></td>
                 </tr>
                 <tr>
                     <td><strong>Total Closings</strong></td>
                     <td class="number"><?php echo $summaryData['todayTotalClose'];?></td>
                     <td class="number"><?php echo $summaryData['mtdTotalClose'];?></td>
-                    <td class="number"><?php echo round($summaryData['mtdTotalClose']/$daysPassed, 2);?></td>
-                    <td class="number"><?php echo round(($summaryData['mtdTotalClose']/$daysPassed)*$totalDaysInMonth, 2);?></td>
-                    <td class="number"><?php echo $summaryData['priorTotalClose'];?></td>
+                    <td class="number"><?php echo number_format(round($summaryData['mtdTotalClose']/$daysPassed));?></td>
+                    <td class="number"><?php echo number_format(round(($summaryData['mtdTotalClose']/$daysPassed)*$totalDaysInMonth));?></td>
+                    <td class="number"><?php echo number_format(round($summaryData['priorTotalClose']));?></td>
                 </tr>
                 <tr>
                     <td><strong>Total Title Premiums</strong></td>
-                    <td class="currency">$<?php echo $summaryData['todayTotalRev'];?></td>
-                    <td class="currency">$<?php echo $summaryData['mtdTotalRev'];?></td>
-                    <td class="currency">$<?php echo round($summaryData['mtdTotalRev']/$daysPassed, 2);?></td>
-                    <td class="currency">$<?php echo round(($summaryData['mtdTotalRev']/$daysPassed)*$totalDaysInMonth, 2);?></td>
-                    <td class="currency">$<?php echo $summaryData['priorTotalRev'];?></td>
+                    <td class="currency">$<?php echo number_format(round($summaryData['todayTotalRev']));?></td>
+                    <td class="currency">$<?php echo number_format(round($summaryData['mtdTotalRev']));?></td>
+                    <td class="currency">$<?php echo number_format(round($summaryData['mtdTotalRev']/$daysPassed));?></td>
+                    <td class="currency">$<?php echo number_format(round(($summaryData['mtdTotalRev']/$daysPassed)*$totalDaysInMonth));?></td>
+                    <td class="currency">$<?php echo number_format(round($summaryData['priorTotalRev']));?></td>
                 </tr>
             </tbody>
         </table>
@@ -90,32 +90,32 @@ foreach ($branchData as $branchName => $data) {
                 <td><strong>🏢 <?php echo $branchName; ?> TOTAL OPENINGS</strong></td>
                 <td class="number"><?php echo ($data['today_escrow_open_cnt'] + $data['today_purchase_open_cnt'] + $data['today_refi_open_cnt']); ?></td>
                 <td class="number"><?php echo ($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt']); ?></td>
-                <td class="number"><?php echo round(($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round((($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round((($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo ($data['prior_escrow_open_cnt'] + $data['prior_purchase_open_cnt'] + $data['prior_refi_open_cnt']); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
                 <td class="number"><?php echo $data['today_escrow_open_cnt']; ?></td>
                 <td class="number"><?php echo $data['mtd_escrow_open_cnt']; ?></td>
-                <td class="number"><?php echo round($data['mtd_escrow_open_cnt']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_escrow_open_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_escrow_open_cnt']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_open_cnt']/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo $data['prior_escrow_open_cnt']; ?></td>
             </tr>
             <tr class="service-title-resale">
                 <td>📋 Title Only - Resale</td>
                 <td class="number"><?php echo $data['today_purchase_open_cnt']; ?></td>
                 <td class="number"><?php echo $data['mtd_purchase_open_cnt']; ?></td>
-                <td class="number"><?php echo round($data['mtd_purchase_open_cnt']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_purchase_open_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_purchase_open_cnt']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_purchase_open_cnt']/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo $data['prior_purchase_open_cnt']; ?></td>
             </tr>
             <tr class="service-title-refi">
                 <td>📋 Title Only - Refinance</td>
                 <td class="number"><?php echo $data['today_refi_open_cnt']; ?></td>
                 <td class="number"><?php echo $data['mtd_refi_open_cnt']; ?></td>
-                <td class="number"><?php echo round($data['mtd_refi_open_cnt']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_refi_open_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_refi_open_cnt']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_refi_open_cnt']/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo $data['prior_refi_open_cnt']; ?></td>
             </tr>
         </tbody>
@@ -138,32 +138,32 @@ foreach ($branchData as $branchName => $data) {
                 <td><strong>🏢 <?php echo $branchName; ?> TOTAL CLOSINGS</strong></td>
                 <td class="number"><?php echo ($data['today_escrow_close_cnt'] + $data['today_purchase_close_cnt'] + $data['today_refi_close_cnt']); ?></td>
                 <td class="number"><?php echo ($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt']); ?></td>
-                <td class="number"><?php echo round(($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round((($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed) * $totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round((($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed) * $totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo ($data['prior_escrow_close_cnt'] + $data['prior_purchase_close_cnt'] + $data['prior_refi_close_cnt']); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
                 <td class="number"><?php echo $data['today_escrow_close_cnt']; ?></td>
                 <td class="number"><?php echo $data['mtd_escrow_close_cnt']; ?></td>
-                <td class="number"><?php echo round($data['mtd_escrow_close_cnt']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_escrow_close_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_escrow_close_cnt']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_close_cnt']/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo $data['prior_escrow_close_cnt']; ?></td>
             </tr>
             <tr class="service-title-resale">
                 <td>📋 Title Only - Resale</td>
                 <td class="number"><?php echo $data['today_purchase_close_cnt']; ?></td>
                 <td class="number"><?php echo $data['mtd_purchase_close_cnt']; ?></td>
-                <td class="number"><?php echo round($data['mtd_purchase_close_cnt']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_purchase_close_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_purchase_close_cnt']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_purchase_close_cnt']/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo $data['prior_purchase_close_cnt']; ?></td>
             </tr>
             <tr class="service-title-refi">
                 <td>📋 Title Only - Refinance</td>
                 <td class="number"><?php echo $data['today_refi_close_cnt']; ?></td>
                 <td class="number"><?php echo $data['mtd_refi_close_cnt']; ?></td>
-                <td class="number"><?php echo round($data['mtd_refi_close_cnt']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_refi_close_cnt']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_refi_close_cnt']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_refi_close_cnt']/$daysPassed)*$totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo $data['prior_refi_close_cnt']; ?></td>
             </tr>
         </tbody>
@@ -186,33 +186,33 @@ foreach ($branchData as $branchName => $data) {
                 <td><stryong>🏢 <?php echo $branchName; ?> TOTAL REVENUE</strong></td>
                 <td class="number"><?php echo ($data['today_escrow_rev'] + $data['today_purchase_rev'] + $data['today_refi_rev']); ?></td>
                 <td class="number"><?php echo ($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev']); ?></td>
-                <td class="number"><?php echo round(($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round((($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed) * $totalDaysInMonth, 2); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round((($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed) * $totalDaysInMonth)); ?></td>
                 <td class="number"><?php echo ($data['prior_escrow_rev'] + $data['prior_purchase_rev'] + $data['prior_refi_rev']); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
-                <td class="number"><?php echo round($data['today_escrow_rev'], 2); ?></td>
-                <td class="number"><?php echo round($data['mtd_escrow_rev'], 2); ?></td>
-                <td class="number"><?php echo round($data['mtd_escrow_rev']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_escrow_rev']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
-                <td class="number"><?php echo round($data['prior_escrow_rev']); ?></td>
+                <td class="number"><?php echo number_format(round($data['today_escrow_rev'])); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_escrow_rev'])); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_escrow_rev']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_rev']/$daysPassed)*$totalDaysInMonth)); ?></td>
+                <td class="number"><?php echo number_format(round($data['prior_escrow_rev'])); ?></td>
             </tr>
             <tr class="service-title-resale">
                 <td>📋 Title Only - Resale</td>
-                <td class="number"><?php echo round($data['today_purchase_rev'], 2); ?></td>
-                <td class="number"><?php echo round($data['mtd_purchase_rev'], 2); ?></td>
-                <td class="number"><?php echo round($data['mtd_purchase_rev']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_purchase_rev']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
-                <td class="number"><?php echo round($data['prior_purchase_rev'], 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['today_purchase_rev'])); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_purchase_rev'])); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_purchase_rev']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_purchase_rev']/$daysPassed)*$totalDaysInMonth)); ?></td>
+                <td class="number"><?php echo number_format(round($data['prior_purchase_rev'])); ?></td>
             </tr>
             <tr class="service-title-refi">
                 <td>📋 Title Only - Refinance</td>
-                <td class="number"><?php echo round($data['today_refi_rev'], 2); ?></td>
-                <td class="number"><?php echo round($data['mtd_refi_rev'], 2); ?></td>
-                <td class="number"><?php echo round($data['mtd_refi_rev']/$daysPassed, 2); ?></td>
-                <td class="number"><?php echo round(($data['mtd_refi_rev']/$daysPassed)*$totalDaysInMonth, 2); ?></td>
-                <td class="number"><?php echo round($data['prior_refi_rev'], 2); ?></td>
+                <td class="number"><?php echo number_format(round($data['today_refi_rev'])); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_refi_rev'])); ?></td>
+                <td class="number"><?php echo number_format(round($data['mtd_refi_rev']/$daysPassed)); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_refi_rev']/$daysPassed)*$totalDaysInMonth)); ?></td>
+                <td class="number"><?php echo number_format(round($data['prior_refi_rev'])); ?></td>
             </tr>
         </tbody>
     </table>
