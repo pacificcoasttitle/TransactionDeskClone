@@ -68,18 +68,26 @@ class Reports extends MX_Controller
     }
 
     public function get_all_order_data($fromDate, $toDate) {
-        return $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
         // $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
             // ->join('pct_softpro_lookup_table u', 't.title_officer = u.id', 'left')
-            ->join('pct_softpro_order_type ot', 't.order_type = ot.id', 'left')
-            ->where('o.created_at >=', $fromDate)
-            ->where('o.created_at <=', $toDate)
-            // ->where('o.profile is not null')
-            ->get()
+            ->join('pct_softpro_order_type ot', 't.order_type = ot.id', 'left');
+            // ->where('o.created_at >=', $fromDate)
+            // ->where('o.created_at <=', $toDate)
+            $this->db->group_start();
+                $this->db->group_start();
+                    $this->db->where('o.sent_to_accounting_date >=', $fromDate);
+                    $this->db->where('o.sent_to_accounting_date <=', $toDate);
+                $this->db->group_end();
+                $this->db->or_group_start();
+                    $this->db->where('o.created_at >=', $fromDate);
+                    $this->db->where('o.created_at <=', $toDate);    
+                $this->db->group_end();
+            $this->db->group_end();
             // echo $this->db->last_query();exit;
-            ->result_array();
+            return $this->db->get()->result_array();
     }
 
     public function salesRepBranchReport()
@@ -210,6 +218,8 @@ class Reports extends MX_Controller
                 $branchName = 'Inland Empire';
             } elseif (strpos($row['file_number'], 'TSG') !== false) {
                 $branchName = 'TSG';
+            } elseif (strpos($row['file_number'], 'PRV') !== false) {
+                $branchName = 'Porterville';
             } else {
                 continue;
                 // $branchName = 'Unknown';
@@ -516,6 +526,8 @@ class Reports extends MX_Controller
                 $branchName = 'Inland Empire';
             } elseif (strpos($row['file_number'], 'TSG') !== false) {
                 $branchName = 'TSG';
+            } elseif (strpos($row['file_number'], 'PRV') !== false) {
+                $branchName = 'Porterville';
             } else {
                 continue;
                 // $branchName = 'Unknown';
@@ -987,6 +999,8 @@ class Reports extends MX_Controller
                 $branchName = 'Inland Empire';
             } elseif (strpos($row['file_number'], 'TSG') !== false) {
                 $branchName = 'TSG';
+            } elseif (strpos($row['file_number'], 'PRV') !== false) {
+                $branchName = 'Porterville';
             } else {
                 continue;
                 // $branchName = 'Unknown';
@@ -1305,6 +1319,8 @@ class Reports extends MX_Controller
                 $branchName = 'Inland Empire';
             } elseif (strpos($row['file_number'], 'TSG') !== false) {
                 $branchName = 'TSG';
+            } elseif (strpos($row['file_number'], 'PRV') !== false) {
+                $branchName = 'Porterville';
             } else {
                 continue;
             }
@@ -1500,6 +1516,8 @@ class Reports extends MX_Controller
             'workingDaysRemaining' => $workingDaysRemaining,
             'todayDate' => date("m-d-Y", strtotime('-1 day'))
         ];
+        // echo "<pre>";
+        // print_r($analysis);die;
         if ($this->input->is_ajax_request()) {
             $dataRes['html'] = $this->load->view('order/reports/branch_analytics', $analysis, true);
             $res = array('status' => 'success', 'report' => $dataRes);

@@ -184,11 +184,11 @@ foreach ($branchData as $branchName => $data) {
         <tbody>
             <tr>
                 <td><stryong>🏢 <?php echo $branchName; ?> TOTAL REVENUE</strong></td>
-                <td class="number"><?php echo ($data['today_escrow_rev'] + $data['today_purchase_rev'] + $data['today_refi_rev']); ?></td>
-                <td class="number"><?php echo ($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev']); ?></td>
+                <td class="number"><?php echo number_format(round(($data['today_escrow_rev'] + $data['today_purchase_rev'] + $data['today_refi_rev']))); ?></td>
+                <td class="number"><?php echo number_format(round(($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev']))); ?></td>
                 <td class="number"><?php echo number_format(round(($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed)); ?></td>
                 <td class="number"><?php echo number_format(round((($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed) * $totalDaysInMonth)); ?></td>
-                <td class="number"><?php echo ($data['prior_escrow_rev'] + $data['prior_purchase_rev'] + $data['prior_refi_rev']); ?></td>
+                <td class="number"><?php echo number_format(round(($data['prior_escrow_rev'] + $data['prior_purchase_rev'] + $data['prior_refi_rev']))); ?></td>
             </tr>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
