@@ -497,7 +497,7 @@ class Home extends MX_Controller
                         $underWriter = 'commonwealth';
                         $underWriterLookup = 'CW';
                     }
-                    $transactionDetailsReq['UnderWriter'] = $underWriterLookup;
+                    $transactionDetailsReq['UnderwriterLookUpCode'] = $underWriterLookup;
 
                     if (isset($LoanNumber) && !empty($LoanNumber)) {
                         $loan['LoanNumber']                  = $LoanNumber;

@@ -78,7 +78,7 @@
     width: 100%;
     margin: 0 0 20px 0;
     border: 1px solid #D4D4D4;
-    font-size: 10pt;
+    font-size: 14px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
@@ -89,7 +89,7 @@
     text-align: left;
     font-weight: bold;
     color: #495057;
-    font-size: 10pt;
+    font-size: 13px;
     white-space: nowrap;
 }
 
@@ -130,14 +130,14 @@
 /* Number formatting */
 .currency {
     text-align: right;
-    font-family: "Courier New", monospace;
+    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-weight: bold;
     color: #0066CC;
 }
 
 .number {
     text-align: right;
-    font-family: "Courier New", monospace;
+    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
     font-weight: bold;
 }
 
