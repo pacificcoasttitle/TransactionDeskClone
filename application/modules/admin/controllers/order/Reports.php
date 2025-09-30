@@ -846,7 +846,7 @@ class Reports extends MX_Controller
                 $rep['closing_ratio'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? round(($salesClosingFigure[$key]['closed'] / $salesClosingFigure[$key]['created']) * 100, 1) : 0;
                 $rep['created_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? $salesClosingFigure[$key]['created'] : 0;
                 $rep['closed_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['closed'] > 0 ? $salesClosingFigure[$key]['closed'] : 0;
-                $rep['projected_rev'] = $workedDays > 0 ? number_format(round(($rep['total_rev'] / $workedDays) * ($workedDays + $workingDaysRemaining))) : $rep['total_rev'];
+                $rep['projected_rev'] = $workedDays > 0 ? (($rep['total_rev'] / $workedDays) * ($workedDays + $workingDaysRemaining)) : $rep['total_rev'];
                 // echo "<pre>";
                 // print_r($rep);die;
                 
