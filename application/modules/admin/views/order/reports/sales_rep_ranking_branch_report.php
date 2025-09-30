@@ -32,9 +32,9 @@
                     <td class="salesrep-name"><?php echo $salesDetails['sales_rep'] ?></td>
                     <td class="percentage high-performance"><?php echo $salesDetails['closing_ratio'] ?>%</td>
                     
-                    <td class="number">$<?php echo number_format(round($salesDetails['total_rev'])); ?></td>
-                    <td class="number">$<?php echo $salesDetails['projected_rev']; ?></td>
-                    <td class="number">$<?php echo number_format(round($salesDetails['prior_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($salesDetails['total_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($salesDetails['projected_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($salesDetails['prior_rev'])); ?></td>
                     
                     
                     <?php
@@ -50,9 +50,9 @@
                     <td class="salesrep-name"><strong>Total</strong></td>
                     <td class="percentage high-performance">-</td>
                     
-                    <td class="number"><strong><?php echo number_format(round($totalRev)); ?></strong></td>
-                    <td class="number"><strong><?php echo number_format(round($totalProjectedRev)); ?></strong></td>
-                    <td class="number"><strong><?php echo number_format(round($totalPriorRev)); ?></strong></td>
+                    <td class="currency">$<strong><?php echo number_format(round($totalRev)); ?></strong></td>
+                    <td class="currency">$<strong><?php echo number_format(round($totalProjectedRev)); ?></strong></td>
+                    <td class="currency">$<strong><?php echo number_format(round($totalPriorRev)); ?></strong></td>
                     
                 </tr>
             </tbody>
