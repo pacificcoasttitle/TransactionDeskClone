@@ -32,9 +32,9 @@
                     <td class="salesrep-name"><?php echo $salesDetails['sales_rep'] ?></td>
                     <td class="percentage high-performance"><?php echo $salesDetails['closing_ratio'] ?>%</td>
                     
-                    <td class="number"><?php echo number_format(round($salesDetails['total_rev'])); ?></td>
-                    <td class="number"><?php echo number_format(round($salesDetails['projected_rev'])); ?></td>
-                    <td class="number"><?php echo number_format(round($salesDetails['prior_rev'])); ?></td>
+                    <td class="number">$<?php echo number_format(round($salesDetails['total_rev'])); ?></td>
+                    <td class="number">$<?php echo $salesDetails['projected_rev']; ?></td>
+                    <td class="number">$<?php echo number_format(round($salesDetails['prior_rev'])); ?></td>
                     
                     
                     <?php
