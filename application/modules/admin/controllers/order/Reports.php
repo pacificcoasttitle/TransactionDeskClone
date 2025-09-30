@@ -86,6 +86,7 @@ class Reports extends MX_Controller
                     $this->db->where('o.created_at <=', $toDate);    
                 $this->db->group_end();
             $this->db->group_end();
+            // $this->db->get();
             // echo $this->db->last_query();exit;
             return $this->db->get()->result_array();
     }
