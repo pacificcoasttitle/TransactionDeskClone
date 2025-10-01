@@ -2667,6 +2667,31 @@ class Order
         return $count;
     }
 
+    public function countWokingsDaysLeftOfSelectedMonth($day, $month, $year)
+    {
+        $count = 0;
+        $counter = mktime(0, 0, 0, $month, $day, $year);
+        while (date("n", $counter) == date('m')) {
+            if (in_array(date("w", $counter), array(0, 6)) == false) {
+                $count++;
+            }
+            $counter = strtotime("+1 day", $counter);
+        }
+        $this->CI->db->select('*');
+        $this->CI->db->from('pct_holidays');
+        $this->CI->db->where('holiday_date >', date("$year-$month-$day"));
+        $this->CI->db->where('holiday_date <=', date("Y-m-t", strtotime(date("$year-$month-$day"))));
+        $query = $this->CI->db->get();
+        $result = $query->result_array();
+        foreach ($result as $res) {
+            $weekendFlag = (date('N', strtotime($res['holiday_date'])) >= 6);
+            if ($weekendFlag != 1) {
+                $count--;
+            }
+        }
+        return $count;
+    }
+
 
     public function get_order_notes($orderId, $user_id = 0)
     {
