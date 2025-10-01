@@ -112,7 +112,7 @@ class Reports extends MX_Controller
     }
 
     public function getSalerepBranchReport() {
-        if ($this->input->is_ajax_request()) {
+        /*if ($this->input->is_ajax_request()) {
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
@@ -146,36 +146,82 @@ class Reports extends MX_Controller
             $monthName = date("F", strtotime('-1 day'));
             $workedDays = $this->order->countWorkedDaysOfMonth();
             $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
-        }
+        }*/
 
-        /*if ($this->input->is_ajax_request()) {
+        if ($this->input->is_ajax_request()) {
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
-            $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
-            $endDate = date('Y-m-t 23:59:59', $selectedDate);
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
-            $today = 0;
-            $monthName = date("F", strtotime($endDate));
+            // $selectedDate = strtotime($yearMonth . "-01");
+            // $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            // $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            // $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            // $today = 0;
+            // $monthName = date("F", strtotime($endDate));
             
-            $priorMonth = date('m', strtotime('-1 months', $selectedDate));
-            $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // die;
-            // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
-            // die;
-            
+            // $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+            // $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+
+            if ($month != date('m') || $year != date('Y')) {
+                // echo "hello";die;
+                $selectedDate = strtotime($yearMonth . "-01");
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+                $endDate = date('Y-m-t 23:59:59', $selectedDate);
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+                $today = 0;
+                $monthName = date("F", strtotime($endDate));
+                
+                $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+                $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            } else {
+                if (date('d') == '01') {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-4 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+                    $priorMonth = date('m', strtotime('-2 month'));
+                    $priorYear  = date('Y', strtotime('-2 month'));
+                } else {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+                    $priorMonth = date('m', strtotime('-1 month'));
+                    $priorYear  = date('Y', strtotime('-1 month'));
+                }
+                $today = date('d', strtotime('-1 day'));
+                $month = date('m', strtotime('-1 day'));
+                $year = date('Y', strtotime('-1 day'));
+                $monthName = date("F", strtotime('-1 day'));
+            }
+            if ($month == date('m') && $year == date('Y')) {
+                // $workedDays = $this->order->countWorkedDaysOfMonth();
+                // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
+            } else {
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = 0;
+            }
         } else {
             $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
-            $endDate    = date('Y-m-d 23:59:59');
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
-            $priorMonth = date('m', strtotime('-1 month'));
-            $priorYear  = date('Y', strtotime('-1 month'));
-            $today = date('d');
-            $month = date('m');
-            $year = date('Y');
-            $monthName = date("F");
-        }*/
+            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+            if (date('d') == '01') {
+                $priorMonth = date('m', strtotime('-2 month'));
+                $priorYear  = date('Y', strtotime('-2 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+            } else {
+                $priorMonth = date('m', strtotime('-1 month'));
+                $priorYear  = date('Y', strtotime('-1 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            }
+            $today = date('d', strtotime('-1 day'));
+            $month = date('m', strtotime('-1 day'));
+            $year = date('Y', strtotime('-1 day'));
+            $monthName = date("F", strtotime('-1 day'));
+            // $workedDays = $this->order->countWorkedDaysOfMonth();
+            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            $workedDays = $this->order->countDaysOfMonth($month, $year);
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
+        }
         
         // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . date('d') . '<br>';
         // die;
@@ -447,6 +493,10 @@ class Reports extends MX_Controller
         }
     }
 
+    private function downloadSalesReport() {
+        $pdfName = $this->order->generateR14Report('August', '2025');
+    }
+
     public function escrowBranchReport()
     {
         if (empty($this->session->userdata('admin'))) {
@@ -468,7 +518,7 @@ class Reports extends MX_Controller
     }
 
     public function getEscrowBranchReport() {
-        if ($this->input->is_ajax_request()) {
+        /*if ($this->input->is_ajax_request()) {
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
@@ -481,8 +531,6 @@ class Reports extends MX_Controller
             
             $priorMonth = date('m', strtotime('-1 months', $selectedDate));
             $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
-            // die;
             if ($month == date('m') && $year == date('Y')) {
                 $workedDays = $this->order->countWorkedDaysOfMonth();
                 $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
@@ -502,6 +550,81 @@ class Reports extends MX_Controller
             $monthName = date("F", strtotime('-1 day'));
             $workedDays = $this->order->countWorkedDaysOfMonth();
             $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+        }*/
+
+        if ($this->input->is_ajax_request()) {
+            $filterType = $this->input->post('report_type');
+            $yearMonth = $this->input->post('month_year');
+            list($year, $month) = explode('-', $yearMonth);
+            // $selectedDate = strtotime($yearMonth . "-01");
+            // $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            // $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            // $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            // $today = 0;
+            // $monthName = date("F", strtotime($endDate));
+            
+            // $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+            // $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+
+            if ($month != date('m') || $year != date('Y')) {
+                // echo "hello";die;
+                $selectedDate = strtotime($yearMonth . "-01");
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+                $endDate = date('Y-m-t 23:59:59', $selectedDate);
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+                $today = 0;
+                $monthName = date("F", strtotime($endDate));
+                
+                $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+                $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            } else {
+                if (date('d') == '01') {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-4 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+                    $priorMonth = date('m', strtotime('-2 month'));
+                    $priorYear  = date('Y', strtotime('-2 month'));
+                } else {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+                    $priorMonth = date('m', strtotime('-1 month'));
+                    $priorYear  = date('Y', strtotime('-1 month'));
+                }
+                $today = date('d', strtotime('-1 day'));
+                $month = date('m', strtotime('-1 day'));
+                $year = date('Y', strtotime('-1 day'));
+                $monthName = date("F", strtotime('-1 day'));
+            }
+            if ($month == date('m') && $year == date('Y')) {
+                // $workedDays = $this->order->countWorkedDaysOfMonth();
+                // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
+            } else {
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = 0;
+            }
+        } else {
+            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+            if (date('d') == '01') {
+                $priorMonth = date('m', strtotime('-2 month'));
+                $priorYear  = date('Y', strtotime('-2 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+            } else {
+                $priorMonth = date('m', strtotime('-1 month'));
+                $priorYear  = date('Y', strtotime('-1 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            }
+            $today = date('d', strtotime('-1 day'));
+            $month = date('m', strtotime('-1 day'));
+            $year = date('Y', strtotime('-1 day'));
+            $monthName = date("F", strtotime('-1 day'));
+            // $workedDays = $this->order->countWorkedDaysOfMonth();
+            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            $workedDays = $this->order->countDaysOfMonth($month, $year);
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
         }
 
         // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . date('d') . '<br>';
@@ -682,20 +805,51 @@ class Reports extends MX_Controller
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
-            $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
-            $endDate = date('Y-m-t 23:59:59', $selectedDate);
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
-            $today = 0;
-            $monthName = date("F", strtotime($endDate));
+            // $selectedDate = strtotime($yearMonth . "-01");
+            // $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            // $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            // $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            // $today = 0;
+            // $monthName = date("F", strtotime($endDate));
             
-            $priorMonth = date('m', strtotime('-1 months', $selectedDate));
-            $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
-            // die;
+            // $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+            // $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+
+            if ($month != date('m') || $year != date('Y')) {
+                // echo "hello";die;
+                $selectedDate = strtotime($yearMonth . "-01");
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+                $endDate = date('Y-m-t 23:59:59', $selectedDate);
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+                $today = 0;
+                $monthName = date("F", strtotime($endDate));
+                
+                $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+                $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            } else {
+                if (date('d') == '01') {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-4 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+                    $priorMonth = date('m', strtotime('-2 month'));
+                    $priorYear  = date('Y', strtotime('-2 month'));
+                } else {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+                    $priorMonth = date('m', strtotime('-1 month'));
+                    $priorYear  = date('Y', strtotime('-1 month'));
+                }
+                $today = date('d', strtotime('-1 day'));
+                $month = date('m', strtotime('-1 day'));
+                $year = date('Y', strtotime('-1 day'));
+                $monthName = date("F", strtotime('-1 day'));
+            }
             if ($month == date('m') && $year == date('Y')) {
-                $workedDays = $this->order->countWorkedDaysOfMonth();
-                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                // $workedDays = $this->order->countWorkedDaysOfMonth();
+                // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
             } else {
                 $workedDays = $this->order->countDaysOfMonth($month, $year);
                 $workingDaysRemaining = 0;
@@ -703,18 +857,26 @@ class Reports extends MX_Controller
         } else {
             $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
             $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
-            $priorMonth = date('m', strtotime('-1 month'));
-            $priorYear  = date('Y', strtotime('-1 month'));
+            if (date('d') == '01') {
+                $priorMonth = date('m', strtotime('-2 month'));
+                $priorYear  = date('Y', strtotime('-2 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+            } else {
+                $priorMonth = date('m', strtotime('-1 month'));
+                $priorYear  = date('Y', strtotime('-1 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            }
             $today = date('d', strtotime('-1 day'));
             $month = date('m', strtotime('-1 day'));
             $year = date('Y', strtotime('-1 day'));
             $monthName = date("F", strtotime('-1 day'));
-            $workedDays = $this->order->countWorkedDaysOfMonth();
-            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            // $workedDays = $this->order->countWorkedDaysOfMonth();
+            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            $workedDays = $this->order->countDaysOfMonth($month, $year);
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
         }
         
-        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . date('d') . '<br>';
+        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
         // die;
         $data = [];
         
@@ -896,7 +1058,7 @@ class Reports extends MX_Controller
 
     public function getTitleOfficerProductionReport() {
         $data = [];
-        if ($this->input->is_ajax_request()) {
+        /*if ($this->input->is_ajax_request()) {
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
@@ -921,64 +1083,100 @@ class Reports extends MX_Controller
         } else {
             $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
             $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
-            $priorMonth = date('m', strtotime('-1 month'));
-            $priorYear  = date('Y', strtotime('-1 month'));
+            if (date('d') == '01') {
+                $priorMonth = date('m', strtotime('-2 month'));
+                $priorYear  = date('Y', strtotime('-2 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+            } else {
+                $priorMonth = date('m', strtotime('-1 month'));
+                $priorYear  = date('Y', strtotime('-1 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            }
             $today = date('d', strtotime('-1 day'));
             $month = date('m', strtotime('-1 day'));
             $year = date('Y', strtotime('-1 day'));
             $monthName = date("F", strtotime('-1 day'));
-            $workedDays = $this->order->countWorkedDaysOfMonth();
-            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
-        }
-        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
-        // die;
-        /*if ($this->input->is_ajax_request()) {
+            // $workedDays = $this->order->countWorkedDaysOfMonth();
+            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            $workedDays = $this->order->countDaysOfMonth($month, $year);
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
+        }*/
+        if ($this->input->is_ajax_request()) {
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
-            $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
-            $endDate = date('Y-m-t 23:59:59', $selectedDate);
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
-            $today = 0;
-            $monthName = date("F", strtotime($endDate));
+            // $selectedDate = strtotime($yearMonth . "-01");
+            // $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+            // $endDate = date('Y-m-t 23:59:59', $selectedDate);
+            // $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+            // $today = 0;
+            // $monthName = date("F", strtotime($endDate));
             
-            $priorMonth = date('m', strtotime('-1 months', $selectedDate));
-            $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // die;
-            
+            // $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+            // $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+
+            if ($month != date('m') || $year != date('Y')) {
+                // echo "hello";die;
+                $selectedDate = strtotime($yearMonth . "-01");
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
+                $endDate = date('Y-m-t 23:59:59', $selectedDate);
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+                $today = 0;
+                $monthName = date("F", strtotime($endDate));
+                
+                $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+                $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            } else {
+                if (date('d') == '01') {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-4 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+                    $priorMonth = date('m', strtotime('-2 month'));
+                    $priorYear  = date('Y', strtotime('-2 month'));
+                } else {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+                    $priorMonth = date('m', strtotime('-1 month'));
+                    $priorYear  = date('Y', strtotime('-1 month'));
+                }
+                $today = date('d', strtotime('-1 day'));
+                $month = date('m', strtotime('-1 day'));
+                $year = date('Y', strtotime('-1 day'));
+                $monthName = date("F", strtotime('-1 day'));
+            }
+            if ($month == date('m') && $year == date('Y')) {
+                // $workedDays = $this->order->countWorkedDaysOfMonth();
+                // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
+            } else {
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = 0;
+            }
         } else {
             $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months'));
-            $endDate    = date('Y-m-d 23:59:59');
-            $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
-            $priorMonth = date('m', strtotime('-1 month'));
-            $priorYear  = date('Y', strtotime('-1 month'));
-            $today = date('d');
-            $month = date('m');
-            $year = date('Y');
-            $monthName = date("F");
-        }*/
-
-        /*$branchMap = [
-            'Glendale Escrow'      => 'Glendale',
-            'Glendale Title'       => 'Glendale',
-            'Orange Escrow'        => 'Orange',
-            'Orange Title'         => 'Orange',
-            'Porterville Escrow'   => 'Porterville',
-            'Production\Payoff'    => 'Production',
-            'TSG'                  => 'TSG',
-            'Inland Empire Escrow' => 'Inland Empire',
-        ];*/
-
-        // $fromDate = date('Y-m-d', strtotime('-4 months')); // we need last 4 months data
-        // $toDate   = date('Y-m-d');
-        // $startMonth = date('Y-m-01', strtotime('-3 months'));  // June 1, 2025
-        // $endDate    = date('Y-m-d');                      // June 30, 2025
-        // $priorMonth = date('m', strtotime('-1 month'));
-        // $priorYear  = date('Y', strtotime('-1 month'));
-        // $ratioMonth = date('m', strtotime('-3 month'));
-        // $ratioYear  = date('Y', strtotime('-3 month'));
+            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+            if (date('d') == '01') {
+                $priorMonth = date('m', strtotime('-2 month'));
+                $priorYear  = date('Y', strtotime('-2 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+            } else {
+                $priorMonth = date('m', strtotime('-1 month'));
+                $priorYear  = date('Y', strtotime('-1 month'));
+                $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+            }
+            $today = date('d', strtotime('-1 day'));
+            $month = date('m', strtotime('-1 day'));
+            $year = date('Y', strtotime('-1 day'));
+            $monthName = date("F", strtotime('-1 day'));
+            // $workedDays = $this->order->countWorkedDaysOfMonth();
+            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            $workedDays = $this->order->countDaysOfMonth($month, $year);
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
+        }
+        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
+        // die;
         
         $records = $this->get_all_to_order_data($startMonth, $endDate, $closedStartMonth);
         // echo "<pre>";
@@ -1257,47 +1455,71 @@ class Reports extends MX_Controller
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
-            $selectedDate = strtotime($yearMonth . "-01");
-            $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
-            $endDate = date('Y-m-t 23:59:59', $selectedDate);
-            $today = 0;
-            $monthName = date("F", strtotime($endDate));
-            
-            $priorMonth = date('m', strtotime('-1 months', $selectedDate));
-            $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
-            // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
-            // die;
+            if ($month != date('m') || $year != date('Y')) {
+                // echo "hello";die;
+                $selectedDate = strtotime($yearMonth . "-01");
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
+                $endDate = date('Y-m-t 23:59:59', $selectedDate);
+                $today = 0;
+                $monthName = date("F", strtotime($endDate));
+                
+                $priorMonth = date('m', strtotime('-1 months', $selectedDate));
+                $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
+            } else {
+                if (date('d') == '01') {
+                    // echo "hello prior";die;
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $priorMonth = date('m', strtotime('-2 month'));
+                    $priorYear  = date('Y', strtotime('-2 month'));
+                } else {
+                    $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+                    $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                    $priorMonth = date('m', strtotime('-1 month'));
+                    $priorYear  = date('Y', strtotime('-1 month'));
+                }
+                $today = date('d', strtotime('-1 day'));
+                $month = date('m', strtotime('-1 day'));
+                $year = date('Y', strtotime('-1 day'));
+                $monthName = date("F", strtotime('-1 day'));
+            }
             if ($month == date('m') && $year == date('Y')) {
-                $workedDays = $this->order->countWorkedDaysOfMonth();
-                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                // $workedDays = $this->order->countWorkedDaysOfMonth();
+                // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+                $workedDays = $this->order->countDaysOfMonth($month, $year);
+                $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
             } else {
                 $workedDays = $this->order->countDaysOfMonth($month, $year);
                 $workingDaysRemaining = 0;
             }
         } else {
-            $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));  // June 1, 2025
-            $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));                      // June 30, 2025
-            $priorMonth = date('m', strtotime('-1 month'));
-            $priorYear  = date('Y', strtotime('-1 month'));
+            if (date('d') == '01') {
+                $priorMonth = date('m', strtotime('-2 month'));
+                $priorYear  = date('Y', strtotime('-2 month'));
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-2 months'));
+                $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+            } else {
+                $startMonth = date('Y-m-01 00:00:00', strtotime('-1 months'));
+                $endDate    = date('Y-m-d 23:59:59', strtotime('-1 day'));
+                $priorMonth = date('m', strtotime('-1 month'));
+                $priorYear  = date('Y', strtotime('-1 month'));
+            }
+            // $priorMonth = date('m', strtotime('-1 month'));
+            // $priorYear  = date('Y', strtotime('-1 month'));
             $today = date('d', strtotime('-1 day'));
             $month = date('m', strtotime('-1 day'));
             $year = date('Y', strtotime('-1 day'));
             $monthName = date("F", strtotime('-1 day'));
-            $workedDays = $this->order->countWorkedDaysOfMonth();
-            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            // $workedDays = $this->order->countWorkedDaysOfMonth();
+            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
+            $workedDays = $this->order->countDaysOfMonth($month, $year);
+            $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
         }
         // echo $startMonth . ' - ' . $endDate . ' -- ' . '-- Month : ' . $month . '-- Year -- ' . $year . '-- Prior - ' . $priorMonth . ' - ' . $priorYear ;
         // die;
-
-        // $startMonth = date('Y-m-01', strtotime('-1 months'));  // June 1, 2025
-        // $endDate    = date('Y-m-d');                      // June 30, 2025
-        // $priorMonth = date('m', strtotime('-1 month'));
-        // $priorYear  = date('Y', strtotime('-1 month'));
         
         $records = $this->get_all_order_data($startMonth, $endDate);
-        // echo "<pre>";
-        // print_r($records);
-        // die;
+        
         $todayTotalOpen = 0;
         $todayTotalClose = 0;
         $mtdTotalOpen = 0;
