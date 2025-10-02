@@ -8691,4 +8691,112 @@ class Cron extends MX_Controller
 
         }
     }
+    public function updatePmaRepsId() {
+
+        $this->db->select('p.id, sales_rep, c.id as c_id, l.id as look_id');
+        $this->db->from('pct_pma_data as p');
+        $this->db->join('customer_basic_details as c', '(c.id = p.sales_rep)', 'inner');
+        $this->db->join('pct_softpro_lookup_table as l', '(c.first_name = l.first_name and c.last_name = l.last_name) or (c.email_address = l.email_address)', 'inner');
+        $query  = $this->db->get();
+        $result = $query->result_array();
+        
+        $keyed_results = [];
+
+        foreach ($result as $row) {
+            // Use the 'sales_rep' column value as the array key
+            // Assign the entire row array to the new key
+            $keyed_results[$row['sales_rep']] = $row;
+        }
+            // echo "<pre>";
+            // print_r($keyed_results);die;
+        
+
+
+
+        $this->db->select('id, sales_rep');
+        $this->db->from('pct_pma_data');
+        $this->db->order_by('id', 'desc');
+        $pmaList = $this->db->get()->result_array();
+        // echo "<pre>";
+        // print_r($pmaList);die;
+        
+        $count=0;
+        $sales_rep = [];
+        foreach ($pmaList as $key => $list) {
+            if (array_key_exists($list['sales_rep'], $keyed_results)) {
+                $updateData = [
+                    'sales_rep' => $keyed_results[$list['sales_rep']]['look_id'],
+                ];
+                
+            } else {
+                if (!in_array($list['sales_rep'], $sales_rep)) {
+                    $sales_rep[] = $list['sales_rep'];
+                }
+                $updateData = [
+                    'sales_rep' => null,
+                ];
+            }
+            $condition = [
+                'id' => $list['id']
+            ];
+            $update = $this->db->update('pct_pma_data', $updateData, $condition);
+        }
+        
+        print_r($sales_rep);die;
+    }
+
+    public function updatePmaRepsAddedId() {
+
+        $this->db->select('p.id, added_by, c.id as c_id, l.id as look_id');
+        $this->db->from('pct_pma_data as p');
+        $this->db->join('customer_basic_details as c', '(c.id = p.added_by)', 'inner');
+        $this->db->join('pct_softpro_lookup_table as l', '(c.first_name = l.first_name and c.last_name = l.last_name) or (c.email_address = l.email_address)', 'inner');
+        $query  = $this->db->get();
+        $result = $query->result_array();
+        
+        $keyed_results = [];
+
+        foreach ($result as $row) {
+            // Use the 'sales_rep' column value as the array key
+            // Assign the entire row array to the new key
+            $keyed_results[$row['added_by']] = $row;
+        }
+            // echo "<pre>";
+            // print_r($keyed_results);die;
+        
+
+
+
+        $this->db->select('id, added_by');
+        $this->db->from('pct_pma_data');
+        $this->db->order_by('id', 'desc');
+        $pmaList = $this->db->get()->result_array();
+        // echo "<pre>";
+        // print_r($pmaList);die;
+        
+        $count=0;
+        $added_by = [];
+        foreach ($pmaList as $key => $list) {
+            if (array_key_exists($list['added_by'], $keyed_results)) {
+                $updateData = [
+                    'added_by' => $keyed_results[$list['added_by']]['look_id'],
+                ];
+                
+            } else {
+                if (!in_array($list['added_by'], $added_by)) {
+                    $added_by[] = $list['added_by'];
+                }
+                $updateData = [
+                    'added_by' => null,
+                ];
+            }
+            $condition = [
+                'id' => $list['id']
+            ];
+            $update = $this->db->update('pct_pma_data', $updateData, $condition);
+        }
+        
+        print_r($added_by);die;
+    }
+
 }
