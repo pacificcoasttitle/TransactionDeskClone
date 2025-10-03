@@ -3622,7 +3622,7 @@ class Cron extends MX_Controller
         // echo "<pre>";
         // print_r($dateIntervalQueryParams);die;
         $apiEndPoints = SOFTPRO_API_END;
-
+        $closedFileNumbers = [];
         foreach ($dateIntervalQueryParams as $key => $range) {
             $reqData = $queryParams = $range;
             $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_all_order_status'] . '?'.$queryParams;
@@ -7048,14 +7048,17 @@ class Cron extends MX_Controller
         // print_r($queryParams);die;
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
+        $apiEndPoints = SOFTPRO_API_END;
+        $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_softpro_orders'] . '?' . $queryParams;
         $reqData     = json_encode($req);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, [], 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', $url, $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', 'get_softpro_orders', $reqData, json_encode($response), 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_softpro_orders', $url, $reqData, json_encode($response), 0, $logid);
 
         $sheetData = [];
         $importedOrderCount = 0;
         $updatedOrderCount = 0;
+        $closedFileNumbers = [];
         if ($response['status'] == 'success' && !empty($response['data'])) {
             
             $orderList = $response['data'];
@@ -7187,7 +7190,10 @@ class Cron extends MX_Controller
                             // 'sent_to_accounting_date'    => $completed_date,
                             'is_softpro_order'          => 1
                         ];
-                        
+
+                        if ($orderStatus == 'completed' || $orderStatus == 'closed') {
+                            $closedFileNumbers[] = $file_number;
+                        }
                         $orderId = $this->home_model->insert($orderData, 'order_details');
                         
                     } else {
@@ -7202,6 +7208,7 @@ class Cron extends MX_Controller
 
                         if ($orderStatus == 'closed' && $order['softpro_status'] != 'closed') {
                             $orderData['resware_closed_status_date'] = $closed_date;
+                            $closedFileNumbers[] = $file_number;
                         }
                         
                         $condition = [
@@ -7224,6 +7231,9 @@ class Cron extends MX_Controller
                     }
                 }
             } // end foreach
+        }
+        if (!empty($closedFileNumbers)) {
+            $this->sendEmailForClosedOrder($closedFileNumbers);
         }
 
         /** Cron log start */
@@ -8648,7 +8658,7 @@ class Cron extends MX_Controller
         $to = $data['escrow_officer_email'];
 
         // $to = array('piyush.j@crestinfosystems.com', 'ghernandez@pct.com');
-        $cc = array('piyush.j@crestinfosystems.com');
+        $cc = array('piyush.j@crestinfosystems.com', ' rudy@pct.com');
 
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
