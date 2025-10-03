@@ -9619,7 +9619,8 @@ class Home extends MX_Controller
     public function sendSurveySampleEmail()
     {
         $input = $this->input->post();
-        $data['email_address'] = 'piyush.j@crestinfosystems.com';//$input['email_address'];
+        // $data['email_address'] = 'piyush.j@crestinfosystems.com';//$input['email_address'];
+        $data['email_address'] = $input['email_address'];
         $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W';
         $mail_result = $this->order->sendSurveySampleEmail($data);
         
