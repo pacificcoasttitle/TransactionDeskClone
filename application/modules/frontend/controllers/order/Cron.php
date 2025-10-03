@@ -5143,7 +5143,7 @@ class Cron extends MX_Controller
                     // $subject = 'Thank You!';
                     // $to = $escrow_email_address;
 
-                    $cc = ['ghernandez@pct.com', $sales_email];
+                    $cc = ['ghernandez@pct.com', $sales_email, 'piyush.j@crestinfosystems.com'];
 
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
