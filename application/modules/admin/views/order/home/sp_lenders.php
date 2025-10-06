@@ -60,10 +60,11 @@
                             <th width="5%">Lookup Code</th>
                             <th width="7%" >First Name</th>
                             <th width="7%">Last Name</th>
-                            <th width="15%">Email Address</th>
-                            <th width="15%">Company Name</th>
+                            <th width="10%">Email Address</th>
+                            <th width="10%">Company Name</th>
                             <th width="26%">Address</th>
-                            <th width="15%">Mail Notification</th>
+                            <th width="10%">Mail Notification</th>
+                            <th width="10%">No Survey Notification</th>
                             <!-- <th width="5%">Mortgage User</th>
                             <th width="10%">User Type</th>
                             <th width="5%">Dual CPL</th> -->

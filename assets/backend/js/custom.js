@@ -8517,7 +8517,7 @@ function updateMailNotificationReps() {
     });
 }
 
-function updateMailNotificationUsers() {
+function updateMailNotificationUsers(flagType = 'recording') {
     $('input[type="checkbox"]').on('change', function () {
         $('body').animate({ opacity: 0.5 }, "slow");
         var id = $(this).attr('id');
@@ -8531,7 +8531,8 @@ function updateMailNotificationUsers() {
             method: "POST",
             data: {
                 id: id,
-                flag: flag
+                flag: flag,
+                flagType: flagType
             },
             success: function (data) {
                 var result = jQuery.parseJSON(data);
