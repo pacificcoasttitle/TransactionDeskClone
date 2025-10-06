@@ -9026,7 +9026,13 @@ class Home extends MX_Controller
                 } else {
                     $checked = '';
                 }
-                $nestedData[] = "<input $checked onclick='updateMailNotificationUsers();' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                if ($value['no_survey_notify'] == 1) {
+                    $suveyChecked = 'checked';
+                } else {
+                    $suveyChecked = '';
+                }
+                $nestedData[] = "<input $checked onclick='updateMailNotificationUsers(" . '"recording"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                $nestedData[] = "<input $suveyChecked onclick='updateMailNotificationUsers(" . '"survey"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 // if ($value['is_mortgage_user'] == 1) {
                 //     $checked = 'checked';
                 // } else {
@@ -9465,17 +9471,29 @@ class Home extends MX_Controller
     public function updateUsersMailFlag()
     {
         $userId             = $this->input->post('id');
+        $flagType             = $this->input->post('flagType');
         $flag     = $this->input->post('flag');
-        $data['notify_recording_confirm'] = $flag;
-        $data['notify_disburse_funds'] = $flag;
+        if ($flagType == 'recording') {
+            $data['notify_recording_confirm'] = $flag;
+            $data['notify_disburse_funds'] = $flag;
+            $message = 'Recording confirmation';
+        } else if ($flagType == 'survey') {
+            $data['no_survey_notify'] = $flag;
+            $message = 'Survey';
+        } else {
+            $data = [];
+            $data = ['status' => 'error', 'msg' => 'Invalid flag type.'];
+            echo json_encode($data);exit();
+
+        }
         $data['updated_at']  = date("Y-m-d H:i:s");
         $condition           = [
             'id' => $userId,
         ];
         $this->db->update('pct_softpro_lookup_table', $data, $condition);
-        $data = ['status' => 'success', 'msg' => 'Email flag updated successfully for user.'];
+        $data = ['status' => 'success', 'msg' => $message . ' Email flag updated successfully for user.'];
         /** Save user Activity */
-        $activity  = 'Recording confirmation email notification value: ' . $flag . ' updated successfully for user id : ' . $user_id;
+        $activity  = $message . ' email notification value: ' . $flag . ' updated successfully for user id : ' . $user_id;
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
         echo json_encode($data);

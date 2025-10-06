@@ -570,9 +570,10 @@ class Order extends MX_Controller
         $this->load->library('form_validation');
         $data = array();
         $data['title'] = 'PCT Order: Import Revenue Data';
-        
         if(!empty($_FILES))
-        {
+            {
+            $configData    = $this->common->getConfigData();
+            $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
             // Form field validation rules
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
             $billCodeFilter = ['TPC', 'TPW'];
@@ -666,7 +667,7 @@ class Order extends MX_Controller
                                 // echo "<pre>";
                                 // print_r($value);
                                 // $value['order_number'] = "TEST-20001451-OCT";
-                                $orderDetails = $this->db->select('id, property_id, transaction_id, escrow_officer_id, softpro_status, file_number, is_softpro_order')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
+                                $orderDetails = $this->db->select('id, property_id, transaction_id, escrow_officer_id, softpro_status, file_number, is_softpro_order, survey_notification_sent')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
                                 if (!empty($orderDetails)) {
                                     $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
 
@@ -709,7 +710,14 @@ class Order extends MX_Controller
                                     if (!empty($updateTransactionDetails)) {
                                         $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
                                     }
-                                    
+                                    if ($enableSurveyEmailFlag == 1 && !$orderDetails['survey_notification_sent']) {
+                                        $emailQueueData = [
+                                            'file_number' => $value['order_number'],
+                                            'email_type' => 'survey'
+                                        ];
+                                        $this->db->insert('pct_email_queue', $emailQueueData);
+                                    }
+
                                     // if (($orderDetails['softpro_status'] != 'closed' && $orderDetails['softpro_status'] != 'completed')) {
                                     //     $emailQueueData = [
                                     //         'file_number' => $value['order_number'],
