@@ -5106,7 +5106,7 @@ class Cron extends MX_Controller
         $configData               = $this->order->getConfigData();
         $loanOrderEmailSendStatus = $configData['loan_order_closed_email_send_off']['is_enable'];
         $saleOrderEmailSendStatus = $configData['sale_order_closed_email_send_off']['is_enable'];
-        $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
+        // $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
         // echo "<pre>";
         // print_r($result);
         // print_r($configData);
@@ -5168,9 +5168,9 @@ class Cron extends MX_Controller
                     echo "Mails sent successfully for Order Number : " . $res['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
                 }
                 
-                if (($enableSurveyEmailFlag == 1) && !empty($res['escrow_officer_email'])) {
-                    $this->sendSurvayEmail($res);
-                }
+                // if (($enableSurveyEmailFlag == 1) && !empty($res['escrow_officer_email'])) {
+                //     $this->sendSurvayEmail($res);
+                // }
 
             }
 
@@ -8649,56 +8649,114 @@ class Cron extends MX_Controller
             } else {
                 exit;
             }
+
+            $message = $this->load->view('emails/surveymonkey_email.php', $data, true);
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            // $subject = 'Thank You!';
+            // $to = 'piyush-crest@yopmail.com';
+            if (!empty($data['escrow_officer_email'])) {
+                $to[] = $data['escrow_officer_email'];
+            }
+            if (empty($data['escrow_no_survey_notify']) && !empty($data['escrow_email'])) {
+                $to[] = $data['escrow_email'];
+            }
+            if (empty($data['lender_no_survey_notify']) && !empty($data['lender_email'])) {
+                $to[] = $data['lender_email'];
+            }
+            
+    
+            // $to = array('piyush.j@crestinfosystems.com');
+            $cc = array('piyush.j@crestinfosystems.com', ' rudy@pct.com');
+    
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $subject = "We'd Love Your Feedback -" . $data['file_number'];
+            // $to = $escrow_email_address;
+            // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
+            // $cc = array('piyush.j@crestinfosystems.com');
+            $mailParams = array(
+                'from_mail' => $from_mail,
+                'from_name' => $from_name,
+                'to' => $to,
+                'subject' => $subject,
+                'message' => json_encode($data),
+                'cc' => $cc,
+            );
+            // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+            // $cc = array();
+            $this->load->helper('sendemail');
+            if (!empty($to)) {
+                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_contacts', '', $mailParams, array(), $data['order_id'], 0);
+                $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
+                $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_contacts', '', $mailParams, array('status' => $mail_result), $data['order_id'], $logid);
+                echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
+            } else {
+                echo "No recepient found";
+            }
         }
-        $message = $this->load->view('emails/surveymonkey_email.php', $data, true);
-        $from_name = 'Pacific Coast Title Company';
-        $from_mail = env('FROM_EMAIL');
-        // $subject = 'Thank You!';
-        // $to = 'piyush-crest@yopmail.com';
-        $to = $data['escrow_officer_email'];
-
-        // $to = array('piyush.j@crestinfosystems.com', 'ghernandez@pct.com');
-        $cc = array('piyush.j@crestinfosystems.com', ' rudy@pct.com');
-
-        $from_name = 'Pacific Coast Title Company';
-        $from_mail = env('FROM_EMAIL');
-        $subject = "We'd Love Your Feedback";
-        // $to = $escrow_email_address;
-        // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
-        // $cc = array('piyush.j@crestinfosystems.com');
-        $mailParams = array(
-            'from_mail' => $from_mail,
-            'from_name' => $from_name,
-            'to' => $to,
-            'subject' => $subject,
-            'message' => json_encode($data),
-            'cc' => $cc,
-        );
-        // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
-        // $cc = array();
-        $this->load->helper('sendemail');
-        $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array(), $data['order_id'], 0);
-        $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
-        $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_to_escrow_officer', '', $mailParams, array('status' => $mail_result), $data['orderId'], $logid);
-        echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
     }
 
-    public function sendQueuedEmail() {
+    public function sendSurveyQueuedEmail() {
+        $yesterday = date('Y-m-d', strtotime('-1 day'));
+        // $yesterday = date('Y-m-d');
         $this->db->from('pct_email_queue');
         $this->db->where('status', 0);
-        
+        $this->db->where('email_type', 'survey');
+
+        $this->db->where('DATE(created_at)', $yesterday);
+        $this->db->order_by('id', 'desc');
         $query  = $this->db->get();
         $result = $query->result_array();
-        
+        // echo "<pre>";
+        // print_r($result);die;
+        if (empty($result)) {
+            echo "No record found";exit;
+        }
+        $this->load->library('order/order');
+        $configData    = $this->order->getConfigData();
+        $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
         foreach ($result as $order) {
-            $closedFileNumbers[] = $order['file_number'];
-            $this->sendEmailForClosedOrder($closedFileNumbers);
+            $this->db->select('
+                order_details.file_number,
+                order_details.id as order_id,
+                order_details.prod_type,
+                order_details.survey_notification_sent,
+                property_details.full_address,
+                escrow_details.email_address as escrow_email,
+                escrow_details.no_survey_notify as escrow_no_survey_notify,
+                lender_details.email_address as lender_email,
+                lender_details.no_survey_notify as lender_no_survey_notify,
+                title_officer.email_address as title_officer_email,
+                escrow_officer.email_address as escrow_officer_email
+                ');
+            $this->db->from('order_details');
+            $this->db->where('file_number', $order['file_number']);
+            // $this->db->where('property_details.escrow_lender_id != ""');
+            // $this->db->where('transaction_details.sales_representative != ""');
+            $this->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
+            $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
+            $this->db->join('pct_softpro_lookup_table as escrow_details', 'escrow_details.id = property_details.escrow_id', 'left');
+            $this->db->join('pct_softpro_lookup_table as lender_details', 'lender_details.id = property_details.lender_id', 'left');
+            $this->db->join('pct_softpro_lookup_table as title_officer', 'title_officer.id = transaction_details.title_officer', 'left');
+            $this->db->join('pct_softpro_lookup_table as escrow_officer', 'escrow_officer.id = order_details.escrow_officer_id', 'left');
+            // $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc');
+            $query  = $this->db->get();
+            $data = $query->row_array();
+            if ( $enableSurveyEmailFlag == 1 && !empty($data) && empty($data['survey_notification_sent'])) {
+                $this->sendSurvayEmail($data);
+                // print_r($data);die;
+                $updateData = ['survey_notification_sent' => 1];
+                $this->db->set($updateData);
+                $this->db->where('file_number', $order['file_number']);
+                $this->db->update('order_details');
+                // print_r($data);;die;
+            }
+            
             $updateData = ['status' => 1];
-
             $this->db->set($updateData);
             $this->db->where('file_number', $order['file_number']);
             $this->db->update('pct_email_queue');
-
         }
     }
     public function updatePmaRepsId() {

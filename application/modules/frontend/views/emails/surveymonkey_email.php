@@ -271,6 +271,20 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td class="center-text" align="center" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:20px;line-height:45px;font-weight:300;font-style:normal;color:#000000;text-decoration:none;letter-spacing:0px;">
+                                                    <div style="margin: 0px; padding: 0px;">
+                                                        <p style="margin: 0px; padding: 0px;"><span style="color:rgb(0, 0, 0);">Order Number: </span><span style="color:#FF7800;"> </span><strong style="color:#FF7800;"><?php echo $file_number;?></strong></p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="center-text" align="center" style="font-family:'Poppins',Arial,Helvetica,sans-serif;font-size:20px;line-height:45px;font-weight:300;font-style:normal;color:#000000;text-decoration:none;letter-spacing:0px;">
+                                                    <div style="margin: 0px; padding: 0px;">
+                                                        <p style="margin: 0px; padding: 0px;"><span style="color:rgb(0, 0, 0);">Property Address: </span><span style="color:#FF7800;"> </span><strong style="color:#FF7800;"><?php echo $full_address;?></strong></p>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td height="20" style="font-size:20px;line-height:20px;">&nbsp;</td>
                                             </tr>
                                             <tr>

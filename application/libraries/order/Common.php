@@ -238,4 +238,23 @@ class Common
         }
         return $date->format($format);
     }
+
+    public function getConfigData()
+    {
+        // $this->CI->db->select('is_enable');
+        // $this->CI->db->from('pct_configs');
+        // $query = $this->CI->db->get();
+        // return $query->row();
+        $this->CI->db->select('is_enable, slug');
+        $this->CI->db->from('pct_configs');
+        $this->CI->db->where('slug !=', 'sales_rep_status_flag');
+        $query = $this->CI->db->get();
+        $data = array();
+
+        foreach ($query->result_array() as $row) {
+            $data[$row['slug']] = $row;
+        }
+
+        return $data;
+    }
 }
