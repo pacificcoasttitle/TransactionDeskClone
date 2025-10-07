@@ -8647,7 +8647,7 @@ class Cron extends MX_Controller
             } else if ($data['title_officer_email'] == 'unit88@pct.com') {
                 $data['survey_link'] = 'https://www.surveymonkey.com/r/6BJZ79Y?order_id=' . $data['order_id']; // Rachel
             } else {
-                exit;
+                return;
             }
 
             $message = $this->load->view('emails/surveymonkey_email.php', $data, true);

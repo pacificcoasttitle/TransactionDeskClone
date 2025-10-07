@@ -8542,7 +8542,7 @@ function updateMailNotificationUsers(flagType = 'recording') {
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#customer_success_msg").offset().top
                     }, 1000);
-                    sales_rep_list.ajax.reload(null, false);
+                    customer_list.ajax.reload(null, false);
                     setTimeout(function () {
                         $('#customer_success_msg').html('').hide();
                     }, 4000);
