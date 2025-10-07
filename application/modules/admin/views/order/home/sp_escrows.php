@@ -64,6 +64,7 @@
                             <th>Street Address</th>
                             <th>City</th>
                             <th>Zipcode</th>
+                            <th>No Survey Notification</th>
                             <th>Action</th>
                         </tr>
                     </thead>                

@@ -8827,6 +8827,12 @@ class Home extends MX_Controller
                 $nestedData[] = $value['address1'];
                 $nestedData[] = $value['city'];
                 $nestedData[] = $value['zip'];
+                if ($value['no_survey_notify'] == 1) {
+                    $suveyChecked = 'checked';
+                } else {
+                    $suveyChecked = '';
+                }
+                $nestedData[] = "<input $suveyChecked onclick='updateMailNotificationUsers(" . '"survey"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 // if ($value['is_dual_cpl'] == 1) {
                 //     $checked = 'checked';
                 // } else {
@@ -9470,8 +9476,8 @@ class Home extends MX_Controller
 
     public function updateUsersMailFlag()
     {
-        $userId             = $this->input->post('id');
-        $flagType             = $this->input->post('flagType');
+        $userId   = $this->input->post('id');
+        $flagType = $this->input->post('flagType');
         $flag     = $this->input->post('flag');
         if ($flagType == 'recording') {
             $data['notify_recording_confirm'] = $flag;
@@ -9484,14 +9490,17 @@ class Home extends MX_Controller
             $data = [];
             $data = ['status' => 'error', 'msg' => 'Invalid flag type.'];
             echo json_encode($data);exit();
-
         }
         $data['updated_at']  = date("Y-m-d H:i:s");
-        $condition           = [
+        $condition = [
             'id' => $userId,
         ];
-        $this->db->update('pct_softpro_lookup_table', $data, $condition);
-        $data = ['status' => 'success', 'msg' => $message . ' Email flag updated successfully for user.'];
+        $updateStatus = $this->db->update('pct_softpro_lookup_table', $data, $condition);
+        if ($updateStatus) {
+            $data = ['status' => 'success', 'msg' => $message . ' Email flag updated successfully for user.'];
+        } else {
+            $data = ['status' => 'error', 'msg' => 'Something went wrong.'];
+        }
         /** Save user Activity */
         $activity  = $message . ' email notification value: ' . $flag . ' updated successfully for user id : ' . $user_id;
         $this->order->logAdminActivity($activity);
