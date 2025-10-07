@@ -715,7 +715,10 @@ class Order extends MX_Controller
                                             'file_number' => $value['order_number'],
                                             'email_type' => 'survey'
                                         ];
-                                        $this->db->insert('pct_email_queue', $emailQueueData);
+                                        // $this->db->insert('pct_email_queue', $emailQueueData);
+                                        if (!$this->db->get_where('pct_email_queue', $emailQueueData)->num_rows()) {
+                                            $this->db->insert('pct_email_queue', $emailQueueData);
+                                        }
                                     }
 
                                     // if (($orderDetails['softpro_status'] != 'closed' && $orderDetails['softpro_status'] != 'completed')) {
