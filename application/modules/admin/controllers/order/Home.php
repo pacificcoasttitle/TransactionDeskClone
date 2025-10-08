@@ -8828,11 +8828,11 @@ class Home extends MX_Controller
                 $nestedData[] = $value['city'];
                 $nestedData[] = $value['zip'];
                 if ($value['no_survey_notify'] == 1) {
-                    $suveyChecked = 'checked';
+                    $surveyChecked = 'checked';
                 } else {
-                    $suveyChecked = '';
+                    $surveyChecked = '';
                 }
-                $nestedData[] = "<input $suveyChecked onclick='updateMailNotificationUsers(" . '"survey"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                $nestedData[] = "<input $surveyChecked onclick='updateMailNotificationUsers(" . '"survey"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 // if ($value['is_dual_cpl'] == 1) {
                 //     $checked = 'checked';
                 // } else {
@@ -9033,12 +9033,12 @@ class Home extends MX_Controller
                     $checked = '';
                 }
                 if ($value['no_survey_notify'] == 1) {
-                    $suveyChecked = 'checked';
+                    $surveyChecked = 'checked';
                 } else {
-                    $suveyChecked = '';
+                    $surveyChecked = '';
                 }
                 $nestedData[] = "<input $checked onclick='updateMailNotificationUsers(" . '"recording"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
-                $nestedData[] = "<input $suveyChecked onclick='updateMailNotificationUsers(" . '"survey"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
+                $nestedData[] = "<input $surveyChecked onclick='updateMailNotificationUsers(" . '"survey"' . ");' style='height:30px;width:20px;' type='checkbox' id='$user_id' name='$user_id'>";
                 // if ($value['is_mortgage_user'] == 1) {
                 //     $checked = 'checked';
                 // } else {
