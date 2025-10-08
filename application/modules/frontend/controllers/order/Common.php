@@ -3848,7 +3848,7 @@ class Common extends MX_Controller
     }
 
     public function getSurveyDetails() {
-        if (empty($this->session->userdata('user'))) {
+        if (empty($this->session->userdata('user')) && empty($this->session->userdata('admin'))) {
             $res = array('status' => 'error', 'msg' => "Authentication required.");
             echo json_encode($res);exit;
         }
