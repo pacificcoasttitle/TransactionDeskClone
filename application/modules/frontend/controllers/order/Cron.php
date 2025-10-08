@@ -8661,9 +8661,9 @@ class Cron extends MX_Controller
             if (empty($data['escrow_no_survey_notify']) && !empty($data['escrow_email'])) {
                 $to[] = $data['escrow_email'];
             }
-            if (empty($data['lender_no_survey_notify']) && !empty($data['lender_email'])) {
-                $to[] = $data['lender_email'];
-            }
+            // if (empty($data['lender_no_survey_notify']) && !empty($data['lender_email'])) {
+            //     $to[] = $data['lender_email'];
+            // }
             
     
             // $to = array('piyush.j@crestinfosystems.com');
@@ -8717,6 +8717,8 @@ class Cron extends MX_Controller
         $configData    = $this->order->getConfigData();
         $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
         foreach ($result as $order) {
+            // lender_details.email_address as lender_email,
+            // lender_details.no_survey_notify as lender_no_survey_notify,
             $this->db->select('
                 order_details.file_number,
                 order_details.id as order_id,
@@ -8725,8 +8727,6 @@ class Cron extends MX_Controller
                 property_details.full_address,
                 escrow_details.email_address as escrow_email,
                 escrow_details.no_survey_notify as escrow_no_survey_notify,
-                lender_details.email_address as lender_email,
-                lender_details.no_survey_notify as lender_no_survey_notify,
                 title_officer.email_address as title_officer_email,
                 escrow_officer.email_address as escrow_officer_email
                 ');
@@ -8737,7 +8737,7 @@ class Cron extends MX_Controller
             $this->db->join('property_details', 'order_details.property_id = property_details.id', 'inner');
             $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id', 'inner');
             $this->db->join('pct_softpro_lookup_table as escrow_details', 'escrow_details.id = property_details.escrow_id', 'left');
-            $this->db->join('pct_softpro_lookup_table as lender_details', 'lender_details.id = property_details.lender_id', 'left');
+            // $this->db->join('pct_softpro_lookup_table as lender_details', 'lender_details.id = property_details.lender_id', 'left');
             $this->db->join('pct_softpro_lookup_table as title_officer', 'title_officer.id = transaction_details.title_officer', 'left');
             $this->db->join('pct_softpro_lookup_table as escrow_officer', 'escrow_officer.id = order_details.escrow_officer_id', 'left');
             // $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc');
