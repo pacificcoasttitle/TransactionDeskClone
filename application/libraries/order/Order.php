@@ -6161,10 +6161,10 @@ class Order
     }
 
     public function getSalesRepForOrder($orderId) {
-        $this->CI->db->select('order_details.file_number, customer_basic_details.first_name, customer_basic_details.last_name')
+        $this->CI->db->select('order_details.file_number, pct_softpro_lookup_table.first_name, pct_softpro_lookup_table.last_name')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'customer_basic_details.id = transaction_details.sales_representative and customer_basic_details.is_sales_rep = 1');
+            ->join('pct_softpro_lookup_table', 'pct_softpro_lookup_table.id = transaction_details.sales_representative and pct_softpro_lookup_table.is_sales_rep = 1');
         $this->CI->db->where('order_details.id', $orderId);
 
         $query = $this->CI->db->get();
