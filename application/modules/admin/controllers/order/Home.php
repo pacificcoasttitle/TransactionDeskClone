@@ -9554,7 +9554,9 @@ class Home extends MX_Controller
             // $titleOffSurveyId = "417131721"; 
             $titleOffSurveyId = $titleOfficerList['0']['id']; 
             $endPoint = 'surveys/' . $titleOffSurveyId . '/responses/bulk';
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey_'.$titleOfficerList[0]['title'], env('SURVEYMONKEY_API_URL') . $endPoint, array(), array(), 0, 0);
             $result = $this->survey->make_request('GET', $endPoint);
+            $this->apiLogs->syncLogs($userdata['id'], 'survey', 'get_survey_'.$titleOfficerList[0]['title'], env('SURVEYMONKEY_API_URL') . $endPoint, array(), $result, 0, $logid);
             // if (isset($result) && !empty($result)) {
             if ($result && is_string($result)) {
                 $response = json_decode($result, true);
