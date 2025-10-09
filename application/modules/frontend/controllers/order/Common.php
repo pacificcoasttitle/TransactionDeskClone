@@ -3875,9 +3875,20 @@ class Common extends MX_Controller
                         if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
                             $orderId = $res['custom_variables']['order_id'];
                             $salesRepDetails = $this->order->getSalesRepForOrder($orderId);
+                            $ratingArr['recipient_name'] = '-';
+                            if (isset($res['custom_variables']['uid'])) {
+                                $userId = $res['custom_variables']['uid'];
+                                // print_r($userId);die;
+                                $userDetails = $this->order->get_row(['id' => $userId], 'pct_softpro_lookup_table');
+                                // print_r($userDetails);die;
+                                if (!empty($userDetails)) {
+                                    $ratingArr['recipient_name'] = $userDetails['first_name'] . ' ' . $userDetails['last_name'] . ' - ' . $userDetails['company_name'];
+                                }
+                            }
                             // echo "<pre>";
                             // print_r($salesRepDetails);die;
-                            $ratingArr['sales_rep'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
+                            // $ratingArr['sales_rep'] = $salesRepDetails['first_name'] . ' ' . $salesRepDetails['last_name'];
+                            $ratingArr['file_number'] = $salesRepDetails['file_number'];
                         }
                         $ratingData['titleOfficer'] = $titleOffSurveyName;
                         foreach ($res['pages'] as $page) {

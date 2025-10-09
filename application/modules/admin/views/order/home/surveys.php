@@ -294,7 +294,7 @@
                                     foreach ($value['rating'] as $k => $val) { ?>
                                         <tr align="center">
                                             <td><?php echo $value['title']; ?></td>
-                                            <td><?php echo $val['sales_rep']; ?></td>
+                                            <td><?php echo $val['file_number']; ?></td>
                                             <td><?php echo ($val['Q1']); ?></td>
                                             <td><?php echo ($val['Q2']); ?></td>
                                             <td><?php echo ($val['Q3']); ?></td>
