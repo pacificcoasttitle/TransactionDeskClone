@@ -8650,17 +8650,25 @@ class Cron extends MX_Controller
                 return;
             }
 
+            $recipients = [];
+            if (empty($data['escrow_no_survey_notify']) && !empty($data['escrow_email'])) {
+                $to[] = $data['escrow_email'];
+                $recipients[] = [
+                    'id' => $data['escrow_id'],
+                    'email_address' => $data['escrow_email'],
+                ];
+                $data['survey_link'] = $data['survey_link'] . '&uid=' . $data['escrow_id'];
+            }
+
             $message = $this->load->view('emails/surveymonkey_email.php', $data, true);
+            // print_r($message);die;
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
             // $subject = 'Thank You!';
             // $to = 'piyush-crest@yopmail.com';
-            if (!empty($data['escrow_officer_email'])) {
-                $to[] = $data['escrow_officer_email'];
-            }
-            if (empty($data['escrow_no_survey_notify']) && !empty($data['escrow_email'])) {
-                $to[] = $data['escrow_email'];
-            }
+            // if (!empty($data['escrow_officer_email'])) {
+            //     $to[] = $data['escrow_officer_email'];
+            // }
             // if (empty($data['lender_no_survey_notify']) && !empty($data['lender_email'])) {
             //     $to[] = $data['lender_email'];
             // }
@@ -8686,10 +8694,12 @@ class Cron extends MX_Controller
             // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
             // $cc = array();
             $this->load->helper('sendemail');
-            if (!empty($to)) {
-                $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_contacts', '', $mailParams, array(), $data['order_id'], 0);
-                $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, array(), $cc);
-                $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_contacts', '', $mailParams, array('status' => $mail_result), $data['order_id'], $logid);
+            if (!empty($recipients)) {
+                foreach($recipients as $key => $recipient) {
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_contacts', '', $mailParams, array(), $data['order_id'], 0);
+                    $mail_result = send_email($from_mail, $from_name, $recipient['email_address'], $subject, $message, array(), $cc);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'survay_email_sent_mail_contacts', '', $mailParams, array('status' => $mail_result), $data['order_id'], $logid);
+                }
                 echo "Survay Mails sent successfully for Order Number : " . $data['file_number'] . " To: " . implode(', ', $to) . "And In CC : " . implode(', ', $cc) . "<br/>";
             } else {
                 echo "No recepient found";
@@ -8725,9 +8735,11 @@ class Cron extends MX_Controller
                 order_details.prod_type,
                 order_details.survey_notification_sent,
                 property_details.full_address,
+                escrow_details.id as escrow_id,
                 escrow_details.email_address as escrow_email,
                 escrow_details.no_survey_notify as escrow_no_survey_notify,
                 title_officer.email_address as title_officer_email,
+                escrow_officer.id as escrow_officer_id,
                 escrow_officer.email_address as escrow_officer_email
                 ');
             $this->db->from('order_details');
