@@ -334,6 +334,15 @@ $(document).ready(function () {
         }
     });
 
+    $('#IsBorrowerOrganization').change(function () {
+        if (this.checked) {
+            $('#organization-borrower-type').show();
+        } else {
+            $("#BorrowerOrganizationType").val("");
+            $('#organization-borrower-type').hide();
+        }
+    });
+
     $("#BuyerAgentName").autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -594,7 +603,7 @@ $(document).ready(function () {
             $('#sales-loan-amount-fields #secondaryBorrower').val('').hide();
 
             // if (selectedText == 'Refinance') {
-            $('#sales-loan-amount-fields #loanAmount').show();
+            $('#organization-borrower-type-fields').hide();
             // }
         } else if (selectedText == 'Purchase') {
             $('#sales-loan-amount-fields').show();
@@ -602,6 +611,8 @@ $(document).ready(function () {
             $('#sales-loan-amount-fields #salesAmount').show();
             $('#sales-loan-amount-fields #primaryBorrower').show();
             $('#sales-loan-amount-fields #secondaryBorrower').show();
+            $('#sales-loan-amount-fields #secondaryBorrower').show();
+            $('#organization-borrower-type-fields').show();
         } else {
             $('#sales-loan-amount-fields').hide();
             $('#sales-loan-amount-fields #salesAmount').hide();
@@ -609,6 +620,7 @@ $(document).ready(function () {
             $('#sales-loan-amount-fields #primaryBorrower').hide();
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
             $('#sales-loan-amount-fields input').val('');
+            $('#organization-borrower-type-fields').hide();
         }
     });
 
