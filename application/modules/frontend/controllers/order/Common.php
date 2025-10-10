@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $js_version = '5.08';
+    private $js_version = '5.09';
  
     public function __construct()
     {
@@ -3872,6 +3872,7 @@ class Common extends MX_Controller
                     foreach ($response['data'] as $res) {
                         $ratingArr = [];
                         $ratingArr['sales_rep'] = '-';
+                        $ratingArr['survey_date'] = date('m-d-Y H:i:s', strtotime($res['date_modified']));
                         if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
                             $orderId = $res['custom_variables']['order_id'];
                             $salesRepDetails = $this->order->getSalesRepForOrder($orderId);
@@ -3916,7 +3917,7 @@ class Common extends MX_Controller
                         $finalAverages['Q'.$i] = number_format(array_sum($weights) / count($weights), 2);
                         $i++;
                     }
-                    $ratingData['rating'] = $ratingArray;
+                    $ratingData['rating'] = array_reverse($ratingArray);
                     // print_r($page);die;
                     $ratingData['avg'] = $finalAverages;
                     $ratingData['textComment'] = $textComment;

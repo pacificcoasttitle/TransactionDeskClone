@@ -20,6 +20,8 @@ class Home extends MX_Controller
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
 
+    private $version = '1.00';
+
     public function __construct()
     {
         parent::__construct();
@@ -9570,6 +9572,7 @@ class Home extends MX_Controller
                     foreach ($response['data'] as $res) {
                         $ratingArr = [];
                         $ratingArr['sales_rep'] = '-';
+                        $ratingArr['survey_date'] = date('m-d-Y H:i:s', strtotime($res['date_modified']));
                         
                         if (isset($res['custom_variables']) && !empty($res['custom_variables'])) {
                             $orderId = $res['custom_variables']['order_id'];
@@ -9616,7 +9619,7 @@ class Home extends MX_Controller
                         $finalAverages['Q'.$i] = number_format(array_sum($weights) / count($weights), 2);
                         $i++;
                     }
-                    $ratingData['rating'] = $ratingArray;
+                    $ratingData['rating'] = array_reverse($ratingArray);
                     // print_r($page);die;
                     $ratingData['avg'] = $finalAverages;
                     $ratingData['textComment'] = $textComment;
