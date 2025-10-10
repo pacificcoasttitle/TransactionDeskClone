@@ -15,6 +15,7 @@
 <table class="table table-bordered" id="tbl-surveys-listing" width="100%" cellspacing="0">
     <thead>
         <tr align="center">
+            <th width="10%">Date</th>
             <th width="10%">Recipient</th>
             <th width="25%">Order Number</th>
             <th width="9%">Service</th>
@@ -35,6 +36,7 @@
         if (!empty($rating)) {
         foreach ($rating as $k => $val) { ?>
             <tr align="center">
+                <td><?php echo ($val['survey_date']) ?? '-'; ?></td>
                 <td><?php echo ($val['recipient_name']) ?? '-'; ?></td>
                 <!-- <td><?php echo $titleOfficer; ?></td> -->
                 <td><?php echo ($val['file_number']) ?? '-'; ?></td>

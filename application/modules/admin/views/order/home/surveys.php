@@ -96,7 +96,7 @@
 
 .btn-icon-split .text {
     display: inline-block;
-    padding: .375rem .75rem;
+    padding: .575rem 3px;
 }
 .card-body .btn {
     width: auto;
