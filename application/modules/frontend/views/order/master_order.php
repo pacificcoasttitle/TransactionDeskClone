@@ -328,6 +328,31 @@
 									</select>
 								</div>
 							</div>
+							
+							<div id="organization-borrower-type-fields" style="display: none;">
+								<div class="row form-group">
+									<div class="col-sm-3 align-display">
+										<input type="checkbox" class="form-control w-20 mr-5" name="IsBorrowerOrganization" id="IsBorrowerOrganization" value="1">
+										<span>Is Borrower Organization</span>
+									</div>
+								</div>
+
+								<div class="row form-group" id="organization-borrower-type" style="display: none;">
+									<div class="col-sm-12">
+										<select id="BorrowerOrganizationType" name="BorrowerOrganizationType" class="form-control">
+											<option value="">Select Borrower Organization Type</option>
+											<option value="Corporation"> Corporation  </option>
+											<option value="Limited Liability Corp"> Limited Liability Corp  </option>
+											<option value="Limited Liability Company"> Limited Liability Company  </option>
+											<option value="Limited Partnership"> Limited Partnership  </option>
+											<option value="Partnership"> Partnership  </option>
+											<option value="Trust"> Trust  </option>
+											<option value="Estate"> Estate  </option>
+											<option value="Other"> Other  </option>
+										</select>
+									</div>
+								</div>
+							</div>
 
 
 							<div id="sales-loan-amount-fields" style="display:none;">

@@ -69,6 +69,10 @@ class Home extends MX_Controller
             if ($this->input->post('IsOrganization')) {
                 $this->form_validation->set_rules('OrganizationType', 'Organization Type', 'required', ['required' => 'Please select Organization Type.']);
             }
+
+            if ($this->input->post('IsBorrowerOrganization')) {
+                $this->form_validation->set_rules('BorrowerOrganizationType', 'Borrower Organization Type', 'required', ['required' => 'Please select Borrower Organization Type.']);
+            }
             // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
             // $this->form_validation->set_rules('escrow_officer', 'Escrow Officer', 'callback_escrow_officer_validation');
 
@@ -108,8 +112,11 @@ class Home extends MX_Controller
                 $ClientLookupCode  = $this->input->post('ClientLookupCode');
                 $CompanyLookupCode = $this->input->post('CompanyLookupCode');
                 $ClientType        = $this->input->post('ClientType');
-                $OrganizationType        = $this->input->post('OrganizationType');
-                $IsOrganization        = $this->input->post('IsOrganization');
+                $OrganizationType  = $this->input->post('OrganizationType');
+                $IsOrganization    = $this->input->post('IsOrganization');
+
+                $BorrowerOrganizationType = $this->input->post('BorrowerOrganizationType');
+                $IsBorrowerOrganization   = $this->input->post('IsBorrowerOrganization');
 
                 $PropertyAddress      = $this->input->post('Property');
                 $SplitPropertyAddress = explode(' ', $PropertyAddress);
@@ -453,6 +460,9 @@ class Home extends MX_Controller
                         $transactionDetailsReq['PrimaryBorrowerFirstName'] = $primaryOwnerArray['first_name'];
                         $transactionDetailsReq['PrimaryBorrowerMiddleName'] = $primaryOwnerArray['middle_name'];
                         $transactionDetailsReq['PrimaryBorrowerLastName'] = $primaryOwnerArray['last_name'];
+                        $transactionDetailsReq['OrganizationType'] = $BorrowerOrganizationType = $OrganizationType;
+                        $transactionDetailsReq['IsOrganization'] = ($IsOrganization) ? "true" : "false";
+                        $OrganizationType = null;
                         // $place_order['Buyers'][] = $legalEntity; //
                     } else {
                         $borrowerName        = explode(' ', $primaryBorrower);
@@ -478,9 +488,11 @@ class Home extends MX_Controller
                         // $place_order['Sellers'][] = $legalEntity; //
                         // $place_order['Buyers'][] = $borrowers; //
                         // $place_order['SalesPrice'] = $SalesAmount; //
+                        $orderReq['sellerDetails']['OrganizationType'] = $OrganizationType;
+                        $orderReq['sellerDetails']['IsOrganization'] = ($IsOrganization) ? "true" : "false";
+                        $transactionDetailsReq['OrganizationType'] = $BorrowerOrganizationType;
+                        $transactionDetailsReq['IsOrganization'] = ($IsBorrowerOrganization) ? "true" : "false";
                     }
-                    $orderReq['sellerDetails']['OrganizationType'] = $OrganizationType;
-                    $orderReq['sellerDetails']['IsOrganization'] = ($IsOrganization) ? "true" : "false";
 
                     // $place_order['TransactionProductType'] = array("TransactionTypeID" => $TransactionTypeID, 'ProductTypeID' => $ProductTypeID);
                     $loan = [];
@@ -682,6 +694,7 @@ class Home extends MX_Controller
                     'loan_number'          => $LoanNumber,
                     'transaction_type'     => $TransactionType,
                     'organization_type'    => $OrganizationType,
+                    'borrwer_organization_type' => $BorrowerOrganizationType,
                     'purchase_type'        => $softproProductTypeId,
                     'product_type'         => $softproProductTypeId,
                     'order_type'           => $softproOrderTypeId,
