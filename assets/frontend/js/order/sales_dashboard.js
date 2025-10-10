@@ -345,12 +345,25 @@ $(document).ready(function () {
                         alert(results.msg);
                     }
                     $('#page-preloader').css('display', 'none');
+                    datatableInSurveyList();
                 }
             });
         }
     });
-
+    datatableInSurveyList();
 });
+
+function datatableInSurveyList() {
+    $('#tbl-surveys-listing').DataTable({
+        "order": [], // disable initial auto-sorting
+        "columnDefs": [
+            { "orderable": false, "targets": [8] } // disable sorting on Action column (last one)
+        ],
+        "pageLength": 10,   // optional
+        "lengthChange": true, // allows user to change rows per page
+        "autoWidth": false, // optional for responsive layout
+    });
+}
 
 if (typeof (salesData) != "undefined" && salesData !== null) {
     var salesDataKeys = Object.keys(salesData);

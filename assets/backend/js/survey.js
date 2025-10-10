@@ -26,13 +26,28 @@ $(document).ready(function () {
                         alert(results.msg);
                     }
                     $('#page-preloader').css('display', 'none');
+                    datatableInSurveyList();
                 }
             });
         }
     });
 
     $('#title_officer_list').removeClass('selectpicker').selectpicker('destroy');
+
+    datatableInSurveyList();
 });
+
+function datatableInSurveyList() {
+    $('#tbl-surveys-listing').DataTable({
+        "order": [], // disable initial auto-sorting
+        "columnDefs": [
+            { "orderable": false, "targets": [8] } // disable sorting on Action column (last one)
+        ],
+        "pageLength": 10,   // optional
+        "lengthChange": true, // allows user to change rows per page
+        "autoWidth": false, // optional for responsive layout
+    });
+}
 
 function displayComment(comments) {
     if (comments.length > 0) {
