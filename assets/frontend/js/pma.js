@@ -749,6 +749,8 @@ function getAddress() {
     if (isNaN(locale[0])) {
         locale += ', CA' // if locale is city rather than zip, add in state
     }
+    console.log('address ==', address);
+    console.log('locale ==', locale);
     addressData(address, locale);
 }
 
@@ -773,6 +775,7 @@ function addressData(address, locale) {
     dataObj.OwnerName = '';
     request = 'http://api.sitexdata.com/sitexapi/sitexapi.asmx/AddressSearch?';
     request += $.param(dataObj)
+    console.log('request ===', request);
     fetchReports('187');
 }
 
@@ -818,7 +821,10 @@ function fetchReports(repNum) {
     //request = decodeURIComponent(request);
     request = request.replace(/</g, '^');
     $('body').addClass('loading-screen');
-    //console.log(request);
+    console.log('fetchReports request ==', request);
+    console.log('fetchReports reportNum ==', reportNum);
+    console.log('fetchReports full url ==', request + '&reportType=' + reportNum);
+
     $.ajax({
         url: base_url + 'pmas/proxy',
         data: {
@@ -827,9 +833,9 @@ function fetchReports(repNum) {
         dataType: 'xml'
     })
         .done(function (response, textStatus, jqXHR) {
-            //console.log(response)
+            console.log('response ==', response);
             var responseStatus = $(response).find('StatusCode').text();
-            //console.log(responseStatus);
+            console.log('responseStatus ===', responseStatus);
             if (reportNum === '110') {
                 var responseStatus = $(response).find('Status').text();
                 addReportCost('110', .45, responseStatus);
@@ -846,7 +852,7 @@ function fetchReports(repNum) {
                 addReportCost('187', .50, responseStatus);
                 compileXmlUrls(response, 'report187');
                 listResults(response);
-                fetchReports('111')
+                fetchReports('111');
             }
         })
         .fail(function (err) {
@@ -895,6 +901,7 @@ function listResults(response) {
 
 // extracts url for report from API response and adds to reportData object
 function compileXmlUrls(response, report) {
+    console.log('compileXmlUrls');
     // get the url for each report
     reportUrl = $(response).find('ReportURL').text();
     if (report === 'report111') {
