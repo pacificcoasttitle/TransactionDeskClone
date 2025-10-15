@@ -563,37 +563,69 @@ $(document).ready(function () {
     // });
 
     $('#ProductTypeID').change(function () {
+        var transactionType = $('#TransactionType').find('option:selected').text();
         var selectedText = $(this).find('option:selected').text();
         $('#ProductType').val(selectedText);
-        if (selectedText.toLowerCase() == 'full alta') {
+
+        if (transactionType == 'Refinance') {
             $('.coverage-field').show();
             $("#coverageAmount").prop('required', true);
+            let loanAmt = $('#sales-loan-amount-fields #loanAmount').val();
+            loanAmt = parseInt(loanAmt.replace(/,/g, ''), 10);
+            if (isNaN(loanAmt)) {
+                loanAmt = 0;
+            }
+            setCoverageAmount(selectedText, loanAmt);
+            // if (selectedText.toLowerCase() == 'full alta') {
+            //     var num2 = (loanAmt * 1.25).toString().split(/(?=(?:\d{3})+$)/).join(",");
+            //     $("#coverageAmount").val(num2);
+            // } else {
+            //     $("#coverageAmount").val(loanAmt);
+            // }
         } else {
+            $("#coverageAmount").val(null);
             $('.coverage-field').hide();
             $("#coverageAmount").prop('required', false);
         }
     });
 
     $("#sales-loan-amount-fields #loanAmount").focusout(function () {
-        var selectedText = $("#ProductTypeID").find('option:selected').text();
-        $('#ProductType').val(selectedText);
-        if (selectedText.toLowerCase() == 'full alta') {
-            $("#coverageAmount").prop('required', true);
-        } else {
-            $("#coverageAmount").prop('required', false);
-        }
         let loanAmt = $('#sales-loan-amount-fields #loanAmount').val();
         loanAmt = parseInt(loanAmt.replace(/,/g, ''), 10);
         if (isNaN(loanAmt)) {
             loanAmt = 0;
         }
-        var num2 = (loanAmt * 1.25).toString().split(/(?=(?:\d{3})+$)/).join(",");
-        $("#coverageAmount").val(num2);
+        var productType = $("#ProductTypeID").find('option:selected').text();
+        var transactionType = $('#TransactionType').find('option:selected').text();
+        $('#ProductType').val(productType);
+        // console.log('transactionType ==', transactionType);
+        if (transactionType == 'Refinance') {
+            $("#coverageAmount").prop('required', true);
+            setCoverageAmount(productType, loanAmt);
+            // if (productType.toLowerCase() == 'full alta') {
+            //     var num2 = (loanAmt * 1.25).toString().split(/(?=(?:\d{3})+$)/).join(",");
+            //     $("#coverageAmount").val(num2);
+            // } else {
+            //     // $("#coverageAmount").prop('required', false);
+            //     $("#coverageAmount").val(loanAmt);
+            // }
+        }
 
     });
 
+    function setCoverageAmount(productType, loanAmt) {
+        if (productType.toLowerCase() == 'full alta') {
+            var num2 = (loanAmt * 1.25).toString().split(/(?=(?:\d{3})+$)/).join(",");
+            $("#coverageAmount").val(num2);
+        } else {
+            // $("#coverageAmount").prop('required', false);
+            $("#coverageAmount").val(loanAmt);
+        }
+    }
+
     $('#TransactionType').change(function () {
         var selectedText = $(this).find('option:selected').text();
+        var productType = $("#ProductTypeID").find('option:selected').text();
         console.log('selectedText ==', selectedText);
         if (selectedText == 'Refinance') {
             $('#sales-loan-amount-fields').show();
@@ -604,6 +636,14 @@ $(document).ready(function () {
 
             // if (selectedText == 'Refinance') {
             $('#organization-borrower-type-fields').hide();
+            $('.coverage-field').show();
+            $("#coverageAmount").prop('required', true);
+            let loanAmt = $('#sales-loan-amount-fields #loanAmount').val();
+            loanAmt = parseInt(loanAmt.replace(/,/g, ''), 10);
+            if (isNaN(loanAmt)) {
+                loanAmt = 0;
+            }
+            setCoverageAmount(productType, loanAmt);
             // }
         } else if (selectedText == 'Purchase') {
             $('#sales-loan-amount-fields').show();
@@ -613,6 +653,8 @@ $(document).ready(function () {
             $('#sales-loan-amount-fields #secondaryBorrower').show();
             $('#sales-loan-amount-fields #secondaryBorrower').show();
             $('#organization-borrower-type-fields').show();
+            $('.coverage-field').hide();
+            $("#coverageAmount").prop('required', false);
         } else {
             $('#sales-loan-amount-fields').hide();
             $('#sales-loan-amount-fields #salesAmount').hide();
@@ -621,6 +663,8 @@ $(document).ready(function () {
             $('#sales-loan-amount-fields #secondaryBorrower').hide();
             $('#sales-loan-amount-fields input').val('');
             $('#organization-borrower-type-fields').hide();
+            $('.coverage-field').hide();
+            $("#coverageAmount").prop('required', false);
         }
     });
 
