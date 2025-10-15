@@ -463,6 +463,7 @@ class Home extends MX_Controller
                         $transactionDetailsReq['OrganizationType'] = $BorrowerOrganizationType = $OrganizationType;
                         $transactionDetailsReq['IsOrganization'] = ($IsOrganization) ? "true" : "false";
                         $OrganizationType = null;
+                        $transactionDetailsReq['coverageAmount'] = $coverageAmount;
                         // $place_order['Buyers'][] = $legalEntity; //
                     } else {
                         $borrowerName        = explode(' ', $primaryBorrower);
@@ -499,9 +500,6 @@ class Home extends MX_Controller
                     if (isset($LoanAmount) && !empty($LoanAmount)) {
                         $loan['LoanAmount']                  = $LoanAmount;
                         $transactionDetailsReq['LoanAmount'] = $LoanAmount;
-                        if (strtolower($softproProductType) == 'full alta') {
-                            $transactionDetailsReq['coverageAmount'] = $coverageAmount;
-                        }
                     }
                     $underWriter = 'westcor';
                     $underWriterLookup = 'WC';
