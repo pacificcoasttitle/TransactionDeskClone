@@ -200,6 +200,10 @@ class Common extends MX_Controller
         $data = json_decode($prelim_details['chatgpt_json'], true);
         $this->load->library('order/parsedown');
         $getPrelimDocument = $this->order->get_prelim_document($orderId);
+        if (empty($getPrelimDocument)) {
+            echo json_encode(['status' => 'error', 'message' => 'Prelim document not found.']);exit;
+            return "Prelim Document not found.";
+        }
         $fileName = $getPrelimDocument['document_name'];
         $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
         if (isset($prelim_details['chatgpt_json']) && !empty($prelim_details['chatgpt_json']) && isset($data['choices'])) {
