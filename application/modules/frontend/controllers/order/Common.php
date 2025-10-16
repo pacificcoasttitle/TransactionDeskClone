@@ -174,15 +174,17 @@ class Common extends MX_Controller
 
     public function getPrelimSummary()
     {
+        $this->load->library('order/tessa');
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
         }
+        $userdata = $this->session->userdata('user');
         $fileNumber = $this->input->post('fileNumber');
         $params = [
             'order_details.file_number' => $fileNumber,
         ];
         $orderDetails = $this->order->get_order_details($params);
-        
+        $orderId = $orderDetails['order_id'];
         // $file_number = isset($orderDetails['file_number']) && !empty($orderDetails['file_number']) ? $orderDetails['file_number'] : '';
         $address = isset($orderDetails['full_address']) && !empty($orderDetails['full_address']) ? $orderDetails['full_address'] : '';
         // $property_type = isset($orderDetails['property_type']) && !empty($orderDetails['property_type']) ? $orderDetails['property_type'] : '';
@@ -196,9 +198,13 @@ class Common extends MX_Controller
         $prelim_details = $this->reviewPrelimData->get_rows($condition);
 
         $data = json_decode($prelim_details['chatgpt_json'], true);
-
         $this->load->library('order/parsedown');
-        if (isset($data) && !empty($data)) {
+        $getPrelimDocument = $this->order->get_prelim_document($orderId);
+        $fileName = $getPrelimDocument['document_name'];
+        $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
+        if (isset($prelim_details['chatgpt_json']) && !empty($prelim_details['chatgpt_json']) && isset($data['choices'])) {
+        // if (isset($data) && !empty($data)) {
+        // if (false) {
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
             $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
             $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
@@ -206,55 +212,89 @@ class Common extends MX_Controller
                 'file_number' => $fileNumber,
                 'resware_json' => $prelim_details['resware_json'],
             );
-            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
-            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
-            $summaryData['html'] = $this->parsedown->text($markdown);
+            $tessaRes    = json_decode($prelim_details['chatgpt_json'], true);
+            
+            // if (isset($tessaRes['choices'])) {
+                $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
+                // $tessaSummaryHtml = $summaryData['html'] = $this->parsedown->text($markdown);
+                $summaryData['html'] = $tessaSummaryHtml = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
+            // } else {
+            //     $tessaSummaryHtml = $this->tessa->format_enhanced_analysis($prelim_details['chatgpt_json'], $fileName);
+            //     $summaryData['html'] = $tessaSummaryHtml;
+            // }
         } else {
-            $apiEndPoints = SOFTPRO_API_END;
-            $req['orderNumber'] = $fileNumber;
+            // echo "else";die;
+            // echo "<pre>";
+            // print_r($getPrelimDocument);die;
+            // $this->load->model('order/tessa_model');
+            // $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/1760559435_prelim_doc_20009285-OCT.pdf';
+            // $fileName = "1760559435_prelim_doc_20009285-OCT.pdf";
+            // $summaryHtml = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);
+            // $file_path = "https://pct-doc.s3-us-west-2.amazonaws.com/documents/1757111998_prelim_doc_20007334-GLT.pdf";
+            // $pdf_text = $this->tessa_model->process_pdf($file_path);
+            // print_r($summaryHtml);
+            // echo "<br><br>";die;
+            // $apiEndPoints = SOFTPRO_API_END;
+            // $req['orderNumber'] = $fileNumber;
             
-            $queryParams = http_build_query($req);
-            $reqData     = json_encode($req);
-            $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_summary'] . '?'.$queryParams;
+            // $queryParams = http_build_query($req);
+            // $reqData     = json_encode($req);
+            // $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_prelim_summary'] . '?'.$queryParams;
             
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
-            $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
-            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
+            // $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', $reqUrl, $reqData, [], 0, 0);
+            // $response    = $this->softpro->make_request('GET', 'get_prelim_summary', $reqData, $queryParams);
+            // $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_prelim_summary', 'get_prelim_summary', $reqData, json_encode($response), 0, $logid);
             
             // echo "<pre>";
-            if (!empty($response) && $response['status'] == 'success') {
-                $prelimSummaryJson = $response['data'];
+            // if (!empty($response) && $response['status'] == 'success') {
+            //     $prelimSummaryJson = $response['data'];
+                //  $pdf_text = $prelimSummaryJson;
+                // Compute facts from PDF text
+                // $facts = $this->tessa_model->compute_facts(json_encode($pdf_text));
+                // echo "<pre>";
+                // print_r($facts);die;
+                // // Store in session for potential further use
+                // $this->session->set_userdata('last_computed_facts', $facts);
+                
+                // // Generate analysis
+                // print_r($facts);echo "<br><br>";
+                // print_r($file_path);echo "<br><br>";
+                // print_r($pdf_text);die;
+                // $analysis = $this->generate_analysis($pdf_text, $upload_data['file_name'], $facts);
+                
+                // echo $analysis;
+                // echo "<pre>";
                 // print_r($prelimSummaryJson);die;
-                $prelimData = array(
-                    'resware_json' => json_encode($prelimSummaryJson)
-                );
+                // $prelimData = array(
+                //     'resware_json' => json_encode($prelimSummaryJson)
+                // );
                 $condition = [
                     // 'file_number' => '20001146-GLT' //$response['OrderNumber'],
                     'file_number' => $fileNumber,
                 ];
-                $this->db->set($prelimData);
-                $this->db->where($condition);
-                $this->db->update('pct_order_prelim_summary');
-
-                $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
-
-                $chatGptRes    = json_decode($chatGptJsonRes, true);
+                // $this->db->set($prelimData);
+                // $this->db->where($condition);
+                // $this->db->update('pct_order_prelim_summary');
+                
+                // $chatGptJsonRes = $this->order->getPrelimAISummary($pdf_text, $prelimSummaryJson);
+                $tessaJsonRes = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);
+                $tessaRes    = json_decode($tessaJsonRes, true);
                 $prelimData = array(
-                    'chatgpt_json' => $chatGptJsonRes
+                    'chatgpt_json' => $tessaJsonRes
                 );
-                $condition = [
-                    // 'file_number' => '20001146-GLT'
-                    'file_number' => $fileNumber,
-                ];
                 $this->db->set($prelimData);
                 $this->db->where($condition);
                 $this->db->update('pct_order_prelim_summary');
+                $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
+                // $summaryData['html'] = $this->parsedown->text($markdown);
+                
+                $tessaSummaryHtml = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
+                $summaryData['html'] = $tessaSummaryHtml;
+            // } else {
+            //     $markdown = 'No content found.';
+            //     $summaryData['html'] = 'No content found.';
+            // }
 
-                $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
-                $summaryData['html'] = $this->parsedown->text($markdown);
-            }
-
-            // $summaryData['html'] = 'No content found.';
         }
         $prelim_details = $summaryData;
 
@@ -269,7 +309,8 @@ class Common extends MX_Controller
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
         if ($prelimSummaryEmailFlag == 1) {
-            $emailData['html'] = $this->parsedown->text($markdown);
+            // $emailData['html'] = $this->parsedown->text($markdown);
+            $emailData['html'] = $tessaSummaryHtml;
             $emailData['file_number'] = $fileNumber;
             $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
             $from_name = 'Pacific Coast Title Company';

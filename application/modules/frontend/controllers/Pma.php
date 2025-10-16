@@ -187,8 +187,8 @@ class Pma extends MX_Controller {
             $sales_rep_temp['name'] = $sales_rep_record->first_name.' '.$sales_rep_record->last_name;
             $sales_rep_temp['image'] = !empty($sales_rep_record->sales_rep_report_image) ? env('AWS_PATH').$sales_rep_record->sales_rep_report_image : '';
             $sales_rep_temp['image_alt'] = strtoupper(substr(trim($sales_rep_record->first_name) , 0,1).substr(trim($sales_rep_record->last_name) , 0,1));
-            $sales_rep_temp['email'] = $sales_rep_record->email_address;
-            $sales_rep_temp['phone'] = $sales_rep_record->telephone_no;
+            $sales_rep_temp['email'] = $sales_rep_record->email_address ?? null;
+            $sales_rep_temp['phone'] = $sales_rep_record->telephone_no ?? null;
             $sales_rep_temp['report_total'] = count($sales_rep_record->pma);
             $cost_sum = 0;
             $report_total_temp = 0;

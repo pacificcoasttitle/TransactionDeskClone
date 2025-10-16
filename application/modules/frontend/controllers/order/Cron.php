@@ -7425,9 +7425,9 @@ class Cron extends MX_Controller
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
         // $queryParams = "DateFrom=03-26-2025&DateTo=03-26-2025";
         $reqData     = json_encode($req);
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, [], 0, 0);
+        $logid = $this->apiLogs->syncLogs(0, 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_single_prelim_report', $reqData, $queryParams);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, json_encode($response), 0, $logid);
+        $this->apiLogs->syncLogs(0, 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, json_encode($response), 0, $logid);
         
         $prelimFetchedCount= 0;
         if (!empty($response) && $response['status'] == 'success') {
