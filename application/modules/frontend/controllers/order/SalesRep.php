@@ -636,7 +636,7 @@ class SalesRep extends MX_Controller
                 $fileNumber = !empty($order['file_number']) ? $order['file_number'] : '';
                 if ($order['prelim_summary_id'] != 0) {
                     $prelimDoc = $this->order->get_prelim_document($order['id']);
-                    if (env('AWS_ENABLE_FLAG') == 1) {
+                    if (env('AWS_ENABLE_FLAG') == 1 && !empty($prelimDoc['document_name'])) {
                         $prelimUrl = env('AWS_PATH') . "documents/" . $prelimDoc['document_name'];
                     } 
                     // else {
