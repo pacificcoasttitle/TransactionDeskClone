@@ -792,13 +792,21 @@ function getPrelimSummary(fileNumber) {
         },
         dataType: "html",
         success: function (response) {
-
+            $('#page-preloader').css('display', 'none');
+            console.log('response ==', response);
             var results = JSON.parse(response);
+            if (results.status == 'error') {
+                alert(results.message);
+                return;
+            }
             $('#prelim_property').text(results.address);
             $('#prelim_file_number').text(results.file_number);
             $('.prelim_summary').html(results.summary_view);
             $('#aiPrelimSummary').modal('show');
+        },
+        error: function () {
             $('#page-preloader').css('display', 'none');
+            alert("Error while fetching the preliminary summary.");
         }
     });
 }
