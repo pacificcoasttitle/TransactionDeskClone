@@ -152,9 +152,13 @@ class Common extends MX_Controller
                 'parcel_id' => $parcelID,
                 'policy_type' => $policy_type,
             );
-            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
-            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content received.';
-            $summaryData['html'] = $this->parsedown->text($markdown);
+            // $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+            // $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content received.';
+            // $summaryData['html'] = $this->parsedown->text($markdown);
+            $fileName = $file_number;
+            $tessaRes    = json_decode($prelim_details['chatgpt_json'], true);
+            $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
+            $summaryData['html'] = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
             // $prelim_details = $summaryData;
         } else {
             $summaryData['html'] = 'No content found.';
