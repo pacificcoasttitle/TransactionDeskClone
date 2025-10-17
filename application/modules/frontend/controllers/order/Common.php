@@ -134,7 +134,8 @@ class Common extends MX_Controller
         $data = json_decode($prelim_details['resware_json'], true);
 
         if (isset($data) && !empty($data)) {
-            $this->load->library('order/parsedown');
+            // $this->load->library('order/parsedown');
+            $this->load->library('order/tessa');
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
             $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
             $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
@@ -202,7 +203,7 @@ class Common extends MX_Controller
         $prelim_details = $this->reviewPrelimData->get_rows($condition);
 
         $data = json_decode($prelim_details['chatgpt_json'], true);
-        $this->load->library('order/parsedown');
+        // $this->load->library('order/parsedown');
         $getPrelimDocument = $this->order->get_prelim_document($orderId);
         if (empty($getPrelimDocument)) {
             echo json_encode(['status' => 'error', 'message' => 'Prelim document not found.']);exit;
@@ -372,7 +373,7 @@ class Common extends MX_Controller
 
         // $data = json_decode($prelim_details['chatgpt_json'], true);
 
-        $this->load->library('order/parsedown');
+        // $this->load->library('order/parsedown');
         // if (isset($data) && !empty($data)) {
         //     $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
         //     $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
