@@ -7711,8 +7711,6 @@ class Cron extends MX_Controller
             $tessaRes    = json_decode($tessaJsonRes, true);
             $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
             $html = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
-            // echo "<pre>Check response ";
-            // print_r($html);die;
             $prelimData = array(
                 'chatgpt_json' => $tessaJsonRes
             );
@@ -8296,14 +8294,39 @@ class Cron extends MX_Controller
 
                 }
             }
-            $prelimSummaryJson = json_decode($value['resware_json'], true);
-            
-            $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
 
-            $chatGptRes    = json_decode($chatGptJsonRes, true);
+            $params = [
+                'order_details.file_number' => $fileNumber,
+            ];
+            $orderDetails = $this->order->get_order_details($params);
+            $orderId = $orderDetails['order_id'];
+            $getPrelimDocument = $this->order->get_prelim_document($orderId);
+            if (empty($getPrelimDocument)) {
+                $res = "Prelim document not found.";
+                $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, $res, 0, $logid);
+                echo $res; exit;
+            }
+            $fileName = $getPrelimDocument['document_name'];
+            // $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
+            $filePath = env('AWS_PATH') .  'documents/' . $fileName;
+
+
+
+            // $prelimSummaryJson = json_decode($value['resware_json'], true);
+            
+            // $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+
+            // $chatGptRes    = json_decode($chatGptJsonRes, true);
+
+            $tessaJsonRes = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);
+            $tessaRes    = json_decode($tessaJsonRes, true);
+            // $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
+            // $html = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
             $prelimData = array(
-                'chatgpt_json' => $chatGptJsonRes
+                'chatgpt_json' => $tessaJsonRes,
+                'is_tessa' => 1
             );
+
             $condition = [
                 'file_number' => $fileNumber,
             ];
