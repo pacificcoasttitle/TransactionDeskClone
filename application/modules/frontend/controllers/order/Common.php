@@ -152,9 +152,13 @@ class Common extends MX_Controller
                 'parcel_id' => $parcelID,
                 'policy_type' => $policy_type,
             );
-            $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
-            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content received.';
-            $summaryData['html'] = $this->parsedown->text($markdown);
+            // $chatGptRes    = json_decode($prelim_details['chatgpt_json'], true);
+            // $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content received.';
+            // $summaryData['html'] = $this->parsedown->text($markdown);
+            $fileName = $file_number;
+            $tessaRes    = json_decode($prelim_details['chatgpt_json'], true);
+            $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
+            $summaryData['html'] = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
             // $prelim_details = $summaryData;
         } else {
             $summaryData['html'] = 'No content found.';
@@ -349,6 +353,7 @@ class Common extends MX_Controller
 
     public function regeneratePrelimSummary()
     {
+        $userdata = $this->session->userdata('user');
         $fileNumber = $this->input->post('fileNumber');
         $params = [
             'order_details.file_number' => $fileNumber,
@@ -406,12 +411,32 @@ class Common extends MX_Controller
             $this->db->where($condition);
             $this->db->update('pct_order_prelim_summary');
 
-            $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+            // $chatGptJsonRes = $this->order->getPrelimAISummary($prelimSummaryJson);
+            
+            // $chatGptRes    = json_decode($chatGptJsonRes, true);
+            // $prelimData = array(
+            //     'chatgpt_json' => $chatGptJsonRes
+            // );
+            
+            $orderId = $orderDetails['order_id'];
+            $getPrelimDocument = $this->order->get_prelim_document($orderId);
+            if (empty($getPrelimDocument)) {
+                $res = "Prelim document not found.";
+                $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, $res, 0, $logid);
+                echo $res; exit;
+            }
+            $fileName = $getPrelimDocument['document_name'];
+            // $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
+            $filePath = env('AWS_PATH') .  'documents/' . $fileName;
 
-            $chatGptRes    = json_decode($chatGptJsonRes, true);
+            $this->load->library('order/tessa');
+            $tessaJsonRes = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);
+            $tessaRes    = json_decode($tessaJsonRes, true);
             $prelimData = array(
-                'chatgpt_json' => $chatGptJsonRes
+                'chatgpt_json' => $tessaJsonRes,
+                'is_tessa' => 1
             );
+
             $condition = [
                 // 'file_number' => '20001146-GLT'
                 'file_number' => $fileNumber,
@@ -420,8 +445,10 @@ class Common extends MX_Controller
             $this->db->where($condition);
             $this->db->update('pct_order_prelim_summary');
 
-            $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
-            $summaryData['html'] = $this->parsedown->text($markdown);
+            // $markdown = $chatGptRes['choices'][0]['message']['content'] ?? 'No content found.';
+            // $summaryData['html'] = $this->parsedown->text($markdown);
+            $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
+            $summaryData['html'] = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
         }
 
             // $summaryData['html'] = 'No content found.';
@@ -440,7 +467,7 @@ class Common extends MX_Controller
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
 
         if ($prelimSummaryEmailFlag == 1) {
-            $emailData['html'] = $this->parsedown->text($markdown);
+            $emailData['html'] = $summaryData['html'];
             $emailData['file_number'] = $fileNumber;
             $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
             $from_name = 'Pacific Coast Title Company';
