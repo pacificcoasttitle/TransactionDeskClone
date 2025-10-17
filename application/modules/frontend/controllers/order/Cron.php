@@ -8265,6 +8265,7 @@ class Cron extends MX_Controller
         $prelimData = $query->result_array();
         // echo "<pre>";
         // print_r($prelimData);die;
+        $this->load->library('order/tessa');
         foreach($prelimData as $key => $value) {
             $fileNumber = $value['file_number'];
             if (empty($value['resware_json'])) {
