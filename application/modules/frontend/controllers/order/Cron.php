@@ -7710,7 +7710,7 @@ class Cron extends MX_Controller
             $tessaJsonRes = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);
             $tessaRes    = json_decode($tessaJsonRes, true);
             $tessaText = $tessaRes['choices'][0]['message']['content'] ?? 'No content found.';
-            $html = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
+            // $html = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
             $prelimData = array(
                 'chatgpt_json' => $tessaJsonRes
             );
