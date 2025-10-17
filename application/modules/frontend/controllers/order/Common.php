@@ -207,7 +207,7 @@ class Common extends MX_Controller
         $fileName = $getPrelimDocument['document_name'];
         // $filePath = env('AWS_PATH') .  'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
         $filePath = env('AWS_PATH') .  'documents/' . $fileName;
-        if (isset($prelim_details['chatgpt_json']) && !empty($prelim_details['chatgpt_json']) && isset($data['choices'])) {
+        if (isset($prelim_details['chatgpt_json']) && !empty($prelim_details['chatgpt_json']) && ($prelim_details['is_tessa'] == 1) && isset($data['choices'])) {
         // if (isset($data) && !empty($data)) {
         // if (false) {
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
@@ -285,7 +285,8 @@ class Common extends MX_Controller
                 $tessaJsonRes = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);
                 $tessaRes    = json_decode($tessaJsonRes, true);
                 $prelimData = array(
-                    'chatgpt_json' => $tessaJsonRes
+                    'chatgpt_json' => $tessaJsonRes,
+                    'is_tessa' => 1
                 );
                 $this->db->set($prelimData);
                 $this->db->where($condition);
