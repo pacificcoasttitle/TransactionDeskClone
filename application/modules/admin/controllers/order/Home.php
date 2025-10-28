@@ -20,7 +20,7 @@ class Home extends MX_Controller
      * @see https://codeigniter.com/user_guide/general/urls.html
      */
 
-    private $version = '1.00';
+    private $jsversion = '1.00';
 
     public function __construct()
     {
@@ -9651,11 +9651,11 @@ class Home extends MX_Controller
         // print_r($survey);die;
         // $data['survey'] = $survey;
         
-        // $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=' . $this->version));
-        $this->admintemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->version));
-        // $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->version));
+        // $this->admintemplate->addCSS(base_url('assets/frontend/css/smart-forms.css?v=' . $this->jsversion));
+        $this->admintemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->jsversion));
+        // $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->jsversion));
         // $this->salesdashboardtemplate->show("order/common", "survey_result", $survey);
-        $this->admintemplate->addJS(base_url('assets/backend/js/survey.js?v=' . $this->version));
+        $this->admintemplate->addJS(base_url('assets/backend/js/survey.js?v=' . $this->jsversion));
         $this->admintemplate->show("order/home", "surveys", $survey);
     }
 
