@@ -691,6 +691,10 @@ class Order extends MX_Controller
                                         // 'resware_closed_status_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
                                         'updated_at'                 => date("Y-m-d H:i:s")
                                     ];
+                                    if (!empty($value['transaction_type'])) {
+                                        $updateOrderDetails['prod_type'] = $value['transaction_type'];
+                                        $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
+                                    }
 
                                     $id = $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
                                     $activity  = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'] . ' Sales reps: ' . $value['sales_rep'] . ' Transaction Date: ' . $value['transaction_date'] . ' Bill Code: ' . $value['bill_code'];
@@ -704,9 +708,9 @@ class Order extends MX_Controller
                                     if (!empty($value['order_type']) && !empty($orderTypeList[$value['order_type']])) {
                                         $updateTransactionDetails['order_type'] = $orderTypeList[$value['order_type']];
                                     }
-                                    if (!empty($value['transaction_type'])) {
-                                        $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
-                                    }
+                                    // if (!empty($value['transaction_type'])) {
+                                    //     $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
+                                    // }
                                     if (!empty($updateTransactionDetails)) {
                                         $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
                                     }
