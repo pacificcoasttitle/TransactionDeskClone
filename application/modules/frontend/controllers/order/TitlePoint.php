@@ -109,7 +109,7 @@ class TitlePoint extends MX_Controller
         $response = json_encode($xmlData);
         $result = json_decode($response, true);
 
-        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, $result, $random_number, $logid);
+        $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', $request_type, $request, $requestParams, $response, $random_number, $logid);
 
         if (isset($result) && empty($result)) {
             $tpData = array(
