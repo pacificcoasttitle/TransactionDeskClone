@@ -18,7 +18,7 @@ class Reports extends MX_Controller
     }
 
     public function get_all_sp_order_data($fromDate, $toDate, $closedFromDate) {
-        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.full_name as sales_rep, o.created_at, ot.order_type')
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.transaction_type, t.sales_representative, t.title_officer, u.full_name as sales_rep, o.created_at, ot.order_type')
         // $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, u.full_name as sales_rep, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
@@ -36,16 +36,17 @@ class Reports extends MX_Controller
                     $this->db->where('o.created_at <=', $toDate);    
                 $this->db->group_end();
             $this->db->group_end();
+            $this->db->where('o.is_softpro_order', 1);
             // $this->db->where('t.sales_representative', 12685);
             // ->where('o.prod_type', 'Refinance')
             // ->where('o.sent_to_accounting_date is not null')
-           return  $this->db->get()
-            // echo $this->db->last_query();exit;
-            ->result_array();
+            return $this->db->get()->result_array();
+            // $this->db->get();
+            // print_r($this->db->last_query());exit;
     }
 
     public function get_all_to_order_data($fromDate, $toDate, $closedFromDate) {
-        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date,t.transaction_type, t.sales_representative, t.title_officer, u.officer_name, o.created_at, ot.order_type')
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.transaction_type, t.sales_representative, t.title_officer, u.officer_name, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
             ->join('pct_softpro_lookup_table u', 't.title_officer = u.id', 'left')
@@ -60,6 +61,7 @@ class Reports extends MX_Controller
                     $this->db->where('o.created_at <=', $toDate);    
                 $this->db->group_end();
             $this->db->group_end();
+            $this->db->where('o.is_softpro_order', 1);
             // $this->db->where('t.title_officer', 14415);
             // $this->db->get();
             // echo $this->db->last_query();exit;
@@ -68,7 +70,7 @@ class Reports extends MX_Controller
     }
 
     public function get_all_order_data($fromDate, $toDate) {
-        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
+        $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.transaction_type, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
         // $records = $this->db->select('o.id as order_id, o.status, o.softpro_status, o.prod_type, o.profile, o.premium, o.file_number, o.resware_closed_status_date, o.sent_to_accounting_date, t.sales_representative, t.title_officer, o.created_at, ot.order_type')
             ->from('order_details o')
             ->join('transaction_details t', 'o.transaction_id = t.id', 'left')
@@ -86,6 +88,7 @@ class Reports extends MX_Controller
                     $this->db->where('o.created_at <=', $toDate);    
                 $this->db->group_end();
             $this->db->group_end();
+            $this->db->where('o.is_softpro_order', 1);
             // $this->db->get();
             // echo $this->db->last_query();exit;
             return $this->db->get()->result_array();
@@ -338,12 +341,12 @@ class Reports extends MX_Controller
 
             // if ($rev_month == date('m') && $rev_year == date('Y')) {
             //     if (strtolower($row['order_type']) == 'title only') {
-            //         if ($row['prod_type'] == 'Purchase') {
+            //         if ($row['transaction_type'] == 'Purchase') {
             //             $rep['mtd_purchase_cnt'] += 1;
             //             if ($rev_day == date('d')) {
             //                 $rep['today_purchase_cnt'] += 1;
             //             } 
-            //         } elseif ($row['prod_type'] == 'Refinance') {
+            //         } elseif ($row['transaction_type'] == 'Refinance') {
             //             $rep['mtd_refi_cnt']++;
             //             if ($rev_day == date('d')) {
             //                 $rep['today_refi_cnt']++;
@@ -356,14 +359,14 @@ class Reports extends MX_Controller
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
                 if (strtolower($row['order_type']) == 'title only') {
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
                         $rep['mtd_purchase_cnt'] += 1;
                         if ($rev_day == $today) {
                             $rep['today_purchase_rev'] += $row['premium'];
                             $rep['today_purchase_cnt'] += 1;
                         }
-                    } elseif ($row['prod_type'] == 'Refinance') {
+                    } elseif ($row['transaction_type'] == 'Refinance') {
                         $rep['mtd_refi_rev'] += $row['premium'];
                         $rep['mtd_refi_cnt'] += 1;
                         
@@ -384,10 +387,10 @@ class Reports extends MX_Controller
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $priorMonth && $rev_year == $priorYear) {
                 if (strtolower($row['order_type']) == 'title only') {
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_cnt']++;
                         $rep['prior_purchase_rev'] += $row['premium'];
-                    } elseif ($row['prod_type'] == 'Refinance') {
+                    } elseif ($row['transaction_type'] == 'Refinance') {
                         $rep['prior_refi_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
@@ -400,9 +403,9 @@ class Reports extends MX_Controller
 
             // if ($rev_month == $priorMonth && $rev_year == $priorYear) {
             //     if (strtolower($row['order_type']) == 'title only') {
-            //         if ($row['prod_type'] == 'Purchase') {
+            //         if ($row['transaction_type'] == 'Purchase') {
             //             $rep['prior_purchase_rev'] += $row['premium'];
-            //         } elseif ($row['prod_type'] == 'Refinance') {
+            //         } elseif ($row['transaction_type'] == 'Refinance') {
             //             $rep['prior_refi_rev'] += $row['premium'];
             //         }
             //     } else if (strtolower($row['order_type']) == 'title & escrow') {
@@ -926,14 +929,14 @@ class Reports extends MX_Controller
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
                 // if (strtolower($row['order_type']) == 'title only') {
-                    // if ($row['prod_type'] == 'Purchase') {
+                    // if ($row['transaction_type'] == 'Purchase') {
                         $rep['total_rev'] += $row['premium'];
                         // $rep['mtd_purchase_cnt'] += 1;
                         // if ($rev_day == $today) {
                         //     $rep['today_purchase_rev'] += $row['premium'];
                         //     $rep['today_purchase_cnt'] += 1;
                         // }
-                    // } elseif ($row['prod_type'] == 'Refinance') {
+                    // } elseif ($row['transaction_type'] == 'Refinance') {
                     //     $rep['mtd_refi_rev'] += $row['premium'];
                     //     $rep['mtd_refi_cnt'] += 1;
                         
@@ -954,10 +957,10 @@ class Reports extends MX_Controller
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $priorMonth && $rev_year == $priorYear) {
                 // if (strtolower($row['order_type']) == 'title only') {
-                    // if ($row['prod_type'] == 'Purchase') {
+                    // if ($row['transaction_type'] == 'Purchase') {
                         // $rep['prior_purchase_cnt']++;
                         $rep['prior_rev'] += $row['premium'];
-                    // } elseif ($row['prod_type'] == 'Refinance') {
+                    // } elseif ($row['transaction_type'] == 'Refinance') {
                     //     $rep['prior_refi_cnt']++;
                     //     $rep['prior_refi_rev'] += $row['premium'];
                     // }
@@ -1267,12 +1270,12 @@ class Reports extends MX_Controller
             // }
 
             // if ($rev_month == date('m') && $rev_year == date('Y')) {
-            //     if ($row['prod_type'] == 'Purchase') {
+            //     if ($row['transaction_type'] == 'Purchase') {
             //         $rep['mtd_purchase_cnt'] += 1;
             //         if ($rev_day == date('d')) {
             //             $rep['today_purchase_cnt'] += 1;
             //         } 
-            //     } elseif ($row['prod_type'] == 'Refinance') {
+            //     } elseif ($row['transaction_type'] == 'Refinance') {
             //         $rep['mtd_refi_cnt']++;
             //         if ($rev_day == date('d')) {
             //             $rep['today_refi_cnt']++;
@@ -1281,14 +1284,14 @@ class Reports extends MX_Controller
             // }
 
             // if ($rev_month == date('m') && $rev_year == date('Y')) {
-            //     if ($row['prod_type'] == 'Purchase') {
+            //     if ($row['transaction_type'] == 'Purchase') {
             //         $rep['mtd_purchase_rev'] += $row['premium'];
             //         $rep['mtd_purchase_cnt'] += 1;
             //         if ($rev_day == date('d')) {
             //             $rep['today_purchase_rev'] += $row['premium'];
             //             $rep['today_purchase_cnt'] += 1;
             //         }
-            //     } elseif ($row['prod_type'] == 'Refinance') {
+            //     } elseif ($row['transaction_type'] == 'Refinance') {
             //         $rep['mtd_refi_rev'] += $row['premium'];
             //         $rep['mtd_refi_cnt'] += 1;
             //         if ($rev_day == date('d')) {
@@ -1611,13 +1614,13 @@ class Reports extends MX_Controller
             if ($created_month == $month && $created_year == $year) {
                 if (strtolower($row['order_type']) == 'title only') {
                     $mtdTotalOpen++;
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_open_cnt'] += 1;
                         if ($created_day == $today) {
                             $rep['today_purchase_open_cnt']++;
                             $todayTotalOpen++;
                         }
-                    } else if ($row['prod_type'] == 'Refinance') {
+                    } else if ($row['transaction_type'] == 'Refinance') {
                         $rep['mtd_refi_open_cnt'] += 1;
                         if ($created_day == $today) {
                             $rep['today_refi_open_cnt']++;
@@ -1639,7 +1642,7 @@ class Reports extends MX_Controller
                 if (strtolower($row['order_type']) == 'title only') {
                     $mtdTotalClose++;
                     $mtdTotalRev += $row['premium'];
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
                         $rep['mtd_purchase_close_cnt'] += 1;
                         if ($rev_day == $today) {
@@ -1648,7 +1651,7 @@ class Reports extends MX_Controller
                             $todayTotalClose++;
                             $todayTotalRev += $row['premium'];
                         }
-                    } else if ($row['prod_type'] == 'Refinance') {
+                    } else if ($row['transaction_type'] == 'Refinance') {
                         $rep['mtd_refi_rev'] += $row['premium'];
                         $rep['mtd_refi_close_cnt'] += 1;
                         if ($rev_day == $today) {
@@ -1676,10 +1679,10 @@ class Reports extends MX_Controller
             /** Prior month created order count */
             if ($created_month == $priorMonth && $created_year == $priorYear) {
                 if (strtolower($row['order_type']) == 'title only') {
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_open_cnt'] += 1;
                         $priorTotalOpen++;
-                    } else if ($row['prod_type'] == 'Refinance') {
+                    } else if ($row['transaction_type'] == 'Refinance') {
                         $rep['prior_refi_open_cnt'] += 1;
                         $priorTotalOpen++;
                     }
@@ -1694,10 +1697,10 @@ class Reports extends MX_Controller
                 if (strtolower($row['order_type']) == 'title only') {
                     $priorTotalClose++;
                     $priorTotalRev += $row['premium'];
-                    if ($row['prod_type'] == 'Purchase') {
+                    if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_close_cnt']++;
                         $rep['prior_purchase_rev'] += $row['premium'];
-                    } else if ($row['prod_type'] == 'Refinance') {
+                    } else if ($row['transaction_type'] == 'Refinance') {
                         $rep['prior_refi_close_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
