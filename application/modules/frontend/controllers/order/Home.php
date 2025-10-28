@@ -1208,11 +1208,13 @@ class Home extends MX_Controller
                 $emailSentFlag     = strtolower($titlePointDetails[0]['email_sent_status']);
                 $this->apiLogs->syncLogs(0, 'email-check-order', 'email-check-order', $orderNumber, ['$titlePointShutOff' => $titlePointShutOff, '$emailSentFlag' => $emailSentFlag, '$taxDocStatus' => $taxDocStatus, 'tax_data_status' => $taxDataStatus, '$lvDocStatus' => $lvDocStatus, 'lp_file_number' => $orderDetails['lp_file_number']], [], 0, 0);
 
-                if ((! isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) &&
-                    $emailSentFlag != 1 &&
-                    ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
-                        ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) || $titlePointShutOff == 1)
-                ) {
+                // if ((! isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) &&
+                //     $emailSentFlag != 1 &&
+                //     ((($lvDocStatus == 'success' || $lvDocStatus == 'failed' || $lvDocStatus == 'exception') &&
+                //         ($taxDocStatus == 'success' || $taxDocStatus == 'failed' || $taxDocStatus == 'exception')) || $titlePointShutOff == 1)
+                // )
+                if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1 && $titlePointShutOff == 1)
+                {
                     // $to = 'hitesh.p@crestinfosystems.com';
                     // $cc = ['piyush.j@crestinfosystems.net'];
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
