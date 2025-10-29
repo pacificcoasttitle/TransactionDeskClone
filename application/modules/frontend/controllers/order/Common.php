@@ -212,9 +212,11 @@ class Common extends MX_Controller
         $fileName = $getPrelimDocument['document_name'];
         // $filePath = env('AWS_PATH') .  'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
         $filePath = env('AWS_PATH') .  'documents/' . $fileName;
+        $summaryExist = 0;
         if (isset($prelim_details['chatgpt_json']) && !empty($prelim_details['chatgpt_json']) && ($prelim_details['is_tessa'] == 1) && isset($data['choices'])) {
         // if (isset($data) && !empty($data)) {
         // if (false) {
+            $summaryExist = 1;
             $parcelID = isset($data['ParcelID']) && !empty($data['ParcelID']) ? $data['ParcelID'] : '';
             $vesting = isset($data['Vesting']) && !empty($data['Vesting']) ? $data['Vesting'] : '';
             $generated_date = isset($data['CommitmentEffectiveDate']) && !empty($data['CommitmentEffectiveDate']) ? date('Y-m-d H:i:s', strtotime($data['CommitmentEffectiveDate'])) : '';
@@ -319,7 +321,7 @@ class Common extends MX_Controller
         $configData                  = $this->order->getConfigData();
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
-        if ($prelimSummaryEmailFlag == 1) {
+        if ($prelimSummaryEmailFlag == 1 && $summaryExist == 0) {
             // $emailData['html'] = $this->parsedown->text($markdown);
             $emailData['html'] = $tessaSummaryHtml;
             $emailData['file_number'] = $fileNumber;
