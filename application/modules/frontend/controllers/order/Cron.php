@@ -7044,6 +7044,12 @@ class Cron extends MX_Controller
 
         $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
 
+        $query = $this->db->select('id, order_type')
+            ->from('pct_softpro_order_type')
+            ->get();
+
+        $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
+
         $queryParams = http_build_query($req);
         // print_r($queryParams);die;
         // $queryParams = "DateFrom=$startDate&DateTo=$endDate";
@@ -7164,6 +7170,9 @@ class Cron extends MX_Controller
                             'title_officer'        => $titleOfficerId,
                             'status'               => 1,
                         ];
+                        if (!empty($orderType) && !empty($orderTypeList[$orderType])) {
+                            $transactionData['order_type'] = $orderTypeList[$orderType];
+                        }
                         
                         $propertyId    = $this->home_model->insert($propertyData, 'property_details');
                         $transactionId = $this->home_model->insert($transactionData, 'transaction_details');
@@ -7224,6 +7233,9 @@ class Cron extends MX_Controller
                             $updateDate = ['sales_amount' => $salesPrice];
                             if (!empty($salesRepId)) {
                                 $updateDate['sales_representative'] = $salesRepId;
+                            }
+                            if (!empty($orderType) && !empty($orderTypeList[$orderType])) {
+                                $updateDate['order_type'] = $orderTypeList[$orderType];
                             }
                             $updatedOrderCount++;
                             $this->home_model->update($updateDate, ['id' => $result['transaction_id']], 'transaction_details');
