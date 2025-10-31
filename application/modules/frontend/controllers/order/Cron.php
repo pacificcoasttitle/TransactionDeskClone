@@ -5895,7 +5895,7 @@ class Cron extends MX_Controller
                         $update_data[$key]['status']         = 1;
                         // $update_data[$key]['user_type'] = 'open_contact';
                     } else {
-                        $insert_data[$key]['lookup_code']    = $row['LookupCode'];
+                        $insert_data[$key]['lookup_code']    = trim($row['LookupCode']);
                         $insert_data[$key]['flookup_code']   = $row['Filter: LookupCode'];
                         $insert_data[$key]['courtesy_title'] = $row['CourtesyTitle'] ?? '';
                         $insert_data[$key]['first_name']     = $row['FirstName'] ?? '';
