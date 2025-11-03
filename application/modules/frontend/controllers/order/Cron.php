@@ -8908,4 +8908,115 @@ class Cron extends MX_Controller
         print_r($added_by);die;
     }
 
+    public function updateOrderTypeForImportedOrder() {
+        $query = $this->db->select('id, product_type')
+            ->from('pct_softpro_product_type')
+            ->get();
+
+        $productTypeList = array_column($query->result_array(), 'id', 'product_type');
+
+        $query = $this->db->select('id, full_name')
+            ->from('pct_softpro_lookup_table')
+            ->where('is_sales_rep', 1) 
+            ->get();
+
+        $salesRepList = array_column($query->result_array(), 'id', 'full_name');
+
+        $query = $this->db->select('id, officer_name')
+            ->from('pct_softpro_lookup_table')
+            ->where('is_title_officer', 1) 
+            ->get();
+
+        $titleOfficerList = array_column($query->result_array(), 'id', 'officer_name');
+
+        $query = $this->db->select('id, order_type')
+            ->from('pct_softpro_order_type')
+            ->get();
+
+        $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
+
+        $this->db->select('order_details.id, file_number, t.title_officer, transaction_id, escrow_officer_id');
+        $this->db->from('order_details');
+        $this->db->join('transaction_details as t', 'order_details.transaction_id = t.id', 'left');
+        $this->db->where('is_softpro_order', 1);
+        $this->db->where('t.order_type is null');
+        $this->db->order_by('order_details.id', 'DESC');
+        $this->db->limit(50);
+        $orderList = $this->db->get()->result_array();
+        // echo "<pre>";
+        // print_r($orderList);die;
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $count=0;
+        foreach ($orderList as $key => $list) {
+            $req['DateFrom'] = '';
+            $req['DateTo'] = '';
+            $req['OrderNumber'] = "";
+            if (!empty($list['file_number'])) {
+                $orderNumber = $list['file_number'];
+                $req['OrderNumber'] = $orderNumber;
+            }
+
+            $queryParams = http_build_query($req);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_softpro_orders'] . '?' . $queryParams;
+            $reqData     = json_encode($req);
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order_type', $url, $reqData, [], 0, 0);
+            $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order_type', $url, $reqData, json_encode($response), 0, $logid);
+
+            $sheetData = [];
+            $importedOrderCount = 0;
+            $updatedOrderCount = 0;
+            $closedFileNumbers = [];
+            if ($response['status'] == 'success' && !empty($response['data'])) {
+                
+                $orderList = $response['data'];
+                foreach ($orderList as $key => $list) {
+                    $file_number = $list['OrderNumber'] ?? null;
+                    $orderType = $list['OrderType'] ?? null;
+                    $transactionType = $list['TransactionType'] ?? null;
+                    $marketingRep = $list['MarketingRep'] ?? null;
+                    
+                    if (!empty($file_number)) {
+                        $condition = [
+                            'where' => [
+                                'file_number' => $file_number,
+                            ],
+                        ];
+                        $order = $this->order->get_order($condition);
+                        
+                        $salesRepId = (!empty($marketingRep)) ? $salesRepList[$marketingRep] : null;
+                        $condition = [
+                            'file_number' => $file_number
+                        ];
+
+                        $orderId = $this->home_model->update($orderData, $condition, 'order_details');
+                        $result = $this->db->select('transaction_id')->from('order_details')->where($condition)->get()->row_array();
+                        if (isset($result['transaction_id'])) {
+                            if (!empty($salesRepId)) {
+                                $updateDate['sales_representative'] = $salesRepId;
+                            }
+                            if (!empty($orderType) && !empty($orderTypeList[$orderType])) {
+                                $updateDate['order_type'] = $orderTypeList[$orderType];
+                            }
+                            $this->home_model->update($updateDate, ['id' => $result['transaction_id']], 'transaction_details');
+                            $count++;
+                        }
+                        
+                    }
+                } // end foreach
+            }
+            
+            /** Cron log start */
+            $res = $count .' Order updated successfully';
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_softpro_orders'] . '?' . $queryParams;
+            $this->order->syncLogs('softpro', 'get_softpro_orders', $url, $reqData, $res, 0, 0);
+            /** Cron log end */
+        }
+        $res = json_encode(['updated' => $count]);
+        print_r($res);die;
+    
+    }
 }
