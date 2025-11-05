@@ -6133,7 +6133,7 @@ class Order
         // $subject = 'Thank You!';
         // $to = $data['escrow_officer_email'];
         $to = array($data['email_address']);
-        $cc = array('piyush.j@crestinfosystems.com');
+        // $cc = array('piyush.j@crestinfosystems.com');
         // print_r($message);die;
 
         $from_name = 'Pacific Coast Title Company';
