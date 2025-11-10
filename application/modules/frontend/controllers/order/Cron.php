@@ -8704,7 +8704,7 @@ class Cron extends MX_Controller
             
     
             // $to = array('piyush.j@crestinfosystems.com');
-            $cc = array('piyush.j@crestinfosystems.com', ' rudy@pct.com');
+            $cc = array(' rudy@pct.com');
     
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');

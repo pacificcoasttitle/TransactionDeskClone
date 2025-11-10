@@ -1543,7 +1543,7 @@ class Reports extends MX_Controller
                 $branchName = 'Orange';
             } elseif (strpos($row['file_number'], 'ONT') !== false) {
                 $branchName = 'Inland Empire';
-            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+            } elseif (strpos($row['file_number'], 'TSG') !== false || $row['transaction_type'] == 'Other') {
                 $branchName = 'TSG';
             } elseif (strpos($row['file_number'], 'PRV') !== false) {
                 $branchName = 'Porterville';
@@ -1612,8 +1612,8 @@ class Reports extends MX_Controller
 
             /** current month and today's open order count calculation */
             if ($created_month == $month && $created_year == $year) {
+                $mtdTotalOpen++;
                 if (strtolower($row['order_type']) == 'title only') {
-                    $mtdTotalOpen++;
                     if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_open_cnt'] += 1;
                         if ($created_day == $today) {
@@ -1621,6 +1621,7 @@ class Reports extends MX_Controller
                             $todayTotalOpen++;
                         }
                     } else if ($row['transaction_type'] == 'Refinance') {
+                        // $mtdTotalOpen++;
                         $rep['mtd_refi_open_cnt'] += 1;
                         if ($created_day == $today) {
                             $rep['today_refi_open_cnt']++;
@@ -1628,7 +1629,7 @@ class Reports extends MX_Controller
                         }
                     }
                 } else if (strtolower($row['order_type']) == 'title & escrow') {
-                    $mtdTotalOpen++;
+                    // $mtdTotalOpen++;
                     $rep['mtd_escrow_open_cnt']++;
                     if ($created_day == $today) {
                         $rep['today_escrow_open_cnt']++;
@@ -1639,9 +1640,9 @@ class Reports extends MX_Controller
 
             /** current month and today's closed order count and revenue calculation */
             if ($rev_month == $month && $rev_year == $year) {
+                $mtdTotalRev += $row['premium'];
+                $mtdTotalClose++;
                 if (strtolower($row['order_type']) == 'title only') {
-                    $mtdTotalClose++;
-                    $mtdTotalRev += $row['premium'];
                     if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
                         $rep['mtd_purchase_close_cnt'] += 1;
@@ -1652,6 +1653,7 @@ class Reports extends MX_Controller
                             $todayTotalRev += $row['premium'];
                         }
                     } else if ($row['transaction_type'] == 'Refinance') {
+                        // $mtdTotalClose++;
                         $rep['mtd_refi_rev'] += $row['premium'];
                         $rep['mtd_refi_close_cnt'] += 1;
                         if ($rev_day == $today) {
@@ -1662,8 +1664,8 @@ class Reports extends MX_Controller
                         }
                     }
                 } else if (strtolower($row['order_type']) == 'title & escrow') {
-                    $mtdTotalClose++;
-                    $mtdTotalRev += $row['premium'];
+                    // $mtdTotalClose++;
+                    // $mtdTotalRev += $row['premium'];
                     $rep['mtd_escrow_rev'] += $row['premium'];
                     $rep['mtd_escrow_close_cnt'] += 1;
                     if ($rev_day == $today) {
@@ -1694,19 +1696,20 @@ class Reports extends MX_Controller
 
             /** Prior month closed order count and revenue calculation */
             if ($rev_month == $priorMonth && $rev_year == $priorYear) {
+                $priorTotalRev += $row['premium'];
+                $priorTotalClose++;
                 if (strtolower($row['order_type']) == 'title only') {
-                    $priorTotalClose++;
-                    $priorTotalRev += $row['premium'];
                     if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_close_cnt']++;
                         $rep['prior_purchase_rev'] += $row['premium'];
                     } else if ($row['transaction_type'] == 'Refinance') {
+                        // $priorTotalClose++;
                         $rep['prior_refi_close_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
                 } else if (strtolower($row['order_type']) == 'title & escrow') {
-                    $priorTotalClose++;
-                    $priorTotalRev += $row['premium'];
+                    // $priorTotalClose++;
+                    // $priorTotalRev += $row['premium'];
                     $rep['prior_escrow_close_cnt']++;
                     $rep['prior_escrow_rev'] += $row['premium'];
                 }
