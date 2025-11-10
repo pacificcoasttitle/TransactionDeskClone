@@ -1560,6 +1560,20 @@ class Order
         return $result;
     }
 
+    public function get_order_likewise($file_number)
+    {
+        $this->CI->db->select('id, customer_id,file_number,status,transaction_id,prod_type,is_softpro_order,is_imported,softpro_status,resware_closed_status_date,created_by,created_at,updated_at,order_completed_date,sent_to_accounting_date,loan_amount,sales_amount,is_seller_packet_mail_sent,is_buyer_packet_mail_sent,lender_policy_sent,owner_policy_sent,supplement_statement_sent,recording_confirmation_sent');
+        $this->CI->db->from('order_details');
+        $this->CI->db->like('file_number', $file_number);
+        $this->CI->db->order_by('id', 'desc');
+        // $this->CI->db->limit(1);
+        $query = $this->CI->db->get();
+        $result = $query->row_array();
+        // $result = ($query->num_rows() > 0) ? $query->raw_array() : false;
+
+        return $result;
+    }
+
     public function get_borrower_info($orderId, $buyerFlag)
     {
         $this->CI->db->select('*')
