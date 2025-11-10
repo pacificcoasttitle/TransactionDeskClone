@@ -576,7 +576,8 @@ class Order extends MX_Controller
             $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
             // Form field validation rules
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
-            $billCodeFilter = ['TPC', 'TPW'];
+            // $salesBillCode = ['TPC', 'TPW'];
+            $billCodeFilter = ['TPC', 'TPW', 'ESC', 'TSGW', 'UPRE'];
             // Validate submitted form data
             if($this->form_validation->run($this) == true)
             {
@@ -621,7 +622,62 @@ class Order extends MX_Controller
                                 $columnNames = $data;
                             } else {
                                 $rowData = array();
-                                if (in_array($data[8], $billCodeFilter) && str_contains(strtolower($data[4]), 'ledger transfer')) {
+                                if (in_array($data[8], $billCodeFilter)) {
+                                    $amt = $data[42];
+                                    // If value is wrapped in parentheses, it's negative
+                                    // if ($data[2] == '20006649-GLT') {
+                                    //     print_r($data);
+                                    // } else {
+                                    //     continue;
+                                    // }
+                                    if (preg_match('/^\(.*\)$/', $amt)) {
+                                        $amt = str_replace(['(', ')'], '', $amt);
+                                        $amt = (float) str_replace(['$', ','], '', $amt);
+                                        $amt = round($amt, 2);
+                                        $amount = $amt * -1;
+                                        // echo 'amt ===' . $amt . ' ********** ' . $amount . "\n";
+                                    } else {
+                                        $amt = (float) str_replace(['$', ','], '', $amt);
+                                        $amount = round($amt, 2);
+                                        // echo 'amt ===' . $amt . ' ********** ' . $amount . "\n";
+                                        // $amount = (float)$amt;
+                                    }
+                                    // $premium = 0;
+                                    // if (in_array($data[8], $salesBillCode) && str_contains(strtolower($data[4]), 'ledger transfer')) {
+                                    //     if ($data[8] == 'TPC') {
+                                    //         $premium = ($amount/0.88);
+                                    //         // $updateData[$data[2]]['premium'] += ($amount/0.88);
+                                    //     } else if ($data[8] == 'TPW') {
+                                    //         $premium = ($amount/0.9);
+                                    //         // $updateData[$data[2]]['premium'] += ($amount/0.9);
+                                    //     }
+                                    // }
+                                    
+                                    if (array_key_exists($data[2], $updateData)) { 
+                                        $updateData[$data[2]]['premium'] += $amount;
+                                        // $updateData[$data[2]]['amount'] += $amount;
+                                    } else {
+                                        $updateData[$data[2]] = [
+                                            'order_number' => $data[2],
+                                            'transaction_date' => $data[3],
+                                            'bill_code' => $data[8],
+                                            'transaction_type' => trim($data[15]),
+                                            'sales_rep' => $data[26],
+                                            'full_address' => $data[29],
+                                            'address' => $data[30],
+                                            'city' => $data[34],
+                                            'state' => $data[33],
+                                            'zip' => $data[32],
+                                            'country' => $data[35],
+                                            'premium' => $amount,
+                                            // 'amount' => $amount,
+                                            'order_type' => trim($data[48]),
+                                            'escrow_closed_date' => $data[17],
+                                            'profile' => $data[1],
+                                        ];
+                                    }
+                                }
+                                /*if (in_array($data[8], $billCodeFilter) && str_contains(strtolower($data[4]), 'ledger transfer')) {
                                     $amount = (float) str_replace(['$', ','], '', $data[42]);
                                     $amount = round($amount, 2);
                                     if (array_key_exists($data[2], $updateData)) { 
@@ -649,17 +705,16 @@ class Order extends MX_Controller
                                             'zip' => $data[32],
                                             'country' => $data[35],
                                             'premium' => $amt,
+                                            'amount' => $amount,
                                             'order_type' => trim($data[48]),
                                             'escrow_closed_date' => $data[17],
                                             'profile' => $data[1],
                                         ];
 
                                     }
-                                }
+                                }*/
                             }
                         }
-
-                        // echo "<pre>";
                         // print_r($updateData);die;
                         if (!empty($updateData)) {
                             $closedOrderFileNumbers = [];

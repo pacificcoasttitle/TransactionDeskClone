@@ -130,7 +130,8 @@ defined('SOFTPRO_API_END') or define('SOFTPRO_API_END', [
     'get_bulk_prelim_report' => 'ordercreation/GetAttachedDocumentsFromOrders',
     'get_single_prelim_report' => 'ordercreation/GetAttachedDocumentsPrelim',
     'get_fees' => 'ordercreation/GetFees',
-    'get_prelim_summary' => 'ordercreation/GetPrelim'
+    'get_prelim_summary' => 'ordercreation/GetPrelim',
+    'power_bi_revenue' => 'powerbi/createExcel'
 ]);
 
 defined('SOFTPRO_TASK_ID') or define('SOFTPRO_TASK_ID', [
