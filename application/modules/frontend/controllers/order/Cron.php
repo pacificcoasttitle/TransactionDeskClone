@@ -7022,21 +7022,20 @@ class Cron extends MX_Controller
             $req['DateFrom'] = $startDate;
             $req['DateTo'] = $endDate;
         }
-        
         // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
         $query = $this->db->select('id, product_type')
-                      ->from('pct_softpro_product_type')
-                      ->get();
-
+                    ->from('pct_softpro_product_type')
+                    ->get();
+                      
         $productTypeList = array_column($query->result_array(), 'id', 'product_type');
 
         $query = $this->db->select('id, full_name')
-                      ->from('pct_softpro_lookup_table')
-                      ->where('is_sales_rep', 1) 
-                      ->get();
+                    ->from('pct_softpro_lookup_table')
+                    ->where('is_sales_rep', 1) 
+                    ->get();
 
         $salesRepList = array_column($query->result_array(), 'id', 'full_name');
-
+        
         $query = $this->db->select('id, officer_name')
                       ->from('pct_softpro_lookup_table')
                       ->where('is_title_officer', 1) 
@@ -7071,7 +7070,7 @@ class Cron extends MX_Controller
             foreach ($orderList as $key => $list) {
                 $completed_date = null;
                 $closed_date = null;
-                $file_number = $list['OrderNumber'] ?? null;
+                $order_number = $list['OrderNumber'] ?? null;
                 $orderStatus = $list['OrderStatus'] ?? null;
                 $orderStatus = strtolower($orderStatus);
                 $marketingSource = $list['MarketingSource'] ?? null;
@@ -7099,16 +7098,21 @@ class Cron extends MX_Controller
                     $myDateTime = DateTime::createFromFormat('n/j/Y g:i:s A', trim($closedDate));
                     $closed_date = $myDateTime->format('Y-m-d H:i:s');
                 }
-
-                if (!empty($file_number)) {
-                    $condition = [
-                        'where' => [
-                            'file_number' => $file_number,
-                        ],
-                    ];
-                    $order = $this->order->get_order($condition);
-                    // echo 'order ==';
-                    // print_r($order);
+                // $order_number = '20010018OCT';
+                preg_match('/^\d+/', $order_number, $matches);
+                if (!empty($matches[0])) {
+                    $number = $matches[0];  // Output: 20010018
+                } else {
+                    continue;
+                }
+                if (!empty($order_number)) {
+                    // $condition = [
+                    //     'where' => [
+                    //         'file_number' => $file_number,
+                    //     ],
+                    // ];
+                    $order = $this->order->get_order_likewise($number);
+                    
                     $salesRepId = (!empty($marketingRep)) ? $salesRepList[$marketingRep] : null;
                     if (empty($order)) {
                         $customerId   = 0;
@@ -7206,9 +7210,11 @@ class Cron extends MX_Controller
                         $orderId = $this->home_model->insert($orderData, 'order_details');
                         
                     } else {
+                        $file_number = $order['order_number'];
                         // $orderStatus = strtolower($orderStatus);
                         $orderData = [
                             'softpro_status' => $orderStatus,
+                            'file_number'   => $file_number,
                         ];
                         if ($orderStatus == 'completed') {
                             $orderData['order_completed_date'] = $completed_date;
@@ -7221,7 +7227,7 @@ class Cron extends MX_Controller
                         }
                         
                         $condition = [
-                            'file_number' => $file_number
+                            'id' => $order['id']
                         ];
 
                         $orderId = $this->home_model->update($orderData, $condition, 'order_details');
@@ -8800,6 +8806,156 @@ class Cron extends MX_Controller
             $this->db->update('pct_email_queue');
         }
     }
+
+    public function importRevenueData()
+    {
+        ini_set('max_execution_time', 0); 
+        ini_set('memory_limit','2048M');
+        $this->load->library('order/softPro');
+        $this->load->model('order/apiLogs');
+        $data = array();
+        $data['title'] = 'PCT Order: Import Revenue Data From PowerBI';
+        
+        $query = $this->db->select('id, product_type')
+            ->from('pct_softpro_product_type')
+            ->get();
+
+        $productTypeList = array_column($query->result_array(), 'id', 'product_type');
+
+        $query = $this->db->select('id, order_type')
+            ->from('pct_softpro_order_type')
+            ->get();
+
+        $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
+
+        // $startDate = new DateTime('2025-10-31');
+        // $endDate   = new DateTime('2025-10-31');
+
+        // for ($date = $startDate; $date <= $endDate; $date->modify('+1 day')) {
+        //     // echo $date->format('Y-m-d') . "\n";
+        //     $req['userPostedDate'] = $date->format('Y-m-d');
+        
+        // die;
+        
+        // foreach ($dateIntervalQueryParams as $key => $range) {
+            // $startDate = date('2025-10-31');
+            $startDate = date('Y-m-d');
+            $req['userPostedDate'] = $startDate;
+
+            $queryParams = http_build_query($req);
+            $apiEndPoints = SOFTPRO_API_END;
+            $url          = getenv("SOFT_PRO_API") . $apiEndPoints['power_bi_revenue'] . '?' . $queryParams;
+            $reqData     = json_encode($req);
+            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'power_bi_revenue', $url, $reqData, [], 0, 0);
+            $response    = $this->softpro->make_request('GET', 'power_bi_revenue', $reqData, $queryParams);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'power_bi_revenue', $url, $reqData, json_encode($response), 0, $logid);
+            // echo "<pre>";
+            // print_r($response);die;
+            $updateData = [];
+            $billCodeFilter = ['TPC', 'TPW', 'ESC', 'TSGW', 'UPRE'];
+            if ($response['status'] == 'success' && !empty($response['data'])) {
+                
+                $orderList = $response['data'];
+                foreach ($orderList as $key => $list) {
+                    // print_r($list);die;
+                    $rowData = array();
+                    $billCode = $list['[BillCode]'];
+                    if (in_array($billCode, $billCodeFilter)) {
+                        $amount = $list['[SumAmount]'];
+                        // $amount = (float) str_replace(['$', ','], '', $data[42]);
+                        // $amount = round($amt, 2);
+                        $orderNumber = trim($list['[Number]']);
+                        
+                        $transactionDate = $list['[TransactionDate]'];
+                        $transactionType = trim($list['[TransType]']);
+                        $salesRep = $list['[SalesRep]'];
+                        $fullAddress = $list['[FullAddress]'];
+                        $address = $list['[Address1]'];
+                        $city = $list['[City]'];
+                        $state = $list['[PropState]'];
+                        $zip = $list['[Zip]'];
+                        $country = $list['[County]'];
+                        $orderType = trim($list['[OrderType]']);
+                        $escrowClosedDate = $list['[EscrowClosedDate]'];
+                        if (array_key_exists($orderNumber, $updateData)) { 
+                            $updateData[$orderNumber]['premium'] += $amount;
+                        } else {
+                            $updateData[$orderNumber] = [
+                                'order_number' => $orderNumber,
+                                'transaction_date' => $transactionDate,
+                                'bill_code' => $billCode,
+                                'transaction_type' => $transactionType,
+                                'sales_rep' => $salesRep,
+                                'full_address' => $fullAddress,
+                                'address' => $address,
+                                'city' => $city,
+                                'state' => $state,
+                                'zip' => $zip,
+                                'country' => $country,
+                                'premium' => round($amount, 2),
+                                'order_type' => $orderType
+                            ];
+                        }
+                    }
+                    
+                }
+                // echo "<pre>";
+                // print_r($updateData);die;
+                if (!empty($updateData)) {
+                    foreach ($updateData as $key => $value) {
+                        $orderDetails = $this->db->select('id, property_id, transaction_id, premium, escrow_officer_id, softpro_status, file_number, is_softpro_order')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
+                        $prevPremium = $orderDetails['premium'] ?? 0;
+                        if (!empty($orderDetails)) {
+                            $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
+
+                            $updateOrderDetails = [
+                                'premium' => $value['premium'],
+                                'bill_code' => $value['bill_code'],
+                                'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
+                                'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
+                                'updated_at' => date("Y-m-d H:i:s")
+                            ];
+                            if (!empty($value['transaction_type'])) {
+                                $updateOrderDetails['prod_type'] = $value['transaction_type'];
+                            }
+                            $this->db->update('order_details', $updateOrderDetails, ['file_number' => $value['order_number']]);
+                            $activity = 'Revenue data update for order :' . $value['order_number'] . ' and premium amount :' . $value['premium'] . ' Sales reps: ' . $value['sales_rep'] . ' Transaction Date: ' . $value['transaction_date'] . ' Bill Code: ' . $value['bill_code'];
+                            $this->order->logAdminActivity($activity);
+                            $updateCount++;
+                            
+                            $updateTransactionDetails = [];
+                            if (!empty($salesRepDetails)) {
+                                $updateTransactionDetails['sales_representative'] = $salesRepDetails['id'];
+                            }
+                            if (!empty($value['order_type']) && !empty($orderTypeList[$value['order_type']])) {
+                                $updateTransactionDetails['order_type'] = $orderTypeList[$value['order_type']];
+                            }
+                            if (!empty($value['transaction_type'])) {
+                                $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
+                            }
+                            if (!empty($updateTransactionDetails)) {
+                                $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
+                            }
+                        }
+                    }
+                }
+
+                
+                $this->session->set_flashdata('revenue_success', 'Data updated for total ' . $updateCount . ' Orders');
+            }
+        // }
+        unset($updateTransactionDetails);
+        unset($updateCount);
+        unset($updateData);
+        unset($salesRepDetails);
+        unset($updateOrderDetails);
+        unset($orderList);
+        unset($response);
+        unset($orderTypeList);
+        unset($productTypeList);
+        unset($query);
+    }
+
     public function updatePmaRepsId() {
 
         $this->db->select('p.id, sales_rep, c.id as c_id, l.id as look_id');
