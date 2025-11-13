@@ -6084,18 +6084,18 @@ class Order
         if ($emailType == 'recording_confirmation') {
             $subject = 'Recording Confirmation for File Number ' . $orderDetails['file_number'];
             if ($orderDetails['lender_notify_recording_confirm'] == 1 && !empty($orderDetails['lender_email'])) {
-                $to[] = [$orderDetails['lender_email']];
+                $to[] = $orderDetails['lender_email'];
             }
             if ($orderDetails['escrow_notify_recording_confirm'] == 1 && !empty($orderDetails['escrow_email'])) {
-                $to[] = [$orderDetails['escrow_email']];
+                $to[] = $orderDetails['escrow_email'];
             }
         } else if ($emailType == 'disburse_funds') {
             $subject = 'Disburse Funds for File Number ' . $orderDetails['file_number'];
             if ($orderDetails['lender_notify_disburse_funds'] == 1 && !empty($orderDetails['lender_email'])) {
-                $to[] = [$orderDetails['lender_email']];
+                $to[] = $orderDetails['lender_email'];
             }
             if ($orderDetails['escrow_notify_disburse_funds'] == 1 && !empty($orderDetails['escrow_email'])) {
-                $to[] = [$orderDetails['escrow_email']];
+                $to[] = $orderDetails['escrow_email'];
             }
         }
         
