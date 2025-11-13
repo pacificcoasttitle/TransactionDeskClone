@@ -7070,7 +7070,8 @@ class Cron extends MX_Controller
             foreach ($orderList as $key => $list) {
                 $completed_date = null;
                 $closed_date = null;
-                $order_number = $list['OrderNumber'] ?? null;
+                // $order_number = $list['OrderNumber'] ?? null;
+                $file_number  = $list['OrderNumber'] ?? null;
                 $orderStatus = $list['OrderStatus'] ?? null;
                 $orderStatus = strtolower($orderStatus);
                 $marketingSource = $list['MarketingSource'] ?? null;
@@ -7099,19 +7100,20 @@ class Cron extends MX_Controller
                     $closed_date = $myDateTime->format('Y-m-d H:i:s');
                 }
                 // $order_number = '20010018OCT';
-                preg_match('/^\d+/', $order_number, $matches);
-                if (!empty($matches[0])) {
-                    $number = $matches[0];  // Output: 20010018
-                } else {
-                    continue;
-                }
-                if (!empty($order_number)) {
-                    // $condition = [
-                    //     'where' => [
-                    //         'file_number' => $file_number,
-                    //     ],
-                    // ];
-                    $order = $this->order->get_order_likewise($number);
+                // preg_match('/^\d+/', $order_number, $matches);
+                // if (!empty($matches[0])) {
+                //     $number = $matches[0];  // Output: 20010018
+                // } else {
+                //     continue;
+                // }
+                if (!empty($file_number )) {
+                    $condition = [
+                        'where' => [
+                            'file_number' => $file_number,
+                        ],
+                    ];
+                    // $order = $this->order->get_order_likewise($number);
+                    $order = $this->order->get_order($condition);
                     
                     $salesRepId = (!empty($marketingRep)) ? $salesRepList[$marketingRep] : null;
                     if (empty($order)) {
@@ -7210,11 +7212,11 @@ class Cron extends MX_Controller
                         $orderId = $this->home_model->insert($orderData, 'order_details');
                         
                     } else {
-                        $file_number = $order['order_number'];
+                        // $file_number = $order['order_number'];
                         // $orderStatus = strtolower($orderStatus);
                         $orderData = [
                             'softpro_status' => $orderStatus,
-                            'file_number'   => $file_number,
+                            // 'file_number'   => $file_number,
                         ];
                         if ($orderStatus == 'completed') {
                             $orderData['order_completed_date'] = $completed_date;
@@ -7227,7 +7229,8 @@ class Cron extends MX_Controller
                         }
                         
                         $condition = [
-                            'id' => $order['id']
+                            // 'id' => $order['id']
+                            'file_number' => $file_number
                         ];
 
                         $orderId = $this->home_model->update($orderData, $condition, 'order_details');
