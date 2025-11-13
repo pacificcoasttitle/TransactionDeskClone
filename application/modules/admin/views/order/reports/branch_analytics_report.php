@@ -200,7 +200,7 @@
             <select id="monthSelect" class="form-control" onchange="changeMonth()" data-filter="branch_analytics">
                 <?php
                 $currentMonth = date("Y-m");
-                for ($i = 0; $i < 5; $i++) { 
+                for ($i = 0; $i < 12; $i++) { 
                     $date = strtotime("-$i month");
                     $value = date("Y-m", $date); // for option value (e.g., 2024-07)
                     $label = date("F Y", $date); // for display (e.g., July 2024)
