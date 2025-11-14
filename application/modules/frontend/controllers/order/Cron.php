@@ -7519,7 +7519,15 @@ class Cron extends MX_Controller
                         'prelim_summary_id' => $id,
                     );
                     $this->order->update($data, $condition);
-                } 
+                } else {
+                    $condition = array(
+                        'id' => $filesResult['id'],
+                    );
+                    $data = array(
+                        'prelim_summary_id' => $prelimSummaryDetails['id'],
+                    );
+                    $this->order->update($data, $condition);
+                }
                 // else {
                 //     $prelimData = array(
                 //         'is_doc_updated' => 1
