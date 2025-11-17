@@ -89,6 +89,7 @@ class Reports extends MX_Controller
                 $this->db->group_end();
             $this->db->group_end();
             $this->db->where('o.is_softpro_order', 1);
+            $this->db->where('o.file_number is not null');
             // $this->db->get();
             // echo $this->db->last_query();exit;
             return $this->db->get()->result_array();
@@ -1578,6 +1579,18 @@ class Reports extends MX_Controller
                     'today_refi_rev' => 0,
                     'mtd_refi_rev' => 0,
                     'prior_refi_rev' => 0,
+
+                    'today_tsg_open_cnt' => 0,
+                    'mtd_tsg_open_cnt' => 0,
+                    'prior_tsg_open_cnt' => 0,
+
+                    'today_tsg_close_cnt' => 0,
+                    'mtd_tsg_close_cnt' => 0,
+                    'prior_tsg_close_cnt' => 0,
+                    
+                    'today_tsg_rev' => 0,
+                    'mtd_tsg_rev' => 0,
+                    'prior_tsg_rev' => 0,
                     
                     'today_escrow_open_cnt' => 0,
                     'mtd_escrow_open_cnt' => 0,
@@ -1628,13 +1641,28 @@ class Reports extends MX_Controller
                             $todayTotalOpen++;
                         }
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     // $mtdTotalOpen++;
                     $rep['mtd_escrow_open_cnt']++;
                     if ($created_day == $today) {
                         $rep['today_escrow_open_cnt']++;
                         $todayTotalOpen++;
                     }
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    // if ($row['transaction_type'] == 'Purchase') {
+                        $rep['mtd_tsg_open_cnt'] += 1;
+                        if ($created_day == $today) {
+                            $rep['today_tsg_open_cnt']++;
+                            $todayTotalOpen++;
+                        }
+                    // } else if ($row['transaction_type'] == 'Refinance') {
+                    //     // $mtdTotalOpen++;
+                    //     $rep['mtd_refi_open_cnt'] += 1;
+                    //     if ($created_day == $today) {
+                    //         $rep['today_refi_open_cnt']++;
+                    //         $todayTotalOpen++;
+                    //     }
+                    // }
                 }
             }
 
@@ -1663,7 +1691,7 @@ class Reports extends MX_Controller
                             $todayTotalRev += $row['premium'];
                         }
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     // $mtdTotalClose++;
                     // $mtdTotalRev += $row['premium'];
                     $rep['mtd_escrow_rev'] += $row['premium'];
@@ -1674,23 +1702,52 @@ class Reports extends MX_Controller
                         $todayTotalClose++;
                         $todayTotalRev += $row['premium'];
                     }
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    // if ($row['transaction_type'] == 'Purchase') {
+                        $rep['mtd_tsg_rev'] += $row['premium'];
+                        $rep['mtd_tsg_close_cnt'] += 1;
+                        if ($rev_day == $today) {
+                            $rep['today_tsg_rev'] += $row['premium'];
+                            $rep['today_tsg_close_cnt'] += 1;
+                            $todayTotalClose++;
+                            $todayTotalRev += $row['premium'];
+                        }
+                    // } else if ($row['transaction_type'] == 'Refinance') {
+                    //     // $mtdTotalClose++;
+                    //     $rep['mtd_refi_rev'] += $row['premium'];
+                    //     $rep['mtd_refi_close_cnt'] += 1;
+                    //     if ($rev_day == $today) {
+                    //         $rep['today_refi_rev'] += $row['premium'];
+                    //         $rep['today_refi_close_cnt'] += 1;
+                    //         $todayTotalClose++;
+                    //         $todayTotalRev += $row['premium'];
+                    //     }
+                    // }
                 }
                 
             }
 
             /** Prior month created order count */
             if ($created_month == $priorMonth && $created_year == $priorYear) {
+                $priorTotalOpen++;
                 if (strtolower($row['order_type']) == 'title only') {
                     if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_open_cnt'] += 1;
-                        $priorTotalOpen++;
                     } else if ($row['transaction_type'] == 'Refinance') {
                         $rep['prior_refi_open_cnt'] += 1;
-                        $priorTotalOpen++;
+                        // $priorTotalOpen++;
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['prior_escrow_open_cnt']++;
-                    $priorTotalOpen++;
+                    // $priorTotalOpen++;
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    // if ($row['transaction_type'] == 'Purchase') {
+                        $rep['prior_tsg_open_cnt'] += 1;
+                        // $priorTotalOpen++;
+                    // } else if ($row['transaction_type'] == 'Refinance') {
+                    //     $rep['prior_refi_open_cnt'] += 1;
+                    //     $priorTotalOpen++;
+                    // }
                 }
             }
 
@@ -1707,11 +1764,20 @@ class Reports extends MX_Controller
                         $rep['prior_refi_close_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     // $priorTotalClose++;
                     // $priorTotalRev += $row['premium'];
                     $rep['prior_escrow_close_cnt']++;
                     $rep['prior_escrow_rev'] += $row['premium'];
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    // if ($row['transaction_type'] == 'Purchase') {
+                        $rep['prior_tsg_close_cnt']++;
+                        $rep['prior_tsg_rev'] += $row['premium'];
+                    // } else if ($row['transaction_type'] == 'Refinance') {
+                    //     // $priorTotalClose++;
+                    //     $rep['prior_refi_close_cnt']++;
+                    //     $rep['prior_refi_rev'] += $row['premium'];
+                    // }
                 }
             }
             

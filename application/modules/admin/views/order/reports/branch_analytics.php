@@ -86,6 +86,7 @@ foreach ($branchData as $branchName => $data) {
             </tr>
         </thead>
         <tbody>
+            <?php if ($branchName != 'TSG') {?>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
                 <td class="number"><?php echo $data['today_escrow_open_cnt']; ?></td>
@@ -118,6 +119,16 @@ foreach ($branchData as $branchName => $data) {
                 <td class="number"><?php echo ($daysPassed > 0) ? number_format(round((($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt'])/$daysPassed)*$totalDaysInMonth)) : number_format(round((($data['mtd_escrow_open_cnt'] + $data['mtd_purchase_open_cnt'] + $data['mtd_refi_open_cnt']) * $totalDaysInMonth))); ?></td>
                 <td class="number"><?php echo ($data['prior_escrow_open_cnt'] + $data['prior_purchase_open_cnt'] + $data['prior_refi_open_cnt']); ?></td>
             </tr>
+            <?php } else { ?>
+            <tr>
+                <td>📋 TSG Orders</td>
+                <td class="number"><?php echo $data['today_tsg_open_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_tsg_open_cnt']; ?></td>
+                <td class="number"><?php echo ($daysPassed > 0) ? number_format(round($data['mtd_tsg_open_cnt']/$daysPassed)) : number_format(round($data['mtd_tsg_open_cnt'])); ?></td>
+                <td class="number"><?php echo ($daysPassed > 0) ? number_format(round(($data['mtd_tsg_open_cnt']/$daysPassed)*$totalDaysInMonth)) : number_format(round(($data['mtd_tsg_open_cnt'] * $totalDaysInMonth))); ?></td>
+                <td class="number"><?php echo $data['prior_tsg_open_cnt']; ?></td>
+            </tr>
+            <?php }?>
         </tbody>
     </table>
     
@@ -134,6 +145,7 @@ foreach ($branchData as $branchName => $data) {
             </tr>
         </thead>
         <tbody >
+            <?php if ($branchName != 'TSG') {?>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
                 <td class="number"><?php echo $data['today_escrow_close_cnt']; ?></td>
@@ -166,6 +178,16 @@ foreach ($branchData as $branchName => $data) {
                 <td class="number"><?php echo ($daysPassed > 0) ? number_format(round((($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt'])/$daysPassed) * $totalDaysInMonth)) : number_format(round((($data['mtd_escrow_close_cnt'] + $data['mtd_purchase_close_cnt'] + $data['mtd_refi_close_cnt']) * $totalDaysInMonth))); ?></td>
                 <td class="number"><?php echo ($data['prior_escrow_close_cnt'] + $data['prior_purchase_close_cnt'] + $data['prior_refi_close_cnt']); ?></td>
             </tr>
+            <?php } else { ?>
+            <tr>
+                <td>📋 TSG - Orders</td>
+                <td class="number"><?php echo $data['today_tsg_close_cnt']; ?></td>
+                <td class="number"><?php echo $data['mtd_tsg_close_cnt']; ?></td>
+                <td class="number"><?php echo ($daysPassed > 0) ? number_format(round($data['mtd_tsg_close_cnt']/$daysPassed)) : number_format(round($data['mtd_tsg_close_cnt'])); ?></td>
+                <td class="number"><?php echo ($daysPassed > 0) ? number_format(round(($data['mtd_tsg_close_cnt']/$daysPassed)*$totalDaysInMonth)) : number_format(round(($data['mtd_tsg_close_cnt'] * $totalDaysInMonth))); ?></td>
+                <td class="number"><?php echo $data['prior_tsg_close_cnt']; ?></td>
+            </tr>
+            <?php }?>
         </tbody>
     </table>
     
@@ -182,6 +204,7 @@ foreach ($branchData as $branchName => $data) {
             </tr>
         </thead>
         <tbody>
+            <?php if ($branchName != 'TSG') {?>
             <tr class="service-escrow">
                 <td>📋 Escrow Orders</td>
                 <td class="number">$<?php echo number_format(round($data['today_escrow_rev'])); ?></td>
@@ -214,6 +237,16 @@ foreach ($branchData as $branchName => $data) {
                 <td class="number">$<?php echo ($daysPassed > 0) ? number_format(round((($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev'])/$daysPassed) * $totalDaysInMonth)) : number_format(round((($data['mtd_escrow_rev'] + $data['mtd_purchase_rev'] + $data['mtd_refi_rev']) * $totalDaysInMonth))); ?></td>
                 <td class="number">$<?php echo number_format(round(($data['prior_escrow_rev'] + $data['prior_purchase_rev'] + $data['prior_refi_rev']))); ?></td>
             </tr>
+            <?php } else { ?>
+            <tr class="service-escrow">
+                <td>📋 TSG Orders</td>
+                <td class="number">$<?php echo number_format(round($data['today_tsg_rev'])); ?></td>
+                <td class="number">$<?php echo number_format(round($data['mtd_tsg_rev'])); ?></td>
+                <td class="number">$<?php echo ($daysPassed > 0) ? number_format(round($data['mtd_tsg_rev']/$daysPassed)) : number_format(round($data['mtd_tsg_rev'])); ?></td>
+                <td class="number">$<?php echo ($daysPassed > 0) ? number_format(round(($data['mtd_tsg_rev']/$daysPassed)*$totalDaysInMonth)) : number_format(round(($data['mtd_tsg_rev'] * $totalDaysInMonth))); ?></td>
+                <td class="number">$<?php echo number_format(round($data['prior_tsg_rev'])); ?></td>
+            </tr>
+            <?php }?>
         </tbody>
     </table>
 </div>
