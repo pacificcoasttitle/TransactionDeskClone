@@ -751,14 +751,9 @@ class Reports extends MX_Controller
                 $rep['created_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? $salesClosingFigure[$key]['created'] : 0;
                 $rep['closed_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['closed'] > 0 ? $salesClosingFigure[$key]['closed'] : 0;
                 
-                // echo "<pre>";
-                // print_r($rep);die;
-                if ($rep['today_purchase_cnt'] == 0 && $rep['today_refi_cnt'] == 0 && $rep['today_escrow_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['prior_purchase_cnt'] == 0 && $rep['mtd_purchase_cnt'] == 0 && $rep['mtd_refi_rev'] == 0 && $rep['mtd_escrow_rev'] == 0 && $rep['prior_refi_cnt'] == 0) {
+                if ($rep['today_escrow_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['mtd_escrow_rev'] == 0 ) {
                     unset($branchData['sales_reps'][$key]);
                 }
-                // $rep['closing_ratio'] = $rep['created_4m'] > 0
-                // ? round(($rep['closed_4m'] / $rep['created_4m']) * 100, 1)
-                // : 0;
             }
             if (isset($branchData['sales_reps'])) {
                 ksort($branchData['sales_reps']);  // Sort by key (sales_rep name)
@@ -808,15 +803,6 @@ class Reports extends MX_Controller
             $filterType = $this->input->post('report_type');
             $yearMonth = $this->input->post('month_year');
             list($year, $month) = explode('-', $yearMonth);
-            // $selectedDate = strtotime($yearMonth . "-01");
-            // $startMonth = date('Y-m-01 00:00:00', strtotime('-3 months', $selectedDate));
-            // $endDate = date('Y-m-t 23:59:59', $selectedDate);
-            // $closedStartMonth = date('Y-m-01 00:00:00', strtotime('-1 months', $selectedDate));
-            // $today = 0;
-            // $monthName = date("F", strtotime($endDate));
-            
-            // $priorMonth = date('m', strtotime('-1 months', $selectedDate));
-            // $priorYear  = date('Y', strtotime('-1 months', $selectedDate));
 
             if ($month != date('m') || $year != date('Y')) {
                 // echo "hello";die;
@@ -879,20 +865,12 @@ class Reports extends MX_Controller
             $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
         }
         
-        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
-        // die;
         $data = [];
         
         $records = $this->get_all_sp_order_data($startMonth, $endDate, $closedStartMonth);
-        // echo "<pre>";
-        // print_r($records);
-        // die;
-
+        
         $branches = [];
         foreach ($records as $row) {
-            // if (empty($profile)) {
-            //     continue;
-            // }
             $repId = $row['sales_representative'];
             $repName = $row['sales_rep'];
             if (empty($repName)) {
@@ -928,63 +906,20 @@ class Reports extends MX_Controller
             
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
-                // if (strtolower($row['order_type']) == 'title only') {
-                    // if ($row['transaction_type'] == 'Purchase') {
-                        $rep['total_rev'] += $row['premium'];
-                        // $rep['mtd_purchase_cnt'] += 1;
-                        // if ($rev_day == $today) {
-                        //     $rep['today_purchase_rev'] += $row['premium'];
-                        //     $rep['today_purchase_cnt'] += 1;
-                        // }
-                    // } elseif ($row['transaction_type'] == 'Refinance') {
-                    //     $rep['mtd_refi_rev'] += $row['premium'];
-                    //     $rep['mtd_refi_cnt'] += 1;
-                        
-                    //     if ($rev_day == $today) {
-                    //         $rep['today_refi_rev'] += $row['premium'];
-                    //         $rep['today_refi_cnt'] += 1;
-                    //     }
-                    // }
-                // } else if (strtolower($row['order_type']) == 'title & escrow') {
-                //     $rep['mtd_escrow_rev'] += $row['premium'];
-                //     $rep['mtd_escrow_cnt'] += 1;
-                //     if ($rev_day == $today) {
-                //         $rep['today_escrow_rev'] += $row['premium'];
-                //         $rep['today_escrow_cnt']++;
-                //     }
-                // }
+                $rep['total_rev'] += $row['premium'];
             }
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $priorMonth && $rev_year == $priorYear) {
-                // if (strtolower($row['order_type']) == 'title only') {
-                    // if ($row['transaction_type'] == 'Purchase') {
-                        // $rep['prior_purchase_cnt']++;
-                        $rep['prior_rev'] += $row['premium'];
-                    // } elseif ($row['transaction_type'] == 'Refinance') {
-                    //     $rep['prior_refi_cnt']++;
-                    //     $rep['prior_refi_rev'] += $row['premium'];
-                    // }
-
-                // } else if (strtolower($row['order_type']) == 'title & escrow') {
-                //     $rep['prior_escrow_cnt']++;
-                //     $rep['prior_escrow_rev'] += $row['premium'];
-                // }
+                $rep['prior_rev'] += $row['premium'];
             }
 
             $rep['total_orders']++;
-            /*if ($row['softpro_status'] == 'closed') {
-                $rep['closed_orders']++;
-            }*/
         }
-        // echo "<pre>";
-        // print_r($branches);die;
-        // die;
+        
         $salesUsers = $this->order->get_sales_users();
         $salesClosingFigure = [];
         if (!empty($salesUsers)) {
             foreach ($salesUsers as $row) {
-                // print_r($startMonth);
-                // print_r($endDate);die;
                 $salesId = $row['id'];
                 $salesRepName = $row['full_name'];
                 $createdCount = array_filter($records, function ($record) use ($startMonth, $endDate, $salesId) {
@@ -1003,25 +938,19 @@ class Reports extends MX_Controller
                 ];
             }
         }
-
-        // echo "<pre>";
-        // print_r($salesClosingFigure);die;
         
         // Finalize closing %
         foreach ($branches as $key => &$rep) {
-                $rep['closing_ratio'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? round(($salesClosingFigure[$key]['closed'] / $salesClosingFigure[$key]['created']) * 100, 1) : 0;
-                $rep['created_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? $salesClosingFigure[$key]['created'] : 0;
-                $rep['closed_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['closed'] > 0 ? $salesClosingFigure[$key]['closed'] : 0;
-                $rep['projected_rev'] = $workedDays > 0 ? (($rep['total_rev'] / $workedDays) * ($workedDays + $workingDaysRemaining)) : $rep['total_rev'];
-                // echo "<pre>";
-                // print_r($rep);die;
-                
-            }
-            if (isset($branches)) {
-                ksort($branches);  // Sort by key (sales_rep name)
-            }
-            // echo "<pre>";
-            // print_r($branches);die;
+            $rep['closing_ratio'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? round(($salesClosingFigure[$key]['closed'] / $salesClosingFigure[$key]['created']) * 100, 1) : 0;
+            $rep['created_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['created'] > 0 ? $salesClosingFigure[$key]['created'] : 0;
+            $rep['closed_4m'] = isset($salesClosingFigure[$key]) && $salesClosingFigure[$key]['closed'] > 0 ? $salesClosingFigure[$key]['closed'] : 0;
+            $rep['projected_rev'] = $workedDays > 0 ? (($rep['total_rev'] / $workedDays) * ($workedDays + $workingDaysRemaining)) : $rep['total_rev'];
+            
+        }
+        
+        if (isset($branches)) {
+            ksort($branches);  // Sort by key (sales_rep name)
+        }
         
         // unset($branchData); // avoid reference issues
         // ksort($branches);
@@ -1031,8 +960,7 @@ class Reports extends MX_Controller
             'todayDate' => date("m-d-Y", strtotime('-1 day')),
             'monthName' => $monthName
         ];
-        // echo "<pre>";
-        // print_r(['branches' => $branches, 'daysDetails' => $daysDetails]);die;
+        
         if ($this->input->is_ajax_request()) {
             $dataRes['html'] = $this->load->view('order/reports/sales_rep_ranking_branch_report', ['branches' => $branches, 'daysDetails' => $daysDetails], true);
             $res = array('status' => 'success', 'report' => $dataRes);
@@ -1173,19 +1101,12 @@ class Reports extends MX_Controller
             $month = date('m', strtotime('-1 day'));
             $year = date('Y', strtotime('-1 day'));
             $monthName = date("F", strtotime('-1 day'));
-            // $workedDays = $this->order->countWorkedDaysOfMonth();
-            // $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
             $workedDays = $this->order->countDaysOfMonth($month, $year);
             $workingDaysRemaining = $this->order->countWokingsDaysLeftOfSelectedMonth($today, $month, $year);
         }
-        // echo $startMonth . ' - ' . $endDate . ' -- Prior month --' . $priorMonth . ' - ' . $priorYear . '-- Current Month --' . $month . ' - ' . $year . ' -- Today --' . $today . '<br>';
-        // die;
         
         $records = $this->get_all_to_order_data($startMonth, $endDate, $closedStartMonth);
-        // echo "<pre>";
-        // print_r($records);
-        // die;
-
+        
         $branches = [];
         foreach ($records as $row) {
             // $profile = $row['profile'];
@@ -1199,7 +1120,7 @@ class Reports extends MX_Controller
                 $branchName = 'Orange';
             } elseif (strpos($row['file_number'], 'ONT') !== false) {
                 $branchName = 'Inland Empire';
-            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+            } elseif (strpos($row['file_number'], 'TSG') !== false || strtolower($row['order_type']) == 'trustee sale guarantee') {
                 $branchName = 'TSG';
             } elseif (strpos($row['file_number'], 'PRV') !== false) {
                 $branchName = 'Porterville';
@@ -1240,6 +1161,15 @@ class Reports extends MX_Controller
                     'prior_escrow_cnt' => 0,
                     'prior_escrow_rev' => 0,
                     'escrow_rev'  => 0,
+
+                    'today_tsg_cnt' => 0,
+                    'today_tsg_rev' => 0,
+                    'mtd_tsg_cnt' => 0,
+                    'mtd_tsg_rev' => 0,
+                    'prior_tsg_cnt' => 0,
+                    'prior_tsg_rev' => 0,
+                    
+
                     'created_4m' => 0,
                     'closed_4m' => 0,
                     'closing_ratio'  => 0,
@@ -1259,48 +1189,7 @@ class Reports extends MX_Controller
 
             $created_month = date('m', strtotime($created_date));
             $created_year  = date('Y', strtotime($created_date));
-            // echo $rev_day . ' ' . $rev_month . ' ' . $rev_year . '<br>';die;
-            // $closed_day = date('d', strtotime($closed_date));
-            // $closed_month = date('m', strtotime($closed_date));
-            // $closed_year  = date('Y', strtotime($closed_date));
             
-
-            // if ($date == date('Y-m-d') && $row['softpro_status'] == 'closed') {
-            //     $rep['today_purchase_cnt']++;
-            // }
-
-            // if ($rev_month == date('m') && $rev_year == date('Y')) {
-            //     if ($row['transaction_type'] == 'Purchase') {
-            //         $rep['mtd_purchase_cnt'] += 1;
-            //         if ($rev_day == date('d')) {
-            //             $rep['today_purchase_cnt'] += 1;
-            //         } 
-            //     } elseif ($row['transaction_type'] == 'Refinance') {
-            //         $rep['mtd_refi_cnt']++;
-            //         if ($rev_day == date('d')) {
-            //             $rep['today_refi_cnt']++;
-            //         }
-            //     }
-            // }
-
-            // if ($rev_month == date('m') && $rev_year == date('Y')) {
-            //     if ($row['transaction_type'] == 'Purchase') {
-            //         $rep['mtd_purchase_rev'] += $row['premium'];
-            //         $rep['mtd_purchase_cnt'] += 1;
-            //         if ($rev_day == date('d')) {
-            //             $rep['today_purchase_rev'] += $row['premium'];
-            //             $rep['today_purchase_cnt'] += 1;
-            //         }
-            //     } elseif ($row['transaction_type'] == 'Refinance') {
-            //         $rep['mtd_refi_rev'] += $row['premium'];
-            //         $rep['mtd_refi_cnt'] += 1;
-            //         if ($rev_day == date('d')) {
-            //             $rep['today_refi_rev'] += $row['premium'];
-            //             $rep['today_refi_cnt'] += 1;
-            //         }
-            //     }
-            // }
-
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
                 
                 if (strtolower($row['order_type']) == 'title only') {
@@ -1319,12 +1208,21 @@ class Reports extends MX_Controller
                             $rep['today_refi_cnt'] += 1;
                         }
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['mtd_escrow_rev'] += $row['premium'];
                     $rep['mtd_escrow_cnt'] += 1;
                     if ($rev_day == $today) {
                         $rep['today_escrow_rev'] += $row['premium'];
                         $rep['today_escrow_cnt']++;
+                    }
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    $rep['mtd_tsg_rev'] += $row['premium'];
+                    $rep['mtd_tsg_cnt'] += 1;
+                    if ($rev_day == $today) {
+                        $rep['today_tsg_rev'] += $row['premium'];
+                        $rep['today_tsg_cnt'] += 1;
+                        $todayTotalClose++;
+                        $todayTotalRev += $row['premium'];
                     }
                 }
             }
@@ -1338,43 +1236,21 @@ class Reports extends MX_Controller
                         $rep['prior_refi_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['prior_escrow_cnt']++;
                     $rep['prior_escrow_rev'] += $row['premium'];
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    $rep['prior_tsg_cnt']++;
+                    $rep['prior_tsg_rev'] += $row['premium'];
                 }
             }
-
-            /*if ($rev_month == $priorMonth && $rev_year == $priorYear && !empty($row['sent_to_accounting_date'])) {
-                if ($row['transaction_type'] == 'Purchase') {
-                    $rep['prior_purchase_cnt']++;
-                } elseif ($row['transaction_type'] == 'Refinance') {
-                    $rep['prior_refi_cnt']++;
-                }
-            }
-
-            if ($rev_month == $priorMonth && $rev_year == $priorYear) {
-                if ($row['transaction_type'] == 'Purchase') {
-                    $rep['prior_purchase_rev'] += $row['premium'];
-                } elseif ($row['transaction_type'] == 'Refinance') {
-                    $rep['prior_refi_rev'] += $row['premium'];
-                }
-            }
-
-            if ($created_date >= $startMonth && $created_date <= $endDate) {
-                $rep['created_4m']++;
-                // echo $repId . ' - ' . $created_date . ' - ' . $rev_date . '<br>';
-                // Among them, check if closed also in the range
-                if (!empty($rev_date) && $rev_date >= $startMonth && $rev_date <= $endDate) {
-                    $rep['closed_4m']++;
-                }
-            }*/
-
+            
             $rep['total_orders']++;
             if ($row['softpro_status'] == 'closed') {
                 $rep['closed_orders']++;
             }
         }
-
+        
         $titleOfficerList = $this->order->get_title_officer();
         $titleOffierClosingFigure = [];
         if (!empty($titleOfficerList)) {
@@ -1396,16 +1272,16 @@ class Reports extends MX_Controller
                 ];
             }
         }
-
+        
         // echo "<pre>";
         // print_r($titleOffierClosingFigure);die;
-
+        
         foreach ($branches as $branch => &$branchData) {
             if (isset($branchData['title_officer'])) {
                 ksort($branchData['title_officer']);  // Sort by key (title officer name)
             }
             foreach($branchData['title_officer'] as $titleOfficerId => &$titleOfficerData) {
-                if ($titleOfficerData['today_purchase_cnt'] == 0 && $titleOfficerData['today_refi_cnt'] == 0 && $titleOfficerData['prior_purchase_cnt'] == 0 && $titleOfficerData['mtd_purchase_cnt'] == 0 && $titleOfficerData['mtd_refi_rev'] == 0 && $titleOfficerData['prior_refi_cnt'] == 0) {
+                if ($titleOfficerData['today_purchase_cnt'] == 0 && $titleOfficerData['today_refi_cnt'] == 0 && $titleOfficerData['today_tsg_cnt'] == 0 && $titleOfficerData['prior_purchase_cnt'] == 0 && $titleOfficerData['prior_tsg_cnt'] == 0 && $titleOfficerData['mtd_purchase_cnt'] == 0 && $titleOfficerData['mtd_refi_rev'] == 0 && $titleOfficerData['prior_refi_cnt'] == 0 && $titleOfficerData['mtd_tsg_rev'] == 0) {
                     unset($branchData['title_officer'][$titleOfficerId]);
                 }
             }
@@ -1413,8 +1289,6 @@ class Reports extends MX_Controller
         
         unset($branchData);
         ksort($branches);
-        // echo "<pre>";
-        // print_r($branches);die;
         $daysDetails = [
             'workedDays' => $workedDays,
             'workingDaysRemaining' => $workingDaysRemaining,
@@ -1543,7 +1417,7 @@ class Reports extends MX_Controller
                 $branchName = 'Orange';
             } elseif (strpos($row['file_number'], 'ONT') !== false) {
                 $branchName = 'Inland Empire';
-            } elseif (strpos($row['file_number'], 'TSG') !== false || $row['transaction_type'] == 'Other') {
+            } elseif (strpos($row['file_number'], 'TSG') !== false || strtolower($row['order_type']) == 'trustee sale guarantee') {
                 $branchName = 'TSG';
             } elseif (strpos($row['file_number'], 'PRV') !== false) {
                 $branchName = 'Porterville';
