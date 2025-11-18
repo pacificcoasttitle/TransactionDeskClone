@@ -12,7 +12,71 @@
         <span class="toggle-icon" id="<?php echo $branchName; ?>-icon">▼</span>
     </button>
     <div class="branch-content" id="<?php echo $branchName; ?>">
+        <?php if ($branchName == 'TSG') {?>
+        <table class="title-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">Title Officer</th>
+                    <!-- <th rowspan="3">Quality<br>Rating</th> -->
+                    <th colspan="3">Closings by Production (<?php echo $daysDetails['monthName']; ?>)</th>
+                    <th colspan="3">Revenue by Production (<?php echo $daysDetails['monthName']; ?>)</th>
+                </tr>
+                <tr>
+                    <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
+                    <th>MTD</th>
+                    <th>Prior</th>
+                    <th><?php echo date('m-d-Y', strtotime('-1 day')) ?></th>
+                    <th>MTD</th>
+                    <th>Prior</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                    $totalTodayTSGCnt = $totalMtdTSGCnt = $totalPriorTSGCnt = 0;
+                    $totalTodayTSGRev = $totalMtdTSGRev = $totalPriorTSGRev = 0;
+                    foreach($branch['title_officer'] as $titleOfficerId => $titleOfficerDetails) {
+                    // echo "<pre>";
+                    // print_r($branch);die;
+                    if ($titleOfficerDetails['today_tsg_cnt'] > 0 || $titleOfficerDetails['mtd_tsg_cnt'] > 0 || $titleOfficerDetails['prior_tsg_cnt'] > 0 ){
+                    ?>
+                <tr>
+                    <td class="title-officer-name"><?php echo $titleOfficerDetails['officer_name'] ?></td>
+                    
+                    <td class="number"><?php echo $titleOfficerDetails['today_tsg_cnt'] ?></td>
+                    <td class="number"><?php echo $titleOfficerDetails['mtd_tsg_cnt'] ?></td>
+                    <td class="number"><?php echo $titleOfficerDetails['prior_tsg_cnt'] ?></td>
+                    
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['today_tsg_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['mtd_tsg_rev'])); ?></td>
+                    <td class="currency">$<?php echo number_format(round($titleOfficerDetails['prior_tsg_rev'])); ?></td>
+                    
+                </tr>
+                <?php
+                        
+                        $totalTodayTSGCnt += $titleOfficerDetails['today_tsg_cnt'];
+                        $totalMtdTSGCnt += $titleOfficerDetails['mtd_tsg_cnt'];
+                        $totalPriorTSGCnt += $titleOfficerDetails['prior_tsg_cnt'];
 
+                        $totalTodayTSGRev += $titleOfficerDetails['today_tsg_rev'];
+                        $totalMtdTSGRev += $titleOfficerDetails['mtd_tsg_rev'];
+                        $totalPriorTSGRev += $titleOfficerDetails['prior_tsg_rev'];
+                    ?>
+                <?php }}?>
+                    <tr>
+                        <td class="title-officer-name"><strong>Total</strong></td>
+                        
+                        <td class="number"><?php echo $totalTodayTSGCnt; ?></td>
+                        <td class="number"><?php echo $totalMtdTSGCnt; ?></td>
+                        <td class="number"><?php echo $totalPriorTSGCnt; ?></td>
+                        
+                        <td class="currency">$<?php echo number_format(round($totalTodayTSGRev)); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalMtdTSGRev)); ?></td>
+                        <td class="currency">$<?php echo number_format(round($totalPriorTSGRev)); ?></td>
+                    </tr>
+                
+            </tbody>
+        </table>
+        <?php } else {?>
         <table class="title-table">
             <thead>
                 <tr>
@@ -147,6 +211,7 @@
                 
             </tbody>
         </table>
+        <?php }?>
     </div>
 </div>
 <?php }?>
