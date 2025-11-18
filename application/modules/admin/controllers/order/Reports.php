@@ -37,6 +37,7 @@ class Reports extends MX_Controller
                 $this->db->group_end();
             $this->db->group_end();
             $this->db->where('o.is_softpro_order', 1);
+            $this->db->where('o.file_number is not null');
             // $this->db->where('t.sales_representative', 12685);
             // ->where('o.prod_type', 'Refinance')
             // ->where('o.sent_to_accounting_date is not null')
@@ -62,6 +63,7 @@ class Reports extends MX_Controller
                 $this->db->group_end();
             $this->db->group_end();
             $this->db->where('o.is_softpro_order', 1);
+            $this->db->where('o.file_number is not null');
             // $this->db->where('t.title_officer', 14415);
             // $this->db->get();
             // echo $this->db->last_query();exit;
@@ -267,7 +269,7 @@ class Reports extends MX_Controller
                 $branchName = 'Orange';
             } elseif (strpos($row['file_number'], 'ONT') !== false) {
                 $branchName = 'Inland Empire';
-            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+            } elseif (strpos($row['file_number'], 'TSG') !== false || strtolower($row['order_type']) == 'trustee sale guarantee') {
                 $branchName = 'TSG';
             } elseif (strpos($row['file_number'], 'PRV') !== false) {
                 $branchName = 'Porterville';
@@ -310,6 +312,15 @@ class Reports extends MX_Controller
                     'mtd_escrow_rev' => 0,
                     'prior_escrow_cnt' => 0,
                     'prior_escrow_rev' => 0,
+
+                    'today_tsg_cnt' => 0,
+                    'mtd_tsg_cnt' => 0,
+                    'prior_tsg_cnt' => 0,
+                    
+                    'today_tsg_rev' => 0,
+                    'mtd_tsg_rev' => 0,
+                    'prior_tsg_rev' => 0,
+
                     'escrow_rev'  => 0,
                     'created_4m' => 0,
                     'closed_4m' => 0,
@@ -376,12 +387,21 @@ class Reports extends MX_Controller
                             $rep['today_refi_cnt'] += 1;
                         }
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['mtd_escrow_rev'] += $row['premium'];
                     $rep['mtd_escrow_cnt'] += 1;
                     if ($rev_day == $today) {
                         $rep['today_escrow_rev'] += $row['premium'];
                         $rep['today_escrow_cnt']++;
+                    }
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    $rep['mtd_tsg_rev'] += $row['premium'];
+                    $rep['mtd_tsg_cnt'] += 1;
+                    if ($rev_day == $today) {
+                        $rep['today_tsg_rev'] += $row['premium'];
+                        $rep['today_tsg_cnt'] += 1;
+                        $todayTotalClose++;
+                        $todayTotalRev += $row['premium'];
                     }
                 }
             }
@@ -396,40 +416,22 @@ class Reports extends MX_Controller
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
 
-                } else if (strtolower($row['order_type']) == 'title & escrow') {
+                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['prior_escrow_cnt']++;
                     $rep['prior_escrow_rev'] += $row['premium'];
+                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                    $rep['prior_tsg_cnt']++;
+                    $rep['prior_tsg_rev'] += $row['premium'];
                 }
             }
-
-            // if ($rev_month == $priorMonth && $rev_year == $priorYear) {
-            //     if (strtolower($row['order_type']) == 'title only') {
-            //         if ($row['transaction_type'] == 'Purchase') {
-            //             $rep['prior_purchase_rev'] += $row['premium'];
-            //         } elseif ($row['transaction_type'] == 'Refinance') {
-            //             $rep['prior_refi_rev'] += $row['premium'];
-            //         }
-            //     } else if (strtolower($row['order_type']) == 'title & escrow') {
-
-            //     }
-            // }
-
-            
-
-            /*if ($created_date >= $startMonth && $created_date <= $endDate) {
-                $rep['created_4m']++;
-                // echo $repId . ' - ' . $created_date . ' - ' . $rev_date . '<br>';
-                // Among them, check if closed also in the range
-                if (!empty($rev_date) && $rev_date >= $startMonth && $rev_date <= $endDate) {
-                    $rep['closed_4m']++;
-                }
-            }*/
 
             $rep['total_orders']++;
             /*if ($row['softpro_status'] == 'closed') {
                 $rep['closed_orders']++;
             }*/
         }
+        // echo "<pre>";
+        // print_r($branches);
         // die;
         $salesUsers = $this->order->get_sales_users();
         $salesClosingFigure = [];
@@ -467,12 +469,9 @@ class Reports extends MX_Controller
                 
                 // echo "<pre>";
                 // print_r($rep);die;
-                if ($rep['today_purchase_cnt'] == 0 && $rep['today_refi_cnt'] == 0 && $rep['today_escrow_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['prior_purchase_cnt'] == 0 && $rep['mtd_purchase_cnt'] == 0 && $rep['mtd_refi_rev'] == 0 && $rep['mtd_escrow_rev'] == 0 && $rep['prior_refi_cnt'] == 0) {
+                if ($rep['today_purchase_cnt'] == 0 && $rep['today_refi_cnt'] == 0 && $rep['today_escrow_cnt'] == 0 && $rep['today_tsg_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['prior_purchase_cnt'] == 0  && $rep['prior_refi_cnt'] == 0  && $rep['prior_tsg_cnt'] == 0 && $rep['mtd_purchase_cnt'] == 0 && $rep['mtd_refi_rev'] == 0 && $rep['mtd_escrow_rev'] == 0 && $rep['mtd_tsg_rev'] == 0) {
                     unset($branchData['sales_reps'][$key]);
                 }
-                // $rep['closing_ratio'] = $rep['created_4m'] > 0
-                // ? round(($rep['closed_4m'] / $rep['created_4m']) * 100, 1)
-                // : 0;
             }
             if (isset($branchData['sales_reps'])) {
                 ksort($branchData['sales_reps']);  // Sort by key (sales_rep name)
@@ -652,7 +651,7 @@ class Reports extends MX_Controller
                 $branchName = 'Orange';
             } elseif (strpos($row['file_number'], 'ONT') !== false) {
                 $branchName = 'Inland Empire';
-            } elseif (strpos($row['file_number'], 'TSG') !== false) {
+            } elseif (strpos($row['file_number'], 'TSG') !== false || strtolower($row['order_type']) == 'trustee sale guarantee') {
                 $branchName = 'TSG';
             } elseif (strpos($row['file_number'], 'PRV') !== false) {
                 $branchName = 'Porterville';
@@ -697,7 +696,7 @@ class Reports extends MX_Controller
             
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
-                if (strtolower($row['order_type']) == 'title & escrow') {
+                if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['mtd_escrow_rev'] += $row['premium'];
                     $rep['mtd_escrow_cnt'] += 1;
                     if ($rev_day == $today) {
@@ -708,7 +707,7 @@ class Reports extends MX_Controller
             }
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $priorMonth && $rev_year == $priorYear) {
-                if (strtolower($row['order_type']) == 'title & escrow') {
+                if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
                     $rep['prior_escrow_cnt']++;
                     $rep['prior_escrow_rev'] += $row['premium'];
                 }
