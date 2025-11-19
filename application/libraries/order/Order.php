@@ -2002,6 +2002,7 @@ class Order
             $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
         }
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
+        $this->CI->db->where('order_details.file_number is not null');
 
         if ($yearly_flag == 1) {
             $this->CI->db->where('YEAR(order_details.created_at)', $year);
@@ -2056,7 +2057,7 @@ class Order
             $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
         }
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
-
+        $this->CI->db->where('order_details.file_number is not null');
         if ($yearly_flag == 1) { 
             $this->CI->db->where('YEAR(order_details.created_at)', $year);
         } else {
@@ -2109,6 +2110,7 @@ class Order
         $this->CI->db->where('order_details.is_softpro_order', 1);
         // $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
+        $this->CI->db->where('order_details.file_number is not null');
         if ($yearly_flag == 1) { 
             if ($year == 0) {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
@@ -2166,7 +2168,7 @@ class Order
         // $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
         $this->CI->db->where('order_details.is_softpro_order', 1);
-
+        $this->CI->db->where('order_details.file_number is not null');
         if ($yearly_flag == 1) { 
             if ($year == 0) {
                 $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
@@ -2225,7 +2227,7 @@ class Order
             $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
         }
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
-
+        $this->CI->db->where('order_details.file_number is not null');
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
@@ -2267,7 +2269,7 @@ class Order
             $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
         }
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
-
+        $this->CI->db->where('order_details.file_number is not null');
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
@@ -2307,6 +2309,7 @@ class Order
         $this->CI->db->where('order_details.is_softpro_order', 1);
         // $this->CI->db->where('order_details.prod_type', 'loan');
         $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
+        $this->CI->db->where('order_details.file_number is not null');
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
@@ -2345,6 +2348,7 @@ class Order
         // $this->CI->db->where('order_details.prod_type', 'sale');
         $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
         $this->CI->db->where('order_details.is_softpro_order', 1);
+        $this->CI->db->where('order_details.file_number is not null');
         if ($dashboard_flag == 1) {
             $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
             $endDate = date('Y-m-d 23:59:59');
