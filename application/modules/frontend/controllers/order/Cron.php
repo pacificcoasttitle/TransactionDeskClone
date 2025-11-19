@@ -8822,6 +8822,7 @@ class Cron extends MX_Controller
     {
         ini_set('max_execution_time', 0); 
         ini_set('memory_limit','2048M');
+        date_default_timezone_set('America/Los_Angeles');
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
         $data = array();
