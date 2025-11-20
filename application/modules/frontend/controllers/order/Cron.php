@@ -8130,11 +8130,13 @@ class Cron extends MX_Controller
                 $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $resMsg, 0, $logid);
             }
             
-            if ($taskId == '03-020' && ($filesResult['lender_notify_recording_confirm'] == 1 || $filesResult['escrow_notify_recording_confirm'] == 1)) {
+            // if ($taskId == '03-020' && ($filesResult['lender_notify_recording_confirm'] == 1 || $filesResult['escrow_notify_recording_confirm'] == 1)) {
+            if ($taskId == '03-020') {
                 $this->order->sendRecordingConfirmationEmail($filesResult, 'recording_confirmation');
             }
             
-            if ($taskId == '04-035' && ($filesResult['lender_notify_disburse_funds'] == 1 || $filesResult['escrow_notify_disburse_funds'] == 1)) {
+            // if ($taskId == '04-035' && ($filesResult['lender_notify_disburse_funds'] == 1 || $filesResult['escrow_notify_disburse_funds'] == 1)) {
+            if ($taskId == '04-035') {
                 // $this->order->sendRecordingConfirmationEmail($filesResult, 'disburse_funds');
             }
             
