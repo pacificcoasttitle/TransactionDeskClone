@@ -1192,7 +1192,7 @@ class Reports extends MX_Controller
             
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $month && $rev_year == $year) {
                 
-                if (strtolower($row['order_type']) == 'title only') {
+                // if (strtolower($row['order_type']) == 'title only') {
                     if ($row['transaction_type'] == 'Purchase') {
                         $rep['mtd_purchase_rev'] += $row['premium'];
                         $rep['mtd_purchase_cnt'] += 1;
@@ -1208,27 +1208,27 @@ class Reports extends MX_Controller
                             $rep['today_refi_cnt'] += 1;
                         }
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
-                    $rep['mtd_escrow_rev'] += $row['premium'];
-                    $rep['mtd_escrow_cnt'] += 1;
-                    if ($rev_day == $today) {
-                        $rep['today_escrow_rev'] += $row['premium'];
-                        $rep['today_escrow_cnt']++;
-                    }
-                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
-                    $rep['mtd_tsg_rev'] += $row['premium'];
-                    $rep['mtd_tsg_cnt'] += 1;
-                    if ($rev_day == $today) {
-                        $rep['today_tsg_rev'] += $row['premium'];
-                        $rep['today_tsg_cnt'] += 1;
-                        $todayTotalClose++;
-                        $todayTotalRev += $row['premium'];
-                    }
-                }
+                // } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
+                //     $rep['mtd_escrow_rev'] += $row['premium'];
+                //     $rep['mtd_escrow_cnt'] += 1;
+                //     if ($rev_day == $today) {
+                //         $rep['today_escrow_rev'] += $row['premium'];
+                //         $rep['today_escrow_cnt']++;
+                //     }
+                // } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                //     $rep['mtd_tsg_rev'] += $row['premium'];
+                //     $rep['mtd_tsg_cnt'] += 1;
+                //     if ($rev_day == $today) {
+                //         $rep['today_tsg_rev'] += $row['premium'];
+                //         $rep['today_tsg_cnt'] += 1;
+                //         $todayTotalClose++;
+                //         $todayTotalRev += $row['premium'];
+                //     }
+                // }
             }
 
             if (!empty($row['sent_to_accounting_date']) && $rev_month == $priorMonth && $rev_year == $priorYear) {
-                if (strtolower($row['order_type']) == 'title only') {
+                // if (strtolower($row['order_type']) == 'title only') {
                     if ($row['transaction_type'] == 'Purchase') {
                         $rep['prior_purchase_cnt']++;
                         $rep['prior_purchase_rev'] += $row['premium'];
@@ -1236,13 +1236,13 @@ class Reports extends MX_Controller
                         $rep['prior_refi_cnt']++;
                         $rep['prior_refi_rev'] += $row['premium'];
                     }
-                } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
-                    $rep['prior_escrow_cnt']++;
-                    $rep['prior_escrow_rev'] += $row['premium'];
-                } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
-                    $rep['prior_tsg_cnt']++;
-                    $rep['prior_tsg_rev'] += $row['premium'];
-                }
+                // } else if (strtolower($row['order_type']) == 'title & escrow' || strtolower($row['order_type']) == 'escrow only') {
+                //     $rep['prior_escrow_cnt']++;
+                //     $rep['prior_escrow_rev'] += $row['premium'];
+                // } else if (strtolower($row['order_type']) == 'trustee sale guarantee') {
+                //     $rep['prior_tsg_cnt']++;
+                //     $rep['prior_tsg_rev'] += $row['premium'];
+                // }
             }
             
             $rep['total_orders']++;
