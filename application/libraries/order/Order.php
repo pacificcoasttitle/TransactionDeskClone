@@ -6110,7 +6110,7 @@ class Order
         $cc = array('piyush.j@crestinfosystems.com');
 
         if ($emailType == 'recording_confirmation') {
-            $to[] = 'processing@lendingxpress.com';
+            // $to[] = 'processing@lendingxpress.com';
             // $to = 'ghernandez@pct.com';
             $message = $this->CI->load->view('emails/confirmation_recording_email.php', $orderDetails, true);
         } else {
