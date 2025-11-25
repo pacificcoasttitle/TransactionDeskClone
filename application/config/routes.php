@@ -216,6 +216,13 @@ $route['import-orders-using-file-number']     = 'frontend/order/cron/importOrder
 $route['import-escrow-fee']                   = 'frontend/order/cron/importEscrowFee';
 $route['get-orders-dashboard']                = 'frontend/order/dashboard/getOrdersDashboard';
 $route['sales-production-history/:any']       = 'frontend/order/salesRep/salesProductionHistory';
+
+$route['escrow-officer-dashboard']       = 'frontend/order/escrowProduction/index';
+$route['get-all-escrow-orders']          = 'frontend/order/escrowProduction/get_escrow_orders';
+$route['escrow-production-history']       = 'frontend/order/escrowProduction/escrowProductionHistory';
+$route['get-escrow-revenue-data']        = 'frontend/order/escrowProduction/getEscrowRevenueData';
+
+
 $route['password-update-all']                 = 'frontend/order/cron/passwordUpdateAll';
 $route['update-all-order-status']             = 'frontend/order/cron/updateAllOrderStatus';
 $route['policy/:any']                         = 'frontend/order/dashboardMail/policy';
@@ -286,6 +293,11 @@ $route['order/admin/softpro-title-production']           = 'admin/order/home/spT
 $route['order/admin/add-softpro-title-production']       = 'admin/order/home/addSpTitleProductions';
 $route['order/admin/edit-softpro-title-production/:num'] = 'admin/order/home/editSpTitlePproduction';
 $route['order/admin/delete-softpro-title-production']    = 'admin/order/home/deleteSpTitlePproduction';
+
+$route['order/admin/softpro-escrow-production']           = 'admin/order/home/spEscrowProduction';
+$route['order/admin/add-softpro-escrow-production']       = 'admin/order/home/addSpEscrowProductions';
+$route['order/admin/edit-softpro-escrow-production/:num'] = 'admin/order/home/editSpEscrowPproduction';
+$route['order/admin/delete-softpro-escrow-production']    = 'admin/order/home/deleteSpEscrowPproduction';
 
 $route['order/admin/edit-user/:num']               = 'admin/order/home/editUser';
 $route['order/admin/edit-softpro-company/:num']             = 'admin/order/home/spEditCompany';

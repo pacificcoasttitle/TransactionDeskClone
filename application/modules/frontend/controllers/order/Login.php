@@ -112,6 +112,7 @@ class Login extends MX_Controller
                                     "is_title_officer" => $user['is_title_officer'],
                                     "is_payoff_user" => $user['is_payoff_user'],
                                     "is_title_production" => $user['is_title_production'],
+                                    "is_escrow_production" => $user['is_escrow_production'],
                                     "is_escrow_officer" => $user['is_escrow_officer'],
                                     "is_escrow_assistant" => $user['is_escrow_assistant'] ?? '',
                                     "lookup_code" => $user['lookup_code'],
@@ -138,6 +139,7 @@ class Login extends MX_Controller
                             "is_title_officer" => $user['is_title_officer'],
                             "is_payoff_user" => $user['is_payoff_user'],
                             "is_title_production" => $user['is_title_production'],
+                            "is_escrow_production" => $user['is_escrow_production'],
                             "is_escrow_officer" => $user['is_escrow_officer'],
                             "is_escrow_assistant" => $user['is_escrow_assistant'] ?? '',
                             "lookup_code" => $user['lookup_code'],
@@ -160,6 +162,8 @@ class Login extends MX_Controller
                         $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-dashboard');
                     } else if ($user['is_title_production'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'file-upload');
+                    }  else if ($user['is_escrow_production'] == 1) {
+                        $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-officer-dashboard');
                     } else {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'dashboard');
                     }

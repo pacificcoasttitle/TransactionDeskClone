@@ -147,6 +147,23 @@ class Common
         }
     }
 
+    public function is_escrow_production()
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (!empty($userdata['id'])) {
+            if ($userdata['is_escrow_production'] == 1) {
+                // print_r($userdata);die;
+                return true;
+            } else {
+                $this->session->sess_destroy();
+                $this->session->unset_userdata('user');
+                redirect(base_url() . 'order/login');
+            }
+        } else {
+            redirect(base_url() . 'order/login');
+        }
+    }
+
     public function getEscrowOfficerInfoBasedOnIdFromOrder($partner_id)
     {
         $this->CI->db->select('*');

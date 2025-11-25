@@ -1,6 +1,6 @@
 $(document).ready(function () {
     if ($('#order_listing').length) {
-        order_listing = $('#order_listing').DataTable({
+        prelim_list = $('#order_listing').DataTable({
             "paging": true,
             "lengthChange": false,
             "language": {
