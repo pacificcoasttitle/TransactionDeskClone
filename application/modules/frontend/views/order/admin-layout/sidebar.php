@@ -86,7 +86,20 @@ if ($userdata['is_sales_rep'] == 1) {
 			</a>
 		</li>
 		<?php }?>
-
+	<?php } else if (($userdata['is_escrow_production'] == 1) && ($sidebar)) { ?>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'escrow-officer-dashboard') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>escrow-officer-dashboard">
+				<i class="fas fa fa-dashboard"></i>
+				<span>Dashboard</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'escrow-production-history') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url(); ?>escrow-production-history">
+				<i class="fas fa fa-history"></i>
+				<span>Production History</span>
+			</a>
+		</li>
+		
 	<?php } else if (($userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1) && ($sidebar)) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'escrow-dashboard' || $this->uri->segment(1) == 'pay-off-dashboard' || $this->uri->segment(1) == 'special-lender-dashboard') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo $dashboardUrl; ?>">

@@ -5,7 +5,7 @@
 class Dashboard extends MX_Controller
 {
 
-    private $js_version = '01';
+    private $js_version = '03';
 
     public function __construct()
     {
@@ -43,7 +43,9 @@ class Dashboard extends MX_Controller
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
         // $this->template->addJS( base_url('assets/frontend/js/order/dashboard.js?v='.$this->js_version) );
         // $this->template->show("order", "dashboard", $data);
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/dashboard.js?v=' . $this->js_version));
+        // $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->js_version));
         $this->salesdashboardtemplate->show("order", "dashboard", $data);
     }
 
@@ -917,36 +919,167 @@ class Dashboard extends MX_Controller
         }
 
         if (isset($order_lists['data']) && !empty($order_lists['data'])) {
+            $configData                  = $this->order->getConfigData();
+            $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
+            $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
             $i = $params['start'] + 1;
             foreach ($order_lists['data'] as $order) {
+                $fileNumber = !empty($order['file_number']) ? $order['file_number'] : '';
                 $nestedData = array();
                 $nestedData[] = $i;
-                $nestedData[] = $order['file_number'];
-                $nestedData[] = $order['softpro_status'];
+                $nestedData[] = $fileNumber;
+                $nestedData[] = ucfirst($order['softpro_status']);
                 $nestedData[] = !empty($order['opened_date']) ? convertTimezone($order['opened_date'], 'm/d/Y') : '';
                 $nestedData[] = $order['full_address'];
-
+                // $nestedData[] = ucfirst($order['softpro_status']);
+                $action = "<div style='display: flex;justify-content: space-evenly;'>";
                 if ($order['prelim_summary_id'] != 0) {
+                    $prelimDoc = $this->order->get_prelim_document($order['id']);
+                    if (env('AWS_ENABLE_FLAG') == 1 && !empty($prelimDoc['document_name'])) {
+                        $prelimUrl = env('AWS_PATH') . "documents/" . $prelimDoc['document_name'];
+                    }
+
                     $class = isset($order['is_visited']) && !empty($order['is_visited']) ? 'secondary' : 'success';
-                    $actions = "<a href='" . base_url() . "review-file/" . $order['id'] . "'>
-							<button type='submit' class='btn btn-$class btn-icon-split'>
-								<span class='icon text-white-50'>
-									<i class='fas fa-file'></i>
-								</span>
-								<span class='text'>Review File</span>
-							</button>
-						</a>";
+                    $class = isset($order['is_doc_updated']) && !empty($order['is_doc_updated']) ? 'updated-prelim-btn' : 'btn-success';
+                    if (!empty($prelimDoc['document_name'])) {
+                        $action .= "<a href='" . $prelimUrl . "' target='_blank'>
+                                <button type='submit' class='btn $class btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-file'></i>
+                                    </span>
+                                    <span class='text'>Review Prelim</span>
+                                </button>
+                            </a>";
+                    }
+                    if ($prelimSummaryShutOffFlag == 0) {
+                        $action .= "<a href='javascript:void(0)' onclick=getPrelimSummary('".$order['file_number']."');>
+                                <button type='submit' class='btn prelim-summary-btn btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-file-alt'></i>
+                                    </span>
+                                    <span class='text'>Prelim Summary</span>
+                                </button>
+                            </a>";
+                    }
+                    $action .= "<div class='dropdown'>
+                        <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
+                            <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
+                                <span class='icon text-white-50'>
+                                    <i class='fas fa-tasks'></i>
+                                </span>
+                                <span class='text'>Click Action Type</span>
+                                <span class='caret'></span>
+                            </button>
+                        </a>
+                        <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>";
+                    if (empty($prelimDoc['document_name'])) {
+                        $action .= "<li>
+                                    <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+                                        <button type='button' class='btn btn-grad-2a button-color'>
+                                            <i class='fas fa-refresh' style='margin-right:5px;'></i>
+                                            <span class='text'>Get Prelim Doc</span>
+                                        </button>
+                                    </a>
+                                </li>";
+                    }
+                    $action .= "<li>
+                                <a href='javascript:void(0)' onclick=updatePrelimAction('".$order['id']."');>
+                                    <button type='button' class='btn btn-grad-2a button-color'>
+                                        <i class='fas fa-refresh' style='margin-right:5px;'></i>
+                                        <span class='text'>Update Prelim</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='javascript:void(0)' onclick=getContacts('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Contacts
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='javascript:void(0)' onclick=getInvoice('".$order['id']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Invoice
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='javascript:void(0)' onclick=regeneratePrelimSummary('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fa fa-refresh' aria-hidden='true' style='margin-right:5px;'></i>
+                                        Regenerate Summary
+                                    </button>
+                                </a>
+                            </li>
+                        </ul></div>
+                        ";
+                    // $actions = "<a href='" . base_url() . "review-file/" . $order['id'] . "'>
+					// 		<button type='submit' class='btn btn-$class btn-icon-split'>
+					// 			<span class='icon text-white-50'>
+					// 				<i class='fas fa-file'></i>
+					// 			</span>
+					// 			<span class='text'>Review File</span>
+					// 		</button>
+					// 	</a>";
                 } else {
-                    $actions = "<a href='javascript:void(0)'>
-						<button type='submit' class='btn btn-info btn-icon-split'>
+                    // $actions = "<a href='javascript:void(0)'>
+					// 	<button type='submit' class='btn btn-info btn-icon-split'>
+					// 		<span class='icon text-white-50'>
+					// 			<i class='fas fa-tasks'></i>
+					// 		</span>
+					// 		<span class='text'>Not Ready</span>
+					// 	</button></a>";
+                    $action .= "<a href='javascript:void(0)'>
+						<button type='submit' class='btn btn-info btn-icon-split info-prelim-btn'>
 							<span class='icon text-white-50'>
 								<i class='fas fa-tasks'></i>
 							</span>
 							<span class='text'>Not Ready</span>
-						</button></a>";
+						</button></a>
+                        <div class='dropdown'>
+                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>
+                            <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
+                                <span class='icon text-white-50'>
+                                    <i class='fas fa-tasks'></i>
+                                </span>
+                                <span class='text'>Click Action Type</span>
+                                <span class='caret'></span>
+                            </button>
+                        </a>
+                        <ul class='dropdown-menu' style='width:210px !important;max-width:none !important;'>
+                            <li>
+                                <a href='javascript:void(0)' onclick=fetchPrelimDocument('".$order['file_number']."');>
+                                    <button type='button' class='btn btn-grad-2a button-color'>
+                                        <i class='fas fa-refresh' style='margin-right:5px;'></i>
+                                        <span class='text'>Get Prelim Doc</span>
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' onclick=getContacts('".$order['file_number']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-eye' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Contacts
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href='#' onclick=getInvoice('".$order['id']."');>
+                                    <button class='btn btn-grad-2a button-color' type='button'>
+                                        <i class='fas fa-file' aria-hidden='true' style='margin-right:5px;'></i>
+                                        View Invoice
+                                    </button>
+                                </a>
+                            </li>
+                        </ul></div>
+                    
+                    ";
                 }
 
-                $nestedData[] = $actions;
+                $nestedData[] = $action;
                 $data[] = $nestedData;
                 $i++;
             }

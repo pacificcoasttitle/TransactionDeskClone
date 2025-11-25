@@ -100,7 +100,10 @@ if (
     $this->uri->segment(3) == 'add-escrow-officer' ||
     $this->uri->segment(3) == 'title-production' ||
     $this->uri->segment(3) == 'add-title-production' ||
-    $this->uri->segment(3) == 'edit-title-production'
+    $this->uri->segment(3) == 'edit-title-production' ||
+    $this->uri->segment(3) == 'escrow-production' ||
+    $this->uri->segment(3) == 'add-escrow-production' ||
+    $this->uri->segment(3) == 'edit-escrow-production'
 ) {
     $usersTabLinks = true;
 }
@@ -166,7 +169,10 @@ if (
 	$this->uri->segment(3) == 'edit-sp-sales-rep' ||
     $this->uri->segment(3) == 'softpro-title-production' ||
     $this->uri->segment(3) == 'add-softpro-title-production' ||
-    $this->uri->segment(3) == 'edit-softpro-title-production'
+    $this->uri->segment(3) == 'edit-softpro-title-production' ||
+    $this->uri->segment(3) == 'softpro-escrow-production' ||
+    $this->uri->segment(3) == 'add-softpro-escrow-production' ||
+    $this->uri->segment(3) == 'edit-softpro-escrow-production'
 ) {
     $spUsersTabLinks = true;
 }
@@ -345,6 +351,7 @@ if (in_array($roleName, ['Admin', 'Super Admin', 'CS Admin'])) {
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-officers' || $this->uri->uri_string() == 'order/admin/add-softpro-title-officer' || $this->uri->segment(3) == 'edit-softpro-title-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-officers'; ?>">Title Officer</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-officers' || $this->uri->segment(3) == 'edit-softpro-escrow-officer' || $this->uri->segment(3) == 'add-softpro-escrow-officer') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-officers'; ?>">Escrow Officers</a>
 						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-title-production' || $this->uri->segment(3) == 'edit-softpro-title-production' || $this->uri->segment(3) == 'add-softpro-title-production') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-title-production'; ?>">Title Production</a>
+						<a class="collapse-item <?php if ($this->uri->uri_string() == 'order/admin/softpro-escrow-production' || $this->uri->segment(3) == 'edit-softpro-escrow-production' || $this->uri->segment(3) == 'add-softpro-escrow-production') {echo 'active';}?>" href="<?php echo base_url() . 'order/admin/softpro-escrow-production'; ?>">Escrow Production</a>
 					</div>
 				</div>
 			</li>

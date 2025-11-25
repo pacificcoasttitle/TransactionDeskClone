@@ -91,7 +91,7 @@
 											<div class="card-body">
 												<div class="row no-gutters align-items-center">
 													<div class="col mr-2">
-														<div class="text-xs font-weight-bold text-info text-uppercase mb-1 sales_loan_count" id="total_premium"><a class="text-info" href="javascript:void(0)" onclick="getRevenueData();">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></a></div>
+														<div class="text-xs font-weight-bold text-info text-uppercase mb-1 sales_loan_count" id="total_premium"><a class="text-info" href="javascript:void(0)" onclick="getEscrowRevenueData();">$<span id="total_premium"><?php echo number_format($total_premium); ?></span></a></div>
 														<div class="salesdivider">
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Sales = $<span id="sale_total_premium"><?Php echo $sale_total_premium;?></span></div>
 														<div class="h5 mb-0 font-weight-bold text-gray-800 sales_loan_section">Refi's = $<span id="refi_total_premium"><?Php echo $refi_total_premium;?></span></div>
@@ -142,7 +142,7 @@
 							<div class="table-responsive">
 								<div id="order_listing_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
 								<div id="order_listing_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
-								<table class="table table-bordered" id="orders_listing" width="100%" cellspacing="0">
+								<table class="table table-bordered" id="escrow_orders_listing" width="100%" cellspacing="0">
 									<thead>
 										<tr>
 											<th>#</th>
@@ -224,32 +224,7 @@
                                                     <div class="toclone">
                                                         <div class="spacer-b10">
                                                             <label class="field" id="revenue_container">
-															<!-- <table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
-																<thead>
-																	<tr>
-																		<th>Sr No</th>
-																		<th>File Number</th>
-																		<th>Address</th>
-																		<th>Product Type</th>
-																		<th>Revenue</th>
-																	</tr>
-																</thead>
-																<tbody>
-																	<?php if (!empty($revenue_data)) { ?>
-																		<?php foreach($revenue_data as $key => $val) { ?>
-																	<tr>
-																		<td width='12%'><?php echo $key + 1;?></td>
-																		<td width='20%'><?php echo ltrim($val[3], "*");?></td>
-																		<td width='44%'><?php echo $val[9] ?></td>
-																		<td width='12%'><?php echo $val[4] ?></td>
-																		<td width='12%'><?php echo $val[10] ?></td>
-																	</tr>
-																	<?php } ?>
-																	<?php } else {  ?>
-																		<tr><td colspan='5'>No records found.</td></tr>
-																	<?php } ?>
-																</tbody>
-															</table> -->
+															
                                                             </label>
                                                         </div>
                                                     </div>
