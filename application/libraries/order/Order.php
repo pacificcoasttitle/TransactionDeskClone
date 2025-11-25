@@ -580,6 +580,273 @@ class Order
         );
     }
 
+    public function get_escrow_orders($params)
+    {
+        $this->CI->load->model('order/home_model');
+        $lp_alerts = $this->CI->home_model->get_lp_alert_delete();
+        $userdata = $this->CI->session->userdata('user');
+        $email = $userdata['email'];
+        $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
+        $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
+        $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
+        $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
+        $order_type = isset($params['order_type']) && !empty($params['order_type']) ? $params['order_type'] : '';
+        $dashboard_order_by = isset($params['dashboard_order_by']) && !empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
+        // $result = $this->getUserFromPartners();
+        $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id, 
+            order_details.created_at as opened_date, order_details.file_number, property_details.full_address,
+            order_details.id, order_details.westcor_order_id, order_details.westcor_file_id, order_details.westcor_cpl_id, 
+            property_details.escrow_lender_id, order_details.is_regenerate_cpl, order_details.cpl_document_name,
+            order_details.created_at, order_details.softpro_status, order_details.is_softpro_order, order_details.proposed_insured_document_name, order_details.is_payoff_generated, 
+            pct_order_prelim_summary.is_tessa,pct_order_prelim_summary.is_visited,pct_order_prelim_summary.generated_date, 
+            pct_order_documents.created as document_created_date, pct_order_prelim_summary.is_doc_updated, p.created as proposed_document_created_date,  property_details.primary_owner';
+
+        if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
+            $keyword = $params['searchvalue'];
+
+            $this->CI->db->group_start()
+                ->like('property_details.full_address', $keyword)
+                ->or_like('order_details.file_number', $keyword)
+                ->group_end();
+            
+            $this->CI->db->group_start()
+                ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+            ->group_end();
+        
+            if (isset($status) && !empty($status)) {
+                if ($status == 'open') {
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
+                } else {
+                    $this->CI->db->where('order_details.softpro_status', $status);
+                }
+            }
+
+            if (isset($month) && !empty($month)) {
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
+                }
+            }
+
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            }
+
+            if (isset($order_type) && !empty($order_type) && $order_type != 'open') {
+                if ($order_type == 'softpro_orders') {
+                    $this->CI->db->group_start()->where('order_details.file_number is not null');
+                    $this->CI->db->where('order_details.file_number !=', "0")->group_end();
+                }
+            }
+
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left')
+                ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+            
+            $this->CI->db->where('order_details.is_softpro_order', 1);
+            
+            
+            $total_records = $this->CI->db->count_all_results();
+
+            
+            $this->CI->db->group_start()->like('property_details.full_address', $keyword);
+            $this->CI->db->or_like('order_details.file_number', $keyword)->group_end();
+        
+            if (isset($status) && !empty($status)) {
+                if ($status == 'open') {
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL)');
+                } else {
+                    $this->CI->db->where('order_details.softpro_status', $status);
+                }
+            }
+
+            if (isset($month) && !empty($month)) {
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
+                }
+            }
+
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            }
+
+            $this->CI->db->group_start()
+                ->where('order_details.file_number is not null')
+                ->where('order_details.file_number !=', "0")
+            ->group_end();
+            
+            $this->CI->db->group_start()
+                ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+            ->group_end();
+
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $orders_lists = array();
+
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left')
+                ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+            $this->CI->db->where('order_details.is_softpro_order', 1);
+            
+
+            if (!empty($dashboard_order_by)) {
+                $this->CI->db->order_by('order_details.prelim_summary_id desc');
+                $this->CI->db->order_by("order_details.created_at", "desc");
+            } else {
+                $this->CI->db->order_by("order_details.created_at", "desc");
+            }
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+            if ($query->num_rows() > 0) {
+                $orders_lists = $query->result_array();
+            }
+            // print_r($this->CI->db->last_query());die;
+
+        } else {
+            if (isset($status) && !empty($status)) {
+                if ($status == 'open') {
+                    $this->CI->db->group_start();
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL))');
+                } else {
+                    $this->CI->db->group_start();
+                    $this->CI->db->where('order_details.softpro_status', $status);
+                    $this->CI->db->group_end();
+                }
+            }
+
+            if (isset($month) && !empty($month)) {
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
+                }
+            }
+
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            }
+
+            $this->CI->db->group_start()
+                ->where('order_details.file_number is not null')
+                ->where('order_details.file_number !=', "0")
+            ->group_end();
+            
+            $this->CI->db->group_start()
+                ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+            ->group_end();
+        
+
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left')
+                ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+            $this->CI->db->where('order_details.is_softpro_order', 1);            
+
+            $total_records = $this->CI->db->count_all_results();
+
+            $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
+            $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
+            $orders_lists = array();
+
+            if (isset($status) && !empty($status)) {
+                if ($status == 'open') {
+                    $this->CI->db->group_start();
+                    $this->CI->db->where('((order_details.softpro_status != "closed" and  order_details.softpro_status != "canceled" and  order_details.softpro_status != "inprocess" and  order_details.softpro_status != "duplicate") OR order_details.softpro_status IS NULL)');
+                    $this->CI->db->group_end();
+                } else {
+                    $this->CI->db->where('order_details.softpro_status', $status);
+                }
+            }
+
+            if (isset($month) && !empty($month)) {
+                if ($status == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('MONTH(order_details.resware_closed_status_date)', $month);
+                    $this->CI->db->where('YEAR(order_details.resware_closed_status_date)', date('Y'));
+                }
+            }
+
+            if (isset($yearFlag) && !empty($yearFlag)) {
+                $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+            }
+
+            $this->CI->db->group_start()
+                ->where('order_details.file_number is not null')
+                ->where('order_details.file_number !=', "0")
+            ->group_end();
+            
+            $this->CI->db->group_start()
+                ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+            ->group_end();
+            
+            $this->CI->db->select($select)
+                ->from('order_details')
+                ->join('property_details', 'order_details.property_id = property_details.id')
+                ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+                ->join('pct_order_documents', 'pct_order_documents.document_name = order_details.cpl_document_name', 'left')
+                ->join('pct_order_documents as p', 'p.document_name = order_details.proposed_insured_document_name', 'left')
+                ->join('pct_order_prelim_summary', 'order_details.prelim_summary_id = pct_order_prelim_summary.id', 'left')
+                ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+            $this->CI->db->where('order_details.is_softpro_order', 1);
+            
+            if (!empty($dashboard_order_by)) {
+                $this->CI->db->order_by('order_details.prelim_summary_id desc');
+                $this->CI->db->order_by("order_details.created_at", "desc");
+            } else {
+                $this->CI->db->order_by("order_details.created_at", "desc");
+            }
+
+            if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
+                $this->CI->db->limit($limit, $offset);
+            }
+
+            $query = $this->CI->db->get();
+            // print_r($this->CI->db->last_query());die;
+            if ($query->num_rows() > 0) {
+                $orders_lists = $query->result_array();
+            }
+        }
+
+        return array(
+            'recordsTotal' => $total_records,
+            'recordsFiltered' => $total_records,
+            'data' => $orders_lists,
+        );
+    }
+
     public function get_document_types()
     {
         $this->CI->db->select('*');
@@ -2047,6 +2314,75 @@ class Order
         return $query->row_array();
     }
 
+    public function getOrdersCountForDashboard($request)
+    {
+        $this->CI->db->select('count(*) as order_count, sum(premium) as total_premium_for_orders')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        if (isset($request['orderType'])) {
+            $this->CI->db->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+            if ($request['orderType'] == 'escrow') {
+                $this->CI->db->group_start()
+                    ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                    ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+                ->group_end();
+            }
+        }
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        if (isset($request['closedOrderNumbers']) && !empty($request['closedOrderNumbers'])) {
+            $this->CI->db->where_not_in('order_details.file_number', $request['closedOrderNumbers']);
+        }
+        if (isset($request['transactionType'])) {
+            $this->CI->db->where('transaction_details.transaction_type', $request['transactionType']);
+        }
+        
+        if (isset($request['yearly_flag']) && $request['yearly_flag'] == 1 ) {
+            if (!isset($request['year']) || $request['year'] == 0) {
+                $request['year'] = date('Y');
+            }
+            // if ($yearly_flag == 1) { 
+            if (isset($request['countType']) && $request['countType'] == 'open') {
+                $this->CI->db->where('YEAR(order_details.created_at)', $request['year']);
+            } else {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $request['year']);
+            }
+        } else {
+            if (isset($request['dashboard_flag']) && $request['dashboard_flag'] == 1 ) {
+            // if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+                if (isset($request['countType']) && $request['countType'] == 'closed') {
+                    $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+                }
+            } else {
+                if (isset($request['countType']) && $request['countType'] == 'open') {
+                    $this->CI->db->where('MONTH(order_details.created_at)', $request['month']);
+                    if (!isset($request['year']) || $request['year'] == 0) {
+                    // if ($year == 0) {
+                        $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                    } else {
+                        $this->CI->db->where('YEAR(order_details.created_at)', $request['year']);
+                    }
+                } else {
+                    $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $request['month']);
+                    if (!isset($request['year'])) {
+                        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                    } else {
+                        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                    }
+                }
+            }
+        }
+        
+
+        $query = $this->CI->db->get();
+        // if ($request['countType'] == 'closed') {
+        //     echo $this->CI->db->last_query();exit;
+        // }
+        return $query->row_array();
+    }
+
     public function getOpenOrdersCountForSaleProducts($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
         $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_open_orders, sum(escrow_amount) as total_escrow_amount_for_sale_open_orders')
@@ -3258,6 +3594,57 @@ class Order
         } else {
             $this->CI->db->where('transaction_details.title_officer is not null');
         }
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function getOpenEscrowOrdersCountForLastMonthOfPreviousYear()
+    {
+        $previousYear = (string) (date('Y') - 1);
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+        $this->CI->db->where('MONTH(order_details.created_at)', '12');
+        $this->CI->db->where('YEAR(order_details.created_at)', $previousYear);
+        $this->CI->db->group_start()
+                    ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                    ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+                ->group_end();
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function getEscrowOrderCountBasedOnCurrentDayForPreviousMonthForPreviousYear()
+    {
+        $firstDate = date("Y", strtotime("-1 year")) . '-12-01';
+        $lastDate = date("Y", strtotime("-1 year")) . '-12-%d';
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+        $this->CI->db->where("(order_details.created_at BETWEEN  DATE_FORMAT(NOW() , '$firstDate') AND DATE_FORMAT(NOW() + INTERVAL 1 DAY , '$lastDate'))");
+        $this->CI->db->group_start()
+                    ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                    ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+                ->group_end();
+        $query = $this->CI->db->get();
+        return $query->row_array();
+    }
+
+    public function getEscrowOrderCountBasedOnCurrentDayForPreviousMonth()
+    {
+        $firstDate = '%Y-' . date("m", strtotime("-1 month")) . '- 01';
+        $lastDate = '%Y-' . date("m", strtotime("-1 month")) . '-%d';
+        $this->CI->db->select('count(*) as total_count')
+            ->from('order_details')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+        $this->CI->db->where("(order_details.created_at BETWEEN  DATE_FORMAT(NOW() , '$firstDate') AND DATE_FORMAT(NOW() + INTERVAL 1 DAY , '$lastDate'))");
+        $this->CI->db->group_start()
+                    ->where('pct_softpro_order_type.order_type', 'Escrow only')
+                    ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+                ->group_end();
         $query = $this->CI->db->get();
         return $query->row_array();
     }
@@ -5377,6 +5764,33 @@ class Order
         } else {
             $this->CI->db->where('transaction_details.sales_representative', $userId);
         }
+        $query = $this->CI->db->get();
+        return $query->result_array();
+    }
+
+    public function getEscrowRevenueData($month, $year='')
+    {
+        if (empty($year)) {
+            $year = date('Y');
+        }
+        $userdata = $this->CI->session->userdata('user');
+        if (empty($userId)) {
+            $userId = $userdata['id'];
+        }
+        $this->CI->db->select('order_details.file_number, order_details.id, property_details.full_address,order_details.id, order_details.prod_type, order_details.premium')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
+            ->join('pct_softpro_order_type', 'transaction_details.order_type = pct_softpro_order_type.id AND pct_softpro_order_type.status=1', 'left');
+
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        $this->CI->db->group_start()
+            ->where('pct_softpro_order_type.order_type', 'Escrow only')
+            ->or_where('pct_softpro_order_type.order_type', 'Title & Escrow')
+        ->group_end();
+        $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+        
         $query = $this->CI->db->get();
         return $query->result_array();
     }

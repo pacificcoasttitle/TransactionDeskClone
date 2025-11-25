@@ -45,6 +45,84 @@
     width: 100%;
     height: auto;
 }
+#aiPrelimSummary .card-body {
+    padding: 0.5px 1.25rem;
+}
+
+.prelim-summary-btn {
+    background: #FF8A65;
+    color: #fff;
+}
+
+.prelim-summary-btn:hover {
+    background: #FF7043;
+    color: #fff;
+}
+.btn-icon-split .text {
+    font-size: 11px;
+    padding: .575rem 3px;
+}
+
+.update-prelim-btn {
+    background-color: #B0BEC5 !important;
+    border-color: #B0BEC5 !important;
+    color: #fff !important;
+}
+
+.updated-prelim-btn {
+    background-color: #f26b2b  !important;
+    border-color: #f26b2b  !important;
+    color: #fff !important;
+}
+
+.info-prelim-btn {
+    background-color: #03374f !important;
+    border-color: #03374f !important;
+    color: #fff !important;
+}
+
+.action-prelim-btn {
+    background-color: #ECEFF1 !important;
+    border-color: #ECEFF1 !important;
+    color: #000 !important;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown .click-action-type {
+    color: #222222;
+    text-decoration: none;
+    padding: 0px;
+}
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 3px;
+    vertical-align: middle;
+    border-top: 3px dashed;
+    border-top: 3px solid;
+    border-right: 3px solid transparent;
+    border-left: 3px solid transparent;
+}
+
+.dropdown-menu {
+    margin-top: 0px !important
+}
+.dropdown-menu > li > a {
+    padding: 5px 0px 5px 0px;
+    display: block;
+    /* padding: 10px 20px; */
+    clear: both;
+    font-weight: normal;
+    line-height: 1;
+    color: #333333;
+    white-space: nowrap;
+}
+.dropdown-toggle::after {
+    border-top: none;
+}
 </style>
 
 <div class="container-fluid p-5 main-wrapper">
@@ -219,6 +297,8 @@
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
+					<div id="order_listing_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+					<div id="order_listing_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
 					<table class="table table-bordered" id="order_listing" width="100%" cellspacing="0">
 						<thead>
 							<tr>
@@ -275,7 +355,7 @@
 		</div>
 	</div>
 </section> -->
-
+</div>
 
 <div class="modal fade" id="sendInviteModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -369,3 +449,180 @@
 	</div>
 </div>
 
+<div class="modal" id="contactsModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary" >Contacts</h6>
+				</div>
+				
+				<div class="card-body"> 
+					<div class="table-responsive">
+						<table class="table table-bordered" id="tbl-contacts-data" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>Type</th>
+									<th>Company Name</th>
+									<th>Name</th>
+									<th>Email Address</th>
+								</tr>
+							</thead>            
+							<tbody></tbody>
+						</table>
+					</div>
+					<div class="form-footer">
+						<button type="reset" data-dismiss="modal" aria-label="Close" class="btn-danger btn-icon-split btn-sm">
+							<span class="icon text-white-50">
+								<i class="fas fa-ban"></i>
+							</span>
+							<span class="text">Close</span>
+						</button>
+						<!-- <button type="button" class="btn btn-success" data-dismiss="modal" >Close</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" width="1200px" id="revenue_model" tabindex="-1" role="dialog"
+    aria-labelledby="Revenue Information" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width:100%;height:auto;">
+        <div class="modal-content">
+            <form method="POST" action="">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Revenue Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="smart-forms smart-container">
+                                    <div class="search-result">
+                                        <div id="deliverables-details-fields">
+                                            <div class="frm-row" id="clone_container">
+                                                <div class="section colm colm12" id="clone-email-address"
+                                                    style="margin-bottom: 0px !important;">
+                                                    <div class="toclone">
+                                                        <div class="spacer-b10">
+                                                            <label class="field" id="revenue_container">
+															
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" width="500px" id="note_information" tabindex="-1" role="dialog" aria-labelledby="Create a Note" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:40%;">
+		<div class="modal-content">
+			<form method="POST" action="" enctype="multipart/form-data" id="prelim_add_note_form" >
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card shadow">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary" >Add a Note</h6>
+							</div>
+							<div class="card-body"> 
+								<div class="smart-forms smart-container">
+									<div class="search-result">
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-12">
+													<label for="note_subject" class="col-form-label">Subject</label>
+													<input type="text" name="note_subject" id="note_subject" class="form-control gui-input ui-autocomplete-input" placeholder="Subject" required="">
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="row">
+												<div class="col-sm-12">
+													<label for="note" class="col-form-label">Note</label>
+													<textarea name="note" id="note" class="gui-input form-control" rows="4" placeholder="Note" autocomplete="off" required=""></textarea>
+												</div>
+											</div>
+										</div>
+
+										<div class="form-group">
+                                            <label for="recorded_date" class="col-form-label">Upload File</label>
+                                            <input required="" name="file_upload" type="file" id="file_upload" class="form-control" accept="application/pdf">
+                                        </div>
+                                        <input type="hidden" name="upload_file_id" id="upload_file_id" value="">
+                                        <input type="hidden" name="document_name" id="document_name" value="">
+                                        <input type="hidden" name="order_id" id="order_id" value="">
+									</div>
+
+									<div class="form-footer" style="padding: 0px 1rem !important;">
+										<button type="submit" data-btntext-sending="Sending..." class="btn btn-success btn-icon-split btn-sm prelim_add_note_form_submit">
+											<span class="icon text-white-50">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text">Submit</span>
+										</button>
+
+										<button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+											<span class="icon text-white-50">
+												<i class="fas fa-ban"></i>
+											</span>
+											<span class="text">Cancel</span>
+										</button>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" width="800px" id="aiPrelimSummary" tabindex="-1" role="dialog"
+	aria-labelledby="Ai Prelim Summary" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document" style="width:65%; max-width: 1200px">
+		<div class="modal-content">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card shadow">
+						<div class="modal-header">
+							<h4 class="modal-title"><strong>Prelim Summary</strong></h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="card-body"> 
+							<div class="row mb-1">
+								<div class="col-md-8">
+									<span><strong>Property Address:</strong> <span id="prelim_property" ></span></span>
+								</div>
+								<div class="col-md-4">
+									<span><strong>File Name:</strong> <span id="prelim_file_number" ></span></span>
+								</div>
+							</div>
+							<div class="typography-section__inner">
+								<div style="border-bottom: 4px solid #D35411;"></div>
+							</div>
+							<div class="smart-forms smart-container prelim_summary">
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

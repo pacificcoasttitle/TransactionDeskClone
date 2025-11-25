@@ -456,6 +456,7 @@ class SalesRep extends MX_Controller
             $data['close_order_percetage'] = 0;
         }
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->js_version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
@@ -912,6 +913,7 @@ class SalesRep extends MX_Controller
         }
         $data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->js_version));
         //$this->template->show("order", "sales_production_history", $data);
         $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
@@ -978,6 +980,7 @@ class SalesRep extends MX_Controller
         $data['salesHistory'] = $salesHistory;
         $this->salesdashboardtemplate->addJS(base_url('assets/plugins/chart/Chart.min.js'));
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-trends.css?v=' . $this->js_version));
         //$this->template->show("order", "sales_trends", $data);
         $this->salesdashboardtemplate->show("order", "sales_trends", $data);
@@ -1057,6 +1060,7 @@ class SalesRep extends MX_Controller
             }
         }
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/escrow_tasks.css?v=05'));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-summary.css?v=05'));
         //$this->template->show("order", "sales_summary", $data);
@@ -1185,6 +1189,7 @@ class SalesRep extends MX_Controller
             }
             $data['salesHistory'] = $salesHistory;
             $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+            $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
             $this->salesdashboardtemplate->show("order", "sales_current_month_production_history", $data);
             // $this->template->show("order", "sales_current_month_production_history", $data);
         } else {
@@ -1199,6 +1204,7 @@ class SalesRep extends MX_Controller
         $data['salesHistory'] = array();
 
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->show("order", "sales_ranking", $data);        
     }
 

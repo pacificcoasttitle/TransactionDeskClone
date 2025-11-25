@@ -40,4 +40,42 @@ $(document).ready(function () {
             }
         });
     }
+
+    if (jQuery('#frm-add-escrow-production').length) {
+        jQuery('#frm-add-escrow-production').validate({
+            ignore: ":not(:visible)",
+            rules: {
+                first_name: "required",
+                last_name: "required",
+                email_address: "required"
+            },
+            messages: {
+                first_name: "Please Enter First Name",
+                last_name: "Please Enter Last Name",
+                email_address: "Please Enter Email address",
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    }
+
+    if (jQuery('#frm-edit-escrow-production').length) {
+        jQuery('#frm-edit-escrow-production').validate({
+            ignore: ":not(:visible)",
+            rules: {
+                first_name: "required",
+                last_name: "required",
+                email_address: "required"
+            },
+            messages: {
+                first_name: "Please Enter First Name",
+                last_name: "Please Enter Last Name",
+                email_address: "Please Enter Email address",
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    }
 });
