@@ -8598,6 +8598,51 @@ function syncSoftProOrders(fileNumber = '') {
     });
 }
 
+function fetchRevenueReport() {
+    $("#page-preloader").show();
+
+    $.ajax({
+        url: base_url + "fetch-revenue-report",
+        method: "POST",
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            console.log(result);
+            if (result.status == 'success') {
+                console.log('status code: ' + result.status);
+                $('body').animate({ opacity: 1.0 }, "slow");
+                let msg = result.message;
+                $('#order_success_msg').html(msg).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_success_msg").offset().top
+                }, 1000);
+                setTimeout(function () {
+                    $('#order_success_msg').html('').hide();
+                }, 4000);
+            } else {
+                $('#order_error_msg').html("Error while syncing sales reps").show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_error_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#order_error_msg').html('').hide();
+                }, 10000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#order_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#order_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#revenue_error_msg').html('').hide();
+            }, 10000);
+        }
+    });
+}
+
 function updateMailNotificationReps() {
     $('input[type="checkbox"]').on('change', function () {
         $('body').animate({ opacity: 0.5 }, "slow");
