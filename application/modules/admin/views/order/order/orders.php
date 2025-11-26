@@ -32,12 +32,12 @@
 <div class="container-fluid">
     <!-- DataTables Example -->
     <div class="row mb-3">
-		<div class="col-sm-6">
+		<div class="col-sm-4">
 			<h1 class="h3 text-gray-800">Orders Listing</h1>
 		</div>
 
         <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <a href="javascript:void(0);" data-export-type="csv" onclick="exportOrders();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
@@ -53,6 +53,11 @@
                         <i class="fas fa-refresh"></i>
                     </span>
                     <span class="text"> Sync Order Status</span> </a>
+                <a href="javascript:void(0);" onclick="fetchRevenueReport();" id="fetch-revenue-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-refresh"></i>
+                    </span>
+                    <span class="text"> Sync Revenue</span> </a>
             </div>
         <?php endif; ?>
 

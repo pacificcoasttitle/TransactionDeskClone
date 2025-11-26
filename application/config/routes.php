@@ -250,6 +250,7 @@ $route['softpro-fetch-prelim-data']         = 'frontend/order/cron/fetchPrelimDo
 $route['softpro-user-login']         = 'frontend/order/cron/transferLoginDetails';
 $route['fetch-pct-master-user-login']         = 'frontend/order/cron/transferMasterUserLoginDetails';
 $route['fetch-softpro-orders']         = 'frontend/order/cron/fetchSoftproOrders';
+$route['fetch-revenue-report']         = 'frontend/order/cron/importRevenueData';
 $route['fetch-bulk-prelim-report']         = 'frontend/order/cron/fetchBulkPrelimreport';
 $route['fetch-single-prelim-report']         = 'frontend/order/cron/fetchSinglePrelimreport';
 $route['post-prelim-report']         = 'frontend/order/cron/postPrelimreport';
