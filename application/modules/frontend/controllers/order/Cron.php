@@ -8011,7 +8011,7 @@ class Cron extends MX_Controller
             $recordingConfirmationShutOff = $configData['recording_confirmation_shut_off']['is_enable'];
             $disburseFundsShutOff = $configData['disburse_funds_shut_off']['is_enable'];
 
-            if ($taskId == '03-020' && $recordingConfirmationShutOff == 1) {
+            if (($taskId == '03-020' || $taskId == 'TSG-02-015' || $taskId == 'TSG-PRE-15') && $recordingConfirmationShutOff == 1) {
                 $res = "Admin has disabled recording confirmation notification.";
                 $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                 echo $res; exit;
@@ -8039,7 +8039,7 @@ class Cron extends MX_Controller
             // print_r($filesResult);die;
             if (!empty($filesResult) && !empty($filesResult['phone'])) {
             // if (!empty($filesResult)) {
-                if ($taskId == '03-020' && $filesResult['notify_recording_confirm'] == 0) {
+                if (($taskId == '03-020' || $taskId == 'TSG-02-015' || $taskId == 'TSG-PRE-15') && $filesResult['notify_recording_confirm'] == 0) {
                 // if (false) {
                     $twilio['message'] = $reqData;
                     $twilio['sent_from'] = $from;
@@ -8067,7 +8067,7 @@ class Cron extends MX_Controller
                     $filesResult['timestamp'] = $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
                     
                     $message = "";
-                    if ($taskId == '03-020') {
+                    if (($taskId == '03-020' || $taskId == 'TSG-02-015' || $taskId == 'TSG-PRE-15')) {
                         // $message = "Hi " . $filesResult['first_name'] . " " . $filesResult['last_name'] . ", \n i. Recording Confirmation: " . $file_number . " \n ii. Property Address: " . $filesResult['full_address'] . " \n iii. @ " . $timestamp;
                         $message = "Hi {$filesResult['first_name']} {$filesResult['last_name']},\n"
                         . "i. Recording Confirmation: {$file_number}\n"
@@ -8131,7 +8131,7 @@ class Cron extends MX_Controller
             }
             
             // if ($taskId == '03-020' && ($filesResult['lender_notify_recording_confirm'] == 1 || $filesResult['escrow_notify_recording_confirm'] == 1)) {
-            if ($taskId == '03-020') {
+            if (($taskId == '03-020' || $taskId == 'TSG-02-015' || $taskId == 'TSG-PRE-15')) {
                 $this->order->sendRecordingConfirmationEmail($filesResult, 'recording_confirmation');
             }
             
