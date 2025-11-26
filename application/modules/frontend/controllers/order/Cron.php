@@ -8954,8 +8954,8 @@ class Cron extends MX_Controller
                     }
                 }
 
-                
-                $this->session->set_flashdata('revenue_success', 'Data updated for total ' . $updateCount . ' Orders');
+                $res = 'Data updated for total ' . $updateCount . ' Orders';
+                // $this->session->set_flashdata('revenue_success', 'Data updated for total ' . $res . ' Orders');
             }
         // }
         unset($updateTransactionDetails);
@@ -8968,6 +8968,8 @@ class Cron extends MX_Controller
         unset($orderTypeList);
         unset($productTypeList);
         unset($query);
+        
+        echo json_encode(['status' => 'success','message' => $res]);
     }
 
     public function updatePmaRepsId() {

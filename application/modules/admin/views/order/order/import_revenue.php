@@ -316,10 +316,27 @@ form {
 
 <section class="section-sm section-defaulta" >
 	<div class="container-fluid padding-l-r">
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <h1 class="h3 text-gray-800">Import Revenue Report</h1>
+            </div>
+
+            <div class="col-sm-6">
+                <a href="javascript:void(0);" onclick="fetchRevenueReport();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-refresh"></i>
+                    </span>
+                    <span class="text"> Update Revenue </span> </a>
+                
+            </div>
+
+        </div>
 		<div class="card shadow p-5">
 			<div class="row">
 				<div class="col-md-8">
 					<h5 class="text-center"><span>Import Revenue Report</span></h5>
+                    <div id="order_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+                    <div id="order_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
 					<div class="smart-forms smart-container">
 						<form method="POST" id="smart-form" enctype="multipart/form-data" >
 							<div class="form-body">
