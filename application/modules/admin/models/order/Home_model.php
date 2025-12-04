@@ -2478,6 +2478,7 @@ class Home_model extends CI_Model
         }
 
         $query = $this->db->get();
+        // print_r($this->db->last_query());die;
         $admin_logs_list = $query->num_rows() > 0 ? $query->result_array() : [];
 
         return [
