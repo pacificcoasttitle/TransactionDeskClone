@@ -4,7 +4,7 @@
 
 class TitleOfficers extends MX_Controller 
 {
-	private $js_version = '03.02';
+	private $js_version = '03.03';
 	function __construct() 
     {
         parent::__construct();
