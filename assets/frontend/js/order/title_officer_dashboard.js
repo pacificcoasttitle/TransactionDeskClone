@@ -299,12 +299,12 @@ function getRevenueData() {
 function getRevenueDataBasedOnMonth(month) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
-    var sales_rep_id = $('#sales_user_production_filter').val();
+    var user_id = $('#sales_user_production_filter').val();
     $.ajax({
         url: base_url + "get-revenue-data",
         method: "POST",
         data: {
-            sales_rep_id: sales_rep_id,
+            user_id: user_id,
             month: month
         },
         success: function (data) {
