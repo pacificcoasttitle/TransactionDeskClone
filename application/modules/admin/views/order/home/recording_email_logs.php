@@ -13,7 +13,7 @@
                         <tr>
                             <th width="5%">Sr No</th>
                             <th width="15%">Order Number</th>
-                            <th width="25%">Receiving Partner</th>
+                            <th width="25%">Property Address</th>
                             <th width="40%">Partner Company Name</th>
                             <th width="15%">Email Sent</th>
                             <!-- <th width="15%">Created</th> -->
