@@ -305,7 +305,8 @@ function getRevenueDataBasedOnMonth(month) {
         method: "POST",
         data: {
             user_id: user_id,
-            month: month
+            month: month,
+            user_type: 'title_officer'
         },
         success: function (data) {
             var result = jQuery.parseJSON(data);
