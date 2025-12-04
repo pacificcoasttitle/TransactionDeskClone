@@ -1009,7 +1009,8 @@ function getRevenueDataBasedOnMonth(month) {
         method: "POST",
         data: {
             user_id: user_id,
-            month: month
+            month: month,
+            user_type: 'sales_rep'
         },
         success: function (data) {
             var result = jQuery.parseJSON(data);
