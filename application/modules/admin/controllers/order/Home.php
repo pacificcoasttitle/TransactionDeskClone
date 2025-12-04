@@ -6649,9 +6649,9 @@ class Home extends MX_Controller
                 $nestedData   = [];
                 $nestedData[] = $i;
                 $nestedData[] = $value['file_number'];
-                $nestedData[] = $name;
+                $nestedData[] = $value['full_address'];
                 $nestedData[] = $companyName;
-                $nestedData[] = $value['recording_confirmation_sent'] ? 'Yes' : 'No';
+                $nestedData[] = $value['recording_confirmation_sent'] ? 'Sent' : 'No';
                 $data[]       = $nestedData;
                 $i++;
             }
