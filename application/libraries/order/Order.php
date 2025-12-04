@@ -5765,6 +5765,7 @@ class Order
             $this->CI->db->where('transaction_details.sales_representative', $userId);
         }
         $query = $this->CI->db->get();
+        // print_r($this->CI->db->last_query());die;
         return $query->result_array();
     }
 
