@@ -47,7 +47,7 @@
                     <span class="icon text-white-50">
                         <i class="fas fa-refresh"></i>
                     </span>
-                    <span class="text"> Sync Order </span> </a>
+                    <span class="text"> Sync All Order </span> </a>
                 <a href="javascript:void(0);" onclick="syncSoftProOrdersStatus();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
                     <span class="icon text-white-50">
                         <i class="fas fa-refresh"></i>
@@ -58,6 +58,11 @@
                         <i class="fas fa-refresh"></i>
                     </span>
                     <span class="text"> Sync Revenue</span> </a>
+                <a href="javascript:void(0);" onclick="openSoftproOrderPopup();" id="fetch-revenue-data" class="btn btn-success btn-icon-split float-right mr-2"> 
+                    <span class="icon text-white-50">
+                        <i class="fas fa-refresh"></i>
+                    </span>
+                    <span class="text"> Sync Order</span> </a>
             </div>
         <?php endif; ?>
 
@@ -106,3 +111,52 @@
         </div>
     </div>
 </div><!-- /.container-fluid -->
+
+<div class="modal fade" id="fetchOrderNumber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form  method="post" id="sync-order-number-form" method="POST">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card shadow">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">Sync Order Number </h6>
+							</div>
+							<div class="card-body"> 
+                                <div class="smart-forms smart-container">
+                                    <div class="modal-body search-result">
+                                        
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <label for="order_number" class="col-form-label">Enter Order Number</label>
+													<input name="order_number" required="" type="text" class="form-control" id="order_number">
+                                                    <div id="sync_order_number_error_msg" class="error" style="display:none;"></div>
+												</div>
+											</div>
+                                            
+										</div>
+									</div>
+									<div class="form-footer" style="padding: 0px 1rem !important;">
+										<button type="submit" data-btntext-sending="Sending..." onclick="syncOrderNumberFromSoftpro(event);" class="btn btn-success btn-icon-split btn-sm">
+											<span class="icon text-white-50">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text">Sync Now</span>
+										</button>
+										<button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn-danger btn-icon-split btn-sm">
+											<span class="icon text-white-50">
+												<i class="fas fa-ban"></i>
+											</span>
+											<span class="text">Cancel</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
