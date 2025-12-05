@@ -32,12 +32,12 @@
 <div class="container-fluid">
     <!-- DataTables Example -->
     <div class="row mb-3">
-		<div class="col-sm-4">
+		<div class="col-sm-2">
 			<h1 class="h3 text-gray-800">Orders Listing</h1>
 		</div>
 
         <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-            <div class="col-sm-8">
+            <div class="col-sm-10">
                 <a href="javascript:void(0);" data-export-type="csv" onclick="exportOrders();" id="export-orders-data" class="btn btn-success btn-icon-split float-right mr-2"> 
                     <span class="icon text-white-50">
                         <i class="fas fa-file-export"></i>
