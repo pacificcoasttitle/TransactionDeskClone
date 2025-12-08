@@ -2481,7 +2481,7 @@ $(document).ready(function () {
                 options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
             });
 
-            $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline;padding-right: 0;text-align: right;"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"' + options + '"</select></label></div>');
+            $("div.FilterOrderListing").append('<div class="" style="display:inline;padding-right: 0;text-align: right;"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"' + options + '"</select></label></div>');
         }
 
         if (product_type) {
