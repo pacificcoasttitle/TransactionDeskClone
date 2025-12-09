@@ -8827,6 +8827,7 @@ class Cron extends MX_Controller
         date_default_timezone_set('America/Los_Angeles');
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
+        $this->load->library('order/common');
         $data = array();
         $data['title'] = 'PCT Order: Import Revenue Data From PowerBI';
         $configData    = $this->common->getConfigData();
