@@ -8829,7 +8829,8 @@ class Cron extends MX_Controller
         $this->load->model('order/apiLogs');
         $data = array();
         $data['title'] = 'PCT Order: Import Revenue Data From PowerBI';
-        
+        $configData    = $this->common->getConfigData();
+        $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
         $query = $this->db->select('id, product_type')
             ->from('pct_softpro_product_type')
             ->get();
@@ -8917,7 +8918,7 @@ class Cron extends MX_Controller
                 // print_r($updateData);die;
                 if (!empty($updateData)) {
                     foreach ($updateData as $key => $value) {
-                        $orderDetails = $this->db->select('id, property_id, transaction_id, premium, escrow_officer_id, softpro_status, file_number, is_softpro_order')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
+                        $orderDetails = $this->db->select('id, property_id, transaction_id, premium, escrow_officer_id, softpro_status, file_number, is_softpro_order, survey_notification_sent')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
                         $prevPremium = $orderDetails['premium'] ?? 0;
                         if (!empty($orderDetails)) {
                             $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
@@ -8949,6 +8950,17 @@ class Cron extends MX_Controller
                             }
                             if (!empty($updateTransactionDetails)) {
                                 $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
+                            }
+
+                            if ($enableSurveyEmailFlag == 1 && !$orderDetails['survey_notification_sent']) {
+                                $emailQueueData = [
+                                    'file_number' => $value['order_number'],
+                                    'email_type' => 'survey'
+                                ];
+                                
+                                if (!$this->db->get_where('pct_email_queue', $emailQueueData)->num_rows()) {
+                                    $this->db->insert('pct_email_queue', $emailQueueData);
+                                }
                             }
                         }
                     }
