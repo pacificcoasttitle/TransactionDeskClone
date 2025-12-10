@@ -141,7 +141,7 @@
                                     </div>
 
                                     <div class="form-group row ml-1">
-                                        <label for="enable_survey_email" class="col-sm-4 col-form-label">Enable Survey Email </label>
+                                        <label for="enable_survey_email" class="col-sm-7 col-form-label">Enable Survey Email </label>
                                         <div class="col-sm-2">
                                             <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_survey_email" id="enable_survey_email" <?php echo isset($enable_survey_email) && !empty($enable_survey_email) ? 'Checked' : ''; ?>>
                                         </div>
