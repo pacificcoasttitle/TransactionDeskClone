@@ -587,6 +587,7 @@ class Order
         $userdata = $this->CI->session->userdata('user');
         $email = $userdata['email'];
         $status = isset($params['status']) && !empty($params['status']) ? $params['status'] : '';
+        $escrowOfficer = isset($params['escrowOfficer']) && !empty($params['escrowOfficer']) ? $params['escrowOfficer'] : '';
         $month = isset($params['month']) && !empty($params['month']) ? $params['month'] : '';
         $is_pay_off = isset($params['is_pay_off']) && !empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag = isset($params['yearFlag']) && !empty($params['yearFlag']) ? $params['yearFlag'] : '';
@@ -620,6 +621,10 @@ class Order
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
                 }
+            }
+
+            if (isset($escrowOfficer) && !empty($escrowOfficer)) {
+                $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficer);
             }
 
             if (isset($month) && !empty($month)) {
@@ -667,6 +672,10 @@ class Order
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
                 }
+            }
+
+            if (isset($escrowOfficer) && !empty($escrowOfficer)) {
+                $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficer);
             }
 
             if (isset($month) && !empty($month)) {
@@ -737,6 +746,10 @@ class Order
                 }
             }
 
+            if (isset($escrowOfficer) && !empty($escrowOfficer)) {
+                $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficer);
+            }
+
             if (isset($month) && !empty($month)) {
                 if ($status == 'open') {
                     $this->CI->db->where('MONTH(order_details.created_at)', $month);
@@ -786,6 +799,10 @@ class Order
                 } else {
                     $this->CI->db->where('order_details.softpro_status', $status);
                 }
+            }
+            
+            if (isset($escrowOfficer) && !empty($escrowOfficer)) {
+                $this->CI->db->where('order_details.escrow_officer_id', $escrowOfficer);
             }
 
             if (isset($month) && !empty($month)) {
@@ -2374,11 +2391,15 @@ class Order
                 }
             }
         }
+
+        if (isset($request['userId']) && !empty($request['userId'])) {
+            $this->CI->db->where('order_details.escrow_officer_id', $request['userId']);
+        }
         
 
         $query = $this->CI->db->get();
         // if ($request['countType'] == 'closed') {
-        //     echo $this->CI->db->last_query();exit;
+            // echo $this->CI->db->last_query();exit;
         // }
         return $query->row_array();
     }
@@ -3491,6 +3512,18 @@ class Order
         $this->CI->db->where('is_title_officer', 1);
         $this->CI->db->where('status', 1);
         $this->CI->db->order_by('first_name', 'asc');
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        return $query->result_array();
+    }
+
+    public function get_escrow_officers()
+    {
+        $this->CI->db->select('id, officer_name, email_address, closer_examiner, company_name');
+        $this->CI->db->from('pct_softpro_lookup_table');
+        $this->CI->db->where('is_escrow_officer', 1);
+        $this->CI->db->where('status', 1);
+        $this->CI->db->order_by('officer_name', 'asc');
         $query = $this->CI->db->get();
         // echo $this->CI->db->last_query();exit;
         return $query->result_array();
