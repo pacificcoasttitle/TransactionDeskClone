@@ -5802,7 +5802,7 @@ class Order
         return $query->result_array();
     }
 
-    public function getEscrowRevenueData($month, $year='')
+    public function getEscrowRevenueData($month, $userId)
     {
         if (empty($year)) {
             $year = date('Y');
@@ -5824,7 +5824,9 @@ class Order
         ->group_end();
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
         $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
-        
+        if (!empty($userId)) {
+            $this->CI->db->where('order_details.escrow_officer_id', $userId);
+        }
         $query = $this->CI->db->get();
         return $query->result_array();
     }
