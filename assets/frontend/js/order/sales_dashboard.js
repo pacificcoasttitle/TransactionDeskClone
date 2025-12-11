@@ -162,7 +162,7 @@ $(document).ready(function () {
                     // d.order_type = $('#order_type_filter').val();
                     //d.month = $('#month_filter').val();
                     d.order_status = $('#order_status_filter').val();
-                    // d.sales_user = $('#sales_user_filter').val();
+                    d.escrow_officer = $('#escrow_officer_filter').val();
                     // d.sales_rep_manager_flag = flag_val;
                 },
                 dataFilter: function (data) {
@@ -196,26 +196,16 @@ $(document).ready(function () {
 
     }
 
-    $("#order_type_filter").on("change", function () {
-        if ($('#escrow_orders_listing').length) {
-            prelim_list.ajax.reload();
-        }
+    // $("#order_type_filter").on("change", function () {
+    //     if ($('#escrow_orders_listing').length) {
+    //         prelim_list.ajax.reload();
+    //     }
 
-        if ($('#orders_listing').length) {
-            prelim_list.ajax.reload();
-        }
-    });
-
-    $("#order_type_filter").on("change", function () {
-        if ($('#escrow_orders_listing').length) {
-            prelim_list.ajax.reload();
-        }
-
-        if ($('#orders_listing').length) {
-            localStorage.setItem("sales_rep_manager_flag", true);
-            prelim_list.ajax.reload();
-        }
-    });
+    //     if ($('#orders_listing').length) {
+    //         localStorage.setItem("sales_rep_manager_flag", true);
+    //         prelim_list.ajax.reload();
+    //     }
+    // });
 
     $("#order_status_filter").on("change", function () {
         if ($('#escrow_orders_listing').length) {
@@ -223,7 +213,7 @@ $(document).ready(function () {
         }
 
         if ($('#orders_listing').length) {
-            localStorage.setItem("sales_rep_manager_flag", true);
+            localStorage.setItem("escrow_officer_flag", true);
             prelim_list.ajax.reload();
         }
     });
@@ -236,40 +226,40 @@ $(document).ready(function () {
     //     order_list.ajax.reload();
     // });
 
-    $("#sales_user_filter").on("change", function () {
-        localStorage.setItem("sales_rep_manager_flag", true);
+    $("#escrow_officer_filter").on("change", function () {
+        localStorage.setItem("escrow_officer_flag", true);
         var user_id = $(this).val();
-        window.location.replace(base_url + 'sales-dashboard/' + user_id);
+        window.location.replace(base_url + 'escrow-officer-dashboard/' + user_id);
     });
 
-    $("#sales_user_production_filter").on("change", function () {
-        var user_id = $(this).val();
-        window.location.replace(base_url + 'sales-production-history/' + user_id);
-    });
+    // $("#sales_user_production_filter").on("change", function () {
+    //     var user_id = $(this).val();
+    //     window.location.replace(base_url + 'sales-production-history/' + user_id);
+    // });
 
-    $("#sales_user_summary_filter").on("change", function () {
-        var user_id = $(this).val();
-        window.location.replace(base_url + 'sales-summary/' + user_id);
-    });
+    // $("#sales_user_summary_filter").on("change", function () {
+    //     var user_id = $(this).val();
+    //     window.location.replace(base_url + 'sales-summary/' + user_id);
+    // });
 
-    $("#sales_user_trend_filter").on("change", function () {
-        var user_id = $(this).val();
-        window.location.replace(base_url + 'trends/' + user_id);
-    });
+    // $("#sales_user_trend_filter").on("change", function () {
+    //     var user_id = $(this).val();
+    //     window.location.replace(base_url + 'trends/' + user_id);
+    // });
 
-    $("#sales_user_commission_filter").on("change", function () {
-        var user_id = $(this).val();
-        window.location.replace(base_url + 'sales-commission/' + user_id);
-    });
+    // $("#sales_user_commission_filter").on("change", function () {
+    //     var user_id = $(this).val();
+    //     window.location.replace(base_url + 'sales-commission/' + user_id);
+    // });
 
-    if ($('.custom__task_button').length > 0) {
-        $('.task_show_all').click(function () {
-            $(".custom__task_card .custom__task_collapse").collapse('show');
-        });
-        $('.task_hide_all').click(function () {
-            $(".custom__task_card .custom__task_collapse").collapse('hide');
-        });
-    }
+    // if ($('.custom__task_button').length > 0) {
+    //     $('.task_show_all').click(function () {
+    //         $(".custom__task_card .custom__task_collapse").collapse('show');
+    //     });
+    //     $('.task_hide_all').click(function () {
+    //         $(".custom__task_card .custom__task_collapse").collapse('hide');
+    //     });
+    // }
 
 
     if ($('#sales_ranking').length) {
