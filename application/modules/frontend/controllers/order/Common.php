@@ -3776,7 +3776,7 @@ class Common extends MX_Controller
                 $i++;
             }
         } else {
-            $data .= "<tr><td colspan='5'>No records found.</td></tr>";
+            $data .= "<tr class='norecord'><td colspan='5'>No records found.</td></tr>";
         }
         $data .= '</tbody></table>';
         if (!empty($data)) {

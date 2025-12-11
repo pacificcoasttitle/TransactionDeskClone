@@ -339,3 +339,11 @@ th {
     border: none;
     padding: 1rem 1rem 0;
 }
+
+#revenue_container {
+    width: 100%;
+}
+
+.norecord {
+    text-align: center;
+}
