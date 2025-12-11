@@ -961,11 +961,13 @@ function getEscrowRevenueData() {
     $('#revenue_model').modal('show');
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
-    var sales_rep_id = $('#sales_user_filter').val();
+    var escrow_officer_id = $('#escrow_officer_filter').val();
     $.ajax({
         url: base_url + "get-escrow-revenue-data",
         method: "POST",
-        data: {},
+        data: {
+            user_id: escrow_officer_id
+        },
         success: function (data) {
             var result = jQuery.parseJSON(data);
             $('#page-preloader').css('display', 'none');

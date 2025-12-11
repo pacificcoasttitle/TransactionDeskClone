@@ -479,8 +479,8 @@ class EscrowProduction extends MX_Controller
     public function getEscrowRevenueData()
     {
         date_default_timezone_set('America/Los_Angeles');
-        
-        $revenueData = $this->order->getEscrowRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'));
+        $user_id = $this->input->post('user_id');
+        $revenueData = $this->order->getEscrowRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $user_id);
         $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
             <thead>
                 <tr>
@@ -510,7 +510,7 @@ class EscrowProduction extends MX_Controller
                 $i++;
             }
         } else {
-            $data .= "<tr><td colspan='5'>No records found.</td></tr>";
+            $data .= "<tr class='norecord'><td colspan='5'>No records found.</td></tr>";
         }
         $data .= '</tbody></table>';
         if (!empty($data)) {
