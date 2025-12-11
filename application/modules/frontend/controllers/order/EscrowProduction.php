@@ -32,7 +32,9 @@ class EscrowProduction extends MX_Controller
         $userdata = $this->session->userdata('user');
         $name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
         $data['name'] = $name;
-        $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+        $userId = $this->uri->segment(2);
+        $data['user_id'] = $userId;
+        $data['escrowOfficers'] = $this->order->get_escrow_officers();
         
         $dt = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
         $currentMonth = $dt->format('m');
@@ -45,12 +47,15 @@ class EscrowProduction extends MX_Controller
         $workedDays = $this->order->countWorkedDaysOfMonth();
         $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
         $request = [];
+        if (!empty($userId)) {
+            $request['userId'] = $userId;
+        }
         $request['month'] = $currentMonth;
         $request['orderType'] = 'escrow';
         $request['transactionType'] = 'Refinance';
         $request['countType'] = 'open';
         $openRefiResult = $this->order->getOrdersCountForDashboard($request);
-
+        
         // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, 'all', 0, 0, 0, 0, 'escrow');
         $data['refi_open_count'] = !empty($openRefiResult['order_count']) ? $openRefiResult['order_count'] : 0;
         $request['transactionType'] = 'Purchase';
@@ -156,7 +161,7 @@ class EscrowProduction extends MX_Controller
         $userdata = $this->session->userdata('user');
         $status = $this->input->post('status');
         $month = $this->input->post('month') ? $this->input->post('month') : '';
-        // $salesUser = $this->input->post('sales_user') ? $this->input->post('sales_user') : '';
+        $params['escrowOfficer'] = $this->input->post('escrow_officer') ? $this->input->post('escrow_officer') : '';
         // $order_type = $this->input->post('order_type');
         $order_status = $this->input->post('order_status');
         // $sales_rep_manager_flag = $this->input->post('sales_rep_manager_flag');

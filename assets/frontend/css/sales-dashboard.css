@@ -115,7 +115,7 @@ th {
     display: flex;
     align-items: center;
 }
-#sales_user_listing {
+#sales_user_listing, #escrow_officer_listing {
     float:left;
     margin: 0 25px;
     /* width: 100%; */

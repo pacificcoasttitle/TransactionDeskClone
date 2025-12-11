@@ -11,18 +11,19 @@
 								<div class="ui-decor-1a bg-accent"></div>
 								<div class="sales-user-listing mb-4">
 									<h4 class="ui-title-block_light fs-16">Production figures for the current month of <b class="month-name"><?php echo date('F');?></b></h3>
-									<?php if(!empty($salesUsers) && $is_sales_rep_manager == 1) { ?>
-										<div id="sales_user_listing">
+									<?php if(!empty($escrowOfficers)) { ?>
+										<div id="escrow_officer_listing">
 											<label>
-												<select style="width:auto;" name="sales_user_filter" id="sales_user_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
-													<?php foreach($salesUsers as $salesUser) { ?>
-														<option <?Php echo ($user_id == $salesUser['id']) ? 'selected' : '';?> value="<?php echo $salesUser['id'];?>"><?php echo $salesUser['first_name']." ".$salesUser['last_name'];?></option>
+												<select style="width:auto;" name="escrow_officer_filter" id="escrow_officer_filter" class="custom-select custom-select-sm form-control form-control-sm"> 
+													<option <?Php echo (empty($user_id)) ? 'selected' : '';?> value="">All Escrow Officer</option>
+													<?php foreach($escrowOfficers as $escrowOfficer) { ?>
+														<option <?Php echo ($user_id == $escrowOfficer['id']) ? 'selected' : '';?> value="<?php echo $escrowOfficer['id'];?>"><?php echo $escrowOfficer['closer_examiner']." - ".$escrowOfficer['officer_name'];?></option>
 													<?php }?>
 												</select>
 											</label>
 										</div>
 									<?php } else { ?>
-										<input type="hidden" name="sales_user_filter" id="sales_user_filter" value="<?php echo $user_id;?>">
+										<input type="hidden" name="escrow_officer_filter" id="escrow_officer_filter" value="">
 									<?php } ?>
 								</div>
 							</div>
