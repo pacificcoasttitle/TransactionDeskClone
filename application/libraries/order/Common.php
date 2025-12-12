@@ -274,4 +274,28 @@ class Common
 
         return $data;
     }
+
+    public function checkLenderParseAccess() {
+        $userdata = $this->CI->session->userdata('user');
+        if (empty($userdata['id']) || ($userdata['is_title_officer'] != 1 && $userdata['is_escrow_officer'] != 1 && $userdata['is_title_production'] != 1 && $userdata['is_master'] != 1)) {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('user');
+            redirect(base_url() . 'order/login');
+        }
+    }
+
+    public function getEscrowOfficerLookupDetails()
+    {
+        // $this->db->select('*');
+        $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name');
+        $this->CI->db->from('pct_softpro_lookup_table');
+        // $this->db->where('status', 1);
+        $this->CI->db->where('is_escrow_officer', 1);
+        $query = $this->CI->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        } else {
+            return array();
+        }
+    }
 }
