@@ -371,7 +371,7 @@ class EscrowProduction extends MX_Controller
     {
         $userdata = $this->session->userdata('user');
         
-        $data['title'] = 'Sales Production History | Pacific Coast Title Company';
+        $data['title'] = 'Escrow Officer Production History | Pacific Coast Title Company';
         $salesHistory = array();
         $request = [];
         $request['orderType'] = 'escrow';
@@ -406,7 +406,7 @@ class EscrowProduction extends MX_Controller
             $salesHistory[$iM - 1]['total_close_count'] = $refi_close_count + $sale_close_count;
 
             $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_orders']) ? $openRefiResult['total_premium_for_orders'] : 0;
-            $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+            $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_orders']) ? $closeRefiResult['total_premium_for_orders'] : 0;
             //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
             $refi_total_premium = $closeOrderRefiTotalPremium;
             $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_orders']) ? $openSaleResult['total_premium_for_orders'] : 0;
