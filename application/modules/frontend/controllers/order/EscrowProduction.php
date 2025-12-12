@@ -416,10 +416,12 @@ class EscrowProduction extends MX_Controller
             $salesHistory[$iM - 1]['total_premium'] = $sale_total_premium + $refi_total_premium;
 
             $totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
+            $totalOpenCount = $sale_open_count + $refi_open_count;
             if ($totalCount > 0) {
                 $refi_close_order_percetage = round(($refi_close_count * 100) / $totalCount);
                 $sale_close_order_percetage = round(($sale_close_count * 100) / $totalCount);
-                $salesHistory[$iM - 1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
+                // $salesHistory[$iM - 1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
+                $salesHistory[$iM - 1]['close_order_percetage'] = round((($sale_close_count + $refi_close_count) * 100) / $totalOpenCount);
             } else {
                 $refi_close_order_percetage = 0;
                 $sale_close_order_percetage = 0;
