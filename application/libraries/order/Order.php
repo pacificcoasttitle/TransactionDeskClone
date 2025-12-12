@@ -5807,10 +5807,10 @@ class Order
         if (empty($year)) {
             $year = date('Y');
         }
-        $userdata = $this->CI->session->userdata('user');
-        if (empty($userId)) {
-            $userId = $userdata['id'];
-        }
+        // $userdata = $this->CI->session->userdata('user');
+        // if (empty($userId)) {
+        //     $userId = $userdata['id'];
+        // }
         $this->CI->db->select('order_details.file_number, order_details.id, property_details.full_address,order_details.id, order_details.prod_type, order_details.premium')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
@@ -5828,6 +5828,7 @@ class Order
             $this->CI->db->where('order_details.escrow_officer_id', $userId);
         }
         $query = $this->CI->db->get();
+        // print_r($this->CI->db->last_query());die;
         return $query->result_array();
     }
 
