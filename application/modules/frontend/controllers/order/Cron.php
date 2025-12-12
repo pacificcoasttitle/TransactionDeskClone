@@ -8844,6 +8844,12 @@ class Cron extends MX_Controller
 
         $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
 
+        $escrowOfficerList = $this->common->getEscrowOfficerLookupDetails();
+        $escrowOfficerList = array_column($escrowOfficerList, 'id', 'officer_name');
+        // echo "<pre>";
+        // print_r($orderTypeList);
+        // print_r($escrowOfficerList);
+        // die;
         // $startDate = new DateTime('2025-10-31');
         // $endDate   = new DateTime('2025-10-31');
 
@@ -8893,6 +8899,7 @@ class Cron extends MX_Controller
                         $country = $list['[County]'];
                         $orderType = trim($list['[OrderType]']);
                         $escrowClosedDate = $list['[EscrowClosedDate]'];
+                        $escrowOfficerName = $list['[EscrowOfficerName]'];
                         if (array_key_exists($orderNumber, $updateData)) { 
                             $updateData[$orderNumber]['premium'] += $amount;
                         } else {
@@ -8911,6 +8918,10 @@ class Cron extends MX_Controller
                                 'premium' => round($amount, 2),
                                 'order_type' => $orderType
                             ];
+
+                            if (!empty($escrowOfficerName)) {
+                                $updateData[$orderNumber]['escrow_officer_id'] = $escrowOfficerList[$escrowOfficerName] ?? null;
+                            }
                         }
                     }
                     
@@ -8929,6 +8940,7 @@ class Cron extends MX_Controller
                                 'bill_code' => $value['bill_code'],
                                 'transaction_date' => date('Y-m-d', strtotime($value['transaction_date'])),
                                 'sent_to_accounting_date' => date('Y-m-d H:i:s', strtotime($value['transaction_date'])),
+                                'escrow_officer_id' => $value['escrow_officer_id'] ?? $orderDetails['escrow_officer_id'],
                                 'updated_at' => date("Y-m-d H:i:s")
                             ];
                             if (!empty($value['transaction_type'])) {
