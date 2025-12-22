@@ -3210,7 +3210,7 @@ class Order
         $this->CI->fileDocument_model->insert($saveData);
 
         $fileList[] = [
-            "FolderName" => 'desk-file-upload',
+            "FolderName" => 'CPL',
             "FileURL" => env('AWS_PATH') . "documents/" . $documentName,
         ];
         $logData = [
