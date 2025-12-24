@@ -146,3 +146,21 @@ defined('TRANSACTION_TYPE') or define('TRANSACTION_TYPE', [
     3 => 'Equity',
     4 => 'Other',
 ]);
+
+defined('PCT_CONTACTS') or define('PCT_CONTACTS', [
+    'jerry_email' => 'ghernandez@pct.com',
+    'jerry_mobile' => '(213) 309-7286',
+    'cs_user' => 'cs@pct.com',
+    'ruby_user' => 'rudy@pct.com',
+    'pj_email' => 'piyush.j@crestinfosystems.com',
+    'title_clive' => 'unit66@pct.com',
+    'title_jim' => 'jjean@pct.com',
+    'title_eddie' => 'unit33@pct.com',
+    'title_rachel' => 'unit88@pct.com',
+]);
+
+defined('PHP_AUTH') or define('PHP_AUTH', [
+    'USERNAME' => 'ghernandez@pct.com',
+    'PASSWORD' => 'hsk@12dhk'
+]);
+
