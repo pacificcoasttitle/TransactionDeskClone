@@ -1,20 +1,28 @@
-# Template PHP Build
-
-# This template allows you to validate your PHP application.
-# The workflow allows running tests and code linting on the default branch.
-
+# Sync code to github repository and deploy code on production
 image: composer:2.0
-
 
 pipelines:
   branches:
-     production:
-          - step:
-               script:
-                   - pipe: atlassian/ssh-run:0.3.0
-                     variables:
-                        SSH_USER: $PCT_SSH_USER
-                        SERVER: $PCT_HOST
-                        PORT: $PCT_PORT
-                        MODE: 'command'
-                        COMMAND: $PCT_PROD_SH
+    production:
+      # STEP 1: Sync to GitHub
+      - step:
+          name: Sync GitHub Mirror
+          image: alpine/git:latest
+          clone:
+            enabled: false
+          script:
+            - git clone --bare git@bitbucket.org:pacificcosttitile/pct-orders.git
+            - cd pct-orders.git
+            - git push --mirror git@github.com:pacificcoasttitle/TransactionDeskClone.git
+
+      # STEP 2: Deploy via SSH (Your existing pipeline)
+      - step:
+          name: Deploy to Server
+          script:
+            - pipe: atlassian/ssh-run:0.3.0
+              variables:
+                SSH_USER: $PCT_SSH_USER
+                SERVER: $PCT_HOST
+                PORT: $PCT_PORT
+                MODE: 'command'
+                COMMAND: $PCT_PROD_SH
