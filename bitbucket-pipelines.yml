@@ -4,18 +4,16 @@ image: composer:2.0
 pipelines:
   branches:
     production-softpro:
-      # Sync to GitHub
       - step:
-          name: Sync GitHub Mirror
+          name: Sync Single Branch to GitHub
           image: alpine/git:latest
-          clone:
-            enabled: false
           script:
-            - git clone --bare git@bitbucket.org:pacificcosttitile/pct-orders.git
-            - cd pct-orders.git
-            - git push --mirror git@github.com:pacificcoasttitle/TransactionDeskClone.git
+            - mkdir -p ~/.ssh
+            - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+            - git remote add github git@github.com:pacificcoasttitle/TransactionDeskClone.git
+            - git push github production-softpro
 
-      # Deploy via SSH
+    # Deploy via SSH
     production:
       - step:
           name: Deploy to Server
