@@ -1861,12 +1861,10 @@ class Cron extends MX_Controller
     public function exportUsers()
     {
         define('USE_AUTHENTICATION', 1);
-        define('USERNAME', 'ghernandez@pct.com');
-        define('PASSWORD', 'hsk@12dhk');
-
+        // $phpAuth = PHP_AUTH;
         if (USE_AUTHENTICATION == 1) {
             if (! isset($_SERVER['PHP_AUTH_USER']) || ! isset($_SERVER['PHP_AUTH_PW']) ||
-                $_SERVER['PHP_AUTH_USER'] != USERNAME || $_SERVER['PHP_AUTH_PW'] != PASSWORD) {
+                $_SERVER['PHP_AUTH_USER'] != getenv("PHP_AUTH_USER") || $_SERVER['PHP_AUTH_PW'] != getenv("PHP_AUTH_PW")) {
                 header('WWW-Authenticate: Basic realm="WINCACHE Log In!"');
                 header('HTTP/1.0 401 Unauthorized');
                 exit;
@@ -1937,8 +1935,9 @@ class Cron extends MX_Controller
 
     public function getOrderInformation()
     {
-        $login    = 'ghernandez@pct.com';
-        $pass     = 'hsk@12dhk';
+        $phpAuth = PHP_AUTH;
+        $login    = getenv("PHP_AUTH_USER");
+        $pass     = getenv("PHP_AUTH_PW");
         $fileId   = $this->uri->segment(2);
         $response = [];
 
@@ -2030,7 +2029,7 @@ class Cron extends MX_Controller
                     }
                     $orderUser = $this->home_model->sp_get_user(['id' => $orderDetails['customer_id']]);
                 }
-
+                $pctContacts = PCT_CONTACTS;
                 $orderData = [
                     'Loans'              => [
                         'LoanNumber'  => $orderDetails['loan_number'],
@@ -2043,8 +2042,8 @@ class Cron extends MX_Controller
                     'Borrower'           => [
                         'PrimaryName'   => $orderDetails['primary_owner_name'],
                         'SecondaryName' => $orderDetails['secondary_owner_name'],
-                        'Email'         => 'ghernandez@pct.com',
-                        'Mobile'        => '(213) 309-7286',
+                        'Email'         => $pctContacts['jerry_email'],
+                        'Mobile'        => $pctContacts['jerry_mobile'],
                     ],
                     'Properties'         => [
                         'Address' => $orderDetails['address'],
@@ -2089,7 +2088,7 @@ class Cron extends MX_Controller
         $this->apiLogs->syncLogs(0, 'resware', 'get_orders', env('RESWARE_ORDER_API') . 'files/search', json_encode($status), $res, 0, $logid);
         $result   = json_decode($res, true);
         $file_ids = [];
-
+        $pctContacts = PCT_CONTACTS;
         if (isset($result['Files']) && !empty($result['Files'])) {
             foreach ($result['Files'] as $res) {
                 $key = array_search($res['FileID'], array_column($filesResult, 'file_id'));
@@ -2121,8 +2120,8 @@ class Cron extends MX_Controller
                         $from_name           = 'Pacific Coast Title Company';
                         $from_mail           = env('FROM_EMAIL');
                         $subject             = 'Notification For On Hold Order';
-                        $to                  = 'cs@pct.com';
-                        $cc                  = ['ghernandez@pct.com'];
+                        $to                  = $pctContacts['cs_user'];
+                        $cc                  = [$pctContacts['jerry_email']];
                         $this->load->helper('sendemail');
                         send_email($from_mail, $from_name, $to, $subject, $message, $cc);
                     }
@@ -2252,7 +2251,7 @@ class Cron extends MX_Controller
         $this->db->order_by('transaction_details.sales_representative asc, property_details.escrow_lender_id asc');
         $query  = $this->db->get();
         $result = $query->result_array();
-
+        $pctContacts = PCT_CONTACTS;
         if (!empty($result)) {
             $checkFlag = 0;
             $data      = [];
@@ -2281,7 +2280,7 @@ class Cron extends MX_Controller
                     $from_mail  = env('FROM_EMAIL');
                     $subject    = 'Thank You!';
                     $to         = $escrow_email_address;
-                    $cc         = ['ghernandez@pct.com', $data['sales_email']];
+                    $cc         = [$pctContacts['jerry_email'], $data['sales_email']];
                     $mailParams = [
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -2321,7 +2320,7 @@ class Cron extends MX_Controller
                 $subject   = 'Thank You!';
                 $to        = $escrow_email_address;
 
-                $cc = ['ghernandez@pct.com', $sales_email];
+                $cc = [$pctContacts['jerry_email'], $sales_email];
                 $this->load->helper('sendemail');
                 $mailParams = [
                     'from_mail' => $from_mail,
@@ -2888,6 +2887,7 @@ class Cron extends MX_Controller
         $result = $query->result_array();
 
         if (!empty($result)) {
+            $pctContacts = PCT_CONTACTS;
             foreach ($result as $res) {
                 $salesRepDetails = [];
                 if (!empty($res['sales_representative'])) {
@@ -2917,7 +2917,7 @@ class Cron extends MX_Controller
                 $message_body = $borrower_message_body;
                 $subject      = $res['file_number'] . ' - Borrower Verification';
                 $to           = $res['email'];
-                $cc           = ['ghernandez@pct.com'];
+                $cc           = [$pctContacts['jerry_email']];
                 //$cc = array();
                 //$to = 'hitesh.p@crestinfosystems.com';
                 $mailParams = [
@@ -4618,7 +4618,7 @@ class Cron extends MX_Controller
             $from_mail           = env('FROM_EMAIL');
             $subject             = 'Memo Created';
             $to                  = $memo_mail['email'];
-            // $to = 'cs@pct.com';
+            
             $cc = [];
             $this->load->helper('sendemail');
             $check_mail = send_email($from_mail, $from_name, $to, $subject, $message, $cc);
@@ -5111,7 +5111,7 @@ class Cron extends MX_Controller
         // print_r($result);
         // print_r($configData);
         // die;
-
+        $pctContacts = PCT_CONTACTS;
         if (!empty($result)) {
             $checkFlag = 0;
             $data      = [];
@@ -5143,14 +5143,14 @@ class Cron extends MX_Controller
                     // $subject = 'Thank You!';
                     // $to = $escrow_email_address;
 
-                    $cc = ['ghernandez@pct.com', $sales_email, 'piyush.j@crestinfosystems.com'];
+                    $cc = [$pctContacts['jerry_email'], $sales_email, $pctContacts['pj_email']];
 
                     $from_name = 'Pacific Coast Title Company';
                     $from_mail = env('FROM_EMAIL');
                     $subject   = 'Your Order ' . $res['file_number'] . ' has been closed';
                     // $to = $escrow_email_address;
-                    // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
-                    // $cc = array('piyush.j@crestinfosystems.com');
+                    // $cc = array($pctContacts['pj_email'], $sales_email);
+                    // $cc = array($pctContacts['pj_email']);
                     $mailParams = [
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -5159,7 +5159,7 @@ class Cron extends MX_Controller
                         'message'   => json_encode($data),
                         'cc'        => $cc,
                     ];
-                    // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+                    // $to = [$pctContacts['pj_email'], $pctContacts['jerry_email'], $pctContacts['pj_email']];
                     // $cc = array();
                     $this->load->helper('sendemail');
                     $logid              = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_all_parties', '', $mailParams, [], $res['order_id'], 0);
@@ -5285,6 +5285,7 @@ class Cron extends MX_Controller
             $checkFlag = 0;
             $data      = [];
             $i         = 0;
+            $pctContacts = PCT_CONTACTS;
             foreach ($result as $res) {
                 if ($checkFlag == 0) {
                     $sales_rep_user_id    = $res['sales_representative'];
@@ -5309,7 +5310,7 @@ class Cron extends MX_Controller
                     $from_mail  = env('FROM_EMAIL');
                     $subject    = 'Thank You!';
                     $to         = $escrow_email_address;
-                    $cc         = ['ghernandez@pct.com', $data['sales_email']];
+                    $cc         = [$pctContacts['jerry_email'], $data['sales_email']];
                     $mailParams = [
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -5318,7 +5319,7 @@ class Cron extends MX_Controller
                         'message'   => json_encode($data),
                         'cc'        => $data['sales_email'],
                     ];
-                    // $to = 'piyush.j@crestinfosystems.net';
+                    // $to = $pctContacts['pj_email'];
                     $cc = [];
                     $this->load->helper('sendemail');
                     $logid              = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, [], $res['order_id'], 0);
@@ -5349,7 +5350,7 @@ class Cron extends MX_Controller
                 $subject   = 'Thank You!';
                 $to        = $escrow_email_address;
 
-                $cc = ['ghernandez@pct.com', $sales_email];
+                $cc = [$pctContacts['jerry_email'], $sales_email];
                 $this->load->helper('sendemail');
                 $mailParams = [
                     'from_mail' => $from_mail,
@@ -5359,7 +5360,7 @@ class Cron extends MX_Controller
                     'message'   => json_encode($data),
                     'cc'        => $sales_email,
                 ];
-                // $to = 'piyush.j@crestinfosystems.net';
+                // $to = $pctContacts['pj_email'];
                 $cc = [];
 
                 $logid              = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_user', '', $mailParams, [], $order_id, 0);
@@ -6879,7 +6880,6 @@ class Cron extends MX_Controller
                                     ->from('customer_basic_details')
                                     ->where([
                                         'status' => 1,
-                                        // 'email_address' => 'teammeza@pct.com'
                                         'email_address' => $value['email_address']
                                         ])
                                     ->where('password is not null')
@@ -7676,7 +7676,7 @@ class Cron extends MX_Controller
         $configData  = $this->order->getConfigData();
         $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
         $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
-        
+        $pctContacts = PCT_CONTACTS;
         if ($prelimSummaryShutOffFlag == 1) {
             $res = "Admin has disabled Prelim Summary Process.";
             $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, $res, 0, $logid);
@@ -7774,10 +7774,10 @@ class Cron extends MX_Controller
             $message = $this->load->view('emails/prelim_summary.php', $data, true);
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
-            $to = 'ghernandez@pct.com';
-            // $to = 'piyush.j@crestinfosystems.com';
+            $to = $pctContacts['jerry_email'];
+            // $to = $pctContacts['pj_email'];
             $subject = 'Prelim Summary : '. $response['OrderNumber'];
-            $cc = ['piyush-crest@yopmail.com'];
+            $cc = [$pctContacts['pj_email']];
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
@@ -7786,7 +7786,7 @@ class Cron extends MX_Controller
                 'message' => $response['OrderNumber'],
                 'cc' => $cc,
             );
-            //$to = 'ghernandez@pct.com';
+            //$to = $pctContacts['jerry_email'];
             //$cc = array();
             $this->load->helper('sendemail');
             $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array(), 0, 0);
@@ -8217,10 +8217,11 @@ class Cron extends MX_Controller
 
         // echo "<pre>";
         // print_r($orderDetails);die;
+        $pctContacts = PCT_CONTACTS;
         foreach ($orderDetails as $order) {
             $file_number = $order['file_number'];
-            $borrower_email = 'ghernandez@pct.com';
-            $cc = array('piyush.j@crestinfosystems.com');
+            $borrower_email = $pctContacts['jerry_email'];
+            $cc = array($pctContacts['pj_email']);
             $package_type = (strtolower($order['prod_type']) == 'refinance') ? 'buyer' : 'seller';
             
             $escrowOffCond = array(
@@ -8651,9 +8652,10 @@ class Cron extends MX_Controller
         $from_name = 'Pacific Coast Title Company';
         $from_mail = env('FROM_EMAIL');
         $to = 'shuklap871@gmail.com';
-        $cc = ['piyush.j@crestinfosystems.com', 'ghernandez@pct.com'];
-        // $to = 'piyush.j@crestinfosystems.com';
-        // $cc = ['piyush.j@crestinfosystems.com'];
+        $pctContacts = PCT_CONTACTS;
+        $cc = [$pctContacts['pj_email'], $pctContacts['jerry_email']];
+        // $to = $pctContacts['pj_email'];
+        // $cc = [$pctContacts['pj_email']];
         $subject = 'Weekly closed order report ' . ' (' . date('M j, Y') . ')';
         
         $data['startDate'] = $startDate;
@@ -8685,14 +8687,15 @@ class Cron extends MX_Controller
 
     public function sendSurvayEmail($data) {
         if (!empty($data['title_officer_email'])) {
+            $pctContacts = PCT_CONTACTS;
             $data['title_officer_email'] = strtolower($data['title_officer_email']);
-            if ($data['title_officer_email'] == 'unit66@pct.com') { 
+            if ($data['title_officer_email'] == $pctContacts['title_clive']) { 
                 $data['survey_link'] = 'https://www.surveymonkey.com/r/KR5G38W?order_id=' . $data['order_id']; // Clive - 143260
-            } else if ($data['title_officer_email'] == 'jjean@pct.com') {
+            } else if ($data['title_officer_email'] == $pctContacts['title_jim']) {
                 $data['survey_link'] = 'https://www.surveymonkey.com/r/P3X7KX8?order_id=' . $data['order_id']; // Jim
-            } else if ($data['title_officer_email'] == 'unit33@pct.com') {
+            } else if ($data['title_officer_email'] == $pctContacts['title_eddie']) {
                 $data['survey_link'] = 'https://www.surveymonkey.com/r/PG7SJRG?order_id=' . $data['order_id']; // Eddie
-            } else if ($data['title_officer_email'] == 'unit88@pct.com') {
+            } else if ($data['title_officer_email'] == $pctContacts['title_rachel']) {
                 $data['survey_link'] = 'https://www.surveymonkey.com/r/6BJZ79Y?order_id=' . $data['order_id']; // Rachel
             } else {
                 return;
@@ -8712,8 +8715,9 @@ class Cron extends MX_Controller
             // print_r($message);die;
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
+            $pctContacts = PCT_CONTACTS;
             // $subject = 'Thank You!';
-            // $to = 'piyush-crest@yopmail.com';
+            // $to = $pctContacts['pj_email'];
             // if (!empty($data['escrow_officer_email'])) {
             //     $to[] = $data['escrow_officer_email'];
             // }
@@ -8721,16 +8725,15 @@ class Cron extends MX_Controller
             //     $to[] = $data['lender_email'];
             // }
             
-    
-            // $to = array('piyush.j@crestinfosystems.com');
-            $cc = array(' rudy@pct.com');
+            // $to = array($pctContacts['pj_email']);
+            $cc = array($pctContacts['ruby_user']);
     
             $from_name = 'Pacific Coast Title Company';
             $from_mail = env('FROM_EMAIL');
             $subject = "We'd Love Your Feedback -" . $data['file_number'];
             // $to = $escrow_email_address;
-            // $cc = array('piyush.j@crestinfosystems.com', $sales_email);
-            // $cc = array('piyush.j@crestinfosystems.com');
+            // $cc = array($pctContacts['pj_email'], $sales_email);
+            // $cc = array($pctContacts['pj_email']);
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
@@ -8739,7 +8742,7 @@ class Cron extends MX_Controller
                 'message' => json_encode($data),
                 'cc' => $cc,
             );
-            // $to = ['piyush.j@crestinfosystems.net', 'ghernandez@pct.com'];
+            // $to = [$pctContacts['pj_email'], $pctContacts['jerry_email']];
             // $cc = array();
             $this->load->helper('sendemail');
             if (!empty($recipients)) {
@@ -9158,9 +9161,9 @@ class Cron extends MX_Controller
             $apiEndPoints = SOFTPRO_API_END;
             $url          = getenv("SOFT_PRO_API") . $apiEndPoints['get_softpro_orders'] . '?' . $queryParams;
             $reqData     = json_encode($req);
-            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order_type', $url, $reqData, [], 0, 0);
+            $logId = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order_type', $url, $reqData, [], 0, 0);
             $response    = $this->softpro->make_request('GET', 'get_softpro_orders', $reqData, $queryParams);
-            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order_type', $url, $reqData, json_encode($response), 0, $logid);
+            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order_type', $url, $reqData, json_encode($response), 0, $logId);
 
             $sheetData = [];
             $importedOrderCount = 0;
