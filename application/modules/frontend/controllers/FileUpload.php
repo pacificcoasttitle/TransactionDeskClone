@@ -386,7 +386,7 @@ class FileUpload extends MX_Controller
         // print_r(PHP_OS_FAMILY);die;
         $this->load->library('order/common');
         $this->common->checkLenderParseAccess();
-        $this->load->library('order/chatgpt');
+        $this->load->library('order/chatGPT');
         $userdata = $this->session->userdata('user');
         $data['title'] = 'Reports | Pacific Coast Title Company';
         // echo "<pre>";
@@ -407,7 +407,7 @@ class FileUpload extends MX_Controller
                 $orderNumber = $this->sanitizeFilename($this->input->post('order_number'));
                 $documentName = $this->sanitizeFilename($this->input->post('document_name'));
                 if (!empty($_FILES['multiFiles']['name'])) {
-                    $this->load->library('order/ocrservice');
+                    $this->load->library('order/ocrService');
                     $files = $_FILES['multiFiles'];
                     // $cpt = count($files['name']);
                     $fileList = [];
@@ -534,7 +534,7 @@ class FileUpload extends MX_Controller
                         // print_r($response);
 
                         // if ($response['status'] == 'success' && !empty($response['data'])) {
-                        $this->load->library('order/pdfsplitter');
+                        $this->load->library('order/pdfSplitter');
 
                         // $pdfPath  = FCPATH . 'uploads/File Upload_1765446957.pdf';
                         // foreach ($pageRange as $doc) {
