@@ -5,7 +5,7 @@ if (! defined('BASEPATH')) {
 
 class SoftPro
 {
-    public static $CI;
+    protected $CI;
 
     public function __construct($params = [])
     {
@@ -13,7 +13,7 @@ class SoftPro
         $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-        self::$CI = $this->CI;
+        // self::$CI = $this->CI;
     }
 
     public function make_request($http_method, $endpoint, $postData = '', $queryParams = '')
@@ -97,8 +97,11 @@ class SoftPro
             return ['status' => 'error', 'message' => curl_error($ch)];
         } else {
             $res = json_decode($result, true);
+            // echo '<pre>------------------API Response------------------';
+            // print_r($res);
             if (isset($res['Status']) && $res['Status'] == 200) {
-                $return = ['status' => 'success', 'message' => $res['Message'], 'data' => $res['data']];
+                $resData = $res['data'] ?? '';
+                $return = ['status' => 'success', 'message' => $res['Message'], 'data' => $resData];
                 if (isset($res['OrderNumber']) && !empty($res['OrderNumber'])) {
                     $return['OrderNumber'] = $res['OrderNumber'];
                 }

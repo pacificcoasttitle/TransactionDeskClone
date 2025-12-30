@@ -95,9 +95,21 @@ $(document).ready(function () {
     // Select elements
     const uploadContainer = document.getElementById('upload-container');
     const fileInput = document.getElementById('file-input');
+
     const browseButton = document.getElementById('browse-button');
     const submitButton = document.getElementById('submit-button');
     const fileList = document.getElementById('file-list');
+    // let fileInput = '';
+    // if ($('#file-list').length) {
+    //     fileList = document.getElementById('file-list');
+    // } else {
+    //     fileList = document.getElementById('lender-file-list');
+    // }
+    // if ($('#file-input').length) {
+    //     fileInput = document.getElementById('file-input');
+    // } else {
+    //     fileInput = document.getElementById('lender-file-input');
+    // }
 
     // Files array to store uploaded files
     let files = [];

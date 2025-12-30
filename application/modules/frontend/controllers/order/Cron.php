@@ -7777,7 +7777,7 @@ class Cron extends MX_Controller
             $to = $pctContacts['jerry_email'];
             // $to = $pctContacts['pj_email'];
             $subject = 'Prelim Summary : '. $response['OrderNumber'];
-            $cc = [$pctContacts['pj_email']];
+            // $cc = [$pctContacts['pj_email']];
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
@@ -8017,7 +8017,7 @@ class Cron extends MX_Controller
                 echo $res; exit;
             }
 
-            if ($taskId == '04-035' && $disburseFundsShutOff == 1) {
+            if (($taskId == '04-035' || $taskId == '04-035-TE') && $disburseFundsShutOff == 1) {
                 $res = "Admin has disabled Disburse Funds notification.";
                 $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                 echo $res; exit; 
@@ -8047,7 +8047,7 @@ class Cron extends MX_Controller
                     $twilio['error_message'] = $resMsg = $res = "Sales Rep has disabled recording confirmation notification.";
                     $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'received_milestone_request', 'received_milestone_request', $reqData, $res, 0, $logid);
                     // echo $res; exit;
-                } else if ($taskId == '04-035' && $filesResult['notify_disburse_funds'] == 0) {
+                } else if (($taskId == '04-035' || $taskId == '04-035-TE') && $filesResult['notify_disburse_funds'] == 0) {
                 // } else if (false) {
                     $twilio['message'] = $reqData;
                     $twilio['sent_from'] = $from;
@@ -8075,7 +8075,7 @@ class Cron extends MX_Controller
                         . "iii. @ {$timestamp}";
                     } 
 
-                    if ($taskId == '04-035') {
+                    if ($taskId == '04-035' || $taskId == '04-035-TE') {
                         // $message = "Hi " . $filesResult['first_name'] . " " . $filesResult['last_name'] . ", \n i. Disbursement Completed: " . $file_number . " \n ii. Property Address: " . $filesResult['full_address'] . " \n iii. @ " . $timestamp;
                         $message = "Hi {$filesResult['first_name']} {$filesResult['last_name']},\n"
                             . "i. Disbursement Completed: {$file_number}\n"
@@ -8136,7 +8136,7 @@ class Cron extends MX_Controller
             }
             
             // if ($taskId == '04-035' && ($filesResult['lender_notify_disburse_funds'] == 1 || $filesResult['escrow_notify_disburse_funds'] == 1)) {
-            if ($taskId == '04-035') {
+            if ($taskId == '04-035' || $taskId == '04-035-TE') {
                 // $this->order->sendRecordingConfirmationEmail($filesResult, 'disburse_funds');
             }
             
