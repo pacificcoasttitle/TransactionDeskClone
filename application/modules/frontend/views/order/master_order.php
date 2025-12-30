@@ -612,7 +612,7 @@
 											<?php
                                                 if (isset($escrowOfficers) && ! empty($escrowOfficers)) {
                                                 foreach ($escrowOfficers as $escrowOfficer) {?>
-		<option value="<?php echo $escrowOfficer['closer_examiner']; ?>"><?php echo $escrowOfficer['name']; ?></option>
+		<option value="<?php echo $escrowOfficer['id']; ?>"><?php echo $escrowOfficer['name']; ?></option>
 <?php
     }
 }?>

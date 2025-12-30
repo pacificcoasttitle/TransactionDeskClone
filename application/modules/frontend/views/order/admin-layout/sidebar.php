@@ -114,12 +114,24 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Payoff Home</span>
 			</a>
 		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'lender-pursing') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url() . 'lender-pursing'; ?>">
+				<i class="fa  fa-file-pdf-o"></i>
+				<span>Lender Parse</span>
+			</a>
+		</li>
 		<?php }?>
 	<?php } else if (($userdata['is_title_production'] == 1) && ($sidebar)) {?>
 		<li class="nav-item <?php if ($this->uri->segment(1) == 'file-upload') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url() . 'file-upload'; ?>">
 				<i class="fa  fa-file-pdf-o"></i>
 				<span>File Upload</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'lender-pursing') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url() . 'lender-pursing'; ?>">
+				<i class="fa  fa-file-pdf-o"></i>
+				<span>Lender Parse</span>
 			</a>
 		</li>
 	<?php } else if (($userdata['is_title_officer'] == 1) && ($sidebar)) {?>
@@ -133,6 +145,12 @@ if ($userdata['is_sales_rep'] == 1) {
 			<a class="nav-link" href="<?php echo base_url(); ?>title-officer-production-history/<?php echo $userdata['id']; ?>">
 				<i class="fas fa fa-history"></i>
 				<span>Production History</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'lender-pursing') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url() . 'lender-pursing'; ?>">
+				<i class="fa  fa-file-pdf-o"></i>
+				<span>Lender Parse</span>
 			</a>
 		</li>
 	<?php } else if ($sidebar) {?>
@@ -177,6 +195,12 @@ if ($userdata['is_sales_rep'] == 1) {
 			<a class="nav-link" href="<?php echo base_url() . 'fees'; ?>">
 				<i class="fa fa-money"></i>
 				<span>Fee Estimate</span>
+			</a>
+		</li>
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'lender-pursing') {echo 'active';}?>">
+			<a class="nav-link" href="<?php echo base_url() . 'lender-pursing'; ?>">
+				<i class="fa  fa-file-pdf-o"></i>
+				<span>Lender Parse</span>
 			</a>
 		</li>
 		<?php }?>
