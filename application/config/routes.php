@@ -749,7 +749,7 @@ $route['file-upload']           = "frontend/fileUpload";
 $route['get-uploaded-desk-doc'] = "frontend/fileUpload/getUploadedDeskDoc";
 
 $route['lender-pursing']        = "frontend/fileUpload/lenderPursing";
-$route['get-pursed-doc'] = "frontend/fileUpload/getPursedDoc";
+$route['get-get-lender-parse-doc'] = "frontend/fileUpload/getLenderPursedDoc";
 
 $route['reports']                    = "frontend/report";
 $route['reports/(.+)']               = "frontend/report/$1";
