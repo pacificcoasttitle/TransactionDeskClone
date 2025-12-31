@@ -1,4 +1,5 @@
 var upload_doc_orders = '';
+var lender_parse_upload = '';
 $(document).ready(function () {
     if ($('#upload_doc_orders').length) {
         upload_doc_orders = $('#upload_doc_orders').DataTable({
@@ -86,6 +87,52 @@ $(document).ready(function () {
                     $("#uploaded_document_list tbody").append(
                         '<tr><td colspan="4" class="text-center">No records found</td></tr>');
                     $("#uploaded_document_list_processing").css("display", "none");
+
+                }
+            }
+        });
+    }
+
+    if ($('#lender_parse_upload').length) {
+        lender_parse_upload = $('#lender_parse_upload').DataTable({
+            // "pageLength": 2,
+            "paging": true,
+            "lengthChange": false,
+            "language": {
+                paginate: {
+                    next: '<span class="fa fa-angle-right"></span>',
+                    previous: '<span class="fa fa-angle-left"></span>',
+                },
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            initComplete: function () {
+
+
+            },
+            dom: 'Bfrtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "get-get-lender-parse-doc",
+                type: "post",
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#lender_parse_upload tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#lender_parse_upload_processing").css("display", "none");
 
                 }
             }
