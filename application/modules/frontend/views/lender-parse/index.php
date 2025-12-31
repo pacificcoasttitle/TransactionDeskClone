@@ -467,7 +467,7 @@ if ($userdata['is_sales_rep'] == 1) {
 	</div>
 </section>
 
-<!-- <section class="section-type-4a section-defaulta mt-5" style="padding-bottom:0px;">
+<section class="section-type-4a section-defaulta mt-5" style="padding-bottom:0px;">
     <div class="container-fluid padding-0">
         <div class="row mb-3">
             <div class="col-sm-12">
@@ -483,7 +483,7 @@ if ($userdata['is_sales_rep'] == 1) {
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="uploaded_document_list" width="100%" cellspacing="0">
+                    <table class="table table-bordered" id="lender_parse_upload" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -500,5 +500,5 @@ if ($userdata['is_sales_rep'] == 1) {
         </div>
 
     </div>
-</section> -->
+</section>
 

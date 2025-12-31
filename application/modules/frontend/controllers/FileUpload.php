@@ -4,7 +4,7 @@ class FileUpload extends MX_Controller
 {
     private $user;
     private $sorting_fields;
-    private $js_version = '02';
+    private $js_version = '02.01';
 
     public function __construct()
     {
@@ -700,5 +700,62 @@ class FileUpload extends MX_Controller
         }
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_doc_orders.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->show("lender-parse", "index", $data);
+    }
+
+    public function getLenderPursedDoc()
+    {
+        $this->load->library('order/common');
+        $this->common->checkLenderParseAccess();
+        
+        $params = array();
+        $data = array();
+        if (isset($_POST['draw']) && !empty($_POST['draw'])) {
+            $params['draw'] = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
+            $params['length'] = isset($_POST['length']) && !empty($_POST['length']) ? $_POST['length'] : 2;
+            $params['start'] = isset($_POST['start']) && !empty($_POST['start']) ? $_POST['start'] : 0;
+            $params['orderColumn'] = isset($_POST['order'][0]['column']) && !empty($_POST['order'][0]['column']) ? $_POST['order'][0]['column'] : 0;
+            $params['orderDir'] = isset($_POST['order'][0]['dir']) && !empty($_POST['order'][0]['dir']) ? $_POST['order'][0]['dir'] : 0;
+            $params['searchvalue'] = isset($_POST['search']['value']) && !empty($_POST['search']['value']) ? $_POST['search']['value'] : '';
+            $pageno = ($params['start'] / $params['length']) + 1;
+            $file_lists = $this->fileDocument_model->get_lender_parsed_doc($params);
+            $json_data['draw'] = intval($params['draw']);
+        } else {
+            $params['searchvalue'] = isset($_POST['keyword']) && !empty($_POST['keyword']) ? $_POST['keyword'] : '';
+            $file_lists = $this->fileDocument_model->get_lender_parsed_doc($params);
+        }
+
+        if (isset($file_lists['data']) && !empty($file_lists['data'])) {
+            $i = $params['start'] + 1;
+            foreach ($file_lists['data'] as $order) {
+                $nestedData = array();
+                $nestedData[] = $i;
+                $nestedData[] = $order['name'];
+                $nestedData[] = $order['order_number'];
+                $nestedData[] = convertTimezone($order['created_at']);
+                $documentUrl = env('AWS_PATH') . "lender-parsing-docs/" . $order['file_path'];
+                $nestedData[] = "<div class='table-action'>
+                                <a href='" . $documentUrl . "' target='_blank'>
+									<button type='submit' class='btn btn-success btn-icon-split'>
+										<span class='icon text-white-50'>
+											<i class='fas fa-file'></i>
+										</span>
+										<span class='text'>View Document</span>
+									</button>
+								</a>
+                                <button type='submit' onclick='copyLink(" . '"' . $documentUrl . '"' . ", this)' class='btn btn-success btn-icon-split'>
+                                    <span class='icon text-white-50'>
+                                        <i class='fas fa-copy'></i>
+                                    </span>
+                                    <span class='text'>Copy Link</span>
+                                </button>
+                                </div>";
+                $data[] = $nestedData;
+                $i++;
+            }
+        }
+        $json_data['recordsTotal'] = intval($file_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($file_lists['recordsFiltered']);
+        $json_data['data'] = $data;
+        echo json_encode($json_data);
     }
 }
