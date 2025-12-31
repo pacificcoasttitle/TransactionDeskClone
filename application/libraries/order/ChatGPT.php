@@ -107,9 +107,9 @@ class Chatgpt
         // print_r($payload);die;
         return $response = $this->callOpenAI($payload);
 
-        if ($response && isset($response['doc_type'])) {
-            return $response['doc_type'];
-        }
+        // if ($response && isset($response['doc_type'])) {
+        //     return $response['doc_type'];
+        // }
 
         // return $this->regexFallback($pageText);
     }
@@ -306,100 +306,229 @@ PROMPT
 //     ];
 // }
 
+// public function buildPromptForTitleAndRanges($array)
+// {
+//     return [
+//         'model' => $this->model,
+
+//         'messages' => [
+//             [
+//                 'role' => 'system',
+//                 'content' => 'You are a strict legal document boundary detection engine based on document type from provieded context for real estate recording packages.
+
+// Important:
+// - Document titles may appear at the TOP, MIDDLE, or BOTTOM of the page.
+// - Do NOT assume titles only appear in headers.
+// - Do NOT guess continuation pages.
+// - If no clear document title is present, start=false.'
+//             ],
+//             [
+//                 'role' => 'user',
+//                 'content' => <<<PROMPT
+// Analyze the FULL PAGE text (entire content).
+
+// Valid document types:
+// ===> Please don't try to find extact word from document text it might be different.
+// - lender_instructions
+// - endorsements
+// - deed_of_trust
+// - deed
+// - title_policy
+// - payoff_statement
+// - closing_worksheet
+// - other
+
+// # You need to flow this step
+// 1. Check document page by page 
+// 2. Identify document type using above valid document types 
+// 3. Identify start page and end page for particular document type
+// 4. You need to return actual pdf page number not page number information provided in document text
+//    You can find this actual pdf number by "actual pdf page number" key in provided array. 
+//    Must return this actual pdf number as start_page and end_page in response.
+
+// # Important rule for end page indentification:
+// => Each original document has its own internal page numbering
+//  - Lender Instructions: Page 1–4
+//  - Endorsements: Page 1–3
+//  - Deed of Trust: Page 1–7
+
+// => After merge:
+//  - Book pages ≠ document pages
+
+// => End of document occurs when:
+//  - Page number resets to 1 OR page number disappears OR a new document title appears
+
+// SCHEMA:
+// [
+//     {
+//         "doc_type": null,
+//         "start_page": 1, # Actual pdf page number where particular document is started,
+//         "end_page": 1 # Acutal pdf page number where particular document is ended.
+//     }, 
+//     {
+//         "doc_type": null,
+//         "start_page: 1,
+//         "end_page": 1
+//     }           
+// ]
+
+// You must need to provide response in this format:
+// SAMPLE RESPONSE: 
+// [
+//     {
+//         "doc_type": "lender_instructions",
+//         "start_page: 2,
+//         "end_page": 4
+//     }, 
+//     {
+//         "doc_type": "deed_of_trust",
+//         "start_page: 5,
+//         "end_page": 8
+//     }           
+// ]
+
+// You must need to understand: 
+// Particular document have multiple types, So you need to provide each types in response with that types information with
+// start page and end page related information. 
+
+// PAGE TEXT:
+// {$array}
+// PROMPT
+//             ]
+    
+//         ]
+//     ];
+// }
 public function buildPromptForTitleAndRanges($array)
 {
     return [
-        'model' => $this->model,
+    'model' => $this->model,
+    'messages' => [
+        [
+            'role' => 'system',
+            'content' => <<<SYSTEM
+You are a STRICT document boundary detection engine for merged real estate recording packages.
 
-        'messages' => [
-            [
-                'role' => 'system',
-                'content' => 'You are a strict legal document boundary detection engine based on document type from provieded context for real estate recording packages.
+PRIMARY SIGNAL (authoritative):
+- INTERNAL PAGE NUMBERING
 
-Important:
-- Document titles may appear at the TOP, MIDDLE, or BOTTOM of the page.
-- Do NOT assume titles only appear in headers.
-- Do NOT guess continuation pages.
-- If no clear document title is present, start=false.'
-            ],
-            [
-                'role' => 'user',
-                'content' => <<<PROMPT
-Analyze the FULL PAGE text (entire content).
+SECONDARY SIGNAL (supporting only):
+- Document content keywords
 
-Valid document types:
-===> Please don't try to find extact word from document text it might be different.
+ABSOLUTE RULES:
+- Never guess.
+- Never truncate a document early.
+- Never end a document before its internal page sequence is complete.
+SYSTEM
+        ],
+        [
+            'role' => 'user',
+            'content' => <<<PROMPT
+You are given OCR text for EACH PAGE of a merged PDF.
+
+Each page contains:
+- actual_pdf_page_number
+- full OCR text
+
+VALID DOCUMENT TYPES (use ONLY these):
 - lender_instructions
-- endorsements
-- deed_of_trust
-- deed
-- title_policy
-- payoff_statement
 - closing_worksheet
-- other
+- payoff_statement
+- prelim_title_report
+- deed
+- deed_of_trust
+- right_to_cancel
+- compliance_eo
+- occupancy
+- wire_instructions
+- title_policy
 
-# You need to flow this step
-1. Check document page by page 
-2. Identify document type using above valid document types 
-3. Identify start page and end page for particular document type
-4. You need to return actual pdf page number not page number information provided in document text
-   You can find this actual pdf number by "actual pdf page number" key in provided array. 
-   Must return this actual pdf number as start_page and end_page in response.
+=================================================
+INTERNAL PAGE NUMBER FORMATS (AUTHORITATIVE)
+=================================================
 
-# Important rule for end page indentification:
-=> Each original document has its own internal page numbering
- - Lender Instructions: Page 1–4
- - Endorsements: Page 1–3
- - Deed of Trust: Page 1–7
+FORMAT A (explicit):
+- "Page 1 of 4"
+- "Page i of 8"
+- "Page l of 3"
 
-=> After merge:
- - Book pages ≠ document pages
+FORMAT B (implicit):
+- Single numbers such as "1", "2", "3" consistently appearing in the footer
 
-=> End of document occurs when:
- - Page number resets to 1 OR page number disappears OR a new document title appears
+OCR NORMALIZATION:
+- i, l, I → 1
+- Ignore casing and punctuation
 
-SCHEMA:
+=================================================
+DOCUMENT START RULE (MANDATORY)
+=================================================
+
+A document STARTS ONLY when:
+- Internal page number = 1
+AND
+- Page content clearly matches ONE valid document type
+
+=================================================
+DOCUMENT CONTINUATION RULE (CRITICAL)
+=================================================
+
+Once a document has started:
+
+1. If format is "Page X of N":
+   - The document MUST continue until X == N
+   - Content changes DO NOT end the document
+   - Keyword weakening DOES NOT end the document
+
+2. If implicit numbering (1,2,3):
+   - The document continues while numbering increments sequentially
+   - The document ends ONLY when numbering resets to 1 or disappears
+
+=================================================
+DOCUMENT END RULE (STRICT)
+=================================================
+
+A document ENDS ONLY when ONE of the following occurs:
+- Explicit "Page N of N" is reached
+- Internal numbering resets to 1 (new document)
+- Internal numbering disappears AND next page starts with page = 1
+
+IMPORTANT:
+- Titles alone NEVER define boundaries
+- Content alone NEVER ends a document
+- Internal numbering ALWAYS overrides content
+
+=================================================
+OUTPUT RULES
+=================================================
+- Use ACTUAL PDF page numbers ONLY
+- No overlapping ranges
+- Do NOT shorten a document before its numbering completes
+- Skip documents if numbering is missing or ambiguous
+
+=================================================
+OUTPUT SCHEMA (JSON ONLY)
+=================================================
 [
     {
-        "doc_type": null,
-        "start_page": 1, # Actual pdf page number where particular document is started,
-        "end_page": 1 # Acutal pdf page number where particular document is ended.
-    }, 
-    {
-        "doc_type": null,
-        "start_page: 1,
-        "end_page": 1
-    }           
+        "doc_type": "",
+        "start_page": 0,
+        "end_page": 0,
+        "confidence": 0.0
+    }
 ]
 
-You must need to provide response in this format:
-SAMPLE RESPONSE: 
-[
-    {
-        "doc_type": "lender_instructions",
-        "start_page: 2,
-        "end_page": 4
-    }, 
-    {
-        "doc_type": "deed_of_trust",
-        "start_page: 5,
-        "end_page": 8
-    }           
-]
-
-You must need to understand: 
-Particular document have multiple types, So you need to provide each types in response with that types information with
-start page and end page related information. 
-
-PAGE TEXT:
+=================================================
+INPUT
+=================================================
+PAGES OCR DATA:
+<<<
 {$array}
+>>>
 PROMPT
-            ]
-    
         ]
-    ];
+    ]
+];
 }
-
 
     private function callOpenAI($payload)
     {
@@ -510,76 +639,70 @@ PROMPT
     //     return 'unknown';
     // }
 
-    // public function detect(array $pageTexts)
-    // {
-    //     $ranges = [];
+    /*public function detect(array $pageTexts)
+    {
+        $ranges = [];
 
-    //     $currentStart = null;
-    //     $expectedEndX = null;
+        $currentStart = null;
+        $expectedEndX = null;
 
-    //     foreach ($pageTexts as $pdfPageNo => $text) {
+        foreach ($pageTexts as $pdfPageNo => $text) {
             
-    //         $pageInfo = $this->extractPageInfo($text);
-    //         if (!$pageInfo) {
-    //             continue;
-    //         }
+            $pageInfo = $this->extractPageInfo($text);
+            if (!$pageInfo) {
+                continue;
+            }
 
-    //         [$x, $y] = $pageInfo;
+            [$x, $y] = $pageInfo;
 
-    //         // New document starts
-    //         if ($x === 1) {
-    //             $currentStart = $pdfPageNo;
-    //             $expectedEndX = $y;
-    //         }
+            // New document starts
+            if ($x === 1) {
+                $currentStart = $pdfPageNo;
+                $expectedEndX = $y;
+            }
 
-    //         // Document ends
-    //         if ($currentStart !== null && $x === $expectedEndX) {
-    //             $ranges[] = [
-    //                 'start' => $currentStart,
-    //                 'end'   => $pdfPageNo
-    //             ];
-    //             $currentStart = null;
-    //             $expectedEndX = null;
-    //         }
-    //     }
+            // Document ends
+            if ($currentStart !== null && $x === $expectedEndX) {
+                $ranges[] = [
+                    'start' => $currentStart,
+                    'end'   => $pdfPageNo
+                ];
+                $currentStart = null;
+                $expectedEndX = null;
+            }
+        }
 
-    //     return $ranges;
-    // }
+        return $ranges;
+    }
 
-    // private function extractPageInfo($text)
-    // {
-    //     $text = strtolower($text);
+    private function extractPageInfo($text)
+    {
+        $text = strtolower($text);
 
-    //     /**
-    //      * Match:
-    //      *  - Page i of 8
-    //      *  - page I of 8
-    //      *  - page 1 of 8
-    //      *  - i of 8
-    //      */
-    //     if (preg_match('/(?:page\s*)?([0-9ilbs|]+)\s+of\s+([0-9]+)/i', $text, $m)) {
+        
+        if (preg_match('/(?:page\s*)?([0-9ilbs|]+)\s+of\s+([0-9]+)/i', $text, $m)) {
 
-    //         $xRaw = strtolower($m[1]);
-    //         $y    = (int)$m[2];
+            $xRaw = strtolower($m[1]);
+            $y    = (int)$m[2];
 
-    //         // Normalize OCR mistakes ONLY for page number X
-    //         $map = [
-    //             'i' => '1',
-    //             'l' => '1',
-    //             '|' => '1',
-    //             's' => '5',
-    //             'b' => '8',
-    //             'o' => '0'
-    //         ];
+            // Normalize OCR mistakes ONLY for page number X
+            $map = [
+                'i' => '1',
+                'l' => '1',
+                '|' => '1',
+                's' => '5',
+                'b' => '8',
+                'o' => '0'
+            ];
 
-    //         $xNorm = strtr($xRaw, $map);
+            $xNorm = strtr($xRaw, $map);
 
-    //         if (ctype_digit($xNorm)) {
-    //             return [(int)$xNorm, $y];
-    //         }
-    //     }
+            if (ctype_digit($xNorm)) {
+                return [(int)$xNorm, $y];
+            }
+        }
 
-    //     return null;
-    // }
+        return null;
+    }*/
     
 }

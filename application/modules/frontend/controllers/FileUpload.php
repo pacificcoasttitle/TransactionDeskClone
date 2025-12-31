@@ -459,7 +459,7 @@ class FileUpload extends MX_Controller
                         
 
                         // echo "<br><br><br><br><br>";
-                        // // $classifyFirstPage = $this->chatgpt->classify($firstPageText);
+                        // $classifyFirstPage = $this->chatgpt->classify($firstPageText);
                         // echo '<pre>------------------First Page TOC and Page range using open ai------------------';
                         $classifyFirstPage = $this->chatgpt->classify($firstPageText);
                         // print_r($classifyFirstPage);
@@ -468,12 +468,15 @@ class FileUpload extends MX_Controller
                         // print_r($firstPageContent);
                         // echo "<br><br><br><br><br>";
                         
-                        // $detectPageRange = $this->chatgpt->detect($pageTexts);
-                        $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($pageTexts));
-                        $documentPageRange = $documentPageRange['choices'][0]['message']['content'] ?? null;
-                        $pageRange = json_decode($documentPageRange, true);
+                        
                         // echo 'result :';
+                        $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($pageTexts));
                         // print_r($documentPageRange); 
+                        $documentPageRange = $documentPageRange['choices'][0]['message']['content'] ?? null;
+                        // echo "<br><br><br><br><br>";
+                        // print_r('Document Page Range Content: ' . $documentPageRange);
+                        // echo "<br><br><br><br><br>";
+                        $pageRange = json_decode($documentPageRange, true);
                         // echo '<pre>------------------Document Page Range using open ai------------------';
                         // print_r($pageRange); 
                         $lenderDocRange = $this->getPageRangeByDocType($pageRange, 'lender_instructions');
