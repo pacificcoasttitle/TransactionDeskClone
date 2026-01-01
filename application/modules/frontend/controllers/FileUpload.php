@@ -24,6 +24,8 @@ class FileUpload extends MX_Controller
     public function index()
     {
         $userdata = $this->session->userdata('user');
+        $this->load->library('order/common');
+        $this->common->checkFileUploadAccess();
         if (empty($userdata) || !isset($userdata['is_title_production']) || $userdata['is_title_production'] != 1) {
             redirect('/dashboard');
         }
