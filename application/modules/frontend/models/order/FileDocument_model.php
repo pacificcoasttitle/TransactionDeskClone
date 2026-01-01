@@ -105,7 +105,7 @@ class FileDocument_model extends MY_Model
         // $result = $query->result();
 
         $this->db->where('added_by', $userdata['id']);
-        $this->db->where('is_parsed_file', 1);
+        // $this->db->where('is_parsed_file', 1);
         $this->db->from('pct_lender_parsing_document');
         $total_records = $this->db->count_all_results();
 
@@ -124,7 +124,7 @@ class FileDocument_model extends MY_Model
             }
 
             $this->db->where('added_by', $userdata['id']);
-            $this->db->where('is_parsed_file', 1);
+            // $this->db->where('is_parsed_file', 1);
             $this->db->from('pct_lender_parsing_document');
             $filter_total_records = $this->db->count_all_results();
 
@@ -136,7 +136,7 @@ class FileDocument_model extends MY_Model
             }
 
             $this->db->where('added_by', $userdata['id']);
-            $this->db->where('is_parsed_file', 1);
+            // $this->db->where('is_parsed_file', 1);
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
@@ -149,13 +149,13 @@ class FileDocument_model extends MY_Model
             }
         } else {
             $this->db->where('added_by', $userdata['id']);
-            $this->db->where('is_parsed_file', 1);
+            // $this->db->where('is_parsed_file', 1);
             $this->db->from('pct_lender_parsing_document');
 
             $filter_total_records = $this->db->count_all_results();
 
             $this->db->where('added_by', $userdata['id']);
-            $this->db->where('is_parsed_file', 1);
+            // $this->db->where('is_parsed_file', 1);
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
