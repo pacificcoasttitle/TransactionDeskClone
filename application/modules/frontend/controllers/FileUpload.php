@@ -731,6 +731,7 @@ class FileUpload extends MX_Controller
                 $nestedData[] = $i;
                 $nestedData[] = $order['name'];
                 $nestedData[] = $order['order_number'];
+                $nestedData[] = ($order['is_parsed_file']) ? 'Parsed File' : 'Original File';
                 $nestedData[] = convertTimezone($order['created_at']);
                 $documentUrl = env('AWS_PATH') . "lender-parsing-docs/" . $order['file_path'];
                 $nestedData[] = "<div class='table-action'>

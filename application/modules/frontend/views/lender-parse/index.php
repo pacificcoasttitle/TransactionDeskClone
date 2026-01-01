@@ -489,6 +489,7 @@ if ($userdata['is_sales_rep'] == 1) {
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>File Number</th>
+                                <th>File Type</th>
                                 <th>Created At</th>
                                 <th>Action</th>
                             </tr>
