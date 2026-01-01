@@ -396,11 +396,11 @@ class FileUpload extends MX_Controller
             $this->form_validation->set_rules('document_name', 'Last Document Name', 'required', array('required' => 'Enter your document name'));
             if ($this->form_validation->run($this) == true) {
                 $this->load->model('order/apiLogs');
-                $config['upload_path'] = './uploads/desk-file-upload/';
+                $config['upload_path'] = './uploads/lender-parsing-docs/';
                 $config['allowed_types'] = 'pdf';
                 $config['max_size'] = 12000;
                 $this->load->library('upload', $config);
-                $file_path = FCPATH . 'uploads/desk-file-upload/';
+                $file_path = FCPATH . 'uploads/lender-parsing-docs/';
                 if (!is_dir($file_path)) {
                     mkdir($file_path, 0777, true);
                 }
@@ -442,13 +442,10 @@ class FileUpload extends MX_Controller
                         
                         rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
                         
-                        // $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
-                        
-                        
                         $pdfPath = FCPATH . $config['upload_path'] . $fileName;
-                        // print_r('PDF Path: ' . $pdfPath);
-                        
+                                                
                         $pageTexts = $this->ocrservice->process_pdf($pdfPath);
+                        
                         // echo "<pre>";
                         // print_r('Total Pages OCRed: ' . count($pageTexts));
                         // echo '<pre>------------------Full Text------------------';
@@ -570,6 +567,9 @@ class FileUpload extends MX_Controller
                             }
                         }
 
+                        /** Upload document to AWS S3 and delete from local storage after processed */
+                        $this->order->uploadDocumentOnAwsS3($fileName, 'lender-parsing-docs');
+
                         $logData = [
                             'order_number' => $orderNumber,
                             'document_name' => $documentName,
@@ -635,7 +635,7 @@ class FileUpload extends MX_Controller
                         );
                         $this->db->insert('pct_resware_log', $reswareData);
                             
-                        unlink($config['upload_path'] . $fileName);
+                        // unlink($config['upload_path'] . $fileName);
                         // }
                         // $firstPageContent = $classifyFirstPage['choices'][0]['message']['content'] ?? null;
                         // $firstPageText = $this->ocrservice->first_page_text($pdf);
