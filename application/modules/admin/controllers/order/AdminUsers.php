@@ -13,8 +13,8 @@ class AdminUsers extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/admin_user_model');
         $this->load->model('order/users_roles_model');
-        $this->load->library('order/common');
-        $this->common->is_super_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->is_super_admin();
     }
 
 	public function index()
@@ -40,7 +40,7 @@ class AdminUsers extends MX_Controller {
 				$updated_id = $this->admin_user_model->update($admin_id,$admin_data);
 				/** Save user Activity */
 				$activity = 'Admin user id :'. $admin_id . ' details updated (name) - ' . $firstName . '  ' . $lastName;
-				$this->common->logAdminActivity($activity);
+				$this->common_lib->logAdminActivity($activity);
 				/** End Save user activity */
 			}
 			else {
@@ -56,7 +56,7 @@ class AdminUsers extends MX_Controller {
 				$inserted_id = $this->admin_user_model->insert($admin_data);
 				/** Save user Activity */
 				$activity = 'New Admin user created details - ' . $email;
-				$this->common->logAdminActivity($activity);
+				$this->common_lib->logAdminActivity($activity);
 				/** End Save user activity */
 			}
 			if($inserted_id) {
@@ -114,7 +114,7 @@ class AdminUsers extends MX_Controller {
 				$status = true;
 				/** Save user Activity */
 				$activity = 'Admin user deleted - ' . $adminDetails->email_id;
-				$this->common->logAdminActivity($activity);
+				$this->common_lib->logAdminActivity($activity);
 				/** End Save user activity */
 			} else {
 				$flash_data['error'] = 'Admin user not deleted.';

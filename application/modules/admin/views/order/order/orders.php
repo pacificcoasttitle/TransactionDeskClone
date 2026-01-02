@@ -8,7 +8,7 @@
     $master_users = json_encode($master_users);
 
     $userdata = $this->session->userdata('admin');
-	$roleList = $this->common->getRoleList();
+	$roleList = $this->common_lib->getRoleList();
 	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 	$roleName = $roleList[$role_id];
 ?>

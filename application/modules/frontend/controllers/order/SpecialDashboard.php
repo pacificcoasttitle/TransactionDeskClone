@@ -15,8 +15,8 @@ class SpecialDashboard extends MX_Controller {
 		$this->load->library('order/template');
 		$this->load->library('order/salesDashboardTemplate');
 		$this->load->library('order/order');
-		$this->load->library('order/common');
-		$this->common->is_special_lender_user();
+		$this->load->library('order/common_lib');
+		$this->common_lib->is_special_lender_user();
 	}
 	
 	function index()

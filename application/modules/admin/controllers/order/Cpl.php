@@ -12,9 +12,9 @@ class Cpl extends MX_Controller
         );
         $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
 
-        $this->common->is_admin();
+        $this->common_lib->checkAllAdminAccess();
     }
 
     public function northAmericanBranches()
@@ -49,7 +49,7 @@ class Cpl extends MX_Controller
         if (!empty($branchesData)) {
             /** Save user Activity */
             $activity = 'North American Branches Refreshed.';
-            $this->common->logAdminActivity($activity);
+            $this->common_lib->logAdminActivity($activity);
             /** End save user activity */
             $data = array('status' => 'success', 'msg' => '');
         } else {
@@ -65,7 +65,7 @@ class Cpl extends MX_Controller
         if (!empty($branchesData)) {
             /** Save user Activity */
             $activity = 'North American Branches Refreshed. (Doma)';
-            $this->common->logAdminActivity($activity);
+            $this->common_lib->logAdminActivity($activity);
             /** End save user activity */
             $data = array('status' => 'success', 'msg' => '');
         } else {
@@ -95,7 +95,7 @@ class Cpl extends MX_Controller
         if (!empty($branchesData)) {
             /** Save user Activity */
             $activity = 'Westcor Branches Refreshed.';
-            $this->common->logAdminActivity($activity);
+            $this->common_lib->logAdminActivity($activity);
             /** End save user activity */
             $data = array('status' => 'success', 'msg' => '');
         } else {
@@ -125,7 +125,7 @@ class Cpl extends MX_Controller
         if (!empty($branchesData)) {
             /** Save user Activity */
             $activity = 'Common wealth Branches Refreshed.';
-            $this->common->logAdminActivity($activity);
+            $this->common_lib->logAdminActivity($activity);
             /** End save user activity */
             $data = array('status' => 'success', 'msg' => '');
         } else {

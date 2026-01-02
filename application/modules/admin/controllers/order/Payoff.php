@@ -17,9 +17,9 @@ class PayOff extends MX_Controller
         $this->load->model('order/home_model');
         $this->load->model('order/order_model');
         $this->load->model('order/transactee_model');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->library('order/order');
-        $this->common->is_admin();
+        $this->common_lib->checkPayoffAccess();
     }
 
     public function transactees_list()
@@ -165,7 +165,7 @@ class PayOff extends MX_Controller
                 $nestedData[] = $order['aba'];
                 $nestedData[] = $order['bank_name'];
                 $nestedData[] = $createdBy . ' ' . convertTimezone($order['submitted'], "m/d/Y");
-                $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . $this->common->convertTimezone($order['approved_date'], 'm/d/Y @ g:i a', 'America/Los_Angeles') : '';
+                $nestedData[] = ($order['is_approved']) ? $order['first_name'] . ' ' . $order['last_name'] . ' ' . $this->common_lib->convertTimezone($order['approved_date'], 'm/d/Y @ g:i a', 'America/Los_Angeles') : '';
                 // $nestedData[] = $order['first_name'] . ' ' . $order['last_name'];
                 $isApproved = $order['is_approved'];
                 if ($isApproved == 1) {
@@ -366,7 +366,7 @@ class PayOff extends MX_Controller
                         $update = $this->transactee_model->update($transacteeData, $condition);
                         /** Save user Activity */
                         $activity = 'transactee updated :- ' . $_POST['transctee_name'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End save user activity */
                         if ($update) {
                             $data['success_msg'] = 'Transactee updated successfully.';
@@ -411,7 +411,7 @@ class PayOff extends MX_Controller
             if ($deleted) {
                 /** Save user Activity */
                 $activity = 'Transactee user deleted :- ' . $payoffUser['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 $successMsg = 'Transactee user deleted successfully.';
                 $response = array('status' => 'success', 'message' => $successMsg);
@@ -560,7 +560,7 @@ class PayOff extends MX_Controller
 
                         /** Save user Activity */
                         $activity = 'Transctee created :- ' . $_POST['transctee_name'] . 'By ' . $userdata['name'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End save user activity */
                         if ($insert) {
                             $data['success_msg'] = 'Transctee created successfully.';

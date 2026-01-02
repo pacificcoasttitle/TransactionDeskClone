@@ -19,8 +19,8 @@ class Escrow extends MX_Controller
         $this->load->model('order/apiLogs');
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
-		$this->load->library('order/common');
-		$this->common->is_escrow_user();
+		$this->load->library('order/common_lib');
+		$this->common_lib->is_escrow_user();
 	}
 	
 	function index()
@@ -213,12 +213,12 @@ class Escrow extends MX_Controller
             }
             
             if (!empty($orderInfo->escrow_officer_id)) {
-                $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
+                $escrowInfoFromOrder = $this->common_lib->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id); 
                 if ($userdata['is_escrow_officer'] == 1) {
                     $escrowInfo = $this->users_model->get_by(array('email' => $escrowInfoFromOrder['email_address']));
                     $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowInfo->branch_id, 'position_id' => 15))), true);
                     $assistantUserEmails = array_column($assistantUsersInfo, 'email');	
-                    $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails); 
+                    $assistantOrderUsersInfo = $this->common_lib->getAssistantUsers($assistantUserEmails); 
 
                     foreach ($assistantOrderUsersInfo as $assistant) {
                         $notificationData = array(

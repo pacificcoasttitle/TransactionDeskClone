@@ -14,9 +14,9 @@ class UsersRole extends MX_Controller
 		$this->load->library('form_validation');
 		$this->load->model('order/admin_user_model');
 		$this->load->model('order/users_roles_model');
-		$this->load->library('order/common');
+		$this->load->library('order/common_lib');
 		$this->load->library('order/order');
-		$this->common->is_super_admin();
+		$this->common_lib->is_super_admin();
 	}
 
 	public function index()

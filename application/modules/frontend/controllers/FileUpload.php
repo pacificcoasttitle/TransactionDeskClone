@@ -24,8 +24,8 @@ class FileUpload extends MX_Controller
     public function index()
     {
         $userdata = $this->session->userdata('user');
-        $this->load->library('order/common');
-        $this->common->checkFileUploadAccess();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkFileUploadAccess();
         if (empty($userdata) || !isset($userdata['is_title_production']) || $userdata['is_title_production'] != 1) {
             redirect('/dashboard');
         }
@@ -386,8 +386,8 @@ class FileUpload extends MX_Controller
 
 
         // print_r(PHP_OS_FAMILY);die;
-        $this->load->library('order/common');
-        $this->common->checkLenderParseAccess();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkLenderParseAccess();
         $this->load->library('order/chatGPT');
         $userdata = $this->session->userdata('user');
         $data['title'] = 'Reports | Pacific Coast Title Company';
@@ -706,8 +706,8 @@ class FileUpload extends MX_Controller
 
     public function getLenderPursedDoc()
     {
-        $this->load->library('order/common');
-        $this->common->checkLenderParseAccess();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkLenderParseAccess();
         
         $params = array();
         $data = array();

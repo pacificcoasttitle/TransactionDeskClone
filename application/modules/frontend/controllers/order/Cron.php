@@ -8057,14 +8057,14 @@ class Cron extends MX_Controller
                     // echo $res; exit; 
                 } else {
                     $this->load->library('order/twilio');
-                    $this->load->library('order/common');
+                    $this->load->library('order/common_lib');
                     $orderId = $filesResult['id'];
                     $file_number = $response['OrderNumber'];
                     // $phoneNumber = "2133097286"; //$filesResult['phone'];
                     $phoneNumber = $filesResult['phone'];
                     $phoneNumber = preg_replace('/\D/', '', $phoneNumber);
                     $propertyAddress = $filesResult['full_address'];
-                    $filesResult['timestamp'] = $timestamp = $this->common->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
+                    $filesResult['timestamp'] = $timestamp = $this->common_lib->convertTimezone(date('Y-m-d H:i:s'), 'g:ia m/d/Y','America/Los_Angeles');
                     
                     $message = "";
                     if (($taskId == '03-020' || $taskId == 'TSG-02-015' || $taskId == 'TSG-PRE-15')) {
@@ -8830,10 +8830,10 @@ class Cron extends MX_Controller
         date_default_timezone_set('America/Los_Angeles');
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $data = array();
         $data['title'] = 'PCT Order: Import Revenue Data From PowerBI';
-        $configData    = $this->common->getConfigData();
+        $configData    = $this->common_lib->getConfigData();
         $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
         $query = $this->db->select('id, product_type')
             ->from('pct_softpro_product_type')
@@ -8847,7 +8847,7 @@ class Cron extends MX_Controller
 
         $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
 
-        $escrowOfficerList = $this->common->getEscrowOfficerLookupDetails();
+        $escrowOfficerList = $this->common_lib->getEscrowOfficerLookupDetails();
         $escrowOfficerList = array_column($escrowOfficerList, 'id', 'officer_name');
         // echo "<pre>";
         // print_r($orderTypeList);

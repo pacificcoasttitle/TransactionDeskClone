@@ -12,8 +12,8 @@ class ProposedInsured extends MX_Controller {
 		$this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/branches_model');
-        $this->load->library('order/common');
-        $this->common->is_super_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->is_super_admin();
     }
 
 	public function index()
@@ -44,14 +44,14 @@ class ProposedInsured extends MX_Controller {
 			if($inserted_id) {
 				/** Save user Activity */
 				$activity = 'Proposed Insured Branch added successfully: .' . $this->input->post('address') . ' ' . $this->input->post('city') . ' ' . $this->input->post('zip');
-				$this->common->logAdminActivity($activity);
+				$this->common_lib->logAdminActivity($activity);
 				/** End save user activity */
 				$flash_data['success'] = 'Branch added successfully.';
 			}
 			elseif($updated_id) {
 				/** Save user Activity */
 				$activity = 'Proposed Insured Branch updated successfully: .' . $this->input->post('address') . ' ' . $this->input->post('city') . ' ' . $this->input->post('zip');
-				$this->common->logAdminActivity($activity);
+				$this->common_lib->logAdminActivity($activity);
 				/** End save user activity */
 				$flash_data['success'] = 'Branch updated successfully.';
 			}
@@ -90,7 +90,7 @@ class ProposedInsured extends MX_Controller {
 
 				/** Save user Activity */
 				$activity = 'Proposed Insured Branch deleted successfully: .' . $branch->address . ' ' . $branch->city . ' ' . $branch->zip;
-				$this->common->logAdminActivity($activity);
+				$this->common_lib->logAdminActivity($activity);
 				/** End save user activity */
 				
 				$flash_data['success'] = 'Branch deleted successfully.';

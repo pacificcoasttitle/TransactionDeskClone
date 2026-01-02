@@ -13,8 +13,8 @@ class RulesManager extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/rulesManager_model');
         $this->load->model('order/counties_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkMasterAdminAccess();
     }
 
     public function index()
@@ -130,7 +130,7 @@ class RulesManager extends MX_Controller {
                 /** Save user activity */
                 $rules = $this->db->select('title')->from('pct_order_rules_manager')->where('id', $ruleId)->get()->row_array(); 
                 $activity = 'Rules value for title:  "' . $rules['title'] . '"  updated';
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 $data = array('status' => 'success','message'=> 'Rule updated successfully.');
             }
