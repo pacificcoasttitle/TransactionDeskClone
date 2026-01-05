@@ -497,6 +497,7 @@ class FileUpload extends MX_Controller
                                 $lenderName = $lenderPackage['lender_name'];
                                 $lendersData = array_map('trim', explode(',', $lenderName));
                                 $lenderNameArray = $this->order->splitFullName($lendersData[0]);
+                                $orderReq['userModel']['FullName'] = $lenderName;
                                 $orderReq['userModel']['FirstName'] = $lenderNameArray['first_name'];
                                 $orderReq['userModel']['MiddleName'] = $lenderNameArray['middle_name'];
                                 $orderReq['userModel']['LastName'] = $lenderNameArray['last_name'];
