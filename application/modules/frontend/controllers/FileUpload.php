@@ -494,7 +494,12 @@ class FileUpload extends MX_Controller
                             $orderReq['orderNumber'] = $orderNumber;
                             $lenderPackage = $lenderInstructionExtraction['lender_package'];
                             if (isset($lenderPackage['lender_name'])) {
-                                $orderReq['userModel']['lenderName'] = $lenderPackage['lender_name'];
+                                $lenderName = $lenderPackage['lender_name'];
+                                $lendersData = array_map('trim', explode(',', $lenderName));
+                                $lenderNameArray = $this->order->splitFullName($lendersData[0]);
+                                $orderReq['userModel']['FirstName'] = $lenderNameArray['first_name'];
+                                $orderReq['userModel']['MiddleName'] = $lenderNameArray['middle_name'];
+                                $orderReq['userModel']['LastName'] = $lenderNameArray['last_name'];
                             }
                             if (isset($lenderPackage['borrowers']) && !empty($lenderPackage['borrowers'])) {
                                 $borrowers = $lenderPackage['borrowers'][0];
