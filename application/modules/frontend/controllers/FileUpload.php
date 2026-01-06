@@ -403,7 +403,7 @@ class FileUpload extends MX_Controller
                 $this->load->model('order/apiLogs');
                 $config['upload_path'] = './uploads/lender-parsing-docs/';
                 $config['allowed_types'] = 'pdf';
-                $config['max_size'] = 12000;
+                $config['max_size'] = 102000;
                 $this->load->library('upload', $config);
                 $file_path = FCPATH . 'uploads/lender-parsing-docs/';
                 if (!is_dir($file_path)) {
