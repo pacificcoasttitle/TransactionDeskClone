@@ -385,7 +385,10 @@ class FileUpload extends MX_Controller
 
 
 
-        // print_r(PHP_OS_FAMILY);die;
+        ini_set('upload_max_filesize', '100M');
+        ini_set('post_max_size', '100M');
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '256M');
         $this->load->library('order/common');
         $this->common->checkLenderParseAccess();
         $this->load->library('order/chatGPT');
