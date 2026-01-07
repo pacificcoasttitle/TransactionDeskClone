@@ -5,7 +5,7 @@ if (!defined('BASEPATH')) {
 
 class Westcor
 {
-    public static $CI;
+    public $CI;
 
     public function __construct($params = array())
     {
@@ -14,7 +14,7 @@ class Westcor
         $this->CI->load->library('email');
         $this->CI->load->library('session');
         $this->CI->load->model('order/home_model');
-        self::$CI = $this->CI;
+        // self::$CI = $this->CI;
     }
 
     public function make_request($http_method, $endpoint, $body_params, $is_token_call = 0, $bearerToken = '')

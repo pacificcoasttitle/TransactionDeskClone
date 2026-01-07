@@ -216,6 +216,7 @@ $route['import-orders-using-file-number']     = 'frontend/order/cron/importOrder
 $route['import-escrow-fee']                   = 'frontend/order/cron/importEscrowFee';
 $route['get-orders-dashboard']                = 'frontend/order/dashboard/getOrdersDashboard';
 $route['sales-production-history/:any']       = 'frontend/order/salesRep/salesProductionHistory';
+$route['get-sales-production-history']        = 'frontend/order/salesRep/getsalesProductionHistory';
 
 $route['escrow-officer-dashboard/?(:any)?']       = 'frontend/order/escrowProduction/index';
 $route['get-all-escrow-orders']          = 'frontend/order/escrowProduction/get_escrow_orders';

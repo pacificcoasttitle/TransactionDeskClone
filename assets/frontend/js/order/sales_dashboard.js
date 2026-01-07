@@ -238,10 +238,10 @@ $(document).ready(function () {
         window.location.replace(base_url + 'sales-dashboard/' + user_id);
     });
 
-    $("#sales_user_production_filter").on("change", function () {
-        var user_id = $(this).val();
-        window.location.replace(base_url + 'sales-production-history/' + user_id);
-    });
+    // $("#sales_user_production_filter").on("change", function () {
+    //     var user_id = $(this).val();
+    //     window.location.replace(base_url + 'sales-production-history/' + user_id);
+    // });
 
     $("#sales_user_summary_filter").on("change", function () {
         var user_id = $(this).val();
@@ -403,6 +403,88 @@ $(document).ready(function () {
             $('.month-title').css('display', 'none');
             $('.year-title').css('display', 'block');
             sales_ranking.ajax.reload();
+        });
+    }
+
+    if ($('#production_history_tab').length) {
+        var flag_val = localStorage.getItem("sales_rep_manager_flag");
+        var filter_type = 'month';
+        production_history = $('#production_history_tab').DataTable({
+            // "pageLength": 2,
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "language": {
+                searchPlaceholder: "Search sales rep name",
+                "emptyTable": "Record(s) not found.",
+                "search": "",
+            },
+            /*"searching": false,*/
+            initComplete: function () {
+
+
+            },
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+
+            },
+            // dom: 'Bfrtip',
+            "dom": 'lf<"production_history_tab_filter">rtip',
+            buttons: [],
+            "drawCallback": function () {
+
+            },
+            "fnInitComplete": function (oSettings, json) {
+                $(".fa-info-circle").mouseenter(function () {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "visible").css("border-radius", "3px");
+                }).mouseleave(function () {
+                    $(this).closest('td').find('span.tooltiptext').css("visibility", "hidden").css("border-radius", "0px");
+                });
+            },
+            "ordering": false,
+            "serverSide": true,
+            "ajax": {
+                url: base_url + "get-sales-production-history", // json datasource
+                type: "post", // method  , by default get
+                beforeSend: function () {
+                    $("#page-preloader").show();
+                },
+                data: function (d) {
+                    d.filter_type = filter_type;
+                    d.year = $('#productionYear').val();
+                    d.user_id = $('#sales_user_production_filter').val();
+                },
+                complete: function () {
+                    $("#page-preloader").hide();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    localStorage.removeItem("sales_rep_manager_flag");
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        alert("You are logged out. Please login.");
+                    }
+                    if (parseInt(XMLHttpRequest.status) == 419) {
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1000);
+                    }
+                    $("#production_history_tab tbody").append(
+                        '<tr><td colspan="4" class="text-center">No records found</td></tr>');
+                    $("#production_history_tab_processing").css("display", "none");
+
+                }
+            }
+        });
+
+        $("#productionYear, #sales_user_production_filter").on("change", function () {
+            let $dropdown = $(this);
+            let selectedValue = $dropdown.val();
+
+            // If empty value selected → set first non-empty option
+            if (!selectedValue) {
+                let firstNonEmpty = $dropdown.find("option[value!='']").first().val();
+                $dropdown.val(firstNonEmpty);
+            }
+            $('.month-name').text(selectedValue);
+            production_history.ajax.reload();
         });
     }
 

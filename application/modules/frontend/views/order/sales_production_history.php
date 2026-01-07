@@ -4,6 +4,24 @@
 			<div class="col-xs-12">
 				<div class="typography-section__inner align-wrapper">
 					<h4 class="ui-title-block_light">Below is list of your month order's count for the current year of <b class="month-name"><?php echo date('Y');?></b></h3>
+					<div id="year_listing">
+						<label>
+							<select style="width:auto;" name="productionYear" id="productionYear" class="custom-select custom-select-sm form-control form-control-sm"> 								
+								<option value="">Select Year</option>
+								<?php 
+								$currentYear = date("Y");
+								for ($i = 0; $i < 5; $i++) { 
+									$date = strtotime("-$i year");
+									$value = date("Y", $date); // for option value (e.g., 2024-07)
+									if ((int)$value < 2025) {
+										break; // Skip years before 2025
+									}
+								?>
+									<option <?php echo ($value == $currentYear) ? "selected" : '' ;?> value="<?php echo $value;?>"><?php echo $value;?></option>
+								<?php }?>
+							</select>
+						</label>
+					</div>
 					<?php if(!empty($salesUsers)) { ?>
 						<div id="sales_user_listing">
 							<label>
@@ -31,7 +49,8 @@
 										<th>Closing %</th>
 									</tr>
 								</thead>
-								<?php if(!empty($salesHistory)) {?>
+								<tbody></tbody>
+								<!-- <?php if(!empty($salesHistory)) {?>
 									<tbody>
 										<?php foreach($salesHistory as $salesData) { ?>
 											<tr>
@@ -50,7 +69,7 @@
 											<td align="center" colspan="5"> No Records Found.</td>
 										</tr>
 									</tbody>
-								<?php } ?>
+								<?php } ?> -->
 							</table>
 						</div>
 					</div>
