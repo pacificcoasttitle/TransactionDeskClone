@@ -306,6 +306,7 @@ $route['generate-payoff']                        = 'frontend/order/payOff/genera
 $route['sales-dashboard/:any']                   = 'frontend/order/salesRep/index';
 $route['get-sales-orders']                       = 'frontend/order/salesRep/get_sales_orders';
 $route['sales-production-history/:any']          = 'frontend/order/salesRep/salesProductionHistory';
+$route['get-sales-production-history']        = 'frontend/order/salesRep/getsalesProductionHistory';
 $route['trends/:any']                            = 'frontend/order/salesRep/trends';
 $route['sales-summary/:any']                     = 'frontend/order/salesRep/summary';
 $route['sales-reports/:any']                     = 'frontend/order/salesRep/salesReports';

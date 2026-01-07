@@ -3529,9 +3529,13 @@ class Order
         return $query->result_array();
     }
 
-    public function getOpenOrdersCountForLastMonthOfPreviousYear($userId)
+    public function getOpenOrdersCountForLastMonthOfPreviousYear($userId, $year = '')
     {
-        $previousYear = (string) (date('Y') - 1);
+        if (empty($year) || $year == date("Y")) {
+            $previousYear = date("Y", strtotime("-1 year"));
+        } else {
+            $previousYear = (string) ($year - 2);
+        }
         $this->CI->db->select('count(*) as total_count')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
@@ -3546,10 +3550,15 @@ class Order
         return $query->row_array();
     }
 
-    public function getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId)
+    public function getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId, $year = '')
     {
-        $firstDate = date("Y", strtotime("-1 year")) . '-12-01';
-        $lastDate = date("Y", strtotime("-1 year")) . '-12-%d';
+        if (empty($year)) {
+            $year = date("Y", strtotime("-1 year"));
+        } else {
+            $year = (string) ($year - 1);
+        }
+        $firstDate = date($year) . '-12-01';
+        $lastDate = date($year) . '-12-%d';
         $this->CI->db->select('count(*) as total_count')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
@@ -3563,10 +3572,13 @@ class Order
         return $query->row_array();
     }
 
-    public function getCountBasedOnCurrentDayForPreviousMonth($userId)
+    public function getCountBasedOnCurrentDayForPreviousMonth($userId, $year = '')
     {
-        $firstDate = '%Y-' . date("m", strtotime("-1 month")) . '-01';
-        $lastDate = '%Y-' . date("m", strtotime("-1 month")) . '-%d';
+        if (empty($year)) {
+            $year = date('Y');
+        }
+        $firstDate = "$year-" . date("m", strtotime("-1 month")) . '-01';
+        $lastDate = "$year-" . date("m", strtotime("-1 month")) . '-%d';
         $this->CI->db->select('count(*) as total_count')
             ->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');

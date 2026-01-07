@@ -5,7 +5,7 @@ if (!defined('BASEPATH')) {
 
 class Natic
 {
-    public static $CI;
+    public $CI;
 
     public function __construct($params = array())
     {
@@ -13,7 +13,7 @@ class Natic
         $this->CI->load->database();
         $this->CI->load->library('email');
         $this->CI->load->library('session');
-        self::$CI = $this->CI;
+        // self::$CI = $this->CI;
     }
 
     public function make_request($xml, $endpoint)

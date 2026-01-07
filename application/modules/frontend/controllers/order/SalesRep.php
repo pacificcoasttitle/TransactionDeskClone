@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $js_version = '12.03.07';
+    private $js_version = '12.03.08';
 
     public function __construct()
     {
@@ -828,6 +828,7 @@ class SalesRep extends MX_Controller
 
     public function salesProductionHistory()
     {
+        $data['title'] = 'Sales Production History | Pacific Coast Title Company';
         $userdata = $this->session->userdata('user');
         $userId = $this->uri->segment(2);
         $data['sales_user_id'] = $userId;
@@ -852,24 +853,121 @@ class SalesRep extends MX_Controller
             }
             $data['salesUsers'] = array();
         }
-        $data['title'] = 'Sales Production History | Pacific Coast Title Company';
+        // $salesHistory = array();
+        // for ($iM = 1; $iM <= (int) date('m'); $iM++) {
+        //     $month = date("m", strtotime("$iM/12/10"));
+        //     $dateObj = DateTime::createFromFormat('!m', $iM);
+        //     $monthName = $dateObj->format('F');
+        //     $salesHistory[$iM - 1]['month'] = $monthName;
+        //     $salesHistory[$iM - 1]['month_val'] = $month;
+
+        //     $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId);
+        //     $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+        //     $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId);
+        //     $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+        //     $salesHistory[$iM - 1]['total_open_count'] = $sale_open_count + $refi_open_count;
+
+        //     $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId);
+        //     $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+        //     $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId);
+        //     $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+        //     $salesHistory[$iM - 1]['total_close_count'] = $refi_close_count + $sale_close_count;
+
+        //     $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+        //     $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+        //     //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+        //     $refi_total_premium = $closeOrderRefiTotalPremium;
+        //     $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+        //     $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+        //     //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+        //     $sale_total_premium = $closeOrderSaleTotalPremium;
+        //     $salesHistory[$iM - 1]['total_premium'] = $sale_total_premium + $refi_total_premium;
+
+        //     $totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
+        //     if ($totalCount > 0) {
+        //         $refi_close_order_percetage = round(($refi_close_count * 100) / $totalCount);
+        //         $sale_close_order_percetage = round(($sale_close_count * 100) / $totalCount);
+        //         $salesHistory[$iM - 1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
+        //     } else {
+        //         $refi_close_order_percetage = 0;
+        //         $sale_close_order_percetage = 0;
+        //         $salesHistory[$iM - 1]['close_order_percetage'] = 0;
+        //     }
+        //     if ($month == date('m')) {
+        //         if ($month == '01') {
+        //             $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId);
+        //         } else {
+        //             $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonth($userId);
+        //         }
+        //         $salesHistory[$iM - 1]['trending'] = $previousCount['total_count'] >= $salesHistory[$iM - 1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
+        //     } else {
+        //         if ($month == '01') {
+        //             $previousCount = $this->order->getOpenOrdersCountForLastMonthOfPreviousYear($userId);
+        //             $previousCount = $previousCount['total_count'];
+        //         } else {
+        //             $previousCount = $salesHistory[$iM - 2]['total_open_count'];
+        //         }
+        //         $salesHistory[$iM - 1]['trending'] = $previousCount >= $salesHistory[$iM - 1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
+        //     }
+
+        // }
+        // $data['salesHistory'] = $salesHistory;
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->js_version));
+        //$this->template->show("order", "sales_production_history", $data);
+        $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
+    }
+
+    public function getsalesProductionHistory() {
+        $userdata = $this->session->userdata('user');
+        $userId = $this->input->post('user_id') ?? $this->uri->segment(2);
+        $year = $this->input->post('year') ?? date('Y');
+        $data['sales_user_id'] = $userId;
+        $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
+
+        if ($userdata['is_sales_rep_manager'] == 1) {
+            $salesUser = $this->home_model->get_user(array('id' => $userdata['id']));
+            if (!empty($salesUser['sales_rep_users'])) {
+                $salesRepUsers = explode(',', $salesUser['sales_rep_users']);
+                if (!in_array($userdata['id'], $salesRepUsers)) {
+                    $salesRepUsers[] = $userdata['id'];
+                }
+                if (!in_array($userId, $salesRepUsers)) {
+                    redirect(base_url() . 'sales-production-history/' . $userdata['id']);
+                }
+                $data['salesUsers'] = $this->order->get_sales_users($salesRepUsers);
+            } else {
+                $data['salesUsers'] = $this->order->get_sales_users();
+            }
+        } else {
+            if ($userId != $userdata['id']) {
+                redirect(base_url() . 'sales-production-history/' . $userdata['id']);
+            }
+            $data['salesUsers'] = array();
+        }
         $salesHistory = array();
-        for ($iM = 1; $iM <= (int) date('m'); $iM++) {
+        if ($year != date('Y')) {
+            $monthsInYear = 12;
+        } else {
+            $monthsInYear = (int) date('m');
+        }
+        for ($iM = 1; $iM <= $monthsInYear; $iM++) {
             $month = date("m", strtotime("$iM/12/10"));
             $dateObj = DateTime::createFromFormat('!m', $iM);
             $monthName = $dateObj->format('F');
             $salesHistory[$iM - 1]['month'] = $monthName;
             $salesHistory[$iM - 1]['month_val'] = $month;
 
-            $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId);
+            $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, [], $year);
             $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-            $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId);
+            $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, [], $year);
             $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
             $salesHistory[$iM - 1]['total_open_count'] = $sale_open_count + $refi_open_count;
 
-            $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId);
+            $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, $year);
             $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-            $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId);
+            $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId, $year);
             $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
             $salesHistory[$iM - 1]['total_close_count'] = $refi_close_count + $sale_close_count;
 
@@ -895,28 +993,39 @@ class SalesRep extends MX_Controller
             }
             if ($month == date('m')) {
                 if ($month == '01') {
-                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId);
+                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonthForPreviousYear($userId, $year);
                 } else {
-                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonth($userId);
+                    $previousCount = $this->order->getCountBasedOnCurrentDayForPreviousMonth($userId, $year);
                 }
                 $salesHistory[$iM - 1]['trending'] = $previousCount['total_count'] >= $salesHistory[$iM - 1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
             } else {
                 if ($month == '01') {
-                    $previousCount = $this->order->getOpenOrdersCountForLastMonthOfPreviousYear($userId);
+                    $previousCount = $this->order->getOpenOrdersCountForLastMonthOfPreviousYear($userId, $year);
                     $previousCount = $previousCount['total_count'];
                 } else {
                     $previousCount = $salesHistory[$iM - 2]['total_open_count'];
                 }
                 $salesHistory[$iM - 1]['trending'] = $previousCount >= $salesHistory[$iM - 1]['total_open_count'] ? '<span style="color: red;font-weight:bold;"><i class="fa fa-arrow-down"></i></span>' : '<span style="color: limegreen;font-weight:bold;"><i class="fa fa-arrow-up"></i></span>';
             }
-
         }
-        $data['salesHistory'] = $salesHistory;
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
-        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
-        $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-production-history.css?v=' . $this->js_version));
-        //$this->template->show("order", "sales_production_history", $data);
-        $this->salesdashboardtemplate->show("order", "sales_production_history", $data);
+        $productionHistory = [];
+        foreach ($salesHistory as $key => $row) {
+            $nestedData = array();
+            $nestedData[] = $row['month'];
+            $nestedData[] = $row['trending'];
+            $nestedData[] = $row['total_open_count'];
+            $nestedData[] = $row['total_close_count'];
+            $nestedData[] = "$".number_format($row['total_premium'], 2);
+            $nestedData[] = number_format($row['close_order_percetage'], 2) . "%";
+            $productionHistory[] = $nestedData;
+        }
+
+        $json_data['recordsTotal'] = count($productionHistory);
+        $json_data['recordsFiltered'] = count($productionHistory);;
+        $json_data['data'] = $productionHistory;
+        echo json_encode($json_data);
+        // echo "<pre>";
+        // print_r($productionHistory);die;
     }
 
     public function trends()
