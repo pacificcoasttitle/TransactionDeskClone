@@ -475,7 +475,7 @@ $(document).ready(function () {
         });
 
         $("#productionYear, #sales_user_production_filter").on("change", function () {
-            let $dropdown = $(this);
+            let $dropdown = $('#productionYear');
             let selectedValue = $dropdown.val();
 
             // If empty value selected → set first non-empty option
