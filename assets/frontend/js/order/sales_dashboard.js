@@ -1084,12 +1084,14 @@ function getRevenueDataBasedOnMonth(month) {
     $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
     $('#page-preloader').css('display', 'block');
     var user_id = $('#sales_user_production_filter').val();
+    var year = $('#productionYear').val();
     $.ajax({
         url: base_url + "get-revenue-data",
         method: "POST",
         data: {
             user_id: user_id,
             month: month,
+            year: year,
             user_type: 'sales_rep'
         },
         success: function (data) {

@@ -2570,6 +2570,7 @@ class Order
         }
 
         $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
         return $query->row_array();
     }
     
@@ -5789,21 +5790,24 @@ class Order
         return true;
     }
 
-    public function getRevenueData($month, $userId, $user_type='sales_rep')
+    public function getRevenueData($month, $userId, $user_type='sales_rep', $year = null)
     {
         $userdata = $this->CI->session->userdata('user');
         if (empty($userId)) {
             $userId = $userdata['id'];
         }
+        if (empty($year)) {
+            $year = date('Y');
+        }
         $this->CI->db->select('order_details.file_number, order_details.id, property_details.full_address,order_details.id, order_details.prod_type, order_details.premium')
             ->from('order_details')
-            ->join('property_details', 'order_details.property_id = property_details.id')
+            ->join('property_details', 'order_details.property_id = property_details.id', 'left')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
 
         $this->CI->db->where('order_details.is_softpro_order', 1);
         $this->CI->db->where('order_details.file_number is not null');
         $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
-        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+        $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
         if ($user_type == 'title_officer') {
             $this->CI->db->where('transaction_details.title_officer', $userId);
         } else {
