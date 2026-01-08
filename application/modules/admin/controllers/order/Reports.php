@@ -400,8 +400,8 @@ class Reports extends MX_Controller
                     if ($rev_day == $today) {
                         $rep['today_tsg_rev'] += $row['premium'];
                         $rep['today_tsg_cnt'] += 1;
-                        $todayTotalClose++;
-                        $todayTotalRev += $row['premium'];
+                        // $todayTotalClose++;
+                        // $todayTotalRev += $row['premium'];
                     }
                 }
             }
@@ -469,7 +469,7 @@ class Reports extends MX_Controller
                 
                 // echo "<pre>";
                 // print_r($rep);die;
-                if ($rep['today_purchase_cnt'] == 0 && $rep['today_refi_cnt'] == 0 && $rep['today_escrow_cnt'] == 0 && $rep['today_tsg_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['prior_purchase_cnt'] == 0  && $rep['prior_refi_cnt'] == 0  && $rep['prior_tsg_cnt'] == 0 && $rep['mtd_purchase_cnt'] == 0 && $rep['mtd_refi_rev'] == 0 && $rep['mtd_escrow_rev'] == 0 && $rep['mtd_tsg_rev'] == 0) {
+                if ($rep['today_purchase_cnt'] == 0 && $rep['today_refi_cnt'] == 0 && $rep['today_escrow_cnt'] == 0 && $rep['today_tsg_cnt'] == 0 && $rep['prior_escrow_cnt'] == 0 && $rep['prior_purchase_cnt'] == 0  && $rep['prior_refi_cnt'] == 0  && $rep['prior_tsg_cnt'] == 0 && $rep['mtd_purchase_cnt'] == 0 && $rep['mtd_refi_cnt'] == 0 && $rep['mtd_escrow_cnt'] == 0 && $rep['mtd_tsg_cnt'] == 0) {
                     unset($branchData['sales_reps'][$key]);
                 }
             }

@@ -3746,7 +3746,8 @@ class Common extends MX_Controller
         date_default_timezone_set('America/Los_Angeles');
         $user_id = $this->input->post('user_id');
         $user_type = $this->input->post('user_type') ?? 'sales_rep';
-        $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $user_id, $user_type);
+        $year = $this->input->post('year') ?? date('Y');
+        $revenueData = $this->order->getRevenueData($this->input->post('month') ? $this->input->post('month') : date('m'), $user_id, $user_type, $year);
         $data = "<table class='table table-bordered' id='tbl-lp-orders-listing' width='100%' cellspacing='0'>
             <thead>
                 <tr>

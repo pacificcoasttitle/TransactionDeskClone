@@ -6,7 +6,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 class SalesRep extends MX_Controller
 {
-    private $js_version = '12.03.09';
+    private $js_version = '12.03.10';
 
     public function __construct()
     {
@@ -1015,7 +1015,7 @@ class SalesRep extends MX_Controller
             $nestedData[] = $row['trending'];
             $nestedData[] = $row['total_open_count'];
             $nestedData[] = $row['total_close_count'];
-            $nestedData[] = "$".number_format($row['total_premium'], 2);
+            $nestedData[] = '<a href="javascript:void(0)" onclick="getRevenueDataBasedOnMonth(\'' . $row['month_val'] . '\');">' . '$' . number_format($row['total_premium']) . '</a>';
             $nestedData[] = number_format($row['close_order_percetage'], 2) . "%";
             $productionHistory[] = $nestedData;
         }
