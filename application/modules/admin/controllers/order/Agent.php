@@ -13,8 +13,8 @@ class Agent extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/agent_model');
         $this->load->model('order/home_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->is_admin();
     }
 
 	public function index()
@@ -244,7 +244,7 @@ class Agent extends MX_Controller {
                 $response = array('status'=>'success', 'message'=>$successMsg);
                 /** Save user Activity */
                 $activity = 'Deleted agent : '. $agent['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End Save user activity */
             }
         }

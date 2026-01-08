@@ -21,8 +21,8 @@ class TitleOfficers extends MX_Controller
 		$this->load->model('order/titleOfficer');
 		$this->load->model('order/home_model');
 		$this->load->library('order/resware');
-		$this->load->library('order/common');
-		$this->common->is_title_officer_user();
+		$this->load->library('order/common_lib');
+		$this->common_lib->is_title_officer_user();
 	}
 	
 	public function index()

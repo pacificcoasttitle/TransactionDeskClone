@@ -19,8 +19,8 @@ class PayOff extends MX_Controller
         $this->load->model('order/apiLogs');
         $this->load->model('order/home_model');
         $this->load->library('order/resware');
-        $this->load->library('order/common');
-        $this->common->is_pay_off_user();
+        $this->load->library('order/common_lib');
+        $this->common_lib->is_pay_off_user();
     }
 
     public function index()

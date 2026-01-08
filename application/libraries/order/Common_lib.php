@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Common
+class Common_lib
 {
     public $CI;
 
@@ -32,6 +32,8 @@ class Common
         if (!empty($userdata['id']) && $userdata['is_admin'] == 1 && $userdata['role_id'] == 1) {
             return true;
         } else {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('admin');
             redirect(base_url() . 'order/admin');
         }
     }
@@ -328,6 +330,82 @@ class Common
                 $this->CI->session->unset_userdata('admin');
                 redirect(base_url() . 'order/admin');
             }
+        } else {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('admin');
+            redirect(base_url() . 'order/admin');
+        }
+    }
+
+    public function checkAllAdminAccess() {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata['id'])) {
+            $roleList = $this->getRoleList();
+            $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+            $roleName = $roleList[$role_id];
+            if (!in_array($roleName, ['Admin', 'Super Admin', 'CS Admin'])) {
+                $this->CI->session->sess_destroy();
+                $this->CI->session->unset_userdata('admin');
+                redirect(base_url() . 'order/admin');
+            }
+        } else {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('admin');
+            redirect(base_url() . 'order/admin');
+        }
+    }
+
+    public function checkMasterAdminAccess() {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata['id'])) {
+            $roleList = $this->getRoleList();
+            $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+            $roleName = $roleList[$role_id];
+            if (!in_array($roleName, ['Admin', 'Super Admin'])) {
+                $this->CI->session->sess_destroy();
+                $this->CI->session->unset_userdata('admin');
+                redirect(base_url() . 'order/admin');
+            }
+        } else {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('admin');
+            redirect(base_url() . 'order/admin');
+        }
+    }
+
+    public function checkOrdersAdminAccess() {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata['id'])) {
+            $roleList = $this->getRoleList();
+            $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+            $roleName = $roleList[$role_id];
+            if (!in_array($roleName, ['Admin', 'Super Admin', 'CS Admin', 'Escrow Admin'])) {
+                $this->CI->session->sess_destroy();
+                $this->CI->session->unset_userdata('admin');
+                redirect(base_url() . 'order/admin');
+            }
+        } else {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('admin');
+            redirect(base_url() . 'order/admin');
+        }
+    }
+
+    public function checkReportsAdminAccess() {
+        $userdata = $this->CI->session->userdata('admin');
+        if (!empty($userdata['id'])) {
+            $roleList = $this->getRoleList();
+            $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+            $roleName = $roleList[$role_id];
+            if (!in_array($roleName, ['Executive', 'Super Admin'])) {
+                $this->CI->session->sess_destroy();
+                $this->CI->session->unset_userdata('admin');
+                redirect(base_url() . 'order/admin');
+            }
+        } else {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('admin');
+            redirect(base_url() . 'order/admin');
         }
     }
 }

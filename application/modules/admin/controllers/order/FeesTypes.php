@@ -12,8 +12,8 @@ class FeesTypes extends MX_Controller {
         $this->load->library('order/adminTemplate');
         $this->load->library('form_validation');
         $this->load->model('order/feesTypes_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkMasterAdminAccess();
     }
 
     public function index()
@@ -58,7 +58,7 @@ class FeesTypes extends MX_Controller {
                     {
                         /** Save user Activity */
                         $activity = 'Fees type updated successfully : ' . $_POST['fee_type'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End Save user activity */
                         $successMsg = 'Fee Type updated successfully.';
                         $this->session->set_userdata('success_msg', $successMsg);
@@ -72,7 +72,7 @@ class FeesTypes extends MX_Controller {
                     if($insert){
                         /** Save user Activity */
                         $activity = 'New Fees type created successfully : ' . $_POST['fee_type'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End Save user activity */
                         $data['success_msg'] = 'Fees type added successfully.';
                     }
@@ -161,7 +161,7 @@ class FeesTypes extends MX_Controller {
             {
                 /** Save user Activity */
                 $activity = 'Fees type deleted successfully : ' . $fees_info['name'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End Save user activity */
 
                 $successMsg = 'Fee type deleted successfully.';
@@ -206,7 +206,7 @@ class FeesTypes extends MX_Controller {
                     if($update){
                         /** Save user Activity */
                         $activity = 'Fees type updated successfully : ' . $_POST['fee_type'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End Save user activity */
                         $data['success_msg'] = 'Fees type updated successfully.';
                     }

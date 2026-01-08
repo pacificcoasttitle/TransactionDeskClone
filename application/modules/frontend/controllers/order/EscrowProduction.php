@@ -21,9 +21,9 @@ class EscrowProduction extends MX_Controller
         $this->load->model('order/apiLogs');
         $this->load->model('order/reviewPrelimData');
         $this->load->model('order/home_model');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->model('order/salesRep_model');
-        $this->common->is_escrow_production();
+        $this->common_lib->is_escrow_production();
     }
 
     public function index()

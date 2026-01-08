@@ -32,15 +32,15 @@ class Home extends MX_Controller
         $this->load->library('form_validation');
         $this->load->model('order/home_model');
         $this->load->model('order/order_model');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->library('order/order');
-        $this->common->is_admin();
+        $this->common_lib->is_admin();
 
     }
 
     public function index()
     {
-        $this->common->checkRoleAccess();
+        $this->common_lib->checkAllAdminAccess();
         $data = [];
         // $data['title'] = 'PCT Order: Dashboard';
         $order_filter         = ['for_month' => date('m'), 'for_year' => date('Y')];
@@ -577,6 +577,7 @@ class Home extends MX_Controller
 
     public function cpl_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: CPL Documents';
         $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
@@ -588,6 +589,7 @@ class Home extends MX_Controller
 
     public function get_cpl_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1333,6 +1335,7 @@ class Home extends MX_Controller
 
     public function grant_deed_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Grant Deed Documents';
         $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
@@ -1345,6 +1348,7 @@ class Home extends MX_Controller
 
     public function lv_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Legal & Vesting Documents';
         $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
@@ -1357,6 +1361,7 @@ class Home extends MX_Controller
 
     public function get_grant_deed_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1418,6 +1423,7 @@ class Home extends MX_Controller
 
     public function policy_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Grant Deed Documents';
         $this->admintemplate->addJS("https://sdk.amazonaws.com/js/aws-sdk-2.895.0.min.js");
@@ -1427,6 +1433,7 @@ class Home extends MX_Controller
 
     public function get_policy_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1489,6 +1496,7 @@ class Home extends MX_Controller
 
     public function get_lv_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1551,6 +1559,7 @@ class Home extends MX_Controller
 
     public function masterUsers()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Master Users';
         $this->admintemplate->show("order/home", "master_users", $data);
@@ -1561,6 +1570,7 @@ class Home extends MX_Controller
 
     public function get_master_users_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -1601,6 +1611,7 @@ class Home extends MX_Controller
 
     public function addNewMasterUser()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Add New Master User';
         $salesRepData  = [];
@@ -1669,6 +1680,7 @@ class Home extends MX_Controller
 
     public function editMasterUser()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Edit Master User';
         $id            = $this->uri->segment(4);
@@ -1746,6 +1758,7 @@ class Home extends MX_Controller
 
     public function tax_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Tax Documents';
         $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
@@ -1757,6 +1770,7 @@ class Home extends MX_Controller
 
     public function get_tax_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1819,6 +1833,7 @@ class Home extends MX_Controller
 
     public function curative_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Curative Documents';
         $this->admintemplate->addJS(base_url('assets/backend/js/cpl-document.js'));
@@ -1830,6 +1845,7 @@ class Home extends MX_Controller
 
     public function get_curative_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -1892,6 +1908,7 @@ class Home extends MX_Controller
 
     public function file_document()
     {
+        $this->common_lib->checkAllAdminAccess();
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
             if (! is_dir('uploads/file_document')) {
                 mkdir('./uploads/file_document', 0777, true);
@@ -1973,6 +1990,7 @@ class Home extends MX_Controller
 
     public function get_file_document_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $this->load->model('order/fileDocument_model');
         $userdata = $this->session->userdata('user');
         // $where = array('added_by'=>$userdata['id']);
@@ -3010,6 +3028,7 @@ class Home extends MX_Controller
 
     public function sendPassword()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Send Password Listing';
         $this->admintemplate->addJS(base_url('assets/backend/js/password-listing.js'));
@@ -3021,6 +3040,7 @@ class Home extends MX_Controller
 
     public function get_password_list()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params              = [];
         $params['user_type'] = $this->input->post('user_type');
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -3200,6 +3220,7 @@ class Home extends MX_Controller
 
     public function notifications()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Notification';
         $this->admintemplate->addJS(base_url('assets/backend/js/order.js'));
@@ -3212,6 +3233,7 @@ class Home extends MX_Controller
 
     public function get_notifications_list()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -3430,6 +3452,7 @@ class Home extends MX_Controller
 
     public function delete_escrow_officer()
     {
+        $this->common_lib->checkAllAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if ($id) {
@@ -3599,7 +3622,7 @@ class Home extends MX_Controller
                 $insert = $this->home_model->insert($titleProductionData);
                 /** Save user Activity */
                 $activity = 'Title Production created :- ' . $_POST['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 if ($insert) {
                     $data['success_msg'] = 'Title Production added successfully.';
@@ -3713,6 +3736,7 @@ class Home extends MX_Controller
 
     public function spTitleProduction()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Title Production';
         $this->admintemplate->show("order/home", "sp_title_production", $data);
@@ -3720,6 +3744,7 @@ class Home extends MX_Controller
 
     public function get_sp_title_production_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -3763,6 +3788,7 @@ class Home extends MX_Controller
 
     public function addSpTitleProductions()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data             = [];
         $data['title']    = 'PCT Order: Add Title Officer.';
         $titleOfficerData = [];
@@ -3786,7 +3812,7 @@ class Home extends MX_Controller
                 $insert = $this->home_model->insert($titleProductionData);
                 /** Save user Activity */
                 $activity = 'Title Production created :- ' . $_POST['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 if ($insert) {
                     $data['success_msg'] = 'Title Production added successfully.';
@@ -3814,6 +3840,7 @@ class Home extends MX_Controller
 
     public function deleteSpTitlePproduction()
     {
+        $this->common_lib->checkAllAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if ($id) {
@@ -3842,6 +3869,7 @@ class Home extends MX_Controller
 
     public function editSpTitlePproduction()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data                = [];
         $id                  = $this->uri->segment(4);
         $data['title']       = 'PCT Order: Edit Title Production';
@@ -3897,6 +3925,7 @@ class Home extends MX_Controller
 
     public function spEscrowProduction()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Escrow Production';
         $this->admintemplate->show("order/home", "sp_escrow_production", $data);
@@ -3904,6 +3933,7 @@ class Home extends MX_Controller
 
     public function get_sp_escrow_production_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -3939,14 +3969,15 @@ class Home extends MX_Controller
                 $data[] = $nestedData;
             }
         }
-        $json_data['recordsTotal']    = intval($mortgage_lists['recordsTotal']);
-        $json_data['recordsFiltered'] = intval($mortgage_lists['recordsFiltered']);
+        $json_data['recordsTotal']    = intval($escrow_lists['recordsTotal']);
+        $json_data['recordsFiltered'] = intval($escrow_lists['recordsFiltered']);
         $json_data['data']            = $data;
         echo json_encode($json_data);
     }
 
     public function addSpEscrowProductions()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data             = [];
         $data['title']    = 'PCT Order: Add Escrow Officer.';
         $titleOfficerData = [];
@@ -3970,7 +4001,7 @@ class Home extends MX_Controller
                 $insert = $this->home_model->insert($escrowProductionData);
                 /** Save user Activity */
                 $activity = 'Escrow Production created :- ' . $_POST['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 if ($insert) {
                     $data['success_msg'] = 'Escrow Production added successfully.';
@@ -3994,6 +4025,7 @@ class Home extends MX_Controller
 
     public function deleteSpEscrowPproduction()
     {
+        $this->common_lib->checkAllAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if ($id) {
@@ -4022,6 +4054,7 @@ class Home extends MX_Controller
 
     public function editSpEscrowPproduction()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data                = [];
         $id                  = $this->uri->segment(4);
         $data['escrow']       = 'PCT Order: Edit Escrow Production';
@@ -4077,6 +4110,7 @@ class Home extends MX_Controller
 
     public function payoff_users()
     {
+        $this->common_lib->checkPayoffAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Payoff Users';
         $this->admintemplate->addJS(base_url('assets/backend/js/payoff_user.js'));
@@ -4088,6 +4122,7 @@ class Home extends MX_Controller
 
     public function get_payoff_users_list()
     {
+        $this->common_lib->checkPayoffAccess();
         $params = [];
         $this->load->model('order/payoff_model');
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -4148,6 +4183,7 @@ class Home extends MX_Controller
 
     public function add_payoff_user()
     {
+        $this->common_lib->checkPayoffAccess();
         $data              = [];
         $data['title']     = 'PCT Order: Add Payoff User.';
         $data['pageTitle'] = 'Payoff User.';
@@ -4182,7 +4218,7 @@ class Home extends MX_Controller
                 $insert = $this->payoff_model->insert($payoffUserData);
                 /** Save user Activity */
                 $activity = 'Payoff user created :- ' . $_POST['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 if ($insert) {
                     $data['success_msg'] = 'Payoff User added successfully.';
@@ -4210,6 +4246,7 @@ class Home extends MX_Controller
 
     public function delete_payoff_user()
     {
+        $this->common_lib->checkPayoffAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             $this->load->model('order/payoff_model');
@@ -4222,7 +4259,7 @@ class Home extends MX_Controller
                 $payoffUser = $this->payoff_model->getPayoffUsers($condition);
                 /** Save user Activity */
                 $activity = 'Payoff user deleted :- ' . $payoffUser['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 $successMsg = 'Payoff user deleted successfully.';
                 $response   = ['status' => 'success', 'message' => $successMsg];
@@ -4236,6 +4273,7 @@ class Home extends MX_Controller
 
     public function edit_payoff_user()
     {
+        $this->common_lib->checkPayoffAccess();
         $data              = [];
         $data['title']     = 'PCT Order: Edit Payoff User';
         $data['pageTitle'] = 'Payoff User.';
@@ -4271,7 +4309,7 @@ class Home extends MX_Controller
                     $update    = $this->payoff_model->update($payoffUserData, $condition);
                     /** Save user Activity */
                     $activity = 'Payoff User updated :- ' . $_POST['email_address'];
-                    $this->common->logAdminActivity($activity);
+                    $this->common_lib->logAdminActivity($activity);
                     /** End save user activity */
                     if ($update) {
                         $data['success_msg'] = 'Payoff User updated successfully.';
@@ -6507,6 +6545,7 @@ class Home extends MX_Controller
 
     public function adminUserLogs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Admin User Logs';
         $this->admintemplate->show("order/home", "admin_user_logs", $data);
@@ -6514,6 +6553,7 @@ class Home extends MX_Controller
 
     public function get_admin_user_logs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -6554,6 +6594,7 @@ class Home extends MX_Controller
 
     public function cronLogs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Cron Logs';
         $this->admintemplate->show("order/home", "cron_logs", $data);
@@ -6561,6 +6602,7 @@ class Home extends MX_Controller
 
     public function get_cron_logs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -6601,6 +6643,7 @@ class Home extends MX_Controller
 
     public function recordingEmailLogs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Recording Email Logs';
         $this->admintemplate->show("order/home", "recording_email_logs", $data);
@@ -6608,6 +6651,7 @@ class Home extends MX_Controller
 
     public function get_recording_email_logs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -6664,6 +6708,7 @@ class Home extends MX_Controller
 
     public function smsLogs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: SMS Logs';
         $this->admintemplate->show("order/home", "sms_logs", $data);
@@ -6671,6 +6716,7 @@ class Home extends MX_Controller
 
     public function get_sms_logs()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -6763,6 +6809,7 @@ class Home extends MX_Controller
 
     public function settings()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Settings';
         if ($this->input->post()) {
@@ -6917,6 +6964,7 @@ class Home extends MX_Controller
 
     public function lpDocumentTypes()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: LP Document Types';
         $this->admintemplate->addJS(base_url('assets/backend/js/lp-document-type.js'));
@@ -6928,6 +6976,7 @@ class Home extends MX_Controller
 
     public function lpAlert()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: LP Alert';
         $this->admintemplate->show("order/home", "lp_alert", $data);
@@ -6938,6 +6987,7 @@ class Home extends MX_Controller
 
     public function get_lp_document_list()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -7013,6 +7063,7 @@ class Home extends MX_Controller
 
     public function get_lp_alert_list()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -7063,6 +7114,7 @@ class Home extends MX_Controller
 
     public function importLpDocumentTypes()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Import LP Document Types';
         if ($this->input->post()) {
@@ -7132,6 +7184,7 @@ class Home extends MX_Controller
 
     public function addLpDocumentTypes()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $this->load->model('order/apiLogs');
         $userdata            = $this->session->userdata('admin');
         $data                = [];
@@ -7192,6 +7245,7 @@ class Home extends MX_Controller
 
     public function deleteLpDocumentType()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if ($id) {
@@ -7217,6 +7271,7 @@ class Home extends MX_Controller
 
     public function editLpDocumentType()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data                = [];
         $id                  = $this->uri->segment(4);
         $data['title']       = 'PCT Order: Edit LP Document Types';
@@ -7305,6 +7360,7 @@ class Home extends MX_Controller
 
     public function addLpAlert()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $this->load->model('order/apiLogs');
         $userdata      = $this->session->userdata('admin');
         $data          = [];
@@ -7342,6 +7398,7 @@ class Home extends MX_Controller
 
     public function deleteLpAlert()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if ($id) {
@@ -7365,6 +7422,7 @@ class Home extends MX_Controller
 
     public function editLpAlert()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $id            = $this->uri->segment(4);
         $data['title'] = 'PCT Order: Edit LP Document Types';
@@ -8241,6 +8299,7 @@ class Home extends MX_Controller
 
     public function changeClient()
     {
+        $this->common_lib->checkAllAdminAccess();
         $order_id    = $this->input->post('client_order_id');
         $customer_id = $this->input->post('client_id');
         $condition   = ['id' => $order_id];
@@ -8258,6 +8317,7 @@ class Home extends MX_Controller
 
     public function dailyEmailControl()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Daily email control';
         $this->admintemplate->show("order/dailyEmailReceiver", "daily-email-control", $data);
@@ -8265,6 +8325,7 @@ class Home extends MX_Controller
 
     public function getDailyEmailer()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -8305,6 +8366,7 @@ class Home extends MX_Controller
 
     public function addDailyEmailer()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Add New Master User';
         $salesRepData  = [];
@@ -8346,6 +8408,7 @@ class Home extends MX_Controller
 
     public function editDailyEmailer()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Edit Master User';
         $id            = $this->uri->segment(4);
@@ -8391,6 +8454,7 @@ class Home extends MX_Controller
 
     public function deleteDailyEmailerReceiver()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
 
         if ($id) {
@@ -8416,6 +8480,7 @@ class Home extends MX_Controller
 
     public function manualReport()
     {
+        $this->common_lib->checkMasterAdminAccess();
         if ($this->session->userdata('errors')) {
             $data['errors'] = $this->session->userdata('errors');
             $this->session->unset_userdata('errors');
@@ -8530,6 +8595,7 @@ class Home extends MX_Controller
 
     public function softproCompanies()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data            = [];
         $data['errors']  = '';
         $data['success'] = '';
@@ -8555,6 +8621,7 @@ class Home extends MX_Controller
 
     public function get_softpro_companies_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -8670,6 +8737,7 @@ class Home extends MX_Controller
     }
 
     public function spAddCompany() {
+        $this->common_lib->checkAllAdminAccess();
         $this->load->model('order/apiLogs');
         $userdata      = $this->session->userdata('admin');
         $data          = [];
@@ -8771,6 +8839,7 @@ class Home extends MX_Controller
 
     public function spEditCompany()
     {
+        $this->common_lib->checkAllAdminAccess();
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
         $id = $this->uri->segment(4);        
@@ -8883,6 +8952,7 @@ class Home extends MX_Controller
 
     public function spAdminAgent()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data            = [];
         $data['errors']  = '';
         $data['success'] = '';
@@ -8900,6 +8970,7 @@ class Home extends MX_Controller
 
     public function get_sp_agent_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = array();  $data = array();
         if(isset($_POST['draw']) && !empty($_POST['draw']))
         {
@@ -8962,6 +9033,7 @@ class Home extends MX_Controller
 
     public function spAdminEscrow()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Escrow';
         $this->session->set_userdata('back_url', base_url() . 'order/admin/softpro-escrow');
@@ -8970,6 +9042,7 @@ class Home extends MX_Controller
 
     public function get_sp_escrow_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         // echo "<pre>"; print_r($_POST); exit;
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -9049,6 +9122,7 @@ class Home extends MX_Controller
 
     public function editUser()
     {
+        $this->common_lib->checkAllAdminAccess();
         $this->load->library('order/softPro');
         $id = $this->uri->segment(4);        
         $data = array();
@@ -9167,6 +9241,7 @@ class Home extends MX_Controller
 
     public function spAdminlenders()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Lenders';
         $this->session->set_userdata('back_url', base_url() . 'order/admin/softpro-lenders');
@@ -9175,6 +9250,7 @@ class Home extends MX_Controller
 
     public function get_sp_lender_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -9266,6 +9342,7 @@ class Home extends MX_Controller
 
     public function spAdminMortgageBrokers()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Mortgage Brokers';
         $this->session->set_userdata('back_url', base_url() . 'order/admin/softpro-mortgage-brokers');
@@ -9275,6 +9352,7 @@ class Home extends MX_Controller
 
     public function get_sp_mortgage_brokers_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -9326,6 +9404,7 @@ class Home extends MX_Controller
 
     public function spNewUsers()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: New Users';
         $this->admintemplate->show("order/home", "sp_new_users", $data);
@@ -9333,6 +9412,7 @@ class Home extends MX_Controller
 
     public function get_sp_new_users_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
             $params['draw']        = isset($_POST['draw']) && !empty($_POST['draw']) ? $_POST['draw'] : 10;
@@ -9383,6 +9463,7 @@ class Home extends MX_Controller
 
     public function spAdminEscrowOfficers()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data          = [];
         $data['title'] = 'PCT Order: Escrow Officers';
         $this->admintemplate->show("order/home", "sp_escrow_officers", $data);
@@ -9390,6 +9471,7 @@ class Home extends MX_Controller
 
     public function get_sp_escrow_officers_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -9515,6 +9597,7 @@ class Home extends MX_Controller
 
     public function manualBuyers()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data = array();
 		$data['title'] = 'PCT Order: Manual Buyers';
 		if ($this->input->post()) {
@@ -9574,6 +9657,7 @@ class Home extends MX_Controller
 
     public function get_manual_buyer_list()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params = [];
 
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -9692,6 +9776,7 @@ class Home extends MX_Controller
 
     public function surveys()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $userdata      = $this->session->userdata('admin');
         $data = array();
         $data['title'] = 'PCT Order: Surveys';

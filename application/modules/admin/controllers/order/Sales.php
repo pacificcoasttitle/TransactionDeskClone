@@ -16,9 +16,9 @@ class Sales extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/sales_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
-		// $this->common->is_super_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->is_admin();
+		// $this->common_lib->is_super_admin();
     }
 
     public function index()
@@ -34,6 +34,7 @@ class Sales extends MX_Controller {
 
     public function edit_sp_sales_rep()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data = array();
         $data['title'] = 'PCT Order: Edit Sales Rep.';
         $id = $this->uri->segment('4');
@@ -284,6 +285,7 @@ class Sales extends MX_Controller {
 
     public function spAdminSalesReps()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $data = array();
         
         $data['title'] = 'PCT Order: Sales Rep.';
@@ -295,6 +297,7 @@ class Sales extends MX_Controller {
 
     public function get_sp_sales_rep_list()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $params = array();  $data = array();
         $params['sales_rep_enable'] = $this->input->post('sales_rep_enable');
         if ($this->input->post('sales_rep_enable') == '1' || $this->input->post('sales_rep_enable') == '0') {
@@ -343,7 +346,7 @@ class Sales extends MX_Controller {
                     $editOrderUrl = base_url().'order/admin/edit-sp-sales-rep/'.$value['id'];
                     $action = "<div style='display:flex;justify-content: space-around;' ><a href='".$editOrderUrl."' class='edit-agent'title ='Edit Sales Rep Detail'><i class='fas fa-edit' aria-hidden='true'></i></a>";
                     $action .= "<a href='javascript:void(0);' onclick='deleteSalesRep(".$value['id'].")'  title='Delete Sales Rep'><i class='fas fa-trash' aria-hidden='true'></i></a>";
-					if($this->common->if_super_admin()) {
+					if($this->common_lib->if_super_admin()) {
 						// $action .= "<a href='".base_url('order/admin/sales-rep-commission/'.$value['id'])."'  title='View Commissions'><i class='fas fa-dollar' aria-hidden='true'></i></a>";
 					}
                     $action .= " </div>";
@@ -361,6 +364,7 @@ class Sales extends MX_Controller {
 
     public function updateRepsMailFlag()
     {
+        $this->common_lib->checkMasterAdminAccess();
         $reps_id             = $this->input->post('id');
         $flag     = $this->input->post('flag');
         $data['is_mail_notification'] = $flag;
