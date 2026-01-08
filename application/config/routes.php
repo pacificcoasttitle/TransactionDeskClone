@@ -397,6 +397,19 @@ $route['get-escrow-branch-report'] = 'admin/order/reports/getEscrowBranchReport'
 $route['order/admin/branch-analytics-report'] = 'admin/order/reports/branchAnalyticsReport';
 $route['get-branch-analytics-report'] = 'admin/order/reports/getBranchAnalyticsReport';
 
+$route['order/admin/new-daily-revenue']           = 'admin/order/managementReports/dailyRevenue';
+$route['order/admin/new-r14-branches']            = 'admin/order/managementReports/r14Branches';
+$route['order/admin/new-r14-ranking']             = 'admin/order/managementReports/r14Ranking';
+$route['order/admin/new-title-officer']           = 'admin/order/managementReports/titleOfficerProduction';
+$route['order/admin/new-escrow-production']       = 'admin/order/managementReports/escrowProduction';
+
+// AJAX endpoints
+$route['order/admin/get-new-daily-revenue']       = 'admin/order/managementReports/getDailyRevenue';
+$route['order/admin/get-new-r14-branches']        = 'admin/order/managementReports/getR14Branches';
+$route['order/admin/get-new-r14-ranking']         = 'admin/order/managementReports/getR14Ranking';
+$route['order/admin/get-new-title-officer']       = 'admin/order/managementReports/getTitleOfficerProduction';
+$route['order/admin/get-new-escrow-production']   = 'admin/order/managementReports/getEscrowProduction';
+
 /** Admin Home Routes */
 $route['order/admin/dashboard']                     = 'admin/order/home/index';
 $route['order/admin/escrow']                        = 'admin/order/home/dashboard';
