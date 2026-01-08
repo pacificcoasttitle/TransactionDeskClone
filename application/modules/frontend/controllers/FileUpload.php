@@ -477,7 +477,7 @@ class FileUpload extends MX_Controller
                         // print_r($documentPageRange); 
                         $documentPageRange = $documentPageRange['choices'][0]['message']['content'] ?? null;
                         // echo "<br><br><br><br><br>";
-                        // print_r('Document Page Range Content: ' . $documentPageRange);
+                        $documentPageRange = preg_replace('/```json|```/', '', $documentPageRange);
                         // echo "<br><br><br><br><br>";
                         $pageRange = json_decode($documentPageRange, true);
                         // echo '<pre>------------------Document Page Range using open ai------------------';
