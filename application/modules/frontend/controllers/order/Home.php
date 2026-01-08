@@ -18,6 +18,7 @@ class Home extends MX_Controller
         $this->load->model('order/agent_model');
         $this->load->library('form_validation');
         $this->load->library('order/order');
+        $this->load->library('order/common');
         $this->load->model('order/titlePointData');
         $this->load->model('order/productType');
         $this->load->library('order/softPro');
@@ -203,8 +204,8 @@ class Home extends MX_Controller
 
                 $con = [
                         'where'      => [
-                            'closer_examiner'   => $escrowOfficer,
-                            'is_escrow_officer'       => 1,
+                            'id'   => $escrowOfficer,
+                            'is_escrow_officer' => 1,
                         ]
                 ];
             
@@ -1412,7 +1413,7 @@ class Home extends MX_Controller
             // $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
             $data['salesRep'] = $this->home_model->getSPSalesRepDetails($condition);
             // $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
-            $data['escrowOfficers'] = $this->home_model->getEscrowOfficerLookupDetails();
+            $data['escrowOfficers'] = $this->common->getEscrowOfficerLookupDetails();
             // echo "<pre>";
             // print_r($data['salesRep']);die;
             $data['productType'] = $this->home_model->get_product_types();

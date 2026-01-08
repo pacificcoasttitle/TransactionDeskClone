@@ -284,6 +284,24 @@ class Common
         }
     }
 
+    public function checkFileUploadAccess() {
+        $userdata = $this->CI->session->userdata('user');
+        if (empty($userdata['id']) || ($userdata['is_title_production'] != 1)) {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('user');
+            redirect(base_url() . 'order/login');
+        }
+    }
+
+    public function checkCreateOrderAccess() {
+        $userdata = $this->CI->session->userdata('user');
+        if (empty($userdata['id']) || ($userdata['is_sales_rep'] == 1 || $userdata['is_escrow_production'] == 1 || $userdata['is_title_officer'] == 1 || $userdata['is_escrow_officer'] == 1 || $userdata['is_payoff_user'] == 1 || $userdata['is_special_lender'] == 1 || $userdata['is_title_production'] == 1)) {
+            $this->CI->session->sess_destroy();
+            $this->CI->session->unset_userdata('user');
+            redirect(base_url() . 'order/login');
+        }
+    }
+
     public function getEscrowOfficerLookupDetails()
     {
         // $this->db->select('*');
