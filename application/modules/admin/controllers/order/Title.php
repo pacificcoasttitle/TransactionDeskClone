@@ -14,12 +14,13 @@ class Title extends MX_Controller
         $this->load->library('form_validation');
         $this->load->model('order/title_model');
         $this->load->model('order/home_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->is_admin();
     }
 
     public function index()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data = array();
         $data['title'] = 'PCT Order: Title Officers';
         $this->admintemplate->show("order/title", "title", $data);
@@ -30,6 +31,7 @@ class Title extends MX_Controller
 
     public function get_title_officer_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = array();
         $data = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {
@@ -109,7 +111,7 @@ class Title extends MX_Controller
                 $insert = $this->title_model->insert($titleOfficerData);
                 /** Save user Activity */
                 $activity = 'Title officer created :- ' . $_POST['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 if ($insert) {
                     $data['success_msg'] = 'Title Officer added successfully.';
@@ -165,7 +167,7 @@ class Title extends MX_Controller
                     $update = $this->title_model->update($titleOfficerData, $condition);
                     /** Save user Activity */
                     $activity = 'Title officer updated :- ' . $_POST['email_address'];
-                    $this->common->logAdminActivity($activity);
+                    $this->common_lib->logAdminActivity($activity);
                     /** End save user activity */
                     if ($update) {
                         $data['success_msg'] = 'Title Officer updated successfully.';
@@ -196,6 +198,7 @@ class Title extends MX_Controller
 
     public function delete_title_officer()
     {
+        $this->common_lib->checkAllAdminAccess();
         $id = isset($_POST['id']) && !empty($_POST['id']) ? $_POST['id'] : '';
         if ($id) {
             $titleOfficerData = array('status' => 0);
@@ -205,7 +208,7 @@ class Title extends MX_Controller
             if ($update) {
                 /** Save user Activity */
                 $activity = 'Title officer deleted :- ' . $titleOfficer['email_address'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End save user activity */
                 $successMsg = 'Title Officer deleted successfully.';
                 $response = array('status' => 'success', 'message' => $successMsg);
@@ -233,6 +236,7 @@ class Title extends MX_Controller
 
     public function spAdminTitleOfficer()
     {
+        $this->common_lib->checkAllAdminAccess();
         $data = array();
         $data['title'] = 'PCT Order: Title Officers';
         $this->admintemplate->show("order/title", "sp_title", $data);
@@ -240,6 +244,7 @@ class Title extends MX_Controller
 
     public function get_sp_title_officer_list()
     {
+        $this->common_lib->checkAllAdminAccess();
         $params = array();
         $data = array();
         if (isset($_POST['draw']) && !empty($_POST['draw'])) {

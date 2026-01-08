@@ -1974,7 +1974,7 @@ class DashboardMail extends MX_Controller
 
         $this->load->model('admin/escrow/order_model');
         $this->load->model('admin/escrow/escrow_user_model');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->model('admin/hr/order_users_model');
         $this->load->model('admin/hr/users_model');
 
@@ -1986,7 +1986,7 @@ class DashboardMail extends MX_Controller
         }
         $this->session->set_userdata($data);
         if (!empty($orderInfo->escrow_officer_id)) {
-            $escrowInfoFromOrder = $this->common->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id);
+            $escrowInfoFromOrder = $this->common_lib->getEscrowOfficerInfoBasedOnIdFromOrder($orderInfo->escrow_officer_id);
             $notificationData = array(
                 'sent_user_id' => $escrowInfoFromOrder['id'],
                 'message' => $message,
@@ -1998,7 +1998,7 @@ class DashboardMail extends MX_Controller
             $escrowHrInfo = $this->escrow_user_model->get_by(array('email' => $escrowInfoFromOrder['email_address']));
             $assistantUsersInfo = json_decode(json_encode($this->escrow_user_model->get_many_by(array('branch_id' => $escrowHrInfo->branch_id, 'position_id' => 15))), true);
             $assistantUserEmails = array_column($assistantUsersInfo, 'email');
-            $assistantOrderUsersInfo = $this->common->getAssistantUsers($assistantUserEmails);
+            $assistantOrderUsersInfo = $this->common_lib->getAssistantUsers($assistantUserEmails);
 
             if (!empty($assistantOrderUsersInfo)) {
                 foreach ($assistantOrderUsersInfo as $assistantUser) {

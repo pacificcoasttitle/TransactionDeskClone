@@ -14,8 +14,8 @@ class TitlePoint extends MX_Controller
         $this->load->library('form_validation');
         $this->load->library('order/order');
         $this->load->model('order/titlePoint_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkAllAdminAccess();
     }
 
     public function index()

@@ -13,8 +13,8 @@ class Fees extends MX_Controller {
         $this->load->library('form_validation');
         $this->load->model('order/fees_model');
         $this->load->model('order/feesTypes_model');
-        $this->load->library('order/common');
-        $this->common->is_admin();
+        $this->load->library('order/common_lib');
+        $this->common_lib->checkMasterAdminAccess();
     }
 
     public function index()
@@ -65,7 +65,7 @@ class Fees extends MX_Controller {
                     {
                         /** Save user Activity */
                         $activity = 'Fees updated successfully : ' . $_POST['fee_name'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End Save user activity */
                         $successMsg = 'Fees updated successfully.';
                         $this->session->set_userdata('success_msg', $successMsg);
@@ -79,7 +79,7 @@ class Fees extends MX_Controller {
                     if($insert){
                         /** Save user Activity */
                         $activity = 'Fees created successfully : ' . $_POST['fee_name'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End Save user activity */
                         $data['success_msg'] = 'Fees added successfully.';
                     }
@@ -186,7 +186,7 @@ class Fees extends MX_Controller {
             {
                 /** Save user Activity */
                 $activity = 'Fees deleted successfully : ' . $fees_info['name'];
-                $this->common->logAdminActivity($activity);
+                $this->common_lib->logAdminActivity($activity);
                 /** End Save user activity */
                 $successMsg = 'Fees deleted successfully.';
                 $data = array('status' => 'success', 'message' => $successMsg);
@@ -236,7 +236,7 @@ class Fees extends MX_Controller {
                     if($update){
                         /** Save user Activity */
                         $activity = 'Fees updated successfully : id : ' . $id . ' - Name: ' . $_POST['fee_name'];
-                        $this->common->logAdminActivity($activity);
+                        $this->common_lib->logAdminActivity($activity);
                         /** End Save user activity */
                         $data['success_msg'] = 'Fees updated successfully.';
                     }

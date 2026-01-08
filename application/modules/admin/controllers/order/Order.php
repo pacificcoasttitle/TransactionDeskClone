@@ -17,13 +17,14 @@ class Order extends MX_Controller
         $this->load->model('order/title_model');
         $this->load->model('order/home_model');
         $this->load->model('order/apiLogs');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->library('order/order');
-        $this->common->is_admin();
+        $this->common_lib->is_admin();
     }
 
     public function orders()
     {
+        $this->common_lib->checkOrdersAdminAccess();
         $params           = [];
         $salesRep         = $this->sales_model->get_sales_reps($params);
         $data['salesRep'] = $salesRep;
@@ -49,6 +50,7 @@ class Order extends MX_Controller
 
     public function get_order_list()
     {
+        $this->common_lib->checkOrdersAdminAccess();
         $params                 = [];
         $params['length']       = $this->input->post('length');
         $params['start']        = $this->input->post('start');
@@ -534,6 +536,7 @@ class Order extends MX_Controller
 
     public function lpOrders()
     {
+        $this->common_lib->checkOrdersAdminAccess();
         $params = [];
         if ($this->session->userdata('errors')) {
             $data['errors'] = $this->session->userdata('errors');
@@ -565,6 +568,7 @@ class Order extends MX_Controller
 
     public function importRevenueData()
     {
+        $this->common_lib->checkOrdersAdminAccess();
         ini_set('max_execution_time', 0); 
         ini_set('memory_limit','2048M');
         $this->load->library('form_validation');
@@ -572,7 +576,7 @@ class Order extends MX_Controller
         $data['title'] = 'PCT Order: Import Revenue Data';
         if(!empty($_FILES))
             {
-            $configData    = $this->common->getConfigData();
+            $configData    = $this->common_lib->getConfigData();
             $enableSurveyEmailFlag = $configData['enable_survey_email']['is_enable'];
             // Form field validation rules
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
@@ -882,6 +886,7 @@ class Order extends MX_Controller
 
     public function get_lp_order_list()
     {
+        $this->common_lib->checkOrdersAdminAccess();
         $params                 = [];
         $params['length']       = $this->input->post('length');
         $params['start']        = $this->input->post('start');

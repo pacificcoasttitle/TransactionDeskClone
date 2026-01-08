@@ -26,7 +26,7 @@ class Common extends MX_Controller
         $this->load->model('order/fees_model');
         $this->load->library('order/resware');
         $this->load->library('order/softPro');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
     }
 
     public function prelimFiles()
@@ -3795,7 +3795,7 @@ class Common extends MX_Controller
         }
         $survey = [];
         $survey['title'] = 'PCT Order: Surveys';
-        
+        $this->common_lib->is_sales_user();
         $this->load->library('order/survey');
         $this->load->model('order/apiLogs');
         $endPoint = 'surveys';

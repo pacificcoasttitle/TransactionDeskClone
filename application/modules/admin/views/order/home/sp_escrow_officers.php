@@ -16,12 +16,12 @@
                 </span>
                 <span class="text"> Sync Escrow Officers </span> 
             </a>
-            <a href="<?php echo base_url()?>order/admin/add-escrow-officer"  class="btn btn-success btn-icon-split float-right mr-2"> 
+            <!-- <a href="<?php echo base_url()?>order/admin/add-escrow-officer"  class="btn btn-success btn-icon-split float-right mr-2"> 
                 <span class="icon text-white-50">
                     <i class="fas fa-plus"></i>
                 </span>
                 <span class="text"> Add </span> 
-            </a>
+            </a> -->
 		</div>
 	</div>
 

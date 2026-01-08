@@ -18,7 +18,7 @@ class Home extends MX_Controller
         $this->load->model('order/agent_model');
         $this->load->library('form_validation');
         $this->load->library('order/order');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->model('order/titlePointData');
         $this->load->model('order/productType');
         $this->load->library('order/softPro');
@@ -30,7 +30,7 @@ class Home extends MX_Controller
     public function index()
     {
         $userdata = $this->session->userdata('user');
-
+        $this->common_lib->checkCreateOrderAccess();
         $this->load->model('order/apiLogs');
         $this->load->model('order/titleOfficer');
         $this->load->model('order/partnerApiLogs');
@@ -1413,7 +1413,7 @@ class Home extends MX_Controller
             // $data['salesRep'] = $this->home_model->getSalesRepDetails($condition);
             $data['salesRep'] = $this->home_model->getSPSalesRepDetails($condition);
             // $data['escrowOfficers'] = $this->home_model->getEscrowOfficerDetails();
-            $data['escrowOfficers'] = $this->common->getEscrowOfficerLookupDetails();
+            $data['escrowOfficers'] = $this->common_lib->getEscrowOfficerLookupDetails();
             // echo "<pre>";
             // print_r($data['salesRep']);die;
             $data['productType'] = $this->home_model->get_product_types();

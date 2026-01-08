@@ -12,9 +12,9 @@ class Reports extends MX_Controller
         $this->load->helper(['file', 'url']);
         $this->load->library('session');
         $this->load->library('order/adminTemplate');
-        $this->load->library('order/common');
+        $this->load->library('order/common_lib');
         $this->load->library('order/order');
-        $this->common->is_admin();
+        $this->common_lib->checkReportsAdminAccess();
     }
 
     public function get_all_sp_order_data($fromDate, $toDate, $closedFromDate) {
