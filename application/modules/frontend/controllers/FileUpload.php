@@ -395,6 +395,7 @@ class FileUpload extends MX_Controller
         $this->load->library('order/chatGPT');
         $userdata = $this->session->userdata('user');
         $data['title'] = 'Reports | Pacific Coast Title Company';
+        $orderReq = [];
         // echo "<pre>";
         // print_r($_FILES);die;
         if (isset($_POST) && !empty($_POST)) {
@@ -467,6 +468,7 @@ class FileUpload extends MX_Controller
                         $classifyFirstPage = $this->chatgpt->classify($firstPageText);
                         // print_r($classifyFirstPage);
                         $firstPageContent = $classifyFirstPage['choices'][0]['message']['content'] ?? null;
+                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'pdf_first_page', $firstPageContent, 0, 0);
                         $firstPageContent = json_decode($firstPageContent, true);
                         // print_r($firstPageContent);
                         // echo "<br><br><br><br><br>";
@@ -476,8 +478,9 @@ class FileUpload extends MX_Controller
                         $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($pageTexts));
                         // print_r($documentPageRange); 
                         $documentPageRange = $documentPageRange['choices'][0]['message']['content'] ?? null;
+                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'pdf_all_page', $documentPageRange, 0, 0);
                         // echo "<br><br><br><br><br>";
-                        // print_r('Document Page Range Content: ' . $documentPageRange);
+                        $documentPageRange = preg_replace('/```json|```/', '', $documentPageRange);
                         // echo "<br><br><br><br><br>";
                         $pageRange = json_decode($documentPageRange, true);
                         // echo '<pre>------------------Document Page Range using open ai------------------';
@@ -494,8 +497,8 @@ class FileUpload extends MX_Controller
                             // print_r($lenderInstructionExtraction);
                         }
 
+                        $orderReq['orderNumber'] = $orderNumber;
                         if (isset($lenderInstructionExtraction['lender_package'])) {
-                            $orderReq['orderNumber'] = $orderNumber;
                             $lenderPackage = $lenderInstructionExtraction['lender_package'];
                             if (isset($lenderPackage['lender_name'])) {
                                 $lenderName = $lenderPackage['lender_name'];
