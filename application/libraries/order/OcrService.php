@@ -46,27 +46,34 @@ class OcrService
 
         // 1. PDF → PNG
         $prefix = $this->tmpDir . DIRECTORY_SEPARATOR . 'page';
-        shell_exec($this->pdftoppm . ' -png -r 300 "' . $pdfPath . '" "' . $prefix . '"');
+        shell_exec($this->pdftoppm . ' -png -r 200 "' . $pdfPath . '" "' . $prefix . '"');
 
         $images = glob($this->tmpDir . '/page-*.png');
         natsort($images);
-
+        $rotationCheckRequired = true;
         foreach ($images as $img) {
-
             if (!preg_match('/page-(\d+)\.png$/', $img, $m)) {
                 continue;
             }
             $pageNo = (int)$m[1];
 
             // 2. Detect rotation
-            $rotate = $this->detectRotation($img);
-
-            $finalImg = $img;
-            if ($rotate > 0) {
-                $finalImg = $img . '_rot.png';
-                shell_exec(
-                    $this->magick . ' "' . $img . '" -rotate ' . $rotate . ' "' . $finalImg . '"'
-                );
+            if ($rotationCheckRequired) {
+                $rotate = $this->detectRotation($img);
+                
+                $finalImg = $img;
+                if ($rotate > 0) {
+                    $finalImg = $img . '_rot.png';
+                    shell_exec(
+                        $this->magick . ' "' . $img . '" -rotate ' . $rotate . ' "' . $finalImg . '"'
+                    );
+                } else {
+                    // No rotation detected on first page, skip for rest
+                    $rotationCheckRequired = false;
+                }
+                
+            } else {
+                $finalImg = $img;
             }
 
             // 3. OCR
