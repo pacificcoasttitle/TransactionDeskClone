@@ -509,10 +509,10 @@ class Westcor
                 if (!empty($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64'])) {
                     $cplDocumentCount = $this->CI->document->countCplDocument($orderDetails['order_id']);
                     $document_name = "westcor_" . $orderDetails['file_number'] . '_'. $cplDocumentCount . ".pdf";
-                    if (!is_dir('uploads/documents')) {
-                        mkdir('./uploads/documents', 0777, true);
+                    if (!is_dir('uploads/cpl_documents')) {
+                        mkdir('./uploads/cpl_documents', 0777, true);
                     }
-                    file_put_contents('./uploads/documents/' . $document_name, base64_decode($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']));
+                    file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']));
                     $this->CI->home_model->update(array('cpl_document_name' => $document_name), array('id' => $orderId), 'order_details');
                 }
 
@@ -521,7 +521,7 @@ class Westcor
                 );
 
                 $this->CI->home_model->update($order_details, $condition, 'order_details');
-                $this->CI->order->uploadDocumentOnAwsS3($document_name, 'documents');
+                $this->CI->order->uploadDocumentOnAwsS3($document_name, 'cpl_documents');
                 $this->CI->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
                 // $this->CI->order->uploadCPLDocumentToResware($document_name, $orderDetails, $resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']);
                 $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
