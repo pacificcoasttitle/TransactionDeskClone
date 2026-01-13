@@ -2238,13 +2238,13 @@ class Common extends MX_Controller
             if ($editCplResponse['success']) {
                 $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
                 $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
-                if (!is_dir('uploads/documents')) {
-                    mkdir('./uploads/documents', 0777, true);
+                if (!is_dir('uploads/cpl_documents')) {
+                    mkdir('./uploads/cpl_documents', 0777, true);
                 }
-                file_put_contents('./uploads/documents/' . $document_name, base64_decode($editCplResponse['response']['a:Content']));
+                file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($editCplResponse['response']['a:Content']));
                 $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
                 $success[] = "CPL document edited successfully for file number - " . $orderDetails['file_number'];
-                $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+                $this->order->uploadDocumentOnAwsS3($document_name, 'cpl_documents');
                 // if ($orderDetails['is_softpro_order'] == 1) {
                     $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
                 // }
@@ -2317,13 +2317,13 @@ class Common extends MX_Controller
                 if ($generateCplResponse['success']) {
                     $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
                     $document_name = "fnf_". $orderDetails['file_number'] . '_' . $cplCount . ".pdf";
-                    if (!is_dir('uploads/documents')) {
-                        mkdir('./uploads/documents', 0777, true);
+                    if (!is_dir('uploads/cpl_documents')) {
+                        mkdir('./uploads/cpl_documents', 0777, true);
                     }
-                    file_put_contents('./uploads/documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
+                    file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
                     $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
                     $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
-                    $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+                    $this->order->uploadDocumentOnAwsS3($document_name, 'cpl_documents');
                     // $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $generateCplResponse['response']['a:Content']);
                     $this->order->uploadCPLDocumentToSoftpro($document_name, $orderDetails);
                     if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
@@ -2427,14 +2427,14 @@ class Common extends MX_Controller
         if ($responseArr['success']) {
             $cplCount = $this->document->countCplDocument($orderDetails['order_id']);
             $document_name = $cplApi . "_" . $cplCount . "_" . $fileId . ".pdf";
-            if (!is_dir('uploads/documents')) {
-                mkdir('./uploads/documents', 0777, true);
+            if (!is_dir('uploads/cpl_documents')) {
+                mkdir('./uploads/cpl_documents', 0777, true);
             }
-            file_put_contents('./uploads/documents/' . $document_name, base64_decode($responseArr['content']));
+            file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($responseArr['content']));
             $this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
             $success[] = "Generated CPL request successfully for file number - " . $orderDetails['file_number'];
             $this->order->uploadCPLDocumentToResware($document_name, $orderDetails, $responseArr['content']);
-            $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
+            $this->order->uploadDocumentOnAwsS3($document_name, 'cpl_documents');
             if (!empty($userdata) && $userdata['id'] == $orderDetails['title_officer']) {
                 $message = 'CPL document generated for order number #' . $orderDetails['file_number'];
                 $notificationData = array(
