@@ -1611,7 +1611,12 @@ class Common extends MX_Controller
                     $file_id = $order['file_number'];
                     $documentName = $order['cpl_document_name'];
                     if (env('AWS_ENABLE_FLAG') == 1) {
-                        $documentUrl = env('AWS_PATH') . "documents/" . $documentName;
+                        if ($this->order->fileExistOrNotOnS3('cpl_documents/' . $documentName)) {
+                            $documentName = $documentName;
+                            $documentUrl = env('AWS_PATH') . "cpl_documents/" . $documentName;
+                        } else {
+                            $documentUrl = env('AWS_PATH') . "documents/" . $documentName;
+                        }
                         $nestedData[] = "<div style='display:flex;justify-content: space-around;'><a href='#' onclick='downloadDocumentFromAws(" . '"' . $documentUrl . '"' . ", " . '"cpl"' . ");' title='Download' class='btn btn-success btn-icon-split'><span class='icon text-white-50'><i class='fas fa-download'></i></span><span class='text'>Download</span></a>
 						<a onclick='return lender_pop_up(0, $order_id);' href='javascript:void(0);' class='btn btn-primary btn-icon-split'><span class='icon text-white-50'><i class='fas fa-edit'></i></span><span class='text'>Edit</span></a></div>";
                     } else {
@@ -2240,6 +2245,8 @@ class Common extends MX_Controller
                 $document_name = "fnf_" . $cplCount . "_" . $orderId . ".pdf";
                 if (!is_dir('uploads/cpl_documents')) {
                     mkdir('./uploads/cpl_documents', 0777, true);
+                } else {
+                    chmod('./uploads/cpl_documents', 0755);
                 }
                 file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($editCplResponse['response']['a:Content']));
                 $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $editCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
@@ -2319,6 +2326,8 @@ class Common extends MX_Controller
                     $document_name = "fnf_". $orderDetails['file_number'] . '_' . $cplCount . ".pdf";
                     if (!is_dir('uploads/cpl_documents')) {
                         mkdir('./uploads/cpl_documents', 0777, true);
+                    } else {
+                        chmod('./uploads/cpl_documents', 0755);
                     }
                     file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($generateCplResponse['response']['a:Content']));
                     $this->home_model->update(array('cpl_document_name' => $document_name, 'fnf_document_id' => $generateCplResponse['response']['a:DocumentId']), array('id' => $orderId), 'order_details');
@@ -2429,6 +2438,8 @@ class Common extends MX_Controller
             $document_name = $cplApi . "_" . $cplCount . "_" . $fileId . ".pdf";
             if (!is_dir('uploads/cpl_documents')) {
                 mkdir('./uploads/cpl_documents', 0777, true);
+            } else {
+                chmod('./uploads/cpl_documents', 0755);
             }
             file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($responseArr['content']));
             $this->home_model->update(array('cpl_document_name' => $document_name), array('file_id' => $fileId), 'order_details');
