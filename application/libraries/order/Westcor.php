@@ -511,6 +511,8 @@ class Westcor
                     $document_name = "westcor_" . $orderDetails['file_number'] . '_'. $cplDocumentCount . ".pdf";
                     if (!is_dir('uploads/cpl_documents')) {
                         mkdir('./uploads/cpl_documents', 0777, true);
+                    } else {
+                        chmod('./uploads/cpl_documents', 0755);
                     }
                     file_put_contents('./uploads/cpl_documents/' . $document_name, base64_decode($resultResCPL['cpl'][$cplCount]['FileInformation']['FileAsBase64']));
                     $this->CI->home_model->update(array('cpl_document_name' => $document_name), array('id' => $orderId), 'order_details');
