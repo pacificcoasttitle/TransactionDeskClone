@@ -451,7 +451,7 @@ class Home extends MX_Controller
                     $transactionDetailsReq['TransactionType'] = $TransactionType;
                     if (!empty($escrowOfficer)) {
                         $transactionDetailsReq['EscrowOfficerName']       = ""; //$escrowOfficer;
-                        $transactionDetailsReq['LookUpCodeEscrowOfficer'] = $escrowOfficer;
+                        $transactionDetailsReq['LookUpCodeEscrowOfficer'] = $escrowOfficerDetails['closer_examiner'];
                     }
                     $orderReq['orderType'] = $TransactionType; //$softproOrderType;
                     if ($TransactionType != 'Purchase') {
