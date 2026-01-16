@@ -46,6 +46,8 @@ class FileUpload extends MX_Controller
                 $file_path = FCPATH . 'uploads/desk-file-upload/';
                 if (!is_dir($file_path)) {
                     mkdir($file_path, 0777, true);
+                } elseif (!is_writable($file_path)) {
+                    chmod($file_paths, 0755);
                 }
                 $orderNumber = $this->sanitizeFilename($this->input->post('order_number'));
                 $documentName = $this->sanitizeFilename($this->input->post('document_name'));
@@ -65,6 +67,7 @@ class FileUpload extends MX_Controller
                             $errorMsg = $this->upload->display_errors();
                             $this->session->set_flashdata('error', $errorMsg);
                             $file_upload_error_msg = 1;
+                            continue;
                         } else {
                             $data = $this->upload->data();
                             $fileName = $documentName . '_' . time() . '.pdf';
@@ -77,80 +80,98 @@ class FileUpload extends MX_Controller
                                 'is_desk_file' => 1,
                                 'created_at' => date('Y-m-d H:i:s'),
                             );
+                            $oldFilePath = $config['upload_path'] . $data['file_name'];
+                            $newFilePath = $config['upload_path'] . $fileName;
                             $id = $this->fileDocument_model->insert($saveData);
-                            rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
+                            if (!$id) {
+                                $errorMsg = 'Failed to save document record to database';
+                                $this->session->set_flashdata('error', $errorMsg);
+                                // Clean up the uploaded file
+                                if (file_exists($oldFilePath)) {
+                                    unlink($oldFilePath);
+                                }
+                                continue; // Skip to next file
+                            }
+                            // rename($config['upload_path'] . $data['file_name'], $config['upload_path'] . $fileName);
+                            if (!rename($oldFilePath, $newFilePath)) {
+                                $errorMsg = 'Something break in internal operation. Please try again.';
+                                $this->session->set_flashdata('error', $errorMsg);
+                                // Clean up the uploaded file
+                                if (file_exists($oldFilePath)) {
+                                    unlink($oldFilePath);
+                                }
+                                continue; // Skip to next file
+                            }
                             $this->order->uploadDocumentOnAwsS3($fileName, 'desk-file-upload');
                             $fileList[] = [
                                 "FolderName" => 'desk-file-upload',
                                 "FileURL" => env('AWS_PATH') . "desk-file-upload/" . $fileName,
                             ];
-                        }
-                        $logData = [
-                            'order_number' => $orderNumber,
-                            'document_name' => $documentName,
-                            'file_list' => json_encode($fileList)
-                        ];
-                        
-                        $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
-
-                        $fileData = [
-                            "Id" => $fileUploadLogId,
-                            "OrderNumber" => $orderNumber,
-                            "DocumentName" => $documentName,
-                            "FileList" => $fileList,
-                        ];
-                        $fileUploadReq[] = $fileData;
-                        $reqData = json_encode($fileUploadReq);
-                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
-                        $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
-                        $response = json_decode($result, true);
-                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
-
-                        if (isset($response) && !empty($response)) {
-                            foreach ($response as $key => $res) {
-                                if ($res['Status'] == 200) {
-                                    $updateData[] = [
-                                        'is_synced' => 1,
-                                        'id' => $res['Id']
-                                    ];
-                                    $this->session->set_flashdata('success', 'Document info saved successfully.');
-                                } else {
-                                    if ((strpos(strtolower($res['Message']), "locked for editing by user") !== false)) {
-                                        $is_synced = 0;
+                            $logData = [
+                                'order_number' => $orderNumber,
+                                'document_name' => $documentName,
+                                'file_list' => json_encode($fileList)
+                            ];
+                            $fileUploadLogId = $this->order->save_sp_file_upload_log($logData);
+                            $fileData = [
+                                "Id" => $fileUploadLogId,
+                                "OrderNumber" => $orderNumber,
+                                "DocumentName" => $documentName,
+                                "FileList" => $fileList,
+                            ];
+                            $fileUploadReq[] = $fileData;
+                            $reqData = json_encode($fileUploadReq);
+                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+                            $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                            $response = json_decode($result, true);
+                            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+                            
+                            if (isset($response) && !empty($response)) {
+                                foreach ($response as $key => $res) {
+                                    if ($res['Status'] == 200) {
+                                        $updateData[] = [
+                                            'is_synced' => 1,
+                                            'id' => $res['Id']
+                                        ];
                                         $this->session->set_flashdata('success', 'Document info saved successfully.');
                                     } else {
-                                        $is_synced = 1;
-                                        $this->session->set_flashdata('error', $res['Message']);
+                                        if ((strpos(strtolower($res['Message']), "locked for editing by user") !== false)) {
+                                            $is_synced = 0;
+                                            $this->session->set_flashdata('success', 'Document info saved successfully.');
+                                        } else {
+                                            $is_synced = 1;
+                                            $this->session->set_flashdata('error', $res['Message']);
+                                        }
+                                        $updateData[] = [
+                                            'is_synced' =>  $is_synced,
+                                            'id' => $res['Id'],
+                                            'reason' => $res['Message']
+                                        ];
                                     }
-                                    $updateData[] = [
-                                        'is_synced' =>  $is_synced,
-                                        'id' => $res['Id'],
-                                        'reason' => $res['Message']
-                                    ];
                                 }
                             }
+                            
+                            foreach ($updateData as $key => $update_row) {
+                                $this->db->where('id', $update_row['id']);
+                                $this->db->update('sp_file_upload_logs', $update_row);
+                            }
+                            /* Start add softpro api logs */
+                            $reswareData = array(
+                                'request_type' => 'upload_file_in_softpro',
+                                'request_url' => 'upload_file',
+                                'request' => $reqData,
+                                'response' => $result,
+                                'status' => '',
+                                'file_number' => $orderNumber,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            );
+                            $this->db->insert('pct_resware_log', $reswareData);
+                            // $successMsg = 'Document info saved successfully.';
+                            // $this->session->set_flashdata('success', $successMsg);
+                            // echo "<pre>";
+                            // print_r($response);die;
+                            /* End add softpro api logs */
                         }
-
-                        foreach ($updateData as $key => $update_row) {
-                            $this->db->where('id', $update_row['id']);
-                            $this->db->update('sp_file_upload_logs', $update_row);
-                        }
-                        /* Start add softpro api logs */
-                        $reswareData = array(
-                            'request_type' => 'upload_file_in_softpro',
-                            'request_url' => 'upload_file',
-                            'request' => $reqData,
-                            'response' => $result,
-                            'status' => '',
-                            'file_number' => $orderNumber,
-                            'created_at' => date("Y-m-d H:i:s"),
-                        );
-                        $this->db->insert('pct_resware_log', $reswareData);
-                        // $successMsg = 'Document info saved successfully.';
-                        // $this->session->set_flashdata('success', $successMsg);
-                        // echo "<pre>";
-                        // print_r($response);die;
-                        /* End add softpro api logs */
                     }
 
                     // if (!empty($_FILES['file-input']['name'])) {
