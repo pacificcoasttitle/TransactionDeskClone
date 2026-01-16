@@ -3186,7 +3186,7 @@ class Order
         if (empty($userdata)) {
             $userdata['id'] = 0;
         }
-        $fileSize = filesize('./uploads/documents/' . $documentName);
+        $fileSize = filesize('./uploads/cpl_documents/' . $documentName);
         $documentData = array(
             'document_name' => $documentName,
             'original_document_name' => $documentName,
@@ -3212,7 +3212,7 @@ class Order
 
         $fileList[] = [
             "FolderName" => 'CPL',
-            "FileURL" => env('AWS_PATH') . "documents/" . $documentName,
+            "FileURL" => env('AWS_PATH') . "cpl_documents/" . $documentName,
         ];
         $logData = [
             'order_number' => $orderNumber,
