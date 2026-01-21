@@ -6792,6 +6792,8 @@ class Cron extends MX_Controller
                     $this->db->update('sp_file_upload_logs', $update_row);
                 }
             }
+        } else {
+            $this->db->truncate('sp_file_upload_logs');
         }
     }
 
