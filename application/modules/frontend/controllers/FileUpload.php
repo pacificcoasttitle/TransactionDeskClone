@@ -4,11 +4,11 @@ class FileUpload extends MX_Controller
 {
     private $user;
     private $sorting_fields;
-    private $js_version = '02.01';
+    private $js_version = '02.02';
     private $max_file_size = 102000; // 100MB in KB
     private $allowed_file_types = ['pdf'];
     private $upload_path = './uploads/lender-parsing-docs/';
-
+    private $document_id = null;
     public function __construct()
     {
         parent::__construct();
@@ -121,10 +121,10 @@ class FileUpload extends MX_Controller
                             ];
                             $fileUploadReq[] = $fileData;
                             $reqData = json_encode($fileUploadReq);
-                            $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+                            $logid = $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
                             $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
                             $response = json_decode($result, true);
-                            $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+                            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
                             
                             if (isset($response) && !empty($response)) {
                                 foreach ($response as $key => $res) {
@@ -392,7 +392,7 @@ class FileUpload extends MX_Controller
         }
 
         $uploadData = $this->upload->data();
-        $this->saveDocumentRecord($orderNumber, $documentName, $config['file_name']);
+        $this->document_id = $this->saveDocumentRecord($orderNumber, $documentName, $config['file_name']);
         $this->documentFilePath = $config['upload_path'] . $config['file_name'];
         $fileData =  [
             'orderNumber' => $orderNumber,
@@ -400,7 +400,7 @@ class FileUpload extends MX_Controller
             'fileName' => $config['file_name'],
             'filePath' => $config['upload_path'] . $config['file_name']
         ];
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_file_uploaded', 'lender_parse_file_uploaded', json_encode($fileData), [], 0, 0);
+        $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_file_uploaded', 'lender_parse_file_uploaded', json_encode($fileData), [], 0, 0);
         return $fileData;
     }
 
@@ -434,101 +434,136 @@ class FileUpload extends MX_Controller
             // Process OCR
             $ocrResults = $this->processDocumentOCR($documentData['filePath']);
             $ocrResults = $ocrResults['pageTexts'];
+
+            // Update progress
+            $this->session->set_flashdata('progress', 'OCR completed. Analyzing document content...');
             // echo "<pre>";
             // echo '-------------OCR Results------------------';
             // print_r($ocrResults);
             // echo '-------------Analysis Results------------------';
             // Analyze document content
             $analysisResults = $this->analyzeDocumentContent($ocrResults);
+            // Update progress
+            $this->session->set_flashdata('progress', 'Document analysis completed. Updating order information...');
             // print_r($analysisResults);
             // Update order information
             $this->updateOrderInformation($ocrResults, $analysisResults, $documentData['orderNumber']);
             
+            // Update progress
+            $this->session->set_flashdata('progress', 'Order information updated. Splitting documents...');
+            
             // Split and upload documents
             $fileList = $this->processDocumentSplitting($documentData, $analysisResults);
+            // Update progress
+            $this->session->set_flashdata('progress', 'Documents split. Syncing with SoftPro...');
             
             // Sync with SoftPro
             $this->syncWithSoftPro($documentData, $fileList);
             
             // Clean up temporary files
-            $this->cleanupTemporaryFiles($documentData['filePath']);
+            $this->cleanupTemporaryFiles($documentData['filePath'], false);
+            // Clear progress
+            $this->session->set_flashdata('progress', 'Document processing completed successfully.');
             
         } catch (Exception $e) {
-            $this->cleanupTemporaryFiles($this->documentFilePath);
+            $this->cleanupTemporaryFiles($this->documentFilePath, true);
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_file_uploaded', 'lender_parse_file_uploaded', '', 'Error processing document: ' . $e->getMessage(), 0, 0);
             throw new Exception('Error processing document: ' . $e->getMessage());
         }
     }
 
     private function processDocumentOCR($filePath)
     {
-        $pdfPath = FCPATH . $filePath;
-        $pageTexts = $this->ocrservice->process_pdf($pdfPath);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_ocr_process', 'lender_parse_ocr_process', $pdfPath, [], 0, 0);
-        // $firstPageText = $this->ocrservice->first_page_text($pdfPath);
-
-        return [
-            'pageTexts' => $pageTexts
-            // 'firstPageText' => $firstPageText
-        ];
+        try {
+            $pdfPath = FCPATH . $filePath;
+            $pageTexts = $this->ocrservice->process_pdf($pdfPath);
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_ocr_process', 'lender_parse_ocr_process', $pdfPath, [], 0, 0);
+            // $firstPageText = $this->ocrservice->first_page_text($pdfPath);
+    
+            return [
+                'pageTexts' => $pageTexts
+                // 'firstPageText' => $firstPageText
+            ];
+        } catch (\Throwable $e) {
+            $this->cleanupTemporaryFiles($this->documentFilePath, true);
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_ocr_process', 'lender_parse_ocr_process', $pdfPath, 'OCR processing failed: ' . $e->getMessage(), 0, 0);
+            throw new Exception('Failed to process document OCR: ' . $e->getMessage());
+        }
     }
 
     private function analyzeDocumentContent($ocrResults)
     {
-        // Analyze first page
-        // $firstPageAnalysis = $this->chatgpt->classify($ocrResults['firstPageText']);
-        // $firstPageContent = json_decode($firstPageAnalysis['choices'][0]['message']['content'], true);
-
-        // Analyze all pages
-        $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($ocrResults));
-        // echo '-------------Document Page Range------------------';
-        // print_r($documentPageRange);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'all_page_analyze', json_encode($documentPageRange), 0, 0);
-        $documentPageRange = preg_replace('/```json|```/', '', $documentPageRange['choices'][0]['message']['content']);
-        $pageRange = json_decode($documentPageRange, true);
-
-        return [
-            // 'firstPageContent' => $firstPageContent,
-            'pageRange' => $pageRange
-        ];
+        try {
+            // Analyze first page
+            // $firstPageAnalysis = $this->chatgpt->classify($ocrResults['firstPageText']);
+            // $firstPageContent = json_decode($firstPageAnalysis['choices'][0]['message']['content'], true);
+    
+            // Analyze all pages
+            $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($ocrResults));
+            
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'all_page_analyze', json_encode($documentPageRange), 0, 0);
+            $documentPageRange = preg_replace('/```json|```/', '', $documentPageRange['choices'][0]['message']['content']);
+            $pageRange = json_decode($documentPageRange, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', $pdfPath, 'Failed to decode OpenAI response: ' . json_last_error_msg(), 0, 0);
+                throw new Exception('Failed to decode OpenAI response: ' . json_last_error_msg());
+            }
+            return [
+                // 'firstPageContent' => $firstPageContent,
+                'pageRange' => $pageRange
+            ];
+        } catch (\Throwable $e) {
+            $this->cleanupTemporaryFiles($this->documentFilePath, true);
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', $pdfPath, 'Document analysis failed: ' . $e->getMessage(), 0, 0);
+            throw new Exception('Failed to analyze document content: ' . $e->getMessage());
+        }
     }
 
     private function updateOrderInformation($ocrResults, $analysisResults, $orderNumber)
     {
-        $lenderDocRange = $this->getPageRangeByDocType($analysisResults['pageRange'], 'lender_instructions');
-        // echo '-------------Lender Doc Range------------------';
-        // print_r($lenderDocRange);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_lender_page_range', 'lender_parse_lender_page_range', json_encode($analysisResults['pageRange']), json_encode($lenderDocRange), 0, 0);
-        if (!$lenderDocRange) {
-            $this->cleanupTemporaryFiles($this->documentFilePath);
-            throw new Exception('Failed to extract lender document.');
+        try {
+            $lenderDocRange = $this->getPageRangeByDocType($analysisResults['pageRange'], 'lender_instructions');
+            // echo '-------------Lender Doc Range------------------';
+            // print_r($lenderDocRange);
+            if (!$lenderDocRange) {
+                $this->cleanupTemporaryFiles($this->documentFilePath, true);
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_lender_page_range', 'lender_parse_lender_page_range', json_encode($analysisResults['pageRange']), 'Failed to extract lender document.', 0, 0);
+                throw new Exception('Failed to extract lender document.');
+            }
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_lender_page_range', 'lender_parse_lender_page_range', json_encode($analysisResults['pageRange']), json_encode($lenderDocRange), 0, 0);
+            // print_r($ocrResults);
+            // echo "<br>";
+    
+            // print_r($lenderDocRange['start_page']);
+            // echo "<br>";
+            // print_r($lenderDocRange['end_page']);
+            // echo "<br>";
+            $lenderPages = array_slice($ocrResults, $lenderDocRange['start_page'], $lenderDocRange['end_page']);
+            // echo '-------------Lender Pages------------------';
+            // print_r($lenderPages);
+    
+            $logId = $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', null, 0, 0);
+            $lenderDetails = $this->chatgpt->getLenderDetails(json_encode($lenderPages));
+            $lenderDetails = json_decode($lenderDetails['choices'][0]['message']['content'], true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Failed to decode lender details: ' . json_last_error_msg(), 0, $logId);
+                throw new Exception('Failed to decode lender details: ' . json_last_error_msg());
+            }
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', json_encode($lenderDetails), 0, $logId);
+            
+            if (!isset($lenderDetails['lender_package'])) {
+                $this->cleanupTemporaryFiles($this->documentFilePath, true);
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Failed to extract lender details', 0, $logId);
+                throw new Exception('Failed to extract lender details.');
+            }
+    
+            $orderUpdate = $this->prepareOrderUpdateData($lenderDetails['lender_package'], $orderNumber);
+            $this->syncOrderUpdate($orderUpdate);
+        } catch (\Throwable $th) {
+            $this->cleanupTemporaryFiles($this->documentFilePath, true);
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Order information update failed: ' . $th->getMessage(), 0, 0);
+            throw new Exception('Failed to update order information: ' . $th->getMessage());
         }
-        // print_r($ocrResults);
-        // echo "<br>";
-
-        // print_r($lenderDocRange['start_page']);
-        // echo "<br>";
-        // print_r($lenderDocRange['end_page']);
-        // echo "<br>";
-        $lenderPages = array_slice($ocrResults, $lenderDocRange['start_page'], $lenderDocRange['end_page']);
-        // echo '-------------Lender Pages------------------';
-        // print_r($lenderPages);
-
-        $logId = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', null, 0, 0);
-        $lenderDetails = $this->chatgpt->getLenderDetails(json_encode($lenderPages));
-        $lenderDetails = json_decode($lenderDetails['choices'][0]['message']['content'], true);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', json_encode($lenderDetails), 0, $logId);
-        // $lenderDetails = json_decode($lenderDetails, true);
-        // echo '-------------Lender Details------------------';
-        // print_r($lenderDetails);
-        // echo '-------------Lender Details Decoded------------------';
-        // print_r($lenderDetails);
-        if (!isset($lenderDetails['lender_package'])) {
-            $this->cleanupTemporaryFiles($this->documentFilePath);
-            throw new Exception('Failed to extract lender details.');
-        }
-
-        $orderUpdate = $this->prepareOrderUpdateData($lenderDetails['lender_package'], $orderNumber);
-        $this->syncOrderUpdate($orderUpdate);
     }
 
     private function prepareOrderUpdateData($lenderPackage, $orderNumber)
@@ -609,7 +644,7 @@ class FileUpload extends MX_Controller
         $this->apiLogs->syncLogs($this->user['id'],'softpro','update_order','update_order',$orderData,json_encode($response),0,$logid);
 
         if (!isset($response['status']) || $response['status'] !== 'success') {
-            $this->cleanupTemporaryFiles($this->documentFilePath);
+            $this->cleanupTemporaryFiles($this->documentFilePath, true);
             throw new Exception('Failed to update order information');
         }
     }
@@ -725,10 +760,15 @@ class FileUpload extends MX_Controller
     //     return preg_replace('/[\/:*?"<>|\\\]/', '', trim($filename));
     // }
 
-    private function cleanupTemporaryFiles($filePath)
+    private function cleanupTemporaryFiles($filePath, $deleteDBRecords = false)
     {
         if (file_exists(FCPATH . $filePath)) {
             unlink(FCPATH . $filePath);
+        }
+
+        if ($deleteDBRecords && !empty($this->document_id)) {
+            $this->db->where('id', $this->document_id);
+            $this->db->delete('pct_lender_parsing_document');
         }
     }
 
@@ -818,7 +858,7 @@ class FileUpload extends MX_Controller
                         $classifyFirstPage = $this->chatgpt->classify($firstPageText);
                         // print_r($classifyFirstPage);
                         $firstPageContent = $classifyFirstPage['choices'][0]['message']['content'] ?? null;
-                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'pdf_first_page', $firstPageContent, 0, 0);
+                        $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'pdf_first_page', $firstPageContent, 0, 0);
                         $firstPageContent = json_decode($firstPageContent, true);
                         // print_r($firstPageContent);
                         // echo "<br><br><br><br><br>";
@@ -828,7 +868,7 @@ class FileUpload extends MX_Controller
                         $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($pageTexts));
                         // print_r($documentPageRange); 
                         $documentPageRange = $documentPageRange['choices'][0]['message']['content'] ?? null;
-                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'pdf_all_page', $documentPageRange, 0, 0);
+                        $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'pdf_all_page', $documentPageRange, 0, 0);
                         // echo "<br><br><br><br><br>";
                         $documentPageRange = preg_replace('/```json|```/', '', $documentPageRange);
                         // echo "<br><br><br><br><br>";
@@ -891,9 +931,9 @@ class FileUpload extends MX_Controller
                         $order_data = json_encode($orderReq);
                         // echo '<pre>------------------Update Order------------------';
                         // print_r($order_data);
-                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order', 'update_order', $order_data, [], 0, 0);
+                        $logid = $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'update_order', 'update_order', $order_data, [], 0, 0);
                         $response = $this->softpro->make_request('POST', 'update_order', $order_data, $userdata);
-                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'update_order', 'update_order', $order_data, json_encode($response), 0, $logid);
+                        $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'update_order', 'update_order', $order_data, json_encode($response), 0, $logid);
                         // echo '<pre>------------------Update Order Response------------------';
                         
                         // print_r($response);
@@ -953,10 +993,10 @@ class FileUpload extends MX_Controller
                         // print_r($fileData);
                         $fileUploadReq[] = $fileData;
                         $reqData = json_encode($fileUploadReq);
-                        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
+                        $logid = $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'upload_document', 'upload_document', $reqData, [], 0, 0);
                         $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
                         $response = json_decode($result, true);
-                        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
+                        $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'upload_document', 'upload_document', $reqData, json_encode($response), 0, $logid);
                         // echo '<pre>------------------Upload Document Response------------------';
                         // print_r($response);
                         if (isset($response) && !empty($response)) {

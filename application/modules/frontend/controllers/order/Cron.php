@@ -1845,6 +1845,7 @@ class Cron extends MX_Controller
         $this->db->delete('pct_order_api_logs');
 
         $this->db->where("DATE(created) < (curdate() - INTERVAL 1 DAY)");
+        $this->db->where_in('request_type', ["upload_document_cron", "get_all_order_status"]);
         $this->db->where("request_type", "upload_document_cron");
         $this->db->delete('pct_order_api_logs');
         $this->db->query('OPTIMIZE TABLE pct_order_api_logs');
