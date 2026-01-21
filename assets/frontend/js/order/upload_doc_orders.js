@@ -119,7 +119,7 @@ $(document).ready(function () {
             "ordering": false,
             "serverSide": true,
             "ajax": {
-                url: base_url + "get-get-lender-parse-doc",
+                url: base_url + "get-lender-parse-doc",
                 type: "post",
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (parseInt(XMLHttpRequest.status) == 419) {

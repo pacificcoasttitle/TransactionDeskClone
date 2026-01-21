@@ -343,7 +343,7 @@ $route['calculator/admin_login']                     = 'frontend/calc/welcome/ad
 $route['file-upload']           = "frontend/fileUpload";
 $route['get-uploaded-desk-doc'] = "frontend/fileUpload/getUploadedDeskDoc";
 $route['lender-pursing']        = "frontend/fileUpload/lenderPursing";
-$route['get-get-lender-parse-doc'] = "frontend/fileUpload/getLenderPursedDoc";
+$route['get-lender-parse-doc'] = "frontend/fileUpload/getLenderPursedDoc";
 
 /** Reports Routes */
 $route['reports']                    = "frontend/report";
