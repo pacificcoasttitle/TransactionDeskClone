@@ -161,17 +161,21 @@ class SalesRep extends MX_Controller
             // $data['close_order_percetage'] = round((($data['sale_close_count'] + $data['refi_close_count'])*100)/($data['refi_open_count'] + $data['sale_open_count']));
 
             /** For last 4 months calculations */
-            $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $userId, 0, 0, 1);
-            $refiClsCount = !empty($clseRefiResult['refi_count']) ? $clseRefiResult['refi_count'] : 0;
+            $openOrderRatioStats = $this->order->getOpenOrderStats($currentMonth, $userId, [], 0, 0, 1);
+            $closedOrderRatioStats = $this->order->getClosedOrderStats($currentMonth, $userId, 0, 0, 1);
+            $refiClsCount = $closedOrderRatioStats['refi_close_count'];
+            $saleClsCount = $closedOrderRatioStats['sale_close_count'];
+            // $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $userId, 0, 0, 1);
+            // $refiClsCount = !empty($clseRefiResult['refi_count']) ? $clseRefiResult['refi_count'] : 0;
             
-            $clsSaleResult = $this->order->getClosedOrdersCountForSaleProducts($currentMonth, $userId, 0, 0, 1);
-            $saleClsCount = !empty($clsSaleResult['sale_count']) ? $clsSaleResult['sale_count'] : 0;
-            
-            $opnRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, $userId, [], 0, 0, 1);
-            $refiOpnCount = !empty($opnRefiResult['refi_count']) ? $opnRefiResult['refi_count'] : 0;
-            
-            $opnSaleResult = $this->order->getOpenOrdersCountForSaleProducts($currentMonth, $userId, [], 0, 0, 1);
-            $saleOpnCount = !empty($opnSaleResult['sale_count']) ? $opnSaleResult['sale_count'] : 0;
+            // $clsSaleResult = $this->order->getClosedOrdersCountForSaleProducts($currentMonth, $userId, 0, 0, 1);
+            // $saleClsCount = !empty($clsSaleResult['sale_count']) ? $clsSaleResult['sale_count'] : 0;
+            // $opnRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, $userId, [], 0, 0, 1);
+            // $refiOpnCount = !empty($opnRefiResult['refi_count']) ? $opnRefiResult['refi_count'] : 0;
+            $refiOpnCount = $openOrderRatioStats['refi_open_count'];
+            $saleOpnCount = $openOrderRatioStats['sale_open_count'];
+            // $opnSaleResult = $this->order->getOpenOrdersCountForSaleProducts($currentMonth, $userId, [], 0, 0, 1);
+            // $saleOpnCount = !empty($opnSaleResult['sale_count']) ? $opnSaleResult['sale_count'] : 0;
             
             $data['refi_close_order_percetage'] = $this->calculatePercentage($refiClsCount, $refiOpnCount);
             $data['sale_close_order_percetage'] = $this->calculatePercentage($saleClsCount, $saleOpnCount);
