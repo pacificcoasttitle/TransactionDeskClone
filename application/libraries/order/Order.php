@@ -2516,6 +2516,133 @@ class Order
         return $query->row_array();
     }
 
+    public function getClosedOrderStats($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0) {
+        $this->CI->db->select('
+            SUM(CASE WHEN transaction_details.transaction_type = "Refinance" THEN 1 ELSE 0 END) as refi_close_count,
+            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN 1 ELSE 0 END) as sale_close_count,
+            SUM(CASE WHEN transaction_details.transaction_type = "Refinance" THEN premium ELSE 0 END) as refi_close_premium,
+            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN premium ELSE 0 END) as sale_close_premium
+        ')->from('order_details')
+        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        // $this->CI->db->where('order_details.prod_type', 'loan');
+        // $this->CI->db->where('transaction_details.transaction_type', 'Refinance');
+        $this->CI->db->where('order_details.file_number is not null');
+        if ($yearly_flag == 1) { 
+            if ($year == 0) {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+            } else {
+                $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+            }
+        } else {
+            if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.sent_to_accounting_date BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+    
+            } else {
+                $this->CI->db->where('MONTH(order_details.sent_to_accounting_date)', $month);
+                if ($year == 0) {
+                    $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', date('Y'));
+                } else {
+                    $this->CI->db->where('YEAR(order_details.sent_to_accounting_date)', $year);
+                }
+            }
+        }
+
+        if (is_array($userId)) {
+            if (!empty($userId)) {
+                $this->CI->db->where_in('transaction_details.sales_representative', $userId);
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null');
+            }
+        } else {
+            if ($userId != 'all') {
+                $this->CI->db->where('transaction_details.sales_representative', $userId);
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null');
+            }
+        }
+        if ($escrow_flag == 1) {
+            $this->CI->db->where('order_details.escrow_amount > 0');
+        }
+
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        $result = $query->row_array();
+        
+        return [
+            'refi_close_count' => (int)$result['refi_close_count'],
+            'sale_close_count' => (int)$result['sale_close_count'],
+            'total_close_count' => (int)($result['refi_close_count'] + $result['sale_close_count']),
+            'refi_close_premium' => (float)$result['refi_close_premium'],
+            'sale_close_premium' => (float)$result['sale_close_premium'],
+            'total_close_premium' => (float)($result['refi_close_premium'] + $result['sale_close_premium'])
+        ];
+    }
+
+    public function getOpenOrderStats($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0) {
+        $this->CI->db->select('
+            SUM(CASE WHEN transaction_details.transaction_type = "Refinance" THEN 1 ELSE 0 END) as refi_open_count,
+            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN 1 ELSE 0 END) as sale_open_count
+        ')->from('order_details')
+        ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        if (!empty($closedOrderNumbers)) {
+            $this->CI->db->where_not_in('order_details.file_number', $closedOrderNumbers);
+        }
+        // $this->CI->db->where('transaction_details.transaction_type', 'Purchase');
+        $this->CI->db->where('order_details.file_number is not null');
+        if ($yearly_flag == 1) { 
+            $this->CI->db->where('YEAR(order_details.created_at)', $year);
+        } else {
+            if ($dashboard_flag == 1) {
+                $startDate = date('Y-m-01 00:00:00', strtotime('-3 months', strtotime(date('Y-m-d'))));
+                $endDate = date('Y-m-d 23:59:59');
+                $this->CI->db->where('order_details.created_at BETWEEN "' . $startDate . '" and "' . $endDate . '"');
+    
+            } else {
+    
+                $this->CI->db->where('MONTH(order_details.created_at)', $month);
+                if ($year == 0) {
+                    $this->CI->db->where('YEAR(order_details.created_at)', date('Y'));
+                } else {
+                    $this->CI->db->where('YEAR(order_details.created_at)', $year);
+                }
+            }
+        }
+
+        if (is_array($userId)) {
+            if (!empty($userId)) {
+                $this->CI->db->where_in('transaction_details.sales_representative', $userId);
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null');
+            }
+        } else {
+            if ($userId != 'all') {
+                $this->CI->db->where('transaction_details.sales_representative', $userId);
+            } else {
+                $this->CI->db->where('transaction_details.sales_representative is not null');
+            }
+        }
+
+        if ($escrow_flag == 1) {
+            $this->CI->db->where('order_details.escrow_amount > 0');
+        }
+
+        $query = $this->CI->db->get();
+        // echo $this->CI->db->last_query();exit;
+        $result = $query->row_array() ?? [
+            'refi_open_count' => 0,
+            'sale_open_count' => 0
+        ];
+        return [
+            'refi_open_count' => (int)$result['refi_open_count'],
+            'sale_open_count' => (int)$result['sale_open_count'],
+            'total_open_count' => (int)($result['refi_open_count'] + $result['sale_open_count']),
+        ];
+    }
+
     public function getClosedOrdersCountForSaleProducts($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
         // $this->CI->db->select('count(*) as sale_count, sum(premium) as total_premium_for_sale_close_orders, sum(escrow_amount) as total_escrow_amount_for_sale_close_orders , '.$fieds_sum_str)
