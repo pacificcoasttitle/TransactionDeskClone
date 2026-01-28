@@ -205,7 +205,7 @@ class SalesRep extends MX_Controller
         // $this->template->show("order", "sales_dashboard", $data);
     }
 
-    public function indexs()
+    /*public function indexs()
     {
         date_default_timezone_set('America/Los_Angeles');
         $userdata = $this->session->userdata('user');
@@ -399,7 +399,7 @@ class SalesRep extends MX_Controller
         // echo "<pre>";
         // var_dump($data);die;
         // $this->template->show("order", "sales_dashboard", $data);
-    }
+    }*/
 
     public function getSalesRepClosingFigures($reqData) {
         $userdata = $this->session->userdata('user');
