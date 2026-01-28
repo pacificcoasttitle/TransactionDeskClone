@@ -31,15 +31,28 @@ class SalesRep extends MX_Controller
         $this->common_lib->is_sales_user();
     }
 
-    /*public function index()
+    // Create a reusable calculation function
+    private function calculateProjectedValue($currentValue, $workedDays, $workingDaysRemaining) {
+        if ($currentValue > 0) {
+            $valuePerWorkedDay = $currentValue / $workedDays;
+            return (round($valuePerWorkedDay * $workingDaysRemaining)) + $currentValue;
+        }
+        return 0;
+    }
+
+    private function calculatePercentage($numerator, $denominator) {
+        return (!empty($denominator) && $denominator > 0) ? round(($numerator * 100) / $denominator) : 0;
+    }
+
+    public function index()
     {
+        date_default_timezone_set('America/Los_Angeles');
         $userdata = $this->session->userdata('user');
         $name = isset($userdata['name']) && !empty($userdata['name']) ? $userdata['name'] : '';
         $data['name'] = $name;
         $data['is_sales_rep_manager'] = $userdata['is_sales_rep_manager'];
         $userId = $this->uri->segment(2);
         $data['user_id'] = $userId;
-        $salesrepDetails = $this->home_model->get_user(array('id' => $userId));
         if ($userdata['is_sales_rep_manager'] == 1) {
             $salesUser = $this->home_model->get_user(array('id' => $userdata['id']));
             if (!empty($salesUser['sales_rep_users'])) {
@@ -60,7 +73,8 @@ class SalesRep extends MX_Controller
             }
             $data['salesUsers'] = array();
         }
-        
+        $dt = new DateTime('now', new DateTimeZone('America/Los_Angeles'));
+        $currentMonth = $dt->format('m');
         $data['user_email'] = $userdata['email'];
         $data['order_lists'] = $this->order->get_recent_orders();
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
@@ -69,111 +83,39 @@ class SalesRep extends MX_Controller
         $data['sales_rep_info'] = $sales_rep_info;
         $workedDays = $this->order->countWorkedDaysOfMonth();
         $workingDaysRemaining = $this->order->countWokingsDaysLeftOfMonth();
-
-        $request = [
-            "DateType" => "Closed Date",
-            "MarketingRep" => $salesrepDetails['full_name'],
-            "DateFrom"  => date('m-01-Y'),
-            "DateThrough" => date('m-d-Y'),
-            "excel" => true
-        ];
-
-        $reqData = json_encode($request);
-        $salesClosingFigures = $this->getSalesRepClosingFigures($reqData);
+        $openOrderStats = $this->order->getOpenOrderStats($currentMonth, $userId);
+        $closedOrderStats = $this->order->getClosedOrderStats($currentMonth, $userId);
+        // echo "<pre>";
+        // print_r($openOrderStats);
+        // print_r($closedOrderStats);die;
+        // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, $userId);
+        // $data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+        // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($currentMonth, $userId);
+        // $data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+        $data['refi_open_count'] = $openOrderStats['refi_open_count'];
+        $data['sale_open_count'] = $openOrderStats['sale_open_count'];
+        $data['total_open_count'] = $openOrderStats['total_open_count'];
         
-        $closeOrderSummary = $salesClosingFigures['closeOrderSummary'];
-        $closedSalesOrderNumbers = $salesClosingFigures['closedSalesOrderNumbers'];
-        $closedRefiOrderNumbers = $salesClosingFigures['closedRefiOrderNumbers'];
-        $sheetData = $salesClosingFigures['sheetData'];
-        $data['revenue_data'] = $sheetData;
-        $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $userId, $closedRefiOrderNumbers);
-        
-        $data['refi_open_count'] = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $userId, $closedSalesOrderNumbers);
-        $data['sale_open_count'] = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-        $data['total_open_count'] = $data['sale_open_count'] + $data['refi_open_count'];
+        $data['refi_close_count'] = $closedOrderStats['refi_close_count'];
+        $data['sale_close_count'] = $closedOrderStats['sale_close_count'];
+        $data['total_close_count'] = $closedOrderStats['total_close_count'];
+
+        $data['sale_total_premium'] = $closedOrderStats['sale_close_premium'];
+        $data['refi_total_premium'] = $closedOrderStats['refi_close_premium'];
+        $data['total_premium'] = $closedOrderStats['total_close_premium'];
 
         if ($data['total_open_count'] > 0) {
-            $numOfOpenOrderPerWorkedDays = $data['total_open_count'] / $workedDays;
-            $data['projected_open_count'] = (round($numOfOpenOrderPerWorkedDays * $workingDaysRemaining)) + $data['total_open_count'];
+            // $numOfOpenOrderPerWorkedDays = $data['total_open_count'] / $workedDays;
+            // $data['projected_open_count'] = (round($numOfOpenOrderPerWorkedDays * $workingDaysRemaining)) + $data['total_open_count'];
+            $data['projected_open_count'] = $this->calculateProjectedValue($data['total_open_count'], $workedDays, $workingDaysRemaining);
         } else {
             $numOfOpenOrderPerWorkedDays = 0;
             $data['projected_open_count'] = 0;
         }
 
-        // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $userId);
+        // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $userId);
         // $data['refi_close_count'] = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-        // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId);
-        $data['refi_close_count'] = $closeOrderSummary['refi']['count'];
-        $data['sale_close_count'] = $closeOrderSummary['sales']['count'];
-        $data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
-        // get commission value from monthly commission
-        $sales_commission = 0;
-        $this->load->model('admin/order/user_monthly_commission_model');
-        $monthly_commission_arr = [
-            'user_id' => $userId,
-            'commission_year' => date('Y'),
-            'commission_month' => date('m'),
-        ];
-        $commission_obj = $this->user_monthly_commission_model->get_by($monthly_commission_arr);
-        if ($commission_obj) {
-            $sales_commission = $commission_obj->commission;
-            $details_json = $commission_obj->commission_details;
-            $first_in_threshold = $draw_amount = 0;
-
-            if (!empty($details_json) && json_decode($details_json)) {
-
-                $details = json_decode($details_json);
-                foreach ($details as $detail_json) {
-                    if (!empty($detail_json) && json_decode($detail_json)) {
-                        $detail = json_decode($detail_json);
-                        $prod_type = $detail->prod_type;
-                        if ($prod_type == 'override_add') {
-                            $override_add_user = getUserName($detail->user_id);
-                            if ($detail->loan > 0) {
-                                $override_add_per['loan'] = $detail->loan;
-                            }
-                            if ($detail->sale > 0) {
-                                $override_add_per['sale'] = $detail->sale;
-                            }
-                            if ($detail->escrow > 0) {
-                                $override_add_per['escrow'] = $detail->escrow;
-                            }
-                            if (count($override_add_per)) {
-                                $condition = [
-                                    'user_id' => $detail->user_id,
-                                    'commission_month' => date('m'),
-                                    'commission_year' => date('Y'),
-                                ];
-                                $override_add_val = getExtraCommission($override_add_per, $condition);
-                            }
-                            if ($override_add_user):
-                                foreach ($override_add_val as $override_add_key => $override_add_comm):
-                                    if ($override_add_key == 'escrow' && is_array($override_add_comm)):
-                                        $override_commission_val = array_sum($override_add_comm);
-                                    else:
-                                        $override_commission_val = $override_add_comm;
-                                    endif;
-
-                                    $sales_commission += $override_commission_val;
-
-                                endforeach;
-                            endif;
-
-                        } elseif ($prod_type == 'draw') {
-                            $draw_amount = $detail->commisison;
-                        } elseif ($prod_type == 'first_threshold') {
-                            $first_in_threshold = $detail->commisison;
-                        }
-
-                    }
-                }
-                if ($sales_commission < 0 && abs($draw_amount) == 0 && abs($first_in_threshold) > 0) {
-                    $sales_commission = 0;
-                }
-            }
-        }
-        // $data['sales_commission'] = $sales_commission;
+        // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($currentMonth, $userId);
 
         //Commission Logic Ends
 
@@ -181,25 +123,28 @@ class SalesRep extends MX_Controller
         // $data['total_close_count'] = $data['refi_close_count'] + $data['sale_close_count'];
 
         if ($data['total_close_count'] > 0) {
-            $numOfCloseOrderPerWorkedDays = $data['total_close_count'] / $workedDays;
-            $data['projected_close_count'] = (round($numOfCloseOrderPerWorkedDays * $workingDaysRemaining)) + $data['total_close_count'];
+            // $numOfCloseOrderPerWorkedDays = $data['total_close_count'] / $workedDays;
+            // $data['projected_close_count'] = (round($numOfCloseOrderPerWorkedDays * $workingDaysRemaining)) + $data['total_close_count'];
+            $data['projected_close_count'] = $this->calculateProjectedValue($data['total_close_count'], $workedDays, $workingDaysRemaining);
+
         } else {
             $numOfCloseOrderPerWorkedDays = 0;
             $data['projected_close_count'] = 0;
         }
 
-        $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+        // $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
         // $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-        $closeOrderRefiTotalPremium = $closeOrderSummary['refi']['total_premium'];
-        $data['refi_total_premium'] = $closeOrderRefiTotalPremium;
-        $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+        // $data['refi_total_premium'] = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
+        // $data['refi_total_premium'] = round($closeOrderRefiTotalPremium);
+        // $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
         // $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-        $closeOrderSaleTotalPremium = $closeOrderSummary['sales']['total_premium'];
-        $data['sale_total_premium'] = $closeOrderSaleTotalPremium;
-        $data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
+        // $data['sale_total_premium'] = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
+        // $data['sale_total_premium'] = round($closeOrderSaleTotalPremium);
+        // $data['total_premium'] = $data['sale_total_premium'] + $data['refi_total_premium'];
         if ($data['total_premium'] > 0) {
-            $premiumWorkedDays = $data['total_premium'] / $workedDays;
-            $data['projected_revenue'] = (round($premiumWorkedDays * $workingDaysRemaining)) + $data['total_premium'];
+            // $premiumWorkedDays = $data['total_premium'] / $workedDays;
+            // $data['projected_revenue'] = (round($premiumWorkedDays * $workingDaysRemaining)) + $data['total_premium'];
+            $data['projected_revenue'] = $this->calculateProjectedValue($data['total_premium'], $workedDays, $workingDaysRemaining);
         } else {
             $premiumWorkedDays = 0;
             $data['projected_revenue'] = 0;
@@ -210,54 +155,47 @@ class SalesRep extends MX_Controller
             // $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$totalCount);
             // $data['close_order_percetage'] = $data['refi_close_order_percetage'] + $data['sale_close_order_percetage'];
 
-            //  Current month calculation only 
+            /** Current month calculation only */
             // $data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$data['refi_open_count']);
             // $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$data['sale_open_count']);
             // $data['close_order_percetage'] = round((($data['sale_close_count'] + $data['refi_close_count'])*100)/($data['refi_open_count'] + $data['sale_open_count']));
 
-            //  For last 4 months calculations 
-            
-            $request = [
-                "DateType" => "Closed Date",
-                "MarketingRep" => $salesrepDetails['full_name'],
-                "DateFrom"  => date('m-01-Y', strtotime('-3 months', strtotime(date('Y-m-d')))),
-                "DateThrough" => date('m-d-Y'),
-                "excel" => true
-            ];
-            
-            $reqData = json_encode($request);
-            $salesClosingFigures = $this->getSalesRepClosingFigures($reqData);
-            
-            $closeOrderSummary = $salesClosingFigures['closeOrderSummary'];
-            $closedSalesOrderNumbers = $salesClosingFigures['closedSalesOrderNumbers'];
-            $closedRefiOrderNumbers = $salesClosingFigures['closedRefiOrderNumbers'];
-
-
-            // $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts(date('m'), $userId, 0, 0, 1);
+            /** For last 4 months calculations */
+            $openOrderRatioStats = $this->order->getOpenOrderStats($currentMonth, $userId, [], 0, 0, 1);
+            $closedOrderRatioStats = $this->order->getClosedOrderStats($currentMonth, $userId, 0, 0, 1);
+            $refiClsCount = $closedOrderRatioStats['refi_close_count'];
+            $saleClsCount = $closedOrderRatioStats['sale_close_count'];
+            // $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $userId, 0, 0, 1);
             // $refiClsCount = !empty($clseRefiResult['refi_count']) ? $clseRefiResult['refi_count'] : 0;
-            // $clsSaleResult = $this->order->getClosedOrdersCountForSaleProducts(date('m'), $userId, 0, 0, 1);
+            
+            // $clsSaleResult = $this->order->getClosedOrdersCountForSaleProducts($currentMonth, $userId, 0, 0, 1);
             // $saleClsCount = !empty($clsSaleResult['sale_count']) ? $clsSaleResult['sale_count'] : 0;
-
-            $refiClsCount = $closeOrderSummary['refi']['count'];
-            $saleClsCount = $closeOrderSummary['sales']['count'];
-
-
-
-            $opnRefiResult = $this->order->getOpenOrdersCountForRefiProducts(date('m'), $userId, [], 0, 0, 1);
-            $refiOpnCount = !empty($opnRefiResult['refi_count']) ? $opnRefiResult['refi_count'] : 0;
-            $opnSaleResult = $this->order->getOpenOrdersCountForSaleProducts(date('m'), $userId, [], 0, 0, 1);
-            $saleOpnCount = !empty($opnSaleResult['sale_count']) ? $opnSaleResult['sale_count'] : 0;
-            $data['refi_close_order_percetage'] = (!empty($refiClsCount) && !empty($refiOpnCount)) ? round(($refiClsCount * 100) / $refiOpnCount) : 0;
-            $data['sale_close_order_percetage'] = (!empty($saleOpnCount) && !empty($saleClsCount)) ? round(($saleClsCount * 100) / $saleOpnCount) : 0;
-            $data['close_order_percetage'] = (!empty($refiClsCount) && !empty($refiOpnCount) && !empty($saleOpnCount) && !empty($saleClsCount)) ? round((($saleClsCount + $refiClsCount) * 100) / ($saleOpnCount + $refiOpnCount)) : 0;
-            //  End last 4 month calculations 
+            // $opnRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, $userId, [], 0, 0, 1);
+            // $refiOpnCount = !empty($opnRefiResult['refi_count']) ? $opnRefiResult['refi_count'] : 0;
+            $refiOpnCount = $openOrderRatioStats['refi_open_count'];
+            $saleOpnCount = $openOrderRatioStats['sale_open_count'];
+            // $opnSaleResult = $this->order->getOpenOrdersCountForSaleProducts($currentMonth, $userId, [], 0, 0, 1);
+            // $saleOpnCount = !empty($opnSaleResult['sale_count']) ? $opnSaleResult['sale_count'] : 0;
+            
+            $data['refi_close_order_percetage'] = $this->calculatePercentage($refiClsCount, $refiOpnCount);
+            $data['sale_close_order_percetage'] = $this->calculatePercentage($saleClsCount, $saleOpnCount);
+            $totalOpen = max(1, ($saleOpnCount + $refiOpnCount));
+            $data['close_order_percetage'] = $this->calculatePercentage(($saleClsCount + $refiClsCount), $totalOpen);
+            // $data['refi_close_order_percetage'] = (!empty($refiClsCount)) ? round(($refiClsCount * 100) / $refiOpnCount) : 0;
+            // $data['sale_close_order_percetage'] = (!empty($saleClsCount)) ? (round(($saleClsCount * 100) / $saleOpnCount)) : 0;
+            // $totalOpen = (($saleOpnCount + $refiOpnCount) > 0) ? ($saleOpnCount + $refiOpnCount) : 1;
+            // $data['close_order_percetage'] = round((($saleClsCount + $refiClsCount) * 100) / ($totalOpen));
+            /** End last 4 month calculations */
 
         } else {
             $data['refi_close_order_percetage'] = 0;
             $data['sale_close_order_percetage'] = 0;
             $data['close_order_percetage'] = 0;
         }
+        // echo "<pre>";
+        // print_r($data);exit;
         $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/sales_dashboard.js?v=' . $this->js_version));
+        $this->salesdashboardtemplate->addJS(base_url('assets/frontend/js/order/prelim.js?v=' . $this->js_version));
         $this->salesdashboardtemplate->addCss(base_url('assets/frontend/css/sales-dashboard.css?v=' . $this->js_version));
 
         $this->salesdashboardtemplate->show("order", "sales_dashboard", $data);
@@ -265,9 +203,9 @@ class SalesRep extends MX_Controller
         // echo "<pre>";
         // var_dump($data);die;
         // $this->template->show("order", "sales_dashboard", $data);
-    }*/
+    }
 
-    public function index()
+    /*public function indexs()
     {
         date_default_timezone_set('America/Los_Angeles');
         $userdata = $this->session->userdata('user');
@@ -426,12 +364,10 @@ class SalesRep extends MX_Controller
             // $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$totalCount);
             // $data['close_order_percetage'] = $data['refi_close_order_percetage'] + $data['sale_close_order_percetage'];
 
-            /** Current month calculation only */
             // $data['refi_close_order_percetage'] = round(($data['refi_close_count']*100)/$data['refi_open_count']);
             // $data['sale_close_order_percetage'] = round(($data['sale_close_count']*100)/$data['sale_open_count']);
             // $data['close_order_percetage'] = round((($data['sale_close_count'] + $data['refi_close_count'])*100)/($data['refi_open_count'] + $data['sale_open_count']));
 
-            /** For last 4 months calculations */
             $clseRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $userId, 0, 0, 1);
             $refiClsCount = !empty($clseRefiResult['refi_count']) ? $clseRefiResult['refi_count'] : 0;
             
@@ -448,8 +384,7 @@ class SalesRep extends MX_Controller
             $data['sale_close_order_percetage'] = (!empty($saleClsCount)) ? (round(($saleClsCount * 100) / $saleOpnCount)) : 0;
             $totalOpen = (($saleOpnCount + $refiOpnCount) > 0) ? ($saleOpnCount + $refiOpnCount) : 1;
             $data['close_order_percetage'] = round((($saleClsCount + $refiClsCount) * 100) / ($totalOpen));
-            /** End last 4 month calculations */
-
+            
         } else {
             $data['refi_close_order_percetage'] = 0;
             $data['sale_close_order_percetage'] = 0;
@@ -464,7 +399,7 @@ class SalesRep extends MX_Controller
         // echo "<pre>";
         // var_dump($data);die;
         // $this->template->show("order", "sales_dashboard", $data);
-    }
+    }*/
 
     public function getSalesRepClosingFigures($reqData) {
         $userdata = $this->session->userdata('user');
