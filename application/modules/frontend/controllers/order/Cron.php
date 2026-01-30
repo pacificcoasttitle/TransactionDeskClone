@@ -40,7 +40,7 @@ class Cron extends MX_Controller
         echo "All orders synced successfully for all users";exit;
     }
 
-    public function import_orders($user = [])
+    /*public function import_orders($user = [])
     {
         $order_status = ['open', 'closed'];
 
@@ -111,7 +111,7 @@ class Cron extends MX_Controller
                                 $FullProperty = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'] . ", " . $res['Properties'][0]['City'] . ", " . $res['Properties'][0]['State'] . ", " . $res['Properties'][0]['Zip'];
                                 $address      = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'];
 
-                                /* get blackkight data */
+                               
                                 $locale = $res['Properties'][0]['City'];
 
                                 if (($locale)) {
@@ -127,7 +127,7 @@ class Cron extends MX_Controller
                                 $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
                                 $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
                                 $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
-                                /* get blackkight data */
+                                
 
                                 $propertyData = [
                                     'customer_id'       => $userdata['id'],
@@ -144,8 +144,7 @@ class Cron extends MX_Controller
                                     'apn'               => $apn,
                                     'county'            => $res['Properties'][0]['County'],
                                     'legal_description' => $LegalDescription,
-                                    /*'primary_owner' => $primary_owner,
-                                    'secondary_owner' => $SecondaryOwner,*/
+                                    
                                     // 'additional_details'=> '',
                                     // 'is_imported'=> 1,
                                     'status'            => 1,
@@ -235,7 +234,7 @@ class Cron extends MX_Controller
         }
 
         echo json_encode($response);
-    }
+    }*/
 
     public function make_request($http_method, $endpoint, $body_params = '', $userdata)
     {
@@ -430,7 +429,7 @@ class Cron extends MX_Controller
         return $tpData;
     }
 
-    public function import_product_types()
+    /*public function import_product_types()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -461,16 +460,7 @@ class Cron extends MX_Controller
                         $rowCount++;
                         // $display_name = '';
                         $status = 0;
-                        /*if((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 19) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
-                        {
-                        $display_name = 'Loan: Refinance';
-                        $status = 1;
-                        }
-                        elseif((isset($value['ProductTypeID']) && $value['ProductTypeID'] == 20) && (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3))
-                        {
-                        $display_name = 'Sales: Purchase';
-                        $status = 1;
-                        }*/
+                        
 
                         if (isset($value['TransactionTypeID']) && $value['TransactionTypeID'] == 3) {
                             $status = 1;
@@ -523,9 +513,9 @@ class Cron extends MX_Controller
         }
 
         echo $successMsg;
-    }
+    }*/
 
-    public function check_update_password()
+    /*public function check_update_password()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -578,10 +568,10 @@ class Cron extends MX_Controller
                                         'resware_error_msg'   => null,
                                     ];
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                    /** Save user Activity */
+                                    
                                     $activity = 'From Cron - check_update_password : Password updated status 1 for :- ' . $v['email_address'];
                                     $this->order->logAdminActivity($activity);
-                                    /** End Save user activity */
+                                   
                                     if ($update) {
                                         $updateCount++;
                                     }
@@ -591,10 +581,10 @@ class Cron extends MX_Controller
                                             'is_password_updated' => 0,
                                         ];
                                         $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                        /** Save user Activity */
+                                        
                                         $activity = 'From Cron - check_update_password : Password updated status 0 for :- ' . $v['email_address'];
                                         $this->order->logAdminActivity($activity);
-                                        /** End Save user activity */
+                                       
                                         $notUpdatePasswordCount++;
                                     }
                                 }
@@ -604,10 +594,10 @@ class Cron extends MX_Controller
                                         'is_password_updated' => 0,
                                     ];
                                     $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                    /** Save user Activity */
+                                   
                                     $activity = 'From Cron - check_update_password : Password updated status 0 for :- ' . $v['email_address'];
                                     $this->order->logAdminActivity($activity);
-                                    /** End Save user activity */
+                                   
                                     $notUpdatePasswordCount++;
                                 }
                             }
@@ -617,10 +607,10 @@ class Cron extends MX_Controller
                                     'is_password_updated' => 0,
                                 ];
                                 $update = $this->home_model->update($customerData, $condition, 'customer_basic_details');
-                                /** Save user Activity */
+                               
                                 $activity = 'From Cron - check_update_password : Password updated status 0 for :- ' . $v['email_address'];
                                 $this->order->logAdminActivity($activity);
-                                /** End Save user activity */
+                               
                                 $notUpdatePasswordCount++;
                             }
                         }
@@ -634,9 +624,9 @@ class Cron extends MX_Controller
             $data = ['status' => 'success', 'msg' => 'No records found for credential check.'];
             echo json_encode($data);
         }
-    }
+    }*/
 
-    public function update_user_details()
+    /*public function update_user_details()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -693,9 +683,9 @@ class Cron extends MX_Controller
 
             echo $successMsg;
         }
-    }
+    }*/
 
-    public function updatePassword()
+    /*public function updatePassword()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -860,9 +850,9 @@ class Cron extends MX_Controller
             }
             echo $successMsg;
         }
-    }
+    }*/
 
-    public function getCompanyInformation()
+    /*public function getCompanyInformation()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -1026,9 +1016,9 @@ class Cron extends MX_Controller
             $data = ['status' => 'success', 'msg' => $successMsg];
             echo json_encode($data);exit;
         }
-    }
+    }*/
 
-    public function updateRemoteFileNumberForAllOrders()
+    /*public function updateRemoteFileNumberForAllOrders()
     {
         $condition = [
             'where' => [
@@ -1058,7 +1048,7 @@ class Cron extends MX_Controller
         } else {
             echo "No orders found to update remote file number";exit;
         }
-    }
+    }*/
 
     public function import_all_sales_rep_orders()
     {
@@ -1081,7 +1071,7 @@ class Cron extends MX_Controller
 
     }
 
-    public function import_sales_rep_orders($salesRep = [])
+    /*public function import_sales_rep_orders($salesRep = [])
     {
         // $order_status = $this->uri->segment(2);
         $order_status = ['open', 'closed'];
@@ -1101,7 +1091,7 @@ class Cron extends MX_Controller
         }
 
         if (isset($userdata) && !empty($userdata)) {
-            /* Fetch records from resware */
+            
             foreach ($order_status as $key => $value) {
                 $status = [];
                 if ($value == 'closed') {
@@ -1147,7 +1137,7 @@ class Cron extends MX_Controller
                             $FullProperty = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'] . ", " . $res['Properties'][0]['City'] . ", " . $res['Properties'][0]['State'] . ", " . $res['Properties'][0]['Zip'];
                             $address      = $res['Properties'][0]['StreetNumber'] . " " . $res['Properties'][0]['StreetDirection'] . " " . $res['Properties'][0]['StreetName'] . " " . $res['Properties'][0]['StreetSuffix'];
 
-                            /* get blackkight data */
+                          
                             $locale = $res['Properties'][0]['City'];
 
                             if (($locale)) {
@@ -1163,7 +1153,7 @@ class Cron extends MX_Controller
                             $property_type    = isset($property_details['property_type']) && !empty($property_details['property_type']) ? $property_details['property_type'] : '';
                             $LegalDescription = isset($property_details['legaldescription']) && !empty($property_details['legaldescription']) ? $property_details['legaldescription'] : '';
                             $apn              = isset($property_details['apn']) && !empty($property_details['apn']) ? $property_details['apn'] : '';
-                            /* get blackkight data */
+                            
 
                             $propertyData = [
                                 'customer_id'       => 0,
@@ -1180,8 +1170,7 @@ class Cron extends MX_Controller
                                 'apn'               => $apn,
                                 'county'            => $res['Properties'][0]['County'],
                                 'legal_description' => $LegalDescription,
-                                /*'primary_owner' => $primary_owner,
-                                'secondary_owner' => $SecondaryOwner,*/
+                                
                                 // 'additional_details'=> '',
                                 // 'is_imported'=> 1,
                                 'status'            => 1,
@@ -1242,7 +1231,7 @@ class Cron extends MX_Controller
 
                             $orderId = $this->home_model->insert($orderData, 'order_details');
 
-                            /* TP call */
+                           
                             $random_number = time() + (floor(rand() * (10000 - 1 + 1)) + 1);
 
                             $propertyData['fipsCode'] = isset($property_details['fips']) && !empty($property_details['fips']) ? $property_details['fips'] : '';
@@ -1289,7 +1278,7 @@ class Cron extends MX_Controller
 
                             $this->titlepoint->generateTaxDoc($tax_serviceId, $res['FileNumber'], $orderId);
 
-                            /* TP call */
+                            
                         } else if ($syncFlag == 1) {
                             $orderData = [
                                 'resware_status' => strtolower($res['Status']['Name']),
@@ -1311,9 +1300,8 @@ class Cron extends MX_Controller
             }
 
             echo json_encode($response);
-            /* Fetch records from resware */
         }
-    }
+    }*/
 
     public function tpCreateService($methodId, $random_number, $propertyData = [], $userdata = [])
     {
@@ -1859,7 +1847,7 @@ class Cron extends MX_Controller
         $this->db->query('OPTIMIZE TABLE sp_file_upload_logs');
     }
 
-    public function exportUsers()
+    /*public function exportUsers()
     {
         define('USE_AUTHENTICATION', 1);
         // $phpAuth = PHP_AUTH;
@@ -1932,9 +1920,9 @@ class Cron extends MX_Controller
                 exit;
             }
         }
-    }
+    }*/
 
-    public function getOrderInformation()
+    /*public function getOrderInformation()
     {
         $phpAuth = PHP_AUTH;
         $login    = getenv("PHP_AUTH_USER");
@@ -2072,9 +2060,9 @@ class Cron extends MX_Controller
         header('Content-type: application/json');
         echo json_encode($response, true);
         exit;
-    }
+    }*/
 
-    public function updateOrderStatus()
+    /*public function updateOrderStatus()
     {
         $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent');
         $this->db->from('order_details');
@@ -2100,21 +2088,7 @@ class Cron extends MX_Controller
                         $filesResult[$key]['file_number'];
 
                         $file_number = $filesResult[$key]['file_number'];
-                        /*$customer_id = $filesResult[$key]['customer_id'];
-                        $condition = array(
-                        'id' => $customer_id
-                        );
-                        $customerDetails = $this->home_model->get_customers($condition);
-                        $first_name = isset($customerDetails['first_name']) && !empty($customerDetails['first_name']) ? $customerDetails['first_name'] : '';
-                        $last_name = isset($customerDetails['last_name']) && !empty($customerDetails['last_name']) ? $customerDetails['last_name'] : '';
-                        $telephone_no = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
-                        $email_address = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
-                        $company_name = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
-                        $street_address = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
-                        $city = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
-                        $zipcode = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
-                        $property = $res['Properties'][0]['StreetNumber']." ".$res['Properties'][0]['StreetDirection']." ".$res['Properties'][0]['StreetName']." ".$res['Properties'][0]['StreetSuffix'].", ".$res['Properties'][0]['City'].", ".$res['Properties'][0]['State'].", ".$res['Properties'][0]['Zip'];
-                        $message = '<h3>User Details:</h3><p>Name: '.$first_name.' '.$last_name.'</p><p>Telephone: '.$telephone_no.'</p><p>Email Address: '.$email_address.'</p><p>Company Name: '.$company_name.'</p><p>Street Address: '.$street_address.'</p><p>City: '.$city.'</p><p>Zipcode: '.$zipcode.'</p><p>Property Address: '.$property.'</p><p>File Number: '.$file_number.'</p>';*/
+                        
 
                         $data['file_number'] = $file_number;
                         $message             = $this->load->view('emails/onhold.php', $data, true);
@@ -2140,9 +2114,9 @@ class Cron extends MX_Controller
         } else {
             echo "No orders found with status hold";exit;
         }
-    }
+    }*/
 
-    public function getOrderStatus()
+    /*public function getOrderStatus()
     {
         echo date('Y-m-d H:i:s') . "----";
         $this->db->select('file_id, customer_id, file_number, on_hold_mail_sent, resware_status');
@@ -2179,7 +2153,7 @@ class Cron extends MX_Controller
             }
         }
         echo date('Y-m-d H:i:s');exit;
-    }
+    }*/
 
     public function updateSafewireStatusForAllorders()
     {
@@ -2223,7 +2197,7 @@ class Cron extends MX_Controller
         echo json_encode($response);exit;
     }
 
-    public function sendMailEscrowUsers()
+    /*public function sendMailEscrowUsers()
     {
         $month = sprintf('%02d', date('m') - 1);
         $this->db->select('order_details.file_id,
@@ -2340,7 +2314,7 @@ class Cron extends MX_Controller
             }
             echo "Mails sent successfully to Escow user ";exit;
         }
-    }
+    }*/
 
     public function transferAllFilesOnAws()
     {
@@ -2396,7 +2370,7 @@ class Cron extends MX_Controller
 
     }
 
-    public function importDataFromCsvFile()
+    /*public function importDataFromCsvFile()
     {
         $sftp     = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
@@ -2864,7 +2838,7 @@ class Cron extends MX_Controller
             echo "No files found";exit;
         }
         echo "All data exported successfully";exit;
-    }
+    }*/
 
     public function sendMailEscrowUsersForBorrowerVerification()
     {
@@ -2937,7 +2911,7 @@ class Cron extends MX_Controller
         }
     }
 
-    public function importOrdersUsingFileNumber()
+    /*public function importOrdersUsingFileNumber()
     {
         $ordersInfo = [
             [
@@ -3193,9 +3167,9 @@ class Cron extends MX_Controller
             }
         }
         echo "All orders imported successfully.";exit;
-    }
+    }*/
 
-    public function passwordUpdateAll()
+    /*public function passwordUpdateAll()
     {
         $this->load->model('order/apiLogs');
         $this->load->library('order/resware');
@@ -3356,9 +3330,9 @@ class Cron extends MX_Controller
                 }
             }
         }
-    }
+    }*/
 
-    public function updatePasswordResware($postData)
+    /*public function updatePasswordResware($postData)
     {
         $body_params = http_build_query($postData);
         $ch          = curl_init(env('RESWARE_UPDATE_PWD_API'));
@@ -3373,9 +3347,9 @@ class Cron extends MX_Controller
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         $result = curl_exec($ch);
         return $result;
-    }
+    }*/
 
-    public function updateAllOrderStatus()
+    /*public function updateAllOrderStatus()
     {
         echo date('Y-m-d H:i:s') . "<br>";
         $sftp     = new SFTP(env('SFTP_HOST'));
@@ -3407,13 +3381,11 @@ class Cron extends MX_Controller
             }
         }
 
-        /** get all sales reps */
         $this->db->select("id, LOWER(CONCAT_WS(' ', first_name, last_name)) AS sales_name, LOWER(email_address) as email");
         $this->db->from('customer_basic_details');
         $this->db->where('is_sales_rep', 1);
         $query      = $this->db->get();
         $salesUsers = $query->result_array();
-        /** End get all sales reps */
         $files = glob("uploads/order-status/*csv", GLOB_NOSORT);
 
         $closedFileNumbers = [];
@@ -3470,7 +3442,6 @@ class Cron extends MX_Controller
                             $prodType = $data[$prodkey];
                         }
 
-                        /** Check and update sales rep logic */
                         if (in_array('Email', $headerColumns)) {
                             $emailkey    = array_search("Email", $headerColumns);
                             $sales_email = strtolower(trim($data[$emailkey]));
@@ -3495,7 +3466,6 @@ class Cron extends MX_Controller
                                 }
                             }
                         }
-                        /** End Check and update sales rep logic */
 
                         if ($row != 1) {
                             if (1 === preg_match('~[0-9]~', $file_number)) {
@@ -3535,10 +3505,8 @@ class Cron extends MX_Controller
                                     $this->db->set($updateData);
                                     $this->db->where('id', $salesDetails['transaction_id']);
                                     $this->db->update('transaction_details');
-                                    /** Save user Activity */
                                     $activity = 'Sales rep changed from update order status cron from :- ' . $salesDetails['sales_representative'] . ' to :- ' . $salesRepId . ' For order number: ' . $file_number;
                                     $this->order->logAdminActivity($activity);
-                                    /** End Save user activity */
                                 }
                             }
                         }
@@ -3575,7 +3543,6 @@ class Cron extends MX_Controller
                     //     exec($command . " > /dev/null &");
                     // }
 
-                    /** Commented this function to avoid duplicate email suggested by Jerry on 10/05/2024 */
                     // $this->sendThankYouEmailForClosedOrder($closedFileNumbers);
 
                     $this->sendEmailForClosedOrder($closedFileNumbers);
@@ -3588,7 +3555,7 @@ class Cron extends MX_Controller
         } else {
             echo "No files found";exit;
         }
-    }
+    }*/
 
     public function updateAllSoftProOrderStatus()
     {
@@ -3837,7 +3804,7 @@ class Cron extends MX_Controller
         exit;
     }
 
-    public function sendMessageRecordingConfirmation()
+    /*public function sendMessageRecordingConfirmation()
     {
         $this->load->model('order/twilioMessage');
         $this->load->library('order/twilio');
@@ -3943,40 +3910,7 @@ class Cron extends MX_Controller
 
                                         $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, [], 0, 0);
 
-                                        /*try {
-                                    $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
-                                    $response = $result->toArray();
-                                    $response['msg_status'] = 'success';
-                                    } catch (Exception $e) {
-                                    $response['sid'] = '';
-                                    $response['to'] = $phoneNumber;
-                                    $response['msg_status'] = 'error';
-                                    $response['errorCode'] = $e->getCode();
-                                    $response['errorMessage'] = $e->getMessage();
-                                    } catch (\Twilio\Exceptions\RestException $e) {
-                                    $response['sid'] = '';
-                                    $response['to'] = $phoneNumber;
-                                    $response['msg_status'] = 'error';
-                                    $response['errorCode'] = $e->getCode();
-                                    $response['errorMessage'] = $e->getMessage();
-                                    }
-                                    $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, $response, 0, $logid);
-
-                                    if($response['msg_status'] == 'success') {
-
-                                    $this->home_model->update(array('is_sent_recording_msg_sales_user' => 1), array('file_number' => $file_number), 'order_details');
-
-                                    $data = array(
-                                    'message' => $response['body'],
-                                    'sent_from' => $response['from'],
-                                    'sent_to' => $response['to'],
-                                    'status' => $response['status'],
-                                    'message_sid' => $response['sid'],
-                                    'error_code' => $response['errorCode'],
-                                    'error_message' => $response['errorMessage'],
-                                    );
-                                    $this->twilioMessage->insert($data);
-                                    } */
+                                        
                                     }
                                 }
                             } else {
@@ -4133,40 +4067,7 @@ class Cron extends MX_Controller
 
                                                 $logid = $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, [], 0, 0);
 
-                                                /*try {
-                                            $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
-                                            $response = $result->toArray();
-                                            $response['msg_status'] = 'success';
-                                            } catch (Exception $e) {
-                                            $response['sid'] = '';
-                                            $response['to'] = $phoneNumber;
-                                            $response['msg_status'] = 'error';
-                                            $response['errorCode'] = $e->getCode();
-                                            $response['errorMessage'] = $e->getMessage();
-                                            } catch (\Twilio\Exceptions\RestException $e) {
-                                            $response['sid'] = '';
-                                            $response['to'] = $phoneNumber;
-                                            $response['msg_status'] = 'error';
-                                            $response['errorCode'] = $e->getCode();
-                                            $response['errorMessage'] = $e->getMessage();
-                                            }
-                                            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', $data, $response, 0, $logid);
-
-                                            if($response['msg_status'] == 'success') {
-
-                                            $this->home_model->update(array('is_sent_recording_msg_sales_user' => 1), array('file_number' => $file_number), 'order_details');
-
-                                            $data = array(
-                                            'message' => $response['body'],
-                                            'sent_from' => $response['from'],
-                                            'sent_to' => $response['to'],
-                                            'status' => $response['status'],
-                                            'message_sid' => $response['sid'],
-                                            'error_code' => $response['errorCode'],
-                                            'error_message' => $response['errorMessage'],
-                                            );
-                                            $this->twilioMessage->insert($data);
-                                            } */
+                                                
                                             }
                                         }
                                     }
@@ -4186,7 +4087,7 @@ class Cron extends MX_Controller
             echo "No files found";exit;
         }
         echo "All messages sent to sales users successfully";exit;
-    }
+    }*/
 
     public function syncPrelimData()
     {
@@ -4219,7 +4120,7 @@ class Cron extends MX_Controller
         echo "Mails sent successfully to Sales Managers";exit;
     }
 
-    public function addPartnerForOrders()
+    /*public function addPartnerForOrders()
     {
         $this->db->select('*');
         $this->db->from('order_details');
@@ -4249,9 +4150,9 @@ class Cron extends MX_Controller
         } else {
             echo "No orders found to update partner";exit;
         }
-    }
+    }*/
 
-    public function importDataForPayOff()
+    /*public function importDataForPayOff()
     {
         $sftp     = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
@@ -4587,10 +4488,10 @@ class Cron extends MX_Controller
             echo "No files found";exit;
         }
         echo "All data imported successfully";exit;
-    }
+    }*/
 
     // Sent Memo acknowledge mail to assigned User
-    public function sendMemoMail($memo_assign_id)
+    /*public function sendMemoMail($memo_assign_id)
     {
         //Get pending mails to be sent
 
@@ -4633,9 +4534,9 @@ class Cron extends MX_Controller
         }
 
         // $data['file_number'] = $file_number;
-    }
+    }*/
 
-    public function importEscrowFee()
+    /*public function importEscrowFee()
     {
         $sftp     = new SFTP(env('SFTP_HOST'));
         $username = env('SFTP_USERNAME');
@@ -4973,7 +4874,7 @@ class Cron extends MX_Controller
             echo "No files found";exit;
         }
         echo "All data exported successfully";exit;
-    }
+    }*/
 
     public function sendDataToHomeDocs($fileId)
     {
@@ -5007,7 +4908,7 @@ class Cron extends MX_Controller
         $this->apiLogs->syncLogs(0, 'homedocs', 'send_order_info', env('HOMEDOCS_URL') . 'api/store-property-detail', json_encode($homedocs_array, JSON_UNESCAPED_SLASHES), $result, $orderDetails['order_id'], $logid);
     }
 
-    public function update_underwriters_data()
+    /*public function update_underwriters_data()
     {
         $table = 'order_details';
         $this->load->library('order/resware');
@@ -5056,7 +4957,7 @@ class Cron extends MX_Controller
             $this->db->update($table, $order_details, $condition);
 
         }
-    }
+    }*/
 
     public function sendEmailForClosedOrder($fileNumbers)
     {
@@ -5398,7 +5299,7 @@ class Cron extends MX_Controller
         echo "All prelim data synced successfully";
     }
 
-    public function update_databackup_partner()
+    /*public function update_databackup_partner()
     {
         $table = 'order_details';
         $this->load->library('order/resware');
@@ -5454,7 +5355,7 @@ class Cron extends MX_Controller
 
             }
         }
-    }
+    }*/
 
     public function sendDailyProductionReport()
     {

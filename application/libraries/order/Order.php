@@ -2025,7 +2025,7 @@ class Order
         return json_decode($result, true);
     }
 
-    public function sendSafewireDocumentToResware($document_name, $orderDetails, $binaryData, $orderFlag = 0)
+    /*public function sendSafewireDocumentToResware($document_name, $orderDetails, $binaryData, $orderFlag = 0)
     {
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->library('order/resware');
@@ -2074,7 +2074,7 @@ class Order
         $this->CI->apiLogs->syncLogs(0, 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
 
-        /* Start add resware api logs */
+        
         $reswareLogData = array(
             'request_type' => 'send_safewire_to_resware',
             'request_url' => env('RESWARE_ORDER_API') . $endPoint,
@@ -2084,13 +2084,13 @@ class Order
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
 
         $data = array();
         $data['updated'] = date("Y-m-d H:i:s");
         $data['api_document_id'] = $res->Document->DocumentID;
         $this->CI->db->update('pct_order_documents', $data, array('id' => $documentId));
-    }
+    }*/
 
     public function array_recursive_search_key_map($needle, $haystack)
     {
@@ -3213,7 +3213,7 @@ class Order
         }
     }
 
-    public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
+    /*public function uploadCPLDocumentToResware($document_name, $orderDetails, $binaryData)
     {
         $this->CI->load->model('order/document');
         $this->CI->load->library('order/resware');
@@ -3264,7 +3264,7 @@ class Order
         $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
 
-        /* Start add resware api logs */
+        
         $reswareLogData = array(
             'request_type' => 'upload_cpl_document_to_resware',
             'request_url' => env('RESWARE_ORDER_API') . $endPoint,
@@ -3274,37 +3274,17 @@ class Order
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+       
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
 
-        /*$from_name = 'Pacific Coast Title Company';
-        $from_mail = env('FROM_EMAIL');
-        $order_message_body = 'Please check attachment for CPL document.';
-        $message = $order_message_body;
-        $subject = 'CPL Document';
-        $to = $orderDetails['lender_email'];
-        $cc = array();
-        if (!empty($orderDetails['sales_representative'])) {
-        $this->CI->db->select('*')
-        ->from('pct_order_sales_rep');
-        $this->CI->db->where('id', $orderDetails['sales_representative']);
-        $query = $this->CI->db->get();
-        $salesResult = $query->row_array();
-        if (!empty($salesResult)) {
-        $cc = array($salesResult['email_address']);
-        }
-        }
-        $bcc = array();
-        $file = array(base_url().'uploads/documents/'.$document_name);
-        $this->CI->load->helper('sendemail');
-        $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file,$cc,$bcc);*/
-    }
+        
+    }*/
 
     public function uploadCPLDocumentToSoftpro($documentName, $orderDetails)
     {
         $this->CI->load->model('order/document');
-        $this->CI->load->library('order/resware');
+        // $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->model('order/fileDocument_model');
         $documentIds = [];
@@ -3430,7 +3410,7 @@ class Order
     public function uploadProposedDocumentToSoftpro($documentName, $orderDetails)
     {
         $this->CI->load->model('order/document');
-        $this->CI->load->library('order/resware');
+        // $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->model('order/fileDocument_model');
         $orderNumber = $orderDetails['file_number'];
@@ -3553,7 +3533,7 @@ class Order
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
     }
 
-    public function uploadPrelimDocxDocToResware($document_name, $order_id, $binaryData, $file_id)
+    /*public function uploadPrelimDocxDocToResware($document_name, $order_id, $binaryData, $file_id)
     {
         $this->CI->load->model('order/document');
         $this->CI->load->library('order/resware');
@@ -3603,7 +3583,7 @@ class Order
         $this->CI->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $order_id, $logid);
         $res = json_decode($result);
 
-        /* Start add resware api logs */
+       
         $reswareLogData = array(
             'request_type' => 'upload_prelimdocx_document_to_resware',
             'request_url' => env('RESWARE_ORDER_API') . $endPoint,
@@ -3613,10 +3593,10 @@ class Order
             'created_at' => date("Y-m-d H:i:s"),
         );
         $this->CI->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
 
         $this->CI->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-    }
+    }*/
 
     public function get_sales_users($sales_rep_users = array())
     {
@@ -4119,7 +4099,7 @@ class Order
         }
     }
 
-    public function importOrder($file_number)
+    /*public function importOrder($file_number)
     {
         $this->CI->load->model('order/apiLogs');
         $this->CI->load->library('order/resware');
@@ -4247,7 +4227,7 @@ class Order
                 return $this->CI->db->insert_id();
             }
         }
-    }
+    }*/
 
     public function getSearchResult($address, $locale)
     {
@@ -5568,7 +5548,7 @@ class Order
         $this->CI->db->insert('pct_admin_activity_logs', $data);
     }
 
-    public function sendSummaryMail($sales_rep_id = 0)
+    /*public function sendSummaryMail($sales_rep_id = 0)
     {
         $this->CI->load->library('order/resware');
         $this->CI->load->model('order/apiLogs');
@@ -5803,7 +5783,7 @@ class Order
                 $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'summary_mail_to_sales_rep', '', $mailParams, array('status' => $escrow_mail_result), 0, $logid);
             }
         }
-    }
+    }*/
 
     public function getLPOrdersForSalesRep($startDate, $endDate, $userId)
     {
