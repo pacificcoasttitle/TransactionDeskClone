@@ -2797,7 +2797,7 @@ class Common extends MX_Controller
         echo json_encode($userInfo);
     }
 
-    /*public function downloadAwsDocument()
+    public function downloadAwsDocument()
     {
         $userdata = $this->session->userdata('user');
         $url = $this->input->post('url');
@@ -2824,7 +2824,7 @@ class Common extends MX_Controller
             }
         }
         echo $binaryData;exit;
-    }*/
+    }
 
     public function generate_proposed_insured()
     {
