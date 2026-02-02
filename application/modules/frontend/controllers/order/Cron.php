@@ -6921,10 +6921,11 @@ class Cron extends MX_Controller
         }
 
         if (empty($_GET)) {
-            $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
+            // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
+            $startDate = date('m-d-Y');
             $endDate = date('m-d-Y');
             $req['DateFrom'] = $startDate;
-            $req['DateTo'] = $endDate;
+            $req['DateTo'] = '';//$endDate;
         }
         // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
         $query = $this->db->select('id, product_type')
