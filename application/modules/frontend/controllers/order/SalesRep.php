@@ -25,7 +25,7 @@ class SalesRep extends MX_Controller
         $this->load->model('order/titleOfficer');
         $this->load->model('order/home_model');
         $this->load->model('order/fees_model');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->library('order/common_lib');
         $this->load->model('order/salesRep_model');
         $this->common_lib->is_sales_user();
@@ -893,30 +893,35 @@ class SalesRep extends MX_Controller
             $monthName = $dateObj->format('F');
             $salesHistory[$iM - 1]['month'] = $monthName;
             $salesHistory[$iM - 1]['month_val'] = $month;
+            
+            $openOrderStats = $this->order->getOpenOrderStats($month, $userId, [], $year);
+            $closedOrderStats = $this->order->getClosedOrderStats($month, $userId, $year);
+            
+            // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, [], $year);
+            $refi_open_count = $openOrderStats['refi_open_count'];// !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+            // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, [], $year);
+            $sale_open_count = $openOrderStats['sale_open_count']; // !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+            $salesHistory[$iM - 1]['total_open_count'] = $openOrderStats['total_open_count'];// $sale_open_count + $refi_open_count;
 
-            $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, [], $year);
-            $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-            $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, [], $year);
-            $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-            $salesHistory[$iM - 1]['total_open_count'] = $sale_open_count + $refi_open_count;
 
-            $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, $year);
-            $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-            $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId, $year);
-            $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-            $salesHistory[$iM - 1]['total_close_count'] = $refi_close_count + $sale_close_count;
+            // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, $year);
+            $refi_close_count = $closedOrderStats['refi_close_count']; // !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+            // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId, $year);
+            $sale_close_count = $closedOrderStats['sale_close_count']; // !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+            $salesHistory[$iM - 1]['total_close_count'] = $closedOrderStats['total_close_count']; // $refi_close_count + $sale_close_count;
 
-            $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-            $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+            // $openOrderRefiTotalPremium = $closedOrderStats['total_close_count'];// !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+            // $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
             //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-            $refi_total_premium = $closeOrderRefiTotalPremium;
-            $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-            $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+            // $refi_total_premium = $closedOrderStats['refi_close_premium']; // $closeOrderRefiTotalPremium;
+            // $openOrderSaleTotalPremium = $closedOrderStats['refi_close_premium'];// !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+            // $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
             //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-            $sale_total_premium = $closeOrderSaleTotalPremium;
-            $salesHistory[$iM - 1]['total_premium'] = $sale_total_premium + $refi_total_premium;
+            // $sale_total_premium = $closedOrderStats['sale_close_premium']; // $closeOrderSaleTotalPremium;
+            $salesHistory[$iM - 1]['total_premium'] = $closedOrderStats['total_close_premium'];// $sale_total_premium + $refi_total_premium;
 
-            $totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
+            // $totalCount = $sale_close_count + $refi_close_count + $sale_open_count + $refi_open_count;
+            $totalCount = $closedOrderStats['total_close_count'] + $openOrderStats['total_open_count'];
             if ($totalCount > 0) {
                 $refi_close_order_percetage = round(($refi_close_count * 100) / $totalCount);
                 $sale_close_order_percetage = round(($sale_close_count * 100) / $totalCount);
@@ -1002,23 +1007,26 @@ class SalesRep extends MX_Controller
                 $monthName = $dateObj->format('F');
                 $salesHistory[$year][$iM - 1]['month'] = $monthName;
 
-                $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, [], strval($year));
-                $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, [], strval($year));
-                $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-                $salesHistory[$year][$iM - 1]['total_open_count'] = $sale_open_count + $refi_open_count;
+                $openOrderStats = $this->order->getOpenOrderStats($month, $userId, [], strval($year));
+                $closedOrderStats = $this->order->getClosedOrderStats($month, $userId, strval($year));
 
-                $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, strval($year));
-                $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId, strval($year));
-                $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-                $salesHistory[$year][$iM - 1]['total_close_count'] = $refi_close_count + $sale_close_count;
+                // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $userId, [], strval($year));
+                $refi_open_count = $openOrderStats['refi_open_count']; // !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, [], strval($year));
+                $sale_open_count = $openOrderStats['sale_open_count']; // !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                $salesHistory[$year][$iM - 1]['total_open_count'] = $openOrderStats['total_open_count']; //$sale_open_count + $refi_open_count;
 
-                $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
-                $refi_total_premium = $closeOrderRefiTotalPremium;
-                $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
-                $sale_total_premium = $closeOrderSaleTotalPremium;
-                $salesHistory[$year][$iM - 1]['total_premium'] = $sale_total_premium + $refi_total_premium;
+                // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $userId, strval($year));
+                $refi_close_count = $closedOrderStats['refi_close_count']; // !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $userId, strval($year));
+                $sale_close_count = $closedOrderStats['sale_close_count']; // !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                $salesHistory[$year][$iM - 1]['total_close_count'] = $closedOrderStats['total_close_count']; //$refi_close_count + $sale_close_count;
+
+                // $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                $refi_total_premium = $closedOrderStats['refi_close_premium']; // !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                // $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                $sale_total_premium = $closedOrderStats['sale_close_premium']; // !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                $salesHistory[$year][$iM - 1]['total_premium'] = $closedOrderStats['total_close_premium'];//$sale_total_premium + $refi_total_premium;
             }
         }
         $data['salesHistory'] = $salesHistory;
@@ -1192,27 +1200,30 @@ class SalesRep extends MX_Controller
                 $currentMonth = $dt->format('m');
                 foreach ($salesUsers as $salesrep) {
                     $salesHistory[$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
-                    $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, $salesrep['id']);
-                    $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                    $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($currentMonth, $salesrep['id']);
-                    $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-                    $salesHistory[$i]['total_open_count'] = $sale_open_count + $refi_open_count;
+                    $openOrderStats = $this->order->getOpenOrderStats($currentMonth, $salesrep['id']);
+                    $closedOrderStats = $this->order->getClosedOrderStats($currentMonth, $salesrep['id']);
+                    
+                    // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($currentMonth, $salesrep['id']);
+                    $refi_open_count = $openOrderStats['refi_open_count']; //!empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                    // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($currentMonth, $salesrep['id']);
+                    $sale_open_count = $openOrderStats['sale_open_count']; //!empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                    $salesHistory[$i]['total_open_count'] = $openOrderStats['total_open_count']; // $sale_open_count + $refi_open_count;
 
-                    $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $salesrep['id']);
-                    $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                    $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($currentMonth, $salesrep['id']);
-                    $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-                    $salesHistory[$i]['total_close_count'] = $refi_close_count + $sale_close_count;
+                    // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($currentMonth, $salesrep['id']);
+                    $refi_close_count = $closedOrderStats['refi_close_count']; // !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                    // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($currentMonth, $salesrep['id']);
+                    $sale_close_count = $closedOrderStats['sale_close_count']; // !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                    $salesHistory[$i]['total_close_count'] = $closedOrderStats['total_close_count'];// $refi_close_count + $sale_close_count;
 
-                    $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-                    $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                    // $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+                    // $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
                     //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-                    $refi_total_premium = $closeOrderRefiTotalPremium;
-                    $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-                    $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                    $refi_total_premium = $closedOrderStats['refi_total_premium']; // $closeOrderRefiTotalPremium;
+                    // $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+                    // $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
                     //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-                    $sale_total_premium = $closeOrderSaleTotalPremium;
-                    $salesHistory[$i]['total_premium'] = $sale_total_premium + $refi_total_premium;
+                    $sale_total_premium = $closedOrderStats['sale_total_premium']; // $closeOrderSaleTotalPremium;
+                    $salesHistory[$i]['total_premium'] = $closedOrderStats['total_close_premium']; // $sale_total_premium + $refi_total_premium;
                     $i++;
                 }
             }
@@ -1286,34 +1297,40 @@ class SalesRep extends MX_Controller
                     $salesHistory[$i]['sales_rep'] = $salesrep['first_name'] . " " . $salesrep['last_name'];
                     $openRefiResult = $openSaleResult = $closeRefiResult = $closeSaleResult = [];
                     if ($filterType == 'month') {
-                        $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id'], [], $year);
-                        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id'], [], $year);
-                        $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id'], $year);
-                        $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id'], $year);
+                        $openOrderStats = $this->order->getOpenOrderStats($month, $salesrep['id'], [], $year);
+                        $closedOrderStats = $this->order->getClosedOrderStats($month, $salesrep['id'], $year);
+
+                        // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts($month, $salesrep['id'], [], $year);
+                        // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $salesrep['id'], [], $year);
+                        // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts($month, $salesrep['id'], $year);
+                        // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts($month, $salesrep['id'], $year);
 
                     } else {
-                        $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(0, $salesrep['id'], [], $year, 0, 0, 1);
-                        $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(0, $salesrep['id'], [], $year, 0, 0, 1);
-                        $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(0, $salesrep['id'], $year, 0, 0, 1);
-                        $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(0, $salesrep['id'], $year, 0, 0, 1);
+                        $openOrderStats = $this->order->getOpenOrderStats(0, $salesrep['id'], [], $year, 0, 0, 1);
+                        $closedOrderStats = $this->order->getClosedOrderStats(0, $salesrep['id'], $year, 0, 0, 1);
+                        
+                        // $openRefiResult = $this->order->getOpenOrdersCountForRefiProducts(0, $salesrep['id'], [], $year, 0, 0, 1);
+                        // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts(0, $salesrep['id'], [], $year, 0, 0, 1);
+                        // $closeRefiResult = $this->order->getClosedOrdersCountForRefiProducts(0, $salesrep['id'], $year, 0, 0, 1);
+                        // $closeSaleResult = $this->order->getClosedOrdersCountForSaleProducts(0, $salesrep['id'], $year, 0, 0, 1);
                     }
-                    $refi_open_count = !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
-                    $sale_open_count = !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
-                    $salesHistory[$i]['total_open_count'] = $sale_open_count + $refi_open_count;
+                    $refi_open_count = $openOrderStats['refi_open_count']; // !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
+                    $sale_open_count = $openOrderStats['sale_open_count']; // !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+                    $salesHistory[$i]['total_open_count'] = $openOrderStats['total_open_count']; // $sale_open_count + $refi_open_count;
 
-                    $refi_close_count = !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
-                    $sale_close_count = !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
-                    $salesHistory[$i]['total_close_count'] = $refi_close_count + $sale_close_count;
+                    $refi_close_count = $closedOrderStats['refi_close_count']; // !empty($closeRefiResult['refi_count']) ? $closeRefiResult['refi_count'] : 0;
+                    $sale_close_count = $closedOrderStats['sale_close_count']; // !empty($closeSaleResult['sale_count']) ? $closeSaleResult['sale_count'] : 0;
+                    $salesHistory[$i]['total_close_count'] = $closedOrderStats['total_close_count']; // $refi_close_count + $sale_close_count;
 
-                    $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
-                    $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
+                    // $openOrderRefiTotalPremium = !empty($openRefiResult['total_premium_for_refi_open_orders']) ? $openRefiResult['total_premium_for_refi_open_orders'] : 0;
+                    // $closeOrderRefiTotalPremium = !empty($closeRefiResult['total_premium_for_refi_close_orders']) ? $closeRefiResult['total_premium_for_refi_close_orders'] : 0;
                     //$refi_total_premium = $openOrderRefiTotalPremium + $closeOrderRefiTotalPremium;
-                    $refi_total_premium = $closeOrderRefiTotalPremium;
-                    $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
-                    $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
+                    $refi_total_premium = $closedOrderStats['refi_close_premium']; // $closeOrderRefiTotalPremium;
+                    // $openOrderSaleTotalPremium = !empty($openSaleResult['total_premium_for_sale_open_orders']) ? $openSaleResult['total_premium_for_sale_open_orders'] : 0;
+                    // $closeOrderSaleTotalPremium = !empty($closeSaleResult['total_premium_for_sale_close_orders']) ? $closeSaleResult['total_premium_for_sale_close_orders'] : 0;
                     //$sale_total_premium = $openOrderSaleTotalPremium + $closeOrderSaleTotalPremium;
-                    $sale_total_premium = $closeOrderSaleTotalPremium;
-                    $salesHistory[$i]['total_premium'] = round($sale_total_premium + $refi_total_premium, 2);
+                    $sale_total_premium = $closedOrderStats['sale_close_premium']; // $closeOrderSaleTotalPremium;
+                    $salesHistory[$i]['total_premium'] = round($closedOrderStats['total_close_premium'], 2); // round($sale_total_premium + $refi_total_premium, 2);
 
                     if ($filterType == 'month') { 
                         /** For last 4 months calculations */

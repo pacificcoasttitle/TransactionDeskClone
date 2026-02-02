@@ -47,7 +47,7 @@ class Common extends MX_Controller
         $userdata = $this->session->userdata('user');
         $prelimDocument = array();
         $linked_doc = array();
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->model('order/document');
         $orderId = $this->uri->segment(2);
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
@@ -507,7 +507,7 @@ class Common extends MX_Controller
             redirect(base_url() . 'order');
         }
         $this->load->model('order/document');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
         // $resware_document_id = $this->input->post('resware_document_id');
@@ -686,7 +686,7 @@ class Common extends MX_Controller
         echo json_encode($results, true);
     }
 
-    public function download_document()
+    /*public function download_document()
     {
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
@@ -728,9 +728,9 @@ class Common extends MX_Controller
                 $request = new Aspose\Words\Model\Requests\ConvertDocumentRequest($file, $format, null);
                 $result = $wordsApi->ConvertDocument($request);
                 copy($result->getPathName(), $dest_doc);
-                /** To download docx file */
+                
                 // $contents = file_get_contents(FCPATH.'/uploads/documents/'.$doc_file_name);
-                /** End */
+                
                 $contents = file_get_contents(FCPATH . '/uploads/documents/' . $document_name);
                 // $contents = file_get_contents(base_url().'uploads/documents/'.$document_name);
                 $this->order->uploadPrelimDocxDocToResware($doc_file_name, $order_id, base64_encode($pdfContents), $this->input->post('fileId'));
@@ -745,9 +745,9 @@ class Common extends MX_Controller
 
         $binaryData = base64_encode($contents);
         echo $binaryData;
-    }
+    }*/
 
-    public function upload_document()
+    /*public function upload_document()
     {
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
@@ -801,7 +801,7 @@ class Common extends MX_Controller
         }
         $res = array('status' => 'success', 'msg' => "Prelim document uploaded successfully on Resware side.");
         echo json_encode($res);exit;
-    }
+    }*/
 
     public function generate_plat_map()
     {
@@ -1055,7 +1055,7 @@ class Common extends MX_Controller
         // redirect(base_url() . 'prelim-files');
     }
 
-    public function get_partners()
+    /*public function get_partners()
     {
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
@@ -1083,7 +1083,7 @@ class Common extends MX_Controller
             $res = array('status' => 'error', 'msg' => "Please select file.");
         }
         echo json_encode($res);
-    }
+    }*/
 
     public function get_contacts()
     {
@@ -1245,7 +1245,7 @@ class Common extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function policy()
+    /*public function policy()
     {
         $data['errors'] = array();
         $data['success'] = array();
@@ -1298,9 +1298,9 @@ class Common extends MX_Controller
         }
 
         $this->salesdashboardtemplate->show("order/common", "policy_package", $data);
-    }
+    }*/
 
-    public function upload_documents()
+    /*public function upload_documents()
     {
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
@@ -1387,7 +1387,7 @@ class Common extends MX_Controller
         // $this->template->show("order/common", "upload_documents", $data);
         $this->escrowdashboardtemplate->addJS(base_url('assets/frontend/js/order/upload_document_for_order.js?v=' . $this->js_version));
         $this->escrowdashboardtemplate->show("order/common", "upload_documents", $data);
-    }
+    }*/
 
     public function getOrderDocuments()
     {
@@ -1439,7 +1439,7 @@ class Common extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function files_upload()
+    /*public function files_upload()
     {
         if (empty($this->session->userdata('user'))) {
             redirect(base_url() . 'order');
@@ -1552,7 +1552,7 @@ class Common extends MX_Controller
         );
         $this->session->set_userdata($data);
         redirect(base_url() . 'upload-documents/' . $fileId);
-    }
+    }*/
 
     public function cpl()
     {
@@ -2797,7 +2797,7 @@ class Common extends MX_Controller
         echo json_encode($userInfo);
     }
 
-    public function downloadAwsDocument()
+    /*public function downloadAwsDocument()
     {
         $userdata = $this->session->userdata('user');
         $url = $this->input->post('url');
@@ -2824,7 +2824,7 @@ class Common extends MX_Controller
             }
         }
         echo $binaryData;exit;
-    }
+    }*/
 
     public function generate_proposed_insured()
     {
@@ -3043,7 +3043,7 @@ class Common extends MX_Controller
             $userdata['id'] = 0;
         }
         $orderId = $this->input->post('orderId');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
 
         if ($orderId) {
             $this->load->model('order/home_model');
@@ -3596,7 +3596,7 @@ class Common extends MX_Controller
             ];
             $orderDetails = $this->order->get_order_details($params);
             // $orderId = isset($orderDetails['order_id']) && !empty($orderDetails['order_id']) ? $orderDetails['order_id'] : '';
-            $this->load->library('order/resware');
+            // $this->load->library('order/resware');
             $request = array();
             // $endPoint = 'files/' . $fileId . '/notes';
             $endPoint = 'add_note';

@@ -18,7 +18,7 @@ class PayOff extends MX_Controller
         $this->load->library('order/order');
         $this->load->model('order/apiLogs');
         $this->load->model('order/home_model');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->library('order/common_lib');
         $this->common_lib->is_pay_off_user();
     }
@@ -290,7 +290,7 @@ class PayOff extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function downloadPayOffDocument()
+    /*public function downloadPayOffDocument()
     {
         $userdata = $this->session->userdata('user');
         $file_id = $this->input->post('file_id');
@@ -384,7 +384,7 @@ class PayOff extends MX_Controller
             }
         }
         echo json_encode($resultPayOffaction);
-    }
+    }*/
 
     public function createPayoff()
     {
@@ -500,7 +500,7 @@ class PayOff extends MX_Controller
         // $this->load->view('order/transactee/add_transactee', $data);
     }
 
-    public function generatePayoff()
+    /*public function generatePayoff()
     {
         $success = array();
         $errors = array();
@@ -739,5 +739,5 @@ class PayOff extends MX_Controller
         );
         $this->session->set_userdata($data);
         redirect(base_url() . 'pay-off-dashboard');
-    }
+    }*/
 }
