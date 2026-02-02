@@ -25,7 +25,7 @@ class SalesRep extends MX_Controller
         $this->load->model('order/titleOfficer');
         $this->load->model('order/home_model');
         $this->load->model('order/fees_model');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->library('order/common_lib');
         $this->load->model('order/salesRep_model');
         $this->common_lib->is_sales_user();

@@ -1745,7 +1745,7 @@ class Home extends MX_Controller
         }
     }
 
-    public function getProductTypes()
+    /*public function getProductTypes()
     {
         $this->load->model('order/apiLogs');
         $userdata = $this->session->userdata('user');
@@ -1800,9 +1800,9 @@ class Home extends MX_Controller
         }
         echo json_encode($product_types);
         exit;
-    }
+    }*/
 
-    public function uploadLvDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
+    /*public function uploadLvDocsToResware($document_name, $fileId, $orderDetails, $lpOrderFlag)
     {
         $this->load->model('order/document');
         $this->load->library('order/resware');
@@ -1855,7 +1855,7 @@ class Home extends MX_Controller
             $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
             $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
             $res = json_decode($result);
-            /* Start add resware api logs */
+            
             $reswareLogData = [
                 'request_type' => 'upload_lv_document_to_resware',
                 'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -1865,7 +1865,7 @@ class Home extends MX_Controller
                 'created_at'   => date("Y-m-d H:i:s"),
             ];
             $this->db->insert('pct_resware_log', $reswareLogData);
-            /* End add resware api logs */
+            
             $this->document->update(['api_document_id' => $res->Document->DocumentID], ['id' => $documentId]);
         }
     }
@@ -1923,7 +1923,7 @@ class Home extends MX_Controller
             $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
             $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
             $res = json_decode($result);
-            /* Start add resware api logs */
+            
             $reswareLogData = [
                 'request_type' => 'upload_grantdeed_document_to_resware',
                 'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -1933,7 +1933,7 @@ class Home extends MX_Controller
                 'created_at'   => date("Y-m-d H:i:s"),
             ];
             $this->db->insert('pct_resware_log', $reswareLogData);
-            /* End add resware api logs */
+            
             $this->document->update(['api_document_id' => $res->Document->DocumentID], ['id' => $documentId]);
         }
 
@@ -1994,7 +1994,7 @@ class Home extends MX_Controller
             $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
             $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
             $res = json_decode($result);
-            /* Start add resware api logs */
+            
             $reswareLogData = [
                 'request_type' => 'upload_tax_document_to_resware',
                 'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -2004,7 +2004,7 @@ class Home extends MX_Controller
                 'created_at'   => date("Y-m-d H:i:s"),
             ];
             $this->db->insert('pct_resware_log', $reswareLogData);
-            /* End add resware api logs */
+            
             $this->document->update(['api_document_id' => $res->Document->DocumentID], ['id' => $documentId]);
         }
 
@@ -2036,38 +2036,38 @@ class Home extends MX_Controller
         $this->document->delete($documentData, $condition);
         $documentId = $this->document->insert($documentData);
 
-        /** Upload records to resware  */
+        
 
-        /*
-    $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
+        
+        $endPoint = 'files/'.$orderDetails['file_id'].'/documents';
 
-    $documentApiData = array(
-    'DocumentName' => $document_name,
-    'DocumentType' => array(
-    'DocumentTypeID' => 1037,
-    ),
-    'Description' => 'Pre Listing Document',
-    'InternalOnly' => false,
-    'DocumentBody' => $binaryData
-    );
-    $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
+        $documentApiData = array(
+        'DocumentName' => $document_name,
+        'DocumentType' => array(
+        'DocumentTypeID' => 1037,
+        ),
+        'Description' => 'Pre Listing Document',
+        'InternalOnly' => false,
+        'DocumentBody' => $binaryData
+        );
+        $document_api_data = json_encode($documentApiData, JSON_UNESCAPED_SLASHES);
 
-    if ($userdata['is_master'] == 1) {
-    $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
-    $user_data['email'] = $orderUser['email_address'];
-    $user_data['password'] = $orderUser['random_password'];
-    // $user_data['admin_api'] = 1;
-    } else {
-    $user_data = array();
-    }
+        if ($userdata['is_master'] == 1) {
+        $orderUser =  $this->home_model->get_user(array('id' => $orderDetails['customer_id']));
+        $user_data['email'] = $orderUser['email_address'];
+        $user_data['password'] = $orderUser['random_password'];
+        // $user_data['admin_api'] = 1;
+        } else {
+        $user_data = array();
+        }
 
-    $user_data['admin_api'] = 1;
-    $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
-    $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
-    $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
-    $res = json_decode($result);
-    $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));*/
-    }
+        $user_data['admin_api'] = 1;
+        $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, array(), $orderDetails['order_id'], 0);
+        $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
+        $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API').$endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
+        $res = json_decode($result);
+        $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
+    }*/
 
     public function checkDuplicateOrder()
     {
@@ -2080,7 +2080,7 @@ class Home extends MX_Controller
         }
     }
 
-    public function uploadCurativeDocsToResware($orderDetails)
+    /*public function uploadCurativeDocsToResware($orderDetails)
     {
         $this->load->model('order/document');
         $this->load->model('order/apiLogs');
@@ -2132,7 +2132,7 @@ class Home extends MX_Controller
         $this->apiLogs->syncLogs($userdata['id'], 'resware', 'create_document', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
 
-        /* Start add resware api logs */
+        
         $reswareLogData = [
             'request_type' => 'upload_curative_document_to_resware',
             'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -2142,11 +2142,11 @@ class Home extends MX_Controller
             'created_at'   => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
 
         $this->document->update(['api_document_id' => $res->Document->DocumentID], ['id' => $documentId]);
         $this->order->uploadDocumentOnAwsS3($document_name, 'curative');
-    }
+    }*/
 
     public function send_invite()
     {

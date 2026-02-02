@@ -709,7 +709,7 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function addNewUser()
+    /*public function addNewUser()
     {
         $this->load->model('order/apiLogs');
         $userdata      = $this->session->userdata('admin');
@@ -831,23 +831,23 @@ class Home extends MX_Controller
                                     'resware_user_id' => $this->input->post('resware_client_id'),
                                 );
                                 $update = $this->home_model->update($customerData, $updateCondition);
-                                /** Save user Activity */
+                                
                                 $activity = 'New user updated :- ' . $this->input->post('email_address');
                                 $this->order->logAdminActivity($activity);
-                                /** End Save user activity */
+                                
                             } else {
                                 $insert = $this->home_model->insert($customerData);
-                                /** Save user Activity */
+                                
                                 $activity = 'New user created :- ' . $this->input->post('email_address');
                                 $this->order->logAdminActivity($activity);
-                                /** End Save user activity */
+                                
                             }
                         } else {
                             $insert = $this->home_model->insert($customerData);
-                            /** Save user Activity */
+                            
                             $activity = 'New user created :- ' . $this->input->post('email_address');
                             $this->order->logAdminActivity($activity);
-                            /** End Save user activity */
+                            
                         }
 
                     } else {
@@ -878,7 +878,7 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_new_user', $data);
         // $this->load->view('order/layout/footer', $data);
-    }
+    }*/
 
     public function addSoftProNewUser()
     {
@@ -1169,10 +1169,10 @@ class Home extends MX_Controller
         return $res;
     }
 
-    public function addNewUserToResware($customerData)
+    /*public function addNewUserToResware($customerData)
     {
         $this->load->model('order/apiLogs');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->library('order/order');
         $userdata = $this->session->userdata('admin');
 
@@ -1296,7 +1296,7 @@ class Home extends MX_Controller
         $result                = $this->resware->make_request($method, $endPoint, $newUserData, $userdata);
         $this->apiLogs->syncLogs($v['id'], 'resware', $apiType, env('RESWARE_ORDER_API') . $endPoint, $newUserData, $result, 0, $logid);
 
-        /* Start add resware api logs */
+        
         $reswareLogData = [
             'request_type' => 'add_new_user_to_resware',
             'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -1306,7 +1306,7 @@ class Home extends MX_Controller
             'created_at'   => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
 
         if (isset($result) && !empty($result)) {
             $response = json_decode($result, true);
@@ -1331,7 +1331,7 @@ class Home extends MX_Controller
             ];
         }
         return $res;
-    }
+    }*/
 
     public function grant_deed_document()
     {
@@ -2176,7 +2176,7 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function addCompany()
+    /*public function addCompany()
     {
         $this->load->model('order/apiLogs');
         $this->load->library('order/order');
@@ -2218,17 +2218,17 @@ class Home extends MX_Controller
                             unset($companyData['partner_id']);
                             $update              = $this->home_model->update($companyData, $condition, 'pct_order_partner_company_info');
                             $data['success_msg'] = 'Company information updated successfully.';
-                            /** Save user Activity */
+                            
                             $activity = 'Company information updated: partner id: ' . $partner_id;
                             $this->order->logAdminActivity($activity);
-                            /** End Save user activity */
+                            
                         } else {
                             $insert              = $this->home_model->insert($companyData, 'pct_order_partner_company_info');
                             $data['success_msg'] = 'Company information added successfully.';
-                            /** Save user Activity */
+                           
                             $activity = 'Company information added: partner id: ' . $partner_id;
                             $this->order->logAdminActivity($activity);
-                            /** End Save user activity */
+                           
                         }
 
                     } else {
@@ -2245,7 +2245,7 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/add_company', $data);
         // $this->load->view('order/layout/footer', $data);
-    }
+    }*/
 
     public function deleteCompany()
     {
@@ -2269,7 +2269,7 @@ class Home extends MX_Controller
         }
     }
 
-    public function make_customer_primary()
+    /*public function make_customer_primary()
     {
         $this->load->model('order/apiLogs');
         $this->load->library('order/order');
@@ -2449,7 +2449,7 @@ class Home extends MX_Controller
                 $result         = $this->resware->make_request('PUT', $endPoint, $userUpdateData, $userdata);
                 $this->apiLogs->syncLogs($userInfo['id'], 'resware', 'update_password', env('RESWARE_ORDER_API') . $endPoint, $userUpdateData, $result, 0, $logid);
 
-                /* Start add resware api logs */
+                
                 $reswareLogData = [
                     'request_type' => 'update_password_to_resware_for_email_' . $userInfo['email_address'],
                     'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -2459,7 +2459,7 @@ class Home extends MX_Controller
                     'created_at'   => date("Y-m-d H:i:s"),
                 ];
                 $this->db->insert('pct_resware_log', $reswareLogData);
-                /* End add resware api logs */
+                
 
                 if (isset($result) && !empty($result)) {
                     $response = json_decode($result, true);
@@ -2493,10 +2493,10 @@ class Home extends MX_Controller
                         } else {
                             $customerData['is_password_updated'] = 1;
                             $response                            = ['status' => 'success', 'message' => 'Password updated successfully for email user: ' . $userInfo['email_address']];
-                            /** Save user Activity */
+                            
                             $activity = 'Password updated successfully for email user: ' . $userInfo['email_address'];
                             $this->order->logAdminActivity($activity);
-                            /** End Save user activity */
+                            
                         }
 
                         $this->home_model->update($customerData, $condition, 'customer_basic_details');
@@ -2530,7 +2530,7 @@ class Home extends MX_Controller
             $response = ['status' => 'error', 'message' => $msg];
         }
         echo json_encode($response);
-    }
+    }*/
 
     public function incorrect_users()
     {
@@ -2597,7 +2597,7 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function reset_user_password()
+    /*public function reset_user_password()
     {
         $this->load->model('order/apiLogs');
         $id     = $this->input->post('id');
@@ -2628,10 +2628,10 @@ class Home extends MX_Controller
         } else {
             $customerData['is_password_updated'] = 1;
             $response                            = ['status' => 'success', 'message' => 'Password updated successfully for email user: ' . $userInfo['email_address']];
-            /** Save user Activity */
+            
             $activity = 'Incorrect user password reset successfully: ' . $userInfo['email_address'];
             $this->order->logAdminActivity($activity);
-            /** End Save user activity */
+            
         }
 
         $this->home_model->update($customerData, $condition, 'customer_basic_details');
@@ -2776,7 +2776,7 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/import_underwriter', $data);
         // $this->load->view('order/layout/footer', $data);
-    }
+    }*/
 
     public function updateUnderwriter()
     {
@@ -2910,7 +2910,7 @@ class Home extends MX_Controller
         echo json_encode($json_data);
     }
 
-    public function editCplProposedUser()
+    /*public function editCplProposedUser()
     {
         $data          = [];
         $id            = $this->uri->segment(4);
@@ -2977,10 +2977,10 @@ class Home extends MX_Controller
                             'id' => $id,
                         ];
                         $update = $this->home_model->update($customerData, $updateCondition);
-                        /** Save user Activity */
+                        
                         $activity = 'CPL/Proposed user approved successfully: ' . $this->input->post('email_address');
                         $this->order->logAdminActivity($activity);
-                        /** End Save user activity */
+                       
                     } else {
                         $data['error_msg'] = $response['msg'];
                     }
@@ -3006,7 +3006,7 @@ class Home extends MX_Controller
         // $this->load->view('order/layout/header', $data);
         // $this->load->view('order/home/edit_cpl_proposed_user', $data);
         // $this->load->view('order/layout/footer', $data);
-    }
+    }*/
 
     public function rejectCplProposedUser()
     {
@@ -3018,11 +3018,11 @@ class Home extends MX_Controller
         $customerData['lender_cpl_proposed_status']      = 2;
         $customerData['is_added_lender_by_cpl_proposed'] = 0;
         $update                                          = $this->home_model->update($customerData, $updateCondition);
-        /** Save user Activity */
+        
         $user     = $this->home_model->get_user($updateCondition);
         $activity = 'CPL/Proposed user rejected successfully: ' . $user['email_address'];
         $this->order->logAdminActivity($activity);
-        /** End Save user activity */
+        
         redirect(base_url() . 'order/admin/cpl-proposed-users');
     }
 
@@ -4702,7 +4702,7 @@ class Home extends MX_Controller
         echo json_encode($response);
     }
 
-    public function changePassword()
+    /*public function changePassword()
     {
         $this->load->model('order/apiLogs');
         $id       = $this->input->post('id');
@@ -4745,7 +4745,7 @@ class Home extends MX_Controller
             $response          = ['status' => 'error', 'message' => $data['error_msg']];
         }
         echo json_encode($response);
-    }
+    }*/
 
     public function isPasswordRequired()
     {
@@ -5443,7 +5443,7 @@ class Home extends MX_Controller
 
         $order_data = json_encode($orderReq);
         // $order_data = json_encode($place_order);
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
 
@@ -6312,7 +6312,7 @@ class Home extends MX_Controller
         }
     }
 
-    public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
+    /*public function uploadLvDocsToResware($document_name, $fileId, $orderDetails)
     {
         $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
@@ -6340,7 +6340,7 @@ class Home extends MX_Controller
         $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->apiLogs->syncLogs(0, 'resware', 'create_lv_document_from_admin', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
-        /* Start add resware api logs */
+        
         $reswareLogData = [
             'request_type' => 'create_lv_document_from_admin_in_resware',
             'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -6350,12 +6350,12 @@ class Home extends MX_Controller
             'created_at'   => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
         $this->db->update('pct_order_documents', ['api_document_id' => $res->Document->DocumentID], ['order_id' => $orderDetails['order_id'], 'is_lv_doc' => 1]);
         // $this->document->update(array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-    }
+    }*/
 
-    public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails)
+    /*public function uploadGrantDeedDocsToResware($document_name, $fileId, $orderDetails)
     {
         // $this->load->model('order/document');
         $this->load->library('order/resware');
@@ -6384,7 +6384,7 @@ class Home extends MX_Controller
         $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->apiLogs->syncLogs(0, 'resware', 'create_grant_deed_document_from_admin', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
-        /* Start add resware api logs */
+        
         $reswareLogData = [
             'request_type' => 'create_grant_deed_document_from_admin_in_resware',
             'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -6394,15 +6394,15 @@ class Home extends MX_Controller
             'created_at'   => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
         $this->db->update('pct_order_documents', ['api_document_id' => $res->Document->DocumentID], ['order_id' => $orderDetails['order_id'], 'is_grant_doc' => 1]);
         // $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-    }
+    }*/
 
-    public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
+    /*public function uploadTaxDocsToResware($document_name, $fileId, $orderDetails)
     {
         // $this->load->model('order/document');
-        $this->load->library('order/resware');
+        // $this->load->library('order/resware');
         $this->load->model('order/apiLogs');
 
         $fileSize = filesize(env('AWS_PATH') . "tax/" . $document_name);
@@ -6429,7 +6429,7 @@ class Home extends MX_Controller
         $result = $this->resware->make_request('POST', $endPoint, $document_api_data, $user_data);
         $this->apiLogs->syncLogs(0, 'resware', 'create_tax_document_from_admin', env('RESWARE_ORDER_API') . $endPoint, $documentApiData, $result, $orderDetails['order_id'], $logid);
         $res = json_decode($result);
-        /* Start add resware api logs */
+        
         $reswareLogData = [
             'request_type' => 'create_tax_document_from_admin_in_resware',
             'request_url'  => env('RESWARE_ORDER_API') . $endPoint,
@@ -6439,10 +6439,10 @@ class Home extends MX_Controller
             'created_at'   => date("Y-m-d H:i:s"),
         ];
         $this->db->insert('pct_resware_log', $reswareLogData);
-        /* End add resware api logs */
+        
         $this->db->update('pct_order_documents', ['api_document_id' => $res->Document->DocumentID], ['order_id' => $orderDetails['order_id'], 'is_tax_doc' => 1]);
         // $this->db->update('pct_order_documents', array('api_document_id' => $res->Document->DocumentID), array('id' => $documentId));
-    }
+    }*/
 
     public function importDocumentTypes()
     {
