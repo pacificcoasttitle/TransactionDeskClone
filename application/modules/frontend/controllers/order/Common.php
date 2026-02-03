@@ -2804,7 +2804,7 @@ class Common extends MX_Controller
         $user_data['admin_api'] = 1;
         $api_document_id = $this->input->post('api_document_id');
         $binaryData = base64_encode(file_get_contents($url));
-        $this->load->model('order/document');
+        /*$this->load->model('order/document');
         if (empty($binaryData) && !empty($api_document_id)) {
             $endPoint = 'documents/' . $api_document_id . '?format=json';
             $logid = $this->apiLogs->syncLogs($userdata['id'], 'resware', 'get_document', env('RESWARE_ORDER_API') . $endPoint, array(), array(), 0, 0);
@@ -2822,7 +2822,7 @@ class Common extends MX_Controller
                 $this->order->uploadDocumentOnAwsS3($document_name, 'documents');
                 $this->document->update(array('is_sync' => 1), array('api_document_id' => $api_document_id));
             }
-        }
+        }*/
         echo $binaryData;exit;
     }
 
