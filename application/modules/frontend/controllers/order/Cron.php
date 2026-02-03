@@ -1845,6 +1845,11 @@ class Cron extends MX_Controller
         $this->db->where("is_synced", 1);
         $this->db->delete('sp_file_upload_logs');
         $this->db->query('OPTIMIZE TABLE sp_file_upload_logs');
+
+        $this->db->where("DATE(created_at) < (curdate() - INTERVAL 2 DAY)");
+        $this->db->where_in('request_url', ["upload_file", "upload_document"]);
+        $this->db->delete('pct_resware_log');
+        $this->db->query('OPTIMIZE TABLE pct_resware_log');
     }
 
     /*public function exportUsers()
