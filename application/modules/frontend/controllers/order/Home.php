@@ -1516,9 +1516,9 @@ class Home extends MX_Controller
                 $data['telephone_no']    = isset($value['telephone_no']) && !empty($value['telephone_no']) ? $value['telephone_no'] : '';
                 $data['email_address']   = isset($value['email_address']) && !empty($value['email_address']) ? $value['email_address'] : '';
                 $data['company_name']    = isset($value['company_name']) && !empty($value['company_name']) ? $value['company_name'] : '';
-                $data['street_address']  = isset($value['street_address']) && !empty($value['street_address']) ? $value['street_address'] : '';
+                $data['street_address']  = isset($value['address1']) && !empty($value['address1']) ? $value['address1'] : '';
                 $data['city']            = isset($value['city']) && !empty($value['city']) ? $value['city'] : '';
-                $data['zip_code']        = isset($value['zip_code']) && !empty($value['zip_code']) ? $value['zip_code'] : '';
+                $data['zip_code']        = isset($value['zip']) && !empty($value['zip']) ? $value['zip'] : '';
                 $data['is_escrow']       = isset($value['is_escrow']) && !empty($value['is_escrow']) ? $value['is_escrow'] : 0;
             }
         }
@@ -1717,9 +1717,9 @@ class Home extends MX_Controller
                 $telephone_no    = isset($customerDetails['telephone_no']) && !empty($customerDetails['telephone_no']) ? $customerDetails['telephone_no'] : '';
                 $email_address   = isset($customerDetails['email_address']) && !empty($customerDetails['email_address']) ? $customerDetails['email_address'] : '';
                 $company_name    = isset($customerDetails['company_name']) && !empty($customerDetails['company_name']) ? $customerDetails['company_name'] : '';
-                $street_address  = isset($customerDetails['street_address']) && !empty($customerDetails['street_address']) ? $customerDetails['street_address'] : '';
+                $street_address  = isset($customerDetails['address1']) && !empty($customerDetails['address1']) ? $customerDetails['address1'] : '';
                 $city            = isset($customerDetails['city']) && !empty($customerDetails['city']) ? $customerDetails['city'] : '';
-                $zipcode         = isset($customerDetails['zip_code']) && !empty($customerDetails['zip_code']) ? $customerDetails['zip_code'] : '';
+                $zipcode         = isset($customerDetails['zip']) && !empty($customerDetails['zip']) ? $customerDetails['zip'] : '';
 
                 $property = $this->input->post('property');
 
