@@ -4,14 +4,15 @@ class TitleOfficer extends CI_Model
     public function __construct()
     {
         // Set table name
-        $this->table = 'customer_basic_details';
+        $this->table = 'pct_softpro_lookup_table';
     }
 
     public function getTitleOfficerDetails($params)
     {
         $table = $this->table;
 
-        $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
+        // $this->db->select('*,CONCAT(first_name, " ", last_name) as name');
+        $this->db->select('*,officer_name as name');
         $this->db->from($table);
         $this->db->where('is_title_officer', 1);
 

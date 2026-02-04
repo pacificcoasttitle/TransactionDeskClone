@@ -26,14 +26,14 @@ class SalesReport_model extends CI_Model
     public function getData($condition = null)
     {
         $table = $this->table;
-        $this->db->select($table . '.*,customer_basic_details.first_name ,customer_basic_details.last_name, ,customer_basic_details.email_address');
+        $this->db->select($table . '.*,pct_softpro_lookup_table.first_name ,pct_softpro_lookup_table.last_name, ,pct_softpro_lookup_table.email_address');
         $this->db->from($table);
         if ($condition && is_array($condition)) {
             foreach ($condition as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        $this->db->join('customer_basic_details', "customer_basic_details.id = $table.sales_rep");
+        $this->db->join('pct_softpro_lookup_table', "pct_softpro_lookup_table.id = $table.sales_rep");
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         $result = $query->result_array();
@@ -46,7 +46,7 @@ class SalesReport_model extends CI_Model
 
     public function getSalesRepData($condition = null, $added_by = 0)
     {
-        $table = 'customer_basic_details';
+        $table = 'pct_softpro_lookup_table';
         $this->db->select($table . '.*,count(' . $this->table . '.id) as report_count');
         $this->db->from($table);
         if ($condition && is_array($condition)) {
@@ -101,7 +101,7 @@ class SalesReport_model extends CI_Model
                 $this->db->where($key, $val);
             }
         }
-        // $this->db->join('customer_basic_details', "customer_basic_details.id = $table.sales_rep");
+        // $this->db->join('pct_softpro_lookup_table', "pct_softpro_lookup_table.id = $table.sales_rep");
         // $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         $result = $query->result_array();

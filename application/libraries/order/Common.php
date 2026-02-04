@@ -185,7 +185,7 @@ class Common
     public function getAssistantUsers($emails)
     {
         $this->CI->db->select('*');
-        $this->CI->db->from('customer_basic_details');
+        $this->CI->db->from('pct_softpro_lookup_table');
         $this->CI->db->where_in('email_address', $emails);
         $this->CI->db->where('is_escrow_assistant', 1);
         $this->CI->db->where('status', 1);
