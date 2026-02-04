@@ -391,7 +391,7 @@ class Dashboard extends MX_Controller
         //     $data['is_escrow_flag'] = 0;
         // }
 
-
+        $userdata = $this->session->userdata('user') ?? [];
         $apiEndPoints = SOFTPRO_API_END;
         $this->load->library('order/softPro');
         $this->load->model('order/apiLogs');
@@ -399,9 +399,9 @@ class Dashboard extends MX_Controller
         $queryParams = "orderNumber=" . urlencode($orderDetails['file_number']);
         $reqData     = json_encode($req);
         $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_fees'] . '?'.$queryParams;
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'] ?? 0, 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'get_fees', $reqData, $queryParams);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'] ?? 0, 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
         
         if ($response['status'] == 'success' && !empty($response['data'])) {
             $feesList = $response['data'];
@@ -429,6 +429,7 @@ class Dashboard extends MX_Controller
     public function get_softpro_fees()
     {
         $data['title'] = 'Smart Dashboard | Pacific Coast Title Company';
+        $userdata = $this->session->userdata('user');
         $order_id = $this->uri->segment(2);
         $params = [
             'order_details.id' => $order_id,
@@ -446,9 +447,9 @@ class Dashboard extends MX_Controller
         $queryParams = "orderNumber=" . urlencode($orderDetails['file_number']);
         $reqData     = json_encode($req);
         $reqUrl  = getenv("SOFT_PRO_API") . $apiEndPoints['get_fees'] . '?'.$queryParams;
-        $logid = $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
+        $logid = $this->apiLogs->syncLogs($userdata['id'] ?? 0, 'softpro', 'get_fees', $reqUrl, $reqData, [], 0, 0);
         $response = $this->softpro->make_request('GET', 'get_fees', $reqData, $queryParams);
-        $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
+        $this->apiLogs->syncLogs($userdata['id'] ?? 0, 'softpro', 'get_fees', $reqUrl, $reqData, json_encode($response), 0, $logid);
         
         if ($response['status'] == 'success' && !empty($response['data'])) {
             $feesList  = $response['data'];

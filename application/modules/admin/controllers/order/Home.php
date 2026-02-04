@@ -2821,7 +2821,7 @@ class Home extends MX_Controller
         // print_r($a);die;
 
         /** Save user Activity */
-        $activity = 'Partner comapny id: ' . $partner_id . ' user type: ' . $userType . ' details  Updated value:- ' . $userId;
+        $activity = 'Partner comapny id: ' . ($partner_id ?? 0) . ' user type: ' . $userType . ' details  Updated value:- ' . $userId;
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
 
@@ -4987,7 +4987,7 @@ class Home extends MX_Controller
                 $result                 = $this->twilio->message($order_details['sales_rep_phone'], $message, '', ['from' => $from]);
                 $response               = $result->toArray();
                 $response['msg_status'] = 'success';
-                $response['code']       = $code;
+                $response['code']       = $code ?? '';
 
             } catch (Exception $e) {
                 $response['sid']          = '';
@@ -5003,7 +5003,7 @@ class Home extends MX_Controller
                 $response['errorMessage'] = $e->getMessage();
             }
 
-            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', ['code' => $code, 'account_sid' => $sid, 'token' => $token, 'to' => $order_details['sales_rep_phone'], 'from' => $from], $response, 0, $logid);
+            $this->apiLogs->syncLogs('', 'twilio', 'send_message', '', ['code' => $code ?? 0, 'account_sid' => $sid, 'token' => $token, 'to' => $order_details['sales_rep_phone'], 'from' => $from], $response, 0, $logid);
 
             if ($response['msg_status'] == 'success') {
                 $data = [
@@ -5033,7 +5033,7 @@ class Home extends MX_Controller
                 'StreetAddress'    => $order_details['cust_street_address'],
                 'City'             => $order_details['cust_city'],
                 'Zipcode'          => $order_details['cust_zip_code'],
-                'openAt'           => gmdate("m-d-Y h:i A", strtotime($orderDetails['opened_date']) + 3600 * ($timezone + date("I"))),
+                'openAt'           => gmdate("m-d-Y h:i A", strtotime($order_details['opened_date']) + 3600 * ($timezone + date("I"))),
                 'PropertyAddress'  => $order_details['address'],
                 'FullProperty'     => $order_details['full_address'],
                 'APN'              => $order_details['apn'],
@@ -5122,15 +5122,15 @@ class Home extends MX_Controller
                 'file'      => json_encode($file),
                 'cc'        => json_encode($cc),
             ];
-
+            $userdata       = $this->session->userdata('admin');
             if (isset($order_details['lp_file_number']) && !empty($order_details['lp_file_number'])) {
-                $logid = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, [], $order_details['order_id'], 0);
+                $logid = $this->apiLogs->syncLogs($userdata['id'] ?? 0, 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, [], $order_details['order_id'], 0);
                 try {
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
                 } catch (Exception $e) {
 
                 }
-                $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, ['status' => $mail_result], $order_details['order_id'], $logid);
+                $this->apiLogs->syncLogs($userdata['id'] ?? 0, 'sendgrid', 'send_confirmation_LP_order_mail', '', $mailParams, ['status' => $mail_result], $order_details['order_id'], $logid);
             }
         }
         /** Save user Activity */
@@ -8196,7 +8196,7 @@ class Home extends MX_Controller
             $requestUrl = env('TP_IMAGE_ENDPOINT');
 
             $request = $requestUrl . http_build_query($requestParams);
-
+            $userdata       = $this->session->userdata('admin');
             $logid    = $this->apiLogs->syncLogs($userdata['id'], 'titlepoint', 'create_tax_image_request', $request, $requestParams, [], $orderId, 0);
             $response = $this->order->curl_post($requestUrl, $requestParams);
             $result   = json_decode($response, true);
@@ -9768,7 +9768,7 @@ class Home extends MX_Controller
             $data = ['status' => 'error', 'msg' => 'Something went wrong.'];
         }
         /** Save user Activity */
-        $activity  = $message . ' email notification value: ' . $flag . ' updated successfully for user id : ' . $user_id;
+        $activity  = $message . ' email notification value: ' . $flag . ' updated successfully for user id : ' . $userId;
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
         echo json_encode($data);
