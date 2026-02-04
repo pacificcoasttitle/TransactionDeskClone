@@ -73,7 +73,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
+                                    <label for="address" class="col-sm-2 col-form-label">Address</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="address" id="address" class="form-control" placeholder="Enter Address">
                                         <?php if (!empty($address_error_msg)) {?>
@@ -83,7 +83,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
+                                    <label for="city" class="col-sm-2 col-form-label">City</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="city" id="city" class="form-control" placeholder="Enter City">
                                         <?php if (!empty($city_error_msg)) {?>
@@ -93,7 +93,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="state" class="col-sm-2 col-form-label">State<span class="required"> *</span></label>
+                                    <label for="state" class="col-sm-2 col-form-label">State</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="state" id="state" class="form-control" placeholder="Enter State">
                                         <?php if (!empty($state_error_msg)) {?>
@@ -103,7 +103,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="zip" class="col-sm-2 col-form-label">Zip Code<span class="required"> *</span></label>
+                                    <label for="zip" class="col-sm-2 col-form-label">Zip Code</label>
                                     <div class="col-sm-6">
                                         <input type="number" class="form-control" name="zip" id="zip" class="form-control" placeholder="Enter Zip">
                                         <?php if (!empty($zip_error_msg)) {?>
