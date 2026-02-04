@@ -1173,10 +1173,10 @@ class Home_model extends CI_Model
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
-                    ->or_like('street_address', $keyword)
+                    ->or_like('address1', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
-                    ->or_like('zip_code', $keyword)
+                    ->or_like('zip', $keyword)
                     ->group_end();
             }
 
@@ -1189,10 +1189,10 @@ class Home_model extends CI_Model
                     ->like("first_name", $keyword)
                     ->or_like('last_name', $keyword)
                     ->or_like('email_address', $keyword)
-                    ->or_like('street_address', $keyword)
+                    ->or_like('address1', $keyword)
                     ->or_like('city', $keyword)
                     ->or_like('state', $keyword)
-                    ->or_like('zip_code', $keyword)
+                    ->or_like('zip', $keyword)
                     ->group_end();
             }
 
@@ -3132,7 +3132,7 @@ class Home_model extends CI_Model
                     if (isset($params['is_from_order_form']) && ! empty($params['is_from_order_form'])) {
                         $this->db->select("CONCAT(first_name, ' ',last_name, ' - ',email_address) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     } else {
-                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', street_address, city, state, zip_code)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
+                        $this->db->select("CONCAT(company_name, ' - ',CONCAT_WS(',', address1, city, state, zip)) AS value, CONCAT(first_name, ' ',last_name) AS full_name");
                     }
 
                     $this->db->where('is_escrow', $params['is_escrow']);

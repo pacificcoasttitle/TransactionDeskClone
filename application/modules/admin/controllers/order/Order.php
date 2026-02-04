@@ -197,9 +197,9 @@ class Order extends MX_Controller
                         'first_name'                  => $customer_details['first_name'],
                         'last_name'                   => $customer_details['last_name'],
                         'telephone_no'                => $customer_details['telephone_no'],
-                        'street_address'              => $customer_details['street_address'],
+                        'street_address'              => $customer_details['address1'],
                         'city'                        => $customer_details['city'],
-                        'zip_code'                    => $customer_details['zip_code'],
+                        'zip_code'                    => $customer_details['zip'],
                         'full_address'                => $order_details['full_address'],
                         'apn'                         => $order_details['apn'],
                         'county'                      => $order_details['county'],
@@ -1265,10 +1265,10 @@ class Order extends MX_Controller
                 $data['email_address']            = isset($value['email_address']) && ! empty($value['email_address']) ? $value['email_address'] : '';
                 $data['telephone_no']             = isset($value['telephone_no']) && ! empty($value['telephone_no']) ? $value['telephone_no'] : '';
                 $data['company']                  = isset($value['company_name']) && ! empty($value['company_name']) ? $value['company_name'] : '';
-                $data['address']                  = isset($value['street_address']) && ! empty($value['street_address']) ? $value['street_address'] : '';
+                $data['address']                  = isset($value['address1']) && ! empty($value['address1']) ? $value['address1'] : '';
                 $data['city']                     = isset($value['city']) && ! empty($value['city']) ? $value['city'] : '';
                 $data['state']                    = isset($value['state']) && ! empty($value['state']) ? $value['state'] : '';
-                $data['zip_code']                 = isset($value['zip_code']) && ! empty($value['zip_code']) ? $value['zip_code'] : '';
+                $data['zip_code']                 = isset($value['zip']) && ! empty($value['zip']) ? $value['zip'] : '';
                 $data['is_escrow']                = isset($value['is_escrow']) && ! empty($value['is_escrow']) ? $value['is_escrow'] : '';
                 $data['assignment_clause']        = isset($value['assignment_clause']) && ! empty($value['assignment_clause']) ? $value['assignment_clause'] : '';
                 $data['is_primary_mortgage_user'] = isset($value['is_primary_mortgage_user']) && ! empty($value['is_primary_mortgage_user']) ? $value['is_primary_mortgage_user'] : '';

@@ -345,7 +345,7 @@ class Common extends MX_Controller
             $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array('status' => $mail_result), 0, $logid);
         } else {
             $res = "Prelim Summary Email is disabled by Admin.";
-            $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', 'send_mail_for_prelim_summary', $reqData, $res, 0, $logid);
+            $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', 'send_mail_for_prelim_summary', null, $res, 0, 0);
         }
 
         $results['summary_view'] = $this->load->view('order/ai_prelim_summary', $data, true);
@@ -952,7 +952,7 @@ class Common extends MX_Controller
                         if ($note_id) {
                             $success .= 'Note added successfully.';
                         } else {
-                            $errors .= 'Something went wrong. Please try again.';
+                            $errors[]= 'Something went wrong. Please try again.';
                         }
                     }
                 }
@@ -2856,7 +2856,7 @@ class Common extends MX_Controller
             $address[] = $city;
         }
 
-        $zip_code = isset($customer_data['zip_code']) && !empty($customer_data['zip_code']) ? $customer_data['zip_code'] : '';
+        $zip_code = isset($customer_data['zip']) && !empty($customer_data['zip']) ? $customer_data['zip'] : '';
         if ($zip_code) {
             $address[] = $zip_code;
         }
