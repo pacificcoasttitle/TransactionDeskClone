@@ -73,9 +73,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="street_address" class="col-sm-2 col-form-label">Address<span class="required"> *</span></label>
+                                <label for="street_address" class="col-sm-2 col-form-label">Address</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="street_address" id="street_address" class="form-control" placeholder="Address" value="<?php echo isset($payoff_user_info['street_address']) && !empty($payoff_user_info['street_address']) ? $payoff_user_info['street_address'] : '' ?>">
+                                    <input type="text" class="form-control" name="street_address" id="street_address" class="form-control" placeholder="Address" value="<?php echo isset($payoff_user_info['address1']) && !empty($payoff_user_info['address1']) ? $payoff_user_info['address1'] : '' ?>">
                                     <?php if (!empty($street_address_error_msg)) {?>
                                         <span class="error"><?php echo $street_address_error_msg; ?></span>
                                     <?php }?>
@@ -83,7 +83,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="city" class="col-sm-2 col-form-label">City<span class="required"> *</span></label>
+                                <label for="city" class="col-sm-2 col-form-label">City</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="city" id="city" class="form-control" placeholder="City" value="<?php echo isset($payoff_user_info['city']) && !empty($payoff_user_info['city']) ? $payoff_user_info['city'] : '' ?>">
                                     <?php if (!empty($city_error_msg)) {?>
@@ -93,7 +93,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="state" class="col-sm-2 col-form-label">State<span class="required"> *</span></label>
+                                <label for="state" class="col-sm-2 col-form-label">State</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" name="state" id="state" class="form-control" placeholder="State" value="<?php echo isset($payoff_user_info['state']) && !empty($payoff_user_info['state']) ? $payoff_user_info['state'] : '' ?>">
                                     <?php if (!empty($state_error_msg)) {?>
@@ -103,9 +103,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="zip" class="col-sm-2 col-form-label">Zip Code<span class="required"> *</span></label>
+                                <label for="zip" class="col-sm-2 col-form-label">Zip Code</label>
                                 <div class="col-sm-6">
-                                    <input type="number" class="form-control" name="zip" id="zip" class="form-control" placeholder="Zip Code" value="<?php echo isset($payoff_user_info['zip_code']) && !empty($payoff_user_info['zip_code']) ? $payoff_user_info['zip_code'] : '' ?>">
+                                    <input type="number" class="form-control" name="zip" id="zip" class="form-control" placeholder="Zip Code" value="<?php echo isset($payoff_user_info['zip']) && !empty($payoff_user_info['zip']) ? $payoff_user_info['zip'] : '' ?>">
                                     <?php if (!empty($zip_error_msg)) {?>
                                         <span class="error"><?php echo $zip_error_msg; ?></span>
                                     <?php }?>

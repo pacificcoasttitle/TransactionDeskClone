@@ -188,9 +188,9 @@ class Home extends MX_Controller
 
                 // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'];
+                $nestedData[] = $value['address1'];
                 $nestedData[] = $value['city'];
-                $nestedData[] = $value['zip_code'];
+                $nestedData[] = $value['zip'];
                 if ($value['is_dual_cpl'] == 1) {
                     $checked = 'checked';
                 } else {
@@ -531,7 +531,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['email_address'];
                 // $nestedData[] = $value['telephone_no'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip_code'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
                 if ($value['is_mortgage_user'] == 1) {
                     $checked = 'checked';
                 } else {
@@ -2887,7 +2887,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['first_name'];
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
-                $nestedData[] = $value['street_address'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip_code'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
                 if ($value['lender_cpl_proposed_status'] == 1) {
                     $lenderStatus = 'Approved';
                 } else if ($value['lender_cpl_proposed_status'] == 2) {
@@ -4195,10 +4195,10 @@ class Home extends MX_Controller
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
             $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
             $this->form_validation->set_rules('company_name', 'Company Name', 'required', ['required' => 'Please Enter Company Name']);
-            $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
-            $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
-            $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
-            $this->form_validation->set_rules('zip', 'Zip', 'required', ['required' => 'Please Enter Zip']);
+            // $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
+            // $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
+            // $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
+            // $this->form_validation->set_rules('zip', 'Zip', 'required', ['required' => 'Please Enter Zip']);
 
             if ($this->form_validation->run() == true) {
                 $payoffUserData = [
@@ -4206,10 +4206,10 @@ class Home extends MX_Controller
                     'last_name'           => $_POST['last_name'],
                     'email_address'       => $_POST['email_address'],
                     'company_name'        => $_POST['company_name'],
-                    'street_address'      => $_POST['address'],
+                    'address1'      => $_POST['address'],
                     'city'                => $_POST['city'],
                     'state'               => $_POST['state'],
-                    'zip_code'            => $_POST['zip'],
+                    'zip'            => $_POST['zip'],
                     'is_password_updated' => 1,
                     'is_payoff_user'      => 1,
                     'status'              => 1,
@@ -4231,10 +4231,10 @@ class Home extends MX_Controller
                 $data['last_name_error_msg']    = form_error('last_name');
                 $data['email_error_msg']        = form_error('email_address');
                 $data['company_name_error_msg'] = form_error('company_name');
-                $data['address_error_msg']      = form_error('address');
-                $data['city_error_msg']         = form_error('city');
-                $data['state_error_msg']        = form_error('state');
-                $data['zip_error_msg']          = form_error('zip');
+                // $data['address_error_msg']      = form_error('address');
+                // $data['city_error_msg']         = form_error('city');
+                // $data['state_error_msg']        = form_error('state');
+                // $data['zip_error_msg']          = form_error('zip');
             }
         }
 
@@ -4286,10 +4286,10 @@ class Home extends MX_Controller
                 $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
                 $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email']);
                 $this->form_validation->set_rules('company_name', 'Company Name', 'required', ['required' => 'Please Enter Company Name']);
-                $this->form_validation->set_rules('street_address', 'Address', 'required', ['required' => 'Please Enter Address']);
-                $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
-                $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
-                $this->form_validation->set_rules('zip', 'Zip', 'required', ['required' => 'Please Enter Zip']);
+                // $this->form_validation->set_rules('street_address', 'Address', 'required', ['required' => 'Please Enter Address']);
+                // $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
+                // $this->form_validation->set_rules('state', 'State', 'required', ['required' => 'Please Enter State']);
+                // $this->form_validation->set_rules('zip', 'Zip', 'required', ['required' => 'Please Enter Zip']);
 
                 if ($this->form_validation->run() == true) {
                     $payoffUserData = [
@@ -4297,10 +4297,10 @@ class Home extends MX_Controller
                         'last_name'           => $_POST['last_name'],
                         'email_address'       => $_POST['email_address'],
                         'company_name'        => $_POST['company_name'],
-                        'street_address'      => $_POST['street_address'],
+                        'address1'            => $_POST['address1'],
                         'city'                => $_POST['city'],
                         'state'               => $_POST['state'],
-                        'zip_code'            => $_POST['zip'],
+                        'zip'            => $_POST['zip'],
                         'is_password_updated' => 1,
                         'is_payoff_user'      => 1,
                         'status'              => 1,
@@ -4321,10 +4321,10 @@ class Home extends MX_Controller
                     $data['last_name_error_msg']      = form_error('last_name');
                     $data['email_error_msg']          = form_error('email_address');
                     $data['company_name_error_msg']   = form_error('company_name');
-                    $data['street_address_error_msg'] = form_error('street_address');
-                    $data['city_error_msg']           = form_error('city');
-                    $data['state_error_msg']          = form_error('state');
-                    $data['zip_error_msg']            = form_error('zip');
+                    // $data['street_address_error_msg'] = form_error('street_address');
+                    // $data['city_error_msg']           = form_error('city');
+                    // $data['state_error_msg']          = form_error('state');
+                    // $data['zip_error_msg']            = form_error('zip');
                 }
             }
             $con              = ['id' => $id];
@@ -4516,7 +4516,7 @@ class Home extends MX_Controller
                 $nestedData[] = $value['last_name'];
                 $nestedData[] = $value['email_address'];
                 $nestedData[] = $value['company_name'];
-                $nestedData[] = $value['street_address'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip_code'];
+                $nestedData[] = $value['address1'] . ", " . $value['city'] . ", " . $value['state'] . ", " . $value['zip'];
                 if ($value['is_primary_mortgage_user'] == 1) {
                     $checked = 'checked';
                 } else {
