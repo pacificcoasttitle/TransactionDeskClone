@@ -78,7 +78,7 @@ class Transactee_model extends CI_Model
                 ->from('pct_vendors')
                 ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
                 ->join('admin as a', 'a.id = pct_vendors.created_by_id', 'left')
-                ->join('customer_basic_details as c', 'c.id = pct_vendors.created_by_id', 'left')
+                ->join('pct_softpro_lookup_table as c', 'c.id = pct_vendors.created_by_id', 'left')
                 ->order_by('pct_vendors.transctee_name', 'asc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
@@ -132,7 +132,7 @@ class Transactee_model extends CI_Model
                 ->from('pct_vendors')
                 ->join('admin', 'admin.id = pct_vendors.approved_by', 'left')
                 ->join('admin as a', 'a.id = pct_vendors.created_by_id', 'left')
-                ->join('customer_basic_details as c', 'c.id = pct_vendors.created_by_id', 'left')
+                ->join('pct_softpro_lookup_table as c', 'c.id = pct_vendors.created_by_id', 'left')
                 ->order_by('pct_vendors.transctee_name', 'asc');
 
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {

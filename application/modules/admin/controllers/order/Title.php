@@ -229,7 +229,7 @@ class Title extends MX_Controller
         $condition = array(
             'id' => $title_officer_id,
         );
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
         $data = array('status' => 'success', 'msg' => 'Flag updated successfully.');
         echo json_encode($data);
     }

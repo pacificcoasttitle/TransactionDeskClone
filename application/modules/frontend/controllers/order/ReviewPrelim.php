@@ -1224,7 +1224,7 @@ class ReviewPrelim extends MX_Controller
                 $resultSales = array();
                 if (!empty($salesRepName)) {
                     $this->db->select('*');
-                    $this->db->from('customer_basic_details');
+                    $this->db->from('pct_softpro_lookup_table');
                     $this->db->like("CONCAT_WS(' ', first_name, last_name)", $salesRepName);
                     $this->db->where('is_sales_rep', 1);
                     $query = $this->db->get();

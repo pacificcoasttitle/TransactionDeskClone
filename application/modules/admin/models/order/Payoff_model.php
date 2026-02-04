@@ -4,13 +4,13 @@ class Payoff_model extends CI_Model
 
     public function __construct()
     {
-        $this->table = 'customer_basic_details';
+        $this->table = 'pct_softpro_lookup_table';
     }
 
     public function get_payoff_users($params)
     {
         $this->db->where('is_payoff_user', 1);
-        $this->db->from('customer_basic_details');
+        $this->db->from('pct_softpro_lookup_table');
         $total_records = $this->db->count_all_results();
         $limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
         $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
@@ -34,7 +34,7 @@ class Payoff_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
 
-            $query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('pct_softpro_lookup_table');
             if ($query->num_rows() > 0) {
                 $payoff_user_lists = $query->result_array();
                 $filter_total_records = count($payoff_user_lists);
@@ -47,7 +47,7 @@ class Payoff_model extends CI_Model
             if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
                 $this->db->limit($limit, $offset);
             }
-            $query = $this->db->get('customer_basic_details');
+            $query = $this->db->get('pct_softpro_lookup_table');
 
             if ($query->num_rows() > 0) {
                 $payoff_user_lists = $query->result_array();
