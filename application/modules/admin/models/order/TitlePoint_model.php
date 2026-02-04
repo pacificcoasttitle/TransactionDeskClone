@@ -356,19 +356,19 @@ class TitlePoint_model extends CI_Model
             transaction_details.preliminary_report_date,
             transaction_details.borrower,
             transaction_details.secondary_borrower,
-            customer_basic_details.id as lender_id,
-            customer_basic_details.street_address as lender_address,
-            customer_basic_details.city as lender_city,
-            customer_basic_details.zip_code as lender_zipcode,
-            customer_basic_details.company_name as lender_company_name,
-            customer_basic_details.first_name as lender_first_name,
-            customer_basic_details.last_name as lender_last_name,
-            customer_basic_details.email_address as lender_email,
-            customer_basic_details.telephone_no as lender_telephone_no')
+            pct_softpro_lookup_table.id as lender_id,
+            pct_softpro_lookup_table.street_address as lender_address,
+            pct_softpro_lookup_table.city as lender_city,
+            pct_softpro_lookup_table.zip_code as lender_zipcode,
+            pct_softpro_lookup_table.company_name as lender_company_name,
+            pct_softpro_lookup_table.first_name as lender_first_name,
+            pct_softpro_lookup_table.last_name as lender_last_name,
+            pct_softpro_lookup_table.email_address as lender_email,
+            pct_softpro_lookup_table.telephone_no as lender_telephone_no')
             ->from('order_details')
             ->join('property_details', 'order_details.property_id = property_details.id')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
-            ->join('customer_basic_details', 'property_details.escrow_lender_id = customer_basic_details.id', 'left');
+            ->join('pct_softpro_lookup_table', 'property_details.escrow_lender_id = pct_softpro_lookup_table.id', 'left');
         $this->db->where('file_id', $fileId);
         // $this->db->order_by('order_details.id', 'desc');
 

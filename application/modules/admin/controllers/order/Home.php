@@ -1624,7 +1624,7 @@ class Home extends MX_Controller
         if ($this->input->post()) {
             $this->form_validation->set_rules('first_name', 'First Name', 'required', ['required' => 'Please Enter First Name']);
             $this->form_validation->set_rules('last_name', 'Last Name', 'required', ['required' => 'Please Enter Last Name']);
-            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email|is_unique[customer_basic_details.email_address]', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique' => 'The %s is already taken']);
+            $this->form_validation->set_rules('email_address', 'Email', 'trim|required|valid_email|is_unique[pct_softpro_lookup_table.email_address]', ['required' => 'Please Enter Email', 'valid_email' => 'Please enter valid Email', 'is_unique' => 'The %s is already taken']);
             $this->form_validation->set_rules('company', 'Company', 'required', ['required' => 'Please Enter Company']);
             $this->form_validation->set_rules('address', 'Address', 'required', ['required' => 'Please Enter Address']);
             $this->form_validation->set_rules('city', 'City', 'required', ['required' => 'Please Enter City']);
@@ -3657,8 +3657,8 @@ class Home extends MX_Controller
 
             $condition = ['id' => $id];
 
-            $companyDetails = $this->home_model->get_user($condition, 'customer_basic_details');
-            $update         = $this->home_model->update($updateData, $condition, 'customer_basic_details');
+            $companyDetails = $this->home_model->get_user($condition, 'pct_softpro_lookup_table');
+            $update         = $this->home_model->update($updateData, $condition, 'pct_softpro_lookup_table');
 
             if ($update) {
                 /** Save user Activity */
@@ -3700,7 +3700,7 @@ class Home extends MX_Controller
                     ];
 
                     $condition = ['id' => $id];
-                    $update    = $this->home_model->update($titleProductionData, $condition, 'customer_basic_details');
+                    $update    = $this->home_model->update($titleProductionData, $condition, 'pct_softpro_lookup_table');
 
                     if ($update) {
                         /** Save user Activity */
@@ -4355,7 +4355,7 @@ class Home extends MX_Controller
         $activity = 'User ' . $user['email_address'] . 'status updated to :- ' . $status;
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
-        $res = $this->db->update('customer_basic_details', $data, $condition);
+        $res = $this->db->update('pct_softpro_lookup_table', $data, $condition);
         // print_r($res);die;
         $data = ['status' => 'success', 'msg' => 'User\'s status updated successfully.'];
         echo json_encode($data);
@@ -4472,7 +4472,7 @@ class Home extends MX_Controller
         $activity = 'Mortgage user ' . $user['email_address'] . ' updated to :- ' . $mortgageUserFlag;
         $this->order->logAdminActivity($activity);
         /** End Save user activity */
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
         $data = ['status' => 'success', 'msg' => 'Mortgage user updated successfully.'];
         echo json_encode($data);
     }
@@ -4635,7 +4635,7 @@ class Home extends MX_Controller
         $condition = [
             'id' => $user_id,
         ];
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
 
         /** Save user Activity */
         $orderUser = $this->home_model->get_user($condition);
@@ -4656,7 +4656,7 @@ class Home extends MX_Controller
         $condition                        = [
             'id' => $user_id,
         ];
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
 
         /** Save user Activity */
         $orderUser = $this->home_model->get_user($condition);
@@ -4822,7 +4822,7 @@ class Home extends MX_Controller
         $condition           = [
             'id' => $user_id,
         ];
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
         $data = ['status' => 'success', 'msg' => 'Dual Cpl value updated successfully for user.'];
         /** Save user Activity */
         $orderUser = $this->home_model->get_user($condition);
@@ -7711,7 +7711,7 @@ class Home extends MX_Controller
         $condition                            = [
             'id' => $user_id,
         ];
-        $this->db->update('customer_basic_details', $data, $condition);
+        $this->db->update('pct_softpro_lookup_table', $data, $condition);
         $data = ['status' => 'success', 'msg' => 'Allow only Resware order value updated successfully for user.'];
         /** Save user Activity */
         $orderUser = $this->home_model->get_user($condition);

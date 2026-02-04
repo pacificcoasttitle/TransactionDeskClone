@@ -4,7 +4,7 @@ class Customer_model extends CI_Model
 
     public function __construct()
     {
-        $this->table = 'customer_basic_details';
+        $this->table = 'pct_softpro_lookup_table';
     }
 
     public function get_customers($params = array())
