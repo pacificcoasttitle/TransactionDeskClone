@@ -35,7 +35,7 @@ class Customer_model extends CI_Model
                 $this->db->or_like('last_name', $keyword);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->or_like('company_name', $keyword);
-                $this->db->or_like('street_address', $keyword);
+                $this->db->or_like('address1', $keyword);
             }
 
             if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
@@ -57,7 +57,7 @@ class Customer_model extends CI_Model
                 $this->db->or_like('last_name', $keyword);
                 $this->db->or_like('email_address', $keyword);
                 $this->db->or_like('company_name', $keyword);
-                $this->db->or_like('street_address', $keyword);
+                $this->db->or_like('address1', $keyword);
             }
 
             if (isset($params['credentials_check']) && strlen($params['credentials_check']) > 0) {
