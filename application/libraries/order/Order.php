@@ -6718,7 +6718,7 @@ class Order
         //$cc = array();
         if (! empty($to)) {
             $logid       = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_' . $emailType, '', $mailParams, [], 0, 0);
-            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
+            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], $cc, []);
             $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_' . $emailType, '', $mailParams, ['status' => $mail_result], 0, $logid);
             if ($mail_result) {
                 $updateOrderDetails['recording_confirmation_sent'] = 1;
