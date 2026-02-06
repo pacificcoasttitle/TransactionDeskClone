@@ -1,72 +1,144 @@
 <style>
-	.typography-section__inner {
-        margin-left: 10%;
-    }
+/* Open Order – same design tokens as dashboard */
+.pct-home-modern {
+    --pct-primary: #1e5f8a;
+    --pct-primary-light: #2d7ab5;
+    --pct-primary-soft: #e8f2f8;
+    --pct-surface: #ffffff;
+    --pct-surface-2: #f8fafc;
+    --pct-text: #1e293b;
+    --pct-text-muted: #64748b;
+    --pct-border: #e2e8f0;
+    --pct-radius: 12px;
+    --pct-radius-sm: 8px;
+    --pct-shadow: 0 1px 3px rgba(0,0,0,.06);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--pct-surface-2);
+    padding-bottom: 2rem;
+}
+.pct-home-modern .ui-autocomplete { max-height: 300px !important; overflow: hidden !important; }
+.pct-home-modern .progress { height: auto; margin-bottom: 0; }
+.pct-home-modern .align-display { flex-direction: row; align-items: center; display: flex; }
+.pct-home-modern .w-20 { width: 20px; min-width: 20px; }
 
-	.ui-autocomplete {
-		max-height: 300px !important;
-		overflow: hidden !important;
-	}
+/* Section headings (taglines) – dashboard-style */
+.pct-home-modern .form-grp-title { margin-top: 2rem; margin-bottom: 1.25rem; }
+.pct-home-modern .tagline {
+    height: 0;
+    border-top: 1px solid var(--pct-border);
+    text-align: left;
+    margin: 0;
+}
+.pct-home-modern .tagline span {
+    display: inline-block;
+    position: relative;
+    padding: 0 0.75rem 0 0;
+    background: var(--pct-surface);
+    color: var(--pct-primary);
+    top: -0.65em;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
 
-	.progress {
-		height: auto;
-		margin-bottom: 0px;
-	}
+.pct-home-modern .center-wrapper { margin: 0 auto; max-width: 100%; }
+.pct-home-modern .card.shadow.mb-4 {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius);
+    box-shadow: var(--pct-shadow);
+    overflow: hidden;
+}
+.pct-home-modern .card-header.py-3 {
+    background: var(--pct-surface-2);
+    border-bottom: 1px solid var(--pct-border);
+    padding: 1rem 1.25rem;
+}
+.pct-home-modern .card-header .font-weight-bold {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--pct-text);
+}
+.pct-home-modern .card-body { padding: 1.5rem 1.25rem; }
 
-	.align-display {
-		flex-direction: row;
-		align-items: center;
-		display: flex;
-	}
-	.w-20 {
-		width: 20px;
-	}
-	.tagline {
-		height: 0;
-		border-top: 1px solid #D9DDE5;
-		text-align: center;
-	}
-	.tagline span {
-		text-transform: uppercase;
-		display: inline-block;
-		position: relative;
-		padding: 0 0px;
-		background: #ffffff;
-		color: #d35411;
-		top: -10px;
-		font-size: 16px;
-		font-weight: 700;
-		letter-spacing: 0.25px;
-	}
+/* Form fields – same spacing and alignment as dashboard */
+.pct-home-modern .form-control {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    color: var(--pct-text);
+    background: var(--pct-surface);
+}
+.pct-home-modern .form-control:focus {
+    border-color: var(--pct-primary-soft);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(30, 95, 138, 0.1);
+}
+.pct-home-modern select.form-control {
+    height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+}
+.pct-home-modern .form-group { margin-bottom: 1rem; }
+.pct-home-modern .form-group .row { margin-left: -0.5rem; margin-right: -0.5rem; }
+.pct-home-modern .form-group .col-sm-6,
+.pct-home-modern .form-group .col-sm-12,
+.pct-home-modern .form-group .col-sm-10,
+.pct-home-modern .form-group .col-sm-3 { padding-left: 0.5rem; padding-right: 0.5rem; }
 
-	.form-grp-title {
-		margin-top: 42px;
-		margin-bottom: 42px;
-	}
-	.center-wrapper {
-		margin: 0 auto;
-	}
-	.form-control {
-		padding: 1.5rem 0.75rem;
-	}
-	select.form-control {
-		height: 50px;
-		padding: 0.375rem 0.75rem;
-	}
-	.main-wrapper {
-		scale: 95%;
-	}
+/* Buttons – same as dashboard (primary, secondary, danger, success, info) */
+.pct-home-modern .btn {
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: var(--pct-radius-sm);
+    /* padding: 0.5rem 1rem; */
+    transition: opacity .15s ease, background .15s ease, border-color .15s ease;
+}
+.pct-home-modern .btn-primary { background: var(--pct-primary); border-color: var(--pct-primary); color: #fff; }
+.pct-home-modern .btn-primary:hover { background: var(--pct-primary-light); border-color: var(--pct-primary-light); color: #fff; }
+.pct-home-modern .btn-secondary { background: #64748b; border-color: #64748b; color: #fff; }
+.pct-home-modern .btn-secondary:hover { background: #475569; border-color: #475569; color: #fff; }
+.pct-home-modern .btn-danger { background: #dc2626; border-color: #dc2626; color: #fff; }
+.pct-home-modern .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; color: #fff; }
+.pct-home-modern .btn-success { background: #059669; border-color: #059669; color: #fff; }
+.pct-home-modern .btn-success:hover { background: #047857; border-color: #047857; color: #fff; }
+.pct-home-modern .btn-info { background: var(--pct-primary); border-color: var(--pct-primary); color: #fff; }
+.pct-home-modern .btn-info:hover { background: var(--pct-primary-light); border-color: var(--pct-primary-light); color: #fff; }
+/* .pct-home-modern .btn-icon-split .text { font-size: 0.75rem; padding: 0.4rem 4px; } */
+.pct-home-modern .search-property-button,
+.pct-home-modern .search-apn-button { margin-right: 0.5rem; margin-bottom: 0.5rem; }
+.pct-home-modern .clone-widget .btn { margin-right: 0.5rem; }
+
+/* Checkboxes */
+.pct-home-modern input[type="checkbox"].form-control { height: 1.25rem; width: 1.25rem; cursor: pointer; }
+
+/* Error and alert states */
+.pct-home-modern .alert-danger,
+.pct-home-modern .pma-error { font-size: 0.875rem; border-radius: var(--pct-radius-sm); }
+.pct-home-modern .search-file-btn { cursor: pointer; margin-bottom: 0; }
+
+/* Modals – match dashboard (use literals so they work outside wrapper) */
+.pct-home-modern ~ .modal .modal-content,
+#searchResultModal .modal-content,
+#findCustomerModal .modal-content,
+#showCustomernumberModal .modal-content { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+.pct-home-modern ~ .modal .card-header h6,
+.modal .card-header h6 { font-weight: 600; color: #1e293b; }
+.pct-home-modern ~ .modal .table thead th,
+.modal .table thead th { background: #f8fafc; font-weight: 600; font-size: 0.8125rem; }
 </style>
 
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container-fluid main-wrapper">
-        <div class="row mb-3">
-            <div class="col-sm-12">
-                <h1 class="h3 text-gray-800 text-center">Open Order Form</h1>
+<div class="pct-home-modern">
+<section class="section-type-4a section-defaulta" style="padding-bottom:0;">
+	<div class="container-fluid px-4 py-4">
+        <div class="row mb-4">
+            <div class="col-3 center-wrapper">
+                <h1 class="pct-page-title" style="font-size:1.5rem;font-weight:600;color:#1e293b;margin-bottom:0.25rem;">Open Order Form</h1>
+                <p class="pct-page-sub" style="font-size:0.9375rem;color:#64748b;margin:0;">Helping get your transaction started.</p>
             </div>
         </div>
-        <div class="row ">
-            <div class="col-md-11 center-wrapper">
+        <div class="row">
+            <div class="col-lg-10 col-xl-9 center-wrapper">
                 <div class="card shadow mb-4 smart-forms">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Helping Get Your Transaction Started.</h6>
@@ -173,9 +245,10 @@
 								</div>
 
 								<div class="row form-group">
-									<a class="button btn btn-primary search-apn search-apn-button mr-3 ml-3" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
-									<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
-
+									<div class="col-sm-12">
+										<a class="button btn btn-primary search-apn search-apn-button" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
+										<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
+									</div>
 								</div>
 							</div>
 							<div class="row form-group">
@@ -265,11 +338,11 @@
                                                     // $full_name = implode(' ', $name);
                                                     $full_name = $v['full_name'];
                                                 ?>
-														<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
-												<?php
-													}
-													}
-												?>
+												<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+										<?php
+											}
+											}
+										?>
 									</select>
 								</div>
 							</div>
@@ -283,11 +356,11 @@
                                             if (isset($titleOfficer) && ! empty($titleOfficer)) {
                                                 foreach ($titleOfficer as $key => $value) {
                                                 ?>
-													<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-												<?php
-													}
-													}
-												?>
+											<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+										<?php
+											}
+											}
+										?>
 									</select>
 								</div>
 							</div>
@@ -331,7 +404,7 @@
 							
 							<div id="organization-borrower-type-fields" style="display: none;">
 								<div class="row form-group">
-									<div class="col-sm-3 align-display">
+									<div class="col-sm-6 align-display">
 										<input type="checkbox" class="form-control w-20 mr-5" name="IsBorrowerOrganization" id="IsBorrowerOrganization" value="1">
 										<span>Is Borrower Organization</span>
 									</div>
@@ -450,16 +523,16 @@
 
     //if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 ?>
-										<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
-											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
-											<span >Add Lender</span>
-										</div>
+									<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
+										<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
+										<span >Add Lender</span>
+									</div>
 
 <?php // }if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
-										<div class="col-sm-3 align-display" id="add-escrow-section" style="display: none;">
-											<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
-											<span >Add Escrow</span>
-										</div>
+									<div class="col-sm-3 align-display" id="add-escrow-section" style="display: none;">
+										<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
+										<span >Add Escrow</span>
+									</div>
 								<?php // }?>
 
 								<div class="col-sm-3 align-display" id="add-escrow-officer-section" style="display:none;">
@@ -698,9 +771,7 @@
         </div>
     </div>
 </section>
-
-<br><br>
-
+</div>
 
 <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	aria-hidden="true">
@@ -739,28 +810,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div class="modal-header">
-				<h4 class="modal-title">Search Results</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body search-result">
-				<table class="table-search-results" width="100%">
-					<thead>
-						<tr>
-							<th width="21%">APN</th>
-							<th width="22%">Address</th>
-							<th width="21%">City</th>
-							<th width="15%">Run Listing</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<div class="apn-search-loader hidden"></div>
-			</div> -->
 		</div>
 	</div>
 </div>
@@ -826,5 +875,3 @@
 		</div>
 	</div>
 </div>
-
-

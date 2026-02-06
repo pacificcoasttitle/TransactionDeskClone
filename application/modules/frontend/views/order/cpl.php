@@ -1,61 +1,203 @@
 <style>
-	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}
-	.ui-autocomplete {
-		max-height: 300px !important;
-		overflow: hidden !important;
-	}
-	.radio {
-		top: 5px !important;
-		margin: 0px 10px !important;
-	}
-	.radio:before {
-		background: none !important;
-	}
-	.fs-2 {
-		font-size: 18px;
-	}
-	.form-grp-title {
-		margin-top: 30px;
-    	margin-bottom: 20px;
-	}
-	.form-grp-title .tagline {
-		height: 0;
-		border-top: 1px solid #D9DDE5;
-	}
-	.form-grp-title .tagline span {
-		text-transform: uppercase;
-		display: inline-block;
-		position: relative;
-		padding: 0 0px;
-		background: #ffffff;
-		color: #d35411;
-		top: -10px;
-		font-size: 16px;
-		font-weight: 700;
-		letter-spacing: 0.25px;
-	}
-	.mt-0 {
-		margin-top: 0px;
-	}
+/* CPL page – same design tokens as dashboard */
+.pct-cpl-modern {
+    --pct-primary: #1e5f8a;
+    --pct-primary-light: #2d7ab5;
+    --pct-primary-soft: #e8f2f8;
+    --pct-surface: #ffffff;
+    --pct-surface-2: #f8fafc;
+    --pct-text: #1e293b;
+    --pct-text-muted: #64748b;
+    --pct-border: #e2e8f0;
+    --pct-radius: 12px;
+    --pct-radius-sm: 8px;
+    --pct-shadow: 0 1px 3px rgba(0,0,0,.06);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--pct-surface-2);
+    padding-bottom: 2rem;
+}
+.pct-cpl-modern .ui-autocomplete { position: absolute; cursor: default; z-index: 10000 !important; max-height: 300px !important; overflow: hidden !important; }
+.pct-cpl-modern .radio { top: 2px !important; margin: 0 0.5rem 0 0 !important; }
+.pct-cpl-modern .radio:before { background: none !important; }
+.pct-cpl-modern .fs-2 { font-size: 0.9375rem; }
+.pct-cpl-modern .mt-0 { margin-top: 0; }
+
+/* Section headings (taglines) */
+.pct-cpl-modern .form-grp-title { margin-top: 1.5rem; margin-bottom: 1rem; }
+.pct-cpl-modern .form-grp-title .tagline {
+    height: 0;
+    border-top: 1px solid var(--pct-border);
+    text-align: left;
+    margin: 0;
+}
+.pct-cpl-modern .form-grp-title .tagline span {
+    display: inline-block;
+    position: relative;
+    padding: 0 0.75rem 0 0;
+    background: var(--pct-surface);
+    color: var(--pct-primary);
+    top: -0.65em;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+/* Card */
+.pct-cpl-modern .card.shadow.mb-4 {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius);
+    box-shadow: var(--pct-shadow);
+    overflow: hidden;
+}
+.pct-cpl-modern .card-header.datatable-header {
+    background: var(--pct-surface-2);
+    border-bottom: 1px solid var(--pct-border);
+    padding: 1rem 1.25rem;
+}
+.pct-cpl-modern .card-header.datatable-header h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--pct-text);
+    margin: 0;
+}
+.pct-cpl-modern .card-header .pl-10 { padding-left: 0.5rem; }
+.pct-cpl-modern .card-body { padding: 1.25rem; }
+
+/* Table – same as dashboard */
+.pct-cpl-modern #cpl_listing thead th {
+    background: var(--pct-surface-2);
+    color: var(--pct-text);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--pct-border);
+    padding: 0.875rem 1rem;
+}
+.pct-cpl-modern #cpl_listing tbody td {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    color: var(--pct-text);
+    border-bottom: 1px solid var(--pct-border);
+    vertical-align: middle;
+}
+.pct-cpl-modern #cpl_listing tbody tr:hover td { background: var(--pct-surface-2); }
+
+/* Pagination – same as dashboard */
+.pct-cpl-modern .dataTables_wrapper { padding-top: 0.75rem; }
+.pct-cpl-modern .dataTables_wrapper .row:last-child {
+    align-items: center;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--pct-border);
+    margin-top: 0.5rem;
+}
+.pct-cpl-modern .dataTables_info { font-size: 0.8125rem; color: var(--pct-text-muted); font-weight: 500; }
+.pct-cpl-modern .dataTables_paginate ul.pagination {
+    margin: 0 !important;
+    gap: 0.25rem;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.pct-cpl-modern .dataTables_paginate .page-item .page-link {
+    min-width: 2rem; height: 2rem;
+    padding: 0 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--pct-text);
+    background: var(--pct-surface);
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.pct-cpl-modern .dataTables_paginate .page-item .page-link:hover {
+    background: var(--pct-surface-2);
+    border-color: var(--pct-primary-soft);
+    color: var(--pct-primary);
+}
+.pct-cpl-modern .dataTables_paginate .page-item.active .page-link {
+    background: var(--pct-primary);
+    border-color: var(--pct-primary);
+    color: #fff;
+}
+.pct-cpl-modern .dataTables_paginate .page-item.disabled .page-link {
+    background: var(--pct-surface-2);
+    color: var(--pct-text-muted);
+    border-color: var(--pct-border);
+    opacity: 0.8;
+}
+
+/* Alerts */
+.pct-cpl-modern .alert { border-radius: var(--pct-radius-sm); font-size: 0.875rem; }
+.pct-cpl-modern .alert-success { border-color: #a7f3d0; }
+.pct-cpl-modern .alert-danger { border-color: #fecaca; }
+
+/* Form in modal – same as home/dashboard */
+.pct-cpl-modern .form-control {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    color: var(--pct-text);
+    background: var(--pct-surface);
+}
+.pct-cpl-modern .form-control:focus {
+    border-color: var(--pct-primary-soft);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(30, 95, 138, 0.1);
+}
+.pct-cpl-modern .col-form-label { font-size: 0.875rem; font-weight: 500; color: var(--pct-text); margin-bottom: 0.25rem; }
+.pct-cpl-modern .form-group { margin-bottom: 1rem; }
+.pct-cpl-modern .btn { font-weight: 500; font-size: 0.875rem; border-radius: var(--pct-radius-sm); }
+.pct-cpl-modern .btn-success { background: #059669; border-color: #059669; color: #fff; }
+.pct-cpl-modern .btn-success:hover { background: #047857; border-color: #047857; color: #fff; }
+.pct-cpl-modern .btn-danger { background: #dc2626; border-color: #dc2626; color: #fff; }
+.pct-cpl-modern .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; color: #fff; }
+.pct-cpl-modern .btn-icon-split .text { font-size: 0.75rem; padding: 0.4rem 4px; }
+
+/* Modal – scoped so it works outside .pct-cpl-modern */
+#lender_information .modal-content { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+#lender_information .card { border: none; box-shadow: none; }
+#lender_information .card-body { padding: 1rem 1.25rem; }
+#lender_information .form-control {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #1e293b;
+    background: #fff;
+}
+#lender_information .form-control:focus {
+    border-color: #e8f2f8;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(30, 95, 138, 0.1);
+}
+#lender_information .col-form-label { font-size: 0.875rem; font-weight: 500; color: #1e293b; margin-bottom: 0.25rem; }
+#lender_information .form-grp-title .tagline span { color: #1e5f8a; font-size: 0.8125rem; font-weight: 600; background: #fff; }
+#lender_information .form-grp-title .tagline { border-top-color: #e2e8f0; }
+#lender_information .btn-success { background: #059669; border-color: #059669; color: #fff; }
+#lender_information .btn-danger { background: #dc2626; border-color: #dc2626; color: #fff; }
 </style>
 
-<section class="section-type-4a section-defaulta pd-3" style="padding-bottom:0px;">
-	<div class="container-fluid">
-		<div class="row mb-3">
-			<div class="col-sm-6">
-				<h1 class="h3 text-gray-800">Closing Protection Letters </h1>
+<div class="pct-cpl-modern">
+<section class="section-type-4a section-defaulta" style="padding-bottom:0;">
+	<div class="container-fluid px-4 py-4">
+		<div class="row mb-4">
+			<div class="col-12">
+				<h1 class="pct-page-title" style="font-size:1.5rem;font-weight:600;color:#1e293b;margin-bottom:0;">Closing Protection Letters</h1>
 			</div>
 		</div>
 		<div class="card shadow mb-4">
-			<div class="card-header datatable-header py-3">
-				<div class="datatable-header-titles" >
-					<span>
-						<i class="fas fa-users"></i>
-					</span>
+			<div class="card-header datatable-header">
+				<div class="datatable-header-titles">
+					<span><i class="fas fa-file"></i></span>
 					<h6 class="m-0 font-weight-bold text-primary pl-10">Generate your CPL</h6>
 				</div>
 			</div>
-
 			<div class="card-body">
 				<?php if (!empty($success)) { ?>
 				<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
@@ -94,6 +236,7 @@ if (!empty($errors)) {
 		</div>
 	</div>
 </section>
+</div>
 
 <div class="modal fade" width="500px" id="lender_information" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">

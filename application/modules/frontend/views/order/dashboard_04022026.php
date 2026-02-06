@@ -1,5 +1,5 @@
 <style>
-/* Modern dashboard – design tokens (do not add min-height: 100% – it breaks content visibility) */
+/* Modern dashboard – design tokens */
 .pct-dashboard-modern {
     --pct-primary: #1e5f8a;
     --pct-primary-light: #2d7ab5;
@@ -15,6 +15,7 @@
     --pct-shadow-hover: 0 4px 12px rgba(0,0,0,.08);
     font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: var(--pct-surface-2);
+    min-height: 100%;
     padding-bottom: 2rem;
 }
 
@@ -226,70 +227,6 @@
 }
 .pct-dashboard-modern .dropdown-toggle::after { border: none; }
 
-/* DataTables bottom bar + pagination – modern */
-.pct-dashboard-modern .dataTables_wrapper {
-    padding-top: 0.75rem;
-}
-.pct-dashboard-modern .dataTables_wrapper .row:last-child {
-    align-items: center;
-    padding: 0.75rem 0;
-    border-top: 1px solid var(--pct-border);
-    margin-top: 0.5rem;
-}
-.pct-dashboard-modern .dataTables_info {
-    font-size: 0.8125rem;
-    color: var(--pct-text-muted);
-    font-weight: 500;
-    padding-top: 0.25rem !important;
-}
-.pct-dashboard-modern .dataTables_paginate {
-    padding-top: 0 !important;
-    margin: 0 !important;
-}
-.pct-dashboard-modern .dataTables_paginate ul.pagination {
-    margin: 0 !important;
-    gap: 0.25rem;
-    display: inline-flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: center;
-}
-.pct-dashboard-modern .dataTables_paginate .page-item .page-link {
-    min-width: 2rem;
-    height: 2rem;
-    padding: 0 0.5rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--pct-text);
-    background: var(--pct-surface);
-    border: 1px solid var(--pct-border);
-    border-radius: var(--pct-radius-sm);
-    transition: background .15s ease, border-color .15s ease, color .15s ease;
-    text-decoration: none;
-}
-.pct-dashboard-modern .dataTables_paginate .page-item .page-link:hover {
-    background: var(--pct-surface-2);
-    border-color: var(--pct-primary-soft);
-    color: var(--pct-primary);
-}
-.pct-dashboard-modern .dataTables_paginate .page-item.active .page-link {
-    background: var(--pct-primary);
-    border-color: var(--pct-primary);
-    color: #fff;
-}
-.pct-dashboard-modern .dataTables_paginate .page-item.disabled .page-link {
-    background: var(--pct-surface-2);
-    color: var(--pct-text-muted);
-    border-color: var(--pct-border);
-    opacity: 0.8;
-}
-.pct-dashboard-modern .dataTables_paginate .page-item .page-link .fa {
-    font-size: 0.875rem;
-}
-
 /* Modals (shared) */
 .modal .modal-content { border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
 .modal .card-header h6,
@@ -418,6 +355,7 @@
 			<div class="row mb-3">
 				<div class="col-12">
 					<h2 class="pct-section-title">Recent Orders</h2>
+					<p class="pct-section-sub">Below are all your orders</p>
 				</div>
 			</div>
 			<div class="card shadow mb-4">
@@ -484,7 +422,7 @@
 		</div>
 	</div>
 </section> -->
-
+</div>
 
 <div class="modal fade" id="sendInviteModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">

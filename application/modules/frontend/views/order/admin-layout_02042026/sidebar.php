@@ -160,7 +160,7 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Dashboard Home</span>
 			</a>
 		</li>
-		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'order' || $this->uri->segment(1) == 'order-submit') {echo 'active';}?>">
+		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'order') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>order">
 				<i class="fas fa fa-calendar  "></i>
 				<span>Open Order</span>

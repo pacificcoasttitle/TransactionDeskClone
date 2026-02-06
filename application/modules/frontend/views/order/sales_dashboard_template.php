@@ -25,6 +25,8 @@
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"> -->
     <link href="<?php echo base_url(); ?>assets/backend/hr/css/sb-admin-2.min.css?v=02" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <link href="<?php echo base_url(); ?>assets/backend/css/sales-dashboard-modern.css?v=2" rel="stylesheet" type="text/css">
+    
 
     <?php echo $css_files; ?>
     <script>
@@ -32,7 +34,7 @@
 		document.cookie = "user_timezone="+Intl.DateTimeFormat().resolvedOptions().timeZone+";path=/";
     </script>
 </head>
-<body id="page-top">
+<body id="page-top" class="pct-modern-layout">
     <div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="page-list-loader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="wrapper">
