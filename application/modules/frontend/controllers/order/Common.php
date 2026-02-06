@@ -1245,7 +1245,7 @@ class Common extends MX_Controller
         echo json_encode($json_data);
     }
 
-    /*public function policy()
+    public function policy()
     {
         $data['errors'] = array();
         $data['success'] = array();
@@ -1298,7 +1298,7 @@ class Common extends MX_Controller
         }
 
         $this->salesdashboardtemplate->show("order/common", "policy_package", $data);
-    }*/
+    }
 
     /*public function upload_documents()
     {
