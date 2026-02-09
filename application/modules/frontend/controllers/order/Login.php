@@ -70,8 +70,9 @@ class Login extends MX_Controller
                 $email = $this->input->post('email_address');
                 // $user = $this->home_model->sp_get_user(array('email_address' => $email, 'is_password_updated' => 1, 'status' => 1));
                 $user = $this->home_model->sp_get_user(array('email_address' => $email, 'status' => 1));
-                if (isset($user['is_title_officer']) && $user['is_title_officer']) {
+                if ((isset($user['is_title_officer']) && $user['is_title_officer']) || isset($user['is_escrow_officer']) && $user['is_escrow_officer']) {
                     $user['first_name'] = $user['officer_name'];
+                    $user['full_name'] = $user['officer_name'];
                 }
                 // echo "<pre>";
                 // print_r($user);die;
@@ -156,11 +157,12 @@ class Login extends MX_Controller
                         $response = array('status' => 'success', 'message' => '', 'url' => 'sales-dashboard/' . $user['id']);
                     } else if (isset($user['is_special_lender']) && $user['is_special_lender'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'special-lender-dashboard');
-                    } else if ($user['is_payoff_user'] == 1) {
-                        $response = array('status' => 'success', 'message' => '', 'url' => 'pay-off-dashboard');
                     } else if ($user['is_escrow_officer'] == 1) {
+                        $session_data['full_name'] = $session_data['name'] = isset($user['officer_name']) && !empty($user['officer_name']) ? $user['officer_name'] : '';
                         $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-dashboard');
                     } else if ($user['is_title_production'] == 1) {
+                        $response = array('status' => 'success', 'message' => '', 'url' => 'pay-off-dashboard');
+                    } else if ($user['is_payoff_user'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'file-upload');
                     }  else if ($user['is_escrow_production'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-officer-dashboard');
