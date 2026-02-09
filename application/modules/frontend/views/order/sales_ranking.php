@@ -1,92 +1,187 @@
+<style>
+/* Sales Ranking – same design tokens as dashboard */
+.pct-home-modern {
+    --pct-primary: #1e5f8a;
+    --pct-primary-light: #2d7ab5;
+    --pct-primary-soft: #e8f2f8;
+    --pct-surface: #ffffff;
+    --pct-surface-2: #f8fafc;
+    --pct-text: #1e293b;
+    --pct-text-muted: #64748b;
+    --pct-border: #e2e8f0;
+    --pct-radius: 12px;
+    --pct-radius-sm: 8px;
+    --pct-shadow: 0 1px 3px rgba(0,0,0,.06);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--pct-surface-2);
+    padding-bottom: 2rem;
+}
 
-<style type="text/css">
-	th {
-		text-align: center;
-	}
-	.month-name, .year-name {
-		text-decoration: underline;
-		color: #d35411;
-		margin-left: 10px;
-	}
-	.align-wrapper {
-		display: flex;
-		align-items: center;
-		flex-direction: row;
-		justify-content: space-between;
-	}
+/* Page header */
+.pct-home-modern .pct-page-title { font-size: 1.5rem; font-weight: 600; color: var(--pct-text); margin-bottom: 0.25rem; }
+.pct-home-modern .pct-page-sub { font-size: 0.9375rem; color: var(--pct-text-muted); margin: 0; }
+.pct-home-modern .month-name, .pct-home-modern .year-name { color: var(--pct-primary); font-weight: 600; }
+
+/* All dropdowns with arrow indicator */
+.pct-home-modern select,
+.pct-home-modern .custom-select {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--pct-text);
+    background: var(--pct-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M2 4l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+    background-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+.pct-home-modern select:focus,
+.pct-home-modern .custom-select:focus {
+    border-color: var(--pct-primary);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(30, 95, 138, 0.1);
+}
+
+/* Card styling */
+.pct-home-modern .card.shadow.mb-4 {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius);
+    box-shadow: var(--pct-shadow);
+    overflow: hidden;
+}
+.pct-home-modern .card-header.py-3 {
+    background: var(--pct-surface-2);
+    border-bottom: 1px solid var(--pct-border);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.pct-home-modern .card-header .font-weight-bold {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--pct-text);
+}
+.pct-home-modern .card-body { padding: 1.25rem; background: var(--pct-surface); }
+
+/* Filter dropdowns container */
+.pct-home-modern .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Table styling */
+.pct-home-modern .table { margin-bottom: 0; }
+.pct-home-modern .table thead th {
+    background: var(--pct-surface-2);
+    border-bottom: 2px solid var(--pct-border);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--pct-text);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    white-space: nowrap;
+}
+.pct-home-modern .table tbody td {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--pct-text);
+    border-bottom: 1px solid var(--pct-border);
+    vertical-align: middle;
+    text-align: center;
+}
+.pct-home-modern .table tbody tr:hover { background: var(--pct-primary-soft); }
+.pct-home-modern .table tbody tr:last-child td { border-bottom: none; }
+
+/* Alerts */
+.pct-home-modern .alert { border-radius: var(--pct-radius-sm); font-size: 0.875rem; margin-bottom: 1rem; }
+.pct-home-modern .alert-success { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+.pct-home-modern .alert-danger { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
 </style>
-<div class="container-fluid">
-		<div class="card shadow mb-4">
-			<div class="card-body">
-				<div class="col-xs-12">
-					<div class="typography-section__inner align-wrapper">
-						<h4 class="ui-title-block_light month-title align-wrapper">Ranking based on production figures for <b class="month-name"><?php echo date('F');?></b></h3>
-						<h4 class="ui-title-block_light year-title" style="display: none;">Ranking based on production figures for the year <b class="year-name"><?php echo date('Y');?></b></h3>
-						<div id="year_listing">
-							<label>
-								<select style="width:auto;" name="year" id="year" class="custom-select custom-select-sm form-control form-control-sm"> 								
-									<option value="">Select Year</option>
-									<?php 
-                                    $currentYear = date("Y");
-                                    for ($i = 0; $i < 5; $i++) { 
-										$date = strtotime("-$i year");
-										$value = date("Y", $date); // for option value (e.g., 2024-07)
-										if ((int)$value < 2025) {
-											break; // Skip years before 2025
-										}
-									?>
-										<option value="<?php echo $value;?>"><?php echo $value;?></option>
-									<?php }?>
-								</select>
-							</label>
-						</div>
-						<div id="month_listing">
-							<label>
-								<select style="width:auto;" name="month_year" id="month_year" class="custom-select custom-select-sm form-control form-control-sm"> 
-									<option value="">Select Month</option>
-									<?php 
-                                    $currentMonth = date("Y-m");
-                                    for ($i = 0; $i < 12; $i++) { 
-										$date = strtotime("-$i month");
-										$value = date("Y-m", $date); // for option value (e.g., 2024-07)
-										$label = date("F Y", $date); // for display (e.g., July 2024)
-										if ((int)date('Y', $date) < 2025) {
-											break; // Skip years before 2025
-										}
 
-										if (((int)date('m', $date) < 3) && ((int)date('Y', $date) == 2025)) {
-											break; // Skip years before 2025
-										}
-									?>
-										<option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
-									<?php }?>
-								</select>
-							</label>
-						</div>
-					</div>
-					<div class="card shadow mb-4">
-						<div class="card-body">
-							<div class="table-responsive">
-                                <div id="sales_ranking_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-								<div id="sales_ranking_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
-								<table class="table table-bordered" id="sales_ranking" width="100%" cellspacing="0">
-									<thead>
-										<tr>
-											<th>Sales Rep.</th>
-											<th>Total Openings</th>
-											<th>Total Closings</th>
-											<th>Total Revenue</th>
-											<th>Closing Ratio</th>
-											<th>Rank</th>
-										</tr>
-									</thead>
-									<tbody></tbody>
-									
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="pct-home-modern">
+<section class="section-type-4a section-defaulta" style="padding-bottom:0;">
+    <div class="container-fluid px-4 py-4">
+        <!-- Page Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="pct-page-title">Sales Ranking</h1>
+                <p class="pct-page-sub month-title">Ranking based on production figures for <b class="month-name"><?php echo date('F');?></b></p>
+                <p class="pct-page-sub year-title" style="display: none;">Ranking based on production figures for the year <b class="year-name"><?php echo date('Y');?></b></p>
+            </div>
+        </div>
+
+        <!-- Ranking Table -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Ranking Overview</h6>
+                <div class="filter-row">
+                    <div id="year_listing">
+                        <select name="year" id="year" style="width:auto;">
+                            <option value="">Select Year</option>
+                            <?php 
+                            $currentYear = date("Y");
+                            for ($i = 0; $i < 5; $i++) { 
+                                $date = strtotime("-$i year");
+                                $value = date("Y", $date);
+                                if ((int)$value < 2025) {
+                                    break;
+                                }
+                            ?>
+                                <option value="<?php echo $value;?>"><?php echo $value;?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                    <div id="month_listing">
+                        <select name="month_year" id="month_year" style="width:auto;">
+                            <option value="">Select Month</option>
+                            <?php 
+                            $currentMonth = date("Y-m");
+                            for ($i = 0; $i < 12; $i++) { 
+                                $date = strtotime("-$i month");
+                                $value = date("Y-m", $date);
+                                $label = date("F Y", $date);
+                                if ((int)date('Y', $date) < 2025) {
+                                    break;
+                                }
+                                if (((int)date('m', $date) < 3) && ((int)date('Y', $date) == 2025)) {
+                                    break;
+                                }
+                            ?>
+                                <option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="sales_ranking_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+                <div id="sales_ranking_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="sales_ranking" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Sales Rep.</th>
+                                <th>Total Openings</th>
+                                <th>Total Closings</th>
+                                <th>Total Revenue</th>
+                                <th>Closing Ratio</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>

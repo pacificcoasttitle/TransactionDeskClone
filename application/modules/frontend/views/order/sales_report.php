@@ -1,402 +1,248 @@
-<style type="text/css">
-	.u-list {
-	    margin-bottom: 15px;
-	}
-	.u-list, .u-list li {
-	    margin: 0;
-	    padding: 0;
-	    list-style: none;
-	}
-	.u-list li:nth-child(2n+1) {
-	    background: #cccccc45;
-	}
-	.u-list li {
-	    padding: 10px;
-	    display: table;
-	    width: 100%;
-	}
-	.u-list .u-pic, .u-list .u-info {
-	    display: block;
-	    vertical-align: top;
-	}
-	.u-list .u-pic {
-	    width: 25%;
-	    height: 80px;
-	    overflow: hidden;
-	    border-radius: 100%;
-	    margin-right: 10px;
-	    float: left;
-	}
-	.u-list .u-pic img {
-	    margin: 0;
-	    border: 0;
-	    max-width: 100%;
-	}
-	.u-list .u-info {
-		width: 60%;
-	    padding-top: 5px;
-	    margin-left: 10px;
-	    float: left;
-	}
-	.u-list .u-name {
-	    font-weight: bold;
-	    color: #000;
-	}
-	.u-list .u-count {
-		float: right;
-		font-size: 20px;
-	}
-	.no-report-image {
-	    text-align: center;
-	    background: #f0f0f0;
-	    height: 80px;
-	    padding-top: 16px;
-	    font-size: 30px;
-	    font-weight: 600;
-	}
-	.u-list li:nth-child(2n+1) .no-report-image{
-	    background: #ffffff;
-	}
-	.report_switch_btn {
-		height: 42px;
-	    background: #d35411;
-	    line-height: 1px;
-	    padding: 25px 18px;
-	    vertical-align: top;
-	    display: inline-block;
-	    font-size: 18px;
-	    color: #fff;
-	}
-	.pma_val {
-	    color: #d35400;
-	    font-weight: bold;
-	    text-align: center;
-	}
-	.padding-l-r {
-		padding-left: 3rem;
-		padding-right: 3rem;
-	}
-	.ui-title-block + .ui-decor-1a {
-		margin-top: 22px;
-		margin-bottom: 34px;
-	}
-
-	.ui-decor-1a {
-		display: inline-block;
-		width: 100px;
-		height: 2px;
-	}
-
-	.bg-accent {
-		background-color: #d35411;
-	}
-
-	tbody tr, thead tr {
-		text-align: center;
-	}
-
-.smart-container {
-    background: #ffffff;
-    margin: 0px auto;
-    -webkit-border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    -o-border-radius: 5px 5px 0 0;
-    border-radius: 5px 5px 0 0;
-}
-.smart-forms {
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    line-height: 1.231;
-    font-weight: 400;
-    font-size: 14px;
-    color: #34495E;
-}
-.smart-forms, .smart-forms * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+<style>
+/* Sales Report – same design tokens as dashboard */
+.pct-home-modern {
+    --pct-primary: #1e5f8a;
+    --pct-primary-light: #2d7ab5;
+    --pct-primary-soft: #e8f2f8;
+    --pct-surface: #ffffff;
+    --pct-surface-2: #f8fafc;
+    --pct-text: #1e293b;
+    --pct-text-muted: #64748b;
+    --pct-border: #e2e8f0;
+    --pct-radius: 12px;
+    --pct-radius-sm: 8px;
+    --pct-shadow: 0 1px 3px rgba(0,0,0,.06);
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--pct-surface-2);
+    padding-bottom: 2rem;
 }
 
-element.style {
+/* Page header */
+.pct-home-modern .pct-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
-.smart-forms, .smart-forms * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
+.pct-home-modern .pct-page-title { font-size: 1.5rem; font-weight: 600; color: var(--pct-text); margin: 0; }
 
-form {
-    display: block;
-    margin-top: 0em;
+/* Card styling */
+.pct-home-modern .card.shadow.mb-4 {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius);
+    box-shadow: var(--pct-shadow);
+    overflow: hidden;
 }
-.smart-forms {
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    line-height: 1.231;
-    font-weight: 400;
-    font-size: 14px;
-    color: #34495E;
+.pct-home-modern .card-header.py-3 {
+    background: var(--pct-surface-2);
+    border-bottom: 1px solid var(--pct-border);
+    padding: 1rem 1.25rem;
 }
-.smart-forms .form-body {
-    padding: 40px 0px;
-    padding-bottom: 20px;
+.pct-home-modern .card-header .font-weight-bold {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--pct-text);
 }
-.smart-forms .frm-row {
-    margin: 0 -10px;
-}
-.smart-forms .frm-row:before, .smart-forms .frm-row:after {
-    display: table;
-    content: "";
-    line-height: 0;
-}
+.pct-home-modern .card-body { padding: 1.25rem; background: var(--pct-surface); }
 
-
-.smart-forms .frm-row .colm {
-    min-height: 1px;
-    padding-left: 10px;
-    padding-right: 10px;
-    position: relative;
-    float: left;
-}
-
-.smart-forms .field {
-    display: block;
-    position: relative;
-}
-
-.smart-forms .section {
-    margin-bottom: 22px;
-}
-
-.smart-forms .file {
-    display: block;
-    width: 100%;
-}
-
-.smart-forms .prepend-icon {
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-    width: 100%;
-}
-
-.smart-forms label, .smart-forms input, .smart-forms button, .smart-forms select, .smart-forms textarea {
-    margin: 0;
-    font-size: 14px;
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    color: #34495E;
-    outline: none;
-}
-
-.smart-forms .button {
-    border: 0;
-    height: 42px;
-    color: #243140;
-    line-height: 1;
-    font-size: 15px;
-    cursor: pointer;
-    padding: 0 18px;
+/* Table styling */
+.pct-home-modern .table { margin-bottom: 0; }
+.pct-home-modern .table thead th {
+    background: var(--pct-surface-2);
+    border-bottom: 2px solid var(--pct-border);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--pct-text);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 0.75rem 1rem;
     text-align: center;
-    vertical-align: top;
-    background: #bdc3c7;
-    display: inline-block;
-    -webkit-user-drag: none;
-    text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
 }
-
-.smart-forms a.button, .smart-forms span.button, .smart-forms label.button {
-    line-height: 42px;
-    text-decoration: none;
-}
-
-.smart-forms .file .button {
-    position: absolute;
-    top: 5px;
-    right: 4px;
-    float: none;
-    height: 32px;
-    line-height: 34px;
-    padding: 0px 16px;
-    z-index: 10;
-    border-radius: 5px;
-}
-
-.smart-forms .file .gui-file {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    padding: 8px 10px;
-    position: absolute;
-    -moz-opacity: 0;
-    opacity: 0;
-    z-index: 11;
-    bottom: 0;
-    right: 0;
-}
-
-.smart-forms .select, .smart-forms .gui-input, .smart-forms .gui-textarea, .smart-forms .select > select, .smart-forms .select-multiple select {
-    background: #fff;
-    position: relative;
-    vertical-align: top;
-    border: 1px solid #cbd2d6;
-    display: -moz-inline-stack;
-    display: inline-block;
-    *display: inline;
-    color: #34495E;
-    outline: none;
-    height: 42px;
-    width: 100%;
-    *zoom: 1;
-}
-
-.smart-forms .prepend-icon > input, .smart-forms .prepend-icon > textarea, .smart-forms .prepend-icon > select {
-    padding-left: 36px;
-}
-
-.smart-forms label, .smart-forms input, .smart-forms button, .smart-forms select, .smart-forms textarea {
-    margin: 0;
-    font-size: 14px;
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    font-weight: 400;
-    color: #34495E;
-    outline: none;
-}
-
-.smart-forms button {
-	color: #fff;
-}
-
-.smart-forms .prepend-icon > input, .smart-forms .prepend-icon > textarea, .smart-forms .prepend-icon > select {
-    padding-left: 36px;
-}
-
-.smart-forms .gui-input, .smart-forms .gui-textarea {
-    padding: 10px;
-}
-
-.smart-forms .prepend-icon .field-icon {
-    left: 0;
-}
-
-.smart-forms .append-icon .field-icon, .smart-forms .prepend-icon .field-icon {
-    top: 0;
-    width: 42px;
-    height: 42px;
-    color: inherit;
-    line-height: 35px;
-    position: absolute;
+.pct-home-modern .table tbody td {
+    padding: 0.875rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--pct-text);
+    border-bottom: 1px solid var(--pct-border);
+    vertical-align: middle;
     text-align: center;
-    -webkit-transition: all 0.5s ease-out;
-    -moz-transition: all 0.5s ease-out;
-    -ms-transition: all 0.5s ease-out;
-    -o-transition: all 0.5s ease-out;
-    transition: all 0.5s ease-out;
-    pointer-events: none;
-    z-index: 99;
+}
+.pct-home-modern .table tbody tr:hover { background: var(--pct-primary-soft); }
+.pct-home-modern .table tbody tr:last-child td { border-bottom: none; }
+
+/* Buttons */
+.pct-home-modern .btn {
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: var(--pct-radius-sm);
+    transition: opacity .15s ease, background .15s ease, border-color .15s ease;
+}
+.pct-home-modern .btn-primary { background: var(--pct-primary); border-color: var(--pct-primary); color: #fff; }
+.pct-home-modern .btn-primary:hover { background: var(--pct-primary-light); border-color: var(--pct-primary-light); color: #fff; }
+.pct-home-modern .btn-success { background: #059669; border-color: #059669; color: #fff; }
+.pct-home-modern .btn-success:hover { background: #047857; border-color: #047857; color: #fff; }
+.pct-home-modern .btn-info { background: var(--pct-primary); border-color: var(--pct-primary); color: #fff; }
+.pct-home-modern .btn-info:hover { background: var(--pct-primary-light); border-color: var(--pct-primary-light); color: #fff; }
+/* .pct-home-modern .btn-icon-split { display: inline-flex; align-items: center; gap: 0.5rem; }
+.pct-home-modern .btn-icon-split .icon { display: flex; } */
+.pct-home-modern .btn-icon-split .text { font-size: 0.875rem; }
+
+/* Alerts */
+.pct-home-modern .alert { border-radius: var(--pct-radius-sm); font-size: 0.875rem; margin-bottom: 1rem; }
+.pct-home-modern .alert-success { background: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+.pct-home-modern .alert-danger { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+.pct-home-modern .alert.hide { display: none; }
+
+/* Action buttons in table */
+.pct-home-modern .align-btn {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
-.smart-forms .append-icon .field-icon i, .smart-forms .prepend-icon .field-icon i {
-    position: relative;
-    font-size: 14px;
+/* Pagination – same as cpl.php */
+.pct-home-modern .dataTables_wrapper { padding-top: 0.75rem; }
+.pct-home-modern .dataTables_wrapper .row:last-child {
+    align-items: center;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--pct-border);
+    margin-top: 0.5rem;
 }
-
-.smart-forms .field-icon i {
-    color: #A2A6A8;
-    position: relative;
-    top: 0;
+.pct-home-modern .dataTables_wrapper select,
+.pct-home-modern .dataTables_wrapper .custom-select {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--pct-text);
+    background: var(--pct-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M2 4l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+    background-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
 }
-.text-center {
-	text-align: center;
+.pct-home-modern .dataTables_wrapper .dataTables_filter input {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--pct-text);
+    background: var(--pct-surface);
 }
-
-#report_listing .btn-icon-split .text {
-	padding: 0.375rem 6px 0.375rem 6px;
-	font-size: 14px;
+.pct-home-modern .dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--pct-primary);
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(30, 95, 138, 0.1);
 }
-
-.align-btn {
-	display: flex;
-	justify-content: space-evenly;
+.pct-home-modern .dataTables_info { font-size: 0.8125rem; color: var(--pct-text-muted); font-weight: 500; }
+.pct-home-modern .dataTables_paginate ul.pagination {
+    margin: 0 !important;
+    gap: 0.25rem;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.pct-home-modern .dataTables_paginate .page-item .page-link {
+    min-width: 2rem; height: 2rem;
+    padding: 0 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--pct-text);
+    background: var(--pct-surface);
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.pct-home-modern .dataTables_paginate .page-item .page-link:hover {
+    background: var(--pct-surface-2);
+    border-color: var(--pct-primary-soft);
+    color: var(--pct-primary);
+}
+.pct-home-modern .dataTables_paginate .page-item.active .page-link {
+    background: var(--pct-primary);
+    border-color: var(--pct-primary);
+    color: #fff;
+}
+.pct-home-modern .dataTables_paginate .page-item.disabled .page-link {
+    background: var(--pct-surface-2);
+    color: var(--pct-text-muted);
+    border-color: var(--pct-border);
+    opacity: 0.8;
 }
 </style>
 
-<section class="section-sm section-defaulta" >
-	<div class="container-fluid">
-		<div class="card shadow p-4">
-			<div class="row">
-				<div class="col-sm-12">
-					<h2 class="ui-title-block ui-title-block_light">Farming Reports
-						<a href="<?php echo base_url(); ?>sales-dashboard/<?php echo $sales_user_id; ?>" class="btn btn-info btn-icon-split pull-right mr-1">
-							<span class="icon text-white-50">
-								<i class="fas fa-arrow-left"></i>
-							</span>
-							<span class="text">Back</span>
-						</a>
-					</h2>
-					<div class="ui-decor-1a bg-accent"></div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<div class="text-center">
-						<div class="table-container1">
-							<div class="alert alert-success hide" id="successMsg"></div>
-							<div class="alert alert-danger hide" id="errorMsg"></div>
-							<table class="table table-type-3 typography-last-elem no-footer table-bordered" id="report_listing">
-								<thead>
-									<tr>
-										<th>Date</th>
-										<th>Report Type</th>
-										<th>Input Options</th>
-										<th>Download</th>
-									</tr>
-								</thead>
-								<tbody>
-								<?php if (!empty($reports_data)) {
-									$monthNameList = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
-									foreach ($reports_data as $report) {
-										$pdf_url = '';
-										$area = $report['area'];
-										$option = $report['option'];
-										if ($report['report_type'] == 'County Report') {
-											$pdf_url = trim(env('AWS_PATH') . 'sales-activity/' . $report['report_url']);
-											$option = $monthNameList[$report['option']];
-										} else if ($report['report_type'] == 'Sales Activity') {
-											$pdf_url = trim(env('AWS_PATH') . 'sales-snap-shot/' . $report['report_url']);
-										} else if ($report['report_type'] == 'FAR Report') {
-											$pdf_url = trim(env('AWS_PATH') . 'sales-rep/pdf/' . $report['report_url']);
-										}
-									$email = $report['email_address'];?>
-									<tr>
-										<td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('m/d/Y', strtotime($report['created_at'])); ?></td>
-										<td><?php echo $report['report_type']; ?></td>
-										<td><?php echo $option; ?> & <?php echo $area; ?></td>
-										<td class="align-btn" >
-										<?php if (!empty($report['report_url'])): ?>
-											<a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
-												<!-- <i class="fa fa-download" aria-hidden="true"></i> -->
-												<span class="icon text-white-50">
-													<i class="fas fa-download"></i>
-												</span>
-												<span class="text">Download</span>
-											</a>
-											<?php endif;?>
-										</td>
-									</tr>
-									<?php
-}
-}?>
-                                   
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="pct-home-modern">
+<section class="section-type-4a section-defaulta" style="padding-bottom:0;">
+    <div class="container-fluid px-4 py-4">
+        <!-- Page Header -->
+        <div class="pct-page-header">
+            <h1 class="pct-page-title">Farming Reports</h1>
+            <a href="<?php echo base_url(); ?>sales-dashboard/<?php echo $sales_user_id; ?>" class="btn btn-info btn-icon-split">
+                <span class="icon text-white-50"><i class="fas fa-arrow-left"></i></span>
+                <span class="text">Back</span>
+            </a>
+        </div>
+
+        <!-- Reports Table -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Your Generated Reports</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success hide" id="successMsg"></div>
+                <div class="alert alert-danger hide" id="errorMsg"></div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="report_listing" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Report Type</th>
+                                <th>Input Options</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php if (!empty($reports_data)) {
+                            $monthNameList = [1 => "January", 2 => "February", 3 => "March", 4 => "April", 5 => "May", 6 => "June", 7 => "July", 8 => "August", 9 => "September", 10 => "October", 11 => "November", 12 => "December"];
+                            foreach ($reports_data as $report) {
+                                $pdf_url = '';
+                                $area = $report['area'];
+                                $option = $report['option'];
+                                if ($report['report_type'] == 'County Report') {
+                                    $pdf_url = trim(env('AWS_PATH') . 'sales-activity/' . $report['report_url']);
+                                    $option = $monthNameList[$report['option']];
+                                } else if ($report['report_type'] == 'Sales Activity') {
+                                    $pdf_url = trim(env('AWS_PATH') . 'sales-snap-shot/' . $report['report_url']);
+                                } else if ($report['report_type'] == 'FAR Report') {
+                                    $pdf_url = trim(env('AWS_PATH') . 'sales-rep/pdf/' . $report['report_url']);
+                                }
+                                $email = $report['email_address'];?>
+                            <tr>
+                                <td><span style="display:none;"><?php echo strtotime($report['created_at']); ?></span><?php echo date('m/d/Y', strtotime($report['created_at'])); ?></td>
+                                <td><?php echo $report['report_type']; ?></td>
+                                <td><?php echo $option; ?> & <?php echo $area; ?></td>
+                                <td class="align-btn">
+                                    <?php if (!empty($report['report_url'])): ?>
+                                        <a href="<?php echo $pdf_url; ?>" class="btn btn-success btn-icon-split" target="_blank" download>
+                                            <span class="icon text-white-50"><i class="fas fa-download"></i></span>
+                                            <span class="text">Download</span>
+                                        </a>
+                                    <?php endif;?>
+                                </td>
+                            </tr>
+                            <?php }
+                        } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+</div>

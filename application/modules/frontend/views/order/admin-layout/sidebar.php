@@ -46,7 +46,7 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Daily</span>
 			</a>
 		</li>
-		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'sales-reports') {echo 'active';}?>">
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'sales-reports') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>sales-reports/<?php echo $userdata['id']; ?>">
 				<i class="fas fa fa-file  "></i>
 				<span>Report</span>

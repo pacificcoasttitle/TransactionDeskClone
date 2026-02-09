@@ -75,27 +75,65 @@
 .pct-home-modern .btn-success { background: #059669; border-color: #059669; color: #fff; }
 .pct-home-modern .btn-success:hover { background: #047857; border-color: #047857; color: #fff; }
 
-/* DataTables overrides */
+/* Pagination – same as cpl.php dashboard */
+.pct-home-modern .dataTables_wrapper { padding-top: 0.75rem; }
+.pct-home-modern .dataTables_wrapper .row:last-child {
+    align-items: center;
+    padding: 0.75rem 0;
+    border-top: 1px solid var(--pct-border);
+    margin-top: 0.5rem;
+}
 .pct-home-modern .dataTables_wrapper .dataTables_length select,
 .pct-home-modern .dataTables_wrapper .dataTables_filter input {
     border: 1px solid var(--pct-border);
     border-radius: var(--pct-radius-sm);
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
+    color: var(--pct-text);
+    background: var(--pct-surface);
 }
 .pct-home-modern .dataTables_wrapper .dataTables_filter input:focus {
     border-color: var(--pct-primary);
     outline: 0;
     box-shadow: 0 0 0 3px rgba(30, 95, 138, 0.1);
 }
-.pct-home-modern .dataTables_wrapper .dataTables_paginate .paginate_button {
-    border-radius: var(--pct-radius-sm);
-    margin: 0 2px;
+.pct-home-modern .dataTables_info { font-size: 0.8125rem; color: var(--pct-text-muted); font-weight: 500; }
+.pct-home-modern .dataTables_paginate ul.pagination {
+    margin: 0 !important;
+    gap: 0.25rem;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
-.pct-home-modern .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background: var(--pct-primary) !important;
-    border-color: var(--pct-primary) !important;
-    color: #fff !important;
+.pct-home-modern .dataTables_paginate .page-item .page-link {
+    min-width: 2rem; height: 2rem;
+    padding: 0 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--pct-text);
+    background: var(--pct-surface);
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius-sm);
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.pct-home-modern .dataTables_paginate .page-item .page-link:hover {
+    background: var(--pct-surface-2);
+    border-color: var(--pct-primary-soft);
+    color: var(--pct-primary);
+}
+.pct-home-modern .dataTables_paginate .page-item.active .page-link {
+    background: var(--pct-primary);
+    border-color: var(--pct-primary);
+    color: #fff;
+}
+.pct-home-modern .dataTables_paginate .page-item.disabled .page-link {
+    background: var(--pct-surface-2);
+    color: var(--pct-text-muted);
+    border-color: var(--pct-border);
+    opacity: 0.8;
 }
 </style>
 
