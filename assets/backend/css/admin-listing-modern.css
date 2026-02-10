@@ -654,3 +654,159 @@ body.pct-modern-layout #content-wrapper {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(75, 85, 99, 0.25);
 }
+
+/* ==========================================================================
+   Modern Accordion Styles (Order Details, etc.)
+   ========================================================================== */
+.pct-admin-listing .modern-accordion .accordion-section {
+    border: 1px solid var(--pct-border);
+    border-radius: var(--pct-radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+    background: var(--pct-surface);
+    box-shadow: var(--pct-shadow);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.pct-admin-listing .modern-accordion .accordion-section:hover {
+    box-shadow: 0 4px 16px rgba(30, 58, 95, 0.12);
+}
+
+.pct-admin-listing .modern-accordion .accordion-section:last-child {
+    margin-bottom: 0;
+}
+
+/* Accordion Header */
+.pct-admin-listing .modern-accordion .accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--pct-primary-soft) 0%, #f0f7ff 100%);
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--pct-primary);
+    transition: all 0.3s ease;
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger:hover {
+    background: linear-gradient(135deg, #dceaf5 0%, #e4f0fb 100%);
+    text-decoration: none;
+    color: var(--pct-primary);
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger:not(.collapsed) {
+    background: linear-gradient(135deg, var(--pct-primary) 0%, var(--pct-primary-light) 100%);
+    color: #ffffff;
+    border-bottom-color: rgba(255,255,255,0.15);
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger:not(.collapsed):hover {
+    background: linear-gradient(135deg, var(--pct-primary-light) 0%, #3d5a7f 100%);
+    color: #ffffff;
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger-title i {
+    font-size: 1.1rem;
+    opacity: 0.85;
+    width: 22px;
+    text-align: center;
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger .accordion-chevron {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+}
+
+.pct-admin-listing .modern-accordion .accordion-trigger:not(.collapsed) .accordion-chevron {
+    transform: rotate(180deg);
+    opacity: 1;
+}
+
+/* Accordion Body */
+.pct-admin-listing .modern-accordion .accordion-section .collapse,
+.pct-admin-listing .modern-accordion .accordion-section .collapsing {
+    border-top: none;
+}
+
+.pct-admin-listing .modern-accordion .accordion-body {
+    padding: 20px 24px 24px 24px;
+    background: var(--pct-surface);
+}
+
+/* Detail Rows inside Accordion */
+.pct-admin-listing .modern-accordion .detail-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 16px;
+    border-radius: var(--pct-radius-sm);
+    margin-bottom: 4px;
+    transition: background 0.2s ease;
+}
+
+.pct-admin-listing .modern-accordion .detail-row:nth-child(odd) {
+    background: var(--pct-surface-2);
+}
+
+.pct-admin-listing .modern-accordion .detail-row:hover {
+    background: var(--pct-primary-soft);
+}
+
+.pct-admin-listing .modern-accordion .detail-label {
+    flex: 0 0 220px;
+    font-weight: 600;
+    color: var(--pct-text);
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    padding-top: 1px;
+}
+
+.pct-admin-listing .modern-accordion .detail-value {
+    flex: 1;
+    color: var(--pct-text-muted);
+    font-size: 0.9rem;
+    word-break: break-word;
+}
+
+@media (max-width: 768px) {
+    .pct-admin-listing .modern-accordion .detail-row {
+        flex-direction: column;
+        gap: 4px;
+        padding: 10px 12px;
+    }
+
+    .pct-admin-listing .modern-accordion .detail-label {
+        flex: none;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--pct-text-muted);
+    }
+
+    .pct-admin-listing .modern-accordion .detail-value {
+        font-size: 0.95rem;
+        color: var(--pct-text);
+        font-weight: 500;
+    }
+
+    .pct-admin-listing .modern-accordion .accordion-trigger {
+        padding: 14px 16px;
+    }
+
+    .pct-admin-listing .modern-accordion .accordion-body {
+        padding: 16px;
+    }
+}
