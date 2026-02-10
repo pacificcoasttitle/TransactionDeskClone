@@ -4,38 +4,29 @@
 	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
 	$roleName = $roleList[$role_id];
 ?>
-<style>
-.dataTables_length {
-    width: 250px !important;
-    float: left;
-}
-</style>
-<div class="container-fluid">
-    <!-- DataTables Example -->
-    <div class="row mb-3">
-		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Legal & Vesting Documents</h1>
-		</div>
+
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-balance-scale"></i> Legal & Vesting Documents</h1>
         <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-            <div class="col-sm-6">
-                <a href="javascript:void(0);" data-export-type="csv" id="export_lv_documents" class="btn btn-success btn-icon-split float-right mr-2"> 
-                    <span class="icon text-white-50"><i class="fas fa-file-export"></i></span><span class="text">Export</span> </a>
+            <div class="action-buttons">
+                <a href="javascript:void(0);" data-export-type="csv" id="export_lv_documents" class="btn-action btn-action-success">
+                    <i class="fas fa-file-export"></i> Export
+                </a>
             </div>
         <?php endif; ?>
-	</div>
-    <div class="card shadow mb-4">
-        <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
-                <span>
-                    <i class="fas fa-table"></i>
-                </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Legal & Vesting Documents</h6> 
-            </div>
-        </div>
+    </div>
 
-        <div class="card-body">
-            <div id="cpl_document_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="cpl_document_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+    <!-- LV Documents Table Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-list-alt"></i> Legal & Vesting Documents</h2>
+        </div>
+        <div class="modern-card-body">
+            <div id="cpl_document_success_msg" class="alert-modern alert-success-modern" style="display:none;"></div>
+            <div id="cpl_document_error_msg" class="alert-modern alert-danger-modern" style="display:none;"></div>
+            
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-lv-documents-listing" width="100%" cellspacing="0">
                     <thead>
