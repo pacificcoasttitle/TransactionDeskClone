@@ -2,15 +2,6 @@
     .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
         width: -webkit-fill-available;
     }
-    #accordionEx .card-header a .fa-angle-down {
-        display: none;
-    }
-    #accordionEx .card-header a.collapsed .fa-angle-up {
-        display: none;
-    }
-    #accordionEx .card-header a.collapsed .fa-angle-down {
-        display: inline-block;
-    }
     .accordion > .card.managerInfoCard {
         overflow: initial;
     }
@@ -62,7 +53,7 @@
         <div class="modern-card-header">
             <h2><i class="fas fa-user-tie"></i> Edit Sales Rep</h2>
         </div>
-        <div class="modern-card-body">
+        <div class="modern-card-body" style="padding: 24px;">
             <?php if (!empty($success_msg)) {?>
                 <div class="alert-modern alert-success-modern"><?php echo $success_msg; ?></div>
             <?php }?>
@@ -72,19 +63,18 @@
 
             <form id="frm-add-sales-rep" method="POST" enctype="multipart/form-data">
 
-                <div class="accordion md-accordion" id="accordionEx">
+                <div class="modern-accordion" id="accordionEx">
 
-                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                        <div class="card-header" role="tab" id="salesRepInfoTab">
-                            <a data-toggle="collapse" style="color: #000000;" data-parent="#accordionEx" href="#salesRepInfo" aria-expanded="true"
-                            aria-controls="salesRepInfo">
-                                <h5 class="mb-0 text-primary">
-                                Sales Rep Info <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
-                                </h5>
-                            </a>
-                        </div>
-                        <div id="salesRepInfo" class="collapse show" role="tabpanel" aria-labelledby="salesRepInfoTab" data-parent="#accordionEx">
-                            <div class="card-body">
+                    <!-- 1. Sales Rep Info -->
+                    <div class="accordion-section">
+                        <a class="accordion-trigger" data-toggle="collapse" data-parent="#accordionEx" href="#salesRepInfo" aria-expanded="true" aria-controls="salesRepInfo">
+                            <span class="accordion-trigger-title">
+                                <i class="fas fa-id-card"></i> Sales Rep Info
+                            </span>
+                            <i class="fas fa-chevron-down accordion-chevron"></i>
+                        </a>
+                        <div id="salesRepInfo" class="collapse show" data-parent="#accordionEx">
+                            <div class="accordion-body">
                                 <div class="form-group">
                                     <label for="sales_rep_first_name" class="col-sm-4 col-form-label">First Name<span class="required"> *</span></label>
                                     <div class="col-sm-6">
@@ -135,17 +125,16 @@
                         </div>
                     </div>
 
-                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                        <div class="card-header" role="tab" id="productionTab">
-                            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#production"
-                            aria-controls="production">
-                                <h5 class="mb-0 text-primary">
-                                Production <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
-                                </h5>
-                            </a>
-                        </div>
-                        <div id="production" class="collapse" role="tabpanel" aria-labelledby="productionTab" data-parent="#accordionEx">
-                            <div class="card-body">
+                    <!-- 2. Production -->
+                    <div class="accordion-section">
+                        <a class="accordion-trigger collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#production" aria-expanded="false" aria-controls="production">
+                            <span class="accordion-trigger-title">
+                                <i class="fas fa-chart-bar"></i> Production
+                            </span>
+                            <i class="fas fa-chevron-down accordion-chevron"></i>
+                        </a>
+                        <div id="production" class="collapse" data-parent="#accordionEx">
+                            <div class="accordion-body">
                                 <div class="form-group">
                                     <label for="sales_rep_no_of_open_orders" class="col-sm-4 col-form-label">Number of Open Orders<span class="required"></span></label>
                                     <div class="col-sm-6">
@@ -179,17 +168,16 @@
                         </div>
                     </div>
 
-                    <div class="card mx-auto mt-5 mb-5 managerInfoCard" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                        <div class="card-header" role="tab" id="managerTab">
-                            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#managerInfo"
-                            aria-controls="managerInfo">
-                                <h5 class="mb-0 text-primary">
-                                Manager <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
-                                </h5>
-                            </a>
-                        </div>
-                        <div id="managerInfo" class="collapse" role="tabpanel" aria-labelledby="managerTab" data-parent="#accordionEx">
-                            <div class="card-body">
+                    <!-- 3. Manager -->
+                    <div class="accordion-section">
+                        <a class="accordion-trigger collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#managerInfo" aria-expanded="false" aria-controls="managerInfo">
+                            <span class="accordion-trigger-title">
+                                <i class="fas fa-user-shield"></i> Manager
+                            </span>
+                            <i class="fas fa-chevron-down accordion-chevron"></i>
+                        </a>
+                        <div id="managerInfo" class="collapse" data-parent="#accordionEx">
+                            <div class="accordion-body">
                                 <div class="form-group">
                                     <label for="language" class="col-sm-4 col-form-label">Sales Manager</label>
                                     <div class="col-sm-1">
@@ -223,17 +211,16 @@
                         </div>
                     </div>
 
-                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                        <div class="card-header" role="tab" id="imagesTab">
-                            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#imagesInfo"
-                            aria-controls="imagesInfo">
-                                <h5 class="mb-0 text-primary">
-                                Images <i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
-                                </h5>
-                            </a>
-                        </div>
-                        <div id="imagesInfo" class="collapse" role="tabpanel" aria-labelledby="imagesTab" data-parent="#accordionEx">
-                            <div class="card-body">
+                    <!-- 4. Images -->
+                    <div class="accordion-section">
+                        <a class="accordion-trigger collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#imagesInfo" aria-expanded="false" aria-controls="imagesInfo">
+                            <span class="accordion-trigger-title">
+                                <i class="fas fa-images"></i> Images
+                            </span>
+                            <i class="fas fa-chevron-down accordion-chevron"></i>
+                        </a>
+                        <div id="imagesInfo" class="collapse" data-parent="#accordionEx">
+                            <div class="accordion-body">
                                 <div class="form-group">
                                     <label for="sales_rep_profile_img" class="col-sm-4 col-form-label">Profile Img For Borrower Email</label>
                                     <div class="col-sm-6">
@@ -298,17 +285,16 @@ if (isset($imgThank) && !empty($imgThank)) {
                         </div>
                     </div>
 
-                    <div class="card mx-auto mt-5 mb-5" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-                        <div class="card-header" role="tab" id="notificationsTab">
-                            <a data-toggle="collapse" class="collapsed" style="color: #000000;" data-parent="#accordionEx" href="#notificationsInfo"
-                            aria-controls="notificationsInfo">
-                                <h5 class="mb-0 text-primary">
-                                Notifications<i class="fas fa-angle-down pull-right"></i><i class="fas fa-angle-up pull-right"></i>
-                                </h5>
-                            </a>
-                        </div>
-                        <div id="notificationsInfo" class="collapse" role="tabpanel" aria-labelledby="notificationsTab" data-parent="#accordionEx">
-                            <div class="card-body">
+                    <!-- 5. Notifications -->
+                    <div class="accordion-section">
+                        <a class="accordion-trigger collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#notificationsInfo" aria-expanded="false" aria-controls="notificationsInfo">
+                            <span class="accordion-trigger-title">
+                                <i class="fas fa-bell"></i> Notifications
+                            </span>
+                            <i class="fas fa-chevron-down accordion-chevron"></i>
+                        </a>
+                        <div id="notificationsInfo" class="collapse" data-parent="#accordionEx">
+                            <div class="accordion-body">
                                 <div class="form-group">
                                     <label for="is_mail_notification" class="col-sm-4 col-form-label">&nbsp;</label>
                                     <div class="col-sm-6">
@@ -329,7 +315,7 @@ if (isset($imgThank) && !empty($imgThank)) {
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 20px;">
                         <div class="col-sm-6">
                             <button type="submit" id="edit-sales-rep" name="edit-sales-rep" class="btn-action btn-action-primary">
                                 <i class="fas fa-save"></i> Update
