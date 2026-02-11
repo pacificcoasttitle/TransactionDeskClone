@@ -8777,7 +8777,7 @@ class Cron extends MX_Controller
         // die;
         
         // foreach ($dateIntervalQueryParams as $key => $range) {
-            // $startDate = date('2025-10-31');
+            // $startDate = date('2026-01-31');
             $startDate = date('Y-m-d');
             $req['userPostedDate'] = $startDate;
 
