@@ -8759,9 +8759,13 @@ class Cron extends MX_Controller
 
         $escrowOfficerList = $this->common_lib->getEscrowOfficerLookupDetails();
         $escrowOfficerList = array_column($escrowOfficerList, 'id', 'officer_name');
+
+        $titleOfficerList = $this->common_lib->getTitleOfficerLookupDetails();
+        $titleOfficerList = array_column($titleOfficerList, 'id', 'officer_name');
         // echo "<pre>";
         // print_r($orderTypeList);
         // print_r($escrowOfficerList);
+        // print_r($titleOfficerList);
         // die;
         // $startDate = new DateTime('2025-10-31');
         // $endDate   = new DateTime('2025-10-31');
@@ -8813,6 +8817,7 @@ class Cron extends MX_Controller
                         $orderType = trim($list['[OrderType]']);
                         $escrowClosedDate = $list['[EscrowClosedDate]'];
                         $escrowOfficerName = $list['[EscrowOfficerName]'];
+                        $titleOfficerName = $list['[TitleOfficerName]'];
                         if (array_key_exists($orderNumber, $updateData)) { 
                             $updateData[$orderNumber]['premium'] += $amount;
                         } else {
@@ -8834,6 +8839,9 @@ class Cron extends MX_Controller
 
                             if (!empty($escrowOfficerName)) {
                                 $updateData[$orderNumber]['escrow_officer_id'] = $escrowOfficerList[$escrowOfficerName] ?? null;
+                            }
+                            if (!empty($titleOfficerName) && isset($titleOfficerList[$titleOfficerName])) {
+                                $updateData[$orderNumber]['title_officer_id'] = $titleOfficerList[$titleOfficerName] ?? null;
                             }
                         }
                     }
@@ -8873,6 +8881,9 @@ class Cron extends MX_Controller
                             }
                             if (!empty($value['transaction_type'])) {
                                 $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
+                            }
+                            if (!empty($value['title_officer_id'])) {
+                                $updateTransactionDetails['title_officer_id'] = $value['title_officer_id'];
                             }
                             if (!empty($updateTransactionDetails)) {
                                 $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
