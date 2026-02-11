@@ -8841,7 +8841,7 @@ class Cron extends MX_Controller
                                 $updateData[$orderNumber]['escrow_officer_id'] = $escrowOfficerList[$escrowOfficerName] ?? null;
                             }
                             if (!empty($titleOfficerName) && isset($titleOfficerList[$titleOfficerName])) {
-                                $updateData[$orderNumber]['title_officer_id'] = $titleOfficerList[$titleOfficerName] ?? null;
+                                $updateData[$orderNumber]['title_officer'] = $titleOfficerList[$titleOfficerName] ?? null;
                             }
                         }
                     }
@@ -8882,8 +8882,8 @@ class Cron extends MX_Controller
                             if (!empty($value['transaction_type'])) {
                                 $updateTransactionDetails['transaction_type'] = $value['transaction_type'];
                             }
-                            if (!empty($value['title_officer_id'])) {
-                                $updateTransactionDetails['title_officer_id'] = $value['title_officer_id'];
+                            if (!empty($value['title_officer'])) {
+                                $updateTransactionDetails['title_officer'] = $value['title_officer'];
                             }
                             if (!empty($updateTransactionDetails)) {
                                 $this->db->update('transaction_details', $updateTransactionDetails, array('id' => $orderDetails['transaction_id']));
