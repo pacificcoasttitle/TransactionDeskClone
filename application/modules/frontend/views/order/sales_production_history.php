@@ -33,7 +33,9 @@
 								</select>
 							</label>
 						</div>
-					<?php } ?>
+					<?php } else { ?>
+						<input type="hidden" name="sales_user_production_filter" id="sales_user_production_filter" value="<?php echo $sales_user_id;?>" />
+					<?php }?>
 				</div>
 				<div class="card shadow mb-4">
 					<div class="card-body">
