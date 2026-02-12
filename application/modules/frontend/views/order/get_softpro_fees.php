@@ -1,6 +1,6 @@
 <style>
 /* Modernized styles - Invoice/Estimate Theme */
-.pct-page-modern {
+:root {
     --pct-primary: #1e5f8a;
     --pct-primary-dark: #164e73;
     --pct-primary-light: #e8f2f8;
@@ -12,7 +12,9 @@
     --pct-radius: 12px;
     --pct-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --pct-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    
+}
+
+.pct-page-modern {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--pct-bg);
     min-height: 100vh;
@@ -25,31 +27,34 @@
     padding: 0 1rem;
 }
 
-/* Card / Document Container */
-.pct-page-modern .invoice-card {
+/* Card / Document Container - Scoped to class for portability to PDF */
+.invoice-card {
     background: var(--pct-surface);
     border-radius: var(--pct-radius);
     box-shadow: var(--pct-shadow);
     overflow: hidden;
     position: relative;
+    /* Ensure styles applied when isolated */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--pct-text);
 }
 
 /* Header Section */
-.pct-page-modern .invoice-header {
+.invoice-card .invoice-header {
     background: #fff;
     padding: 2.5rem;
     border-bottom: 2px solid var(--pct-primary-light);
     position: relative;
 }
 
-.pct-page-modern .brand-section {
+.invoice-card .brand-section {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 2rem;
 }
 
-.pct-page-modern .brand-logo {
+.invoice-card .brand-logo {
     font-size: 1.75rem;
     font-weight: 800;
     color: var(--pct-primary);
@@ -60,11 +65,11 @@
     gap: 0.5rem;
 }
 
-.pct-page-modern .document-title {
+.invoice-card .document-title {
     text-align: right;
 }
 
-.pct-page-modern .doc-label {
+.invoice-card .doc-label {
     font-size: 0.875rem;
     text-transform: uppercase;
     color: var(--pct-text-muted);
@@ -73,14 +78,14 @@
     margin-bottom: 0.25rem;
 }
 
-.pct-page-modern .doc-id {
+.invoice-card .doc-id {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--pct-text);
 }
 
 /* Details Grid */
-.pct-page-modern .details-grid {
+.invoice-card .details-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
@@ -88,13 +93,13 @@
     background: var(--pct-surface);
 }
 
-.pct-page-modern .detail-item {
+.invoice-card .detail-item {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
 }
 
-.pct-page-modern .detail-icon {
+.invoice-card .detail-icon {
     width: 42px;
     height: 42px;
     border-radius: 10px;
@@ -107,11 +112,11 @@
     flex-shrink: 0;
 }
 
-.pct-page-modern .detail-content {
+.invoice-card .detail-content {
     flex: 1;
 }
 
-.pct-page-modern .detail-label {
+.invoice-card .detail-label {
     font-size: 0.75rem;
     text-transform: uppercase;
     color: var(--pct-text-muted);
@@ -119,7 +124,7 @@
     margin-bottom: 0.25rem;
 }
 
-.pct-page-modern .detail-value {
+.invoice-card .detail-value {
     font-size: 1rem;
     font-weight: 600;
     color: var(--pct-text);
@@ -127,20 +132,21 @@
 }
 
 /* Fees Table */
-.pct-page-modern .table-container {
+.invoice-card .table-container {
     padding: 0 2.5rem 2.5rem;
+    width: 100%; 
 }
 
-.pct-page-modern .table-fees {
+.invoice-card .table-fees {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
 }
 
-.pct-page-modern .table-fees th {
-    background: var(--pct-surface);
-    color: var(--pct-text-muted);
-    font-weight: 600;
+.invoice-card .table-fees th {
+    background: var(--pct-primary-light); /* Distinct background */
+    color: var(--pct-primary-dark); /* Darker text for contrast */
+    font-weight: 700;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -149,9 +155,9 @@
     text-align: left;
 }
 
-.pct-page-modern .table-fees th.text-right { text-align: right; }
+.invoice-card .table-fees th.text-right { text-align: right; }
 
-.pct-page-modern .table-fees td {
+.invoice-card .table-fees td {
     padding: 1.25rem 1.5rem;
     color: var(--pct-text);
     font-size: 0.95rem;
@@ -159,15 +165,15 @@
     transition: background-color 0.2s;
 }
 
-.pct-page-modern .table-fees tr:hover td {
+.invoice-card .table-fees tr:hover td {
     background-color: var(--pct-primary-light);
 }
 
-.pct-page-modern .table-fees tr:last-child td {
+.invoice-card .table-fees tr:last-child td {
     border-bottom: none;
 }
 
-.pct-page-modern .total-section {
+.invoice-card .total-section {
     background: #f8fafc;
     padding: 1.5rem 2.5rem;
     display: flex;
@@ -176,20 +182,24 @@
     border-top: 1px solid var(--pct-border);
 }
 
-.pct-page-modern .total-label {
+.invoice-card .total-label {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--pct-text-muted);
     margin-right: 2rem;
 }
 
-.pct-page-modern .total-amount {
+.invoice-card .total-amount {
     font-size: 1.75rem;
     font-weight: 800;
     color: var(--pct-primary);
 }
 
-/* Actions */
+/* Actions - Keep these scoped to page modern or generic outside of invoice-card if possible, 
+   but they are inside .invoice-card in HTML structure for error state. 
+   The main invoice card #artcle_main does NOT contain actions, so we are good. 
+*/
+
 .pct-page-modern .action-bar {
     margin-top: 2rem;
     display: flex;
@@ -248,9 +258,10 @@
 }
 
 @media print {
+    body { background: white; }
     .pct-page-modern { padding: 0; background: white; }
     .pct-page-modern .action-bar { display: none; }
-    .pct-page-modern .invoice-card { box-shadow: none; border: none; }
+    .invoice-card { box-shadow: none !important; border: 1px solid #ddd !important; }
 }
 </style>
 
