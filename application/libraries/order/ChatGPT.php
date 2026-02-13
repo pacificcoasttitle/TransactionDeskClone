@@ -19,6 +19,11 @@ class Chatgpt
 
     public function make_request($prompt, $data = array())
     {
+        return $this->make_request_with_retry($prompt, $data);
+    }
+
+    public function make_request_with_retry($prompt, $data = array(), $maxRetries = 3)
+    {
         $postData = [
             'model' => 'gpt-4o-mini',
             'messages' => [
@@ -28,19 +33,55 @@ class Chatgpt
         ];
         $apiKey = env('CHAT_GPT_API_KEY');
         $chatGPTUrl = env('CHAT_GPT_URL');
-        $ch = curl_init($chatGPTUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $apiKey
-        ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        
+        $attempt = 0;
+        do {
+            $attempt++;
+            $ch = curl_init($chatGPTUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $apiKey
+            ]);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
 
-        return $response;
+            if ($httpCode === 200 && $response) {
+                return $response;
+            }
+
+            // Exponential backoff
+            if ($attempt < $maxRetries) {
+                sleep(pow(2, $attempt)); 
+            }
+
+        } while ($attempt < $maxRetries);
+
+        return $response; // Return last response even if failed
+    }
+
+    private function safe_json_decode($json_str) 
+    {
+        // Remove markdown code blocks if present
+        if (preg_match('/```json\s*([\s\S]*?)\s*```/', $json_str, $matches)) {
+            $json_str = $matches[1];
+        } elseif (preg_match('/```\s*([\s\S]*?)\s*```/', $json_str, $matches)) {
+            $json_str = $matches[1];
+        }
+        
+        $data = json_decode($json_str, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return null;
+        }
+        
+        return $data;
     }
 
     public function classify($firstPageText)
@@ -101,17 +142,20 @@ class Chatgpt
             return 'unknown';
         }
 
+        // Decode to array to truncate text if needed
+        $pages = json_decode($pageText, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($pages)) {
+            foreach ($pages as &$page) {
+                if (isset($page['text']) && strlen($page['text']) > 3000) {
+                    $page['text'] = substr($page['text'], 0, 1500) . "\n...[TRUNCATED]...\n" . substr($page['text'], -1500);
+                }
+            }
+            $pageText = json_encode($pages);
+        }
+
         $payload = $this->buildPromptForTitleAndRanges($pageText);
         
-        // $payload = $this->buildPromptForTitleAndRanges($pageText);
-        // print_r($payload);die;
-        return $response = $this->callOpenAI($payload);
-
-        // if ($response && isset($response['doc_type'])) {
-        //     return $response['doc_type'];
-        // }
-
-        // return $this->regexFallback($pageText);
+        return $this->callOpenAI($payload);
     }
 
 //     private function prompt($text)
@@ -532,31 +576,55 @@ PROMPT
 
     private function callOpenAI($payload)
     {
-        if (!getenv('USE_OPENAI')) return null;
+        // if (!getenv('USE_OPENAI')) return null;
 
-        $ch = curl_init(getenv('CHAT_GPT_URL'));
+        $chatGPTUrl = getenv('CHAT_GPT_URL');
+        $apiKey = $this->apiKey;
+        $maxRetries = 3;
+        $attempt = 0;
+        $response = null;
 
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->apiKey
-            ],
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_TIMEOUT => 60
-        ]);
+        do {
+            $attempt++;
+            $ch = curl_init($chatGPTUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $apiKey
+                ],
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_TIMEOUT => 60
+            ]);
 
-        $result = curl_exec($ch);
-        // print_r('<br>------------------ChatGPT Response------------------<br>', curl_error($ch));
-        // curl_close($ch);
-        // print_r('ChatGPT Result: ' . $result);die;
+            $result = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($httpCode === 200 && $result) {
+                // Try to decode
+                $json = json_decode($result, true);
+                if (json_last_error() === JSON_ERROR_NONE && isset($json['choices'][0]['message']['content'])) {
+                    $content = $json['choices'][0]['message']['content'];
+                    // Use safe_json_decode to handle markdown blocks
+                    $decodedContent = $this->safe_json_decode($content);
+                    // Just return the full JSON response as that's what callers expect
+                    return $json;
+                }
+            }
+
+            // Exponential backoff
+            if ($attempt < $maxRetries) {
+                sleep(pow(2, $attempt)); 
+            }
+
+        } while ($attempt < $maxRetries);
+
         if (!$result) return null;
 
-        return $json = json_decode($result, true);
-        $content = $json['choices'][0]['message']['content'] ?? null;
-
-        return json_decode($content, true);
+        return json_decode($result, true);
     }
 
     /**

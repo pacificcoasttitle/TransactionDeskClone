@@ -443,14 +443,18 @@ class FileUpload extends MX_Controller
             // echo '-------------Analysis Results------------------';
             // Analyze document content
             $analysisResults = $this->analyzeDocumentContent($ocrResults);
-            // Update progress
-            $this->session->set_flashdata('progress', 'Document analysis completed. Updating order information...');
-            // print_r($analysisResults);
-            // Update order information
-            $this->updateOrderInformation($ocrResults, $analysisResults, $documentData['orderNumber']);
             
             // Update progress
-            $this->session->set_flashdata('progress', 'Order information updated. Splitting documents...');
+            $this->session->set_flashdata('progress', 'Document analysis completed. Updating order information...');
+            
+            // Update order information - Try/Catch to ensure splitting happens even if this fails
+            try {
+                $this->updateOrderInformation($ocrResults, $analysisResults, $documentData['orderNumber']);
+                $this->session->set_flashdata('progress', 'Order information updated. Splitting documents...');
+            } catch (\Throwable $e) {
+                // Log error but continue
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_update_order', 'lender_parse_update_order', '', 'Failed to update order info, continuing to split: ' . $e->getMessage(), 0, 0);
+            }
             
             // Split and upload documents
             $fileList = $this->processDocumentSplitting($documentData, $analysisResults);
@@ -494,27 +498,47 @@ class FileUpload extends MX_Controller
     private function analyzeDocumentContent($ocrResults)
     {
         try {
-            // Analyze first page
-            // $firstPageAnalysis = $this->chatgpt->classify($ocrResults['firstPageText']);
-            // $firstPageContent = json_decode($firstPageAnalysis['choices'][0]['message']['content'], true);
-    
+            // Format for OpenAI
+            $formattedPages = [];
+            foreach ($ocrResults as $pageNo => $text) {
+                $formattedPages[] = [
+                    'actual_pdf_page_number' => $pageNo,
+                    'text' => $text
+                ];
+            }
+
             // Analyze all pages
-            $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($ocrResults));
+            $documentPageRange = $this->chatgpt->classifyAllPage(json_encode($formattedPages));
             
             $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', 'all_page_analyze', json_encode($documentPageRange), 0, 0);
-            $documentPageRange = preg_replace('/```json|```/', '', $documentPageRange['choices'][0]['message']['content']);
-            $pageRange = json_decode($documentPageRange, true);
+            
+            // Check if response is valid
+            if (!isset($documentPageRange['choices'][0]['message']['content'])) {
+                throw new Exception('Invalid response from OpenAI.');
+            }
+
+            $content = $documentPageRange['choices'][0]['message']['content'];
+            
+            // detailed log
+            // $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai_content', 'content', $content, [], 0, 0);
+
+            // Clean up markdown if present (ChatGPT library might do this but let's be safe)
+            $content = preg_replace('/```json\s*([\s\S]*?)\s*```/', '$1', $content);
+            $content = preg_replace('/```\s*([\s\S]*?)\s*```/', '$1', $content);
+
+            $pageRange = json_decode($content, true);
+            
             if (json_last_error() !== JSON_ERROR_NONE) {
-                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', $pdfPath, 'Failed to decode OpenAI response: ' . json_last_error_msg(), 0, 0);
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', '', 'Failed to decode OpenAI response: ' . json_last_error_msg(), 0, 0);
                 throw new Exception('Failed to decode OpenAI response: ' . json_last_error_msg());
             }
+
             return [
-                // 'firstPageContent' => $firstPageContent,
                 'pageRange' => $pageRange
             ];
         } catch (\Throwable $e) {
             $this->cleanupTemporaryFiles($this->documentFilePath, true);
-            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', $pdfPath, 'Document analysis failed: ' . $e->getMessage(), 0, 0);
+            $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_open_ai', 'lender_parse_open_ai', '', 'Document analysis failed: ' . $e->getMessage(), 0, 0);
             throw new Exception('Failed to analyze document content: ' . $e->getMessage());
         }
     }
@@ -523,45 +547,89 @@ class FileUpload extends MX_Controller
     {
         try {
             $lenderDocRange = $this->getPageRangeByDocType($analysisResults['pageRange'], 'lender_instructions');
-            // echo '-------------Lender Doc Range------------------';
-            // print_r($lenderDocRange);
+            
             if (!$lenderDocRange) {
-                $this->cleanupTemporaryFiles($this->documentFilePath, true);
+                // Instead of throwing exception immediately, we can check if we should proceed or just log warning
+                // But for now, let's keep it strict but cleaner
                 $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_lender_page_range', 'lender_parse_lender_page_range', json_encode($analysisResults['pageRange']), 'Failed to extract lender document.', 0, 0);
-                throw new Exception('Failed to extract lender document.');
+                throw new Exception('Lender instructions not found in the document.');
             }
+            
             $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_lender_page_range', 'lender_parse_lender_page_range', json_encode($analysisResults['pageRange']), json_encode($lenderDocRange), 0, 0);
-            // print_r($ocrResults);
-            // echo "<br>";
-    
-            // print_r($lenderDocRange['start_page']);
-            // echo "<br>";
-            // print_r($lenderDocRange['end_page']);
-            // echo "<br>";
-            $lenderPages = array_slice($ocrResults, $lenderDocRange['start_page'], $lenderDocRange['end_page']);
-            // echo '-------------Lender Pages------------------';
-            // print_r($lenderPages);
-    
+
+            // Fix for array_slice: start_page is 1-based index from PDF, array_slice needs 0-based offset
+            // Length is (end - start + 1)
+            $offset = max(0, $lenderDocRange['start_page'] - 1);
+            $length = ($lenderDocRange['end_page'] - $lenderDocRange['start_page']) + 1;
+            
+            // Re-index ocrResults to be safe or just slice if it's 0-indexed list?
+            // OcrService returns [PageNo => Text], keys are 1, 2, 3...
+            // array_slice preserves keys? No, unless 4th arg is true.
+            // But we just want the values (text pages).
+            // array_values first to ensure it's 0-indexed list matching page 1=index 0
+            $ocrValues = array_values($ocrResults);
+            $lenderPages = array_slice($ocrValues, $offset, $length);
+            
             $logId = $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', null, 0, 0);
-            $lenderDetails = $this->chatgpt->getLenderDetails(json_encode($lenderPages));
-            $lenderDetails = json_decode($lenderDetails['choices'][0]['message']['content'], true);
+            
+            // Format for OpenAI
+            $formattedLenderPages = [];
+            foreach ($lenderPages as $index => $text) {
+                $formattedLenderPages[] = [
+                    'page_number' => $lenderDocRange['start_page'] + $index,
+                    'text' => $text
+                ];
+            }
+
+            $lenderDetailsResp = $this->chatgpt->getLenderDetails(json_encode($formattedLenderPages));
+            
+            if (!isset($lenderDetailsResp['choices'][0]['message']['content'])) {
+                 throw new Exception('Invalid response for Lender Details.');
+            }
+            
+            $content = $lenderDetailsResp['choices'][0]['message']['content'];
+             // Clean up markdown
+            $content = preg_replace('/```json\s*([\s\S]*?)\s*```/', '$1', $content);
+            $content = preg_replace('/```\s*([\s\S]*?)\s*```/', '$1', $content);
+            
+            $lenderDetails = json_decode($content, true);
+            
             if (json_last_error() !== JSON_ERROR_NONE) {
                 $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Failed to decode lender details: ' . json_last_error_msg(), 0, $logId);
                 throw new Exception('Failed to decode lender details: ' . json_last_error_msg());
             }
+
             $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', json_encode($lenderDetails), 0, $logId);
             
             if (!isset($lenderDetails['lender_package'])) {
-                $this->cleanupTemporaryFiles($this->documentFilePath, true);
-                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Failed to extract lender details', 0, $logId);
-                throw new Exception('Failed to extract lender details.');
+                // If structure is different, try to adapt or fail
+                 // Sometimes it might return just the object without key?
+                 if (isset($lenderDetails['lender_name'])) {
+                     $lenderDetails = ['lender_package' => $lenderDetails];
+                 } else {
+                    $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Failed to extract lender details structure', 0, $logId);
+                    throw new Exception('Failed to extract lender details: Invalid structure.');
+                 }
             }
     
             $orderUpdate = $this->prepareOrderUpdateData($lenderDetails['lender_package'], $orderNumber);
             $this->syncOrderUpdate($orderUpdate);
         } catch (\Throwable $th) {
-            $this->cleanupTemporaryFiles($this->documentFilePath, true);
+            // Log but don't strictly fail the whole process if just lender update fails? 
+            // The requirement says "maximum successful output". 
+            // Maybe we should continue to split documents even if lender update fails?
+            // "Split the pdf in all different document type... upload all"
+            // So YES, we should PROBABLY catch and continue, OR allow main process to catch.
+            // But if we throw here, processDocumentContent catches and aborts splitting.
+            // Let's NOT catch here, but ensure processDocumentContent handles it? 
+            // Actually, if this fails, we probably still want to split documents.
+            // So we should catch here, log error, and return false/null so caller can proceed.
+            
             $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_openai_lender_details', 'lender_parse_openai_lender_details', 'lender_document_pages', 'Order information update failed: ' . $th->getMessage(), 0, 0);
+            // We throw up specifically so we can decide in caller. 
+            // BUT for "maximum success", we should probably separate these concerns.
+            // For now, I will rethrow to maintain existing flow but with better logging.
+            // To truly fix "maximum success", I should refactor processDocumentContent to independent steps.
             throw new Exception('Failed to update order information: ' . $th->getMessage());
         }
     }
@@ -655,19 +723,30 @@ class FileUpload extends MX_Controller
         $pdfPath = FCPATH . $documentData['filePath'];
 
         foreach ($analysisResults['pageRange'] as $doc) {
-            if ($this->shouldProcessDocument($doc)) {
-                $docName = $this->generateDocumentName($documentData['orderNumber'], $doc['doc_type']);
-                $outputPath = FCPATH . $this->upload_path . $docName;
+            try {
+                if ($this->shouldProcessDocument($doc)) {
+                    $docName = $this->generateDocumentName($documentData['orderNumber'], $doc['doc_type']);
+                    $outputPath = FCPATH . $this->upload_path . $docName;
 
-                $this->pdfsplitter->splitByRange($pdfPath, $doc['start_page'], $doc['end_page'], $outputPath);
-                $this->order->uploadDocumentOnAwsS3($docName, 'lender-parsing-docs');
+                    $this->pdfsplitter->splitByRange($pdfPath, $doc['start_page'], $doc['end_page'], $outputPath);
+                    
+                    // Verify file exists before uploading
+                    if (!file_exists($outputPath)) {
+                        throw new Exception("Split file not created: $outputPath");
+                    }
 
-                $fileList[] = [
-                    "FolderName" => 'lender-parsing-docs',
-                    "FileURL" => env('AWS_PATH') . "lender-parsing-docs/" . $docName
-                ];
+                    $this->order->uploadDocumentOnAwsS3($docName, 'lender-parsing-docs');
 
-                $this->saveDocumentRecord($documentData['orderNumber'], $doc['doc_type'], $docName);
+                    $fileList[] = [
+                        "FolderName" => 'lender-parsing-docs',
+                        "FileURL" => env('AWS_PATH') . "lender-parsing-docs/" . $docName
+                    ];
+
+                    $this->saveDocumentRecord($documentData['orderNumber'], $doc['doc_type'], $docName);
+                }
+            } catch (\Throwable $e) {
+                // Log and continue
+                $this->apiLogs->syncLogs($this->user['id'], 'softpro', 'lender_parse_split_doc', 'lender_parse_split_doc', json_encode($doc), 'Failed to split/upload document: ' . $e->getMessage(), 0, 0);
             }
         }
 
@@ -686,7 +765,7 @@ class FileUpload extends MX_Controller
 
     private function generateDocumentName($orderNumber, $docType)
     {
-        return $orderNumber . '_' . time() . '_' . $docType . '.pdf';
+        return $orderNumber . '_' . uniqid() . '_' . $docType . '.pdf';
     }
 
     private function syncWithSoftPro($documentData, $fileList)
