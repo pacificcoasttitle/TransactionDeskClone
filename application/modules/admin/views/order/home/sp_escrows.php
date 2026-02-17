@@ -1,57 +1,31 @@
 <?php 
     $userdata = $this->session->userdata('admin');
-	$roleList = $this->common_lib->getRoleList();
-	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
-	$roleName = $roleList[$role_id];
+    $roleList = $this->common_lib->getRoleList();
+    $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+    $roleName = $roleList[$role_id];
 ?>
-<style>
-.dataTables_length {
-    width: 250px !important;
-    float: left;
-}
-</style>
-<div class="container-fluid">
-    <div class="row mb-3">
-		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Escrow Users Listing</h1>
-		</div>
-		<div class="col-sm-6">
-            <a href="javascript:void" onclick="syncSoftProOpenContacts('escrow');"  class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-refresh"></i>
-                </span>
-                <span class="text"> Sync Escrow Contacts </span> 
+
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-file-contract"></i> Escrow Users</h1>
+        
+        <div class="action-buttons">
+            <a href="javascript:void(0);" onclick="syncSoftProOpenContacts('escrow');" class="btn-action btn-action-success">
+                <i class="fas fa-sync-alt"></i> Sync Escrow Contacts
             </a>
-            <!-- <a href="<?php echo base_url()?>order/admin/import"  class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-file-import"></i>
-                </span>
-                <span class="text"> Import </span> 
-            </a> -->
-            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-                <!-- <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
-                    <span class="icon text-white-50">
-                        <i class="fas fa-file-export"></i>
-                    </span>
-                    <span class="text"> Export </span> 
-                </a> -->
-            <?php endif; ?>
-		</div>
-	</div>
-    <!-- DataTables Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
-                <span>
-                    <i class="fas fa-users"></i>
-                </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Escrows</h6> 
-            </div>
         </div>
-                
-        <div class="card-body">
-            <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+    </div>
+
+    <!-- Escrows Table Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-users"></i> Escrows Listing</h2>
+        </div>
+        <div class="modern-card-body">
+            <div id="customer_success_msg" class="alert-modern alert-success-modern" style="display:none;"></div>
+            <div id="customer_error_msg" class="alert-modern alert-danger-modern" style="display:none;"></div>
+            
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-sp-escrow-listing" width="100%" cellspacing="0">
                     <thead>
@@ -73,4 +47,4 @@
             </div>
         </div>
     </div>
-</div><!-- /.container-fluid -->
+</div>

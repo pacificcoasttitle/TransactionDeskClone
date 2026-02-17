@@ -191,7 +191,7 @@ if (in_array($roleName, ['Admin', 'Super Admin', 'CS Admin'])) {
 ?>
 
 <?php if ($userdata['email_address'] == 'upwork@pct.com') {?>
-	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion pct-sidebar-modern" id="accordionSidebar">
 
 		<!-- Sidebar - Brand -->
 		<a class="sidebar-brand d-flex align-items-center justify-content-center"
@@ -221,7 +221,7 @@ if (in_array($roleName, ['Admin', 'Super Admin', 'CS Admin'])) {
 
 <?php } else {?>
 	<!-- Sidebar -->
-	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion pct-sidebar-modern" id="accordionSidebar">
 
 		<!-- Sidebar - Brand -->
 		<a class="sidebar-brand d-flex align-items-center justify-content-center"

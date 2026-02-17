@@ -1303,7 +1303,7 @@ $(document).ready(function () {
                     text: 'Export',
                     title: '',
                     exportOptions: {
-                        columns: [2, 4, 5],
+                        columns: [0, 1, 2, 3, 4],
                         format: {
                             body: function (data, row, column, node) {
                                 return (column === 2 || column === 4 || column === 5) ?
@@ -1587,7 +1587,7 @@ $(document).ready(function () {
         } else {
             sales_rep_status_checked = '';
         }
-        $("div.FilterOrderListing").html('<label> Show Hidden: <input style="width:20px;height:20px;" ' + sales_rep_status_checked + ' type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>');
+        $("div.FilterOrderListing").html('<label> Show hidden: <input style="width:20px;height:20px;" ' + sales_rep_status_checked + ' type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>');
     }
 
     /* Mortgage Brokers listing table */
@@ -1804,7 +1804,7 @@ $(document).ready(function () {
         } else {
             sales_rep_status_checked = '';
         }
-        $("div.FilterOrderListing").html('<label> Show Hidden: <input style="width:20px;height:20px;" ' + sales_rep_status_checked + ' type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>');
+        $("div.FilterOrderListing").html('<label> Show hidden: <input style="width:20px;height:20px;" ' + sales_rep_status_checked + ' type="checkbox" id="enable_sales_rep" name="enable_sales_rep"></label>');
     }
 
     $("#enable_sales_rep").on("change", function () {
@@ -2473,7 +2473,6 @@ $(document).ready(function () {
             });
             $("div.FilterOrderListing").html('<label> Sales Rep: <select style="width:auto;" name="FilterOrderListing" id="FilterOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label>');
         }
-
         if (master_users) {
             var obj = jQuery.parseJSON(master_users);
             var options = '';
@@ -2481,7 +2480,7 @@ $(document).ready(function () {
                 options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
             });
 
-            $("div.FilterOrderListing").append('<div class="" style="display:inline;padding-right: 0;text-align: right;"><label> Created By: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"' + options + '"</select></label></div>');
+            $("div.FilterOrderListing").append('<div class="" style="display:inline;padding-right: 0;text-align: right;"><label> Created by: <select name="FilterCreatedBy" id="FilterCreatedBy" class="custom-select custom-select-sm form-control form-control-sm" style="width:auto;"> <option value="" > All </option>"' + options + '"</select></label></div>');
         }
 
         if (product_type) {
@@ -2564,7 +2563,7 @@ $(document).ready(function () {
             $.each(obj, function (key, value) {
                 options += '<option value="' + value.id + '">' + value.first_name + ' ' + value.last_name + '</option>'
             });
-            $("div.FilterOrderListing").html('<div class="col-sm-6" style="padding-left: 0;"><label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label></div>');
+            $("div.FilterOrderListing").html('<div class="col-sm-12" style="padding-left: 0;"><label> Sales Rep: <select style="width:auto;" name="FilterLpOrderListing" id="FilterLpOrderListing" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label></div>');
         }
 
         // if (lp_master_users) {
@@ -2574,7 +2573,7 @@ $(document).ready(function () {
         //   options += '<option value="'+value.id+'">'+value.first_name+' '+value.last_name+'</option>'
         // });
 
-        $("div.FilterOrderListing").append('<div class="col-sm-3" style="display:inline"><label> Start Date: <input type="date" name="FilterLpStartDate" id="FilterLpStartDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div><div class="col-sm-3" style="display:inline; text-align: right;padding-right: 0;"><label> End Date: <input type="date" name="FilterLpEndDate" id="FilterLpEndDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div>');
+        $("div.FilterOrderListing").append('<div class="col-sm-3" style="padding-left: 0;"><label> Start Date: <input type="date" name="FilterLpStartDate" id="FilterLpStartDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div><div class="col-sm-3" style="display:inline; text-align: right;padding-right: 0;"><label> End Date: <input type="date" name="FilterLpEndDate" id="FilterLpEndDate" class="custom-select form-control form-control-sm" style="width:auto;"></label></div>');
         // }
 
         if (lp_product_type) {
@@ -3836,7 +3835,7 @@ $(document).ready(function () {
 
         var options = '<option value="1">Checked</option><option value="0">Unchecked</option>';
 
-        $("div.FilterOrderListing").html('<label> Is Display filter: <select style="width:auto;" name="isDisplayFilter" id="isDisplayFilter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label>');
+        $("div.FilterOrderListing").html('<label> Is display filter: <select style="width:auto;" name="isDisplayFilter" id="isDisplayFilter" class="custom-select custom-select-sm form-control form-control-sm"> <option value="" > All </option>"' + options + '"</select></label>');
         $("#isDisplayFilter").on("change", function () {
             lp_document_list.ajax.reload();
         });
@@ -8239,6 +8238,7 @@ function syncSoftProOpenContacts(userType) {
         url: base_url + "fetch-open-contact-lookup-code",
         method: "POST",
         success: async function (data) {
+            console.log(data);
             var result = jQuery.parseJSON(data);
             console.log(result);
             console.log('status code: ' + result.status);
@@ -8414,7 +8414,7 @@ function syncSoftProMortgage() {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#customer_success_msg").offset().top
                 }, 1000);
-                customers_list.ajax.reload(null, false);
+                customer_list.ajax.reload(null, false);
                 setTimeout(function () {
                     $('#customer_success_msg').html('').hide();
                 }, 4000);

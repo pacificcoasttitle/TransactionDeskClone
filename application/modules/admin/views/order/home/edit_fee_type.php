@@ -1,64 +1,48 @@
-<div class="content">
-<?php if (!empty($success_msg)) {?>
-    <div class="col-xs-12">
-        <div class="alert alert-success"><?php echo $success_msg; ?></div>
-    </div>
-<?php }?>
-<?php if (!empty($error_msg)) {?>
-    <div class="col-xs-12">
-        <div class="alert alert-danger"><?php echo $error_msg; ?></div>
-    </div>
-<?php }?>
-<div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col-sm-6">
-                <h1 class="h3 text-gray-800">Fee Type</h1>
-            </div>
-            <div class="col-sm-6">
-                <a href="<?php echo base_url() . 'order/admin/fees-types'; ?>" class="btn btn-info btn-icon-split float-right mr-2">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-arrow-left"></i>
-                    </span>
-                    <span class="text"> Back </span>
-                </a>
-            </div>
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-edit"></i> Fee Type</h1>
+        <div class="action-buttons">
+            <a href="<?php echo base_url() . 'order/admin/fees-types'; ?>" class="btn-action btn-action-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Edit Fee Type</h6>
+    </div>
+
+    <!-- Edit Fee Type Form Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-tag"></i> Edit Fee Type</h2>
         </div>
-        <div class="card-body">
+        <div class="modern-card-body">
+            <?php if (!empty($success_msg)) {?>
+                <div class="alert-modern alert-success-modern"><?php echo $success_msg; ?></div>
+            <?php }?>
+            <?php if (!empty($error_msg)) {?>
+                <div class="alert-modern alert-danger-modern"><?php echo $error_msg; ?></div>
+            <?php }?>
+
             <form id="frm-edit-fee-type" method="POST">
-
-
                 <div class="form-group">
                     <label for="fee_type" class="col-sm-2 col-form-label">Fee Type<span class="required"> *</span></label>
                     <div class="col-sm-6">
                         <?php
 $fee_type = isset($fees_info['name']) && !empty($fees_info['name']) ? $fees_info['name'] : '';
 ?>
-                        <input type="text" class="form-control" name="fee_type" id="fee_type" class="form-control" value="<?php echo $fee_type; ?>" placeholder="Fee Type">
-
+                        <input type="text" class="form-control" name="fee_type" id="fee_type" value="<?php echo $fee_type; ?>" placeholder="Fee Type">
                         <?php if (!empty($name_error_msg)) {?>
                             <span class="error"><?php echo $name_error_msg; ?></span>
                         <?php }?>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <button type="submit" id="updateFeeType" name="updateFeeType" class="btn btn-info btn-icon-split">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-save"></i>
-                            </span>
-                            <span class="text">Update</span>
+                        <button type="submit" id="updateFeeType" name="updateFeeType" class="btn-action btn-action-primary">
+                            <i class="fas fa-save"></i> Update
                         </button>
-                        <a href="<?php echo base_url() . 'order/admin/fees-types'; ?>" class="btn btn-secondary btn-icon-split">
-                            <span class="icon text-white-50">
-                                <i class="fas fa-arrow-left"></i>
-                            </span>
-                            <span class="text">Cancel</span>
+                        <a href="<?php echo base_url() . 'order/admin/fees-types'; ?>" class="btn-action btn-action-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
                         </a>
                     </div>
                 </div>

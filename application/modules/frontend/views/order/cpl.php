@@ -1,61 +1,20 @@
-<style>
-	.ui-autocomplete { position: absolute; cursor: default;z-index:10000 !important;}
-	.ui-autocomplete {
-		max-height: 300px !important;
-		overflow: hidden !important;
-	}
-	.radio {
-		top: 5px !important;
-		margin: 0px 10px !important;
-	}
-	.radio:before {
-		background: none !important;
-	}
-	.fs-2 {
-		font-size: 18px;
-	}
-	.form-grp-title {
-		margin-top: 30px;
-    	margin-bottom: 20px;
-	}
-	.form-grp-title .tagline {
-		height: 0;
-		border-top: 1px solid #D9DDE5;
-	}
-	.form-grp-title .tagline span {
-		text-transform: uppercase;
-		display: inline-block;
-		position: relative;
-		padding: 0 0px;
-		background: #ffffff;
-		color: #d35411;
-		top: -10px;
-		font-size: 16px;
-		font-weight: 700;
-		letter-spacing: 0.25px;
-	}
-	.mt-0 {
-		margin-top: 0px;
-	}
-</style>
 
-<section class="section-type-4a section-defaulta pd-3" style="padding-bottom:0px;">
-	<div class="container-fluid">
-		<div class="row mb-3">
-			<div class="col-sm-6">
-				<h1 class="h3 text-gray-800">Closing Protection Letters </h1>
+
+<div class="pct-page-modern">
+<section class="section-type-4a section-defaulta" style="padding-bottom:0;">
+	<div class="container-fluid px-4 py-4">
+		<div class="row mb-4">
+			<div class="col-12">
+				<h1 class="pct-page-title" style="font-size:1.5rem;font-weight:600;color:#1e293b;margin-bottom:0;">Closing Protection Letters</h1>
 			</div>
 		</div>
 		<div class="card shadow mb-4">
-			<div class="card-header datatable-header py-3">
-				<div class="datatable-header-titles" >
-					<span>
-						<i class="fas fa-users"></i>
-					</span>
+			<div class="card-header datatable-header">
+				<div class="datatable-header-titles">
+					<span><i class="fas fa-file"></i></span>
 					<h6 class="m-0 font-weight-bold text-primary pl-10">Generate your CPL</h6>
 				</div>
 			</div>
-
 			<div class="card-body">
 				<?php if (!empty($success)) { ?>
 				<div id="agent_success_msg" class="w-100 alert alert-success alert-dismissible">
@@ -94,6 +53,7 @@ if (!empty($errors)) {
 		</div>
 	</div>
 </section>
+</div>
 
 <div class="modal fade" width="500px" id="lender_information" tabindex="-1" role="dialog" aria-labelledby="Lender Infromation" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document" style="width:40%;">

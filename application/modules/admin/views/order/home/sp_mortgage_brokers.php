@@ -1,37 +1,26 @@
-<style>
-.dataTables_length {
-    width: 250px !important;
-    float: left;
-}
-</style>
-<div class="container-fluid">
-    <div class="row mb-3">
-		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800"> Mortgage Users </h1>
-		</div>
-        <div class="col-sm-6">
-            <a href="javascript:void" onclick="syncSoftProOpenContacts('mortgage');"  class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-refresh"></i>
-                </span>
-                <span class="text"> Sync Mortgage </span> 
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-home"></i> Mortgage Users</h1>
+        
+        <div class="action-buttons">
+            <a href="javascript:void(0);" onclick="syncSoftProOpenContacts('mortgage');" class="btn-action btn-action-success">
+                <i class="fas fa-sync-alt"></i> Sync Mortgage
             </a>
-		</div>
-	</div>
-
-    <div class="card shadow mb-4">
-        <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
-                <span>
-                    <i class="fas fa-users"></i>
-                </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Mortgage Users</h6> 
-            </div>
         </div>
-  
-        <div class="card-body">
-            <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+    </div>
+
+    <!-- Mortgage Users Table Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-users"></i> Mortgage Users Listing</h2>
+        </div>
+        <div class="modern-card-body">
+            <div id="customer_success_msg" class="alert-modern alert-success-modern" style="display:none;"></div>
+            <div id="customer_error_msg" class="alert-modern alert-danger-modern" style="display:none;"></div>
+            <div id="mortgage_success_msg" class="alert-modern alert-success-modern" style="display:none;"></div>
+            <div id="mortgage_error_msg" class="alert-modern alert-danger-modern" style="display:none;"></div>
+            
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-sp-mortgage-listing" width="100%" cellspacing="0">
                     <thead>
@@ -42,7 +31,6 @@
                             <th>Email Address</th>
                             <th>Company Name</th>
                             <th>Address</th>
-                            <!-- <th>Primary Mortgage User</th> -->
                             <th>Action</th>
                         </tr>
                     </thead>                
@@ -54,24 +42,20 @@
 </div>
 
 <script>
-    function isMortgagePrimaryUser()
-    {    
+    function isMortgagePrimaryUser() {    
         $('input[type="checkbox"]').on('change', function() {
             $('body').animate({ opacity: 0.5 }, "slow");
             var user_id = $(this).attr('id');
-            if ($(this).is(":checked")) {
-                var primaryMortgageUserFlag = 1;
-            } else {
-                var primaryMortgageUserFlag = 0;
-            }
+            var primaryMortgageUserFlag = $(this).is(":checked") ? 1 : 0;
+            
             $.ajax({
-                url: base_url+"is-mortgage-primary-user",
+                url: base_url + "is-mortgage-primary-user",
                 method: "POST",
-                data : {
+                data: {
                     user_id: user_id,
                     primaryMortgageUserFlag: primaryMortgageUserFlag
                 },
-                success: function(data){
+                success: function(data) {
                     var result = jQuery.parseJSON(data);
                     if (result.status == 'success') {
                         $('body').animate({ opacity: 1.0 }, "slow");
@@ -79,8 +63,8 @@
                         $([document.documentElement, document.body]).animate({
                             scrollTop: $("#mortgage_success_msg").offset().top
                         }, 1000);
-                        customer_list.ajax.reload( null, false );
-                        setTimeout(function () {
+                        customer_list.ajax.reload(null, false);
+                        setTimeout(function() {
                             $('#mortgage_success_msg').html('').hide();
                         }, 4000);
                     } else {
@@ -88,19 +72,17 @@
                         $([document.documentElement, document.body]).animate({
                             scrollTop: $("#mortgage_error_msg").offset().top
                         }, 1000);
-
-                        setTimeout(function () {
+                        setTimeout(function() {
                             $('#mortgage_error_msg').html('').hide();
                         }, 4000);
                     }
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
                     $('#mortgage_error_msg').html('Something went wrong. Please try it again.').show();
                     $([document.documentElement, document.body]).animate({
                         scrollTop: $("#mortgage_success_msg").offset().top
                     }, 1000);
-
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $('#mortgage_error_msg').html('').hide();
                     }, 4000);
                 }

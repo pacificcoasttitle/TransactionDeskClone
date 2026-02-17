@@ -1,72 +1,16 @@
-<style>
-	.typography-section__inner {
-        margin-left: 10%;
-    }
 
-	.ui-autocomplete {
-		max-height: 300px !important;
-		overflow: hidden !important;
-	}
 
-	.progress {
-		height: auto;
-		margin-bottom: 0px;
-	}
-
-	.align-display {
-		flex-direction: row;
-		align-items: center;
-		display: flex;
-	}
-	.w-20 {
-		width: 20px;
-	}
-	.tagline {
-		height: 0;
-		border-top: 1px solid #D9DDE5;
-		text-align: center;
-	}
-	.tagline span {
-		text-transform: uppercase;
-		display: inline-block;
-		position: relative;
-		padding: 0 0px;
-		background: #ffffff;
-		color: #d35411;
-		top: -10px;
-		font-size: 16px;
-		font-weight: 700;
-		letter-spacing: 0.25px;
-	}
-
-	.form-grp-title {
-		margin-top: 42px;
-		margin-bottom: 42px;
-	}
-	.center-wrapper {
-		margin: 0 auto;
-	}
-	.form-control {
-		padding: 1.5rem 0.75rem;
-	}
-	select.form-control {
-		height: 50px;
-		padding: 0.375rem 0.75rem;
-	}
-	.main-wrapper {
-		scale: 95%;
-	}
-</style>
-
-<section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
-	<div class="container-fluid main-wrapper">
-        <div class="row mb-3">
-            <div class="col-sm-12">
-                <h1 class="h3 text-gray-800 text-center">Open Order Form</h1>
+<div class="pct-home-modern">
+<section class="section-type-4a section-defaulta" style="padding-bottom:0;">
+	<div class="container-fluid px-4 py-4">
+        <div class="row mb-4">
+            <div class="col-3 center-wrapper">
+                <h1 class="pct-page-title" style="font-size:1.5rem;font-weight:600;color:#1e293b;margin-bottom:0.25rem;">Open Order Form</h1>
+                <p class="pct-page-sub" style="font-size:0.9375rem;color:#64748b;margin:0;">Helping get your transaction started.</p>
             </div>
         </div>
-        <div class="row ">
-            <div class="col-md-11 center-wrapper">
+        <div class="row">
+            <div class="col-lg-10 col-xl-9 center-wrapper">
                 <div class="card shadow mb-4 smart-forms">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">Helping Get Your Transaction Started.</h6>
@@ -173,9 +117,10 @@
 								</div>
 
 								<div class="row form-group">
-									<a class="button btn btn-primary search-apn search-apn-button mr-3 ml-3" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
-									<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
-
+									<div class="col-sm-12">
+										<a class="button btn btn-primary search-apn search-apn-button" href="javascript:void(0);" id="search-apn-btn">APN Search</a>
+										<a class="button btn btn-secondary switch-property-button search-apn-button" href="javascript:void(0);" id="switch-property-btn">Switch To Property Search</a>
+									</div>
 								</div>
 							</div>
 							<div class="row form-group">
@@ -265,11 +210,11 @@
                                                     // $full_name = implode(' ', $name);
                                                     $full_name = $v['full_name'];
                                                 ?>
-														<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
-												<?php
-													}
-													}
-												?>
+												<option value="<?php echo $v['id']; ?>"><?php echo $full_name; ?></option>
+										<?php
+											}
+											}
+										?>
 									</select>
 								</div>
 							</div>
@@ -283,11 +228,11 @@
                                             if (isset($titleOfficer) && ! empty($titleOfficer)) {
                                                 foreach ($titleOfficer as $key => $value) {
                                                 ?>
-													<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-												<?php
-													}
-													}
-												?>
+											<option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+										<?php
+											}
+											}
+										?>
 									</select>
 								</div>
 							</div>
@@ -331,7 +276,7 @@
 							
 							<div id="organization-borrower-type-fields" style="display: none;">
 								<div class="row form-group">
-									<div class="col-sm-3 align-display">
+									<div class="col-sm-6 align-display">
 										<input type="checkbox" class="form-control w-20 mr-5" name="IsBorrowerOrganization" id="IsBorrowerOrganization" value="1">
 										<span>Is Borrower Organization</span>
 									</div>
@@ -450,16 +395,16 @@
 
     //if ($is_escrow == 1 || $is_primary_mortgage_user == 1) {
 ?>
-										<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
-											<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
-											<span >Add Lender</span>
-										</div>
+									<div class="col-sm-3 align-display" id="add-lender-section" style="display: none;">
+										<input type="checkbox" class="form-control w-20 mr-5" name="add-lender-details" id="add-lender-details">
+										<span >Add Lender</span>
+									</div>
 
 <?php // }if ($is_escrow == 0 || $is_primary_mortgage_user == 1) {?>
-										<div class="col-sm-3 align-display" id="add-escrow-section" style="display: none;">
-											<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
-											<span >Add Escrow</span>
-										</div>
+									<div class="col-sm-3 align-display" id="add-escrow-section" style="display: none;">
+										<input type="checkbox" class="form-control w-20 mr-5" name="add-escrow-details" id="add-escrow-details">
+										<span >Add Escrow</span>
+									</div>
 								<?php // }?>
 
 								<div class="col-sm-3 align-display" id="add-escrow-officer-section" style="display:none;">
@@ -698,9 +643,7 @@
         </div>
     </div>
 </section>
-
-<br><br>
-
+</div>
 
 <div class="modal fade" id="searchResultModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 	aria-hidden="true">
@@ -739,28 +682,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div class="modal-header">
-				<h4 class="modal-title">Search Results</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body search-result">
-				<table class="table-search-results" width="100%">
-					<thead>
-						<tr>
-							<th width="21%">APN</th>
-							<th width="22%">Address</th>
-							<th width="21%">City</th>
-							<th width="15%">Run Listing</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<div class="apn-search-loader hidden"></div>
-			</div> -->
 		</div>
 	</div>
 </div>
@@ -826,5 +747,3 @@
 		</div>
 	</div>
 </div>
-
-

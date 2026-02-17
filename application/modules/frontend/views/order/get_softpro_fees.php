@@ -1,112 +1,126 @@
-<div class="row mb-3">
-    <div class="col-sm-12">
-        <a style="float:right" class="btn-success btn-icon-split btn-sm " href="<?php echo base_url();?>fees">
-            <span class="icon text-white-50">
-                <i class="fa fa-arrow-left"></i>
-            </span>
-            <span class="text">Back</span>
-        </a>
+
+
+<div class="pct-page-modern">
+    <div class="container-invoice">
+        
+        <?php if(empty($calcResult)) { ?>
+            <div class="invoice-card">
+                <div class="error-state">
+                     <i class="fas fa-file-invoice-dollar"></i>
+                     <h3 class="h5">Fees estimation is not available.</h3>
+                     <p>Please check the order details or try again later.</p>
+                     <div class="mt-4">
+                        <a href="<?php echo base_url();?>fees" class="btn-modern btn-outline">
+                            <i class="fas fa-arrow-left"></i> Return to Fees
+                        </a>
+                     </div>
+                </div>
+            </div>
+        <?php } else { ?>
+            
+            <div class="invoice-card" id="artcle_main">
+                <!-- Header -->
+                <div class="invoice-header">
+                    <div class="brand-section">
+                        <div class="brand-logo">
+                            <i class="fas fa-file-signature"></i> PCT Desk
+                        </div>
+                        <div class="document-title">
+                            <div class="doc-label">Fee Estimate For Order</div>
+                            <div class="doc-id">#<?php echo isset($order_number) && !empty($order_number) ? $order_number : '---'; ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="detail-content">
+                            <div class="detail-label">Transaction Type</div>
+                            <div class="detail-value"><?php echo isset($transactionType) && !empty($transactionType) ? $transactionType : '-'; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="detail-content">
+                            <div class="detail-label">Property Location</div>
+                            <div class="detail-value"><?php echo isset($full_address) && !empty($full_address) ?$full_address : '-'; ?></div>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="detail-content">
+                            <div class="detail-label">Loan Amount</div>
+                            <div class="detail-value">
+                                <?php if(isset($loan_amount) && !empty($loan_amount)) {
+                                    $loan_amount = str_replace(",", "", $loan_amount); ?>
+                                    $<?php echo number_format($loan_amount); ?>
+                                <?php } else { echo '-'; } ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if(isset($sales_amount) && !empty($sales_amount)) { ?>
+                    <div class="detail-item">
+                        <div class="detail-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="detail-content">
+                            <div class="detail-label">Sales Amount</div>
+                            <div class="detail-value">$<?php echo number_format($sales_amount); ?></div>
+                        </div>
+                    </div>
+                    <?php } ?>
+                </div>
+
+                <!-- Fees Table -->
+                <div class="table-container">
+                    <table class="table-fees">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($calcResult)) { 
+                                foreach($calcResult as $fee)  { ?>
+                                    <tr>
+                                        <td><?php echo $fee['Description'];?></td>
+                                        <td class="text-right"><?php echo $fee['Amount']; ?></td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Total Section -->
+                <div class="total-section">
+                    <span class="total-label">Total Estimated Fees</span>
+                    <span class="total-amount"><?php echo "$".number_format($totalAmount , 2); ?></span>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <a href="<?php echo base_url();?>fees" class="btn-modern btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Fees
+                </a>
+                <a href="javascript:void(0);" id="download_estimate" data-closing-fee-id="<?php echo $closing_fee_estimate_id; ?>" class="btn-modern btn-primary">
+                    <i class="fas fa-download"></i> Download Fee Estimate
+                </a>
+            </div>
+
+        <?php } ?>
     </div>
 </div>
-<section class="content-wrapper" style="margin-bottom:50px;">
-    <div class="row">
-
-    </div>
-    <div class="row">
-        <div class="recipt-body" id="artcle_main">
-            <div id="editor"></div>
-            <div class="article" id="artcle_div">
-                <?php if(empty($calcResult)) { ?>
-                    <span style='font-size: 20px;color: red;'>Fees estimation does not exist.</span>
-                <?php } else { ?>
-                    <table class="table" style="max-width:100%">
-                        <tbody>
-                            <tr>
-                                <td style="border-top:none;" colspan="4">
-                                    <h3><strong>Pacific Coast Title</strong> - Fee Estimate</h3>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><b>Order Number</b></td>
-                                <td><?php echo isset($order_number) && !empty($order_number) ? $order_number : '-'; ?></td>
-                                <td><b>Transaction Type</b></td>
-                                <td>
-                                    <?php echo isset($transactionType) && !empty($transactionType) ? $transactionType : '-'; ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><b>Property Location</b></td>
-                                <td>
-                                    <?php echo isset($full_address) && !empty($full_address) ?$full_address : '-'; ?>
-                                </td>
-                                <?php if(isset($loan_amount) && !empty($loan_amount)) {
-                                        $loan_amount = str_replace(",", "", $loan_amount); ?>
-                                        <td><b>Loan Amount </b></td>
-                                        <td>$<?php echo number_format($loan_amount); ?></td>
-                                <?php } else { ?>
-                                        <td></td>
-                                        <td></td>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <?php if(isset($sales_amount) && !empty($sales_amount)) { ?>
-                                    <td><b>Sales Amount </b></td>
-                                    <td>$<?php echo number_format($sales_amount); ?> </td>
-                                    <td></td>
-                                    <td></td>
-                                <?php } ?>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="clearfix">
-                        <p></p>
-                    </div>
-                    <table class="table-null" cellspacing="5" cellpadding="5">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <table class="table-data">
-                                        <tbody>
-                                            
-
-                                            <tr class="bg-gray">
-                                                <td class="bg-gray" colspan="2" style="width:60%"><b>Fees changes</b></td>
-                                            </tr>
-
-                                            <?php if (!empty($calcResult)) { 
-                                                foreach($calcResult as $fee)  { ?>
-                                                    <tr>
-                                                        <td><?php echo $fee['Description'];?></td>
-                                                        <td class="aright">
-                                                            <?php echo $fee['Amount']; ?>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                                <tr>
-                                                    <td><b>Total</b></td>
-                                                    <td class="aright">
-                                                        <b><?php echo "$".number_format($totalAmount , 2); ?></b>
-                                                    </td>
-                                                </tr>
-                                            
-                                            <?php } ?>
-
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <?php } ?>
-            </div>
-            
-        </div>
-        <div class="clearfix" id="act_btns">
-            <br />
-            <a class="button small orange" id="download_estimate" data-closing-fee-id="<?php echo $closing_fee_estimate_id; ?>" href="javascript:void(0);">Download Fee Estimate</a>
-        </div>
-    </div>	
-</section>
-
-
-

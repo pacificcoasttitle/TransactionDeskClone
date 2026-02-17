@@ -1,37 +1,22 @@
-<style>
-.dataTables_length {
-    width: 250px !important;
-    float: left;
-}
-</style>
-<div class="container-fluid">
-    <div class="row mb-3">
-		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800"> Payoff Users </h1>
-		</div>
-		<div class="col-sm-6">
-            <a href="<?php echo base_url() ?>order/admin/add-payoff-user"  class="btn btn-success btn-icon-split float-right mr-2">
-                <span class="icon text-white-50">
-                    <i class="fas fa-plus"></i>
-                </span>
-                <span class="text"> Add </span>
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-users"></i> Payoff Users</h1>
+        <div class="action-buttons">
+            <a href="<?php echo base_url() ?>order/admin/add-payoff-user" class="btn-action btn-action-success">
+                <i class="fas fa-plus"></i> Add
             </a>
-		</div>
-	</div>
-
-    <!-- DataTables Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" >
-                <span>
-                    <i class="fas fa-users"></i>
-                </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Payoff Users</h6>
-            </div>
         </div>
-        <div class="card-body">
-            <div id="payoff_user_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="payoff_user_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+    </div>
+
+    <!-- Payoff Users Table Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-users"></i> Payoff Users</h2>
+        </div>
+        <div class="modern-card-body">
+            <div id="payoff_user_success_msg" class="alert-modern alert-success-modern" style="display:none;"></div>
+            <div id="payoff_user_error_msg" class="alert-modern alert-danger-modern" style="display:none;"></div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-payoff-users-listing" width="100%" cellspacing="0">
                     <thead>
@@ -48,4 +33,4 @@
             </div>
         </div>
     </div>
-</div><!-- /.container-fluid -->
+</div>

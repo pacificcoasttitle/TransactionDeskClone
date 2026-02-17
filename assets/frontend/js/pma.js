@@ -43,7 +43,7 @@ $(document).ready(function () {
         value: false
     });
     $('.progress-bar').hide();
-    $('.recent-reports tbody').hide();
+    // $('.recent-reports tbody').hide();
 
     // create dialog for custom info selection
     // runPMADialog = $('#run-pma-dialog').dialog({
@@ -634,42 +634,11 @@ function updateTally(tallies) {
     $('.pma-total').text(tallyData.total);
     $('.accrued-cost').text(tallyData.cost);
     var rep_data = tallyData.sales_reps;
-    list_emement = '';
-    if ($('#rep-list-data li').length > 1) {
-        $.each(rep_data, function (key, value) {
-            var dynamic_li_class = '.rep_list_' + value.rep_id;
-            $(dynamic_li_class + ' .report_total').html(value.report_total);
-            $(dynamic_li_class + ' .report_cost').html('$' + value.report_cost);
-        });
-    }
-    else {
 
-        $.each(rep_data, function (key, value) {
-            var img_div = '';
-            if (value.image == '') {
-                img_div = '<div class="no-report-image"><span>' + value.image_alt + '</span></div>';
-            }
-            else {
-                img_div = '<img src="' + value.image + '" alt="' + value.image_alt + '" class="retina">';
-            }
+    // Always regenerate list
+    populateRepList(rep_data);
 
-            list_emement += '<li class="rep_list_' + value.rep_id + '"><div class="u-pic">' + img_div + '</div>';
-            list_emement += '<div class="u-info">';
-            list_emement += '<div class="u-name">' + value.name + '</div>';
-            list_emement += '<div>' + value.email + '</div>';
-            list_emement += '<div>' + value.phone + '</div></div>';
-            list_emement += '<div class="u-count">';
-            list_emement += '<div class="report_total pma_val">' + value.report_total + '</div>';
-            list_emement += '<div class="report_cost pma_val">$' + value.report_cost + '</div></div></li>';
-        });
-        $('#rep-list-data').html(list_emement);
-        $("#show_all_rep").removeClass('hide');
-
-    }
-
-    //console.log(tallyData);
-
-
+    // Update table logic (legacy preservation if needed, though mostly handled by updateRecents)
     $('.rep-table tr').each(function () {
         var pctRep = $(this).find('td:nth-child(1)').text();
         if (tallyData[pctRep]) {
@@ -680,6 +649,44 @@ function updateTally(tallies) {
         }
     });
     updateRecents(tallyData)
+}
+
+// Modernized Rep List Population
+function populateRepList(reps) {
+    var listHtml = '';
+    if (reps.length > 0) {
+        $.each(reps, function (index, rep) {
+            // Determine Avatar Content (Image or Initials)
+            var avatarContent = '';
+            if (rep.image && rep.image !== '') {
+                avatarContent = '<img src="' + rep.image + '" alt="' + rep.name + '">';
+            } else {
+                avatarContent = '<span>' + rep.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) + '</span>';
+            }
+
+            // Construct List Item
+            listHtml += '<li class="rep-list-item">';
+            listHtml += '  <div class="rep-avatar">' + avatarContent + '</div>';
+            listHtml += '  <div class="rep-details">';
+            listHtml += '      <div class="rep-name">' + rep.name + '</div>';
+            if (rep.email) listHtml += '      <div class="rep-info"><i class="fas fa-envelope mr-1"></i> ' + rep.email + '</div>';
+            if (rep.phone) listHtml += '      <div class="rep-info"><i class="fas fa-phone mr-1"></i> ' + rep.phone + '</div>';
+            listHtml += '  </div>';
+            listHtml += '  <div class="rep-count">' + rep.report_total + '</div>';
+            listHtml += '</li>';
+
+            if (index >= 9) return false;
+        });
+    } else {
+        listHtml = '<li class="p-3 text-center text-muted">No representatives found.</li>';
+    }
+    $('#rep-list-data').html(listHtml);
+
+    if (reps.length > 10) {
+        $('#show_all_rep').removeClass('hide');
+    } else {
+        $('#show_all_rep').addClass('hide');
+    }
 }
 
 

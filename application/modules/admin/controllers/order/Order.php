@@ -183,20 +183,19 @@ class Order extends MX_Controller
         if (isset($ordersList['data']) && ! empty($ordersList['data'])) {
             $export_data = [];
             foreach ($ordersList['data'] as $key => $value) {
-                $file_id = isset($value['file_id']) && ! empty(! empty($value['file_id'])) ? $value['file_id'] : '';
-                if ($file_id) {
-                    $order_details    = $this->order_model->get_order_details($file_id);
+                $orderId = isset($value['id']) && ! empty(! empty($value['id'])) ? $value['id'] : '';
+                if ($orderId) {
+                    $order_details    = $this->order_model->get_order_details($orderId);
                     $con              = ['id' => $order_details['customer_id']];
                     $customer_details = $this->home_model->get_rows($con);
                     $export_data[]    = [
                         'file_number'                 => $order_details['file_number'],
-                        'file_id'                     => $order_details['file_id'],
                         'opened_date'                 => $order_details['opened_date'],
                         'company_name'                => $customer_details['company_name'],
                         'email_address'               => $customer_details['email_address'],
                         'first_name'                  => $customer_details['first_name'],
                         'last_name'                   => $customer_details['last_name'],
-                        'telephone_no'                => $customer_details['telephone_no'],
+                        'telephone_no'                => $customer_details['phone'],
                         'street_address'              => $customer_details['address1'],
                         'city'                        => $customer_details['city'],
                         'zip_code'                    => $customer_details['zip'],
@@ -208,9 +207,9 @@ class Order extends MX_Controller
                         'secondary_owner'             => $order_details['secondary_owner'],
                         'borrower'                    => $order_details['borrower'],
                         'secondary_borrower'          => $order_details['secondary_borrower'],
-                        'sales_rep_name'              => $order_details['sales_rep_name'],
-                        'title_officer_name'          => $order_details['title_officer_name'],
-                        'product_type'                => $order_details['product_type'],
+                        'sales_rep_name'              => $order_details['sp_sales_rep_name'],
+                        'title_officer_name'          => $order_details['sp_title_officer_name'],
+                        'product_type'                => $order_details['sp_product_type_name'],
                         'loan_amount'                 => $order_details['loan_amount'],
                         'sales_amount'                => $order_details['sales_amount'],
                         'loan_number'                 => $order_details['loan_number'],
@@ -219,20 +218,22 @@ class Order extends MX_Controller
                         'additional_email'            => $order_details['additional_email'],
                         'additional_email_1'          => $order_details['additional_email_1'],
                         'additional_email_2'          => $order_details['additional_email_2'],
-                        'buyer_agent_name'            => $order_details['buyer_agent_name'],
-                        'buyer_agent_email_address'   => $order_details['buyer_agent_email_address'],
-                        'buyer_agent_company'         => $order_details['buyer_agent_company'],
-                        'buyer_agent_telephone_no'    => $order_details['buyer_agent_telephone_no'],
-                        'listing_agent_name'          => $order_details['listing_agent_name'],
-                        'listing_agent_email_address' => $order_details['listing_agent_email_address'],
-                        'listing_agent_company'       => $order_details['listing_agent_company'],
-                        'listing_agent_telephone_no'  => $order_details['listing_agent_telephone_no'],
-                        'escrow_lender_company_name'  => $order_details['escrow_lender_company_name'],
-                        'escrow_lender_first_name'    => $order_details['escrow_lender_first_name'],
-                        'escrow_lender_last_name'     => $order_details['escrow_lender_last_name'],
-                        'escrow_lender_email'         => $order_details['escrow_lender_email'],
-                        'escrow_lender_telephone_no'  => $order_details['escrow_lender_telephone_no'],
+                        'buyer_agent_name'            => $order_details['sp_buyer_agent_name'],
+                        'buyer_agent_email_address'   => $order_details['sp_buyer_agent_email_address'],
+                        'buyer_agent_company'         => $order_details['sp_buyer_agent_company'],
+                        'buyer_agent_telephone_no'    => $order_details['sp_buyer_agent_telephone_no'],
+                        'listing_agent_name'          => $order_details['sp_listing_agent_name'],
+                        'listing_agent_email_address' => $order_details['sp_listing_agent_email_address'],
+                        'listing_agent_company'       => $order_details['sp_listing_agent_company'],
+                        'listing_agent_telephone_no'  => $order_details['sp_listing_agent_telephone_no'],
+                        'escrow_lender_first_name'    => $order_details['sp_escrow_lender_first_name'] . ' ' . $order_details['sp_escrow_lender_last_name'],
+                        // 'escrow_lender_last_name'     => $order_details['sp_escrow_lender_last_name'],
+                        'escrow_lender_email'         => $order_details['sp_escrow_lender_email'],
+                        'escrow_lender_company_name'  => $order_details['sp_escrow_lender_company_name'],
+                        'escrow_lender_telephone_no'  => $order_details['sp_escrow_lender_telephone_no'],
                     ];
+                    // echo "<pre>";
+                    // print_r($export_data);die;
                 }
             }
             if (isset($export_data) && ! empty($export_data)) {
@@ -243,7 +244,7 @@ class Order extends MX_Controller
                 $outputPath = './uploads/orders/output.csv';
                 $output     = fopen($outputPath, "w");
 
-                $header = ["Order #", "File ID", "Order Open At", "Company Name", "Email Address", "First Name", "Last Name", "Telephone", "Street Address", "City", "Zipcode", "Property Address", "APN", "County", "Brief Legal Description", "Primary Owner", "Secondary Owner", "Primary Borrower", "Secondary Borrower", "Sales Rep", "Title Officer", "Product", "Loan Amount", "Sales Amount", "Loan Number", "Escrow Number", "Notes", "Additional Email Address", "Additional Email Address1", "Additional Email Address2", "Buyer Agent Name", "Buyer Agent Email Address", "Buyer Agent Comapny", "Buyer Agent Telephone", "Listing Agent Name", "Listing Agent Email Address", "Listing Agent Comapny", "Listing Agent Telephone", "Lender/Escrow Name", "Lender/Escrow Email Address", "Lender/Escrow Comapny", "Lender/Escrow Telephone"];
+                $header = ["Order #", "Order Open At", "Company Name", "Email Address", "First Name", "Last Name", "Telephone", "Street Address", "City", "Zipcode", "Property Address", "APN", "County", "Brief Legal Description", "Primary Owner", "Secondary Owner", "Primary Borrower", "Secondary Borrower", "Sales Rep", "Title Officer", "Product", "Loan Amount", "Sales Amount", "Loan Number", "Escrow Number", "Notes", "Additional Email Address", "Additional Email Address1", "Additional Email Address2", "Buyer Agent Name", "Buyer Agent Email Address", "Buyer Agent Comapny", "Buyer Agent Telephone", "Listing Agent Name", "Listing Agent Email Address", "Listing Agent Comapny", "Listing Agent Telephone", "Lender/Escrow Name", "Lender/Escrow Email Address", "Lender/Escrow Comapny", "Lender/Escrow Telephone"];
                 fputcsv($output, $header);
 
                 foreach ($export_data as $key => $value) {

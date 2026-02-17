@@ -5843,11 +5843,12 @@ class Cron extends MX_Controller
                 $this->db->insert_batch('pct_softpro_lookup_table', $insert_data);
             }
 
-            $res = json_encode(['status' => 'success', 'updated' => count($update_data), 'inserted' => count($insert_data)]);
+            $res = json_encode(['status' => 'success', 'updated' => count($update_data), 'inserted' => count($insert_data), 'message' => 'Lookup code updated successfully']);
             $apiEndPoints = SOFTPRO_API_END;
             $url          = getenv("SOFT_PRO_API") . $apiEndPoints['fetch_lookup_code'] . '?' . $queryParams;
             $this->order->syncLogs('softpro', 'fetch_lookup_code', $url, $reqData, $res, 0, 0);
-            print_r($res);
+            // print_r($res);
+            echo $res;exit;
         }
     }
 

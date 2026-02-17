@@ -1,235 +1,70 @@
-<style>
 
 
-.fs-2 {
-    font-size: 20px;
-	margin-bottom: 3rem;
-    color: #3c6997;
-    font-weight: 600;
-}
-.fs-1-half {
-	font-size: 15px;
-}
-.text-center {
-	text-align: center;
-}
-.anchor-hover {
-	position: absolute;
-    z-index: 1;
-    height: 100%;
-    top: 0;
-    width: 100%;
-}
-.padding-0 {
-	padding: 0;
-}
-.dashboard-menu-icon {
-	height: 5rem;
-}
-.main-wrapper {
-	scale: 95%;
-}
-.card_title {
-	font-size: 25px;
-	padding-top: 20px;
-}
-.main-title {
-	margin-bottom: 3rem;
-    color: #3c6997;
-    font-weight: 600;
-}
-.dashboard-wrap {
-	background-image: url(/../../assets/frontend/images/NewBG.jpg);
-    background-repeat: no-repeat;
-    background-size: contain;
-    width: 100%;
-    height: auto;
-}
-#aiPrelimSummary .card-body {
-    padding: 0.5px 1.25rem;
-}
-
-.prelim-summary-btn {
-    background: #FF8A65;
-    color: #fff;
-}
-
-.prelim-summary-btn:hover {
-    background: #FF7043;
-    color: #fff;
-}
-.btn-icon-split .text {
-    font-size: 11px;
-    padding: .575rem 3px;
-}
-
-.update-prelim-btn {
-    background-color: #B0BEC5 !important;
-    border-color: #B0BEC5 !important;
-    color: #fff !important;
-}
-
-.updated-prelim-btn {
-    background-color: #f26b2b  !important;
-    border-color: #f26b2b  !important;
-    color: #fff !important;
-}
-
-.info-prelim-btn {
-    background-color: #03374f !important;
-    border-color: #03374f !important;
-    color: #fff !important;
-}
-
-.action-prelim-btn {
-    background-color: #ECEFF1 !important;
-    border-color: #ECEFF1 !important;
-    color: #000 !important;
-    display: flex;
-    align-items: center;
-}
-
-.dropdown .click-action-type {
-    color: #222222;
-    text-decoration: none;
-    padding: 0px;
-}
-
-.caret {
-    display: inline-block;
-    width: 0;
-    height: 0;
-    margin-left: 3px;
-    vertical-align: middle;
-    border-top: 3px dashed;
-    border-top: 3px solid;
-    border-right: 3px solid transparent;
-    border-left: 3px solid transparent;
-}
-
-.dropdown-menu {
-    margin-top: 0px !important
-}
-.dropdown-menu > li > a {
-    padding: 5px 0px 5px 0px;
-    display: block;
-    /* padding: 10px 20px; */
-    clear: both;
-    font-weight: normal;
-    line-height: 1;
-    color: #333333;
-    white-space: nowrap;
-}
-.dropdown-toggle::after {
-    border-top: none;
-}
-</style>
-
-<div class="container-fluid p-5 main-wrapper">
+<div class="pct-dashboard-modern">
+<div class="container-fluid px-4 py-4">
 	<div class="row">
-		<div class="col-md-12">
-			<div class="typography-section__innera">
-				<h2 class="ui-title-block ui-title-block_light mb-3 main-title">Welcome Back <?php echo $name; ?>,</h2>
-				<div class="ui-decor-1a bg-accent"></div>
-				<p class="ui-title-block_light fs-2">How can we help you today?</p>
+		<div class="col-12">
+			<div class="pct-welcome">
+				<h1>Welcome back, <?php echo htmlspecialchars($name); ?></h1>
+				<p class="pct-welcome-sub">How can we help you today?</p>
 			</div>
 		</div>
 	</div>
 
 	<div class="row mb-4">
-		<div class="col-md-4 col-sm-12">
-			<div class="card shadow h-100 py-2" style="border-left: 0.25rem solid #3c6997!important;border-radius: 5px;">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+			<div class="card pct-action-card h-100">
 				<div class="card-body">
-					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
-						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/New@2x.png">
-						</div>
-						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold text-uppercase mb-1 card_title" style="color: #3c6997;">New Title Order</div>
-						</div>
-					</div>
+					<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/New@2x.png" alt="">
+					<p class="pct-card-title">New Title Order</p>
 				</div>
 				<a href="<?php echo base_url() . 'order'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
-
-		<div class="col-md-4 col-sm-12">
-			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+			<div class="card pct-action-card h-100">
 				<div class="card-body">
-					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
-						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/CPL@2x.png">
-						</div>
-						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Generate CPL</div>
-						</div>
-					</div>
+					<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/CPL@2x.png" alt="">
+					<p class="pct-card-title">Generate CPL</p>
 				</div>
 				<a href="<?php echo base_url() . 'cpl-dashboard'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
-
-		<div class="col-md-4 col-sm-12">
-			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+			<div class="card pct-action-card h-100">
 				<div class="card-body">
-					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
-						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Proposed@2x.png">
-						</div>
-						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Proposed</div>
-						</div>
-					</div>
+					<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Proposed@2x.png" alt="">
+					<p class="pct-card-title">Proposed</p>
 				</div>
 				<a href="<?php echo base_url() . 'proposed-insured'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
 	</div>
 
-	<div class="row mt-3 mb-4">
-		<div class="col-md-4 col-sm-12">
-			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
+	<div class="row mb-4">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+			<div class="card pct-action-card h-100">
 				<div class="card-body">
-					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
-						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Fees@2x.png">
-						</div>
-						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Fee Estimate</div>
-						</div>
-					</div>
+					<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Fees@2x.png" alt="">
+					<p class="pct-card-title">Fee Estimate</p>
 				</div>
 				<a href="<?php echo base_url() . 'fees'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
-
-		<div class="col-md-4 col-sm-12">
-			<div class="card shadow h-100 py-2" style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+			<div class="card pct-action-card h-100">
 				<div class="card-body">
-					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
-						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Prelim@2x.png">
-						</div>
-						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Review Prelim</div>
-						</div>
-					</div>
+					<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Prelim@2x.png" alt="">
+					<p class="pct-card-title">Review Prelim</p>
 				</div>
 				<a href="<?php echo base_url() . 'prelim-files'; ?>" class="anchor-hover"></a>
 			</div>
 		</div>
-
-		<div class="col-md-4 col-sm-12">
-			<div class="card shadow h-100 py-2"  style="border-left:.25rem solid #3c6997!important;border-radius: 5px;">
+		<div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+			<div class="card pct-action-card h-100">
 				<div class="card-body">
-					<div class="row no-gutters align-items-center" style="flex-direction: column; text-align: center;" >
-						<div class="col-auto">
-							<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Upload@2x.png">
-						</div>
-						<div class="col mr-2 mt-3">
-							<div class="text-xl font-weight-bold  text-uppercase mb-1 card_title" style="color:#3c6997;">Get Policy</div>
-						</div>
-					</div>
+					<img class="dashboard-menu-icon" src="<?php echo base_url(); ?>assets/frontend/images/Upload@2x.png" alt="">
+					<p class="pct-card-title">Get Policy</p>
 				</div>
 				<a href="<?php echo base_url() . 'policy-orders'; ?>" class="anchor-hover"></a>
 			</div>
@@ -281,44 +116,41 @@
 	</div>
 </section> -->
 
-<section class="section-type-4a section-defaulta mt-5" style="padding-bottom:0px;">
-	<div class="container-fluid padding-0">
-		<div class="row mb-3">
-			<div class="col-sm-12">
-				<h1 class="h3 text-gray-800 text-center">Recent Orders </h1>
-			</div>
-		</div>
-		<div class="card shadow mb-4">
-			<div class="card-header datatable-header py-3">
-				<div class="datatable-header-titles" >
-
-					<h6 class="m-0 font-weight-bold text-primary pl-10">Below are all your orders</h6>
+	<section class="section-type-4a section-defaulta mt-4">
+		<div class="container-fluid padding-0">
+			<div class="row mb-3">
+				<div class="col-12">
+					<h2 class="pct-section-title">Recent Orders</h2>
 				</div>
 			</div>
-			<div class="card-body">
-				<div class="table-responsive">
-					<div id="order_listing_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-					<div id="order_listing_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
-					<table class="table table-bordered" id="order_listing" width="100%" cellspacing="0">
-						<thead>
-							<tr>
-								<th>No</th>
-								<th>Order No</th>
-								<th>Status</th>
-								<th>Opened</th>
-								<th>Property Address</th>
-								<!-- <th>Buyer/Seller</th> -->
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
+			<div class="card shadow mb-4">
+				<div class="card-header datatable-header">
+					<h6 class="m-0 font-weight-bold">Below are all your orders</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<div id="order_listing_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
+						<div id="order_listing_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+						<table class="table table-bordered" id="order_listing" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Order No</th>
+									<th>Status</th>
+									<th>Opened</th>
+									<th>Property Address</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
-
-	</div>
-</section>
+	</section>
+</div>
+</div>
 
 <!-- <section class="section-type-4a section-defaulta" style="padding-bottom:0px;">
 	<div class="container">
@@ -355,7 +187,7 @@
 		</div>
 	</div>
 </section> -->
-</div>
+
 
 <div class="modal fade" id="sendInviteModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">

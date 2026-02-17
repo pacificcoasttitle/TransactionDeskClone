@@ -1,6 +1,6 @@
 <?php $userdata = $this->session->userdata('hr_admin');?>
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion pct-sidebar-modern" id="accordionSidebar">
 <?php
 $userdata = $this->session->userdata('user');
 // echo "<pre>";
@@ -27,7 +27,7 @@ if ($userdata['is_sales_rep'] == 1) {
 	<!-- Sidebar - Brand -->
 	<a class="sidebar-brand d-flex align-items-center justify-content-center"
 		href="<?php echo $dashboardUrl; ?>">
-		<img style="width:200px;" src="<?php echo base_url(); ?>assets/backend/hr/img/logo2.png">
+		<img style="max-width:180px; height:auto; max-height:40px;" src="<?php echo base_url(); ?>assets/backend/hr/img/logo2.png" alt="Pacific Coast Title">
 	</a>
 	<hr class="sidebar-divider my-0">
 
@@ -46,7 +46,7 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Daily</span>
 			</a>
 		</li>
-		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'sales-reports') {echo 'active';}?>">
+		<li class="nav-item <?php if ($this->uri->segment(1) == 'sales-reports') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>sales-reports/<?php echo $userdata['id']; ?>">
 				<i class="fas fa fa-file  "></i>
 				<span>Report</span>
@@ -160,7 +160,7 @@ if ($userdata['is_sales_rep'] == 1) {
 				<span>Dashboard Home</span>
 			</a>
 		</li>
-		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'order') {echo 'active';}?>">
+		<li class="nav-item <?php if ($this->uri->uri_string(1) == 'order' || $this->uri->segment(1) == 'order-submit') {echo 'active';}?>">
 			<a class="nav-link" href="<?php echo base_url(); ?>order">
 				<i class="fas fa fa-calendar  "></i>
 				<span>Open Order</span>

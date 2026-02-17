@@ -2,25 +2,20 @@
     .ui-menu .ui-menu-item-wrapper {
         font-size: 13px;
     }
-
     .ui-autocomplete {
         max-height: 300px !important;
     }
-
     .display-flex {
         display: flex;
     }
-
     .add-btn {
         display: flex;
         align-items: end;
         height: 40px;
     }
-
     .btn-danger.add-btn {
         margin-left: 20px;
     }
-
     .hide {
         display: none;
     }
@@ -28,161 +23,138 @@
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
     integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
-<div class="content">
-    <?php if (!empty($success_msg)) {?>
-        <div class="col-xs-12">
-            <div class="alert alert-success">
-                <?php echo $success_msg; ?>
-            </div>
+
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-plus-circle"></i> LP Document Types</h1>
+        <div class="action-buttons">
+            <a href="<?php echo base_url() . 'order/admin/lp-document-types'; ?>" class="btn-action btn-action-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
         </div>
-    <?php }?>
+    </div>
 
-    <?php if (!empty($error_msg)) {?>
-        <div class="col-xs-12">
-            <div class="alert alert-danger">
-                <?php echo $error_msg; ?>
-            </div>
+    <!-- Add LP Document Types Form Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-file-alt"></i> Add New LP Document Types</h2>
         </div>
-    <?php }?>
+        <div class="modern-card-body">
+            <?php if (!empty($success_msg)) {?>
+                <div class="alert-modern alert-success-modern"><?php echo $success_msg; ?></div>
+            <?php }?>
+            <?php if (!empty($error_msg)) {?>
+                <div class="alert-modern alert-danger-modern"><?php echo $error_msg; ?></div>
+            <?php }?>
 
-    <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col-sm-6">
-                <h1 class="h3 text-gray-800">LP Document Types</h1>
-            </div>
-            <div class="col-sm-6">
-                <a href="<?php echo base_url() . 'order/admin/lp-document-types'; ?>" class="btn btn-info btn-icon-split float-right mr-2">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-arrow-left"></i>
-                    </span>
-                    <span class="text"> Back </span>
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Add New LP Document Types</h6>
-                    </div>
-                    <div class="card-body">
-                        <form id="add-new-user" method="POST">
+            <form id="add-new-user" method="POST">
 
-                            <div class="form-group">
-                                <label for="doc_type" class="col-sm-4 col-form-label">Doc Type<span class="required">
-                                        *</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="doc_type" id="doc_type" value="
-                                            <?php echo set_value('doc_type') ?>" class="form-control"
-                                        placeholder="Doc Type">
-                                    <?php if (!empty($doc_type_error_msg)) {?>
-                                        <span class="error">
-                                            <?php echo $doc_type_error_msg; ?>
-                                        </span>
-                                    <?php }?>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="doc_type_description" class="col-sm-4 col-form-label">Doc Type
-                                    Description<span class="required">*</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="doc_type_description"
-                                        id="doc_type_description"
-                                        value="<?php echo set_value('doc_type_description') ?>" class="form-control"
-                                        placeholder="Doc Type Description">
-                                </div>
-                            </div>
-
-                            <!-- <div class="form-group">
-                                <label for="doc_sub_type" class="col-sm-4 col-form-label">Doc Sub Type<span class="required"> *</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" value="<?php echo set_value('doc_sub_type') ?>" class="form-control" name="doc_sub_type" id="doc_sub_type" class="form-control" placeholder="Doc Sub Type">
-                                    <?php if (!empty($doc_sub_type_error_msg)) {?>
-                                        <span class="error"><?php echo $doc_sub_type_error_msg; ?></span>
-                                    <?php }?>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="doc_sub_type_description" class="col-sm-4 col-form-label">Doc Sub Type Description<span class="required"> *</span></label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" name="doc_sub_type_description" id="doc_sub_type_description" value="<?php echo set_value('doc_sub_type_description') ?>" class="form-control" placeholder="Doc Sub Type Description">
-                                    <?php if (!empty($doc_sub_type_description_error_msg)) {?>
-                                        <span class="error"><?php echo $doc_sub_type_description_error_msg; ?></span>
-                                    <?php }?>
-                                </div>
-                            </div> -->
-                            <div class="form-group row ml-1">
-                                <label for="subtype_flag" class="col-sm-2 col-form-label">Is Subtype</label>
-                                <div class="col-sm-2">
-                                    <input type="checkbox" value="1" class="form-control" style="width: 20px;"
-                                        name="subtype_flag" id="subtype_flag" class="form-control">
-                                </div>
-                            </div>
-                            <div class="form-group ">
-                                <div class="subtype-wrapper display-flex" data-count="1">
-                                    <div class="col-sm-4">
-                                        <label class="col-sm-6 col-form-label">Select Sub types.</label>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <label class="col-sm-6 col-form-label">Select Section.</label>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="form-group" id="clone-subtype-option">
-                                <div class="subtype-wrapper display-flex toclone clone-widget mb-2" data-count="1">
-                                    <div class="col-sm-4">
-                                        <div class="selectSubtype">
-                                            <select name="subtype[]" id="subtype" class="form-control sectionSelect">
-                                                <option value=""> Select Sub type </option>
-                                                <?php foreach ($subtypeList as $list) {?>
-                                                    <option <?php echo $selected; ?>
-                                                        value="<?php echo $list['doc_type']; ?>">
-                                                        <?php echo $list['doc_type']; ?></option>
-                                                <?php }?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <select name="map_in_section[]" class="sectionSelect">
-                                            <option value=""> Select Section </option>
-                                            <option value="G"> Section G </option>
-                                            <option value="H"> Section H </option>
-                                            <option value="I"> Section I </option>
-                                        </select>
-
-                                    </div>
-
-                                    <a href="javascript:void(0)" class="clone-1 btn btn-success add-btn"
-                                        onClick="addSubtypeInput(1)">
-                                        <span class="icon"> <i class="fas fa-plus"></i> </span></a>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <button type="submit" class="btn btn-info btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-save"></i>
-                                        </span>
-                                        <span class="text">Add</span>
-                                    </button>
-                                    <a href="<?php echo base_url() . 'order/admin/lp-document-types'; ?>"
-                                        class="btn btn-secondary btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-arrow-left"></i>
-                                        </span>
-                                        <span class="text">Cancel</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
+                <div class="form-group">
+                    <label for="doc_type" class="col-sm-4 col-form-label">Doc Type<span class="required">
+                            *</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="doc_type" id="doc_type" value="
+                                <?php echo set_value('doc_type') ?>" class="form-control"
+                            placeholder="Doc Type">
+                        <?php if (!empty($doc_type_error_msg)) {?>
+                            <span class="error">
+                                <?php echo $doc_type_error_msg; ?>
+                            </span>
+                        <?php }?>
                     </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label for="doc_type_description" class="col-sm-4 col-form-label">Doc Type
+                        Description<span class="required">*</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="doc_type_description"
+                            id="doc_type_description"
+                            value="<?php echo set_value('doc_type_description') ?>" class="form-control"
+                            placeholder="Doc Type Description">
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="doc_sub_type" class="col-sm-4 col-form-label">Doc Sub Type<span class="required"> *</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" value="<?php echo set_value('doc_sub_type') ?>" class="form-control" name="doc_sub_type" id="doc_sub_type" class="form-control" placeholder="Doc Sub Type">
+                        <?php if (!empty($doc_sub_type_error_msg)) {?>
+                            <span class="error"><?php echo $doc_sub_type_error_msg; ?></span>
+                        <?php }?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="doc_sub_type_description" class="col-sm-4 col-form-label">Doc Sub Type Description<span class="required"> *</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="doc_sub_type_description" id="doc_sub_type_description" value="<?php echo set_value('doc_sub_type_description') ?>" class="form-control" placeholder="Doc Sub Type Description">
+                        <?php if (!empty($doc_sub_type_description_error_msg)) {?>
+                            <span class="error"><?php echo $doc_sub_type_description_error_msg; ?></span>
+                        <?php }?>
+                    </div>
+                </div> -->
+                <div class="form-group row ml-1">
+                    <label for="subtype_flag" class="col-sm-2 col-form-label">Is Subtype</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" value="1" class="form-control" style="width: 20px;"
+                            name="subtype_flag" id="subtype_flag" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="subtype-wrapper display-flex" data-count="1">
+                        <div class="col-sm-4">
+                            <label class="col-sm-6 col-form-label">Select Sub types.</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="col-sm-6 col-form-label">Select Section.</label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group" id="clone-subtype-option">
+                    <div class="subtype-wrapper display-flex toclone clone-widget mb-2" data-count="1">
+                        <div class="col-sm-4">
+                            <div class="selectSubtype">
+                                <select name="subtype[]" id="subtype" class="form-control sectionSelect">
+                                    <option value=""> Select Sub type </option>
+                                    <?php foreach ($subtypeList as $list) {?>
+                                        <option <?php echo $selected; ?>
+                                            value="<?php echo $list['doc_type']; ?>">
+                                            <?php echo $list['doc_type']; ?></option>
+                                    <?php }?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <select name="map_in_section[]" class="sectionSelect">
+                                <option value=""> Select Section </option>
+                                <option value="G"> Section G </option>
+                                <option value="H"> Section H </option>
+                                <option value="I"> Section I </option>
+                            </select>
+
+                        </div>
+
+                        <a href="javascript:void(0)" class="clone-1 btn btn-success add-btn"
+                            onClick="addSubtypeInput(1)">
+                            <span class="icon"> <i class="fas fa-plus"></i> </span></a>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn-action btn-action-primary">
+                            <i class="fas fa-save"></i> Add
+                        </button>
+                        <a href="<?php echo base_url() . 'order/admin/lp-document-types'; ?>" class="btn-action btn-action-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

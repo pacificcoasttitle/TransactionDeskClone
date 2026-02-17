@@ -1,74 +1,44 @@
 <?php 
     $userdata = $this->session->userdata('admin');
-	$roleList = $this->common_lib->getRoleList();
-	$role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
-	$roleName = $roleList[$role_id];
+    $roleList = $this->common_lib->getRoleList();
+    $role_id = isset($userdata['role_id']) ? $userdata['role_id'] : 0;
+    $roleName = $roleList[$role_id];
 ?>
-<style>
-.dataTables_length {
-    width: 250px !important;
-    float: left;
-}
-</style>
-<div class="container-fluid">
-    <div class="row mb-3">
-		<div class="col-sm-6">
-			<h1 class="h3 text-gray-800">Lenders </h1>
-		</div>
-		<div class="col-sm-6">
-            <a href="javascript:void" onclick="syncSoftProOpenContacts('lender');"  class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-refresh"></i>
-                </span>
-                <span class="text"> Sync Lender </span> 
-            </a>
-            <!-- <a href="<?php echo base_url()?>order/admin/import-lenders"  class="btn btn-success btn-icon-split float-right mr-2"> 
-                <span class="icon text-white-50">
-                    <i class="fas fa-file-import"></i>
-                </span>
-                <span class="text"> Import </span> 
-            </a> -->
-            <?php  if (!in_array($roleName, ['CS Admin'])) : ?>
-                <!-- <a href="javascript:void(0);" data-export-type="csv" id="export-csv" class="btn btn-success btn-icon-split float-right mr-2"> 
-                    <span class="icon text-white-50">
-                        <i class="fas fa-file-export"></i>
-                    </span>
-                    <span class="text"> Export </span> 
-                </a> -->
-            <?php endif; ?>
-		</div>
-	</div>
-    <!-- DataTables Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header datatable-header py-3">
-            <div class="datatable-header-titles" > 
-                <span>
-                    <i class="fas fa-users"></i>
-                </span>
-                <h6 class="m-0 font-weight-bold text-primary pl-10">Lenders</h6> 
-            </div>
-        </div>
 
-                
-        <div class="card-body">
-            <div id="customer_success_msg" class="w-100 alert alert-success alert-dismissible" style="display:none;"></div>
-            <div id="customer_error_msg" class="w-100 alert alert-danger alert-dismissible" style="display:none;"></div>
+<div class="pct-admin-listing">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1><i class="fas fa-landmark"></i> Lenders</h1>
+        
+        <div class="action-buttons">
+            <a href="javascript:void(0);" onclick="syncSoftProOpenContacts('lender');" class="btn-action btn-action-success">
+                <i class="fas fa-sync-alt"></i> Sync Lender
+            </a>
+        </div>
+    </div>
+
+    <!-- Lenders Table Card -->
+    <div class="modern-card">
+        <div class="modern-card-header">
+            <h2><i class="fas fa-users"></i> Lenders Listing</h2>
+        </div>
+        <div class="modern-card-body">
+            <div id="customer_success_msg" class="alert-modern alert-success-modern" style="display:none;"></div>
+            <div id="customer_error_msg" class="alert-modern alert-danger-modern" style="display:none;"></div>
+            
             <div class="table-responsive">
                 <table class="table table-bordered" id="tbl-sp-lenders-listing" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th width="5%">Lookup Code</th>
-                            <th width="7%" >First Name</th>
-                            <th width="7%">Last Name</th>
-                            <th width="10%">Email Address</th>
-                            <th width="10%">Company Name</th>
-                            <th width="26%">Address</th>
-                            <th width="10%">Email Recording</th>
-                            <th width="10%">No Survey Notification</th>
-                            <!-- <th width="5%">Mortgage User</th>
-                            <th width="10%">User Type</th>
-                            <th width="5%">Dual CPL</th> -->
-                            <th width="5%">Action</th>
+                            <th>Lookup Code</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email Address</th>
+                            <th>Company Name</th>
+                            <th>Address</th>
+                            <th>Email Recording</th>
+                            <th>No Survey Notification</th>
+                            <th>Action</th>
                         </tr>
                     </thead>                
                     <tbody></tbody>
@@ -76,4 +46,4 @@
             </div>
         </div>
     </div>
-</div><!-- /.container-fluid -->
+</div>

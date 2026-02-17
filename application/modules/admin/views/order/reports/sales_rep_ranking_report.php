@@ -1,154 +1,119 @@
 <style>
-/* R-14 Report Styling - Adapted for Dashboard */
-.branch-section {
-    margin: 20px 0;
-    border: 1px solid #D4D4D4;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* Enhanced Report Styles - Premium Look */
+.pct-report-container {
+    --report-primary: #1F4E79;
+    --report-primary-light: #4472C4;
+    --report-accent: #2F5597;
+    --report-gradient: linear-gradient(135deg, #1F4E79 0%, #4472C4 100%);
+    --report-card-shadow: 0 10px 40px rgba(31, 78, 121, 0.15);
 }
 
-.branch-toggle {
-    background: linear-gradient(to bottom, #1F4E79, #2F5597);
+.pct-report-container .report-header-banner {
+    background: var(--report-gradient);
+    border-radius: 16px;
+    padding: 24px 30px;
+    margin-bottom: 24px;
+    box-shadow: var(--report-card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.pct-report-container .report-header-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.pct-report-container .report-header-banner h2 { color: white; font-size: 1.5rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 12px; }
+.pct-report-container .report-header-banner h2 i { font-size: 1.8rem; opacity: 0.9; }
+
+.pct-report-container .report-date-badge {
+    background: rgba(255,255,255,0.2);
     color: white;
-    padding: 15px 20px;
-    font-weight: bold;
-    font-size: 14pt;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.pct-report-container .branch-section {
+    margin: 20px 0;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.pct-report-container .branch-section:hover { box-shadow: 0 8px 30px rgba(31, 78, 121, 0.15); transform: translateY(-2px); }
+
+.pct-report-container .branch-toggle {
+    background: var(--report-gradient);
+    color: white;
+    padding: 18px 24px;
+    font-weight: 600;
+    font-size: 15px;
     border: none;
     width: 100%;
     text-align: left;
     cursor: pointer;
-    border-radius: 8px 8px 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
 }
 
-.branch-toggle:hover {
-    background: linear-gradient(to bottom, #2F5597, #4472C4);
-}
+.pct-report-container .branch-toggle:hover { background: linear-gradient(135deg, #2F5597 0%, #5a8fd4 100%); }
+.pct-report-container .branch-toggle .toggle-icon { font-size: 14px; background: rgba(255,255,255,0.2); width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-.branch-toggle .toggle-icon {
-    font-size: 12pt;
-    transition: transform 0.3s ease;
-}
+.pct-report-container .branch-content { padding: 24px; background: linear-gradient(180deg, #ffffff 0%, #f8f9fc 100%); display: block; }
+.pct-report-container .branch-content.collapsed { display: none; }
 
-.branch-content {
-    padding: 20px;
-    background-color: white;
-    border-radius: 0 0 8px 8px;
-    display: block;
-}
+.pct-report-container .salesrep-table { border-collapse: separate; border-spacing: 0; width: 100%; margin: 0 0 24px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.pct-report-container .salesrep-table th { background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%); border: none; border-bottom: 2px solid #dee2e6; padding: 14px 12px; text-align: center; font-weight: 700; color: var(--report-primary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+.pct-report-container .salesrep-table td { border: none; border-bottom: 1px solid #eef0f5; padding: 12px 10px; text-align: center; background-color: #ffffff; font-size: 13px; transition: all 0.2s ease; }
+.pct-report-container .salesrep-table tr:nth-child(even) td { background-color: #f8f9fc; }
+.pct-report-container .salesrep-table tr:hover td { background-color: #e8f4fd !important; }
 
-.branch-content.collapsed {
-    display: none;
-}
+.pct-report-container .salesrep-name { text-align: left !important; font-weight: 600; color: var(--report-primary); padding-left: 16px !important; }
+.pct-report-container .currency { text-align: right; font-family: 'Nunito', sans-serif; font-weight: 700; color: #0066CC; }
+.pct-report-container .number { text-align: right; font-family: 'Nunito', sans-serif; font-weight: 600; }
+.pct-report-container .percentage { text-align: right; font-family: 'Nunito', sans-serif; font-weight: 600; }
+.pct-report-container .high-performance { color: #10b981; font-weight: 700; }
+.pct-report-container .medium-performance { color: #f59e0b; font-weight: 700; }
+.pct-report-container .low-performance { color: #ef4444; font-weight: 700; }
+.pct-report-container .branch-totals td { font-weight: 700 !important; background: linear-gradient(135deg, #e8f4fd 0%, #dbeafe 100%) !important; color: var(--report-primary) !important; border-top: 2px solid var(--report-primary-light) !important; }
 
-.salesrep-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 0 0 20px 0;
-    border: 1px solid #D4D4D4;
-    font-size: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+.pct-report-container .mapping-note { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: none; border-left: 4px solid #10b981; border-radius: 8px; padding: 18px 20px; margin: 20px 0; font-size: 13px; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.1); }
+.pct-report-container .mapping-note strong { color: #059669; }
 
-.salesrep-table th {
-    background: linear-gradient(to bottom, #F8F9FA, #E9ECEF);
-    border: 1px solid #D4D4D4;
-    padding: 12px 8px;
-    text-align: center;
-    font-weight: bold;
-    color: #495057;
-    font-size: 13px;
-    white-space: nowrap;
-}
-
-.salesrep-table td {
-    border: 1px solid #D4D4D4;
-    padding: 8px 6px;
-    text-align: center;
-    vertical-align: middle;
-    background-color: #ffffff;
-    font-size: 13px;
-}
-
-.salesrep-table tr:nth-child(even) td {
-    background-color: #F8F9FA;
-}
-
-.salesrep-table tr:hover td {
-    background-color: #E3F2FD;
-}
-
-.salesrep-name {
-    text-align: left !important;
-    font-weight: bold;
-    color: #1F4E79;
-    padding-left: 12px !important;
-}
-
-.currency {
-    text-align: right;
-    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    font-weight: bold;
-    color: #0066CC;
-}
-
-.number {
-    text-align: right;
-    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    font-weight: bold;
-}
-
-.percentage {
-    text-align: right;
-    font-family: Nunito,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-    font-weight: bold;
-}
-
-.high-performance { color: #28a745; font-weight: bold; }
-.medium-performance { color: #ffc107; font-weight: bold; }
-.low-performance { color: #dc3545; font-weight: bold; }
-
-.branch-totals td {
-    font-weight: bold !important;
-    background: linear-gradient(135deg, #F0F8FF, #E6F3FF) !important;
-    color: #1F4E79 !important;
-}
-
-.mapping-note {
-    background: #e8f5e8;
-    border: 1px solid #4caf50;
-    border-radius: 5px;
-    padding: 15px;
-    margin: 20px 0;
-    font-size: 11pt;
-}
-
-#monthSelect, .d-sm-inline-block {
-    width: 170px;
-}
+.pct-report-container #monthSelect { width: 180px; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-weight: 500; background: white; transition: all 0.2s ease; }
+.pct-report-container #monthSelect:hover { border-color: var(--report-primary-light); }
+.pct-report-container #monthSelect:focus { outline: none; border-color: var(--report-primary); box-shadow: 0 0 0 3px rgba(68, 114, 196, 0.1); }
 </style>
 
-<div class="container-fluid">
-    <!-- Report Header -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">R-14 Mapped Report as of : <?php echo date('m-d-Y', strtotime('-1 day')) ?></h1>
-        <div class="d-sm-inline-block">
+<div class="pct-admin-listing pct-report-container">
+    <div class="page-header">
+        <h1><i class="fas fa-trophy"></i> Sales Ranking Report</h1>
+        
+        <div class="action-buttons">
             <select id="monthSelect" class="form-control" data-filter="sales_rep_ranking">
                 <?php
                 $currentMonth = date("Y-m");
                 for ($i = 0; $i < 5; $i++) { 
                     $date = strtotime("-$i month");
-                    $value = date("Y-m", $date); // for option value (e.g., 2024-07)
-                    $label = date("F Y", $date); // for display (e.g., July 2024)
-                    // if ((int)date('Y', $date) < 2025) {
-                    //     break; // Skip years before 2025
-                    // }
-
+                    $value = date("Y-m", $date);
+                    $label = date("F Y", $date);
                     if (((int)date('m', $date) < 3) && ((int)date('Y', $date) == 2025)) {
-                        break; // Skip years before 2025
+                        break;
                     }
                 ?>
                     <option <?php echo ($value == $currentMonth) ? 'selected' : ''; ?> value="<?php echo $value;?>"><?php echo $label;?></option>
@@ -158,21 +123,28 @@
         </div>
     </div>
 
-    <!-- Mapping Logic Explanation -->
-    <div class="mapping-note">
-        <strong>📋 Sales Rep Mapping Logic:</strong> Sales representatives are displayed in their assigned branch from the mapping file (including zero production). 
-        Additionally, reps appear in other branches where they have actual transactions. 
-        <strong>4-Month Closing Ratio:</strong> Calculated as (Closings ÷ Openings) × 100 over the past 4 months.
-    </div>
-    
-    <!-- Branch sections will be dynamically loaded here -->
-    <div id="branchSections">
-        <?php if (isset($error) && $error) {
-                            
-        } else {
-            echo $branch_reports; 
-        }
-        ?>
+    <div class="modern-card">
+        <div class="report-header-banner">
+            <h2><i class="fas fa-medal"></i> Top Performers Ranking</h2>
+            <span class="report-date-badge">
+                <i class="fas fa-calendar-alt mr-2"></i>As of <?php echo date('F d, Y', strtotime('-1 day')) ?>
+            </span>
+        </div>
+        <div class="modern-card-body">
+            <div class="mapping-note">
+                <strong>📋 Sales Rep Mapping Logic:</strong> Sales representatives are displayed in their assigned branch from the mapping file (including zero production). 
+                Additionally, reps appear in other branches where they have actual transactions. 
+                <strong>4-Month Closing Ratio:</strong> Calculated as (Closings ÷ Openings) × 100 over the past 4 months.
+            </div>
+            
+            <div id="branchSections">
+                <?php if (isset($error) && $error) {
+                } else {
+                    echo $branch_reports; 
+                }
+                ?>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -180,29 +152,8 @@
 function toggleBranch(branchId) {
     const content = document.getElementById(branchId);
     const icon = document.getElementById(branchId + '-icon');
-    
-    if (content.classList.contains('collapsed')) {
-        content.classList.remove('collapsed');
-        icon.textContent = '▼';
-    } else {
-        content.classList.add('collapsed');
-        icon.textContent = '▶';
-    }
+    if (content.classList.contains('collapsed')) { content.classList.remove('collapsed'); icon.textContent = '▼'; } 
+    else { content.classList.add('collapsed'); icon.textContent = '▶'; }
 }
-
-// function changeMonth() {
-//     const monthSelect = document.getElementById('monthSelect');
-//     const selectedMonth = monthSelect.value;
-    
-//     if (selectedMonth !== 'August 2025') {
-//         alert('Data loading for ' + selectedMonth + ' would be implemented here.');
-//     }
-// }
-
-// Load branch data when page loads
-$(document).ready(function() {
-    // Add your AJAX call here to load the branch data
-    // For now, we'll use the static HTML from the original file
-    // $('#branchSections').load('<?php echo base_url(); ?>order/get_mapped_report_data');
-});
+$(document).ready(function() {});
 </script>

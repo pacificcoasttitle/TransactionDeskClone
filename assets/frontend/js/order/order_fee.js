@@ -1,23 +1,20 @@
-$(document).ready(function () {
+$('#download_estimate').click(function () {
+    var element = document.getElementById('artcle_main');
+    var opt = {
+        margin: [0, 0, 0, 0],
+        filename: 'feeEstimation.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, logging: false, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'pt', format: 'letter', orientation: 'portrait' }
+    };
 
-    $('#download_estimate').click(function () {
-        console.log('hi');
-        var pdf = new jsPDF('', 'pt', 'a4');
-
-        var element = document.getElementById('artcle_main');
-        html2pdf(element, {
-            margin: 1,
-            filename: 'feeEstimation.pdf',
-            // image: {type: 'jpeg', quality: 1},
-            html2canvas: {
-                scale: 4,
-                logging: false
-            },
-            // jsPDF: {unit: 'mm', format: 'a4', orientation: 'p'}
-
-        });
-        
-    });
+    // Check if html2pdf is defined (it should be)
+    if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(element).save();
+    } else {
+        // Fallback or legacy usage
+        html2pdf(element, opt);
+    }
 });
 
 function base64toBlob(base64Data, contentType) {

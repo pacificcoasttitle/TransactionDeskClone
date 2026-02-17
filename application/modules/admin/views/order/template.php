@@ -35,6 +35,9 @@
         type="text/css">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <!-- Modern Admin Theme Styles -->
+    <link href="<?php echo base_url(); ?>assets/backend/css/sales-dashboard-modern.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo base_url(); ?>assets/backend/css/admin-listing-modern.css" rel="stylesheet" type="text/css">
     <script src="<?php echo base_url(); ?>assets/backend/hr/vendor/jquery/jquery.min.js"></script>
 
     <?php echo $css_files; ?>
@@ -44,7 +47,7 @@
     </script>
 </head>
 
-<body id="page-top">
+<body id="page-top" class="pct-modern-layout">
     <div id="page-preloader" style="background-color: rgba(0, 0, 0, 0.5); display: none;"><span
             class="spinner border-t_second_b border-t_prim_a"></span></div>
     <div id="wrapper">
