@@ -1,5 +1,3 @@
-
-
 <style>
     .ui-autocomplete { z-index: 1060 !important; }
 </style>
