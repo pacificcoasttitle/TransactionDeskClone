@@ -900,16 +900,18 @@
 /* Dropdown toggle & caret alignment fix */
 .pct-dashboard-modern .click-action-type { padding: 0 !important; display: inline-block; }
 .pct-dashboard-modern .click-action-type::after { display: none !important; }
-.pct-dashboard-modern .action-prelim-btn { gap: 0; }
+.pct-dashboard-modern .dropdown-toggle::after { display: none !important; }
+.pct-dashboard-modern .action-prelim-btn { display: inline-flex !important; align-items: center !important; gap: 0; }
 .pct-dashboard-modern .action-prelim-btn .caret {
-    display: inline-block;
-    width: 0;
-    height: 0;
+    display: inline-block !important;
+    width: 0 !important;
+    height: 0 !important;
     margin-left: 6px;
-    vertical-align: middle;
-    border-top: 4px solid;
-    border-right: 4px solid transparent;
-    border-left: 4px solid transparent;
+    vertical-align: middle !important;
+    border-top: 4px dashed !important;
+    border-right: 4px solid transparent !important;
+    border-left: 4px solid transparent !important;
+    border-bottom: 0 !important;
 }
 
 /* Button text sizing in table action column */
