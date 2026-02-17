@@ -1,3 +1,8 @@
+<style> 
+    .pct-page-modern .stat-card, .pct-home-modern .stat-card {
+        background: linear-gradient(135deg, var(--pct-primary) 0%, var(--pct-primary-light) 100%)
+    }
+</style>
 <div class="pct-page-modern pct-report-page">
     <div class="container-fluid px-4 py-4">
         
