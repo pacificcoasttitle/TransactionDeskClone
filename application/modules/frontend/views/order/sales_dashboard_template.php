@@ -25,7 +25,7 @@
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"> -->
     <link href="<?php echo base_url(); ?>assets/backend/hr/css/sb-admin-2.min.css?v=02" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
-    <link href="<?php echo base_url(); ?>assets/backend/css/sales-dashboard-modern.css?v=2" rel="stylesheet" type="text/css">
+    <link href="<?php echo base_url(); ?>assets/backend/css/sales-dashboard-modern.css?v=3" rel="stylesheet" type="text/css">
     
 
     <?php echo $css_files; ?>
