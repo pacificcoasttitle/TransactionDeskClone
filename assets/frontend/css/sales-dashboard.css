@@ -294,7 +294,7 @@ th {
     background-position: 150% 0;
 } */
 .dropdown-toggle::after {
-    border-top: none;
+    display: none !important;
 }
 .button-color {
     color: #888888;
@@ -326,8 +326,9 @@ th {
     background-color: #ECEFF1 !important;
     border-color: #ECEFF1 !important;
     color: #000 !important;
-    display: flex;
-    align-items: center;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0;
 }
 
 .modal-close-btn span{
@@ -346,4 +347,18 @@ th {
 
 .norecord {
     text-align: center;
+}
+
+/* Dropdown caret alignment fix */
+.dropdown .click-action-type::after { display: none !important; }
+.action-prelim-btn .caret {
+    display: inline-block !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin-left: 6px;
+    vertical-align: middle !important;
+    border-top: 4px dashed !important;
+    border-right: 4px solid transparent !important;
+    border-left: 4px solid transparent !important;
+    border-bottom: 0 !important;
 }
