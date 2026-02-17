@@ -1303,7 +1303,7 @@ $(document).ready(function () {
                     text: 'Export',
                     title: '',
                     exportOptions: {
-                        columns: [2, 4, 5],
+                        columns: [0, 1, 2, 3, 4],
                         format: {
                             body: function (data, row, column, node) {
                                 return (column === 2 || column === 4 || column === 5) ?
@@ -8238,6 +8238,7 @@ function syncSoftProOpenContacts(userType) {
         url: base_url + "fetch-open-contact-lookup-code",
         method: "POST",
         success: async function (data) {
+            console.log(data);
             var result = jQuery.parseJSON(data);
             console.log(result);
             console.log('status code: ' + result.status);
@@ -8413,7 +8414,7 @@ function syncSoftProMortgage() {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#customer_success_msg").offset().top
                 }, 1000);
-                customers_list.ajax.reload(null, false);
+                customer_list.ajax.reload(null, false);
                 setTimeout(function () {
                     $('#customer_success_msg').html('').hide();
                 }, 4000);

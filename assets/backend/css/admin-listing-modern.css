@@ -254,19 +254,51 @@ body.pct-modern-layout #content-wrapper {
 /* ==========================================================================
    DataTables Controls
    ========================================================================== */
+/* Top controls row: length | FilterOrderListing | filter (search) */
 .pct-admin-listing .dataTables_length {
-    width: 250px !important;
-    float: left;
-}
-
-.pct-admin-listing .FilterOrderListing {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    flex-wrap: wrap;
-    gap: 1rem;
+    float: left !important;
+    width: auto !important;
+    margin-right: 1.5rem;
     margin-bottom: 1rem;
+}
+.pct-admin-listing .FilterOrderListing {
+    float: left !important;
+    width: auto !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+.pct-admin-listing .FilterOrderListing label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: var(--pct-text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+.pct-admin-listing .dataTables_filter {
+    float: right !important;
+    width: auto !important;
+    text-align: right;
+    margin-bottom: 1rem;
+}
+/* Clearfix so the table renders below the floated controls */
+.pct-admin-listing .dataTables_wrapper::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+/* Bottom row: info on left, pagination on right */
+.pct-admin-listing .dataTables_info {
+    float: left !important;
+    clear: left;
+}
+.pct-admin-listing .dataTables_paginate {
+    float: right !important;
+    clear: right;
 }
 
 .pct-admin-listing .dataTables_wrapper .dataTables_length,

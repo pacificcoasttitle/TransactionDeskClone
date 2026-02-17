@@ -72,7 +72,6 @@ jQuery(document).ready(function ($) {
     });
 
     if ($('#add-new-user #company_name').length) {
-        console.log('testt --');
         $("#add-new-user #company_name").autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -84,7 +83,6 @@ jQuery(document).ready(function ($) {
                     type: "POST",
                     dataType: "json",
                     success: function (data) {
-                        console.log('data ===', data);
                         if (data.length > 0) {
                             response($.map(data, function (item) {
                                 return item;
@@ -154,7 +152,6 @@ jQuery(document).ready(function ($) {
     }
 
     if ($('#edit-new-user #company_name').length) {
-        console.log('edit test --');
         $("#edit-new-user #company_name").autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -166,7 +163,6 @@ jQuery(document).ready(function ($) {
                     type: "POST",
                     dataType: "json",
                     success: function (data) {
-                        console.log('data ===', data);
                         if (data.length > 0) {
                             response($.map(data, function (item) {
                                 return item;
@@ -216,7 +212,6 @@ $('#add-new-user #company_name, #add-new-user #first_name, #add-new-user #last_n
             type: "POST",
             dataType: "json",
             success: function (data) {
-                console.log(data);
                 $("#add-new-user #lookup_code").val(data.code);
                 $("#add-new-user #lookup_code").prop("disabled", false);
             }

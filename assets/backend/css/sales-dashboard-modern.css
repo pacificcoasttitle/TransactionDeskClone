@@ -225,7 +225,8 @@
 /* Stat Cards */
 .pct-page-modern .stat-card, .pct-home-modern .stat-card {
     text-align: center; padding: 1.5rem;
-    background: linear-gradient(135deg, var(--pct-primary) 0%, var(--pct-primary-light) 100%);
+    background: #fff;
+    /* background: linear-gradient(135deg, var(--pct-primary) 0%, var(--pct-primary-light) 100%); */
     color: white; border-radius: var(--pct-radius); margin-bottom: 1.5rem;
     border: none; box-shadow: var(--pct-shadow);
 }
@@ -528,6 +529,7 @@
 }
 
 .pct-page-modern.pct-report-page .action-bar { justify-content: flex-end; }
+.pct-page-modern.pct-report-page .custom-file-input { opacity: unset; }
 
 /* Sales Rep List */
 .pct-page-modern .rep-list-item { display: flex; padding: 1rem; border-bottom: 1px solid var(--pct-border); align-items: flex-start; }
