@@ -875,7 +875,7 @@ class Dashboard extends MX_Controller
                             </a>";
                     }
                     $action .= "<div class='dropdown'>
-                        <a class='btn dropdown-toggle click-action-type type='button' data-toggle='dropdown' href='#'>
+                        <a class='btn dropdown-toggle click-action-type' type='button' data-toggle='dropdown' href='#'>
                             <button type='submit' class='btn btn-light btn-icon-split action-prelim-btn'>
                                 <span class='icon text-white-50'>
                                     <i class='fas fa-tasks'></i>
