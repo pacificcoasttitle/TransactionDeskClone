@@ -58,7 +58,7 @@ class OcrService
             $pageNo = (int)$m[1];
 
             // 2. Detect rotation
-            if ($rotationCheckRequired) {
+            // if ($rotationCheckRequired) {
                 $rotate = $this->detectRotation($img);
                 
                 $finalImg = $img;
@@ -69,12 +69,12 @@ class OcrService
                     );
                 } else {
                     // No rotation detected on first page, skip for rest
-                    $rotationCheckRequired = false;
+                    // $rotationCheckRequired = false;
                 }
                 
-            } else {
-                $finalImg = $img;
-            }
+            // } else {
+            //     $finalImg = $img;
+            // }
 
             // 3. OCR
             $text = shell_exec(

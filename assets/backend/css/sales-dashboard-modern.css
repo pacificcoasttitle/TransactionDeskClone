@@ -429,9 +429,9 @@
 .pct-home-modern .stat-card.stat-success::before { background: #059669; }
 .pct-home-modern .stat-card.stat-info::before { background: #0891b2; }
 .pct-home-modern .stat-card.stat-warning::before { background: #d97706; }
-.pct-home-modern .sales_loan_count { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+.pct-home-modern .sales_loan_count { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
 .pct-home-modern .salesdivider { border-top: 1px solid var(--pct-border); padding-top: 0.75rem; margin-top: 0.5rem; }
-.pct-home-modern .sales_loan_section { font-size: 0.875rem; font-weight: 500; color: var(--pct-text); margin-bottom: 0.25rem; }
+.pct-home-modern .sales_loan_section { font-size: 1rem; font-weight: 500; color: var(--pct-text); margin-bottom: 0.25rem; }
 .pct-home-modern .projected_goal_section { font-size: 0.75rem; color: var(--pct-text-muted); margin-top: 0.5rem; }
 .pct-home-modern .order-count-cotainer h4 { font-size: 0.8375rem; color: var(--pct-text-muted); font-weight: 400; margin: 0; }
 .pct-home-modern .order-count-cotainer { margin: 1.5rem 0 1rem; }
