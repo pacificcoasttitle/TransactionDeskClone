@@ -53,7 +53,7 @@ class Order
         $salesRepManagerFlag = isset($params['sales_rep_manager_flag']) && ! empty($params['sales_rep_manager_flag']) ? $params['sales_rep_manager_flag'] : '';
         $is_pay_off          = isset($params['is_pay_off']) && ! empty($params['is_pay_off']) ? $params['is_pay_off'] : '';
         $yearFlag            = isset($params['yearFlag']) && ! empty($params['yearFlag']) ? $params['yearFlag'] : '';
-        $order_type          = isset($params['order_type']) && ! empty($params['order_type']) ? $params['order_type'] : '';
+        $order_type          = isset($params['order_type']) && ! empty($params['order_type']) ? $params['order_type'] : 'softpro_orders';
         $dashboard_order_by  = isset($params['dashboard_order_by']) && ! empty($params['dashboard_order_by']) ? $params['dashboard_order_by'] : '';
         // $result = $this->getUserFromPartners();
         $select = 'order_details.random_number,order_details.lp_report_status,order_details.lp_file_number,order_details.prelim_summary_id,
