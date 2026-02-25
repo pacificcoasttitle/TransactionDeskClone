@@ -101,7 +101,7 @@
     <div class="page-header">
         <h1><i class="fas fa-id-card"></i> Title Officer Production Report</h1>
         
-        <div class="action-buttons">
+        <div class="action-buttons" style="display:flex; align-items:center;width:auto; min-width:180px;">
             <select id="monthSelect" class="form-control" data-filter="title_officer">
                 <?php
                 $currentMonth = date("Y-m");
