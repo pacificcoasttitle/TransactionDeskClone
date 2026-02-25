@@ -104,7 +104,7 @@
     <div class="page-header">
         <h1><i class="fas fa-file-contract"></i> Escrow Branch Report</h1>
         
-        <div class="action-buttons">
+        <div class="action-buttons" style="display:flex; align-items:center;width:auto; min-width:180px;">
             <select id="monthSelect" class="form-control" data-filter="escrow">
                 <?php
                 $currentMonth = date("Y-m");
