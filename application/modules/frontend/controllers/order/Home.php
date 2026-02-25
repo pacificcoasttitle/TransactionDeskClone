@@ -948,8 +948,14 @@ class Home extends MX_Controller
                 if (!empty($escrowOfficerDetails)) {
                     $url .= "&email=".urlencode($escrowOfficerDetails['email_address']);
                 }
+                if (!empty($escrowOfficerDetails) && !empty($escrowOfficerDetails['phone'])) {
+                    $url .= "&phone=".urlencode($escrowOfficerDetails['phone']);
+                }
                 if ($branchName) {
                     $url .= "&branch=".urlencode($branchName);
+                }
+                if (isset($PropertyType) && !empty($PropertyType)) {
+                    $url .= "&proptype=".urlencode($PropertyType);
                 }
                 $data = [
                     'orderNumber'       => $orderNumber,
