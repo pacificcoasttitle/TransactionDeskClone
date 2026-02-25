@@ -339,6 +339,64 @@
     color: var(--report-primary);
     border-radius: 6px;
 }
+
+/* Page Header Fix */
+.pct-report-container.pct-admin-listing .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.pct-report-container.pct-admin-listing .page-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pct-report-container.pct-admin-listing .page-header .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Month Dropdown Styling */
+.pct-report-container.pct-admin-listing .page-header .action-buttons #monthSelect {
+    width: auto;
+    min-width: 180px;
+    padding: 8px 32px 8px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1e293b;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pct-report-container.pct-admin-listing .page-header .action-buttons #monthSelect:hover {
+    border-color: var(--report-primary-light);
+}
+
+.pct-report-container.pct-admin-listing .page-header .action-buttons #monthSelect:focus {
+    outline: none;
+    border-color: var(--report-primary);
+    box-shadow: 0 0 0 3px rgba(68, 114, 196, 0.15);
+}
 </style>
 
 <div class="pct-admin-listing pct-report-container">
@@ -346,8 +404,8 @@
     <div class="page-header">
         <h1><i class="fas fa-chart-bar"></i> Branch Analytics Report</h1>
         
-        <div class="action-buttons">
-            <select id="monthSelect" class="form-control" onchange="changeMonth()" data-filter="branch_analytics">
+        <div class="action-buttons" style="display:flex; align-items:center;width:auto; min-width:180px;">
+            <select id="monthSelect" class="form-control" onchange="changeMonth()" data-filter="branch_analytics" style="padding:8px 14px; border:2px solid #e2e8f0; border-radius:8px; font-size:0.9rem; font-weight:500; color:#1e293b; background-color:#fff; cursor:pointer; -webkit-appearance:menulist; appearance:menulist;">
                 <?php
                 $currentMonth = date("Y-m");
                 for ($i = 0; $i < 12; $i++) { 

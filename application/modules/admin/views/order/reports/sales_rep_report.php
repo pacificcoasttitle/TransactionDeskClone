@@ -175,7 +175,7 @@
     <div class="page-header">
         <h1><i class="fas fa-user-tie"></i> Sales Rep Branch Report</h1>
         
-        <div class="action-buttons">
+        <div class="action-buttons" style="display:flex; align-items:center;width:auto; min-width:180px;">
             <select id="monthSelect" class="form-control" data-filter="sales_rep">
                 <?php
                 $currentMonth = date("Y-m");

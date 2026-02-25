@@ -6929,7 +6929,7 @@ class Cron extends MX_Controller
         if (empty($_GET)) {
             // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
             $startDate = date('m-d-Y');
-            $endDate = date('m-d-Y');
+            // $endDate = date('m-d-Y');
             $req['DateFrom'] = $startDate;
             $req['DateTo'] = '';//$endDate;
         }
@@ -8758,6 +8758,13 @@ class Cron extends MX_Controller
 
         $orderTypeList = array_column($query->result_array(), 'id', 'order_type');
 
+        $query = $this->db->select('id, full_name')
+            ->from('pct_softpro_lookup_table')
+            ->where('is_sales_rep', 1) 
+            ->get();
+
+        $salesRepList = array_column($query->result_array(), 'id', 'full_name');
+
         $escrowOfficerList = $this->common_lib->getEscrowOfficerLookupDetails();
         $escrowOfficerList = array_column($escrowOfficerList, 'id', 'officer_name');
 
@@ -8776,10 +8783,18 @@ class Cron extends MX_Controller
         //     $req['userPostedDate'] = $date->format('Y-m-d');
         
         // die;
-        
+        $month = $this->input->get('month') ?? null;
+        $year = $this->input->get('year') ?? null;
+        if (empty($month)) {
+            $startDate = date('Y-m-d');
+        } else {
+            $year = $year ?? date('Y');
+            $startDate = $year . '-' . $month . '-01';
+        }
+        // print_r($startDate);die;
         // foreach ($dateIntervalQueryParams as $key => $range) {
             // $startDate = date('2026-01-31');
-            $startDate = date('Y-m-d');
+            
             $req['userPostedDate'] = $startDate;
 
             $queryParams = http_build_query($req);
@@ -8822,6 +8837,7 @@ class Cron extends MX_Controller
                         if (array_key_exists($orderNumber, $updateData)) { 
                             $updateData[$orderNumber]['premium'] += $amount;
                         } else {
+                            $salesRepId = (!empty($salesRep)) ? $salesRepList[$salesRep] : null;
                             $updateData[$orderNumber] = [
                                 'order_number' => $orderNumber,
                                 'transaction_date' => $transactionDate,
@@ -8841,8 +8857,20 @@ class Cron extends MX_Controller
                             if (!empty($escrowOfficerName)) {
                                 $updateData[$orderNumber]['escrow_officer_id'] = $escrowOfficerList[$escrowOfficerName] ?? null;
                             }
-                            if (!empty($titleOfficerName) && isset($titleOfficerList[$titleOfficerName])) {
-                                $updateData[$orderNumber]['title_officer'] = $titleOfficerList[$titleOfficerName] ?? null;
+                            if (!empty($titleOfficerName)) {
+                                if (isset($titleOfficerList[$titleOfficerName])) {
+                                    $updateData[$orderNumber]['title_officer'] = $titleOfficerList[$titleOfficerName] ?? null;
+                                }
+                            } else {
+                                $updateData[$orderNumber]['title_officer'] = null;
+                            }
+
+                            if (!empty($salesRep)) {
+                                if (isset($salesRepList[$salesRep])) {
+                                    $updateData[$orderNumber]['sales_rep_id'] = $salesRepList[$salesRep];
+                                }
+                            } else {
+                                $updateData[$orderNumber]['sales_rep_id'] = null;
                             }
                         }
                     }
@@ -8850,10 +8878,12 @@ class Cron extends MX_Controller
                 }
                 // echo "<pre>";
                 // print_r($updateData);die;
+                $totalPremium = 0;
                 if (!empty($updateData)) {
                     foreach ($updateData as $key => $value) {
                         $orderDetails = $this->db->select('id, property_id, transaction_id, premium, escrow_officer_id, softpro_status, file_number, is_softpro_order, survey_notification_sent')->from('order_details')->where(['file_number' => trim($value['order_number']), 'is_softpro_order' => 1])->get()->row_array();
                         $prevPremium = $orderDetails['premium'] ?? 0;
+                        $totalPremium += $value['premium'];
                         if (!empty($orderDetails)) {
                             $salesRepDetails = $this->db->select('id')->from('pct_softpro_lookup_table')->where('full_name', $value['sales_rep'])->get()->row_array();
 
@@ -8903,8 +8933,8 @@ class Cron extends MX_Controller
                         }
                     }
                 }
-
-                $res = 'Data updated for total ' . $updateCount . ' Orders';
+                $res = 'Data updated for total ' . $updateCount . ' Orders and Total Premium updated' . $totalPremium;
+                print_r($res);die;
                 // $this->session->set_flashdata('revenue_success', 'Data updated for total ' . $res . ' Orders');
             }
         // }
