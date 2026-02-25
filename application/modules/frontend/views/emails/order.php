@@ -1274,6 +1274,44 @@ if (isset($escrow_details['company']) && !empty($escrow_details['company'])) {
                     <?php
 }
 ?>
+<!-- FinCEN Reporting Checklist -->
+<!-- Add to open order confirmation email template -->
+<div style="border:2px solid #D4A843; border-radius:8px; padding:20px;margin:20px 0;background:#F8F6F0;">
+  <h3 style="color:#1E2761; margin-top:0; font-family:Arial,sans-serif;">
+    &#9888;&#65039; FinCEN Reporting &mdash; Quick Check
+  </h3>
+  <p style="color:#475569;font-size:14px;font-family:Arial,sans-serif;">
+    Effective March 1, 2026, certain transactions must be reported to FinCEN.
+    Does this transaction meet <strong>any</strong> of the following?
+  </p>
+  <ul style="color:#475569;font-size:14px;font-family:Arial,sans-serif;">
+    <?php if (!empty($SalesAmount)) { ?>
+    <li>Purchase price of
+      <strong>$<?php echo $SalesAmount; ?> or more</strong>
+    </li>
+    <?php } ?>
+    <li>All-cash, wire, or non-traditional
+      financing (no AML-regulated lender)
+    </li>
+    <li>Buyer is a
+      <strong>legal entity or trust</strong>
+      (LLC, Corp, Partnership, Trust)
+    </li>
+  </ul>
+  <p style="color:#475569;font-size:14px;font-family:Arial,sans-serif;">
+    <strong>If none apply:</strong>
+    No action needed.<br>
+    <strong>If any apply:</strong>
+    Click below to check and start intake.
+  </p>
+  <a href="<?php echo $fincen_url; ?>"
+ style="display:inline-block;background:#1E2761;color:#FFFFFF;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;font-size:14px;font-family:Arial,sans-serif;">
+    Check This Transaction &rarr;
+ </a>
+ <p style="color:#999999;font-size:12px;margin-bottom:0;font-family:Arial,sans-serif;">
+  Questions? fincen@pct.com | (866) 724-1050
+ </p>
+</div>
                     <!-- <p style="text-align:center;">
 
                     </p> -->

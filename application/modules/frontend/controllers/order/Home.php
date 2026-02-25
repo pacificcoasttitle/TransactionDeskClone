@@ -922,6 +922,35 @@ class Home extends MX_Controller
                 
                 // Convert to PST
                 
+                $url = env(FIINCEN_URL);
+                $url = $url."/fincen/is-it-reportable?escrow={{ESCROW_NUMBER}}&street={{PROPERTY_STREET_ENCODED}}&city={{PROPERTY_CITY_ENCODED}}";
+                $url = str_replace("{{ESCROW_NUMBER}}", urlencode($orderNumber), $url);
+                $url = str_replace("{{PROPERTY_STREET_ENCODED}}", urlencode($PropertyAddress), $url);
+                $url = str_replace("{{PROPERTY_CITY_ENCODED}}", urlencode($PropertyCity), $url);
+                if ($PropertyState) {
+                    $url .= "&state=".urlencode($PropertyState);
+                }
+                if ($PropertyZip) {
+                    $url .= "&zip=".urlencode($PropertyZip);
+                }
+                if ($County) {
+                    $url .= "&county=".urlencode($County);
+                }
+                if ($SalesAmount) {
+                    $url .= "&price=".urlencode($SalesAmount);
+                }
+                if (isset($closingDate)) {
+                    $url .= "&closing=".urlencode($closingDate);
+                }
+                if (!empty($escrowOfficer)) {
+                    $url .= "&officer=".urlencode($escrowOfficer['officer_name']);
+                }
+                if (!empty($escrowOfficer)) {
+                    $url .= "&email=".urlencode($escrowOfficer['email_address']);
+                }
+                if ($branchName) {
+                    $url .= "&branch=".urlencode($branchName);
+                }
                 $data = [
                     'orderNumber'       => $orderNumber,
                     // 'orderId' => $file_id,
@@ -940,6 +969,8 @@ class Home extends MX_Controller
                     'LegalDescription'  => $LegalDescription,
                     'PrimaryOwner'      => $PrimaryOwner,
                     'SecondaryOwner'    => $SecondaryOwner,
+                    'primaryBorrower'   => $primaryBorrower,
+                    'secondaryBorrower' => $secondaryBorrower,
                     'SalesRep'          => $salesRepName,
                     'TitleOfficer'      => $titleOfficerName,
                     'ProductType'       => $ProductTypeTxt,
@@ -957,8 +988,8 @@ class Home extends MX_Controller
                     'randomString'      => $randomString,
                     'titlePointDetails' => $titlePointDetails,
                     'titlePointShutOff' => $titlePointShutOff,
+                    'fincen_url' => $url
                 ];
-
                 $from_name          = 'Pacific Coast Title Company';
                 $from_mail          = env('FROM_EMAIL');
                 $order_message_body = $this->load->view('emails/order.php', $data, true);
