@@ -942,11 +942,11 @@ class Home extends MX_Controller
                 if (isset($closingDate)) {
                     $url .= "&closing=".urlencode($closingDate);
                 }
-                if (!empty($escrowOfficer)) {
-                    $url .= "&officer=".urlencode($escrowOfficer['officer_name']);
+                if (!empty($escrowOfficerDetails)) {
+                    $url .= "&officer=".urlencode($escrowOfficerDetails['officer_name']);
                 }
-                if (!empty($escrowOfficer)) {
-                    $url .= "&email=".urlencode($escrowOfficer['email_address']);
+                if (!empty($escrowOfficerDetails)) {
+                    $url .= "&email=".urlencode($escrowOfficerDetails['email_address']);
                 }
                 if ($branchName) {
                     $url .= "&branch=".urlencode($branchName);
