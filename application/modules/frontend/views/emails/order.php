@@ -355,18 +355,104 @@
           </tr>
         </table>
         <!-- End Layout 35 (Full width image) -->
+<!-- FinCEN Reporting Checklist -->
+        <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td align="center" style="background-color:#ffffff;">
+              <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
+                <tr>
+                  <td style="padding:30px 20px 30px 20px;">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #D4A843;border-radius:8px;background:#F8F6F0;">
+                      <tr>
+                        <td style="padding:24px 28px;">
+                          <!-- Header -->
+                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;color:#1E2761;padding-bottom:14px;border-bottom:2px solid #D4A843;">
+                                &#9888;&#65039; FinCEN Reporting &mdash; Quick Check
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- Description -->
+                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#475569;padding-top:16px;padding-bottom:12px;">
+                                Effective <strong>March 1, 2026</strong>, certain transactions must be reported to FinCEN. Does this transaction meet <strong>any</strong> of the following?
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- Checklist Items -->
+                          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;">
+                            <?php if (!empty($SalesAmount)) { ?>
+                            <tr>
+                              <td width="28" valign="top" style="font-size:16px;padding:4px 0;">&#8226;</td>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#475569;padding:4px 0;">
+                                Purchase price of <strong>$<?php echo number_format((float)str_replace(',','',$SalesAmount), 0); ?>+</strong>
+                              </td>
+                            </tr>
+                            <?php } ?>
+                            <tr>
+                              <td width="28" valign="top" style="font-size:16px;padding:4px 0;">&#8226;</td>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#475569;padding:4px 0;">
+                                All-cash, wire, or non-traditional financing <span style="color:#94a3b8;">(no AML-regulated lender)</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td width="28" valign="top" style="font-size:16px;padding:4px 0;">&#8226;</td>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#475569;padding:4px 0;">
+                                Buyer is a <strong>legal entity or trust</strong> <span style="color:#94a3b8;">(LLC, Corp, Partnership, Trust)</span>
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- Action guidance -->
+                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#475569;padding-bottom:18px;">
+                                <strong style="color:#16a34a;">If none apply:</strong> No action needed. &nbsp; <strong style="color:#dc2626;">If any apply:</strong> Click below to check &amp; start intake.
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- CTA Button -->
+                          <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td align="center" style="border-radius:6px;background:#1E2761;">
+                                <a href="<?php echo $fincen_url; ?>" target="_blank" style="display:inline-block;padding:14px 32px;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;color:#FFFFFF;text-decoration:none;border-radius:6px;letter-spacing:0.5px;">
+                                  Check This Transaction &rarr;
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- Footer note -->
+                          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#94a3b8;padding-top:16px;border-top:1px solid #e2e0d8;margin-top:14px;">
+                                Questions? <a href="mailto:fincen@pct.com" style="color:#1E2761;text-decoration:none;">fincen@pct.com</a> &nbsp;|&nbsp; (866) 724-1050
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <!-- End FinCEN Reporting Checklist -->
+
         <!-- Layout 7 (Text block with title) -->
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" style="background-color:#ffffff;">
               <table class="container" width="610" align="center" cellpadding="0" cellspacing="0" border="0" style="width:610px;">
                 <tr>
-                  <td class="sp" height="74" style="font-size:1px;line-height:74px;">
+                  <td class="sp" height="20" style="font-size:1px;line-height:74px;">
 
                   </td>
                 </tr>
                 <tr>
-                  <td class="h2" style="font-family:'Open Sans', Arial, sans-serif;line-height:1.074;font-size:28px;font-weight:700;color:#111111;text-align:center;">
+                  <td class="h2" style="font-family:'Open Sans', Arial, sans-serif;line-height:1.374;font-size:28px;font-weight:700;color:#111111;text-align:center;">
                     Title Order Opened!<br><span style="color: #d35400; font-size: 22px;">Order Details Below</span>
                     <br>
                     <?php
@@ -1274,44 +1360,7 @@ if (isset($escrow_details['company']) && !empty($escrow_details['company'])) {
                     <?php
 }
 ?>
-<!-- FinCEN Reporting Checklist -->
-<!-- Add to open order confirmation email template -->
-<div style="border:2px solid #D4A843; border-radius:8px; padding:20px;margin:20px 0;background:#F8F6F0;">
-  <h3 style="color:#1E2761; margin-top:0; font-family:Arial,sans-serif;">
-    &#9888;&#65039; FinCEN Reporting &mdash; Quick Check
-  </h3>
-  <p style="color:#475569;font-size:14px;font-family:Arial,sans-serif;">
-    Effective March 1, 2026, certain transactions must be reported to FinCEN.
-    Does this transaction meet <strong>any</strong> of the following?
-  </p>
-  <ul style="color:#475569;font-size:14px;font-family:Arial,sans-serif;">
-    <?php if (!empty($SalesAmount)) { ?>
-    <li>Purchase price of
-      <strong>$<?php echo $SalesAmount; ?> or more</strong>
-    </li>
-    <?php } ?>
-    <li>All-cash, wire, or non-traditional
-      financing (no AML-regulated lender)
-    </li>
-    <li>Buyer is a
-      <strong>legal entity or trust</strong>
-      (LLC, Corp, Partnership, Trust)
-    </li>
-  </ul>
-  <p style="color:#475569;font-size:14px;font-family:Arial,sans-serif;">
-    <strong>If none apply:</strong>
-    No action needed.<br>
-    <strong>If any apply:</strong>
-    Click below to check and start intake.
-  </p>
-  <a href="<?php echo $fincen_url; ?>"
- style="display:inline-block;background:#1E2761;color:#FFFFFF;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:bold;font-size:14px;font-family:Arial,sans-serif;">
-    Check This Transaction &rarr;
- </a>
- <p style="color:#999999;font-size:12px;margin-bottom:0;font-family:Arial,sans-serif;">
-  Questions? fincen@pct.com | (866) 724-1050
- </p>
-</div>
+
                     <!-- <p style="text-align:center;">
 
                     </p> -->
