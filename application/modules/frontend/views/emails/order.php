@@ -387,7 +387,7 @@
                             <tr>
                               <td width="28" valign="top" style="font-size:16px;padding:4px 0;">&#8226;</td>
                               <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#475569;padding:4px 0;">
-                                Purchase price of <strong>$<?php echo number_format((float)str_replace(',','',$SalesAmount), 0); ?>+</strong>
+                                Purchase price of <strong>$<?php echo number_format((float)str_replace(',','',$SalesAmount), 0); ?> or more</strong>
                               </td>
                             </tr>
                             <?php } ?>
