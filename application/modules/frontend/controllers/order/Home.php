@@ -1010,6 +1010,7 @@ class Home extends MX_Controller
                     'randomString'      => $randomString,
                     'titlePointDetails' => $titlePointDetails,
                     'titlePointShutOff' => $titlePointShutOff,
+                    'TransactionType'   => $TransactionType,
                     'fincen_url' => $url
                 ];
                 $from_name          = 'Pacific Coast Title Company';

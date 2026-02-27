@@ -355,7 +355,8 @@
           </tr>
         </table>
         <!-- End Layout 35 (Full width image) -->
-<!-- FinCEN Reporting Checklist -->
+        <!-- FinCEN Reporting Checklist -->
+         <?php if ($TransactionType == 'Purchase') {?>
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" style="background-color:#ffffff;">
@@ -439,6 +440,7 @@
             </td>
           </tr>
         </table>
+        <?php } ?>
         <!-- End FinCEN Reporting Checklist -->
 
         <!-- Layout 7 (Text block with title) -->
