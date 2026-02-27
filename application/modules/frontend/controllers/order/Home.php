@@ -270,6 +270,10 @@ class Home extends MX_Controller
 
                 if ($orderUser['is_escrow']) {
                     $escrowId = $orderUser['id'];
+                    $escrowName  = !empty($orderUser['first_name']) ? $orderUser['first_name'] . ' ' . $orderUser['last_name'] : '';
+                    $escrowCompany  = !empty($orderUser['company_name']) ? $orderUser['company_name'] : $escrowName;
+                    $escrowEmail  = !empty($orderUser['email_address']) ? $orderUser['email_address'] : '';
+                    $escrowTelephone  = !empty($orderUser['phone']) ? $orderUser['phone'] : '';
                 } else if ($orderUser['is_lender']) {
                     $lenderId = $orderUser['id'];
                 }
@@ -942,15 +946,27 @@ class Home extends MX_Controller
                 if (isset($closingDate)) {
                     $url .= "&closing=".urlencode($closingDate);
                 }
-                if (!empty($escrowOfficerDetails)) {
-                    $url .= "&officer=".urlencode($escrowOfficerDetails['officer_name']);
+                if (isset($escrowId) && !empty($escrowId)) {
+                    // $escrowTelephone $escrowEmail $escrowCompany $escrowName $escrowId
+                    if (!empty($escrowCompany)) {
+                        $url .= "&officer=".urlencode($escrowCompany);
+                    }
+                    if (!empty($escrowEmail)) {
+                        $url .= "&email=".urlencode($escrowEmail);
+                    }
+                    if (!empty($escrowTelephone)) {
+                        $url .= "&phone=".urlencode($escrowTelephone);
+                    }
                 }
-                if (!empty($escrowOfficerDetails)) {
-                    $url .= "&email=".urlencode($escrowOfficerDetails['email_address']);
-                }
-                if (!empty($escrowOfficerDetails) && !empty($escrowOfficerDetails['phone'])) {
-                    $url .= "&phone=".urlencode($escrowOfficerDetails['phone']);
-                }
+                // if (!empty($escrowOfficerDetails)) {
+                //     $url .= "&officer=".urlencode($escrowOfficerDetails['officer_name']);
+                // }
+                // if (!empty($escrowOfficerDetails)) {
+                //     $url .= "&email=".urlencode($escrowOfficerDetails['email_address']);
+                // }
+                // if (!empty($escrowOfficerDetails) && !empty($escrowOfficerDetails['phone'])) {
+                //     $url .= "&phone=".urlencode($escrowOfficerDetails['phone']);
+                // }
                 if ($branchName) {
                     $url .= "&branch=".urlencode($branchName);
                 }
