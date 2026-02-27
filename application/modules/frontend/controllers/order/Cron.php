@@ -8339,8 +8339,8 @@ class Cron extends MX_Controller
             $req['orderNumber'] = $fileNumber;
             $req['isAutomationCall'] = false;
             
-            echo "<pre>";
-            print_r($value);
+            // echo "<pre>";
+            // print_r($value);
             
             $queryParams = http_build_query($req);
             $reqData     = json_encode($req);
@@ -8348,7 +8348,7 @@ class Cron extends MX_Controller
             $response    = $this->softpro->make_request('GET', 'get_single_prelim_report', $reqData, $queryParams);
             $this->apiLogs->syncLogs($userdata['id'], 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, json_encode($response), 0, $logid);
             
-            print_r($response);
+            // print_r($response);
             
             if (!empty($response) && $response['status'] == 'success') {
             
@@ -8357,7 +8357,7 @@ class Cron extends MX_Controller
                 $this->db->where('is_prelim_document', 1);
                 $this->db->where('order_id', $value['id']);
                 $documentData = $this->db->get()->row_array();
-                print_r($documentData);
+                // print_r($documentData);
                 // $this->db->select('*');
                 // $this->db->from('pct_order_prelim_summary as s');
                 // $this->db->where('file_number', $response['OrderNumber']);
@@ -8934,7 +8934,7 @@ class Cron extends MX_Controller
                     }
                 }
                 $res = 'Data updated for total ' . $updateCount . ' Orders and Total Premium updated' . $totalPremium;
-                print_r($res);die;
+                // print_r($res);die;
                 // $this->session->set_flashdata('revenue_success', 'Data updated for total ' . $res . ' Orders');
             }
         // }
