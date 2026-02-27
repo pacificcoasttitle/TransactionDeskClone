@@ -1271,13 +1271,13 @@ class Home extends MX_Controller
                 if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1) // Removed LV and Tax file status condition as per jerry's request on 28-10-2025 in email
                 {
                     // $to = 'hitesh.p@crestinfosystems.com';
-                    // $cc = ['piyush.j@crestinfosystems.net'];
+                    $cc[] = 'piyush.j@crestinfosystems.com';
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
-                    $logid       = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, [], $orderId, 0);
+                    $logid       = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_softpro_order_mail_home_index_' . $orderNumber, '', $mailParams, [], $orderId, 0);
                     $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc, []);
-                    $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_resware_order_mail_home_index_' . $orderNumber, '', $mailParams, ['status' => $mail_result], $orderId, $logid);
+                    $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_confirmation_softpro_order_mail_home_index_' . $orderNumber, '', $mailParams, ['status' => $mail_result], $orderId, $logid);
                     // $to = ['piyush.j@crestinfosystems.net'];
                     // $cc[] = 'piyush.j@crestinfosystems.net';
                     // $taxDataStatus = 'falied';
