@@ -194,6 +194,7 @@ $route['get-survey-details']                    = 'frontend/order/common/getSurv
 $route['getSoftproCompanyByName']                = 'frontend/order/common/getSoftproCompanyByName';
 $route['mark-as-read']                           = 'frontend/order/common/markAsRead';
 $route['get-revenue-data']                       = 'frontend/order/common/getRevenueData';
+$route['get-open-order-data']                    = 'frontend/order/common/getOpenOrderData';
 
 /** Review Prelim Routes */
 $route['resware-fetch-data']                    = 'frontend/order/ReviewPrelim/fetchData';

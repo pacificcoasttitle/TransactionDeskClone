@@ -102,3 +102,39 @@
         </div>
     </div>
 </div>
+
+<!-- Open Orders Modal -->
+<div class="modal fade" width="1200px" id="open_order_model" tabindex="-1" role="dialog" aria-labelledby="Open Orders Information" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="width:100%;height:auto;">
+        <div class="modal-content">
+            <form method="POST" action="">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Open Orders Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="smart-forms smart-container">
+                                    <div class="search-result">
+                                        <div id="deliverables-details-fields">
+                                            <div class="frm-row" id="clone_container">
+                                                <div class="section colm colm12" id="clone-email-address" style="margin-bottom: 0px !important;">
+                                                    <div class="toclone">
+                                                        <div class="spacer-b10">
+                                                            <label class="field" id="open_order_container"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

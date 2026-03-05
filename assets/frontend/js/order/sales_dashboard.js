@@ -1119,6 +1119,37 @@ function getRevenueDataBasedOnMonth(month) {
     });
 }
 
+function getOpenOrderDataBasedOnMonth(month) {
+    $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
+    $('#page-preloader').css('display', 'block');
+    var user_id = $('#sales_user_production_filter').val();
+    var year = $('#productionYear').val();
+    $.ajax({
+        url: base_url + "get-open-order-data",
+        method: "POST",
+        data: {
+            user_id: user_id,
+            month: month,
+            year: year,
+            user_type: 'sales_rep'
+        },
+        success: function (data) {
+            var result = jQuery.parseJSON(data);
+            $('#page-preloader').css('display', 'none');
+            if (result.status == 'success') {
+                $('#open_order_container').html(result.data);
+                $('#open_order_model').modal('show');
+            } else {
+                $('#open_order_container').html(result.data);
+                $('#open_order_model').modal('show');
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#page-preloader').css('display', 'none');
+        }
+    });
+}
+
 // function fetchPrelimDocument(fileNumber = '') {
 //     $("#page-preloader").show();
 //     let queryParams = '';

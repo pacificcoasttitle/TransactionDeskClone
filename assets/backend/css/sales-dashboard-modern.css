@@ -1113,3 +1113,10 @@
     padding: 1rem 1.5rem;
     border-radius: 0 0 var(--pct-radius) var(--pct-radius);
 }
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

@@ -3800,6 +3800,57 @@ class Common extends MX_Controller
         exit;
     }
 
+    public function getOpenOrderData()
+    {
+        date_default_timezone_set('America/Los_Angeles');
+        $user_id = $this->input->post('user_id');
+        $user_type = $this->input->post('user_type') ?? 'sales_rep';
+        $year = $this->input->post('year') ?? date('Y');
+        $openOrderData = $this->order->getOpenedOrderData($this->input->post('month') ? $this->input->post('month') : date('m'), $user_id, $user_type, $year);
+        $data = "<table class='table table-bordered' id='tbl-open-orders-listing' width='100%' cellspacing='0'>
+            <thead>
+                <tr>
+                    <th>Sr No</th>
+                    <th>File Number</th>
+                    <th>Address</th>
+                    <th>Prod Type</th>
+                    <th>Status</th>
+                    <th>Created Date</th>
+                </tr>
+            </thead>
+        <tbody>";
+
+        $i = 1;
+        if (!empty($openOrderData)) {
+            foreach ($openOrderData as $order) {
+                $file_number = $order['file_number'];
+                $full_address = $order['full_address'];
+                $prod_type = $order['prod_type'];
+                $status = ucfirst($order['softpro_status']);
+                $created_date = !empty($order['created_at']) ? date('m/d/Y', strtotime($order['created_at'])) : '-';
+                $data .= "<tr>
+                                <td width='8%'>$i</td>
+                                <td width='12%'>$file_number</td>
+                                <td width='40%'>$full_address</td>
+                                <td width='12%'>$prod_type</td>
+                                <td width='12%'>$status</td>
+                                <td width='16%'>$created_date</td>
+                            </tr>";
+                $i++;
+            }
+        } else {
+            $data .= "<tr class='norecord'><td colspan='6'>No records found.</td></tr>";
+        }
+        $data .= '</tbody></table>';
+        if (!empty($data)) {
+            $result = array('status' => 'success', 'data' => $data);
+        } else {
+            $result = array('status' => 'error', 'data' => $data);
+        }
+        echo json_encode($result);
+        exit;
+    }
+
     public function surveysResult()
     {
         if (empty($this->session->userdata('user'))) {

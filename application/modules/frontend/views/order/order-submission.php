@@ -108,13 +108,13 @@
         <div class="row mt-4" id="grantDeedInfo">
             <div class="col-12">
                 <div class="order-card">
-                    <div class="order-card-header d-flex">Grant Deed Information</div>
+                    <div class="order-card-header d-flex flex-center">Grant Deed Information</div>
                     <?php
                     $cs4_result_id_status = isset($tp_data['cs4_message']) && !empty($tp_data['cs4_message']) ? $tp_data['cs4_message'] : '';
                     ?>
                     <div class="row">
                         <div class="col-md-4 mb-3 mb-md-0">
-                            <div id="grantDeedInfoFile" class="d-flex">
+                            <div id="grantDeedInfoFile" class="d-flex flex-center">
                                 <?php
                                 $L_V_serviceId = isset($tp_data['cs4_service_id']) && !empty($tp_data['cs4_service_id']) ? $tp_data['cs4_service_id'] : '';
                                 $instrumentNumber = isset($tp_data['cs4_instrument_no']) && !empty($tp_data['cs4_instrument_no']) ? $tp_data['cs4_instrument_no'] : '';
@@ -170,7 +170,7 @@
                         </div>
 
                         <div class="col-md-4 mb-3 mb-md-0">
-                            <div id="instrumentInfoFile"  class="d-flex">
+                            <div id="instrumentInfoFile"  class="d-flex flex-center">
                                 <?php if (isset($deed_file_url) && !empty($deed_file_url)) {
                                     if (env('AWS_ENABLE_FLAG') == 1) { ?>
                                         <a href="javascript:void(0)" class="btn btn-success btn-icon-split" onclick="downloadDocumentFromAws('<?php echo $deed_file_url; ?>', 'grant_deed');">
@@ -194,7 +194,7 @@
 
                         <?php $apn = str_replace('0000', '0-000', $apn); ?>
                         <div class="col-md-4">
-                            <div id="taxDocumentInfo"  class="d-flex">
+                            <div id="taxDocumentInfo"  class="d-flex flex-center">
                                 <?php if (isset($tax_file_url) && !empty($tax_file_url)) {
                                     if (env('AWS_ENABLE_FLAG') == 1) { ?>
                                         <a href="javascript:void(0)" class="btn btn-success btn-icon-split" onclick="downloadDocumentFromAws('<?php echo $tax_file_url; ?>', 'tax');">
@@ -275,8 +275,8 @@
                     <p>And you'll get solutions for everything</p>
                 </div>
                 <div class="col-md-4 text-md-right">
-                    <a class="btn mr-2 mb-2" href="https://clients.pacificcoasttitle.com/login.aspx?ReturnUrl=/&amp;officeid=1">Open Orders</a>
-                    <a class="btn mb-2" href="rate-book.html">Get Rates</a>
+                    <a class="btn mr-2 mb-2" href="<?php echo base_url() . 'order'; ?>">Open Orders</a>
+                    <a class="btn mb-2" href="<?php echo base_url() . 'fees'; ?>">Get Rates</a>
                 </div>
             </div>
         </div>

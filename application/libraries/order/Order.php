@@ -5925,6 +5925,33 @@ class Order
         return $query->result_array();
     }
 
+    public function getOpenedOrderData($month, $userId, $user_type = 'sales_rep', $year = null)
+    {
+        $userdata = $this->CI->session->userdata('user');
+        if (empty($userId)) {
+            $userId = $userdata['id'];
+        }
+        if (empty($year)) {
+            $year = date('Y');
+        }
+        $this->CI->db->select('order_details.file_number, order_details.id, property_details.full_address, order_details.prod_type, order_details.softpro_status, order_details.created_at')
+            ->from('order_details')
+            ->join('property_details', 'order_details.property_id = property_details.id', 'left')
+            ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+
+        $this->CI->db->where('order_details.is_softpro_order', 1);
+        $this->CI->db->where('order_details.file_number is not null');
+        $this->CI->db->where('MONTH(order_details.created_at)', $month);
+        $this->CI->db->where('YEAR(order_details.created_at)', $year);
+        if ($user_type == 'title_officer') {
+            $this->CI->db->where('transaction_details.title_officer', $userId);
+        } else {
+            $this->CI->db->where('transaction_details.sales_representative', $userId);
+        }
+        $query = $this->CI->db->get();
+        return $query->result_array();
+    }
+
     public function getEscrowRevenueData($month, $userId)
     {
         if (empty($year)) {
