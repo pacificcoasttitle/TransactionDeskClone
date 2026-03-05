@@ -6995,7 +6995,7 @@ class Cron extends MX_Controller
                 $salesPrice = $list['SalesPrice'] ?? null;
                 $transactionType = $list['TransactionType'] ?? null;
                 $productType = $list['ProductType'] ?? null;
-                $receivedDate = $list['ReceivedDate'] ?? null;
+                $receivedDate = $list['ReceivedDate'] ?? date('Y-m-d H:i:s');
                 $completedDate = $list['CompletedDate'] ?? null;
                 $closedDate = ($orderStatus == 'closed') ? $list['ModifiedDate'] : null;
                 $marketingRep = $list['MarketingRep'] ?? null;
