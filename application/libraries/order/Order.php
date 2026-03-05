@@ -2514,11 +2514,13 @@ class Order
 
     public function getClosedOrderStats($month, $userId, $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
+        // SUM(CASE WHEN transaction_details.transaction_type = "Other" THEN 1 ELSE 0 END) as other_close_count,
+        // SUM(CASE WHEN transaction_details.transaction_type = "Other" THEN premium ELSE 0 END) as other_close_premium
         $this->CI->db->select('
             SUM(CASE WHEN transaction_details.transaction_type = "Refinance" THEN 1 ELSE 0 END) as refi_close_count,
             SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN 1 ELSE 0 END) as sale_close_count,
             SUM(CASE WHEN transaction_details.transaction_type = "Refinance" THEN premium ELSE 0 END) as refi_close_premium,
-            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN premium ELSE 0 END) as sale_close_premium
+            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN premium ELSE 0 END) as sale_close_premium,
         ')->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         $this->CI->db->where('order_details.is_softpro_order', 1);
@@ -2572,18 +2574,19 @@ class Order
         return [
             'refi_close_count'    => (int) $result['refi_close_count'],
             'sale_close_count'    => (int) $result['sale_close_count'],
-            'total_close_count'   => (int) ($result['refi_close_count'] + $result['sale_close_count']),
+            'total_close_count'   => (int) ($result['refi_close_count'] + $result['sale_close_count']), // + $result['other_close_count']),
             'refi_close_premium'  => (float) $result['refi_close_premium'],
             'sale_close_premium'  => (float) $result['sale_close_premium'],
-            'total_close_premium' => (float) ($result['refi_close_premium'] + $result['sale_close_premium']),
+            'total_close_premium' => (float) ($result['refi_close_premium'] + $result['sale_close_premium']), // + $result['other_close_premium']),
         ];
     }
 
     public function getOpenOrderStats($month, $userId, $closedOrderNumbers = [], $year = 0, $escrow_flag = 0, $dashboard_flag = 0, $yearly_flag = 0)
     {
+        // SUM(CASE WHEN transaction_details.transaction_type = "Other" THEN 1 ELSE 0 END) as other_open_count
         $this->CI->db->select('
             SUM(CASE WHEN transaction_details.transaction_type = "Refinance" THEN 1 ELSE 0 END) as refi_open_count,
-            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN 1 ELSE 0 END) as sale_open_count
+            SUM(CASE WHEN transaction_details.transaction_type = "Purchase" THEN 1 ELSE 0 END) as sale_open_count,
         ')->from('order_details')
             ->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
         if (! empty($closedOrderNumbers)) {
@@ -2637,7 +2640,7 @@ class Order
         return [
             'refi_open_count'  => (int) $result['refi_open_count'],
             'sale_open_count'  => (int) $result['sale_open_count'],
-            'total_open_count' => (int) ($result['refi_open_count'] + $result['sale_open_count']),
+            'total_open_count' => (int) ($result['refi_open_count'] + $result['sale_open_count']), // + $result['other_open_count']),
         ];
     }
 
@@ -5949,6 +5952,7 @@ class Order
             $this->CI->db->where('transaction_details.sales_representative', $userId);
         }
         $query = $this->CI->db->get();
+        // print_r($this->CI->db->last_query());die;
         return $query->result_array();
     }
 

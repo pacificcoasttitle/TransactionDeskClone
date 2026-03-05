@@ -901,6 +901,7 @@ class SalesRep extends MX_Controller
             $refi_open_count = $openOrderStats['refi_open_count'];// !empty($openRefiResult['refi_count']) ? $openRefiResult['refi_count'] : 0;
             // $openSaleResult = $this->order->getOpenOrdersCountForSaleProducts($month, $userId, [], $year);
             $sale_open_count = $openOrderStats['sale_open_count']; // !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
+            $other_open_count = $openOrderStats['other_open_count']; // !empty($openSaleResult['sale_count']) ? $openSaleResult['sale_count'] : 0;
             $salesHistory[$iM - 1]['total_open_count'] = $openOrderStats['total_open_count'];// $sale_open_count + $refi_open_count;
 
 
@@ -926,6 +927,7 @@ class SalesRep extends MX_Controller
                 $refi_close_order_percetage = round(($refi_close_count * 100) / $totalCount);
                 $sale_close_order_percetage = round(($sale_close_count * 100) / $totalCount);
                 $salesHistory[$iM - 1]['close_order_percetage'] = $refi_close_order_percetage + $sale_close_order_percetage;
+                // $salesHistory[$iM - 1]['close_order_percetage'] = round(($closedOrderStats['total_close_count'] * 100) / $totalCount);
             } else {
                 $refi_close_order_percetage = 0;
                 $sale_close_order_percetage = 0;
