@@ -7254,6 +7254,7 @@ class Cron extends MX_Controller
             
             if (!empty($response)) {
                 
+                $this->load->model('order/document');
                 foreach ($response as $key => $data) {
                     if ($data['Status'] == 200 && !empty($data['data'])) {
                         $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
@@ -7281,7 +7282,6 @@ class Cron extends MX_Controller
                                     $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
                                     
                                     if ($uploadStatus) {
-                                        $this->load->model('order/document');
                                         $documentData = array(
                                             'document_name' => $document_name,
                                             'original_document_name' => urldecode($documentName),
