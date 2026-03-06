@@ -1271,7 +1271,7 @@ class Home extends MX_Controller
                 if ((!isset($orderDetails['lp_file_number']) || empty($orderDetails['lp_file_number'])) && $emailSentFlag != 1) // Removed LV and Tax file status condition as per jerry's request on 28-10-2025 in email
                 {
                     // $to = 'hitesh.p@crestinfosystems.com';
-                    $cc[] = 'piyush.j@crestinfosystems.com';
+                    // $cc[] = 'piyush.j@crestinfosystems.com';
                     if (isset($titleOfficerDetails['email_address']) && !empty($titleOfficerDetails['email_address'])) {
                         $cc[] = $titleOfficerDetails['email_address'];
                     }
