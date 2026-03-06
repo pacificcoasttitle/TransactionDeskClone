@@ -7234,7 +7234,7 @@ class Cron extends MX_Controller
             $req['DateTo'] = $endDate;
         }
         // print_r($req);die;
-        $dateIntervalQueryParams = $this->getDateIntervals($startDate, $endDate, 6);
+        $dateIntervalQueryParams = $this->getDateIntervals($startDate, $endDate, 3);
         // echo "<pre>";
         // print_r($dateIntervalQueryParams);die;
         // $queryParams = http_build_query($req);
