@@ -355,8 +355,8 @@ class Common extends MX_Controller
         $results['summary_view'] = $this->load->view('order/ai_prelim_summary', $data, true);
         $results['file_number'] = $fileNumber;
         $results['address'] = $address;
-        
-        echo json_encode($results);
+        // echo json_encode($results);
+        echo json_encode($results, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
     }
 
     public function regeneratePrelimSummary()
