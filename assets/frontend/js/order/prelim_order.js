@@ -31,8 +31,8 @@ function summary() {
         },
         dataType: "html",
         success: function (response) {
-            var results = JSON.parse(response);
-            $('#links_details').html(results);
+            // var results = JSON.parse(response);
+            $('#links_details').html(response);
             $('#page-preloader').css('display', 'none');
         }
     });

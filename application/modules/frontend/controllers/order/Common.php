@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $js_version = '5.09';
+    private $js_version = '5.10';
  
     public function __construct()
     {
@@ -174,7 +174,8 @@ class Common extends MX_Controller
         $data['prelim_details']['property_type'] = $property_type;
         
         $results = $this->load->view('order/review_file_summary', $data, true);
-        echo json_encode($results, true);
+        echo $results; exit;
+        // echo json_encode($results, true);exit;
     }
 
     public function getPrelimSummary()
@@ -303,6 +304,37 @@ class Common extends MX_Controller
                 
                 $tessaSummaryHtml = $this->tessa->format_enhanced_analysis($tessaText, $fileName);
                 $summaryData['html'] = $tessaSummaryHtml;
+
+
+                $configData                  = $this->order->getConfigData();
+                $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
+                $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
+                if ($prelimSummaryEmailFlag == 1 && $summaryExist == 0) {
+                    // $emailData['html'] = $this->parsedown->text($markdown);
+                    $emailData['html'] = $tessaSummaryHtml;
+                    $emailData['file_number'] = $fileNumber;
+                    $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
+                    $from_name = 'Pacific Coast Title Company';
+                    $from_mail = env('FROM_EMAIL');
+                    $to = 'ghernandez@pct.com';
+                    $subject = 'Prelim Summary : '. $fileNumber;
+                    $cc = ['piyush.j@crestinfosystems.com'];
+                    $mailParams = array(
+                        'from_mail' => $from_mail,
+                        'from_name' => $from_name,
+                        'to' => $to,
+                        'subject' => $subject,
+                        'message' => $fileNumber,
+                        'cc' => $cc,
+                    );
+                    $this->load->helper('sendemail');
+                    $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array(), 0, 0);
+                    $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], $cc, []);
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array('status' => $mail_result), 0, $logid);
+                } else {
+                    $res = "Prelim Summary Email is disabled by Admin.";
+                    $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', 'send_mail_for_prelim_summary', null, $res, 0, 0);
+                }
             // } else {
             //     $markdown = 'No content found.';
             //     $summaryData['html'] = 'No content found.';
@@ -318,35 +350,7 @@ class Common extends MX_Controller
         $data['prelim_details']['address'] = $address;
         $data['prelim_details']['file_number'] = $fileNumber;
         
-        $configData                  = $this->order->getConfigData();
-        $prelimSummaryEmailFlag = $configData['enable_prelim_summary_email']['is_enable'];
-        $prelimSummaryShutOffFlag = $configData['prelim_summary_shut_off']['is_enable'];
-        if ($prelimSummaryEmailFlag == 1 && $summaryExist == 0) {
-            // $emailData['html'] = $this->parsedown->text($markdown);
-            $emailData['html'] = $tessaSummaryHtml;
-            $emailData['file_number'] = $fileNumber;
-            $message = $this->load->view('emails/prelim_summary.php', $emailData, true);
-            $from_name = 'Pacific Coast Title Company';
-            $from_mail = env('FROM_EMAIL');
-            $to = 'ghernandez@pct.com';
-            $subject = 'Prelim Summary : '. $fileNumber;
-            $cc = ['piyush.j@crestinfosystems.com'];
-            $mailParams = array(
-                'from_mail' => $from_mail,
-                'from_name' => $from_name,
-                'to' => $to,
-                'subject' => $subject,
-                'message' => $fileNumber,
-                'cc' => $cc,
-            );
-            $this->load->helper('sendemail');
-            $logid = $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array(), 0, 0);
-            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, [], $cc, []);
-            $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', '', $mailParams, array('status' => $mail_result), 0, $logid);
-        } else {
-            $res = "Prelim Summary Email is disabled by Admin.";
-            $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_for_prelim_summary', 'send_mail_for_prelim_summary', null, $res, 0, 0);
-        }
+        
 
         $results['summary_view'] = $this->load->view('order/ai_prelim_summary', $data, true);
         $results['file_number'] = $fileNumber;
