@@ -131,7 +131,7 @@ class Common extends MX_Controller
 
         $prelim_details = $this->reviewPrelimData->get_rows($condition);
 
-        $data = json_decode($prelim_details['resware_json'], true);
+        $data = json_decode($prelim_details['chatgpt_json'], true);
 
         if (isset($data) && !empty($data)) {
             // $this->load->library('order/parsedown');
