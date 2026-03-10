@@ -102,11 +102,10 @@ function getPrelimSummary(fileNumber) {
         data: {
             fileNumber: fileNumber
         },
-        dataType: "html",
-        success: function (response) {
+        dataType: "json",
+        success: function (results) {
             $('#page-preloader').css('display', 'none');
-            console.log('response ==', response);
-            var results = JSON.parse(response);
+            // var results = JSON.parse(response);
             if (results.status == 'error') {
                 alert(results.message);
                 return;
@@ -132,10 +131,10 @@ function regeneratePrelimSummary(fileNumber) {
         data: {
             fileNumber: fileNumber
         },
-        dataType: "html",
-        success: function (response) {
+        dataType: "json",
+        success: function (results) {
 
-            var results = JSON.parse(response);
+            // var results = JSON.parse(response);
             $('#prelim_property').text(results.address);
             $('#prelim_file_number').text(results.file_number);
             $('.prelim_summary').html(results.summary_view);
