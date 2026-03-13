@@ -1327,14 +1327,14 @@ class Home extends MX_Controller
                         'subject'   => $subject,
                         'message'   => json_encode($email_data),
                     ];
-
-                    if (!empty($escrowEmail) && $loanFlag == 1) {
+                    /** Borrower verification mail stopped as per jerry's request in email on 13-03-2026 */
+                    /*if (!empty($escrowEmail) && $loanFlag == 1) {
                         $to               = $escrowEmail;
                         $mailParams['to'] = $to;
                         $logid            = $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, [], $orderId, 0);
                         $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body);
                         $this->apiLogs->syncLogs($userdata['id'], 'sendgrid', 'send_mail_to_escrow_client', '', $mailParams, ['status' => $escrow_mail_result], $orderId, $logid);
-                    }
+                    }*/
 
                     // if (!empty($escrow_officer_email)) {
                     //     $to = $escrow_officer_email;

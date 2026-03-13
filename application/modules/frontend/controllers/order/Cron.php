@@ -2847,7 +2847,8 @@ class Cron extends MX_Controller
 
     public function sendMailEscrowUsersForBorrowerVerification()
     {
-        $this->db->select('order_details.file_id,
+        /** Borrower verification mail stopped as per jerry's request in email on 13-03-2026 */
+        /*$this->db->select('order_details.file_id,
             order_details.file_number,
             order_details.id as orderId,
             order_details.random_number,
@@ -2913,7 +2914,7 @@ class Cron extends MX_Controller
                 $escrow_mail_result = send_email($from_mail, $from_name, $to, $subject, $message_body, [], $cc);
                 $this->apiLogs->syncLogs(0, 'sendgrid', 'send_mail_to_escrow_officer', '', $mailParams, ['status' => $escrow_mail_result], $res['orderId'], $logid);
             }
-        }
+        }*/
     }
 
     /*public function importOrdersUsingFileNumber()
