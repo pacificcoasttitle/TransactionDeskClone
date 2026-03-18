@@ -161,9 +161,9 @@ class Login extends MX_Controller
                         $session_data['full_name'] = $session_data['name'] = isset($user['officer_name']) && !empty($user['officer_name']) ? $user['officer_name'] : '';
                         $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-dashboard');
                     } else if ($user['is_title_production'] == 1) {
-                        $response = array('status' => 'success', 'message' => '', 'url' => 'pay-off-dashboard');
-                    } else if ($user['is_payoff_user'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'file-upload');
+                    } else if ($user['is_payoff_user'] == 1) {
+                        $response = array('status' => 'success', 'message' => '', 'url' => 'pay-off-dashboard');
                     }  else if ($user['is_escrow_production'] == 1) {
                         $response = array('status' => 'success', 'message' => '', 'url' => 'escrow-officer-dashboard');
                     } else {
