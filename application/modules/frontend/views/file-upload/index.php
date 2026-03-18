@@ -40,7 +40,7 @@ if ($userdata['is_sales_rep'] == 1) {
                                 <div class="col-md-5">
                                     <div class="form-group">
                                         <label class="form-label">Order Number</label>
-                                        <input type="text" class="form-control" name="order_number" value="" placeholder="Enter Order Number">
+                                        <input type="text" class="form-control" name="order_number" value="" placeholder="Enter Order Number. Ex. 2000000-OCT">
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">Document Name</label>

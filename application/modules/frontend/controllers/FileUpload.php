@@ -51,6 +51,17 @@ class FileUpload extends MX_Controller
                 }
                 $orderNumber = $this->sanitizeFilename($this->input->post('order_number'));
                 $documentName = $this->sanitizeFilename($this->input->post('document_name'));
+                $condition = [
+                    'where' => [
+                        'file_number' => $orderNumber,
+                    ],
+                ];
+                $order = $this->order->get_order($condition);
+                if(empty($order)) {
+                    $errMsg = 'Order not found. Please enter valid order number.';
+                    $this->session->set_flashdata('error', $errMsg);
+                    redirect('/file-upload');
+                }
                 if (!empty($_FILES['multiFiles']['name'])) {
                     $files = $_FILES['multiFiles'];
                     $cpt = count($files['name']);
