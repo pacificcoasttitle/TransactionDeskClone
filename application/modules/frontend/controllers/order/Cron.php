@@ -6928,8 +6928,13 @@ class Cron extends MX_Controller
         }
 
         if (empty($_GET)) {
-            // $startDate = date('m-d-Y', strtotime('-1 day', strtotime(date('Y-m-d'))));
-            $startDate = date('m-d-Y');
+            $currentHour = (int) date('G');
+            if ($currentHour === 3) {
+                // At 3:55 AM, fetch yesterday's orders to cover 22:55/23:55 failures
+                $startDate = date('m-d-Y', strtotime('-1 day'));
+            } else {
+                $startDate = date('m-d-Y');
+            }
             // $endDate = date('m-d-Y');
             $req['DateFrom'] = $startDate;
             $req['DateTo'] = '';//$endDate;
