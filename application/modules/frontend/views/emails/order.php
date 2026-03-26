@@ -356,7 +356,7 @@
         </table>
         <!-- End Layout 35 (Full width image) -->
         <!-- FinCEN Reporting Checklist -->
-         <?php if ($TransactionType == 'Purchase') {?>
+        <!-- <?php if ($TransactionType == 'Purchase') {?>
         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td align="center" style="background-color:#ffffff;">
@@ -366,7 +366,6 @@
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border:2px solid #D4A843;border-radius:8px;background:#F8F6F0;">
                       <tr>
                         <td style="padding:24px 28px;">
-                          <!-- Header -->
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                               <td style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;color:#1E2761;padding-bottom:14px;border-bottom:2px solid #D4A843;">
@@ -374,7 +373,6 @@
                               </td>
                             </tr>
                           </table>
-                          <!-- Description -->
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                               <td style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#475569;padding-top:16px;padding-bottom:12px;">
@@ -382,7 +380,6 @@
                               </td>
                             </tr>
                           </table>
-                          <!-- Checklist Items -->
                           <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:14px;">
                             <?php if (!empty($SalesAmount)) { ?>
                             <tr>
@@ -405,7 +402,6 @@
                               </td>
                             </tr>
                           </table>
-                          <!-- Action guidance -->
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                               <td style="font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#475569;padding-bottom:18px;">
@@ -413,7 +409,6 @@
                               </td>
                             </tr>
                           </table>
-                          <!-- CTA Button -->
                           <table cellpadding="0" cellspacing="0" border="0">
                             <tr>
                               <td align="center" style="border-radius:6px;background:#1E2761;">
@@ -423,7 +418,6 @@
                               </td>
                             </tr>
                           </table>
-                          <!-- Footer note -->
                           <table width="100%" cellpadding="0" cellspacing="0" border="0">
                             <tr>
                               <td style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#94a3b8;padding-top:16px;border-top:1px solid #e2e0d8;margin-top:14px;">
@@ -440,7 +434,7 @@
             </td>
           </tr>
         </table>
-        <?php } ?>
+        <?php } ?> -->
         <!-- End FinCEN Reporting Checklist -->
 
         <!-- Layout 7 (Text block with title) -->
