@@ -1841,7 +1841,7 @@ class Cron extends MX_Controller
         $this->db->where("DATE(created) < (curdate() - INTERVAL " . getenv('NO_OF_DAYS_TO_KEEP_API_LOGS') . " DAY)");
         $this->db->delete('pct_order_cron_logs');
 
-        $this->db->where("DATE(created_at) < (curdate() - INTERVAL 1 DAY)");
+        // $this->db->where("DATE(created_at) < (curdate() - INTERVAL 1 DAY)");
         $this->db->where("is_synced", 1);
         $this->db->delete('sp_file_upload_logs');
         $this->db->query('OPTIMIZE TABLE sp_file_upload_logs');
@@ -6929,7 +6929,7 @@ class Cron extends MX_Controller
 
         if (empty($_GET)) {
             $currentHour = (int) date('G');
-            if ($currentHour === 3) {
+            if ($currentHour === 3 || $currentHour === 4) {
                 // At 3:55 AM, fetch yesterday's orders to cover 22:55/23:55 failures
                 $startDate = date('m-d-Y', strtotime('-1 day'));
             } else {
