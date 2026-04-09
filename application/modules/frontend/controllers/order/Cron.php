@@ -7522,7 +7522,7 @@ class Cron extends MX_Controller
                 $orderId = $filesResult['id'];
                 $file_number = $response['OrderNumber'];
                 $prelimLink = $response['data'][0];
-                $prelimFetchedCount++;
+                // $prelimFetchedCount++;
                 $documentName = basename($prelimLink);
                 $document_name = time() . "_prelim_doc_" . $file_number . '.pdf';
                 $uploadStatus = $this->order->uploadDocumentUsingLinkOnAwsS3($prelimLink, $document_name, 'documents');
@@ -7558,6 +7558,11 @@ class Cron extends MX_Controller
                             );
                             $this->order->update($data, $condition);
                         }
+                        $filesResult['prelimLink'] = $prelimLink;
+                        /** Order type is title & escrow */
+                        if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                            $this->order->sendPrelimDocumentEmail($filesResult);
+                        }
                     } else {
                         $documentData = array(
                             'document_name' => $document_name,
@@ -7580,10 +7585,7 @@ class Cron extends MX_Controller
                         $this->order->updateRecords($documentData, $condition, 'pct_order_prelim_summary');
                     }
 
-                    $filesResult['prelimLink'] = $prelimLink;
-                    if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
-                        $this->order->sendPrelimDocumentEmail($filesResult);
-                    }
+                    
                     $status = 'success';
                     $msg = "Document uploaded sucecssfully.";
                 } else {
