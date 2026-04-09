@@ -650,21 +650,22 @@
                         
                             <h1 style="text-align: center;"><br>
 <span style="color:#000000"><strong>Prelim Hot Items</strong></span><br>
-<span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br>
-<span style="color:#000000"><strong><span style="font-size:19px">Order Number: <?php echo $file_number; ?></span></strong></span></h1>
-
-<h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Property Taxes</strong></span></span></h1><br>
+<!-- <span style="color:#d35411"><strong><span style="font-size:19px">Urgent Items that need your attention</span></strong></span><br> -->
+<span style="color:#d35411"><strong><span style="font-size:19px">Order Number: <?php echo $file_number; ?></span></strong></span></h1>
 
 <?php
 if(isset($tax) && !empty($tax))
-{
-    $tax = json_decode($tax,TRUE);
+{?>
+<h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Property Taxes</strong></span></span></h1><br>
 
-    if(isset($tax) && !empty($tax))
-    {
+<?php
 ?>
         <!-- <ol> -->
     <?php
+    $tax = json_decode($tax,TRUE);
+    
+    if(isset($tax) && !empty($tax))
+    {
         foreach ($tax as $key => $tax_val) 
         {
     ?>
@@ -685,19 +686,19 @@ if(isset($tax) && !empty($tax))
 }
 ?>
 
+<?php
+if(isset($liens) && !empty($liens))
+    {
+?>
 <h1 style="text-align: left;"><span style="color:#ff0000"><span style="font-size:18px"><strong>Liens</strong></span></span></h1>
 <br>
 
+<!-- <ol> -->
 <?php
-if(isset($liens) && !empty($liens))
-{
     $lien = json_decode($liens,TRUE);
 
     if(isset($lien) && !empty($lien))
     {
-?>
-        <!-- <ol> -->
-<?php
         foreach ($lien as $key => $lien_val)
         {
     ?>

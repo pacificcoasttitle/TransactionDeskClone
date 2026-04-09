@@ -111,8 +111,16 @@ class Common extends MX_Controller
         // echo "<pre>";
         // print_r($orderDetails);die;
         $policy_type = '';
-        if (isset($orderDetails['product_type']) && !empty($orderDetails['product_type'])) {
+        /*if (isset($orderDetails['product_type']) && !empty($orderDetails['product_type'])) {
             if (strpos($orderDetails['product_type'], 'Loan:') !== false) {
+                $policy_type = 'ALTA 2012 Short Form Residential Loan Policy';
+            } else {
+                $policy_type = 'ALTA 2006 Extended Loan Policy CA';
+            }
+        }*/
+
+        if (isset($orderDetails['prod_type']) && !empty($orderDetails['prod_type'])) {
+            if ($orderDetails['prod_type'] == 'Refinance') {
                 $policy_type = 'ALTA 2012 Short Form Residential Loan Policy';
             } else {
                 $policy_type = 'ALTA 2006 Extended Loan Policy CA';

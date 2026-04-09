@@ -7263,8 +7263,12 @@ class Cron extends MX_Controller
                 $this->load->model('order/document');
                 foreach ($response as $key => $data) {
                     if ($data['Status'] == 200 && !empty($data['data'])) {
-                        $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+                        // $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+                        // $this->db->from('order_details as o');
+                        $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status, e.email_address as escrow_officer_email, t.order_type');
                         $this->db->from('order_details as o');
+                        $this->db->join('transaction_details as t', 't.id = o.transaction_id', 'left');
+                        $this->db->join('pct_softpro_lookup_table as e', 'e.id = o.escrow_officer_id', 'left');
                         $this->db->where('o.file_number', $data['OrderNumber']);
                         $filesResult = $this->db->get()->row_array();
     
@@ -7300,6 +7304,10 @@ class Cron extends MX_Controller
                                         );
                                         $this->document->insert($documentData);
                                         $newSyncedFile[] = $file_number;
+
+                                        if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                                            $this->order->sendPrelimDocumentEmail($filesResult);
+                                        }
                                     }
                                 }
 
@@ -7367,12 +7375,24 @@ class Cron extends MX_Controller
         $logid = $this->apiLogs->syncLogs(0, 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, [], 0, 0);
         $response    = $this->softpro->make_request('GET', 'get_single_prelim_report', $reqData, $queryParams);
         $this->apiLogs->syncLogs(0, 'softpro', 'get_single_prelim_report', 'get_single_prelim_report', $reqData, json_encode($response), 0, $logid);
-        
+        // $link = env('AWS_PATH') . "documents/1753080056_prelim_doc_TEST-20001644-OCT.pdf";
+        // $reqData = '{ 
+        //     "status": "success", 
+        //     "Message": "Success", 
+        //     "OrderNumber": "20000842-GLT", 
+        //     "FileUploadedStatus": true, 
+        //     "data": [ "https://sandbox-pct.s3-us-west-2.amazonaws.com/documents/1753080056_prelim_doc_TEST-20001644-OCT.pdf" ] 
+        // }';
+        // $response    = json_decode($reqData, true);
         $prelimFetchedCount= 0;
         if (!empty($response) && $response['status'] == 'success') {
             
-            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+            // $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+            // $this->db->from('order_details as o');
+            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status, e.email_address as escrow_officer_email, t.order_type');
             $this->db->from('order_details as o');
+            $this->db->join('transaction_details as t', 't.id = o.transaction_id', 'left');
+            $this->db->join('pct_softpro_lookup_table as e', 'e.id = o.escrow_officer_id', 'left');
             $this->db->where('o.file_number', $response['OrderNumber']);
             $filesResult = $this->db->get()->row_array();
 
@@ -7446,6 +7466,10 @@ class Cron extends MX_Controller
                     );
                     $this->order->update($data, $condition);
                 }
+                $filesResult['prelimLink'] = $prelimLink;
+                if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                    $this->order->sendPrelimDocumentEmail($filesResult);
+                }
                 // else {
                 //     $prelimData = array(
                 //         'is_doc_updated' => 1
@@ -7480,8 +7504,12 @@ class Cron extends MX_Controller
         $response    = json_decode($reqData, true);
         if (!empty($response) && $response['Status'] == 200) {
             
-            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+            // $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status');
+            // $this->db->from('order_details as o');
+            $this->db->select('o.id, o.customer_id, o.file_number, o.softpro_status, e.email_address as escrow_officer_email, t.order_type');
             $this->db->from('order_details as o');
+            $this->db->join('transaction_details as t', 't.id = o.transaction_id', 'left');
+            $this->db->join('pct_softpro_lookup_table as e', 'e.id = o.escrow_officer_id', 'left');
             $this->db->where('o.file_number', $response['OrderNumber']);
             $filesResult = $this->db->get()->row_array();
 
@@ -7552,6 +7580,10 @@ class Cron extends MX_Controller
                         $this->order->updateRecords($documentData, $condition, 'pct_order_prelim_summary');
                     }
 
+                    $filesResult['prelimLink'] = $prelimLink;
+                    if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                        $this->order->sendPrelimDocumentEmail($filesResult);
+                    }
                     $status = 'success';
                     $msg = "Document uploaded sucecssfully.";
                 } else {
@@ -7614,19 +7646,6 @@ class Cron extends MX_Controller
             ];
             
             $prelimRow = $this->order->get_row($condition, 'pct_order_prelim_summary');
-            $getPrelimDocument = $this->order->get_prelim_document($orderId);
-            if (empty($getPrelimDocument)) {
-                $res = "Prelim document not found.";
-                $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, $res, 0, $logid);
-                echo $res; exit;
-            }
-            $fileName = $getPrelimDocument['document_name'];
-            // $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
-            $filePath = env('AWS_PATH') .  'documents/' . $fileName;
-            // echo "<pre> test it";
-            // print_r($prelimRow);die;
-
-            $response['data']['orderNumber'] = $fileNumber;
             if (empty($prelimRow)) {
                 $prelimData = array(
                     'file_number' => $fileNumber,
@@ -7652,6 +7671,21 @@ class Cron extends MX_Controller
                 $this->db->where($condition);
                 $this->db->update('pct_order_prelim_summary');
             }
+            
+            $getPrelimDocument = $this->order->get_prelim_document($orderId);
+            if (empty($getPrelimDocument)) {
+                $res = "Prelim document not found.";
+                $this->apiLogs->syncLogs(0, 'softpro', 'received_prelim_summary', 'received_prelim_summary', $reqData, $res, 0, $logid);
+                echo $res; exit;
+            }
+            $fileName = $getPrelimDocument['document_name'];
+            // $filePath = 'https://pct-doc.s3-us-west-2.amazonaws.com/documents/' . $fileName;
+            $filePath = env('AWS_PATH') .  'documents/' . $fileName;
+            // echo "<pre> test it";
+            // print_r($prelimRow);die;
+
+            $response['data']['orderNumber'] = $fileNumber;
+            
             // $this->load->library('order/order');
             // $chatGptJsonRes = $this->order->getPrelimAISummary($responseData);
             $tessaJsonRes = $this->tessa->analyze_pdf_with_tessa($filePath, $fileName);

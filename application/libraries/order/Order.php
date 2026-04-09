@@ -6825,4 +6825,36 @@ class Order
     {
         return $this->CI->load->view('frontend/order/common/survey/survey_report_rating_details', $data, true);
     }
+
+    public function sendPrelimDocumentEmail($orderDetails) {
+        $orderNumber = $orderDetails['file_number'];
+        $emailContent['file_number'] = $orderNumber;
+        // if(!empty($orderUser['email_address'])) {
+            $file[] = $orderDetails['prelimLink'];
+            $from_name = 'Pacific Coast Title Company';
+            $from_mail = env('FROM_EMAIL');
+            $prelim_message_body = $this->CI->load->view('emails/prelim.php', $emailContent, true);
+            $message = $prelim_message_body;
+            $subject = 'The Prelim Hot Sheet';
+            $to = $orderDetails['escrow_officer_email'];
+            $cc[] = 'piyush.j@crestinfosystems.com';
+            // $to = 'piyush.j@crestinfosystems.com';
+            $mailParams = array(
+                'from_mail'=>$from_mail,
+                'from_name'=>$from_name,
+                'to'=> $to,
+                'subject'=>$subject
+            );
+            $this->CI->load->helper('sendemail');
+            $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_client', '', $mailParams, array(), 0, 0);
+            $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
+            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_client', '', $mailParams, array('status'=> $mail_result), 0, $logid);
+            $result = array();
+            if ($mail_result) {
+                $result['mail_status'] = 'success';
+            } else {
+                $result['mail_status'] = 'error';
+            }
+            return $result;
+    }
 }
