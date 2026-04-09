@@ -6846,9 +6846,9 @@ class Order
                 'subject'=>$subject
             );
             $this->CI->load->helper('sendemail');
-            $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_client', '', $mailParams, array(), 0, 0);
+            $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_escrow_officer', '', $mailParams, array(), 0, 0);
             $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
-            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_client', '', $mailParams, array('status'=> $mail_result), 0, $logid);
+            $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_escrow_officer', '', $mailParams, array('status'=> $mail_result), 0, $logid);
             $result = array();
             if ($mail_result) {
                 $result['mail_status'] = 'success';
