@@ -5780,52 +5780,52 @@ class Cron extends MX_Controller
                 if (!empty($row['Email'])) {
                     if (in_array(trim($row['LookupCode']), $existing_lookupcode)) {
                         // $update_data[$key]['lookup_code'] = $row['LookupCode'];
-                        $update_data[$key]['flookup_code']   = $row['Filter: LookupCode'];
-                        $update_data[$key]['courtesy_title'] = $row['CourtesyTitle'] ?? '';
-                        $update_data[$key]['first_name']     = $row['FirstName'] ?? '';
-                        $update_data[$key]['middle_name']    = $row['MiddleName'] ?? '';
-                        $update_data[$key]['last_name']      = $row['LastName'] ?? '';
+                        $update_data[$key]['flookup_code']   = trim($row['Filter: LookupCode']);
+                        $update_data[$key]['courtesy_title'] = trim($row['CourtesyTitle'] ?? '');
+                        $update_data[$key]['first_name']     = trim($row['FirstName'] ?? '');
+                        $update_data[$key]['middle_name']    = trim($row['MiddleName'] ?? '');
+                        $update_data[$key]['last_name']      = trim($row['LastName'] ?? '');
                         $update_data[$key]['email_address']  = trim($row['Email']);
-                        $update_data[$key]['phone']          = $row['Phone'] ?? '';
-                        $update_data[$key]['phone_ext']      = $row['PhoneExt'] ?? '';
-                        $update_data[$key]['suffix']         = $row['Suffix'] ?? '';
-                        $update_data[$key]['title']          = $row['Title'] ?? '';
-                        $update_data[$key]['fax']            = $row['Fax'] ?? '';
-                        $update_data[$key]['cell']           = $row['Cell'] ?? '';
-                        $update_data[$key]['pager']          = $row['Pager'] ?? '';
-                        $update_data[$key]['gender_id']      = $row['GenderID'] ?? '';
-                        $update_data[$key]['address1']       = $row['Address1'] ?? '';
-                        $update_data[$key]['address2']       = $row['Address2'] ?? '';
-                        $update_data[$key]['city']           = $row['City'] ?? '';
-                        $update_data[$key]['state']          = $row['State'] ?? '';
-                        $update_data[$key]['zip']            = $row['Zip'] ?? '';
-                        $update_data[$key]['note']           = $row['Note'] ?? '';
-                        $update_data[$key]['license_no']     = $row['License No'] ?? '';
+                        $update_data[$key]['phone']          = trim($row['Phone'] ?? '');
+                        $update_data[$key]['phone_ext']      = trim($row['PhoneExt'] ?? '');
+                        $update_data[$key]['suffix']         = trim($row['Suffix'] ?? '');
+                        $update_data[$key]['title']          = trim($row['Title'] ?? '');
+                        $update_data[$key]['fax']            = trim($row['Fax'] ?? '');
+                        $update_data[$key]['cell']           = trim($row['Cell'] ?? '');
+                        $update_data[$key]['pager']          = trim($row['Pager'] ?? '');
+                        $update_data[$key]['gender_id']      = trim($row['GenderID'] ?? '');
+                        $update_data[$key]['address1']       = trim($row['Address1'] ?? '');
+                        $update_data[$key]['address2']       = trim($row['Address2'] ?? '');
+                        $update_data[$key]['city']           = trim($row['City'] ?? '');
+                        $update_data[$key]['state']          = trim($row['State'] ?? '');
+                        $update_data[$key]['zip']            = trim($row['Zip'] ?? '');
+                        $update_data[$key]['note']           = trim($row['Note'] ?? '');
+                        $update_data[$key]['license_no']     = trim($row['License No'] ?? '');
                         $update_data[$key]['status']         = 1;
                         // $update_data[$key]['user_type'] = 'open_contact';
                     } else {
                         $insert_data[$key]['lookup_code']    = trim($row['LookupCode']);
-                        $insert_data[$key]['flookup_code']   = $row['Filter: LookupCode'];
-                        $insert_data[$key]['courtesy_title'] = $row['CourtesyTitle'] ?? '';
-                        $insert_data[$key]['first_name']     = $row['FirstName'] ?? '';
-                        $insert_data[$key]['middle_name']    = $row['MiddleName'] ?? '';
-                        $insert_data[$key]['last_name']      = $row['LastName'] ?? '';
+                        $insert_data[$key]['flookup_code']   = trim($row['Filter: LookupCode']);
+                        $insert_data[$key]['courtesy_title'] = trim($row['CourtesyTitle'] ?? '');
+                        $insert_data[$key]['first_name']     = trim($row['FirstName'] ?? '');
+                        $insert_data[$key]['middle_name']    = trim($row['MiddleName'] ?? '');
+                        $insert_data[$key]['last_name']      = trim($row['LastName'] ?? '');
                         $insert_data[$key]['email_address']  = trim($row['Email']);
-                        $insert_data[$key]['phone']          = $row['Phone'] ?? '';
-                        $insert_data[$key]['phone_ext']      = $row['PhoneExt'] ?? '';
-                        $insert_data[$key]['suffix']         = $row['Suffix'] ?? '';
-                        $insert_data[$key]['title']          = $row['Title'] ?? '';
-                        $insert_data[$key]['fax']            = $row['Fax'] ?? '';
-                        $insert_data[$key]['cell']           = $row['Cell'] ?? '';
-                        $insert_data[$key]['pager']          = $row['Pager'] ?? '';
-                        $insert_data[$key]['gender_id']      = $row['GenderID'] ?? '';
-                        $insert_data[$key]['address1']       = $row['Address1'] ?? '';
-                        $insert_data[$key]['address2']       = $row['Address2'] ?? '';
-                        $insert_data[$key]['city']           = $row['City'] ?? '';
-                        $insert_data[$key]['state']          = $row['State'] ?? '';
-                        $insert_data[$key]['zip']            = $row['Zip'] ?? '';
-                        $insert_data[$key]['note']           = $row['Note'] ?? '';
-                        $insert_data[$key]['license_no']     = $row['License No'] ?? '';
+                        $insert_data[$key]['phone']          = trim($row['Phone'] ?? '');
+                        $insert_data[$key]['phone_ext']      = trim($row['PhoneExt'] ?? '');
+                        $insert_data[$key]['suffix']         = trim($row['Suffix'] ?? '');
+                        $insert_data[$key]['title']          = trim($row['Title'] ?? '');
+                        $insert_data[$key]['fax']            = trim($row['Fax'] ?? '');
+                        $insert_data[$key]['cell']           = trim($row['Cell'] ?? '');
+                        $insert_data[$key]['pager']          = trim($row['Pager'] ?? '');
+                        $insert_data[$key]['gender_id']      = trim($row['GenderID'] ?? '');
+                        $insert_data[$key]['address1']       = trim($row['Address1'] ?? '');
+                        $insert_data[$key]['address2']       = trim($row['Address2'] ?? '');
+                        $insert_data[$key]['city']           = trim($row['City'] ?? '');
+                        $insert_data[$key]['state']          = trim($row['State'] ?? '');
+                        $insert_data[$key]['zip']            = trim($row['Zip'] ?? '');
+                        $insert_data[$key]['note']           = trim($row['Note'] ?? '');
+                        $insert_data[$key]['license_no']     = trim($row['License No'] ?? '');
                         $insert_data[$key]['status']         = 1;
                         $insert_data[$key]['user_type']      = 'open_contact';
                     }
@@ -5873,15 +5873,15 @@ class Cron extends MX_Controller
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
 
-            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_escrow_company', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code'] = $row['Lookup Code'];
-                    $update_data[$key]['company_name'] = $row['Name'];
+                    $update_data[$key]['flookup_code'] = trim($row['Lookup Code']);
+                    $update_data[$key]['company_name'] = trim($row['Name']);
                     $update_data[$key]['is_escrow']    = 1;
                     // $update_data[$key]['payee_name'] = $row['Payee Name'];
                     // $update_data[$key]['address1'] = $row['Address (line 1)'];
@@ -5921,46 +5921,46 @@ class Cron extends MX_Controller
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']       = $row['Lookup Code'];
-                    $company_update_data[$key]['name']              = $row['Name'];
+                    $company_update_data[$key]['lookup_code']       = trim($row['Lookup Code']);
+                    $company_update_data[$key]['name']              = trim($row['Name']);
                     $company_update_data[$key]['is_escrow_company'] = 1;
-                    $company_update_data[$key]['payee_name']        = $row['Payee Name'] ?? '';
-                    $company_update_data[$key]['address1']          = $row['Address (line 1)'] ?? '';
-                    $company_update_data[$key]['address2']          = $row['Address (line 2)']  ?? '';
-                    $company_update_data[$key]['city']              = $row['City'] ?? '';
-                    $company_update_data[$key]['state']             = $row['State'] ?? '';
-                    $company_update_data[$key]['zip']               = $row['Zip'] ?? '';
-                    $company_update_data[$key]['phone']             = $row['Phone'] ?? '';
-                    $company_update_data[$key]['fax']               = $row['Fax'] ?? '';
-                    $company_update_data[$key]['email_address']     = $row['Email'];
+                    $company_update_data[$key]['payee_name']        = trim($row['Payee Name'] ?? '');
+                    $company_update_data[$key]['address1']          = trim($row['Address (line 1)'] ?? '');
+                    $company_update_data[$key]['address2']          = trim($row['Address (line 2)'] ?? '');
+                    $company_update_data[$key]['city']              = trim($row['City'] ?? '');
+                    $company_update_data[$key]['state']             = trim($row['State'] ?? '');
+                    $company_update_data[$key]['zip']               = trim($row['Zip'] ?? '');
+                    $company_update_data[$key]['phone']             = trim($row['Phone'] ?? '');
+                    $company_update_data[$key]['fax']               = trim($row['Fax'] ?? '');
+                    $company_update_data[$key]['email_address']     = trim($row['Email']);
                     // $update_data[$key]['user_type']         = 'escrow_company';
 
-                    $company_update_data[$key]['signature_line']         = $row['Signature Line'] ?? '';
-                    $company_update_data[$key]['fee_transfer_ledger']    = $row['Fee Transfer Ledger'] ?? '';
-                    $company_update_data[$key]['state_of_incorporation'] = $row['State Of Incorporation'] ?? '';
-                    $company_update_data[$key]['marketing_rep']          = $row['Marketing Rep'] ?? '';
-                    $company_update_data[$key]['special_instructions']   = $row['Special Instructions'] ?? '';
+                    $company_update_data[$key]['signature_line']         = trim($row['Signature Line'] ?? '');
+                    $company_update_data[$key]['fee_transfer_ledger']    = trim($row['Fee Transfer Ledger'] ?? '');
+                    $company_update_data[$key]['state_of_incorporation'] = trim($row['State Of Incorporation'] ?? '');
+                    $company_update_data[$key]['marketing_rep']          = trim($row['Marketing Rep'] ?? '');
+                    $company_update_data[$key]['special_instructions']   = trim($row['Special Instructions'] ?? '');
                     // $company_update_data[$key]['row_state']              = $row['Row State'];
                 } else {
-                    $company_insert_data[$key]['lookup_code']       = $row['Lookup Code'];
-                    $company_insert_data[$key]['name']              = $row['Name'];
+                    $company_insert_data[$key]['lookup_code']       = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['name']              = trim($row['Name']);
                     $company_insert_data[$key]['is_escrow_company'] = 1;
-                    $company_insert_data[$key]['payee_name']        = $row['Payee Name'] ?? '';
-                    $company_insert_data[$key]['address1']          = $row['Address (line 1)'] ?? '';
-                    $company_insert_data[$key]['address2']          = $row['Address (line 2)'] ?? '';
-                    $company_insert_data[$key]['city']              = $row['City'] ?? '';
-                    $company_insert_data[$key]['state']             = $row['State'] ?? '';
-                    $company_insert_data[$key]['zip']               = $row['Zip'] ?? '';
-                    $company_insert_data[$key]['phone']             = $row['Phone'] ?? '';
-                    $company_insert_data[$key]['fax']               = $row['Fax'] ?? '';
-                    $company_insert_data[$key]['email_address']     = $row['Email'];
+                    $company_insert_data[$key]['payee_name']        = trim($row['Payee Name'] ?? '');
+                    $company_insert_data[$key]['address1']          = trim($row['Address (line 1)'] ?? '');
+                    $company_insert_data[$key]['address2']          = trim($row['Address (line 2)'] ?? '');
+                    $company_insert_data[$key]['city']              = trim($row['City'] ?? '');
+                    $company_insert_data[$key]['state']             = trim($row['State'] ?? '');
+                    $company_insert_data[$key]['zip']               = trim($row['Zip'] ?? '');
+                    $company_insert_data[$key]['phone']             = trim($row['Phone'] ?? '');
+                    $company_insert_data[$key]['fax']               = trim($row['Fax'] ?? '');
+                    $company_insert_data[$key]['email_address']     = trim($row['Email']);
                     // $company_insert_data[$key]['user_type'] = 'escrow_company';
 
-                    $company_insert_data[$key]['signature_line']         = $row['Signature Line'] ?? '';
-                    $company_insert_data[$key]['fee_transfer_ledger']    = $row['Fee Transfer Ledger'] ?? '';
-                    $company_insert_data[$key]['state_of_incorporation'] = $row['State Of Incorporation'] ?? '';
-                    $company_insert_data[$key]['marketing_rep']          = $row['Marketing Rep'] ?? '';
-                    $company_insert_data[$key]['special_instructions']   = $row['Special Instructions'] ?? '';
+                    $company_insert_data[$key]['signature_line']         = trim($row['Signature Line'] ?? '');
+                    $company_insert_data[$key]['fee_transfer_ledger']    = trim($row['Fee Transfer Ledger'] ?? '');
+                    $company_insert_data[$key]['state_of_incorporation'] = trim($row['State Of Incorporation'] ?? '');
+                    $company_insert_data[$key]['marketing_rep']          = trim($row['Marketing Rep'] ?? '');
+                    $company_insert_data[$key]['special_instructions']   = trim($row['Special Instructions'] ?? '');
                     // $company_insert_data[$key]['row_state']              = $row['Row State'];
                 }
             }
@@ -6008,7 +6008,7 @@ class Cron extends MX_Controller
         if ($response['status'] == 'success') {
             // Get existing emails from the database
             $new_data            = $response['data'];
-            $existing_lookupcode = $this->db->select('closer_examiner')->from('pct_softpro_lookup_table')->where('is_escrow_officer', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('closer_examiner')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'closer_examiner');
 
             // Separate data into updates and inserts
@@ -6016,15 +6016,15 @@ class Cron extends MX_Controller
             $insert_data = [];
             foreach ($new_data as $key => $row) {
                 if (in_array($row['Escrow officer/Closer'], $existing_lookupcode)) {
-                    $update_data[$key]['closer_examiner'] = $row['Escrow officer/Closer'];
-                    $update_data[$key]['lookup_code']     = $row['Office LookupCode'];
-                    $update_data[$key]['officer_name']    = $row['Officer Name'];
-                    $update_data[$key]['email_address']    = $row['Email'];
+                    $update_data[$key]['closer_examiner'] = trim($row['Escrow officer/Closer']);
+                    $update_data[$key]['lookup_code']     = trim($row['Office LookupCode']);
+                    $update_data[$key]['officer_name']    = trim($row['Officer Name']);
+                    $update_data[$key]['email_address']    = trim($row['Email']);
                 } else {
-                    $insert_data[$key]['closer_examiner']   = $row['Escrow officer/Closer'];
-                    $insert_data[$key]['lookup_code']       = $row['Office LookupCode'];
-                    $insert_data[$key]['officer_name']      = $row['Officer Name'];
-                    $insert_data[$key]['email_address']    = $row['Email'];
+                    $insert_data[$key]['closer_examiner']   = trim($row['Escrow officer/Closer']);
+                    $insert_data[$key]['lookup_code']       = trim($row['Office LookupCode']);
+                    $insert_data[$key]['officer_name']      = trim($row['Officer Name']);
+                    $insert_data[$key]['email_address']    = trim($row['Email']);
                     $insert_data[$key]['is_escrow_officer'] = 1;
                 }
             }
@@ -6073,72 +6073,72 @@ class Cron extends MX_Controller
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
 
-            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_lender', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 if (in_array($row['LookupCode'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code'] = $row['LookupCode'];
-                    $update_data[$key]['company_name'] = $row['Name'];
+                    $update_data[$key]['flookup_code'] = trim($row['LookupCode']);
+                    $update_data[$key]['company_name'] = trim($row['Name']);
                     $update_data[$key]['is_lender']    = 1;
                 } else {
                 }
 
                 if (in_array($row['LookupCode'], $existing_lookupcode)) {
-                    $company_update_data[$key]['name']      = $row['Name'];
+                    $company_update_data[$key]['name']      = trim($row['Name']);
                     $company_update_data[$key]['is_lender'] = 1;
 
-                    $company_update_data[$key]['lookup_code']   = $row['LookupCode'];
-                    $company_update_data[$key]['payee_name']    = $row['PayeeName'] ?? '';
-                    $company_update_data[$key]['address1']      = $row['Address1'] ?? '';
-                    $company_update_data[$key]['address2']      = $row['Address2'] ?? '';
-                    $company_update_data[$key]['city']          = $row['City'] ?? '';
-                    $company_update_data[$key]['state']         = $row['State'] ?? '';
-                    $company_update_data[$key]['zip']           = $row['Zip'] ?? '';
-                    $company_update_data[$key]['phone']         = $row['Phone'] ?? '';
-                    $company_update_data[$key]['fax']           = $row['Fax'] ?? '';
-                    $company_update_data[$key]['email_address'] = $row['Email'];
+                    $company_update_data[$key]['lookup_code']   = trim($row['LookupCode']);
+                    $company_update_data[$key]['payee_name']    = trim($row['PayeeName'] ?? '');
+                    $company_update_data[$key]['address1']      = trim($row['Address1'] ?? '');
+                    $company_update_data[$key]['address2']      = trim($row['Address2'] ?? '');
+                    $company_update_data[$key]['city']          = trim($row['City'] ?? '');
+                    $company_update_data[$key]['state']         = trim($row['State'] ?? '');
+                    $company_update_data[$key]['zip']           = trim($row['Zip'] ?? '');
+                    $company_update_data[$key]['phone']         = trim($row['Phone'] ?? '');
+                    $company_update_data[$key]['fax']           = trim($row['Fax'] ?? '');
+                    $company_update_data[$key]['email_address'] = trim($row['Email']);
 
-                    $company_update_data[$key]['legal_name']             = $row['LegalName'] ?? '';
-                    $company_update_data[$key]['fee_transfer_ledger']    = $row['FeeTransferLedger'] ?? '';
-                    $company_update_data[$key]['state_of_incorporation'] = $row['StateOfIncorporation'] ?? '';
-                    $company_update_data[$key]['marketing_rep']          = $row['MarketingRep'] ?? '';
-                    $company_update_data[$key]['funding_address1']       = $row['FundingAddress1'] ?? '';
-                    $company_update_data[$key]['funding_address2']       = $row['FundingAddress2'] ?? '';
-                    $company_update_data[$key]['funding_city']           = $row['FundingCity'] ?? '';
-                    $company_update_data[$key]['funding_state']          = $row['FundingState'] ?? '';
-                    $company_update_data[$key]['funding_zip']            = $row['FundingZip'] ?? '';
-                    $company_update_data[$key]['funding_phone']          = $row['FundingPhone'] ?? '';
-                    $company_update_data[$key]['funding_fax']            = $row['FundingFax'] ?? '';
-                    $company_update_data[$key]['special_instructions']   = $row['Special Instructions'] ?? '';
+                    $company_update_data[$key]['legal_name']             = trim($row['LegalName'] ?? '');
+                    $company_update_data[$key]['fee_transfer_ledger']    = trim($row['FeeTransferLedger'] ?? '');
+                    $company_update_data[$key]['state_of_incorporation'] = trim($row['StateOfIncorporation'] ?? '');
+                    $company_update_data[$key]['marketing_rep']          = trim($row['MarketingRep'] ?? '');
+                    $company_update_data[$key]['funding_address1']       = trim($row['FundingAddress1'] ?? '');
+                    $company_update_data[$key]['funding_address2']       = trim($row['FundingAddress2'] ?? '');
+                    $company_update_data[$key]['funding_city']           = trim($row['FundingCity'] ?? '');
+                    $company_update_data[$key]['funding_state']          = trim($row['FundingState'] ?? '');
+                    $company_update_data[$key]['funding_zip']            = trim($row['FundingZip'] ?? '');
+                    $company_update_data[$key]['funding_phone']          = trim($row['FundingPhone'] ?? '');
+                    $company_update_data[$key]['funding_fax']            = trim($row['FundingFax'] ?? '');
+                    $company_update_data[$key]['special_instructions']   = trim($row['Special Instructions'] ?? '');
                 } else {
-                    $company_insert_data[$key]['name']          = $row['Name'];
+                    $company_insert_data[$key]['name']          = trim($row['Name']);
                     $company_insert_data[$key]['is_lender']     = 1;
-                    $company_insert_data[$key]['lookup_code']   = $row['LookupCode'];
-                    $company_insert_data[$key]['phone']         = $row['Phone'] ?? '';
-                    $company_insert_data[$key]['address1']      = $row['Address1'] ?? '';
-                    $company_insert_data[$key]['address2']      = $row['Address2'] ?? '';
-                    $company_insert_data[$key]['city']          = $row['City'] ?? '';
-                    $company_insert_data[$key]['state']         = $row['State'] ?? '';
-                    $company_insert_data[$key]['zip']           = $row['Zip'] ?? '';
-                    $company_insert_data[$key]['fax']           = $row['Fax'] ?? '';
-                    $company_insert_data[$key]['payee_name']    = $row['PayeeName'] ?? '';
-                    $company_insert_data[$key]['email_address'] = $row['Email'];
+                    $company_insert_data[$key]['lookup_code']   = trim($row['LookupCode']);
+                    $company_insert_data[$key]['phone']         = trim($row['Phone'] ?? '');
+                    $company_insert_data[$key]['address1']      = trim($row['Address1'] ?? '');
+                    $company_insert_data[$key]['address2']      = trim($row['Address2'] ?? '');
+                    $company_insert_data[$key]['city']          = trim($row['City'] ?? '');
+                    $company_insert_data[$key]['state']         = trim($row['State'] ?? '');
+                    $company_insert_data[$key]['zip']           = trim($row['Zip'] ?? '');
+                    $company_insert_data[$key]['fax']           = trim($row['Fax'] ?? '');
+                    $company_insert_data[$key]['payee_name']    = trim($row['PayeeName'] ?? '');
+                    $company_insert_data[$key]['email_address'] = trim($row['Email']);
 
-                    $company_insert_data[$key]['legal_name']             = $row['LegalName'] ?? '';
-                    $company_insert_data[$key]['fee_transfer_ledger']    = $row['FeeTransferLedger'] ?? '';
-                    $company_insert_data[$key]['state_of_incorporation'] = $row['StateOfIncorporation'] ?? '';
-                    $company_insert_data[$key]['marketing_rep']          = $row['MarketingRep'] ?? '';
-                    $company_insert_data[$key]['funding_address1']       = $row['FundingAddress1'] ?? '';
-                    $company_insert_data[$key]['funding_address2']       = $row['FundingAddress2'] ?? '';
-                    $company_insert_data[$key]['funding_city']           = $row['FundingCity'] ?? '';
-                    $company_insert_data[$key]['funding_state']          = $row['FundingState'] ?? '';
-                    $company_insert_data[$key]['funding_zip']            = $row['FundingZip'] ?? '';
-                    $company_insert_data[$key]['funding_phone']          = $row['FundingPhone'] ?? '';
-                    $company_insert_data[$key]['funding_fax']            = $row['FundingFax'] ?? '';
-                    $company_insert_data[$key]['special_instructions']   = $row['Special Instructions'] ?? '';
+                    $company_insert_data[$key]['legal_name']             = trim($row['LegalName'] ?? '');
+                    $company_insert_data[$key]['fee_transfer_ledger']    = trim($row['FeeTransferLedger'] ?? '');
+                    $company_insert_data[$key]['state_of_incorporation'] = trim($row['StateOfIncorporation'] ?? '');
+                    $company_insert_data[$key]['marketing_rep']          = trim($row['MarketingRep'] ?? '');
+                    $company_insert_data[$key]['funding_address1']       = trim($row['FundingAddress1'] ?? '');
+                    $company_insert_data[$key]['funding_address2']       = trim($row['FundingAddress2'] ?? '');
+                    $company_insert_data[$key]['funding_city']           = trim($row['FundingCity'] ?? '');
+                    $company_insert_data[$key]['funding_state']          = trim($row['FundingState'] ?? '');
+                    $company_insert_data[$key]['funding_zip']            = trim($row['FundingZip'] ?? '');
+                    $company_insert_data[$key]['funding_phone']          = trim($row['FundingPhone'] ?? '');
+                    $company_insert_data[$key]['funding_fax']            = trim($row['FundingFax'] ?? '');
+                    $company_insert_data[$key]['special_instructions']   = trim($row['Special Instructions'] ?? '');
                 }
             }
 
@@ -6191,15 +6191,15 @@ class Cron extends MX_Controller
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
 
-            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_mortgage_broker', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code']       = $row['Lookup Code'];
-                    $update_data[$key]['company_name']       = $row['Name'];
+                    $update_data[$key]['flookup_code']       = trim($row['Lookup Code']);
+                    $update_data[$key]['company_name']       = trim($row['Name']);
                     $update_data[$key]['is_mortgage_broker'] = 1;
                     // $update_data[$key]['lookup_code'] = $row['Lookup Code'];
                     // $update_data[$key]['first_name'] = $row['Name'];
@@ -6221,40 +6221,40 @@ class Cron extends MX_Controller
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']        = $row['Lookup Code'];
-                    $company_update_data[$key]['name']               = $row['Name'];
+                    $company_update_data[$key]['lookup_code']        = trim($row['Lookup Code']);
+                    $company_update_data[$key]['name']               = trim($row['Name']);
                     $company_update_data[$key]['is_mortgage_broker'] = 1;
-                    $company_update_data[$key]['payee_name']         = $row['Payee Name'] ?? '';
-                    $company_update_data[$key]['address1']           = $row['Address (line 1)'] ?? '';
-                    $company_update_data[$key]['address2']           = $row['Address (line 2)'] ?? '';
-                    $company_update_data[$key]['city']               = $row['City'] ?? '';
-                    $company_update_data[$key]['state']              = $row['State'] ?? '';
-                    $company_update_data[$key]['zip']                = $row['Zip'] ?? '';
-                    $company_update_data[$key]['phone']              = $row['Phone'] ?? '';
-                    $company_update_data[$key]['fax']                = $row['Fax'] ?? '';
-                    $company_update_data[$key]['email_address']      = $row['Email'];
+                    $company_update_data[$key]['payee_name']         = trim($row['Payee Name'] ?? '');
+                    $company_update_data[$key]['address1']           = trim($row['Address (line 1)'] ?? '');
+                    $company_update_data[$key]['address2']           = trim($row['Address (line 2)'] ?? '');
+                    $company_update_data[$key]['city']               = trim($row['City'] ?? '');
+                    $company_update_data[$key]['state']              = trim($row['State'] ?? '');
+                    $company_update_data[$key]['zip']                = trim($row['Zip'] ?? '');
+                    $company_update_data[$key]['phone']              = trim($row['Phone'] ?? '');
+                    $company_update_data[$key]['fax']                = trim($row['Fax'] ?? '');
+                    $company_update_data[$key]['email_address']      = trim($row['Email']);
 
-                    $company_update_data[$key]['fee_transfer_ledger']  = $row['Fee Transfer Ledger'] ?? '';
-                    $company_update_data[$key]['marketing_rep']        = $row['Marketing Rep'] ?? '';
-                    $company_update_data[$key]['special_instructions'] = $row['Special Instructions'] ?? '';
+                    $company_update_data[$key]['fee_transfer_ledger']  = trim($row['Fee Transfer Ledger'] ?? '');
+                    $company_update_data[$key]['marketing_rep']        = trim($row['Marketing Rep'] ?? '');
+                    $company_update_data[$key]['special_instructions'] = trim($row['Special Instructions'] ?? '');
                     // $company_update_data[$key]['user_type']            = 'mortgage_broker';
                 } else {
-                    $company_insert_data[$key]['lookup_code']        = $row['Lookup Code'];
-                    $company_insert_data[$key]['name']               = $row['Name'];
+                    $company_insert_data[$key]['lookup_code']        = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['name']               = trim($row['Name']);
                     $company_insert_data[$key]['is_mortgage_broker'] = 1;
-                    $company_insert_data[$key]['payee_name']         = $row['Payee Name'] ?? '';
-                    $company_insert_data[$key]['address1']           = $row['Address (line 1)'] ?? '';
-                    $company_insert_data[$key]['address2']           = $row['Address (line 2)'] ?? '';
-                    $company_insert_data[$key]['city']               = $row['City'] ?? '';
-                    $company_insert_data[$key]['state']              = $row['State'] ?? '';
-                    $company_insert_data[$key]['zip']                = $row['Zip'] ?? '';
-                    $company_insert_data[$key]['phone']              = $row['Phone'] ?? '';
-                    $company_insert_data[$key]['fax']                = $row['Fax'] ?? '';
-                    $company_insert_data[$key]['email_address']      = $row['Email'];
+                    $company_insert_data[$key]['payee_name']         = trim($row['Payee Name'] ?? '');
+                    $company_insert_data[$key]['address1']           = trim($row['Address (line 1)'] ?? '');
+                    $company_insert_data[$key]['address2']           = trim($row['Address (line 2)'] ?? '');
+                    $company_insert_data[$key]['city']               = trim($row['City'] ?? '');
+                    $company_insert_data[$key]['state']              = trim($row['State'] ?? '');
+                    $company_insert_data[$key]['zip']                = trim($row['Zip'] ?? '');
+                    $company_insert_data[$key]['phone']              = trim($row['Phone'] ?? '');
+                    $company_insert_data[$key]['fax']                = trim($row['Fax'] ?? '');
+                    $company_insert_data[$key]['email_address']      = trim($row['Email']);
 
-                    $company_insert_data[$key]['fee_transfer_ledger']  = $row['Fee Transfer Ledger'] ?? '';
-                    $company_insert_data[$key]['marketing_rep']        = $row['Marketing Rep'] ?? '';
-                    $company_insert_data[$key]['special_instructions'] = $row['Special Instructions'] ?? '';
+                    $company_insert_data[$key]['fee_transfer_ledger']  = trim($row['Fee Transfer Ledger'] ?? '');
+                    $company_insert_data[$key]['marketing_rep']        = trim($row['Marketing Rep'] ?? '');
+                    $company_insert_data[$key]['special_instructions'] = trim($row['Special Instructions'] ?? '');
                     // $insert_data[$key]['user_type'] = 'mortgage_broker';
                 }
             }
@@ -6310,61 +6310,61 @@ class Cron extends MX_Controller
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
 
-            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_selling_agent', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code']     = $row['Lookup Code'];
-                    $update_data[$key]['company_name']     = $row['Name'];
+                    $update_data[$key]['flookup_code']     = trim($row['Lookup Code']);
+                    $update_data[$key]['company_name']     = trim($row['Name']);
                     $update_data[$key]['is_selling_agent'] = 1;
 
                 } else {
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']      = $row['Lookup Code'];
-                    $company_update_data[$key]['name']             = $row['Name'];
+                    $company_update_data[$key]['lookup_code']      = trim($row['Lookup Code']);
+                    $company_update_data[$key]['name']             = trim($row['Name']);
                     $company_update_data[$key]['is_selling_agent'] = 1;
-                    $company_update_data[$key]['payee_name']       = $row['Payee Name'] ?? '';
-                    $company_update_data[$key]['address1']         = $row['Address (line 1)'] ?? '';
-                    $company_update_data[$key]['address2']         = $row['Address (line 2)'] ?? '';
-                    $company_update_data[$key]['city']             = $row['City'] ?? '';
-                    $company_update_data[$key]['state']            = $row['State'] ?? '';
-                    $company_update_data[$key]['zip']              = $row['Zip'] ?? '';
-                    $company_update_data[$key]['phone']            = $row['Phone'] ?? '';
-                    $company_update_data[$key]['fax']              = $row['Fax'] ?? '';
-                    $company_update_data[$key]['email_address']    = $row['Email'];
+                    $company_update_data[$key]['payee_name']       = trim($row['Payee Name'] ?? '');
+                    $company_update_data[$key]['address1']         = trim($row['Address (line 1)'] ?? '');
+                    $company_update_data[$key]['address2']         = trim($row['Address (line 2)'] ?? '');
+                    $company_update_data[$key]['city']             = trim($row['City'] ?? '');
+                    $company_update_data[$key]['state']            = trim($row['State'] ?? '');
+                    $company_update_data[$key]['zip']              = trim($row['Zip'] ?? '');
+                    $company_update_data[$key]['phone']            = trim($row['Phone'] ?? '');
+                    $company_update_data[$key]['fax']              = trim($row['Fax'] ?? '');
+                    $company_update_data[$key]['email_address']    = trim($row['Email']);
 
-                    $company_update_data[$key]['home_phone']           = $row['Home Phone'] ?? '';
-                    $company_update_data[$key]['fee_transfer_ledger']  = $row['Fee Transfer Ledger'] ?? '';
-                    $company_update_data[$key]['represents']           = $row['Represents'] ?? '';
-                    $company_update_data[$key]['marketing_rep']        = $row['Marketing Rep'] ?? '';
-                    $company_update_data[$key]['license_no']           = $row['License No'] ?? '';
-                    $company_update_data[$key]['special_instructions'] = $row['Special Instructions'] ?? '';
+                    $company_update_data[$key]['home_phone']           = trim($row['Home Phone'] ?? '');
+                    $company_update_data[$key]['fee_transfer_ledger']  = trim($row['Fee Transfer Ledger'] ?? '');
+                    $company_update_data[$key]['represents']           = trim($row['Represents'] ?? '');
+                    $company_update_data[$key]['marketing_rep']        = trim($row['Marketing Rep'] ?? '');
+                    $company_update_data[$key]['license_no']           = trim($row['License No'] ?? '');
+                    $company_update_data[$key]['special_instructions'] = trim($row['Special Instructions'] ?? '');
 
                 } else {
-                    $company_insert_data[$key]['lookup_code']      = $row['Lookup Code'];
-                    $company_insert_data[$key]['name']             = $row['Name'];
+                    $company_insert_data[$key]['lookup_code']      = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['name']             = trim($row['Name']);
                     $company_insert_data[$key]['is_selling_agent'] = 1;
-                    $company_insert_data[$key]['payee_name']       = $row['Payee Name'] ?? '';
-                    $company_insert_data[$key]['address1']         = $row['Address (line 1)'] ?? '';
-                    $company_insert_data[$key]['address2']         = $row['Address (line 2)'] ?? '';
-                    $company_insert_data[$key]['city']             = $row['City'] ?? '';
-                    $company_insert_data[$key]['state']            = $row['State'] ?? '';
-                    $company_insert_data[$key]['zip']              = $row['Zip'] ?? '';
-                    $company_insert_data[$key]['phone']            = $row['Phone'] ?? '';
-                    $company_insert_data[$key]['fax']              = $row['Fax'] ?? '';
-                    $company_insert_data[$key]['email_address']    = $row['Email'];
+                    $company_insert_data[$key]['payee_name']       = trim($row['Payee Name'] ?? '');
+                    $company_insert_data[$key]['address1']         = trim($row['Address (line 1)'] ?? '');
+                    $company_insert_data[$key]['address2']         = trim($row['Address (line 2)'] ?? '');
+                    $company_insert_data[$key]['city']             = trim($row['City'] ?? '');
+                    $company_insert_data[$key]['state']            = trim($row['State'] ?? '');
+                    $company_insert_data[$key]['zip']              = trim($row['Zip'] ?? '');
+                    $company_insert_data[$key]['phone']            = trim($row['Phone'] ?? '');
+                    $company_insert_data[$key]['fax']              = trim($row['Fax'] ?? '');
+                    $company_insert_data[$key]['email_address']    = trim($row['Email']);
 
-                    $company_insert_data[$key]['home_phone']           = $row['Home Phone'] ?? '';
-                    $company_insert_data[$key]['fee_transfer_ledger']  = $row['Fee Transfer Ledger'] ?? '';
-                    $company_insert_data[$key]['represents']           = $row['Represents'] ?? '';
-                    $company_insert_data[$key]['marketing_rep']        = $row['Marketing Rep'] ?? '';
-                    $company_insert_data[$key]['license_no']           = $row['License No'] ?? '';
-                    $company_insert_data[$key]['special_instructions'] = $row['Special Instructions'] ?? '';
+                    $company_insert_data[$key]['home_phone']           = trim($row['Home Phone'] ?? '');
+                    $company_insert_data[$key]['fee_transfer_ledger']  = trim($row['Fee Transfer Ledger'] ?? '');
+                    $company_insert_data[$key]['represents']           = trim($row['Represents'] ?? '');
+                    $company_insert_data[$key]['marketing_rep']        = trim($row['Marketing Rep'] ?? '');
+                    $company_insert_data[$key]['license_no']           = trim($row['License No'] ?? '');
+                    $company_insert_data[$key]['special_instructions'] = trim($row['Special Instructions'] ?? '');
 
                 }
             }
@@ -6423,15 +6423,15 @@ class Cron extends MX_Controller
             foreach ($new_data as $key => $row) {
                 // print_r($row);
                 if (in_array($row['Title officer/Examiner'], $closer_examiner)) {
-                    $update_data[$key]['closer_examiner'] = $row['Title officer/Examiner'];
-                    $update_data[$key]['lookup_code']     = $row['Office LookupCode'];
-                    $update_data[$key]['officer_name']    = $row['Officer Name'];
-                    $update_data[$key]['email_address']    = $row['Email'];
+                    $update_data[$key]['closer_examiner'] = trim($row['Title officer/Examiner']);
+                    $update_data[$key]['lookup_code']     = trim($row['Office LookupCode']);
+                    $update_data[$key]['officer_name']    = trim($row['Officer Name']);
+                    $update_data[$key]['email_address']    = trim($row['Email']);
                 } else {
-                    $insert_data[$key]['closer_examiner']  = $row['Title officer/Examiner'];
-                    $insert_data[$key]['lookup_code']      = $row['Office LookupCode'];
-                    $insert_data[$key]['officer_name']     = $row['Officer Name'];
-                    $insert_data[$key]['email_address']     = $row['Email'];
+                    $insert_data[$key]['closer_examiner']  = trim($row['Title officer/Examiner']);
+                    $insert_data[$key]['lookup_code']      = trim($row['Office LookupCode']);
+                    $insert_data[$key]['officer_name']     = trim($row['Officer Name']);
+                    $insert_data[$key]['email_address']     = trim($row['Email']);
                     $insert_data[$key]['is_title_officer'] = 1;
                 }
             }
@@ -6487,21 +6487,21 @@ class Cron extends MX_Controller
             foreach ($new_data as $key => $row) {
                 $spliteFullName = $this->order->splitFullName($row['FullName']);
                 if (in_array($row['LookUpCode'], $existingLookupcode)) {
-                    $update_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    $update_data[$key]['first_name']    = $spliteFullName['first_name'];
-                    $update_data[$key]['last_name']    = $spliteFullName['last_name'];
-                    $update_data[$key]['full_name']    = $row['FullName'];
-                    $update_data[$key]['email_address']    = $row['Email'];
-                    $update_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
+                    $update_data[$key]['lookup_code'] = trim($row['LookUpCode']);
+                    $update_data[$key]['first_name']    = trim($spliteFullName['first_name']);
+                    $update_data[$key]['last_name']    = trim($spliteFullName['last_name']);
+                    $update_data[$key]['full_name']    = trim($row['FullName']);
+                    $update_data[$key]['email_address']    = trim($row['Email']);
+                    $update_data[$key]['phone']    = trim(preg_replace('/\D/', '', $row['Phone']));
                     $update_data[$key]['is_sales_rep'] = 1;
                     $update_data[$key]['status'] = 1;
                 } else {
-                    $insert_data[$key]['lookup_code'] = $row['LookUpCode'];
-                    $insert_data[$key]['first_name']    = $spliteFullName['first_name'];
-                    $insert_data[$key]['last_name']    = $spliteFullName['last_name'];
-                    $insert_data[$key]['phone']    = preg_replace('/\D/', '', $row['Phone']);
-                    $insert_data[$key]['full_name']    = $row['FullName'];
-                    $insert_data[$key]['email_address']    = $row['Email'];
+                    $insert_data[$key]['lookup_code'] = trim($row['LookUpCode']);
+                    $insert_data[$key]['first_name']    = trim($spliteFullName['first_name']);
+                    $insert_data[$key]['last_name']    = trim($spliteFullName['last_name']);
+                    $insert_data[$key]['phone']    = trim(preg_replace('/\D/', '', $row['Phone']));
+                    $insert_data[$key]['full_name']    = trim($row['FullName']);
+                    $insert_data[$key]['email_address']    = trim($row['Email']);
                     $insert_data[$key]['is_sales_rep'] = 1;
                     $insert_data[$key]['status'] = 1;
                 }
@@ -6550,7 +6550,7 @@ class Cron extends MX_Controller
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'underwriter')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'lookup_code');
 
-            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->where('is_underwriter', 1)->get()->result_array();
+            $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
             // print_r($existing_lookupcode);
             // echo "Hello";die;
@@ -6558,52 +6558,52 @@ class Cron extends MX_Controller
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code']   = $row['Lookup Code'];
-                    $update_data[$key]['company_name']   = $row['Name'];
+                    $update_data[$key]['flookup_code']   = trim($row['Lookup Code']);
+                    $update_data[$key]['company_name']   = trim($row['Name']);
                     $update_data[$key]['is_underwriter'] = 1;
                 } else {
                 }
 
                 if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']    = $row['Lookup Code'];
-                    $company_update_data[$key]['name']           = $row['Name'];
+                    $company_update_data[$key]['lookup_code']    = trim($row['Lookup Code']);
+                    $company_update_data[$key]['name']           = trim($row['Name']);
                     $company_update_data[$key]['is_underwriter'] = 1;
-                    $company_update_data[$key]['address1']       = $row['Address (line 1)'] ?? '';
-                    $company_update_data[$key]['city']           = $row['City'] ?? '';
-                    $company_update_data[$key]['state']          = $row['State'] ?? '';
-                    $company_update_data[$key]['zip']            = $row['Zip'] ?? '';
-                    $company_update_data[$key]['phone']          = $row['Phone'] ?? '';
-                    $company_update_data[$key]['fax']            = $row['Fax'] ?? '';
-                    $company_update_data[$key]['email_address']  = $row['Email'] ?? '';
+                    $company_update_data[$key]['address1']       = trim($row['Address (line 1)'] ?? '');
+                    $company_update_data[$key]['city']           = trim($row['City'] ?? '');
+                    $company_update_data[$key]['state']          = trim($row['State'] ?? '');
+                    $company_update_data[$key]['zip']            = trim($row['Zip'] ?? '');
+                    $company_update_data[$key]['phone']          = trim($row['Phone'] ?? '');
+                    $company_update_data[$key]['fax']            = trim($row['Fax'] ?? '');
+                    $company_update_data[$key]['email_address']  = trim($row['Email'] ?? '');
 
-                    $company_update_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'] ?? '';
+                    $company_update_data[$key]['fee_transfer_ledger'] = trim($row['Fee Transfer Ledger'] ?? '');
                     // $company_update_data[$key]['county']                = $row['County'];
-                    $company_update_data[$key]['splitTo_premiums']      = $row['SplitTo - Premiums'] ?? '';
-                    $company_update_data[$key]['percent_premiums']      = $row['Percent - Premiums'] ?? '';
-                    $company_update_data[$key]['billCode_premiums']     = $row['BillCode - Premiums'] ?? '';
-                    $company_update_data[$key]['splitTo_endorsements']  = $row['SplitTo - Endorsements'] ?? '';
-                    $company_update_data[$key]['percent_endorsements']  = $row['Percent - Endorsements'] ?? '';
-                    $company_update_data[$key]['billCode_endorsements'] = $row['BillCode - Endorsements'] ?? '';
+                    $company_update_data[$key]['splitTo_premiums']      = trim($row['SplitTo - Premiums'] ?? '');
+                    $company_update_data[$key]['percent_premiums']      = trim($row['Percent - Premiums'] ?? '');
+                    $company_update_data[$key]['billCode_premiums']     = trim($row['BillCode - Premiums'] ?? '');
+                    $company_update_data[$key]['splitTo_endorsements']  = trim($row['SplitTo - Endorsements'] ?? '');
+                    $company_update_data[$key]['percent_endorsements']  = trim($row['Percent - Endorsements'] ?? '');
+                    $company_update_data[$key]['billCode_endorsements'] = trim($row['BillCode - Endorsements'] ?? '');
                 } else {
-                    $company_insert_data[$key]['lookup_code']    = $row['Lookup Code'];
-                    $company_insert_data[$key]['name']           = $row['Name'];
+                    $company_insert_data[$key]['lookup_code']    = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['name']           = trim($row['Name']);
                     $company_insert_data[$key]['is_underwriter'] = 1;
-                    $company_insert_data[$key]['address1']       = $row['Address (line 1)'] ?? '';
-                    $company_insert_data[$key]['city']           = $row['City'] ?? '';
-                    $company_insert_data[$key]['state']          = $row['State'] ?? '';
-                    $company_insert_data[$key]['zip']            = $row['Zip'] ?? '';
-                    $company_insert_data[$key]['phone']          = $row['Phone'] ?? '';
-                    $company_insert_data[$key]['fax']            = $row['Fax'] ?? '';
-                    $company_insert_data[$key]['email_address']  = $row['Email'] ?? '';
+                    $company_insert_data[$key]['address1']       = trim($row['Address (line 1)'] ?? '');
+                    $company_insert_data[$key]['city']           = trim($row['City'] ?? '');
+                    $company_insert_data[$key]['state']          = trim($row['State'] ?? '');
+                    $company_insert_data[$key]['zip']            = trim($row['Zip'] ?? '');
+                    $company_insert_data[$key]['phone']          = trim($row['Phone'] ?? '');
+                    $company_insert_data[$key]['fax']            = trim($row['Fax'] ?? '');
+                    $company_insert_data[$key]['email_address']  = trim($row['Email'] ?? '');
 
-                    $company_insert_data[$key]['fee_transfer_ledger'] = $row['Fee Transfer Ledger'] ?? '';
+                    $company_insert_data[$key]['fee_transfer_ledger'] = trim($row['Fee Transfer Ledger'] ?? '');
                     // $company_insert_data[$key]['county']                = $row['County'] ?? '';
-                    $company_insert_data[$key]['splitTo_premiums']      = $row['SplitTo - Premiums'] ?? '';
-                    $company_insert_data[$key]['percent_premiums']      = $row['Percent - Premiums'] ?? '';
-                    $company_insert_data[$key]['billCode_premiums']     = $row['BillCode - Premiums'] ?? '';
-                    $company_insert_data[$key]['splitTo_endorsements']  = $row['SplitTo - Endorsements'] ?? '';
-                    $company_insert_data[$key]['percent_endorsements']  = $row['Percent - Endorsements'] ?? '';
-                    $company_insert_data[$key]['billCode_endorsements'] = $row['BillCode - Endorsements'] ?? '';
+                    $company_insert_data[$key]['splitTo_premiums']      = trim($row['SplitTo - Premiums'] ?? '');
+                    $company_insert_data[$key]['percent_premiums']      = trim($row['Percent - Premiums'] ?? '');
+                    $company_insert_data[$key]['billCode_premiums']     = trim($row['BillCode - Premiums'] ?? '');
+                    $company_insert_data[$key]['splitTo_endorsements']  = trim($row['SplitTo - Endorsements'] ?? '');
+                    $company_insert_data[$key]['percent_endorsements']  = trim($row['Percent - Endorsements'] ?? '');
+                    $company_insert_data[$key]['billCode_endorsements'] = trim($row['BillCode - Endorsements'] ?? '');
                 }
             }
 
