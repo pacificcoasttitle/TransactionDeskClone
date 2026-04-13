@@ -5879,8 +5879,9 @@ class Cron extends MX_Controller
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
-                if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code'] = trim($row['Lookup Code']);
+                $lookupCode = trim($row['Lookup Code']); 
+                if (in_array($lookupCode, $existing_flookupcode)) {
+                    $update_data[$key]['flookup_code'] = $lookupCode;
                     $update_data[$key]['company_name'] = trim($row['Name']);
                     $update_data[$key]['is_escrow']    = 1;
                     // $update_data[$key]['payee_name'] = $row['Payee Name'];
@@ -5920,8 +5921,8 @@ class Cron extends MX_Controller
                     // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
                 }
 
-                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']       = trim($row['Lookup Code']);
+                if (in_array($lookupCode, $existing_lookupcode)) {
+                    $company_update_data[$key]['lookup_code']       = $lookupCode;
                     $company_update_data[$key]['name']              = trim($row['Name']);
                     $company_update_data[$key]['is_escrow_company'] = 1;
                     $company_update_data[$key]['payee_name']        = trim($row['Payee Name'] ?? '');
@@ -5942,7 +5943,7 @@ class Cron extends MX_Controller
                     $company_update_data[$key]['special_instructions']   = trim($row['Special Instructions'] ?? '');
                     // $company_update_data[$key]['row_state']              = $row['Row State'];
                 } else {
-                    $company_insert_data[$key]['lookup_code']       = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['lookup_code']       = $lookupCode;
                     $company_insert_data[$key]['name']              = trim($row['Name']);
                     $company_insert_data[$key]['is_escrow_company'] = 1;
                     $company_insert_data[$key]['payee_name']        = trim($row['Payee Name'] ?? '');
@@ -6079,18 +6080,19 @@ class Cron extends MX_Controller
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
-                if (in_array($row['LookupCode'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code'] = trim($row['LookupCode']);
+                $lookupCode = trim($row['LookupCode']);
+                if (in_array($lookupCode, $existing_flookupcode)) {
+                    $update_data[$key]['flookup_code'] = $lookupCode;
                     $update_data[$key]['company_name'] = trim($row['Name']);
                     $update_data[$key]['is_lender']    = 1;
                 } else {
                 }
 
-                if (in_array($row['LookupCode'], $existing_lookupcode)) {
+                if (in_array($lookupCode, $existing_lookupcode)) {
                     $company_update_data[$key]['name']      = trim($row['Name']);
                     $company_update_data[$key]['is_lender'] = 1;
 
-                    $company_update_data[$key]['lookup_code']   = trim($row['LookupCode']);
+                    $company_update_data[$key]['lookup_code']   = $lookupCode;
                     $company_update_data[$key]['payee_name']    = trim($row['PayeeName'] ?? '');
                     $company_update_data[$key]['address1']      = trim($row['Address1'] ?? '');
                     $company_update_data[$key]['address2']      = trim($row['Address2'] ?? '');
@@ -6116,7 +6118,7 @@ class Cron extends MX_Controller
                 } else {
                     $company_insert_data[$key]['name']          = trim($row['Name']);
                     $company_insert_data[$key]['is_lender']     = 1;
-                    $company_insert_data[$key]['lookup_code']   = trim($row['LookupCode']);
+                    $company_insert_data[$key]['lookup_code']   = $lookupCode;
                     $company_insert_data[$key]['phone']         = trim($row['Phone'] ?? '');
                     $company_insert_data[$key]['address1']      = trim($row['Address1'] ?? '');
                     $company_insert_data[$key]['address2']      = trim($row['Address2'] ?? '');
@@ -6197,8 +6199,9 @@ class Cron extends MX_Controller
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
-                if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code']       = trim($row['Lookup Code']);
+                $lookupCode = trim($row['Lookup Code']);
+                if (in_array($lookupCode, $existing_flookupcode)) {
+                    $update_data[$key]['flookup_code']       = $lookupCode;
                     $update_data[$key]['company_name']       = trim($row['Name']);
                     $update_data[$key]['is_mortgage_broker'] = 1;
                     // $update_data[$key]['lookup_code'] = $row['Lookup Code'];
@@ -6220,8 +6223,8 @@ class Cron extends MX_Controller
                 } else {
                 }
 
-                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']        = trim($row['Lookup Code']);
+                if (in_array($lookupCode, $existing_lookupcode)) {
+                    $company_update_data[$key]['lookup_code']        = $lookupCode;
                     $company_update_data[$key]['name']               = trim($row['Name']);
                     $company_update_data[$key]['is_mortgage_broker'] = 1;
                     $company_update_data[$key]['payee_name']         = trim($row['Payee Name'] ?? '');
@@ -6239,7 +6242,7 @@ class Cron extends MX_Controller
                     $company_update_data[$key]['special_instructions'] = trim($row['Special Instructions'] ?? '');
                     // $company_update_data[$key]['user_type']            = 'mortgage_broker';
                 } else {
-                    $company_insert_data[$key]['lookup_code']        = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['lookup_code']        = $lookupCode;
                     $company_insert_data[$key]['name']               = trim($row['Name']);
                     $company_insert_data[$key]['is_mortgage_broker'] = 1;
                     $company_insert_data[$key]['payee_name']         = trim($row['Payee Name'] ?? '');
@@ -6312,20 +6315,21 @@ class Cron extends MX_Controller
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
-
+            
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
-                if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code']     = trim($row['Lookup Code']);
+                $lookupCode = trim($row['Lookup Code']); 
+                if (in_array($lookupCode, $existing_flookupcode)) {
+                    $update_data[$key]['flookup_code']     = $lookupCode;
                     $update_data[$key]['company_name']     = trim($row['Name']);
                     $update_data[$key]['is_selling_agent'] = 1;
 
                 } else {
                 }
 
-                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']      = trim($row['Lookup Code']);
+                if (in_array($lookupCode, $existing_lookupcode)) {
+                    $company_update_data[$key]['lookup_code']      = $lookupCode;
                     $company_update_data[$key]['name']             = trim($row['Name']);
                     $company_update_data[$key]['is_selling_agent'] = 1;
                     $company_update_data[$key]['payee_name']       = trim($row['Payee Name'] ?? '');
@@ -6346,7 +6350,7 @@ class Cron extends MX_Controller
                     $company_update_data[$key]['special_instructions'] = trim($row['Special Instructions'] ?? '');
 
                 } else {
-                    $company_insert_data[$key]['lookup_code']      = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['lookup_code']      = $lookupCode;
                     $company_insert_data[$key]['name']             = trim($row['Name']);
                     $company_insert_data[$key]['is_selling_agent'] = 1;
                     $company_insert_data[$key]['payee_name']       = trim($row['Payee Name'] ?? '');
@@ -6557,15 +6561,16 @@ class Cron extends MX_Controller
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
-                if (in_array($row['Lookup Code'], $existing_flookupcode)) {
-                    $update_data[$key]['flookup_code']   = trim($row['Lookup Code']);
+                $lookupCode = trim($row['Lookup Code']);
+                if (in_array($lookupCode, $existing_flookupcode)) {
+                    $update_data[$key]['flookup_code']   = $lookupCode;
                     $update_data[$key]['company_name']   = trim($row['Name']);
                     $update_data[$key]['is_underwriter'] = 1;
                 } else {
                 }
 
-                if (in_array($row['Lookup Code'], $existing_lookupcode)) {
-                    $company_update_data[$key]['lookup_code']    = trim($row['Lookup Code']);
+                if (in_array($lookupCode, $existing_lookupcode)) {
+                    $company_update_data[$key]['lookup_code']    = $lookupCode;
                     $company_update_data[$key]['name']           = trim($row['Name']);
                     $company_update_data[$key]['is_underwriter'] = 1;
                     $company_update_data[$key]['address1']       = trim($row['Address (line 1)'] ?? '');
@@ -6585,7 +6590,7 @@ class Cron extends MX_Controller
                     $company_update_data[$key]['percent_endorsements']  = trim($row['Percent - Endorsements'] ?? '');
                     $company_update_data[$key]['billCode_endorsements'] = trim($row['BillCode - Endorsements'] ?? '');
                 } else {
-                    $company_insert_data[$key]['lookup_code']    = trim($row['Lookup Code']);
+                    $company_insert_data[$key]['lookup_code']    = $lookupCode;
                     $company_insert_data[$key]['name']           = trim($row['Name']);
                     $company_insert_data[$key]['is_underwriter'] = 1;
                     $company_insert_data[$key]['address1']       = trim($row['Address (line 1)'] ?? '');
