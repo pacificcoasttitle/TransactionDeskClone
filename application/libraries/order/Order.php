@@ -6840,14 +6840,15 @@ class Order
             $cc[] = 'piyush.j@crestinfosystems.com';
             // $to = 'piyush.j@crestinfosystems.com';
             $mailParams = array(
-                'from_mail'=>$from_mail,
-                'from_name'=>$from_name,
-                'to'=> $to,
-                'subject'=>$subject
+                'from_mail' => $from_mail,
+                'from_name' => $from_name,
+                'to' => $to,
+                'subject' => $subject,
+                'cc' => $cc,
             );
             $this->CI->load->helper('sendemail');
             $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_escrow_officer', '', $mailParams, array(), 0, 0);
-            $mail_result = send_email($from_mail,$from_name, $to, $subject, $message,$file);
+            $mail_result = send_email($from_mail, $from_name, $to, $subject, $message, $file, $cc);
             $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_escrow_officer', '', $mailParams, array('status'=> $mail_result), 0, $logid);
             $result = array();
             if ($mail_result) {
