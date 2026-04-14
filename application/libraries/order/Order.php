@@ -6845,6 +6845,7 @@ class Order
                 'to' => $to,
                 'subject' => $subject,
                 'cc' => $cc,
+                'file' => $file
             );
             $this->CI->load->helper('sendemail');
             $logid = $this->CI->apiLogs->syncLogs(0, 'sendgrid', 'prelim_mail_to_escrow_officer', '', $mailParams, array(), 0, 0);
