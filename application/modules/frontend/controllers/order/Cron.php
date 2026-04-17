@@ -5872,15 +5872,19 @@ class Cron extends MX_Controller
 
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
+            $existing_flookupcode = array_map('strtolower', $existing_flookupcode);
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
-
+            $existing_lookupcode = array_map('strtolower', $existing_lookupcode);
+            // echo "<pre>";
+            // print_r($existing_lookupcode);
+            // exit;
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 $lookupCode = trim($row['Lookup Code']); 
-                if (in_array($lookupCode, $existing_flookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_flookupcode)) {
                     $update_data[$key]['flookup_code'] = $lookupCode;
                     $update_data[$key]['company_name'] = trim($row['Name']);
                     $update_data[$key]['is_escrow']    = 1;
@@ -5921,7 +5925,7 @@ class Cron extends MX_Controller
                     // $insert_data[$key]['special_instructions'] = $row['Special Instructions'];
                 }
 
-                if (in_array($lookupCode, $existing_lookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_lookupcode)) {
                     $company_update_data[$key]['lookup_code']       = $lookupCode;
                     $company_update_data[$key]['name']              = trim($row['Name']);
                     $company_update_data[$key]['is_escrow_company'] = 1;
@@ -5965,6 +5969,8 @@ class Cron extends MX_Controller
                     // $company_insert_data[$key]['row_state']              = $row['Row State'];
                 }
             }
+            // print_r($company_insert_data);
+            // exit;
             // Perform batch update for existing emails
             if (!empty($update_data)) {
                 foreach ($update_data as $update_row) {
