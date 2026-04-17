@@ -6079,22 +6079,24 @@ class Cron extends MX_Controller
             $new_data             = $response['data'];
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
+            $existing_flookupcode = array_map('strtolower', $existing_flookupcode);
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+            $existing_lookupcode = array_map('strtolower', $existing_lookupcode);
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 $lookupCode = trim($row['LookupCode']);
-                if (in_array($lookupCode, $existing_flookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_flookupcode)) {
                     $update_data[$key]['flookup_code'] = $lookupCode;
                     $update_data[$key]['company_name'] = trim($row['Name']);
                     $update_data[$key]['is_lender']    = 1;
                 } else {
                 }
 
-                if (in_array($lookupCode, $existing_lookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_lookupcode)) {
                     $company_update_data[$key]['name']      = trim($row['Name']);
                     $company_update_data[$key]['is_lender'] = 1;
 
@@ -6198,15 +6200,17 @@ class Cron extends MX_Controller
             $new_data             = $response['data'];
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
+            $existing_flookupcode = array_map('strtolower', $existing_flookupcode);
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+            $existing_lookupcode = array_map('strtolower', $existing_lookupcode);
 
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 $lookupCode = trim($row['Lookup Code']);
-                if (in_array($lookupCode, $existing_flookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_flookupcode)) {
                     $update_data[$key]['flookup_code']       = $lookupCode;
                     $update_data[$key]['company_name']       = trim($row['Name']);
                     $update_data[$key]['is_mortgage_broker'] = 1;
@@ -6229,7 +6233,7 @@ class Cron extends MX_Controller
                 } else {
                 }
 
-                if (in_array($lookupCode, $existing_lookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_lookupcode)) {
                     $company_update_data[$key]['lookup_code']        = $lookupCode;
                     $company_update_data[$key]['name']               = trim($row['Name']);
                     $company_update_data[$key]['is_mortgage_broker'] = 1;
@@ -6318,15 +6322,17 @@ class Cron extends MX_Controller
             $new_data             = $response['data'];
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'flookup_code');
+            $existing_flookupcode = array_map('strtolower', $existing_flookupcode);
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+            $existing_lookupcode = array_map('strtolower', $existing_lookupcode);
             
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 $lookupCode = trim($row['Lookup Code']); 
-                if (in_array($lookupCode, $existing_flookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_flookupcode)) {
                     $update_data[$key]['flookup_code']     = $lookupCode;
                     $update_data[$key]['company_name']     = trim($row['Name']);
                     $update_data[$key]['is_selling_agent'] = 1;
@@ -6334,7 +6340,7 @@ class Cron extends MX_Controller
                 } else {
                 }
 
-                if (in_array($lookupCode, $existing_lookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_lookupcode)) {
                     $company_update_data[$key]['lookup_code']      = $lookupCode;
                     $company_update_data[$key]['name']             = trim($row['Name']);
                     $company_update_data[$key]['is_selling_agent'] = 1;
@@ -6559,23 +6565,25 @@ class Cron extends MX_Controller
             $new_data             = $response['data'];
             $existing_flookupcode = $this->db->select('flookup_code')->from('pct_softpro_lookup_table')->where('user_type', 'underwriter')->get()->result_array();
             $existing_flookupcode = array_column($existing_flookupcode, 'lookup_code');
+            $existing_flookupcode = array_map('strtolower', $existing_flookupcode);
 
             $existing_lookupcode = $this->db->select('lookup_code')->from('sp_company')->get()->result_array();
             $existing_lookupcode = array_column($existing_lookupcode, 'lookup_code');
+            $existing_lookupcode = array_map('strtolower', $existing_lookupcode);
             // print_r($existing_lookupcode);
             // echo "Hello";die;
             // Separate data into updates and inserts
             $update_data = $insert_data = $company_insert_data = $company_update_data = [];
             foreach ($new_data as $key => $row) {
                 $lookupCode = trim($row['Lookup Code']);
-                if (in_array($lookupCode, $existing_flookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_flookupcode)) {
                     $update_data[$key]['flookup_code']   = $lookupCode;
                     $update_data[$key]['company_name']   = trim($row['Name']);
                     $update_data[$key]['is_underwriter'] = 1;
                 } else {
                 }
 
-                if (in_array($lookupCode, $existing_lookupcode)) {
+                if (in_array(strtolower($lookupCode), $existing_lookupcode)) {
                     $company_update_data[$key]['lookup_code']    = $lookupCode;
                     $company_update_data[$key]['name']           = trim($row['Name']);
                     $company_update_data[$key]['is_underwriter'] = 1;
