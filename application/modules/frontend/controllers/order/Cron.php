@@ -7325,6 +7325,7 @@ class Cron extends MX_Controller
                                         $newSyncedFile[] = $file_number;
 
                                         if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                                            $filesResult['prelimLink'] = env('AWS_PATH') .  'documents/' . $document_name;
                                             $this->order->sendPrelimDocumentEmail($filesResult);
                                         }
                                     }
@@ -7487,6 +7488,7 @@ class Cron extends MX_Controller
                 }
                 $filesResult['prelimLink'] = $prelimLink;
                 if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                    $filesResult['prelimLink'] = env('AWS_PATH') .  'documents/' . $document_name;
                     $this->order->sendPrelimDocumentEmail($filesResult);
                 }
                 // else {
@@ -7580,6 +7582,7 @@ class Cron extends MX_Controller
                         $filesResult['prelimLink'] = $prelimLink;
                         /** Order type is title & escrow */
                         if ($filesResult['order_type'] == 3 && !empty($filesResult['escrow_officer_email'])) {
+                            $filesResult['prelimLink'] = env('AWS_PATH') .  'documents/' . $document_name;
                             $this->order->sendPrelimDocumentEmail($filesResult);
                         }
                     } else {
