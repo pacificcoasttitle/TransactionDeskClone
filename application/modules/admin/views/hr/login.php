@@ -38,7 +38,7 @@
 
 <body class="bg-dark">
 	<div class="container">
-		<div class="adlogo"><img class="normal-logo" src="http://pct.com/assets/media/general/logo2.png" alt="logo">
+		<div class="adlogo"><img class="normal-logo" src="<?php echo base_url(); ?>assets/backend/hr/img/logo2.png" alt="logo">
 		</div>
 		<div class="card card-login mx-auto mt-5">
 			<div class="card-header2">HR-Center Admin Squad</div>

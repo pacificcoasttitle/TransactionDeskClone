@@ -36,7 +36,7 @@
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
     <a class="navbar-brand mr-1" href="<?php echo site_url().'admin/dashboard'; ?>">
-      <img src="http://pct.com/assets/media/general/logo2.png">
+      <img src="<?php echo base_url(); ?>assets/backend/hr/img/logo2.png">
     </a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
