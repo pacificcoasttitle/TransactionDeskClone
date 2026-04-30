@@ -6837,7 +6837,7 @@ class Order
             $message = $prelim_message_body;
             $subject = 'The Prelim Hot Sheet';
             $to = $orderDetails['escrow_officer_email'];
-            $cc[] = 'piyush.j@crestinfosystems.com';
+            // $cc[] = 'piyush.j@crestinfosystems.com';
             // $to = 'piyush.j@crestinfosystems.com';
             $mailParams = array(
                 'from_mail' => $from_mail,

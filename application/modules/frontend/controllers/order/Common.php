@@ -326,7 +326,8 @@ class Common extends MX_Controller
                     $from_mail = env('FROM_EMAIL');
                     $to = 'ghernandez@pct.com';
                     $subject = 'Prelim Summary : '. $fileNumber;
-                    $cc = ['piyush.j@crestinfosystems.com'];
+                    // $cc = ['piyush.j@crestinfosystems.com'];
+                    $cc = [];
                     $mailParams = array(
                         'from_mail' => $from_mail,
                         'from_name' => $from_name,
@@ -478,7 +479,8 @@ class Common extends MX_Controller
                 $from_mail = env('FROM_EMAIL');
                 $to = 'ghernandez@pct.com';
                 $subject = 'Prelim Summary : '. $response['OrderNumber'];
-                $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+                // $cc = ['piyush-crest@yopmail.com', 'piyush.j@crestinfosystems.com'];
+                $cc = [];
                 $mailParams = array(
                     'from_mail' => $from_mail,
                     'from_name' => $from_name,

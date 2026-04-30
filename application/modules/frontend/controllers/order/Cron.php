@@ -7754,6 +7754,7 @@ class Cron extends MX_Controller
             // $to = $pctContacts['pj_email'];
             $subject = 'Prelim Summary : '. $response['OrderNumber'];
             // $cc = [$pctContacts['pj_email']];
+            $cc = [];
             $mailParams = array(
                 'from_mail' => $from_mail,
                 'from_name' => $from_name,
