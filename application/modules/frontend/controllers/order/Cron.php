@@ -8001,7 +8001,7 @@ class Cron extends MX_Controller
             }
 
             $this->load->library('order/softPro');
-            $this->db->select('o.id, o.file_number, p.full_address, p.address, p.city, p.state, p.zip, p.id as property_id, u.id as sales_rep_id, u.email_address, u.phone, u.first_name, u.last_name, u.notify_disburse_funds, u.notify_recording_confirm, escrow.email_address as escrow_email, escrow.first_name as escrow_first_name, escrow.last_name as escrow_last_name, escrow.notify_disburse_funds as escrow_notify_disburse_funds, escrow.notify_recording_confirm as escrow_notify_recording_confirm, lender.email_address as lender_email, lender.first_name as lender_first_name, lender.last_name as lender_last_name, lender.notify_disburse_funds as lender_notify_disburse_funds, lender.notify_recording_confirm as lender_notify_recording_confirm');
+            $this->db->select('o.id, o.file_number, p.full_address, p.address, p.city, p.state, p.zip, p.id as property_id, u.id as sales_rep_id, u.email_address, u.phone, u.alternate_phone, u.first_name, u.last_name, u.notify_disburse_funds, u.notify_recording_confirm, escrow.email_address as escrow_email, escrow.first_name as escrow_first_name, escrow.last_name as escrow_last_name, escrow.notify_disburse_funds as escrow_notify_disburse_funds, escrow.notify_recording_confirm as escrow_notify_recording_confirm, lender.email_address as lender_email, lender.first_name as lender_first_name, lender.last_name as lender_last_name, lender.notify_disburse_funds as lender_notify_disburse_funds, lender.notify_recording_confirm as lender_notify_recording_confirm');
             $this->db->from('order_details as o');
             $this->db->join('property_details as p', 'o.property_id = p.id');
             $this->db->join('transaction_details as t', 'o.transaction_id = t.id');
@@ -8078,6 +8078,18 @@ class Cron extends MX_Controller
                         $result = $this->twilio->message($phoneNumber, $message, '', array('from' => $from));
                         $res = $result->toArray();
                         $res['msg_status'] = 'success';
+
+                        if (!empty($filesResult['alternate_phone'])) {
+                            try {
+                                $altPhoneNumber = preg_replace('/\D/', '', $filesResult['alternate_phone']);
+                                $alt_result = $this->twilio->message($altPhoneNumber, $message, '', array('from' => $from));
+                                $alt_res = $alt_result->toArray();
+                                $res['alternate_phone_status'] = 'success';
+                            } catch (\Exception $altEx) {
+                                $res['alternate_phone_status'] = 'error';
+                                $res['alternate_phone_error'] = $altEx->getMessage();
+                            }
+                        }
                     } catch (\Twilio\Exceptions\RestException $e) {
                         $res['msg_status'] = 'error';
                         $res['errorCode'] = $e->getCode();

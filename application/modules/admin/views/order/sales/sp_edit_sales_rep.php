@@ -116,6 +116,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="alternate_phone" class="col-sm-4 col-form-label">Alternate Phone Number</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" name="alternate_phone" id="alternate_phone" placeholder="Alternate Phone Number" value="<?php echo isset($sales_rep_info['alternate_phone']) && !empty($sales_rep_info['alternate_phone']) ? $sales_rep_info['alternate_phone'] : '' ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label for="language" class="col-sm-4 col-form-label">Disable</label>
                                     <div class="col-sm-1">
                                         <input <?php echo $sales_rep_info['status'] == 0 ? "checked" : ""; ?>  type="checkbox" class="form-control" name="status" id="status">
@@ -320,7 +327,7 @@ if (isset($imgThank) && !empty($imgThank)) {
                             <button type="submit" id="edit-sales-rep" name="edit-sales-rep" class="btn-action btn-action-primary">
                                 <i class="fas fa-save"></i> Update
                             </button>
-                            <a href="<?php echo site_url('order/admin/sales-rep'); ?>" class="btn-action btn-action-secondary">
+                            <a href="<?php echo site_url('order/admin/softpro-sales-reps'); ?>" class="btn-action btn-action-secondary">
                                 <i class="fas fa-arrow-left"></i> Cancel
                             </a>
                         </div>

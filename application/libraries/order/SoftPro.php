@@ -203,7 +203,7 @@ class SoftPro
         }
         /* Start add resware api logs */
         $softproLogData = [
-            'request_type' => 'add_new_user_to_softpro',
+            'request_type' => 'update_user_to_softpro',
             'request_url'  => $apiType,
             'request'      => $newUserData,
             'response'     => json_encode($response),

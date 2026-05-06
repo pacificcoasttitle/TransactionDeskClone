@@ -122,12 +122,12 @@ class Sales extends MX_Controller {
 
                     if($status == "success" && $statusThank == "success")
                     {
-                       
                         $salesRepData = array(
                             'first_name' => $_POST['sales_rep_first_name'],
                             'last_name' => $_POST['sales_rep_last_name'],
                             'email_address' => $_POST['email_address'],
                             'phone' =>  $_POST['telephone'],
+                            'alternate_phone' => isset($_POST['alternate_phone']) ? $_POST['alternate_phone'] : '',
                             'is_mail_notification' =>  isset($_POST['is_mail_notification']) ? 1 : 0,
                             'notify_disburse_funds' =>  isset($_POST['notify_disburse_funds']) ? 1 : 0,
                             'notify_recording_confirm' =>  isset($_POST['notify_recording_confirm']) ? 1 : 0,
