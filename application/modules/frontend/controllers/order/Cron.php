@@ -6656,6 +6656,99 @@ class Cron extends MX_Controller
     }
 
     public function spSyncFailedDocument() {
+        // Fetch up to 200 pending records at once
+        $allRecords = $this->db->select('id, order_number, file_list, document_name, document_ids')
+                            ->from('sp_file_upload_logs')
+                            ->where('is_synced', 0)
+                            ->order_by('id', 'asc')
+                            ->limit(200)
+                            ->get()->result_array();
+
+        if (!empty($allRecords)) {
+            $this->load->library('order/softPro');
+
+            // Build a lookup map for all records by ID (needed for response processing)
+            $recordsById = [];
+            foreach ($allRecords as $record) {
+                $recordsById[$record['id']] = $record;
+            }
+
+            // Process in chunks of 10
+            $chunks = array_chunk($allRecords, 10);
+
+            foreach ($chunks as $chunk) {
+                $fileUploadReq = [];
+
+                foreach ($chunk as $value) {
+                    if (empty($value['document_name'])) {
+                        $update_row = [
+                            'is_synced' => 1,
+                            'reason' => 'Document name is required'
+                        ];
+                        $this->db->where('id', $value['id']);
+                        $this->db->update('sp_file_upload_logs', $update_row);
+                    } else {
+                        $fileData = [
+                            "Id" => $value['id'],
+                            "OrderNumber"  => $value['order_number'],
+                            "DocumentName" => $value['document_name'],
+                            "FileList"     => json_decode($value['file_list']),
+                        ];
+                        $fileUploadReq[] = $fileData;
+                    }
+                }
+
+                // Skip API call if no valid files in this chunk
+                if (empty($fileUploadReq)) {
+                    continue;
+                }
+
+                $reqData = json_encode($fileUploadReq);
+                $logid = $this->apiLogs->syncLogs(0, 'softpro', 'upload_document_cron', 'upload_document', $reqData, [], 0, 0);
+                $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
+                $response = json_decode($result, true);
+                $this->apiLogs->syncLogs(0, 'softpro', 'upload_document_cron', 'upload_document', $reqData, json_encode($response), 0, $logid);
+
+                if (isset($response) && !empty($response)) {
+                    $updateData = [];
+                    foreach ($response as $res) {
+                        if ($res['Status'] == 200) {
+                            $updateData[] = [
+                                'is_synced' => 1,
+                                'id' => $res['Id']
+                            ];
+                            // BUG FIX: Use $recordsById lookup instead of leaked $value
+                            $currentRecord = isset($recordsById[$res['Id']]) ? $recordsById[$res['Id']] : null;
+                            if ($currentRecord && !empty($currentRecord['document_ids'])) {
+                                $docIds = json_decode($currentRecord['document_ids'], true);
+                                if (!empty($docIds)) {
+                                    $this->db->where_in('id', $docIds);
+                                    $this->db->update('pct_order_documents', ['is_sync' => 1]);
+                                }
+                            }
+                        } else {
+                            $updateData[] = [
+                                'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
+                                'id' => $res['Id'],
+                                'reason' => $res['Message'],
+                            ];
+                        }
+                    }
+
+                    if (!empty($updateData)) {
+                        foreach ($updateData as $update_row) {
+                            $this->db->where('id', $update_row['id']);
+                            $this->db->update('sp_file_upload_logs', $update_row);
+                        }
+                    }
+                }
+            }
+        } else {
+            $this->db->truncate('sp_file_upload_logs');
+        }
+    }
+
+    public function spSyncFailedDocument_bkp() {
         
         $records = $this->db->select('id, order_number, file_list, document_name, document_ids')
                             ->from('sp_file_upload_logs')
