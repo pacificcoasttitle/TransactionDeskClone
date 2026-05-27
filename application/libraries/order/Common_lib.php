@@ -423,4 +423,79 @@ class Common_lib
             redirect(base_url() . 'order/admin');
         }
     }
+
+    public function fetchAndSyncContacts($fileNumber)
+    {
+        $softproContacts = [];
+        if (! empty($fileNumber)) {
+            $this->CI->load->model('order/home_model');
+            $this->CI->load->model('order/apiLogs');
+            $this->CI->load->library('order/softPro');
+            $req['orderNumber'] = $fileNumber;
+            $apiEndPoints       = SOFTPRO_API_END;
+            $queryParams        = http_build_query($req);
+            $reqData            = json_encode($req);
+            $reqUrl             = getenv("SOFT_PRO_API") . $apiEndPoints['get_order_contacts'] . '?' . $queryParams;
+            $logid              = $this->CI->apiLogs->syncLogs(0, 'softpro', 'get_order_contacts', $reqUrl, $reqData, [], 0, 0);
+            $response           = $this->CI->softpro->make_request('GET', 'get_order_contacts', $reqData, $queryParams);
+            $this->CI->apiLogs->syncLogs(0, 'softpro', 'get_order_contacts', $reqUrl, $reqData, json_encode($response), 0, $logid);
+            if ($response['status'] == 'success' && ! empty($response['data'])) {
+                $contacts       = $response['data'];
+                $updateContacts = [];
+                if (! empty($contacts['EscrowCompanies']) && ! empty($contacts['EscrowCompanies']['PersonLookupCode'])) {
+                    $escrow     = $contacts['EscrowCompanies']['PersonLookupCode'];
+                    $escrowUser = $this->CI->home_model->sp_get_user(['lookup_code' => $escrow]);
+                    if (! empty($escrowUser)) {
+                        $softproContacts['escrow']['email_address'] = $escrowEmail = $escrowUser['email_address'];
+                        $softproContacts['escrow']['id']            = $updateContacts['escrow_id']            = $escrowUser['id'];
+                        $softproContacts['escrow']['lookup_code']   = $escrowUser['lookup_code'];
+                        $softproContacts['escrow']['name']          = $escrowUser['first_name'] . ' ' . $escrowUser['last_name'];
+                        $softproContacts['escrow']['company_name']  = $escrowUser['company_name'];
+                    }
+                }
+
+                if (! empty($contacts['Lenders']) && ! empty($contacts['Lenders']['PersonLookupCode'])) {
+                    $lender     = $contacts['Lenders']['PersonLookupCode'];
+                    $lenderUser = $this->CI->home_model->sp_get_user(['lookup_code' => $lender]);
+                    if (! empty($lenderUser)) {
+                        $softproContacts['lender']['email_address'] = $lenderEmail = $lenderUser['email_address'];
+                        $softproContacts['lender']['id']            = $updateContacts['lender_id']            = $lenderId            = $lenderUser['id'];
+                        $softproContacts['lender']['lookup_code']   = $lenderUser['lookup_code'];
+                        $softproContacts['lender']['name']          = $lenderUser['first_name'] . ' ' . $lenderUser['last_name'];
+                        $softproContacts['lender']['company_name']  = $lenderUser['company_name'];
+                    }
+                }
+
+                if (! empty($contacts['ListingAgentBrokers']) && ! empty($contacts['ListingAgentBrokers']['PersonLookupCode'])) {
+                    $listingAgent     = $contacts['ListingAgentBrokers']['PersonLookupCode'];
+                    $listingAgentUser = $this->CI->home_model->sp_get_user(['lookup_code' => $listingAgent]);
+                    if (! empty($listingAgentUser)) {
+                        $softproContacts['listing_agent']['email_address'] = $listingAgentEmail = $listingAgentUser['email_address'];
+                        $softproContacts['listing_agent']['id']            = $updateContacts['listing_agent_id']            = $listingAgentId            = $listingAgentUser['id'];
+                        $softproContacts['listing_agent']['lookup_code']   = $listingAgentUser['lookup_code'];
+                        $softproContacts['listing_agent']['name']          = $listingAgentUser['first_name'] . ' ' . $listingAgentUser['last_name'];
+                        $softproContacts['listing_agent']['company_name']  = $listingAgentUser['company_name'];
+                    }
+                }
+
+                if (! empty($contacts['TitleCompanies']) && ! empty($contacts['TitleCompanies']['CompanyLookUpCode'])) {
+                    $titleOfficer                                     = $contacts['TitleCompanies'];
+                    $softproContacts['title_officer']['lookup_code']  = $titleOfficer['CompanyLookUpCode'];
+                    $softproContacts['title_officer']['company_name'] = $titleOfficer['PersonLookupCode'];
+                }
+
+                if (! empty($contacts['Underwriters']) && ! empty($contacts['Underwriters']['CompanyLookUpCode'])) {
+                    $underWritter                                    = $contacts['Underwriters'];
+                    $softproContacts['underwritter']['lookup_code']  = $underWritter['CompanyLookUpCode'];
+                    $softproContacts['underwritter']['company_name'] = $underWritter['PersonLookupCode'];
+                }
+            }
+
+            // if (! empty($updateContacts) && ! empty($filesResult['property_id'])) {
+            //     $this->CI->db->where('id', $filesResult['property_id']);
+            //     $this->CI->db->update('property_details', $updateContacts);
+            // }
+        }
+        return $softproContacts;
+    }
 }

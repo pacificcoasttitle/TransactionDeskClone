@@ -269,6 +269,155 @@ class Order extends MX_Controller
         exit;
     }
 
+    public function exportContactsWithSalesrep()
+    {
+        $salesRepId = 15967; // Mark Neveu
+        // Fetch all orders associated with the sales rep
+        $this->db->select('order_details.id, order_details.file_number, order_details.transaction_id, order_details.created_at, 
+                property_details.full_address, property_details.apn, property_details.county,CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name, to.officer_name as title_officer_name');
+        $this->db->from('order_details');
+        $this->db->join('transaction_details', 'order_details.transaction_id = transaction_details.id');
+        $this->db->join('property_details', 'order_details.property_id = property_details.id');
+        $this->db->join('pct_softpro_lookup_table as salerep', 'transaction_details.sales_representative = salerep.id', 'left');
+        $this->db->join('pct_softpro_lookup_table as to', 'transaction_details.title_officer = to.id', 'left');
+        $this->db->where('transaction_details.sales_representative', $salesRepId);
+        $query      = $this->db->get();
+        // echo $this->db->last_query();die;
+        $ordersList = $query->result_array();
+        // echo "<pre>";
+        // print_r($ordersList);die;
+        if (isset($ordersList) && ! empty($ordersList)) {
+            
+            $export_data = [];
+            foreach ($ordersList as $key => $value) {
+                $orderId    = isset($value['id']) && ! empty($value['id']) ? $value['id'] : '';
+                $fileNumber = isset($value['file_number']) && ! empty($value['file_number']) ? $value['file_number'] : '';
+
+                if ($orderId && $fileNumber) {
+                    $order_details    = $this->order_model->get_order_details($orderId);
+                    $con              = ['id' => $order_details['customer_id']];
+                    $customer_details = $this->home_model->get_rows($con);
+
+                    // Fetch contacts from SoftPro using library function
+                    $softproContacts = $this->common_lib->fetchAndSyncContacts($fileNumber);
+
+                    // Escrow contact details
+                    $escrowName        = isset($softproContacts['escrow']['name']) ? $softproContacts['escrow']['name'] : '';
+                    $escrowEmail       = isset($softproContacts['escrow']['email_address']) ? $softproContacts['escrow']['email_address'] : '';
+                    $escrowCompany     = isset($softproContacts['escrow']['company_name']) ? $softproContacts['escrow']['company_name'] : '';
+                    $escrowLookupCode  = isset($softproContacts['escrow']['lookup_code']) ? $softproContacts['escrow']['lookup_code'] : '';
+
+                    // Lender contact details
+                    $lenderName        = isset($softproContacts['lender']['name']) ? $softproContacts['lender']['name'] : '';
+                    $lenderEmail       = isset($softproContacts['lender']['email_address']) ? $softproContacts['lender']['email_address'] : '';
+                    $lenderCompany     = isset($softproContacts['lender']['company_name']) ? $softproContacts['lender']['company_name'] : '';
+                    $lenderLookupCode  = isset($softproContacts['lender']['lookup_code']) ? $softproContacts['lender']['lookup_code'] : '';
+
+                    // Listing agent contact details
+                    $listingAgentName       = isset($softproContacts['listing_agent']['name']) ? $softproContacts['listing_agent']['name'] : '';
+                    $listingAgentEmail      = isset($softproContacts['listing_agent']['email_address']) ? $softproContacts['listing_agent']['email_address'] : '';
+                    $listingAgentCompany    = isset($softproContacts['listing_agent']['company_name']) ? $softproContacts['listing_agent']['company_name'] : '';
+                    $listingAgentLookupCode = isset($softproContacts['listing_agent']['lookup_code']) ? $softproContacts['listing_agent']['lookup_code'] : '';
+
+                    // Title officer details
+                    $titleOfficerLookupCode = isset($softproContacts['title_officer']['lookup_code']) ? $softproContacts['title_officer']['lookup_code'] : '';
+                    $titleOfficerCompany    = isset($softproContacts['title_officer']['company_name']) ? $softproContacts['title_officer']['company_name'] : '';
+
+                    // Underwriter details
+                    $underwriterLookupCode = isset($softproContacts['underwritter']['lookup_code']) ? $softproContacts['underwritter']['lookup_code'] : '';
+                    $underwriterCompany    = isset($softproContacts['underwritter']['company_name']) ? $softproContacts['underwritter']['company_name'] : '';
+
+                    $export_data[] = [
+                        'file_number'                => $value['file_number'],
+                        'opened_date'                => $value['opened_date'],
+                        // 'company_name'               => $customer_details['company_name'],
+                        // 'email_address'              => $customer_details['email_address'],
+                        // 'first_name'                 => $customer_details['first_name'],
+                        // 'last_name'                  => $customer_details['last_name'],
+                        // 'telephone_no'               => $customer_details['phone'],
+                        // 'street_address'             => $customer_details['address1'],
+                        // 'city'                       => $customer_details['city'],
+                        // 'zip_code'                   => $customer_details['zip'],
+                        'full_address'               => $value['full_address'],
+                        'apn'                        => $value['apn'],
+                        'county'                     => $value['county'],
+                        // 'legal_description'          => $order_details['legal_description'],
+                        // 'primary_owner'              => $order_details['primary_owner'],
+                        // 'secondary_owner'            => $order_details['secondary_owner'],
+                        // 'borrower'                   => $order_details['borrower'],
+                        // 'secondary_borrower'         => $order_details['secondary_borrower'],
+                        'sales_rep_name'             => $value['sales_rep_name'],
+                        'title_officer_name'         => $value['title_officer_name'],
+                        // 'product_type'               => $order_details['sp_product_type_name'],
+                        // 'loan_amount'                => $order_details['loan_amount'],
+                        // 'sales_amount'               => $order_details['sales_amount'],
+                        'escrow_name'                => $escrowName,
+                        'escrow_email'               => $escrowEmail,
+                        // 'escrow_company'             => $escrowCompany,
+                        // 'escrow_lookup_code'         => $escrowLookupCode,
+                        'lender_name'                => $lenderName,
+                        'lender_email'               => $lenderEmail,
+                        // 'lender_company'             => $lenderCompany,
+                        // 'lender_lookup_code'         => $lenderLookupCode,
+                        'listing_agent_name'         => $listingAgentName,
+                        'listing_agent_email'        => $listingAgentEmail,
+                        // 'listing_agent_company'      => $listingAgentCompany,
+                        // 'listing_agent_lookup_code'  => $listingAgentLookupCode,
+                        'title_officer_lookup_code'  => $titleOfficerLookupCode,
+                        'title_officer_company'      => $titleOfficerCompany,
+                        'underwriter_lookup_code'    => $underwriterLookupCode,
+                        'underwriter_company'        => $underwriterCompany,
+                    ];
+                }
+            }
+
+            if (isset($export_data) && ! empty($export_data)) {
+                if (! is_dir('uploads/orders')) {
+                    mkdir('./uploads/orders', 0777, true);
+                }
+
+                $outputPath = './uploads/orders/contacts_salesrep_output.csv';
+                $output     = fopen($outputPath, "w");
+
+                $header = [
+                    "Order #", "Order Open At", // "Company Name", "Email Address",
+                    // "First Name", "Last Name", "Telephone", "Street Address",
+                    // "City", "Zipcode", 
+                    "Property Address", "APN", "County",
+                    // "Brief Legal Description", "Primary Owner", "Secondary Owner",
+                    // "Primary Borrower", "Secondary Borrower", 
+                    "Sales Rep", "Title Officer",
+                    // "Product",  "Loan Amount", "Sales Amount",
+                    "Escrow Name", "Escrow Email", // "Escrow Company", "Escrow Lookup Code",
+                    "Lender Name", "Lender Email", // "Lender Company", "Lender Lookup Code",
+                    "Listing Agent Name", "Listing Agent Email", // "Listing Agent Company", "Listing Agent Lookup Code",
+                    "Title Officer Lookup Code", "Title Officer Company",
+                    "Underwriter Lookup Code", "Underwriter Company"
+                ];
+                fputcsv($output, $header);
+
+                foreach ($export_data as $key => $value) {
+                    fputcsv($output, $value);
+                }
+
+                header('Content-Type: application/json');
+                $contents   = file_get_contents($outputPath);
+                $binaryData = base64_encode($contents);
+                unlink($outputPath);
+                fclose($output);
+
+                $res = ['status' => 'success', 'data' => $binaryData];
+            } else {
+                $res = ['status' => 'error', 'data' => 'No data found.'];
+            }
+        } else {
+            $res = ['status' => 'error', 'data' => 'No data found.'];
+        }
+
+        echo json_encode($res);
+        exit;
+    }
+
     public function partnerApiLogs()
     {
         $data          = [];

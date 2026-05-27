@@ -583,6 +583,7 @@ $route['order/admin/orders(/:any)?']                = 'admin/order/order/orders'
 $route['order/admin/get-order-list']                = 'admin/order/order/get_order_list';
 $route['order/admin/order-details/:num']            = 'admin/order/order/order_details';
 $route['order/admin/export-orders']                 = 'admin/order/order/export_orders';
+$route['order/admin/export-order-contacts']         = 'admin/order/order/exportContactsWithSalesrep';
 $route['order/admin/export_lp_orders']              = 'admin/order/order/exportLpOrders';
 $route['order/admin/partner-api-log']               = 'admin/order/order/partnerApiLogs';
 $route['order/admin/update-order-details']          = 'admin/order/order/update_order_details';
