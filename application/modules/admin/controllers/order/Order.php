@@ -400,22 +400,34 @@ class Order extends MX_Controller
                     fputcsv($output, $value);
                 }
 
-                header('Content-Type: application/json');
-                $contents   = file_get_contents($outputPath);
-                $binaryData = base64_encode($contents);
-                unlink($outputPath);
+                // header('Content-Type: application/json');
+                // $contents   = file_get_contents($outputPath);
+                // $binaryData = base64_encode($contents);
+                // unlink($outputPath);
                 fclose($output);
 
-                $res = ['status' => 'success', 'data' => $binaryData];
+                // $res = ['status' => 'success', 'data' => $binaryData];
+                // Force browser to download the CSV file
+                $fileName = 'contacts_salesrep_' . date('Y-m-d_H-i-s') . '.csv';
+                header('Content-Description: File Transfer');
+                header('Content-Type: text/csv');
+                header('Content-Disposition: attachment; filename="' . $fileName . '"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($outputPath));
+
+                readfile($outputPath);
+                unlink($outputPath);
+                exit;
             } else {
-                $res = ['status' => 'error', 'data' => 'No data found.'];
+                echo json_encode(['status' => 'error', 'data' => 'No data found.']);
+                exit;
             }
         } else {
-            $res = ['status' => 'error', 'data' => 'No data found.'];
+            echo json_encode(['status' => 'error', 'data' => 'No data found.']);
+            exit;
         }
-
-        echo json_encode($res);
-        exit;
     }
 
     public function partnerApiLogs()
