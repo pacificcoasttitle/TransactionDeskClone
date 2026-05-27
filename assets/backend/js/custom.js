@@ -6691,6 +6691,42 @@ function exportOrders() {
     });
 }
 
+function exportOrdersContacts(salesId) {
+    $("#page-preloader").show();
+    $.ajax({
+        url: base_url + "order/admin/export-order-contacts",
+        method: "POST",
+        data: { salesId: salesId },
+        success: function (data) {
+            if (data.status == 'success') {
+                download('sales_rep_contacts.csv', data.data);
+            }
+            else {
+                $('#order_error_msg').html(result.message).show();
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#order_success_msg").offset().top
+                }, 1000);
+
+                setTimeout(function () {
+                    $('#order_error_msg').html('').hide();
+                }, 4000);
+            }
+            $("#page-preloader").hide();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            $('#order_error_msg').html('Something went wrong. Please try it again.').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#order_success_msg").offset().top
+            }, 1000);
+
+            setTimeout(function () {
+                $('#order_error_msg').html('').hide();
+            }, 4000);
+            $("#page-preloader").hide();
+        }
+    });
+}
+
 function exportSalesRepReports() {
     let month = $('#sales-rep-csv-report #select_month').val();
     let year = $('#sales-rep-csv-report #select_year').val();

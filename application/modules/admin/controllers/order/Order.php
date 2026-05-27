@@ -271,7 +271,8 @@ class Order extends MX_Controller
 
     public function exportContactsWithSalesrep()
     {
-        $salesRepId = 15967; // Mark Neveu
+        // $salesRepId = 15967; // Mark Neveu
+        $salesRepId = $this->input->post('salesId');
         // Fetch all orders associated with the sales rep
         $this->db->select('order_details.id, order_details.file_number, order_details.transaction_id, order_details.created_at, 
                 property_details.full_address, property_details.apn, property_details.county,CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name, to.officer_name as title_officer_name');
@@ -329,7 +330,7 @@ class Order extends MX_Controller
 
                     $export_data[] = [
                         'file_number'                => $value['file_number'],
-                        'opened_date'                => $value['opened_date'],
+                        'opened_date'                => $value['created_at'],
                         // 'company_name'               => $customer_details['company_name'],
                         // 'email_address'              => $customer_details['email_address'],
                         // 'first_name'                 => $customer_details['first_name'],
@@ -400,25 +401,26 @@ class Order extends MX_Controller
                     fputcsv($output, $value);
                 }
 
-                // header('Content-Type: application/json');
-                // $contents   = file_get_contents($outputPath);
-                // $binaryData = base64_encode($contents);
-                // unlink($outputPath);
+                header('Content-Type: application/json');
+                $contents   = file_get_contents($outputPath);
+                $binaryData = base64_encode($contents);
+                unlink($outputPath);
                 fclose($output);
 
-                // $res = ['status' => 'success', 'data' => $binaryData];
+                $res = ['status' => 'success', 'data' => $binaryData];
                 // Force browser to download the CSV file
-                $fileName = 'contacts_salesrep_' . date('Y-m-d_H-i-s') . '.csv';
-                header('Content-Description: File Transfer');
-                header('Content-Type: text/csv');
-                header('Content-Disposition: attachment; filename="' . $fileName . '"');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize($outputPath));
+                // $fileName = 'contacts_salesrep_' . date('Y-m-d_H-i-s') . '.csv';
+                // header('Content-Description: File Transfer');
+                // header('Content-Type: text/csv');
+                // header('Content-Disposition: attachment; filename="' . $fileName . '"');
+                // header('Expires: 0');
+                // header('Cache-Control: must-revalidate');
+                // header('Pragma: public');
+                // header('Content-Length: ' . filesize($outputPath));
 
-                readfile($outputPath);
-                unlink($outputPath);
+                // readfile($outputPath);
+                // unlink($outputPath);
+                echo json_encode($res);
                 exit;
             } else {
                 echo json_encode(['status' => 'error', 'data' => 'No data found.']);

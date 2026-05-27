@@ -20,6 +20,9 @@
         
         <?php if (!in_array($roleName, ['CS Admin'])) : ?>
         <div class="action-buttons">
+            <a href="javascript:void(0);" onclick="fetchContactsForSalesOrder();" class="btn-action btn-action-info">
+                <i class="fas fa-sync"></i> Fetch Contacts Order
+            </a>
             <a href="javascript:void(0);" onclick="openSoftproOrderPopup();" class="btn-action btn-action-info">
                 <i class="fas fa-sync"></i> Sync Order
             </a>
@@ -97,6 +100,44 @@
                     </button>
                     <button type="submit" onclick="syncOrderNumberFromSoftpro(event);" class="btn btn-primary">
                         <i class="fas fa-sync-alt mr-1"></i> Sync Now
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Sync Contacts Order Number Modal -->
+<div class="modal fade pct-admin-listing" id="fetchContactsOrder" tabindex="-1" role="dialog" aria-labelledby="fetchContactsOrderLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post" id="fetch-contacts-order-form">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fetchContactsOrderLabel">
+                        <i class="fas fa-sync-alt mr-2"></i>Fetch Order Contacts 
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="sale_reps" class="font-weight-bold">Select Sales Rep</label>
+                        <select name="sale_reps" required="" class="form-control" id="sale_reps">
+                            <option value="">Select Sales Rep</option>
+                            <?php foreach ($salesRep as $key => $value) : ?>
+                                <option value="<?php echo $value['id']; ?>"><?php echo $value['first_name'] . ' ' . $value['last_name']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div id="sync_contacts_sale_reps_error_msg" class="text-danger mt-2" style="display:none;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fas fa-times mr-1"></i> Cancel
+                    </button>
+                    <button type="submit" onclick="syncContactsOrder(event);" class="btn btn-primary">
+                        <i class="fas fa-sync-alt mr-1"></i> Fetch Now
                     </button>
                 </div>
             </form>

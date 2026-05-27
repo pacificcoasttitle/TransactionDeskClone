@@ -622,7 +622,7 @@ body.pct-modern-layout #content-wrapper {
 .pct-admin-listing .modal .modal-body .form-control {
     border: 1.5px solid #e5e7eb;
     border-radius: var(--pct-radius-sm);
-    padding: 0.5rem 0.75rem;
+    /* padding: 0.5rem 0.75rem; */
     font-size: 0.875rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }

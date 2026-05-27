@@ -74,6 +74,10 @@ function openSoftproOrderPopup() {
     $('#fetchOrderNumber').modal('show');
 }
 
+function fetchContactsForSalesOrder() {
+    $('#fetchContactsOrder').modal('show');
+}
+
 async function syncOrderNumberFromSoftpro(e) {
     e.preventDefault();
     // return;
@@ -88,5 +92,22 @@ async function syncOrderNumberFromSoftpro(e) {
     await syncSoftProOrders(orderNumber);
     $('#order_number').val('');
     $('#fetchOrderNumber').modal('hide');
+
+}
+
+async function syncContactsOrder(e) {
+    e.preventDefault();
+    // return;
+    var salesId = $('#sale_reps').val();
+    if (salesId == '') {
+        $('#sync_contacts_sale_reps_error_msg').html('Please select sales rep.').show();
+        setTimeout(function () {
+            $('#sync_contacts_sale_reps_error_msg').html('').hide();
+        }, 2000);
+        return false;
+    }
+    await exportOrdersContacts(salesId);
+    $('#sale_reps').val('');
+    $('#syncContactsOrder').modal('hide');
 
 }
