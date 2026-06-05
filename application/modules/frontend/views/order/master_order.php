@@ -93,7 +93,7 @@
 									<input type="hidden" name="random_number" id="random_number" value="">
 
 									<div class="col-sm-12">
-										<input type="text" name="Property" id="property-search" class="form-control gui-input pac-target-input" placeholder="Property Address">
+										<input type="text" name="Property" id="property-search" class="form-control gui-input pac-target-input" placeholder="Search Property Address">
 									</div>
 								</div>
 
@@ -202,7 +202,7 @@
 							<div class="row form-group">
 								<div class="col-sm-12">
 									<select id="SalesRep" name="SalesRep" class="form-control">
-										<option value="">Sales Rep...</option>
+										<option value="">Select Sales Rep...</option>
 										<?php
                                             if (isset($salesRep) && ! empty($salesRep)) {
                                                 foreach ($salesRep as $k => $v) {
@@ -222,7 +222,7 @@
 							<div class="row form-group">
 								<div class="col-sm-12">
 									<select id="TitleOfficer" name="TitleOfficer" class="form-control">
-										<option value="">Title Officer</option>
+										<option value="">Select Title Officer</option>
 										<?php
 
                                             if (isset($titleOfficer) && ! empty($titleOfficer)) {
