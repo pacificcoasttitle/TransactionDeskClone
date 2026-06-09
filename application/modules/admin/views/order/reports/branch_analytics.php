@@ -13,7 +13,7 @@ $daysRemaining = $totalDaysInMonth - $currentDay;
 
 // Total days passed including today
 $daysPassed = $currentDay;
-$daysPassed = $summaryData['workedDays'];
+// $daysPassed = $summaryData['workedDays'];
 $daysRemaining = $summaryData['workingDaysRemaining'];
 $totalDaysInMonth = $daysPassed + $daysRemaining;
 // echo "Today's Day of Month: " . $currentDay . PHP_EOL;
