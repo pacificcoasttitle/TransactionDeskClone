@@ -324,7 +324,7 @@ class Common_lib
         // $this->db->select('*');
         $this->CI->db->select('*, REPLACE(COALESCE(NULLIF(officer_name, ""), closer_examiner), "\\\\", " ") as name');
         $this->CI->db->from('pct_softpro_lookup_table');
-        $this->db->where('status', 1);
+        $this->CI->db->where('status', 1);
         $this->CI->db->where('is_title_officer', 1);
         $query = $this->CI->db->get();
         if ($query->num_rows() > 0) {
