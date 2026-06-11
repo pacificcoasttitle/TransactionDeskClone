@@ -57,6 +57,22 @@ var counties = {
     'Ventura': '06111',
     'Yolo': '06113',
     'Yuba': '06115',
+    // Arizona counties
+    'Apache': '04001',
+    'Cochise': '04003',
+    'Coconino': '04005',
+    'Gila': '04007',
+    'Graham': '04009',
+    'Greenlee': '04011',
+    'La Paz': '04012',
+    'Maricopa': '04013',
+    'Mohave': '04015',
+    'Navajo': '04017',
+    'Pima': '04019',
+    'Pinal': '04021',
+    'Santa Cruz': '04023',
+    'Yavapai': '04025',
+    'Yuma': '04027',
 };
 
 $(document).ready(function () {
@@ -685,8 +701,11 @@ function autoComplete() {
     // use Google Places API to autocomplete address searches and bias suggestions to California
     var input = document.getElementById('property-search');
     var defaultBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(-32.30, 114.8),
-        new google.maps.LatLng(-42, 124.24)); // latitude and longitude ranges of California
+        // new google.maps.LatLng(-32.30, 114.8),
+        // new google.maps.LatLng(-42, 124.24)); // latitude and longitude ranges of California
+        new google.maps.LatLng(32.50, -124.48), // SW corner: southern Arizona / southern California
+        new google.maps.LatLng(42.01, -109.05)  // NE corner: northern California / northern Arizona
+    );
     var options = {
         componentRestrictions: {
             country: 'us'

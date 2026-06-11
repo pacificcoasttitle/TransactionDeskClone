@@ -5,7 +5,7 @@
 class Home extends MX_Controller
 {
 
-    private $js_version = '06.03';
+    private $js_version = '06.04';
 
     public function __construct()
     {
@@ -407,7 +407,7 @@ class Home extends MX_Controller
                         "Zip"                => $PropertyZip,
                         "EscrowBriefLegal"   => $LegalDescription,
                         "IsPrimaryResidence" => true,
-                        "State"              => "CA",
+                        // "State"              => "CA",
                     ];
                     
                     $transactionDetailsReq = [

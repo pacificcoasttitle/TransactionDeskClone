@@ -2,7 +2,7 @@
 (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Pma extends MX_Controller {
     private $user;
-    private $js_version = '01';
+    private $js_version = '01.01';
 	function __construct() 
     {
         parent::__construct();

@@ -315,11 +315,14 @@ $(document).ready(function () {
 });
 
 function autoComplete() {
-    // use Google Places API to autocomplete address searches and bias suggestions to California
+    // use Google Places API to autocomplete address searches and bias suggestions to California and Arizona
     var input = document.getElementById('property-search');
     var defaultBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(-32.30, 114.8),
-        new google.maps.LatLng(-42, 124.24)); // latitude and longitude ranges of California
+        // new google.maps.LatLng(-32.30, 114.8),
+        // new google.maps.LatLng(-42, 124.24)); // latitude and longitude ranges of California
+        new google.maps.LatLng(32.50, -124.48), // SW corner: southern Arizona / southern California
+        new google.maps.LatLng(42.01, -109.05)  // NE corner: northern California / northern Arizona
+    );
     var options = {
         componentRestrictions: {
             country: 'us'
