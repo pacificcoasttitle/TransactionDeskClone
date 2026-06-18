@@ -6515,8 +6515,8 @@ class Order
             if ($response['status'] == 'success' && ! empty($response['data'])) {
                 $contacts       = $response['data'];
                 $updateContacts = [];
-                if (! empty($contacts['EscrowCompanies']) && ! empty($contacts['EscrowCompanies']['PersonLookupCode'])) {
-                    $escrow     = $contacts['EscrowCompanies']['PersonLookupCode'];
+                if (! empty($contacts['EscrowCompanies']) && ! empty($contacts['EscrowCompanies']['Person'])) {
+                    $escrow     = $contacts['EscrowCompanies']['Person']['LookupCode'];
                     $escrowUser = $this->CI->home_model->sp_get_user(['lookup_code' => $escrow]);
                     if (! empty($escrowUser)) {
                         $softproContacts['escrow']['email_address'] = $escrowEmail = $escrowUser['email_address'];
@@ -6527,8 +6527,8 @@ class Order
                     }
                 }
 
-                if (! empty($contacts['Lenders']) && ! empty($contacts['Lenders']['PersonLookupCode'])) {
-                    $lender     = $contacts['Lenders']['PersonLookupCode'];
+                if (! empty($contacts['Lenders']) && ! empty($contacts['Lenders']['Person'])) {
+                    $lender     = $contacts['Lenders']['Person']['LookupCode'];
                     $lenderUser = $this->CI->home_model->sp_get_user(['lookup_code' => $lender]);
                     if (! empty($lenderUser)) {
                         $softproContacts['lender']['email_address'] = $lenderEmail = $lenderUser['email_address'];
@@ -6539,8 +6539,20 @@ class Order
                     }
                 }
 
-                if (! empty($contacts['ListingAgentBrokers']) && ! empty($contacts['ListingAgentBrokers']['PersonLookupCode'])) {
-                    $listingAgent     = $contacts['ListingAgentBrokers']['PersonLookupCode'];
+                if (! empty($contacts['MortgageBrokers']) && ! empty($contacts['MortgageBrokers']['Person'])) {
+                    $mortgageBrokersLookup     = $contacts['MortgageBrokers']['Person']['LookupCode'];
+                    $mortgageBrokersUser = $this->CI->home_model->sp_get_user(['lookup_code' => $mortgageBrokersLookup]);
+                    if (! empty($mortgageBrokersUser)) {
+                        $softproContacts['mortgage_broker']['email_address'] = $mortgageBrokersEmail = $mortgageBrokersUser['email_address'];
+                        $softproContacts['mortgage_broker']['id']            = $updateContacts['mortgage_broker_id'] = $mortgageBrokersId = $mortgageBrokersUser['id'];
+                        $softproContacts['mortgage_broker']['lookup_code']   = $mortgageBrokersUser['lookup_code'];
+                        $softproContacts['mortgage_broker']['name']          = $mortgageBrokersUser['first_name'] . ' ' . $mortgageBrokersUser['last_name'];
+                        $softproContacts['mortgage_broker']['company_name']  = $mortgageBrokersUser['company_name'];
+                    }
+                }
+
+                if (! empty($contacts['ListingAgentBrokers']) && ! empty($contacts['ListingAgentBrokers']['Person'])) {
+                    $listingAgent     = $contacts['ListingAgentBrokers']['Person']['LookupCode'];
                     $listingAgentUser = $this->CI->home_model->sp_get_user(['lookup_code' => $listingAgent]);
                     if (! empty($listingAgentUser)) {
                         $softproContacts['listing_agent']['email_address'] = $listingAgentEmail = $listingAgentUser['email_address'];
@@ -6551,16 +6563,21 @@ class Order
                     }
                 }
 
-                if (! empty($contacts['TitleCompanies']) && ! empty($contacts['TitleCompanies']['CompanyLookUpCode'])) {
-                    $titleOfficer                                     = $contacts['TitleCompanies'];
-                    $softproContacts['title_officer']['lookup_code']  = $titleOfficer['CompanyLookUpCode'];
-                    $softproContacts['title_officer']['company_name'] = $titleOfficer['PersonLookupCode'];
+                if (! empty($contacts['TitleCompanies']) && ! empty($contacts['TitleCompanies']['Person'])) {
+                    $titleOfficer                                     = $contacts['TitleCompanies']['Person'];
+                    $titleOfficerCompany                              = $contacts['TitleCompanies']['Company'];
+                    $softproContacts['title_officer']['lookup_code']  = $titleOfficerCompany['LookupCode'];
+                    $softproContacts['title_officer']['name'] = $titleOfficer['Name'];
+                    $softproContacts['title_officer']['company_name'] = $titleOfficerCompany['Name'];
+                    $softproContacts['title_officer']['email_address'] = $titleOfficer['Email'] ?? '';
                 }
 
-                if (! empty($contacts['Underwriters']) && ! empty($contacts['Underwriters']['CompanyLookUpCode'])) {
-                    $underWritter                                    = $contacts['Underwriters'];
-                    $softproContacts['underwritter']['lookup_code']  = $underWritter['CompanyLookUpCode'];
-                    $softproContacts['underwritter']['company_name'] = $underWritter['PersonLookupCode'];
+                if (! empty($contacts['Underwriters']) && ! empty($contacts['Underwriters']['Company'])) {
+                    $underWritter                                    = $contacts['Underwriters']['Company'];
+                    $softproContacts['underwritter']['lookup_code']  = $underWritter['LookupCode'];
+                    $softproContacts['underwritter']['name'] = '';
+                    $softproContacts['underwritter']['company_name'] = $underWritter['Name'];
+                    $softproContacts['underwritter']['email_address'] = $underWritter['Email'] ?? '';
                 }
             }
 
