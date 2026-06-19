@@ -6706,10 +6706,16 @@ class Cron extends MX_Controller
                 $reqData = json_encode($fileUploadReq);
                 $logid = $this->apiLogs->syncLogs(0, 'softpro', 'upload_document_cron', 'upload_document', $reqData, [], 0, 0);
                 $result = $this->softpro->make_request('POST', 'upload_document', $reqData);
-                $response = json_decode($result, true);
+                // $response = json_decode($result, true);
+                // Handle different response formats returned by make_request
+                if (is_array($result)) {
+                    $response = $result;
+                } else {
+                    $response = json_decode($result, true);
+                }
                 $this->apiLogs->syncLogs(0, 'softpro', 'upload_document_cron', 'upload_document', $reqData, json_encode($response), 0, $logid);
 
-                if (isset($response) && !empty($response)) {
+                if (!empty($response) && isset($response[0]['Status'])) {
                     $updateData = [];
                     foreach ($response as $res) {
                         if ($res['Status'] == 200) {

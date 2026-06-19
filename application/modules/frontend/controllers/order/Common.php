@@ -4,7 +4,7 @@
 
 class Common extends MX_Controller
 {
-    private $js_version = '5.11';
+    private $js_version = '5.12';
  
     public function __construct()
     {
