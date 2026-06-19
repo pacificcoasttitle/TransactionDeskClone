@@ -6668,10 +6668,10 @@ class Cron extends MX_Controller
             $this->load->library('order/softPro');
 
             // Build a lookup map for all records by ID (needed for response processing)
-            $recordsById = [];
-            foreach ($allRecords as $record) {
-                $recordsById[$record['id']] = $record;
-            }
+            // $recordsById = [];
+            // foreach ($allRecords as $record) {
+            //     $recordsById[$record['id']] = $record;
+            // }
 
             // Process in chunks of 10
             $chunks = array_chunk($allRecords, 10);
@@ -6724,14 +6724,14 @@ class Cron extends MX_Controller
                                 'id' => $res['Id']
                             ];
                             // BUG FIX: Use $recordsById lookup instead of leaked $value
-                            $currentRecord = isset($recordsById[$res['Id']]) ? $recordsById[$res['Id']] : null;
-                            if ($currentRecord && !empty($currentRecord['document_ids'])) {
-                                $docIds = json_decode($currentRecord['document_ids'], true);
-                                if (!empty($docIds)) {
-                                    $this->db->where_in('id', $docIds);
-                                    $this->db->update('pct_order_documents', ['is_sync' => 1]);
-                                }
-                            }
+                            // $currentRecord = isset($recordsById[$res['Id']]) ? $recordsById[$res['Id']] : null;
+                            // if ($currentRecord && !empty($currentRecord['document_ids'])) {
+                            //     $docIds = json_decode($currentRecord['document_ids'], true);
+                            //     if (!empty($docIds)) {
+                            //         $this->db->where_in('id', $docIds);
+                            //         $this->db->update('pct_order_documents', ['is_sync' => 1]);
+                            //     }
+                            // }
                         } else {
                             $updateData[] = [
                                 'is_synced' =>  (strpos(strtolower($res['Message']), "locked for editing by user") !== false) ? 0 : 1,
