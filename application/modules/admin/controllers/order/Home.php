@@ -8642,7 +8642,7 @@ class Home extends MX_Controller
             $this->load->model('order/sales_model');
             $this->load->model('order/title_model');
             $sales_rep_lists     = $this->sales_model->get_sales_reps(['sales_rep_enable' => 1]);
-            $title_officer_lists = $this->home_model->get_sp_officers_list([['is_title_officer' => 1]]);
+            $title_officer_lists = $this->home_model->get_sp_officers_list(['is_title_officer' => 1]);
 
             $salesRepList = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateTitleSalesSPUser(lookup_code, this.value, \'sales\');" id="sales_rep" name="sales_rep">
                                     <option value="">Select Sales Rep</option>';
