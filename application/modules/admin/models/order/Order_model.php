@@ -162,7 +162,7 @@ class Order_model extends CI_Model
             }
 
             $query = $this->db->get();
-            // echo $this->db->last_query();die;
+            
             if ($query->num_rows() > 0) {
                 $orders_lists = $query->result_array();
             }
@@ -268,7 +268,7 @@ class Order_model extends CI_Model
             }
 
             $query = $this->db->get();
-            // echo $this->db->last_query();die;
+            
             if ($query->num_rows() > 0) {
                 $orders_lists = $query->result_array();
             }
