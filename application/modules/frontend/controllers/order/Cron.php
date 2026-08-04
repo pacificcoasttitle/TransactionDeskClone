@@ -8984,7 +8984,7 @@ class Cron extends MX_Controller
             // echo "<pre>";
             // print_r($response);die;
             $updateData = [];
-            $billCodeFilter = ['TPC', 'TPW', 'ESC', 'TSGW', 'UPRE'];
+            $billCodeFilter = ['TPC', 'TPW', 'ESC', 'TSGW', 'UPRE','DOC','LOANS'];
             if ($response['status'] == 'success' && !empty($response['data'])) {
                 
                 $orderList = $response['data'];
