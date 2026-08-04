@@ -745,7 +745,7 @@ class Order extends MX_Controller
             // Form field validation rules
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
             // $salesBillCode = ['TPC', 'TPW'];
-            $billCodeFilter = ['TPC', 'TPW', 'ESC', 'TSGW', 'UPRE'];
+            $billCodeFilter = ['TPC', 'TPW', 'ESC', 'TSGW', 'UPRE','DOC','LOANS'];
             // Validate submitted form data
             if($this->form_validation->run($this) == true)
             {
