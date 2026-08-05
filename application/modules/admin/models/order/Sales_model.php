@@ -8,88 +8,86 @@ class Sales_model extends CI_Model
 	
     public function get_sales_reps($params,$isGetCounts = true)
     {
-        $total_records = 0;
+        $limit  = isset($params['length']) && !empty($params['length']) ? $params['length'] : null;
+        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : null;
+        $keyword = isset($params['searchvalue']) && !empty($params['searchvalue']) ? trim($params['searchvalue']) : '';
 
+        $sales_rep_lists = [];
+        $total_records = 0;
+        $filter_total_records = 0;
+
+        // ----------------------------
+        // Total Records (without search)
+        // ----------------------------
         if($isGetCounts){
             $this->db->where('is_sales_rep', 1);
             $this->db->from('pct_softpro_lookup_table');
-            $total_records =  ($isGetCounts)?$this->db->count_all_results():0;
+            $this->db->where("TRIM(first_name) <> ''", null, false);
+
+            if (!empty($params['sales_rep_enable'])) {
+                $this->db->where('status', 1);
+            }
+
+            $total_records = $this->db->count_all_results();
+
         }
-		$limit = isset($params['length']) && !empty($params['length']) ? $params['length'] : '';
-        $offset = isset($params['start']) && !empty($params['start']) ? $params['start'] : '';
-        $sales_rep_lists = array();
-        $filter_total_records = 0;
+
+        // ----------------------------
+        // Filtered Records
+        // ----------------------------
+		
+
+        if ($isGetCounts) {
+            $this->db->from('pct_softpro_lookup_table');
+            $this->db->where('is_sales_rep', 1);
+            $this->db->where("TRIM(first_name) <> ''", null, false);
+
+            if (!empty($params['sales_rep_enable'])) {
+                $this->db->where('status', 1);
+            }
+
+            if ($keyword !== '') {
+                $this->db->group_start()
+                    ->like("CONCAT_WS(' ', first_name, last_name)", $keyword, 'both', false)
+                    ->or_like('email_address', $keyword)
+                    ->or_like('phone', $keyword)
+                    ->group_end();
+            }
+
+            $filter_total_records = $this->db->count_all_results();
+        }
+
+        // ----------------------------
+        // Data Query
+        // ----------------------------
+
+        $this->db->from('pct_softpro_lookup_table');
+        $this->db->where('is_sales_rep', 1);
+        $this->db->where("TRIM(first_name) <> ''", null, false);
 
         if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
             $this->db->where('status', 1);
         }
 
-        $this->db->where('first_name is not null');
-        
-    	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
-    		$keyword = $params['searchvalue'];
-           
-            if($isGetCounts){
-                $this->db->where('is_sales_rep', 1);
-    
-                if (isset($keyword) && !empty($keyword)) {
-    
-                    $this->db->group_start()
-                            ->like("CONCAT_WS(' ',first_name,last_name)",$keyword, NULL, FALSE)
-                            ->or_like('email_address', $keyword)
-                            ->or_like('phone', $keyword)
-                            ->group_end();
-                }
-                $this->db->from('pct_softpro_lookup_table');
-    
-                $filter_total_records =  $this->db->count_all_results();
-            }
+        if ($keyword !== '') {
+            $this->db->group_start()
+                ->like("CONCAT_WS(' ', first_name, last_name)", $keyword, 'both', false)
+                ->or_like('email_address', $keyword)
+                ->or_like('phone', $keyword)
+                ->group_end();
+        }
 
-            $this->db->where('is_sales_rep', 1);
+        if ($limit !== null) {
+            $this->db->limit($limit, $offset);
+        }
 
-            if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
-                $this->db->where('status', 1);
-            }
-			if (isset($keyword) && !empty($keyword)) {
+        $this->db->order_by('first_name', 'ASC');
 
-                $this->db->group_start()
-                        ->like("CONCAT_WS(' ',first_name,last_name)",$keyword, NULL, FALSE)
-                        ->or_like('email_address', $keyword)
-                        ->or_like('phone', $keyword)
-                        ->group_end();
-			}
-            
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }
-            $this->db->order_by('first_name','ASC');
-			$query = $this->db->get('pct_softpro_lookup_table');
-			
-			if ($query->num_rows() > 0) {
-                $sales_rep_lists = $query->result_array();
-	        }
-    	} else {    	
+        $query = $this->db->get();
 
-            if($isGetCounts){
-                $this->db->where('is_sales_rep', 1);	
-                $this->db->from('pct_softpro_lookup_table');
-                $filter_total_records =  $this->db->count_all_results();
-            }
-
-            if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
-                $this->db->where('status', 1);
-            }
-            $this->db->where('is_sales_rep', 1);
-			if ((isset($limit) && !empty($limit)) || (isset($offset) && !empty($offset))) {
-                $this->db->limit($limit, $offset);
-            }
-    	    $this->db->order_by('first_name','ASC');
-			$query = $this->db->get('pct_softpro_lookup_table');
-            
-			if ($query->num_rows() > 0) {
-	            $sales_rep_lists = $query->result_array();
-	        } 
-    	}
+        if ($query->num_rows()) {
+            $sales_rep_lists = $query->result_array();
+        }
 
     	return array(
             'recordsTotal' => $total_records,
@@ -207,6 +205,7 @@ class Sales_model extends CI_Model
                 $this->db->limit($limit, $offset);
             }
             $this->db->order_by('first_name','ASC');
+  
 			$query = $this->db->get('pct_softpro_lookup_table');
 			
 			if ($query->num_rows() > 0) {
