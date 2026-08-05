@@ -8689,7 +8689,9 @@ class Home extends MX_Controller
                 } else {
                     $loan_underwriter = '';
                 }
-                $loanUnderwriterSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter(' . '"' . $lookupCode . '"' . ',\'loan_underwriter\' ,this.value);" id="loan_underwriter" name="loan_underwriter">
+                $loanUnderwriterSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" 
+                onchange="updateUnderwriter(\'' . $lookupCode . '\', \'loan_underwriter\', this.value);"
+                id="loan_underwriter" name="loan_underwriter">
                                     <option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
@@ -8703,7 +8705,8 @@ class Home extends MX_Controller
                 } else {
                     $sales_underwriter = '';
                 }
-                $salesUnderwriterSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateUnderwriter(' . '"' . $lookupCode . '"' . ',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
+                $salesUnderwriterSelection = '<select class="custom-select custom-select-sm form-control form-control-sm" 
+                onchange="updateUnderwriter(\'' . $lookupCode . '\',\'sales_underwriter\', this.value);" id="sales_underwriter" name="sales_underwriter"><option value="">Select</option>
                                     <option value="westcor">Westcor</option>
                                     <option value="north_american">North American</option>
                                     <option value="commonwealth">Commonwealth</option>

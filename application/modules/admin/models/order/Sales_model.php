@@ -23,6 +23,8 @@ class Sales_model extends CI_Model
         if (isset($params['sales_rep_enable']) && !empty($params['sales_rep_enable'])) {
             $this->db->where('status', 1);
         }
+
+        $this->db->where('first_name is not null');
         
     	if (isset($params['searchvalue']) && !empty($params['searchvalue'])) {
     		$keyword = $params['searchvalue'];
