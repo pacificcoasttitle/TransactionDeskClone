@@ -78,7 +78,7 @@ if (!empty($errors)) {
 											<div class="row">
 												<div class="col-sm-8 d-flex fs-2">
 													<!-- <label for="email_id" class="col-form-label">Email</label> -->
-													<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender
+													<input class="radio" type="radio" name="new_existing_lender" id="add_lender" value="add_lender">New Lender&nbsp;&nbsp;
 													<input class="radio" type="radio" name="new_existing_lender" id="existing_lender" value="existing_lender">Existing Lender
 													<!-- <input name="email_id" required="" type="email" class="form-control" id="email_id"> -->
 												</div>
