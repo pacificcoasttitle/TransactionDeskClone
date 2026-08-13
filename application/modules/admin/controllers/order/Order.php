@@ -62,13 +62,13 @@ class Order extends MX_Controller
 
         $pageno     = ($params['start'] / $params['length']) + 1;
         $ordersList = $this->order_model->get_orders($params);
-        // echo "<pre>";
-        // print_r($ordersList);die;
+        
         $data  = [];
         $cnt   = ($pageno == 1) ? ($params['start'] + 1) : (($pageno - 1) * $params['length']) + 1;
         $count = $params['start'] + 1;
         $this->load->model('order/sales_model');
-        $sales_rep_lists = $this->sales_model->get_sales_reps(['sales_rep_enable' => 1]);
+
+        $sales_rep_lists = $this->sales_model->get_sales_reps(['sales_rep_enable' => 1], false);
         $salesRepList    = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateSalesUserForOrder(transaction_id, this.value);" id="sales_rep" name="sales_rep">
         <option value="">Select Sales Rep</option>';
         if (isset($sales_rep_lists['data']) && ! empty($sales_rep_lists['data'])) {
@@ -78,7 +78,6 @@ class Order extends MX_Controller
         }
 
         $sp_sales_rep_lists = $this->sales_model->get_sp_sales_reps(['sales_rep_enable' => 1]);
-        // print_r($sp_sales_rep_lists);die;
         $spSalesRepList    = '<select class="custom-select custom-select-sm form-control form-control-sm" onchange="updateSalesUserForOrder(transaction_id, this.value);" id="sales_rep" name="sales_rep">
         <option value="">Select Sales Rep</option>';
         if (isset($sp_sales_rep_lists['data']) && ! empty($sp_sales_rep_lists['data'])) {
@@ -87,8 +86,7 @@ class Order extends MX_Controller
             }
         }
         $spSalesRepList .= '</select>';
-        // echo "<pre>";
-        // print_r($ordersList['data']);die;
+        
         foreach ($ordersList['data'] as $key => $value) {
             $nestedData   = [];
             $nestedData[] = $count;
@@ -125,7 +123,7 @@ class Order extends MX_Controller
                 $checked = '';
             }
             $nestedData[] = "<input $checked onclick='avoidDuplication();' style='height:30px;width:20px;' type='checkbox' id='$property_id' name='$property_id'>";
-            // $nestedData[] = date("m/d/Y h:i:s A", strtotime($value['created_at']));
+            
             $nestedData[] = convertTimezone($value['created_at']);
             $editOrderUrl = base_url() . 'order/admin/order-details/' . $value['id'];
             $action       = "<div style='display: flex;justify-content: space-evenly;'><a href='" . $editOrderUrl . "' class='view-icon action-btn-padding' title ='View Order Detail'><span class='fas fa-eye' aria-hidden='true'></span></a>";
@@ -273,6 +271,7 @@ class Order extends MX_Controller
     {
         // $salesRepId = 15967; // Mark Neveu
         $salesRepId = $this->input->post('salesId');
+
         // Fetch all orders associated with the sales rep
         $this->db->select('order_details.id, order_details.file_number, order_details.transaction_id, order_details.created_at, 
                 property_details.full_address, property_details.apn, property_details.county,CONCAT(salerep.first_name, " ", salerep.last_name) as sales_rep_name, to.officer_name as title_officer_name');
@@ -283,10 +282,9 @@ class Order extends MX_Controller
         $this->db->join('pct_softpro_lookup_table as to', 'transaction_details.title_officer = to.id', 'left');
         $this->db->where('transaction_details.sales_representative', $salesRepId);
         $query      = $this->db->get();
-        // echo $this->db->last_query();die;
+        
         $ordersList = $query->result_array();
-        // echo "<pre>";
-        // print_r($ordersList);die;
+        
         if (isset($ordersList) && ! empty($ordersList)) {
             
             $export_data = [];
@@ -296,8 +294,8 @@ class Order extends MX_Controller
 
                 if ($orderId && $fileNumber) {
                     $order_details    = $this->order_model->get_order_details($orderId);
-                    $con              = ['id' => $order_details['customer_id']];
-                    $customer_details = $this->home_model->get_rows($con);
+                    // $con              = ['id' => $order_details['customer_id']];
+                    // $customer_details = $this->home_model->get_rows($con);
 
                     // Fetch contacts from SoftPro using library function
                     $softproContacts = $this->common_lib->fetchAndSyncContacts($fileNumber);

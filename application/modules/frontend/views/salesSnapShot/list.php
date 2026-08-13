@@ -106,7 +106,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-light border-right-0"><i class="fa fa-map-marker text-muted"></i></span>
                                             </div>
-                                            <input type="text" class="form-control border-left-0" name="area_name" value="<?php echo (!empty($prev_data['area_name'])) ? $prev_data['area_name'] : ''; ?>" placeholder="What Area?">
+                                            <input type="text" class="form-control area-input border-left-0" name="area_name" value="<?php echo (!empty($prev_data['area_name'])) ? $prev_data['area_name'] : ''; ?>" placeholder="What Area?">
                                         </div>
                                     </div>
                                 </div>

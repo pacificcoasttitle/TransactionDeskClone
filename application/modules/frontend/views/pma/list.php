@@ -88,7 +88,7 @@
                                                 <span class="input-group-text bg-light border-right-0"><i class="fa fa-map-marker text-muted"></i></span>
                                             </div>
                                             <!-- Address Input -->
-                                            <input type="text" class="js-pma-address form-control border-left-0" name="address_input" id="js-property-search"
+                                            <input type="text" class="js-pma-address area-input form-control border-left-0" name="address_input" id="js-property-search"
                                                 value="<?php echo (!empty($prev_data['address_input'])) ? $prev_data['address_input'] : ''; ?>" placeholder="Property Address">
                                             <!-- APN Input (Hidden toggle) -->
                                             <input id="js-apn-search" placeholder="APN" class="formpma js-pma-apn form-control border-left-0" type="text" value="" name="subject" style="display:none;"> 
@@ -102,7 +102,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-light border-right-0"><i class="fa fa-map-marker text-muted"></i></span>
                                             </div>
-                                            <input type="text" class="js-pma-city js-pma-fips form-control border-left-0" name="city_input" value="<?php echo (!empty($prev_data['city_input'])) ? $prev_data['city_input'] : ''; ?>" placeholder="City">
+                                            <input type="text" class="js-pma-city area-input js-pma-fips form-control border-left-0" name="city_input" value="<?php echo (!empty($prev_data['city_input'])) ? $prev_data['city_input'] : ''; ?>" placeholder="City">
                                         </div>
                                     </div>
                                 </div>

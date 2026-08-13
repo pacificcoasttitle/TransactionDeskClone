@@ -1615,6 +1615,40 @@ class Order
 
     public function checkDuplicateOrder($apn)
     {
+        $db = $this->CI->db;
+
+        // If any duplicate is allowed, don't block the order.
+        $allowDuplicate = $db->from('property_details')
+            ->join(
+                'order_details',
+                'property_details.id = order_details.property_id',
+                'inner'
+            )
+            ->where('property_details.apn', $apn)
+            ->where('order_details.is_softpro_order', 1)
+            ->where('property_details.allow_duplication', 1)
+            ->count_all_results();
+
+        if ($allowDuplicate > 0) {
+            return false;
+        }
+
+        // Check if any matching order exists.
+        $duplicateExists = $db->from('property_details')
+            ->join(
+                'order_details',
+                'property_details.id = order_details.property_id',
+                'inner'
+            )
+            ->where('property_details.apn', $apn)
+            ->where('order_details.is_softpro_order', 1)
+            ->count_all_results();
+
+        return $duplicateExists > 0;
+    }
+
+    public function checkDuplicateOrder_old($apn)
+    {
         $this->CI->db->select('property_details.*')
             ->from('property_details')
             ->join('order_details', 'property_details.id = order_details.property_id', 'left');

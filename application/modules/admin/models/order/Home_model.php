@@ -3448,6 +3448,13 @@ class Home_model extends CI_Model
         if (isset($params['searchvalue']) && ! empty($params['searchvalue'])) {
 
             $keyword = $params['searchvalue'];
+
+            // ======================================================
+            // Total Records (without search)
+            // ======================================================
+
+            $this->db->from('pct_softpro_lookup_table');
+
             if ($is_escrow == 1) {
                 $this->db->where('is_escrow', $is_escrow);
             } else if ($is_lender == 1) {
@@ -3459,10 +3466,16 @@ class Home_model extends CI_Model
             } else if ($is_new_user == 1) {
                 $this->db->where('is_new_user', $is_new_user);
             }
+
             $this->db->where('status', 1);
-            $this->db->from('pct_softpro_lookup_table');
+            
             $total_records = $this->db->count_all_results();
 
+            // ======================================================
+            // Filtered Records
+            // ======================================================
+            $this->db->from('pct_softpro_lookup_table');
+
             if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('first_name', $keyword)
@@ -3473,7 +3486,7 @@ class Home_model extends CI_Model
                     ->group_end();
             }
 
-            $this->db->where('is_escrow', $is_escrow);
+            // $this->db->where('is_escrow', $is_escrow);
             if ($is_escrow == 1) {
                 $this->db->where('is_escrow', $is_escrow);
             } else if ($is_lender == 1) {
@@ -3483,10 +3496,16 @@ class Home_model extends CI_Model
             } else if ($is_new_user == 1) {
                 $this->db->where('is_new_user', $is_new_user);
             }
+
             $this->db->where('status', 1);
-            $this->db->get('pct_softpro_lookup_table');
+            // $this->db->get('pct_softpro_lookup_table');
             $filter_total_records = $this->db->count_all_results();
 
+            // ======================================================
+            // Data
+            // ======================================================
+            // $this->db->from('pct_softpro_lookup_table');
+
             if (isset($keyword) && ! empty($keyword)) {
                 $this->db->group_start()
                     ->like('first_name', $keyword)
@@ -3506,7 +3525,9 @@ class Home_model extends CI_Model
             } else if ($is_new_user == 1) {
                 $this->db->where('is_new_user', $is_new_user);
             }
+
             $this->db->where('status', 1);
+            
             if ((isset($limit) && ! empty($limit)) || (isset($offset) && ! empty($offset))) {
                 $this->db->limit($limit, $offset);
             }

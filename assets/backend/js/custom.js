@@ -2404,6 +2404,7 @@ $(document).ready(function () {
         });
     }
 
+    var orderListXhr = null;
     if ($('#tbl-orders-listing').length) {
         order_list = $('#tbl-orders-listing').DataTable({
             /*"pageLength": 2,*/
@@ -2435,7 +2436,14 @@ $(document).ready(function () {
             "ajax": {
                 url: base_url + "admin/order/order/get_order_list", // json datasource
                 type: "post", // method  , by default get
-                beforeSend: function () {
+                beforeSend: function (xhr) {
+                        // Abort previous request if still running
+                        if (orderListXhr) {
+                            orderListXhr.abort();
+                        }
+
+                        orderListXhr = xhr;
+
                     $("#page-preloader").show();
                     // $('#page-preloader').css('background-color', 'rgba(0,0,0,.5)');
                     // $('#page-preloader').css('display', 'block');
@@ -2446,14 +2454,23 @@ $(document).ready(function () {
                     // d.product_type = product_type;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    // Ignore intentionally aborted requests
+                    if (textStatus === "abort") {
+                        return;
+                    }
+
+                    // Session expired
                     if (parseInt(XMLHttpRequest.status) == 419) {
                         alert("You are logged out. Please login.");
-                    }
-                    if (parseInt(XMLHttpRequest.status) == 419) {
+
                         setTimeout(function () {
                             location.reload();
                         }, 1000);
+
+                        return;
                     }
+                  
                     $("#tbl-orders-listing tbody").append('<tr><td colspan="12" class="text-center">No records found</td></tr>');
                     $("#tbl-orders-listing_processing").css("display", "none");
 
