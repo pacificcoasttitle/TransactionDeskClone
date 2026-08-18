@@ -1021,7 +1021,7 @@ class Home extends MX_Controller
                 if (str_contains(strtolower($PropertyType), 'vacant land')) {
                     $addInSubject = ' - APN: ' . $apn;
                 }
-                $subject            = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
+                $subject            = $orderNumber . ' - ' . $PropertyAddress .' - PCT Title Order Placed' . $addInSubject;
                 $email_notification = $this->input->post('email_notification');
 
                 $this->session->set_userdata('email_notification', $email_notification);

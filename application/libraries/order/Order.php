@@ -5431,7 +5431,7 @@ class Order
         if (str_contains(strtolower($orderDetails['property_type']), 'vacant land')) {
             $addInSubject = ' - APN: ' . $orderDetails['apn'];
         }
-        $subject            = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
+        $subject            = $orderNumber . ' - ' . $orderDetails['address'] . ' - PCT Title Order Placed' . $addInSubject;
         $email_notification = $this->CI->session->userdata('email_notification');
         $this->CI->session->unset_userdata('email_notification');
         if ($orderDetails["salerep_is_mail_notification"] == 1) {

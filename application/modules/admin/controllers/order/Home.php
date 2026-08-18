@@ -6278,7 +6278,7 @@ class Home extends MX_Controller
                         $addInSubject = ' - APN: ' . $order_details['apn'];
                     }
 
-                    $subject = $orderNumber . ' - PCT Title Order Placed' . $addInSubject;
+                    $subject = $orderNumber . ' - ' . $order_details['address'] . ' - PCT Title Order Placed' . $addInSubject;
                     $to      = $order_details['salerep_email_address'];
                     // $to = 'piyush-crest@yopmail.com';
                     $mailParams = [
