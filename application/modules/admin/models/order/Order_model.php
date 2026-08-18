@@ -79,7 +79,7 @@ class Order_model extends CI_Model
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 // ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
                 ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
             $this->db->where('order_details.is_softpro_order', 1);
@@ -151,7 +151,7 @@ class Order_model extends CI_Model
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 // ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
                 ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
             $this->db->where('order_details.is_softpro_order', 1);
@@ -193,7 +193,7 @@ class Order_model extends CI_Model
                 ->join('transaction_details', 'order_details.transaction_id = transaction_details.id')
                 // ->join('customer_basic_details as cbd', 'transaction_details.sales_representative = cbd.id', 'left')
                 ->join('pct_softpro_lookup_table as sp_sales', 'transaction_details.sales_representative = sp_sales.id', 'left')
-                ->join('pct_order_title_point_data as tpd', 'order_details.file_id = tpd.file_id', 'left')
+                ->join('pct_order_title_point_data as tpd', 'order_details.id = tpd.order_id', 'left')
                 ->join('pct_order_product_types', 'transaction_details.purchase_type = pct_order_product_types.product_type_id AND pct_order_product_types.status=1', 'left')
                 ->join('pct_softpro_product_type', 'transaction_details.purchase_type = pct_softpro_product_type.id AND pct_softpro_product_type.status=1', 'left');
             $this->db->where('order_details.is_softpro_order', 1);
