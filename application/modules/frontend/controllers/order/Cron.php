@@ -8031,7 +8031,7 @@ class Cron extends MX_Controller
                     $configData                  = $this->order->getConfigData();
                     $isEnablePolicyDocumentEmail = $configData['enable_policy_document_email']['is_enable'];
                     
-                    if (!empty($files['supplement'])) {
+                    if ($isEnablePolicyDocumentEmail && !empty($files['supplement'])) {
                         $suppData = $filesResult; // Clone
                         $suppData['doc_type'] = "Supplement Statement Document";
                         $suppData['file_links'] = $files['supplement'];
