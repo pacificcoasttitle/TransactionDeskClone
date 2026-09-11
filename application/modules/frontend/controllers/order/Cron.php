@@ -8027,6 +8027,9 @@ class Cron extends MX_Controller
 
                 if (!empty($filesResult['email_address'])) {
                     $filesResult['email_to'] = $filesResult['email_address'];
+
+                    $configData                  = $this->order->getConfigData();
+                    $isEnablePolicyDocumentEmail = $configData['enable_policy_document_email']['is_enable'];
                     
                     if (!empty($files['supplement'])) {
                         $suppData = $filesResult; // Clone
@@ -8035,7 +8038,7 @@ class Cron extends MX_Controller
                         $email_status = $this->order->sendSuppPolicyEmail($suppData);
                     }
 
-                    if(!empty($files['policy'])) {
+                    if($isEnablePolicyDocumentEmail && !empty($files['policy'])) {
                         $policyData = $filesResult; // Clone
                         $policyData['doc_type'] = "Policy Document";
                         $policyData['file_links'] = $files['policy'];

@@ -78,6 +78,13 @@
                                 <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_create_order_submit_button" id="enable_create_order_submit_button" <?php echo isset($enable_create_order_submit_button) && !empty($enable_create_order_submit_button) ? 'Checked' : ''; ?>>
                             </div>
                         </div>
+
+                         <div class="form-group row ml-1">
+                            <label for="enable_policy_document_email" class="col-sm-7 col-form-label">Enable Policy Document Email </label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_policy_document_email" id="enable_policy_document_email" <?php echo isset($enable_policy_document_email) && !empty($enable_policy_document_email) ? 'Checked' : ''; ?>>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -136,6 +143,7 @@
                                 <input type="checkbox" value="1" class="form-control" style="width:20px;"  name="enable_survey_email" id="enable_survey_email" <?php echo isset($enable_survey_email) && !empty($enable_survey_email) ? 'Checked' : ''; ?>>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
 
