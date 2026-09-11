@@ -6920,6 +6920,12 @@ class Home extends MX_Controller
                 'is_enable' => $enable_survey_email,
             );
             $this->db->update('pct_configs', $enableSurveyEmailFlag, array('slug' => 'enable_survey_email'));
+
+            $enable_policy_document_email = isset($input['enable_policy_document_email']) && !empty($input['enable_policy_document_email']) ? 1 : 0;
+            $enableSurveyEmailFlag = array(
+                'is_enable' => $enable_policy_document_email,
+            );
+            $this->db->update('pct_configs', $enableSurveyEmailFlag, array('slug' => 'enable_policy_document_email'));
             
             $msg = 'Setting updated';
             /** Save user Activity */
@@ -6957,6 +6963,7 @@ class Home extends MX_Controller
         $res['enable_prelim_summary_email']          = $data['enable_prelim_summary_email']['is_enable'];
         $res['prelim_summary_shut_off']              = $data['prelim_summary_shut_off']['is_enable'];
         $res['enable_survey_email']                  = $data['enable_survey_email']['is_enable'];
+        $res['enable_policy_document_email']         = $data['enable_policy_document_email']['is_enable'];
 
         // $data['is_lp_enable'] = $res->is_enable;
         $this->admintemplate->show("order/home", "settings", $res);
